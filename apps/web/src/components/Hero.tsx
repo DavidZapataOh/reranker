@@ -4,10 +4,8 @@ import { useEffect, useId, useState } from "react";
 import { EngineRotator } from "./EngineRotator";
 import { ChatDemo } from "./ChatDemo";
 
-const cities = ["Medellín", "Bogotá"] as const;
 
 export function Hero() {
-  const [city, setCity] = useState<(typeof cities)[number]>("Medellín");
   const [business, setBusiness] = useState("");
   const [submitted, setSubmitted] = useState<string | null>(null);
   const [paused, setPaused] = useState(false);
@@ -23,8 +21,7 @@ export function Hero() {
     return () => window.removeEventListener("rr:negocio", on);
   }, []);
   const inputId = useId();
-  const cityId = useId();
-
+  
   return (
     <section id="reporte" aria-labelledby="hero-title" className="relative overflow-x-clip">
       <div className="mx-auto max-w-[1536px] px-5 pt-12 text-center md:px-16 md:pt-[3.65vw]">
@@ -49,7 +46,7 @@ export function Hero() {
         </button>
 
         <p className="mx-auto mt-5 max-w-[1000px] lg:whitespace-nowrap text-[clamp(1.05rem,1.25vw,1.19rem)] leading-snug text-ink/80 md:mt-[1.5vw]">
-          Te mostramos a quién recomiendan ChatGPT, Gemini, Google y Perplexity cuando alguien busca lo que vendes en {city}.
+          Te mostramos a quién recomiendan ChatGPT, Gemini, Google y Perplexity cuando alguien busca lo que vendes.
         </p>
 
         <form
@@ -90,39 +87,14 @@ export function Hero() {
             </button>
           </div>
 
-          <div className="mt-4 flex justify-center md:mt-[1.05vw]">
-            <label
-              htmlFor={cityId}
-              className="relative inline-flex h-9 md:h-[2.35vw] md:min-h-8 cursor-pointer items-center gap-2 rounded-full bg-green-light pr-3 pl-3.5 text-[15px] md:text-[clamp(14px,0.98vw,16px)] text-ink transition-colors hover:bg-[#cfe4cc]"
-            >
-              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-[17px] w-[17px] text-green">
-                <path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.6a2.6 2.6 0 1 1 0-5.2 2.6 2.6 0 0 1 0 5.2Z" />
-              </svg>
-              <span>Buscando en</span>
-              <select
-                id={cityId}
-                value={city}
-                onChange={(e) => setCity(e.target.value as (typeof cities)[number])}
-                className="cursor-pointer appearance-none bg-transparent pr-5 font-medium outline-none"
-              >
-                {cities.map((c) => (
-                  <option key={c}>{c}</option>
-                ))}
-              </select>
-              <svg aria-hidden="true" viewBox="0 0 24 24" className="pointer-events-none absolute right-3 h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m6 9 6 6 6-6" />
-              </svg>
-            </label>
-          </div>
-
-          <p className="mt-4 text-[14px] text-ink/60 md:mt-[1.15vw] md:text-[clamp(13px,0.92vw,15px)]">
+          <p className="mt-4 text-[14px] text-ink/60 md:mt-[1.2vw] md:text-[clamp(13px,0.92vw,15px)]">
             Gratis <span aria-hidden="true" className="px-1">·</span> Sin registro ni tarjeta{" "}
             <span aria-hidden="true" className="px-1">·</span> Resultado en menos de 2 minutos
           </p>
         </form>
       </div>
 
-      <ChatDemo city={city} business={submitted} />
+      <ChatDemo business={submitted} />
     </section>
   );
 }

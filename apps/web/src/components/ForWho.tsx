@@ -5,16 +5,16 @@ import { useEffect, useRef, useState } from "react";
 import { H2, Section } from "./ui";
 
 const kinds = [
-  { k: "Restaurantes", Icon: UtensilsCrossed, q: "¿Dónde almuerzo rico cerca al parque Lleras?" },
-  { k: "Clínicas", Icon: Stethoscope, q: "¿Qué clínica dental me recomiendas en El Poblado?" },
+  { k: "Restaurantes", Icon: UtensilsCrossed, q: "¿Dónde almuerzo rico cerca al parque de la 93?" },
+  { k: "Clínicas", Icon: Stethoscope, q: "¿Qué clínica dental me recomiendas en Pereira?" },
   { k: "Talleres", Icon: Wrench, q: "Un taller de confianza para mi carro en Bogotá" },
   { k: "Tiendas", Icon: ShoppingBag, q: "¿Dónde compro ropa de lino hecha en Colombia?" },
-  { k: "Hoteles", Icon: BedDouble, q: "Un hotel boutique tranquilo en Getsemaní" },
-  { k: "Gimnasios", Icon: Dumbbell, q: "¿Qué gimnasio tiene yoga en Chapinero?" },
-  { k: "Colegios", Icon: GraduationCap, q: "Un colegio bilingüe en el norte de Bogotá" },
+  { k: "Hoteles", Icon: BedDouble, q: "Un hotel boutique tranquilo en Villa de Leyva" },
+  { k: "Gimnasios", Icon: Dumbbell, q: "¿Qué gimnasio tiene yoga en Manizales?" },
+  { k: "Colegios", Icon: GraduationCap, q: "Un colegio bilingüe cerca de Chía" },
   { k: "Abogados", Icon: Scale, q: "Necesito un abogado de inmigración en Medellín" },
-  { k: "Veterinarias", Icon: PawPrint, q: "¿Qué veterinaria atiende urgencias en Envigado?" },
-  { k: "Inmobiliarias", Icon: House, q: "Una inmobiliaria confiable para arrendar en Laureles" },
+  { k: "Veterinarias", Icon: PawPrint, q: "¿Qué veterinaria atiende urgencias en Cali?" },
+  { k: "Inmobiliarias", Icon: House, q: "Una inmobiliaria confiable para arrendar en Barranquilla" },
 ];
 
 /** A cualquier negocio le preguntan: un tipo de negocio a la vez, su pregunta escribiéndose en una barra. */

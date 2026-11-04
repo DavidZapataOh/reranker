@@ -3,20 +3,20 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
-const QUESTION = "¿Qué abogado de inmigración me recomiendas en Medellín?";
-const ANSWER = "Te recomiendo tres firmas: Ruiz & Asociados, Visa Legal Medellín y Castaño Abogados.";
+const QUESTION = "¿Qué marca de ropa de lino hecha en Colombia me recomiendas?";
+const ANSWER = "Te recomiendo tres marcas: Lino Andino, Casa Telar y Hilo Caribe, con envíos a todo el país.";
 
 /**
  * La demo del hero: una ventana propia (no la interfaz de ChatGPT) donde un cliente
  * pregunta y la IA responde palabra por palabra. Datos de ejemplo, negocios ficticios.
  * Escritorio: escenario medido sobre el comp (1536 px) y escalado con unidades cqw.
  */
-export function ChatDemo({ city, business }: { city: string; business: string | null }) {
+export function ChatDemo({ business }: { business: string | null }) {
   const words = ANSWER.split(" ");
   const [shown, setShown] = useState(0);
   const [phase, setPhase] = useState<"idle" | "typing" | "done">("idle");
   const ref = useRef<HTMLDivElement>(null);
-  const question = QUESTION.replace("Medellín", city);
+  const question = QUESTION;
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -145,7 +145,7 @@ export function ChatDemo({ city, business }: { city: string; business: string | 
               <Image src="/brand/reranker-symbol.svg" alt="" width={40} height={40} className="h-[2.5cqw] w-[2.5cqw]" />
             </span>
             <p className="max-w-[22cqw] flex-1 pt-[0.35cqw] text-[1.1cqw] leading-[1.45] tracking-[-0.005em] text-ink">
-              <strong className="font-semibold">Propuesta:</strong> agrega &lsquo;abogado de inmigración&rsquo; a tu perfil de Google
+              <strong className="font-semibold">Propuesta:</strong> agrega &lsquo;ropa de lino&rsquo; y tus envíos nacionales a tu perfil de Google
             </p>
             <span aria-hidden="true" className="grid h-[1.95cqw] w-[1.95cqw] shrink-0 ml-auto -mt-[0.1cqw] place-items-center rounded-full bg-amber font-display text-[1.2cqw] font-black text-ink">
               !
@@ -193,7 +193,7 @@ export function ChatDemo({ city, business }: { city: string; business: string | 
               <Image src="/brand/reranker-symbol.svg" alt="" width={24} height={24} className="h-6 w-6" />
             </span>
             <p className="flex-1 text-[14.5px] leading-snug text-ink">
-              <strong className="font-semibold">Propuesta:</strong> agrega &lsquo;abogado de inmigración&rsquo; a tu perfil de Google
+              <strong className="font-semibold">Propuesta:</strong> agrega &lsquo;ropa de lino&rsquo; y tus envíos nacionales a tu perfil de Google
             </p>
           </div>
           <div className="mt-3.5 flex gap-2.5">

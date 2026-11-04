@@ -66,15 +66,15 @@ export function Bento() {
           <div className="flex items-start justify-between gap-4">
             <div>
               <h3 className="text-[19px] font-bold text-ink">Quién sale en tu lugar</h3>
-              <p className="mt-1 text-[15px] text-ink/65">Abogados de inmigración · Medellín · 10 preguntas</p>
+              <p className="mt-1 text-[15px] text-ink/65">Clínicas dentales · Bogotá · 10 preguntas</p>
             </div>
             <Example />
           </div>
           <ol className="mt-7 space-y-3.5">
             {[
-              { n: "Ruiz & Asociados", v: 8 },
-              { n: "Visa Legal Medellín", v: 6 },
-              { n: "Castaño Abogados", v: 4 },
+              { n: "Dental Usaquén", v: 8 },
+              { n: "Sonrisa Chicó", v: 6 },
+              { n: "Odonto Norte", v: 4 },
               { n: "Tu negocio", v: 1, you: true },
             ].map((r, i) => (
               <li key={r.n} className="grid grid-cols-[1.4rem_1fr_auto] items-center gap-3">
@@ -99,9 +99,9 @@ export function Bento() {
           <h3 className="text-[19px] font-bold text-ink">Cada respuesta, guardada tal cual</h3>
           <p className="mt-1 text-[15px] text-ink/65">Para que puedas volver a ella cuando quieras.</p>
           <div className="relative mt-6 rounded-2xl bg-paper p-5 font-mono text-[12.5px] leading-relaxed text-ink/80 ring-1 ring-line">
-            <p>ChatGPT · Medellín</p>
+            <p>Perplexity · Cali</p>
             <p>04 nov 2026 · 10:42</p>
-            <p className="mt-2 font-sans text-[14px] text-ink">“Te recomiendo tres firmas: Ruiz &amp; Asociados, Visa Legal…”</p>
+            <p className="mt-2 font-sans text-[14px] text-ink">“Para un taller de confianza en Cali, te sugiero Motor Valle y…”</p>
             <p className="mt-3 text-ink/50">ID rr_7f3a·91c2</p>
             <span className="stamp absolute -top-4 -right-3 grid h-[74px] w-[74px] rotate-[-12deg] place-items-center rounded-full bg-amber text-center font-display text-[11px] leading-tight font-black text-ink shadow-soft">
               Guardada
@@ -120,7 +120,7 @@ export function Bento() {
           <p className="mt-1 text-[15px] text-ink/65">Te proponemos el cambio. Tú decides.</p>
           <div className="mt-6 rounded-2xl p-4 shadow-lift ring-1 ring-line">
             <p className="text-[14px] leading-snug text-ink">
-              <strong className="font-semibold">Perfil de Google:</strong> agrega la categoría “Abogado de inmigración”.
+              <strong className="font-semibold">Perfil de Google:</strong> agrega la categoría “Clínica dental”.
             </p>
             <div className="mt-4 flex gap-2">
               <span className="inline-flex h-9 flex-1 items-center justify-center rounded-lg bg-green text-[14px] font-semibold text-white">Aprobar</span>
@@ -138,7 +138,7 @@ export function Bento() {
             <div className="flex gap-3 rounded-2xl bg-paper p-4 ring-1 ring-line">
               <Image src="/engines/gemini.svg" alt="" width={20} height={20} className="mt-0.5 h-5 w-5" />
               <p className="text-[14px] leading-snug text-ink">
-                Gemini empezó a recomendar a <strong className="font-semibold">Visa Legal Medellín</strong>.
+                Gemini empezó a recomendar a <strong className="font-semibold">Sonrisa Chicó</strong>.
                 <span className="mt-1 block font-mono text-[12px] text-ink/50">hoy · 08:15</span>
               </p>
             </div>
@@ -424,7 +424,7 @@ export function Footer() {
         </div>
 
         <div className="mt-16 flex flex-col gap-3 border-t border-line py-6 text-[13.5px] text-ink/55 sm:flex-row sm:items-center sm:justify-between">
-          <p>© 2026 Reranker · Hecho en Medellín</p>
+          <p>© 2026 Reranker</p>
           <ul className="flex gap-6">
             <li><Link href="/politica-de-datos" className="hover:text-green">Política de datos</Link></li>
             <li><Link href="/terminos" className="hover:text-green">Términos</Link></li>

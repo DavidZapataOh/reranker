@@ -5,8 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import { H2, Lede, Section } from "./ui";
 
 const steps = [
-  { t: "Escribe tu negocio y tu ciudad", d: "No necesitas registrarte ni conectar nada para el primer reporte." },
-  { t: "Le preguntamos a la IA como lo haría un cliente", d: "ChatGPT, Gemini, Google y Perplexity, varias veces y de varias formas, en tu ciudad." },
+  { t: "Escribe el nombre de tu negocio", d: "No necesitas registrarte ni conectar nada para el primer reporte." },
+  { t: "Le preguntamos a la IA como lo haría un cliente", d: "ChatGPT, Gemini, Google y Perplexity, varias veces y de varias formas." },
   { t: "Ves quién sale y qué cambiar", d: "Tu puntaje, quién aparece en tu lugar y la primera corrección, en palabras normales." },
 ];
 
@@ -75,10 +75,9 @@ export function HowItWorks() {
             {s === 0 && (
               <div className="mx-auto w-full max-w-[440px]">
                 <div className="flex items-center gap-2 rounded-2xl bg-white p-2 pl-4 shadow-soft ring-1 ring-line">
-                  <span className="flex-1 text-[16px] text-ink">Clínica Sonrisa Laureles<span className="caret" /></span>
+                  <span className="flex-1 text-[16px] text-ink">Hotel Brisa Marina<span className="caret" /></span>
                   <span className="rounded-xl bg-green px-4 py-2.5 text-[14px] font-semibold text-white">Ver</span>
                 </div>
-                <span className="mt-4 inline-flex h-8 items-center gap-2 rounded-full bg-green-light px-3 text-[14px] text-ink">Buscando en Medellín</span>
                 <ul className="mt-8 space-y-2.5">
                   {[
                     ["/engines/openai.svg", "ChatGPT"],
@@ -98,10 +97,10 @@ export function HowItWorks() {
             {s === 1 && (
               <ul className="space-y-3">
                 {[
-                  ["/engines/openai.svg", "ChatGPT", "¿Qué odontólogo me recomiendas en Laureles?"],
-                  ["/engines/gemini.svg", "Gemini", "Busco una clínica dental buena en Medellín"],
-                  ["/engines/google.svg", "Google", "mejor clínica dental Laureles Medellín"],
-                  ["/engines/perplexity.svg", "Perplexity", "Clínicas dentales confiables en Laureles"],
+                  ["/engines/openai.svg", "ChatGPT", "¿Qué hotel me recomiendas en Santa Marta?"],
+                  ["/engines/gemini.svg", "Gemini", "Hotel frente al mar en Santa Marta para ir en pareja"],
+                  ["/engines/google.svg", "Google", "mejores hoteles Santa Marta El Rodadero"],
+                  ["/engines/perplexity.svg", "Perplexity", "Hoteles boutique bien calificados en Santa Marta"],
                 ].map(([src, n, q], k) => (
                   <li key={n} className="flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-2xl bg-white p-4 ring-1 ring-line" style={{ animationDelay: `${k * 120}ms` }}>
                     <Image src={src} alt="" width={24} height={24} className="h-6 w-6" />
@@ -114,14 +113,14 @@ export function HowItWorks() {
             )}
             {s === 2 && (
               <div className="rounded-2xl bg-white p-6 ring-1 ring-line">
-                <p className="text-[14px] text-ink/60">Clínica Sonrisa Laureles · Medellín</p>
+                <p className="text-[14px] text-ink/60">Hotel Brisa Marina · Santa Marta</p>
                 <p className="mt-2 font-display text-[56px] leading-none font-black text-ink">34</p>
                 <p className="font-mono text-[12.5px] text-ink/55">entre 28 y 40</p>
                 <p className="mt-5 text-[15px] text-ink">
-                  Sale en tu lugar: <strong className="font-semibold">Dental Lleras</strong> y <strong className="font-semibold">Odonto Poblado</strong>.
+                  Sale en tu lugar: <strong className="font-semibold">Casa Rodadero</strong> y <strong className="font-semibold">Hotel Taganga Azul</strong>.
                 </p>
                 <p className="mt-2 text-[15px] text-ink">
-                  Primera corrección: <span className="rounded bg-amber/70 px-1">agrega tus horarios al perfil de Google</span>.
+                  Primera corrección: <span className="rounded bg-amber/70 px-1">agrega fotos de las habitaciones a tu perfil de Google</span>.
                 </p>
               </div>
             )}
