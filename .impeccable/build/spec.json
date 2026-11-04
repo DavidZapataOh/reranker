@@ -1,0 +1,1855 @@
+{
+  "tool": "comp-spec",
+  "version": 1,
+  "createdAt": "2026-11-04T17:23:25.139Z",
+  "comp": ".impeccable/mocks/decision/alt-conversacion.png",
+  "warnings": [
+    "region chat-window: \"container\": true set in the regions file (the region-size refusal is overridden: one undivided element)",
+    "region card: \"container\": true set in the regions file (the region-size refusal is overridden: one undivided element)"
+  ],
+  "uncoveredInkCells": [],
+  "compSize": {
+    "width": 1536,
+    "height": 1024
+  },
+  "aspect": 1.5,
+  "orientation": "landscape",
+  "palette": [
+    {
+      "hex": "#f8f8f7",
+      "coverage": 0.9562
+    },
+    {
+      "hex": "#080e0e",
+      "coverage": 0.0196
+    },
+    {
+      "hex": "#08584a",
+      "coverage": 0.0186
+    },
+    {
+      "hex": "#b7b9b9",
+      "coverage": 0.0039
+    },
+    {
+      "hex": "#333d3d",
+      "coverage": 0.0017
+    }
+  ],
+  "bands": [
+    {
+      "y": 0.0118,
+      "strength": 0.2864
+    },
+    {
+      "y": 0.0471,
+      "strength": 0.2914
+    },
+    {
+      "y": 0.1529,
+      "strength": 0.7271
+    },
+    {
+      "y": 0.1882,
+      "strength": 1
+    },
+    {
+      "y": 0.2235,
+      "strength": 0.3218
+    },
+    {
+      "y": 0.2588,
+      "strength": 0.4751
+    },
+    {
+      "y": 0.2941,
+      "strength": 0.2916
+    },
+    {
+      "y": 0.3176,
+      "strength": 0.2239
+    },
+    {
+      "y": 0.3647,
+      "strength": 0.2362
+    },
+    {
+      "y": 0.4118,
+      "strength": 0.3314
+    },
+    {
+      "y": 0.5882,
+      "strength": 0.2744
+    },
+    {
+      "y": 0.6824,
+      "strength": 0.221
+    },
+    {
+      "y": 0.7529,
+      "strength": 0.3083
+    },
+    {
+      "y": 0.9059,
+      "strength": 0.2745
+    },
+    {
+      "y": 0.9529,
+      "strength": 0.3697
+    }
+  ],
+  "regions": [
+    {
+      "id": "logo",
+      "kind": "chrome",
+      "note": "reranker logo lockup from the existing brand SVG file",
+      "grid": "A0:B0",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0.2,
+        "h": 0.1
+      },
+      "px": {
+        "x": 0,
+        "y": 0,
+        "w": 307,
+        "h": 102
+      },
+      "aspect": 3.0098,
+      "palette": [
+        {
+          "hex": "#f8f8f8",
+          "coverage": 0.9554
+        },
+        {
+          "hex": "#08110f",
+          "coverage": 0.0291
+        },
+        {
+          "hex": "#087057",
+          "coverage": 0.0098
+        },
+        {
+          "hex": "#2b3838",
+          "coverage": 0.0029
+        },
+        {
+          "hex": "#75827e",
+          "coverage": 0.0029
+        }
+      ],
+      "detail": {
+        "energy": 14.6437
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "nav-links",
+      "kind": "text",
+      "note": "nav links Cómo funciona, Precios, Para agencias",
+      "grid": "D0:G0",
+      "coverBox": {
+        "x": 0.3,
+        "y": 0,
+        "w": 0.4,
+        "h": 0.1
+      },
+      "box": {
+        "x": 0.5267,
+        "y": 0.0176,
+        "w": 0.0703,
+        "h": 0.0352
+      },
+      "px": {
+        "x": 809,
+        "y": 18,
+        "w": 108,
+        "h": 36
+      },
+      "aspect": 3,
+      "palette": [
+        {
+          "hex": "#f8f8f7",
+          "coverage": 0.8364
+        },
+        {
+          "hex": "#3d4142",
+          "coverage": 0.0654
+        },
+        {
+          "hex": "#c4c8c4",
+          "coverage": 0.0421
+        },
+        {
+          "hex": "#7c7c7c",
+          "coverage": 0.0374
+        },
+        {
+          "hex": "#1c2024",
+          "coverage": 0.0187
+        }
+      ],
+      "detail": {
+        "energy": 21.5857
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "type": {
+        "comp": {
+          "lines": 1,
+          "glyphs": 11,
+          "capHeightPx": 12.4,
+          "inkIsDark": true,
+          "allCaps": false,
+          "advance": 0.5624,
+          "advTall": 0.3816,
+          "advX": 0.5624,
+          "gap": 0.1205,
+          "xRatio": 0.7006,
+          "stemW": 0.1763,
+          "contrast": 1.1752,
+          "serif": 0.4096,
+          "densTall": 0.6659,
+          "densX": 0.6173,
+          "weight": 0.6659
+        },
+        "widthClass": "condensed",
+        "weightClass": "black"
+      }
+    },
+    {
+      "id": "nav-login",
+      "kind": "text",
+      "note": "nav link Ingresar",
+      "grid": "H0:I0",
+      "coverBox": {
+        "x": 0.7,
+        "y": 0,
+        "w": 0.2,
+        "h": 0.1
+      },
+      "box": {
+        "x": 0.8405,
+        "y": 0,
+        "w": 0.0592,
+        "h": 0.0645
+      },
+      "px": {
+        "x": 1291,
+        "y": 0,
+        "w": 91,
+        "h": 66
+      },
+      "aspect": 1.3788,
+      "palette": [
+        {
+          "hex": "#08584a",
+          "coverage": 0.5228
+        },
+        {
+          "hex": "#f7f8f8",
+          "coverage": 0.4244
+        },
+        {
+          "hex": "#a8c5c2",
+          "coverage": 0.025
+        },
+        {
+          "hex": "#5f988b",
+          "coverage": 0.0162
+        },
+        {
+          "hex": "#387876",
+          "coverage": 0.0117
+        }
+      ],
+      "detail": {
+        "energy": 11.8542
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "type": {
+        "comp": null,
+        "measuredAt": "2026-11-04T17:23:36.992Z",
+        "note": "no separable lettering in the crop; size by the region box"
+      }
+    },
+    {
+      "id": "nav-cta",
+      "kind": "control",
+      "note": "green pill button Ver qué dice la IA",
+      "grid": "I0:J0",
+      "coverBox": {
+        "x": 0.8,
+        "y": 0,
+        "w": 0.2,
+        "h": 0.1
+      },
+      "box": {
+        "x": 0.8392,
+        "y": 0,
+        "w": 0.125,
+        "h": 0.0645
+      },
+      "px": {
+        "x": 1289,
+        "y": 0,
+        "w": 192,
+        "h": 66
+      },
+      "aspect": 2.9091,
+      "palette": [
+        {
+          "hex": "#09584a",
+          "coverage": 0.537
+        },
+        {
+          "hex": "#f7f8f7",
+          "coverage": 0.4217
+        },
+        {
+          "hex": "#aecec7",
+          "coverage": 0.0235
+        },
+        {
+          "hex": "#78a59f",
+          "coverage": 0.01
+        },
+        {
+          "hex": "#52857e",
+          "coverage": 0.0078
+        }
+      ],
+      "detail": {
+        "energy": 23.6048
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "h1-line1",
+      "kind": "text",
+      "note": "headline line one Tus clientes le preguntan a",
+      "grid": "B1:F1",
+      "coverBox": {
+        "x": 0.1,
+        "y": 0.1,
+        "w": 0.5,
+        "h": 0.1
+      },
+      "box": {
+        "x": 0.1237,
+        "y": 0.1348,
+        "w": 0.4766,
+        "h": 0.0645
+      },
+      "px": {
+        "x": 190,
+        "y": 138,
+        "w": 732,
+        "h": 66
+      },
+      "aspect": 11.0909,
+      "palette": [
+        {
+          "hex": "#f7f7f6",
+          "coverage": 0.6727
+        },
+        {
+          "hex": "#08100f",
+          "coverage": 0.2729
+        },
+        {
+          "hex": "#3e4a49",
+          "coverage": 0.0262
+        },
+        {
+          "hex": "#8f9795",
+          "coverage": 0.0164
+        },
+        {
+          "hex": "#bfc3be",
+          "coverage": 0.0119
+        }
+      ],
+      "detail": {
+        "energy": 104.2192
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "type": {
+        "comp": {
+          "lines": 1,
+          "glyphs": 19,
+          "capHeightPx": 44.2,
+          "inkIsDark": true,
+          "allCaps": false,
+          "advance": 0.7014,
+          "advTall": 0.5882,
+          "advX": 0.7014,
+          "gap": 0.0679,
+          "xRatio": 0.7123,
+          "stemW": 0.2432,
+          "contrast": 1.2595,
+          "serif": 0.8585,
+          "densTall": 0.5474,
+          "densX": 0.7044,
+          "weight": 0.5474
+        },
+        "widthClass": "normal",
+        "weightClass": "medium",
+        "chosen": {
+          "family": "Encode Sans Expanded",
+          "weight": 700,
+          "fontSizePx": 63,
+          "source": "catalog",
+          "estimatedSize": true,
+          "stamp": "622f02303704"
+        }
+      }
+    },
+    {
+      "id": "h1-pill",
+      "kind": "control",
+      "note": "white rounded pill with ChatGPT knot icon and the word ChatGPT, rotating engine",
+      "grid": "G1:I1",
+      "coverBox": {
+        "x": 0.6,
+        "y": 0.1,
+        "w": 0.3,
+        "h": 0.1
+      },
+      "box": {
+        "x": 0.6393,
+        "y": 0.123,
+        "w": 0.2227,
+        "h": 0.0762
+      },
+      "px": {
+        "x": 982,
+        "y": 126,
+        "w": 342,
+        "h": 78
+      },
+      "aspect": 4.3846,
+      "palette": [
+        {
+          "hex": "#f8f8f8",
+          "coverage": 0.7077
+        },
+        {
+          "hex": "#080a0a",
+          "coverage": 0.2401
+        },
+        {
+          "hex": "#c4c5c5",
+          "coverage": 0.0234
+        },
+        {
+          "hex": "#3a3e3d",
+          "coverage": 0.018
+        },
+        {
+          "hex": "#7e7f7f",
+          "coverage": 0.0109
+        }
+      ],
+      "detail": {
+        "energy": 61.6449
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "h1-line2",
+      "kind": "text",
+      "note": "headline line two Que salgas tú.",
+      "grid": "D2:G2",
+      "coverBox": {
+        "x": 0.3,
+        "y": 0.2,
+        "w": 0.4,
+        "h": 0.1
+      },
+      "box": {
+        "x": 0.3626,
+        "y": 0.2002,
+        "w": 0.2773,
+        "h": 0.082
+      },
+      "px": {
+        "x": 557,
+        "y": 205,
+        "w": 426,
+        "h": 84
+      },
+      "aspect": 5.0714,
+      "palette": [
+        {
+          "hex": "#f8f8f7",
+          "coverage": 0.7269
+        },
+        {
+          "hex": "#091110",
+          "coverage": 0.2343
+        },
+        {
+          "hex": "#394642",
+          "coverage": 0.0155
+        },
+        {
+          "hex": "#acb0af",
+          "coverage": 0.0122
+        },
+        {
+          "hex": "#6f7775",
+          "coverage": 0.0112
+        }
+      ],
+      "detail": {
+        "energy": 54.5338
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "type": {
+        "comp": {
+          "lines": 1,
+          "glyphs": 11,
+          "capHeightPx": 47,
+          "inkIsDark": true,
+          "allCaps": false,
+          "advance": 0.6596,
+          "advTall": 0.6277,
+          "advX": 0.6596,
+          "gap": 0.0851,
+          "xRatio": 0.7021,
+          "stemW": 0.2398,
+          "contrast": 1.2747,
+          "serif": null,
+          "densTall": 0.5725,
+          "densX": 0.7213,
+          "weight": 0.5725
+        },
+        "widthClass": "normal",
+        "weightClass": "bold",
+        "chosen": {
+          "family": "Suez One",
+          "weight": 400,
+          "fontSizePx": 67,
+          "source": "catalog",
+          "estimatedSize": true,
+          "stamp": "cdaecc2e5054"
+        }
+      }
+    },
+    {
+      "id": "subtitle",
+      "kind": "text",
+      "note": "subtitle Te mostramos a quién recomiendan ChatGPT, Gemini y Google...",
+      "grid": "B3:I3",
+      "coverBox": {
+        "x": 0.1,
+        "y": 0.3,
+        "w": 0.8,
+        "h": 0.1
+      },
+      "box": {
+        "x": 0.6237,
+        "y": 0.3525,
+        "w": 0.1445,
+        "h": 0.0469
+      },
+      "px": {
+        "x": 958,
+        "y": 361,
+        "w": 222,
+        "h": 48
+      },
+      "aspect": 4.625,
+      "palette": [
+        {
+          "hex": "#09584b",
+          "coverage": 0.6577
+        },
+        {
+          "hex": "#f7f8f8",
+          "coverage": 0.2975
+        },
+        {
+          "hex": "#a1c2be",
+          "coverage": 0.0245
+        },
+        {
+          "hex": "#4d897e",
+          "coverage": 0.0186
+        },
+        {
+          "hex": "#d0e8d8",
+          "coverage": 0.0017
+        }
+      ],
+      "detail": {
+        "energy": 31.3605
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "type": {
+        "comp": null,
+        "measuredAt": "2026-11-04T17:23:37.109Z",
+        "note": "no separable lettering in the crop; size by the region box"
+      }
+    },
+    {
+      "id": "input",
+      "kind": "control",
+      "note": "wide white input bar with search icon and placeholder Nombre de tu negocio",
+      "grid": "C3:H4",
+      "coverBox": {
+        "x": 0.2,
+        "y": 0.3,
+        "w": 0.6,
+        "h": 0.2
+      },
+      "box": {
+        "x": 0.6217,
+        "y": 0.3525,
+        "w": 0.1484,
+        "h": 0.0703
+      },
+      "px": {
+        "x": 955,
+        "y": 361,
+        "w": 228,
+        "h": 72
+      },
+      "aspect": 3.1667,
+      "palette": [
+        {
+          "hex": "#09594a",
+          "coverage": 0.5763
+        },
+        {
+          "hex": "#f7f8f7",
+          "coverage": 0.3628
+        },
+        {
+          "hex": "#659691",
+          "coverage": 0.0439
+        },
+        {
+          "hex": "#a1c2be",
+          "coverage": 0.0159
+        },
+        {
+          "hex": "#d0e8d8",
+          "coverage": 0.0011
+        }
+      ],
+      "detail": {
+        "energy": 25.9447
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "input-btn",
+      "kind": "control",
+      "note": "green button inside input Ver qué dice la IA arrow",
+      "grid": "G3:H4",
+      "coverBox": {
+        "x": 0.6,
+        "y": 0.3,
+        "w": 0.2,
+        "h": 0.2
+      },
+      "box": {
+        "x": 0.6237,
+        "y": 0.3525,
+        "w": 0.1445,
+        "h": 0.0703
+      },
+      "px": {
+        "x": 958,
+        "y": 361,
+        "w": 222,
+        "h": 72
+      },
+      "aspect": 3.0833,
+      "palette": [
+        {
+          "hex": "#09594a",
+          "coverage": 0.5919
+        },
+        {
+          "hex": "#f7f8f8",
+          "coverage": 0.3455
+        },
+        {
+          "hex": "#659691",
+          "coverage": 0.0451
+        },
+        {
+          "hex": "#a1c2be",
+          "coverage": 0.0163
+        },
+        {
+          "hex": "#d0e8d8",
+          "coverage": 0.0011
+        }
+      ],
+      "detail": {
+        "energy": 26.0234
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "city-chip",
+      "kind": "control",
+      "note": "light green chip with pin icon Buscando en Medellín and chevron",
+      "grid": "E4:F4",
+      "coverBox": {
+        "x": 0.4,
+        "y": 0.4,
+        "w": 0.2,
+        "h": 0.1
+      },
+      "box": {
+        "x": 0.431,
+        "y": 0.4414,
+        "w": 0.1328,
+        "h": 0.0352
+      },
+      "px": {
+        "x": 662,
+        "y": 452,
+        "w": 204,
+        "h": 36
+      },
+      "aspect": 5.6667,
+      "palette": [
+        {
+          "hex": "#e1eae3",
+          "coverage": 0.864
+        },
+        {
+          "hex": "#0f2a25",
+          "coverage": 0.0655
+        },
+        {
+          "hex": "#3d5c52",
+          "coverage": 0.0445
+        },
+        {
+          "hex": "#adc7ba",
+          "coverage": 0.0161
+        },
+        {
+          "hex": "#88a298",
+          "coverage": 0.0099
+        }
+      ],
+      "detail": {
+        "energy": 33.5792
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "microcopy",
+      "kind": "text",
+      "note": "small muted line Gratis · Sin registro ni tarjeta · Resultado en menos de 2 minutos",
+      "grid": "D5:G5",
+      "coverBox": {
+        "x": 0.3,
+        "y": 0.5,
+        "w": 0.4,
+        "h": 0.1
+      },
+      "box": {
+        "x": 0.3509,
+        "y": 0.5,
+        "w": 0.2969,
+        "h": 0.0176
+      },
+      "px": {
+        "x": 539,
+        "y": 512,
+        "w": 456,
+        "h": 18
+      },
+      "aspect": 25.3333,
+      "palette": [
+        {
+          "hex": "#f6f6f5",
+          "coverage": 0.8673
+        },
+        {
+          "hex": "#b4b7b9",
+          "coverage": 0.068
+        },
+        {
+          "hex": "#787d83",
+          "coverage": 0.0636
+        },
+        {
+          "hex": "#585868",
+          "coverage": 0.0011
+        }
+      ],
+      "detail": {
+        "energy": 32.1423
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "type": {
+        "comp": {
+          "lines": 1,
+          "glyphs": 62,
+          "capHeightPx": 6.3,
+          "inkIsDark": true,
+          "allCaps": true,
+          "advance": 0.32,
+          "advTall": 0.32,
+          "advX": null,
+          "gap": 0.24,
+          "xRatio": null,
+          "stemW": 0.3136,
+          "contrast": 1.212,
+          "serif": 0.5336,
+          "densTall": 0.872,
+          "densX": null,
+          "weight": 0.872
+        },
+        "widthClass": "compressed",
+        "weightClass": "black"
+      }
+    },
+    {
+      "id": "chat-window",
+      "kind": "chrome",
+      "note": "large white rounded chat window frame with hairline border",
+      "grid": "A5:I9",
+      "container": true,
+      "box": {
+        "x": 0,
+        "y": 0.5,
+        "w": 0.9,
+        "h": 0.5
+      },
+      "px": {
+        "x": 0,
+        "y": 512,
+        "w": 1382,
+        "h": 512
+      },
+      "aspect": 2.6992,
+      "palette": [
+        {
+          "hex": "#f8f7f6",
+          "coverage": 0.9738
+        },
+        {
+          "hex": "#08594b",
+          "coverage": 0.0177
+        },
+        {
+          "hex": "#0b0e1a",
+          "coverage": 0.0032
+        },
+        {
+          "hex": "#273040",
+          "coverage": 0.0027
+        },
+        {
+          "hex": "#b9b9c1",
+          "coverage": 0.0026
+        }
+      ],
+      "detail": {
+        "energy": 11.8177
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "chat-header",
+      "kind": "text",
+      "note": "window title Así le responde la IA a tus clientes · Ejemplo",
+      "grid": "A5:D5",
+      "coverBox": {
+        "x": 0,
+        "y": 0.5,
+        "w": 0.4,
+        "h": 0.1
+      },
+      "box": {
+        "x": 0.0898,
+        "y": 0.5645,
+        "w": 0.2383,
+        "h": 0.0352
+      },
+      "px": {
+        "x": 138,
+        "y": 578,
+        "w": 366,
+        "h": 36
+      },
+      "aspect": 10.1667,
+      "palette": [
+        {
+          "hex": "#f7f8f8",
+          "coverage": 0.8791
+        },
+        {
+          "hex": "#090d16",
+          "coverage": 0.0396
+        },
+        {
+          "hex": "#303642",
+          "coverage": 0.0375
+        },
+        {
+          "hex": "#949aa2",
+          "coverage": 0.0271
+        },
+        {
+          "hex": "#bfc3c9",
+          "coverage": 0.0167
+        }
+      ],
+      "detail": {
+        "energy": 61.0931
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "type": {
+        "comp": {
+          "lines": 1,
+          "glyphs": 37,
+          "capHeightPx": 13.6,
+          "inkIsDark": true,
+          "allCaps": false,
+          "advance": 0.5867,
+          "advTall": 0.1833,
+          "advX": 0.6234,
+          "gap": 0.11,
+          "xRatio": 0.7181,
+          "stemW": 0.1746,
+          "contrast": 1.0912,
+          "serif": 0.5022,
+          "densTall": 0.7973,
+          "densX": 0.6174,
+          "weight": 0.7973
+        },
+        "widthClass": "normal",
+        "weightClass": "black"
+      }
+    },
+    {
+      "id": "chat-dots",
+      "kind": "chrome",
+      "note": "three small window dots red yellow green",
+      "grid": "I5:I5",
+      "box": {
+        "x": 0.8,
+        "y": 0.5,
+        "w": 0.1,
+        "h": 0.1
+      },
+      "px": {
+        "x": 1229,
+        "y": 512,
+        "w": 154,
+        "h": 102
+      },
+      "aspect": 1.5098,
+      "palette": [
+        {
+          "hex": "#f8f8f6",
+          "coverage": 0.9767
+        },
+        {
+          "hex": "#4ab147",
+          "coverage": 0.0074
+        },
+        {
+          "hex": "#f8c84c",
+          "coverage": 0.0074
+        },
+        {
+          "hex": "#f86968",
+          "coverage": 0.0063
+        },
+        {
+          "hex": "#f89898",
+          "coverage": 0.0023
+        }
+      ],
+      "detail": {
+        "energy": 1.9704
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "q-bubble",
+      "kind": "text",
+      "note": "customer question bubble light grey ¿Qué abogado de inmigración me recomiendas en Medellín?",
+      "grid": "E6:H6",
+      "coverBox": {
+        "x": 0.4,
+        "y": 0.6,
+        "w": 0.4,
+        "h": 0.1
+      },
+      "box": {
+        "x": 0.4935,
+        "y": 0.6582,
+        "w": 0.306,
+        "h": 0.0293
+      },
+      "px": {
+        "x": 758,
+        "y": 674,
+        "w": 470,
+        "h": 30
+      },
+      "aspect": 15.6667,
+      "palette": [
+        {
+          "hex": "#f4f4f7",
+          "coverage": 0.8329
+        },
+        {
+          "hex": "#a8adb5",
+          "coverage": 0.0653
+        },
+        {
+          "hex": "#1e2735",
+          "coverage": 0.0519
+        },
+        {
+          "hex": "#727882",
+          "coverage": 0.0269
+        },
+        {
+          "hex": "#484f5f",
+          "coverage": 0.023
+        }
+      ],
+      "detail": {
+        "energy": 57.1897
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "type": {
+        "comp": {
+          "lines": 1,
+          "glyphs": 48,
+          "capHeightPx": 14,
+          "inkIsDark": true,
+          "allCaps": false,
+          "advance": 0.5721,
+          "advTall": 0.4827,
+          "advX": 0.5721,
+          "gap": 0.1073,
+          "xRatio": 0.6976,
+          "stemW": 0.1473,
+          "contrast": 1.0434,
+          "serif": 0.487,
+          "densTall": 0.492,
+          "densX": 0.537,
+          "weight": 0.492
+        },
+        "widthClass": "condensed",
+        "weightClass": "medium"
+      }
+    },
+    {
+      "id": "q-avatar",
+      "kind": "chrome",
+      "note": "small grey round user avatar icon",
+      "grid": "I6:I6",
+      "box": {
+        "x": 0.8,
+        "y": 0.6,
+        "w": 0.1,
+        "h": 0.1
+      },
+      "px": {
+        "x": 1229,
+        "y": 614,
+        "w": 154,
+        "h": 102
+      },
+      "aspect": 1.5098,
+      "palette": [
+        {
+          "hex": "#f6f6f5",
+          "coverage": 0.9671
+        },
+        {
+          "hex": "#6f777e",
+          "coverage": 0.0159
+        },
+        {
+          "hex": "#0d111d",
+          "coverage": 0.0074
+        },
+        {
+          "hex": "#aaadb3",
+          "coverage": 0.0057
+        },
+        {
+          "hex": "#414656",
+          "coverage": 0.004
+        }
+      ],
+      "detail": {
+        "energy": 6.6553
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "ai-avatar",
+      "kind": "chrome",
+      "note": "round light avatar with ChatGPT knot icon",
+      "grid": "B7:B7",
+      "box": {
+        "x": 0.1,
+        "y": 0.7,
+        "w": 0.1,
+        "h": 0.1
+      },
+      "px": {
+        "x": 154,
+        "y": 717,
+        "w": 154,
+        "h": 102
+      },
+      "aspect": 1.5098,
+      "palette": [
+        {
+          "hex": "#f8f8f8",
+          "coverage": 0.9402
+        },
+        {
+          "hex": "#0e0e11",
+          "coverage": 0.0273
+        },
+        {
+          "hex": "#84868a",
+          "coverage": 0.0148
+        },
+        {
+          "hex": "#c0c0c2",
+          "coverage": 0.0103
+        },
+        {
+          "hex": "#323944",
+          "coverage": 0.0074
+        }
+      ],
+      "detail": {
+        "energy": 13.4902
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "ai-answer",
+      "kind": "text",
+      "note": "answer bubble Te recomiendo tres firmas: Ruiz & Asociados, Visa Legal Medellín y... with typing cursor",
+      "grid": "B7:F7",
+      "coverBox": {
+        "x": 0.1,
+        "y": 0.7,
+        "w": 0.5,
+        "h": 0.1
+      },
+      "box": {
+        "x": 0.1667,
+        "y": 0.7412,
+        "w": 0.3672,
+        "h": 0.0352
+      },
+      "px": {
+        "x": 256,
+        "y": 759,
+        "w": 564,
+        "h": 36
+      },
+      "aspect": 15.6667,
+      "palette": [
+        {
+          "hex": "#f7f7f7",
+          "coverage": 0.854
+        },
+        {
+          "hex": "#717782",
+          "coverage": 0.0414
+        },
+        {
+          "hex": "#13192b",
+          "coverage": 0.0378
+        },
+        {
+          "hex": "#aab0b6",
+          "coverage": 0.0338
+        },
+        {
+          "hex": "#414855",
+          "coverage": 0.0329
+        }
+      ],
+      "detail": {
+        "energy": 51.8536
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "type": {
+        "comp": {
+          "lines": 1,
+          "glyphs": 54,
+          "capHeightPx": 14.6,
+          "inkIsDark": true,
+          "allCaps": false,
+          "advance": 0.5462,
+          "advTall": 0.3414,
+          "advX": 0.5462,
+          "gap": 0.1024,
+          "xRatio": 0.6987,
+          "stemW": 0.1483,
+          "contrast": 1.0444,
+          "serif": 0.3596,
+          "densTall": 0.5534,
+          "densX": 0.5689,
+          "weight": 0.5534
+        },
+        "widthClass": "condensed",
+        "weightClass": "medium"
+      }
+    },
+    {
+      "id": "typing-dots",
+      "kind": "chrome",
+      "note": "three small grey typing dots",
+      "grid": "B8:C8",
+      "box": {
+        "x": 0.1,
+        "y": 0.8,
+        "w": 0.2,
+        "h": 0.1
+      },
+      "px": {
+        "x": 154,
+        "y": 819,
+        "w": 307,
+        "h": 102
+      },
+      "aspect": 3.0098,
+      "palette": [
+        {
+          "hex": "#f8f8f8",
+          "coverage": 0.998
+        },
+        {
+          "hex": "#bfbfc8",
+          "coverage": 0.002
+        }
+      ],
+      "detail": {
+        "energy": 1.1533
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "arrow-buscan",
+      "kind": "plate",
+      "note": "hand-drawn ink curved arrow pointing left to the question bubble",
+      "grid": "I6:J6",
+      "box": {
+        "x": 0.8,
+        "y": 0.6,
+        "w": 0.2,
+        "h": 0.1
+      },
+      "px": {
+        "x": 1229,
+        "y": 614,
+        "w": 307,
+        "h": 102
+      },
+      "aspect": 3.0098,
+      "palette": [
+        {
+          "hex": "#f7f7f6",
+          "coverage": 0.9695
+        },
+        {
+          "hex": "#0f1320",
+          "coverage": 0.0109
+        },
+        {
+          "hex": "#70777d",
+          "coverage": 0.0103
+        },
+        {
+          "hex": "#a6a7ad",
+          "coverage": 0.006
+        },
+        {
+          "hex": "#344141",
+          "coverage": 0.0032
+        }
+      ],
+      "detail": {
+        "energy": 15.2155
+      },
+      "medium": "raster",
+      "plate": "assets/plates/arrow-buscan.png",
+      "text": null
+    },
+    {
+      "id": "annot-buscan",
+      "kind": "text",
+      "note": "handwritten annotation Así te buscan",
+      "grid": "I6:J6",
+      "coverBox": {
+        "x": 0.8,
+        "y": 0.6,
+        "w": 0.2,
+        "h": 0.1
+      },
+      "box": {
+        "x": 0.8548,
+        "y": 0.5996,
+        "w": 0.125,
+        "h": 0.0938
+      },
+      "px": {
+        "x": 1313,
+        "y": 614,
+        "w": 192,
+        "h": 96
+      },
+      "aspect": 2,
+      "palette": [
+        {
+          "hex": "#f8f8f6",
+          "coverage": 0.9634
+        },
+        {
+          "hex": "#0f1320",
+          "coverage": 0.0188
+        },
+        {
+          "hex": "#a8aaac",
+          "coverage": 0.0079
+        },
+        {
+          "hex": "#344141",
+          "coverage": 0.0054
+        },
+        {
+          "hex": "#3c3f4f",
+          "coverage": 0.0045
+        }
+      ],
+      "detail": {
+        "energy": 15.3974
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "type": {
+        "comp": {
+          "lines": 1,
+          "glyphs": 6,
+          "capHeightPx": 18.7,
+          "inkIsDark": true,
+          "allCaps": false,
+          "advance": null,
+          "advTall": null,
+          "advX": null,
+          "gap": 0.0892,
+          "xRatio": 0.6552,
+          "stemW": 0.1157,
+          "contrast": 0.9596,
+          "serif": null,
+          "densTall": null,
+          "densX": null,
+          "weight": null
+        },
+        "widthClass": "normal",
+        "weightClass": "regular"
+      }
+    },
+    {
+      "id": "arrow-apareces",
+      "kind": "plate",
+      "note": "long hand-drawn ink curved arrow pointing left to the answer bubble",
+      "grid": "F7:J7",
+      "box": {
+        "x": 0.5,
+        "y": 0.7,
+        "w": 0.5,
+        "h": 0.1
+      },
+      "px": {
+        "x": 768,
+        "y": 717,
+        "w": 768,
+        "h": 102
+      },
+      "aspect": 7.5294,
+      "palette": [
+        {
+          "hex": "#f8f8f7",
+          "coverage": 0.9777
+        },
+        {
+          "hex": "#0d1120",
+          "coverage": 0.011
+        },
+        {
+          "hex": "#484b58",
+          "coverage": 0.0042
+        },
+        {
+          "hex": "#a0a8b0",
+          "coverage": 0.004
+        },
+        {
+          "hex": "#70737d",
+          "coverage": 0.0031
+        }
+      ],
+      "detail": {
+        "energy": 13.5837
+      },
+      "medium": "raster",
+      "plate": "assets/plates/arrow-apareces.png",
+      "text": null
+    },
+    {
+      "id": "annot-apareces",
+      "kind": "text",
+      "note": "handwritten annotation Aquí no apareces",
+      "grid": "I7:J7",
+      "coverBox": {
+        "x": 0.8,
+        "y": 0.7,
+        "w": 0.2,
+        "h": 0.1
+      },
+      "box": {
+        "x": 0.8822,
+        "y": 0.7236,
+        "w": 0.0977,
+        "h": 0.0586
+      },
+      "px": {
+        "x": 1355,
+        "y": 741,
+        "w": 150,
+        "h": 60
+      },
+      "aspect": 2.5,
+      "palette": [
+        {
+          "hex": "#f8f8f6",
+          "coverage": 0.9246
+        },
+        {
+          "hex": "#0c101f",
+          "coverage": 0.0402
+        },
+        {
+          "hex": "#a7aeb3",
+          "coverage": 0.0171
+        },
+        {
+          "hex": "#4f5561",
+          "coverage": 0.0111
+        },
+        {
+          "hex": "#737d7f",
+          "coverage": 0.007
+        }
+      ],
+      "detail": {
+        "energy": 19.872
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "type": {
+        "comp": {
+          "lines": 1,
+          "glyphs": 8,
+          "capHeightPx": 29,
+          "inkIsDark": true,
+          "allCaps": true,
+          "advance": 0.2589,
+          "advTall": null,
+          "advX": null,
+          "gap": 0.2071,
+          "xRatio": null,
+          "stemW": 0.066,
+          "contrast": 0.7488,
+          "serif": null,
+          "densTall": null,
+          "densX": null,
+          "weight": null
+        },
+        "widthClass": "compressed",
+        "weightClass": "light"
+      }
+    },
+    {
+      "id": "card",
+      "kind": "chrome",
+      "note": "white Reranker proposal card with soft shadow overlapping the chat window",
+      "grid": "G8:J9",
+      "container": true,
+      "box": {
+        "x": 0.6,
+        "y": 0.8,
+        "w": 0.4,
+        "h": 0.2
+      },
+      "px": {
+        "x": 922,
+        "y": 819,
+        "w": 614,
+        "h": 205
+      },
+      "aspect": 2.9951,
+      "palette": [
+        {
+          "hex": "#f7f6f4",
+          "coverage": 0.8832
+        },
+        {
+          "hex": "#085849",
+          "coverage": 0.1019
+        },
+        {
+          "hex": "#c2c7ca",
+          "coverage": 0.0054
+        },
+        {
+          "hex": "#f8b842",
+          "coverage": 0.0048
+        },
+        {
+          "hex": "#242e3c",
+          "coverage": 0.0048
+        }
+      ],
+      "detail": {
+        "energy": 16.5775
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "card-icon",
+      "kind": "chrome",
+      "note": "round light badge with green stepped r symbol",
+      "grid": "G8:G8",
+      "box": {
+        "x": 0.6,
+        "y": 0.8,
+        "w": 0.1,
+        "h": 0.1
+      },
+      "px": {
+        "x": 922,
+        "y": 819,
+        "w": 154,
+        "h": 102
+      },
+      "aspect": 1.5098,
+      "palette": [
+        {
+          "hex": "#f8f8f8",
+          "coverage": 0.9427
+        },
+        {
+          "hex": "#0c6a53",
+          "coverage": 0.0292
+        },
+        {
+          "hex": "#bbc3c7",
+          "coverage": 0.0138
+        },
+        {
+          "hex": "#585b69",
+          "coverage": 0.0086
+        },
+        {
+          "hex": "#0a0d1b",
+          "coverage": 0.0057
+        }
+      ],
+      "detail": {
+        "energy": 10.4361
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "card-text",
+      "kind": "text",
+      "note": "Propuesta: agrega abogado de inmigración a tu perfil de Google",
+      "grid": "H8:I8",
+      "coverBox": {
+        "x": 0.7,
+        "y": 0.8,
+        "w": 0.2,
+        "h": 0.1
+      },
+      "box": {
+        "x": 0.6999,
+        "y": 0.8291,
+        "w": 0.1914,
+        "h": 0.0586
+      },
+      "px": {
+        "x": 1075,
+        "y": 849,
+        "w": 294,
+        "h": 60
+      },
+      "aspect": 4.9,
+      "palette": [
+        {
+          "hex": "#f8f8f8",
+          "coverage": 0.8814
+        },
+        {
+          "hex": "#232b38",
+          "coverage": 0.0338
+        },
+        {
+          "hex": "#c3c7cc",
+          "coverage": 0.0328
+        },
+        {
+          "hex": "#525664",
+          "coverage": 0.027
+        },
+        {
+          "hex": "#979aa6",
+          "coverage": 0.025
+        }
+      ],
+      "detail": {
+        "energy": 42.8003
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "type": {
+        "comp": {
+          "lines": 2,
+          "glyphs": 42,
+          "capHeightPx": 13.6,
+          "inkIsDark": true,
+          "allCaps": false,
+          "advance": 0.5901,
+          "advTall": 0.5147,
+          "advX": 0.5901,
+          "gap": 0.1101,
+          "xRatio": 0.6911,
+          "stemW": 0.1568,
+          "contrast": 1.0618,
+          "serif": 0.505,
+          "densTall": 0.5137,
+          "densX": 0.6027,
+          "weight": 0.5137
+        },
+        "widthClass": "normal",
+        "weightClass": "medium"
+      }
+    },
+    {
+      "id": "card-alert",
+      "kind": "chrome",
+      "note": "small amber circle with exclamation mark",
+      "grid": "J8:J8",
+      "box": {
+        "x": 0.9,
+        "y": 0.8,
+        "w": 0.1,
+        "h": 0.1
+      },
+      "px": {
+        "x": 1382,
+        "y": 819,
+        "w": 154,
+        "h": 102
+      },
+      "aspect": 1.5098,
+      "palette": [
+        {
+          "hex": "#f8f8f6",
+          "coverage": 0.9536
+        },
+        {
+          "hex": "#f8b842",
+          "coverage": 0.0413
+        },
+        {
+          "hex": "#f8d480",
+          "coverage": 0.0045
+        },
+        {
+          "hex": "#f8e8a8",
+          "coverage": 0.0006
+        }
+      ],
+      "detail": {
+        "energy": 1.602
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "btn-aprobar",
+      "kind": "control",
+      "note": "green button Aprobar",
+      "grid": "G9:H9",
+      "coverBox": {
+        "x": 0.6,
+        "y": 0.9,
+        "w": 0.2,
+        "h": 0.1
+      },
+      "box": {
+        "x": 0.6081,
+        "y": 0.9004,
+        "w": 0.1797,
+        "h": 0.0586
+      },
+      "px": {
+        "x": 934,
+        "y": 922,
+        "w": 276,
+        "h": 60
+      },
+      "aspect": 4.6,
+      "palette": [
+        {
+          "hex": "#085849",
+          "coverage": 0.7526
+        },
+        {
+          "hex": "#f7f8f8",
+          "coverage": 0.1843
+        },
+        {
+          "hex": "#a4c1bc",
+          "coverage": 0.0517
+        },
+        {
+          "hex": "#4e8780",
+          "coverage": 0.0109
+        },
+        {
+          "hex": "#083838",
+          "coverage": 0.0005
+        }
+      ],
+      "detail": {
+        "energy": 18.5454
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "btn-ahora",
+      "kind": "control",
+      "note": "outlined ghost button Ahora no",
+      "grid": "I9:J9",
+      "coverBox": {
+        "x": 0.8,
+        "y": 0.9,
+        "w": 0.2,
+        "h": 0.1
+      },
+      "box": {
+        "x": 0.8392,
+        "y": 0.9121,
+        "w": 0.0547,
+        "h": 0.0293
+      },
+      "px": {
+        "x": 1289,
+        "y": 934,
+        "w": 84,
+        "h": 30
+      },
+      "aspect": 2.8,
+      "palette": [
+        {
+          "hex": "#f8f8f8",
+          "coverage": 0.8566
+        },
+        {
+          "hex": "#b5b5c1",
+          "coverage": 0.0573
+        },
+        {
+          "hex": "#232b37",
+          "coverage": 0.043
+        },
+        {
+          "hex": "#5e6171",
+          "coverage": 0.0394
+        },
+        {
+          "hex": "#384848",
+          "coverage": 0.0036
+        }
+      ],
+      "detail": {
+        "energy": 17.8025
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    }
+  ]
+}

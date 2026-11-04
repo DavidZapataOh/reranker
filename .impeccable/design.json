@@ -1,0 +1,391 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-04T18:07:05.031041+00:00",
+  "title": "Design System: Reranker",
+  "extensions": {
+    "colorMeta": {
+      "green": {
+        "role": "primary",
+        "displayName": "Verde verificado",
+        "canonical": "oklch(42.4% 0.081 167.3)",
+        "tonalRamp": [
+          "oklch(15% 0.081 167.3)",
+          "oklch(25% 0.081 167.3)",
+          "oklch(35% 0.081 167.3)",
+          "oklch(45% 0.081 167.3)",
+          "oklch(58% 0.081 167.3)",
+          "oklch(70% 0.081 167.3)",
+          "oklch(82% 0.081 167.3)",
+          "oklch(95% 0.081 167.3)"
+        ]
+      },
+      "green-deep": {
+        "role": "primary",
+        "displayName": "Verde hondo",
+        "canonical": "oklch(36.6% 0.069 167.3)",
+        "tonalRamp": [
+          "oklch(15% 0.069 167.3)",
+          "oklch(25% 0.069 167.3)",
+          "oklch(35% 0.069 167.3)",
+          "oklch(45% 0.069 167.3)",
+          "oklch(58% 0.069 167.3)",
+          "oklch(70% 0.069 167.3)",
+          "oklch(82% 0.069 167.3)",
+          "oklch(95% 0.069 167.3)"
+        ]
+      },
+      "green-light": {
+        "role": "primary",
+        "displayName": "Verde claro",
+        "canonical": "oklch(92.1% 0.033 142.5)",
+        "tonalRamp": [
+          "oklch(15% 0.033 142.5)",
+          "oklch(25% 0.033 142.5)",
+          "oklch(35% 0.033 142.5)",
+          "oklch(45% 0.033 142.5)",
+          "oklch(58% 0.033 142.5)",
+          "oklch(70% 0.033 142.5)",
+          "oklch(82% 0.033 142.5)",
+          "oklch(95% 0.033 142.5)"
+        ]
+      },
+      "amber": {
+        "role": "secondary",
+        "displayName": "Ámbar sello",
+        "canonical": "oklch(81.0% 0.144 79.3)",
+        "tonalRamp": [
+          "oklch(15% 0.144 79.3)",
+          "oklch(25% 0.144 79.3)",
+          "oklch(35% 0.144 79.3)",
+          "oklch(45% 0.144 79.3)",
+          "oklch(58% 0.144 79.3)",
+          "oklch(70% 0.144 79.3)",
+          "oklch(82% 0.144 79.3)",
+          "oklch(95% 0.120 79.3)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Papel",
+        "canonical": "oklch(97.7% 0.010 87.5)",
+        "tonalRamp": [
+          "oklch(15% 0.010 87.5)",
+          "oklch(25% 0.010 87.5)",
+          "oklch(35% 0.010 87.5)",
+          "oklch(45% 0.010 87.5)",
+          "oklch(58% 0.010 87.5)",
+          "oklch(70% 0.010 87.5)",
+          "oklch(82% 0.010 87.5)",
+          "oklch(95% 0.010 87.5)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Blanco superficie",
+        "canonical": "oklch(100.0% 0.000 89.9)",
+        "tonalRamp": [
+          "oklch(15% 0.000 89.9)",
+          "oklch(25% 0.000 89.9)",
+          "oklch(35% 0.000 89.9)",
+          "oklch(45% 0.000 89.9)",
+          "oklch(58% 0.000 89.9)",
+          "oklch(70% 0.000 89.9)",
+          "oklch(82% 0.000 89.9)",
+          "oklch(95% 0.000 89.9)"
+        ]
+      },
+      "bubble": {
+        "role": "neutral",
+        "displayName": "Burbuja",
+        "canonical": "oklch(96.0% 0.004 121.6)",
+        "tonalRamp": [
+          "oklch(15% 0.004 121.6)",
+          "oklch(25% 0.004 121.6)",
+          "oklch(35% 0.004 121.6)",
+          "oklch(45% 0.004 121.6)",
+          "oklch(58% 0.004 121.6)",
+          "oklch(70% 0.004 121.6)",
+          "oklch(82% 0.004 121.6)",
+          "oklch(95% 0.004 121.6)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Tinta",
+        "canonical": "oklch(23.3% 0.022 164.3)",
+        "tonalRamp": [
+          "oklch(15% 0.022 164.3)",
+          "oklch(25% 0.022 164.3)",
+          "oklch(35% 0.022 164.3)",
+          "oklch(45% 0.022 164.3)",
+          "oklch(58% 0.022 164.3)",
+          "oklch(70% 0.022 164.3)",
+          "oklch(82% 0.022 164.3)",
+          "oklch(95% 0.022 164.3)"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Tinta suave",
+        "canonical": "#14211bb3"
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Línea",
+        "canonical": "#14211b14"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Solo el H1 del hero, con la píldora de motor en línea."
+      },
+      "statement": {
+        "displayName": "Statement",
+        "purpose": "Frase-tesis a toda anchura con resaltador en el remate."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "H2 de sección."
+      },
+      "numeral": {
+        "displayName": "Numeral",
+        "purpose": "Puntaje y precios, tabulares."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Títulos de tarjeta, pasos y criterios."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Texto corrido."
+      },
+      "lede": {
+        "displayName": "Lede",
+        "purpose": "Bajada de sección, 56ch máx., tinta al 75 %."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Botones, chips y nombres."
+      },
+      "evidence": {
+        "displayName": "Evidence",
+        "purpose": "Fechas, horas, rangos, IDs y fuentes."
+      },
+      "hand": {
+        "displayName": "Hand",
+        "purpose": "Anotaciones al margen, rotadas, aria-hidden."
+      }
+    },
+    "shadows": [
+      {
+        "name": "soft",
+        "value": "0 1px 2px rgb(20 33 27 / 0.06), 0 4px 16px rgb(20 33 27 / 0.06)",
+        "purpose": "CTA de nav y cierre, sello ámbar."
+      },
+      {
+        "name": "lift",
+        "value": "0 2px 4px rgb(20 33 27 / 0.06), 0 18px 40px -12px rgb(20 33 27 / 0.18)",
+        "purpose": "Tarjeta de propuesta dentro del bento."
+      },
+      {
+        "name": "float",
+        "value": "0 1px 2px rgb(20 33 27 / 0.05), 0 12px 32px -14px rgb(20 33 27 / 0.22)",
+        "purpose": "Campo del hero y píldora de motor."
+      },
+      {
+        "name": "float-window",
+        "value": "0 1px 2px rgb(20 33 27 / 0.05), 0 24px 60px -28px rgb(20 33 27 / 0.25)",
+        "purpose": "Ventana de conversación."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-brand",
+        "value": "cubic-bezier(0.2, 0.8, 0.2, 1)",
+        "purpose": "Única curva del sistema."
+      },
+      {
+        "name": "hover",
+        "value": "150ms",
+        "purpose": "Color y levantamiento de 1 px en botones."
+      },
+      {
+        "name": "step-in",
+        "value": "250ms",
+        "purpose": "Cambio de paso, aparición de anotaciones."
+      },
+      {
+        "name": "step-up",
+        "value": "340ms",
+        "purpose": "Firma: sube, pausa, sube. Entrada de la tarjeta de propuesta."
+      },
+      {
+        "name": "reveal",
+        "value": "400ms, translateY 14px",
+        "purpose": "Entradas al hacer scroll bajo el pliegue."
+      },
+      {
+        "name": "bar",
+        "value": "600ms scaleX",
+        "purpose": "Crecimiento de barras de datos."
+      },
+      {
+        "name": "typing",
+        "value": "95ms por palabra",
+        "purpose": "Respuesta de la IA en la demo."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "La acción verde: una por vista; sube 1 px y se oscurece en hover.",
+      "html": "<button class=\"ds-btn-primary\">Ver qué dice la IA <svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h13M13 6l6 6-6 6\"/></svg></button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 24px;border:0;border-radius:12px;background:#0f5c45;color:#fff;font:600 15.5px/1 'Plus Jakarta Sans',system-ui,sans-serif;box-shadow:0 1px 2px rgb(20 33 27/.06),0 4px 16px rgb(20 33 27/.06);cursor:pointer;transition:background-color 150ms cubic-bezier(0.2, 0.8, 0.2, 1),transform 150ms cubic-bezier(0.2, 0.8, 0.2, 1)}.ds-btn-primary:hover{background:#0b4a37;transform:translateY(-1px)}.ds-btn-primary:active{transform:none}.ds-btn-primary:focus-visible{outline:2px solid #0f5c45;outline-offset:3px}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Acción secundaria: blanco con ring de tinta al 15 %.",
+      "html": "<button class=\"ds-btn-secondary\">Empezar con Pro</button>",
+      "css": ".ds-btn-secondary{height:48px;padding:0 24px;border:0;border-radius:12px;background:#fff;color:#14211b;font:600 15.5px/1 'Plus Jakarta Sans',system-ui,sans-serif;box-shadow:inset 0 0 0 1px rgb(20 33 27/.15);cursor:pointer;transition:box-shadow 150ms}.ds-btn-secondary:hover{box-shadow:inset 0 0 0 1px rgb(20 33 27/.3)}.ds-btn-secondary:focus-visible{outline:2px solid #0f5c45;outline-offset:3px}"
+    },
+    {
+      "name": "Business Search Field",
+      "kind": "input",
+      "refersTo": "input-business",
+      "description": "Campo del hero: nombre del negocio con botón verde interno.",
+      "html": "<form class=\"ds-field\" onsubmit=\"return false\"><svg viewBox=\"0 0 24 24\" width=\"22\" height=\"22\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"m20 20-3.6-3.6\"/></svg><input class=\"ds-field-input\" placeholder=\"Nombre de tu negocio\" aria-label=\"Nombre de tu negocio\"><button class=\"ds-field-btn\">Ver qué dice la IA</button></form>",
+      "css": ".ds-field{display:flex;align-items:center;gap:8px;max-width:640px;padding:8px 8px 8px 20px;border-radius:22px;background:#fff;color:rgb(20 33 27/.7);box-shadow:0 0 0 1px #14211b14,0 1px 2px rgb(20 33 27/.05),0 12px 32px -14px rgb(20 33 27/.22);transition:box-shadow 150ms}.ds-field:focus-within{box-shadow:0 0 0 2px rgb(15 92 69/.4),0 12px 32px -14px rgb(20 33 27/.22)}.ds-field-input{flex:1;min-width:0;border:0;background:transparent;font:400 18px/1.4 'Plus Jakarta Sans',system-ui,sans-serif;color:#14211b;caret-color:#0f5c45;outline:none}.ds-field-input::placeholder{color:rgb(20 33 27/.45)}.ds-field-btn{height:52px;padding:0 24px;border:0;border-radius:13px;background:#0f5c45;color:#fff;font:600 16px/1 'Plus Jakarta Sans',system-ui,sans-serif;cursor:pointer;transition:background-color 150ms cubic-bezier(0.2, 0.8, 0.2, 1),transform 150ms cubic-bezier(0.2, 0.8, 0.2, 1)}.ds-field-btn:hover{background:#0b4a37;transform:translateY(-1px)}"
+    },
+    {
+      "name": "City Chip",
+      "kind": "chip",
+      "refersTo": "chip-city",
+      "description": "Selector de ciudad en píldora verde claro.",
+      "html": "<span class=\"ds-chip-city\"><svg viewBox=\"0 0 24 24\" width=\"17\" height=\"17\" aria-hidden=\"true\"><path fill=\"#0f5c45\" d=\"M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.6a2.6 2.6 0 1 1 0-5.2 2.6 2.6 0 0 1 0 5.2Z\"/></svg>Buscando en <b>Medellín</b></span>",
+      "css": ".ds-chip-city{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px;border-radius:9999px;background:#d9ebd7;color:#14211b;font:400 15px/1 'Plus Jakarta Sans',system-ui,sans-serif;cursor:pointer;transition:background-color 150ms}.ds-chip-city b{font-weight:500}.ds-chip-city:hover{background:#cfe4cc}"
+    },
+    {
+      "name": "Example Chip",
+      "kind": "chip",
+      "refersTo": "chip-example",
+      "description": "Marca obligatoria de datos de ejemplo.",
+      "html": "<span class=\"ds-chip-example\">Ejemplo</span>",
+      "css": ".ds-chip-example{display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:9999px;background:#d9ebd7;color:#0f5c45;font:600 12px/1 'Plus Jakarta Sans',system-ui,sans-serif}"
+    },
+    {
+      "name": "Navigation",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Barra fina: logo, tres enlaces, Ingresar y CTA verde.",
+      "html": "<nav class=\"ds-nav\"><b class=\"ds-nav-logo\">reranker</b><ul class=\"ds-nav-links\"><li><a href=\"#\">Cómo funciona</a></li><li><a href=\"#\">Precios</a></li><li><a href=\"#\">Para agencias</a></li></ul><a class=\"ds-nav-cta\" href=\"#\">Ver qué dice la IA</a></nav>",
+      "css": ".ds-nav{display:flex;align-items:center;justify-content:space-between;gap:24px;height:64px;padding:0 24px;background:#faf7f0;border-bottom:1px solid #14211b14;font:400 15px/1 'Plus Jakarta Sans',system-ui,sans-serif}.ds-nav-logo{font:900 24px/1 Nunito,ui-rounded,sans-serif;color:#14211b}.ds-nav-links{display:flex;gap:40px;list-style:none;margin:0;padding:0}.ds-nav-links a{color:#14211b;text-decoration:none;transition:color 150ms}.ds-nav-links a:hover{color:#0f5c45}.ds-nav-cta{display:inline-flex;align-items:center;height:44px;padding:0 20px;border-radius:12px;background:#0f5c45;color:#fff;font-weight:600;text-decoration:none;transition:background-color 150ms cubic-bezier(0.2, 0.8, 0.2, 1),transform 150ms cubic-bezier(0.2, 0.8, 0.2, 1)}.ds-nav-cta:hover{background:#0b4a37;transform:translateY(-1px)}"
+    },
+    {
+      "name": "Product Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Tarjeta de bento: blanca, 24 px, ring de línea, mini-producto dentro.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-card-head\"><div><h3>Quién sale en tu lugar</h3><p>Abogados de inmigración · Medellín · 10 preguntas</p></div><span class=\"ds-card-chip\">Ejemplo</span></div><div class=\"ds-card-row\"><span>Ruiz &amp; Asociados</span><i style=\"--w:80%\"></i><code>8/10</code></div><div class=\"ds-card-row ds-you\"><span>Tu negocio</span><i style=\"--w:10%\"></i><code>1/10</code></div></article>",
+      "css": ".ds-card{max-width:440px;padding:32px;border-radius:24px;background:#fff;box-shadow:0 0 0 1px #14211b14;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#14211b}.ds-card-head{display:flex;justify-content:space-between;gap:16px}.ds-card h3{margin:0;font-size:19px;font-weight:700}.ds-card-head p{margin:4px 0 0;font-size:15px;color:rgb(20 33 27/.65)}.ds-card-chip{align-self:flex-start;height:24px;padding:0 10px;border-radius:9999px;background:#d9ebd7;color:#0f5c45;font-size:12px;font-weight:600;line-height:24px}.ds-card-row{display:grid;grid-template-columns:1fr auto;gap:6px 12px;margin-top:16px;font-size:15px}.ds-card-row i{grid-column:1;display:block;height:8px;border-radius:9999px;background:linear-gradient(90deg,#0f5c45 var(--w),#f1f2ef var(--w))}.ds-you i{background:linear-gradient(90deg,#f2b544 var(--w),#f1f2ef var(--w))}.ds-you span{font-weight:600}.ds-card-row code{grid-row:1/3;grid-column:2;align-self:center;font:400 13px 'JetBrains Mono',monospace;color:rgb(20 33 27/.7)}"
+    },
+    {
+      "name": "Annotated Conversation",
+      "kind": "custom",
+      "refersTo": "bubble-question",
+      "description": "Firma: pregunta del cliente, respuesta de la IA, nota a mano y tarjeta de propuesta.",
+      "html": "<div class=\"ds-convo\"><p class=\"ds-q\">¿Qué abogado de inmigración me recomiendas en Medellín?</p><p class=\"ds-a\">Te recomiendo tres firmas: Ruiz &amp; Asociados, Visa Legal Medellín y Castaño Abogados.<span class=\"ds-caret\"></span></p><p class=\"ds-hand\">Aquí no apareces</p><div class=\"ds-proposal\"><p><b>Propuesta:</b> agrega ‘abogado de inmigración’ a tu perfil de Google</p><div><button class=\"ds-ok\">Aprobar</button><button class=\"ds-no\">Ahora no</button></div></div></div>",
+      "css": ".ds-convo{max-width:520px;padding:16px;border-radius:24px;background:#fff;box-shadow:0 0 0 1px #14211b14,0 24px 60px -28px rgb(20 33 27/.25);font:400 15px/1.45 'Plus Jakarta Sans',system-ui,sans-serif;color:#14211b}.ds-q{margin:0 0 12px auto;width:fit-content;max-width:85%;padding:10px 14px;border-radius:16px 6px 16px 16px;background:#f1f2ef}.ds-a{margin:0;max-width:85%;padding:10px 14px;border-radius:6px 16px 16px 16px;box-shadow:0 0 0 1px #14211b14}.ds-caret{display:inline-block;width:2px;height:1.1em;margin-left:2px;vertical-align:-.18em;background:#14211b;animation:ds-blink 1s steps(1) infinite}@keyframes ds-blink{50%{opacity:0}}.ds-hand{margin:8px 0 0 40px;font:500 22px/1 Caveat,'Segoe Print',cursive;transform:rotate(-6deg);transform-origin:left}.ds-proposal{margin:-4px 12px 0;position:relative;padding:16px;border-radius:16px;background:#fff;box-shadow:0 0 0 1px #14211b14,0 2px 4px rgb(20 33 27/.06),0 20px 40px -16px rgb(20 33 27/.26);animation:ds-step 340ms cubic-bezier(0.2, 0.8, 0.2, 1) both}.ds-proposal p{margin:0 0 14px;font-size:14.5px}.ds-proposal b{font-weight:600}.ds-proposal div{display:flex;gap:10px}.ds-ok,.ds-no{flex:1;height:44px;border:0;border-radius:12px;font:inherit;cursor:pointer}.ds-ok{background:#0f5c45;color:#fff;font-weight:600}.ds-ok:hover{background:#0b4a37}.ds-no{background:#fff;color:#14211b;box-shadow:inset 0 0 0 1px rgb(20 33 27/.15)}@keyframes ds-step{0%{opacity:0;transform:translateY(12px)}45%{opacity:1;transform:translateY(6px)}55%{transform:translateY(6px)}100%{opacity:1;transform:none}}"
+    },
+    {
+      "name": "Evidence Receipt",
+      "kind": "custom",
+      "refersTo": "card-inset",
+      "description": "Recibo mono con sello ámbar: la respuesta guardada tal cual.",
+      "html": "<div class=\"ds-receipt\"><p>ChatGPT · Medellín</p><p>04 nov 2026 · 10:42</p><p class=\"ds-quote\">“Te recomiendo tres firmas: Ruiz &amp; Asociados, Visa Legal…”</p><p class=\"ds-id\">ID rr_7f3a·91c2</p><span class=\"ds-stamp\">Guardada<br>sin editar</span></div>",
+      "css": ".ds-receipt{position:relative;max-width:300px;padding:20px;border-radius:16px;background:#faf7f0;box-shadow:0 0 0 1px #14211b14;font:400 12.5px/1.625 'JetBrains Mono',monospace;color:rgb(20 33 27/.8)}.ds-receipt p{margin:0}.ds-quote{margin-top:8px!important;font:400 14px/1.5 'Plus Jakarta Sans',system-ui,sans-serif;color:#14211b}.ds-id{margin-top:12px!important;color:rgb(20 33 27/.5)}.ds-stamp{position:absolute;top:-16px;right:-12px;display:grid;place-items:center;width:74px;height:74px;border-radius:9999px;background:#f2b544;color:#14211b;font:900 11px/1.2 Nunito,ui-rounded,sans-serif;text-align:center;transform:rotate(-12deg);box-shadow:0 1px 2px rgb(20 33 27/.06),0 4px 16px rgb(20 33 27/.06)}"
+    },
+    {
+      "name": "Marker Highlight",
+      "kind": "custom",
+      "refersTo": "amber",
+      "description": "Resaltador ámbar de corte duro detrás de la tinta.",
+      "html": "<p class=\"ds-marker-p\">Ahora le preguntan a la IA y escuchan <span class=\"ds-marker\">dos o tres nombres.</span></p>",
+      "css": ".ds-marker-p{max-width:22ch;font:900 40px/1.06 Nunito,ui-rounded,sans-serif;letter-spacing:-.022em;color:#14211b}.ds-marker{background-image:linear-gradient(transparent 58%,rgb(242 181 68/.75) 58%,rgb(242 181 68/.75) 92%,transparent 92%);-webkit-box-decoration-break:clone;box-decoration-break:clone;padding:0 .06em}"
+    }
+  ],
+  "narrative": {
+    "northStar": "La conversación anotada",
+    "overview": "**Creative North Star: \"La conversación anotada\"**\n\nReranker se ve como una conversación con una IA impresa sobre papel cálido, que alguien de confianza ya leyó con un lápiz en la mano. Una ventana de chat propia (blanca, neutra, nunca la interfaz de ChatGPT) muestra lo que pregunta un cliente y lo que responde la IA; en el margen, notas a mano en tinta con flechas finas dicen qué significa; y una tarjeta de Reranker con la r escalonada propone un arreglo que el dueño aprueba. Ese trío, chat + anotación al margen + tarjeta de aprobación, es la firma del sistema y se reconoce aun sin texto.\n\nEl suelo es papel (70 % de la superficie), la voz es tinta, y el color se gana: un solo verde profundo carga la acción, y el ámbar aparece solo como resaltador detrás de la tinta o como sello. La densidad es baja y editorial: secciones de 96–128 px de aire, titulares Nunito Black grandes y redondeados, cuerpo en Plus Jakarta Sans, y los datos (fechas, rangos, IDs) en JetBrains Mono para decir \"esto es un dato\". La prueba se muestra con producto funcionando dentro de tarjetas, nunca con un pantallazo de dashboard.\n\nRechazos confirmados por la marca: la estética de \"IA mágica\" (violeta, destellos, robots), los degradados de color y el verde WhatsApp.",
+    "keyCharacteristics": [
+      "Papel cálido, tinta, un verde de acción, ámbar solo como resaltador o sello.",
+      "Ventana de chat propia con burbujas blancas y grises, como escenario del producto.",
+      "Anotaciones a mano (Caveat, tinta) con flechas finas en el margen.",
+      "Tarjetas blancas de 24 px con borde de tinta al 8 %, sin sombra en reposo.",
+      "Metadatos en mono como evidencia.",
+      "El escalón (subir dos pasos) como único movimiento de marca."
+    ],
+    "rules": [
+      {
+        "name": "The One Green Action Rule",
+        "body": "El verde es la acción. Los demás botones son blancos con ring de tinta al 15 %, o papel sobre tinta.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink-Over-Amber Rule",
+        "body": "El ámbar nunca es texto ni ícono suelto sobre papel (1,7:1). Va detrás de la tinta como resaltador (franja del 58 % al 92 % de la línea, 75 % de opacidad) o como forma con tinta encima.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Margins Rule",
+        "body": "Mono es el dato, la mano es el comentario. La mano nunca carga información que no esté también en el texto real.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Card Rule",
+        "body": "Las tarjetas de contenido no tienen sombra; se separan con ring y cambio de tono. La sombra significa \"esto es un objeto en la conversación\".",
+        "section": "elevation"
+      },
+      {
+        "name": "The Stepped Bar Rule",
+        "body": "El progreso se dibuja como escalones que suben (cuatro barras de alturas crecientes de 16 px por paso), nunca como gauge o donut.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "**Do** dejar que el papel ocupe la mayor parte de la pantalla y usar el verde solo para la acción.",
+      "**Do** poner el ámbar detrás de la tinta (resaltador) o como sello con texto en tinta.",
+      "**Do** mostrar el producto funcionando dentro de tarjetas blancas de 24 px, con el chip \"Ejemplo\" cuando los datos son inventados.",
+      "**Do** escribir fechas, horas, rangos e IDs en JetBrains Mono a 12–13 px.",
+      "**Do** anotar en el margen con Caveat en tinta y la flecha fina de las placas, siempre aria-hidden y con la información repetida en texto real.",
+      "**Do** usar íconos de trazo uniforme (2 px sobre 24 px, extremos redondeados).",
+      "**Do** dibujar el progreso como escalones que suben."
+    ],
+    "donts": [
+      "**Don't** usar el ámbar como color de texto o de glifo, ni texto blanco sobre ámbar.",
+      "**Don't** aclarar el verde ni usar violeta, morado, rojo, turquesa o verde WhatsApp.",
+      "**Don't** usar degradados de color visibles, destellos o robots (el resaltador es una franja de corte duro, no un degradado).",
+      "**Don't** copiar la interfaz de ChatGPT u otro motor: la ventana es propia y neutra; los logos de motores solo identifican junto a su nombre.",
+      "**Don't** dar sombra a las tarjetas de contenido; la sombra es solo para objetos que flotan."
+    ]
+  }
+}

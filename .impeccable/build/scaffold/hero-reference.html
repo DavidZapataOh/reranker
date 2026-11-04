@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Scaffold reference: alt-conversacion.png</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Encode+Sans+Expanded:wght@700&family=Suez+One:wght@400&display=swap">
+  <link rel="stylesheet" href="layout.css">
+  <style>html,body{margin:0}body{background:#f8f8f7}.region{box-sizing:border-box}.region.text p{white-space:pre-wrap}</style>
+</head>
+<body>
+<!-- Reference only. Every region sits at its measured box inside a comp-aspect frame. Take the boxes (layout.css), keep your own semantic structure. -->
+<main class="comp-frame" style="max-width:1536px">
+  <div class="r-logo region chrome" data-region="logo"><!-- reranker logo lockup from the existing brand SVG file --></div>
+  <div class="r-nav-links region text" data-region="nav-links"><!-- nav links Cómo funciona, Precios, Para agencias --><p style="font-size:var(--r-nav-links-font);line-height:1.05;margin:0">nav-links</p></div>
+  <div class="r-nav-login region text" data-region="nav-login"><!-- nav link Ingresar --><p style="line-height:1.05;margin:0">nav-login</p></div>
+  <div class="r-nav-cta region control" data-region="nav-cta"><!-- green pill button Ver qué dice la IA: rebuild the control's chrome from the crop (comp-spec.mjs --crop nav-cta); its ink box, border, fill, radius, and label size are the comp's --></div>
+  <div class="r-h1-line1 region text" data-region="h1-line1"><!-- headline line one Tus clientes le preguntan a --><p style="font-size:var(--r-h1-line1-font);font-family:var(--r-h1-line1-family),sans-serif;font-weight:var(--r-h1-line1-weight);line-height:1.05;margin:0">h1-line1</p></div>
+  <div class="r-h1-pill region control" data-region="h1-pill"><!-- white rounded pill with ChatGPT knot icon and the word ChatGPT, rotating engine: rebuild the control's chrome from the crop (comp-spec.mjs --crop h1-pill); its ink box, border, fill, radius, and label size are the comp's --></div>
+  <div class="r-h1-line2 region text" data-region="h1-line2"><!-- headline line two Que salgas tú. --><p style="font-size:var(--r-h1-line2-font);font-family:var(--r-h1-line2-family),sans-serif;font-weight:var(--r-h1-line2-weight);line-height:1.05;margin:0">h1-line2</p></div>
+  <div class="r-subtitle region text" data-region="subtitle"><!-- subtitle Te mostramos a quién recomiendan ChatGPT, Gemini y Google... --><p style="line-height:1.05;margin:0">subtitle</p></div>
+  <div class="r-input region control" data-region="input"><!-- wide white input bar with search icon and placeholder Nombre de tu negocio: rebuild the control's chrome from the crop (comp-spec.mjs --crop input); its ink box, border, fill, radius, and label size are the comp's --></div>
+  <div class="r-input-btn region control" data-region="input-btn"><!-- green button inside input Ver qué dice la IA arrow: rebuild the control's chrome from the crop (comp-spec.mjs --crop input-btn); its ink box, border, fill, radius, and label size are the comp's --></div>
+  <div class="r-city-chip region control" data-region="city-chip"><!-- light green chip with pin icon Buscando en Medellín and chevron: rebuild the control's chrome from the crop (comp-spec.mjs --crop city-chip); its ink box, border, fill, radius, and label size are the comp's --></div>
+  <div class="r-microcopy region text" data-region="microcopy"><!-- small muted line Gratis · Sin registro ni tarjeta · Resultado en menos de 2 minutos --><p style="font-size:var(--r-microcopy-font);line-height:1.05;margin:0">microcopy</p></div>
+  <div class="r-chat-window region chrome" data-region="chat-window"><!-- large white rounded chat window frame with hairline border --></div>
+  <div class="r-chat-header region text" data-region="chat-header"><!-- window title Así le responde la IA a tus clientes · Ejemplo --><p style="font-size:var(--r-chat-header-font);line-height:1.05;margin:0">chat-header</p></div>
+  <div class="r-chat-dots region chrome" data-region="chat-dots"><!-- three small window dots red yellow green --></div>
+  <div class="r-q-bubble region text" data-region="q-bubble"><!-- customer question bubble light grey ¿Qué abogado de inmigración me recomiendas en Medellín? --><p style="font-size:var(--r-q-bubble-font);line-height:1.05;margin:0">q-bubble</p></div>
+  <div class="r-q-avatar region chrome" data-region="q-avatar"><!-- small grey round user avatar icon --></div>
+  <div class="r-ai-avatar region chrome" data-region="ai-avatar"><!-- round light avatar with ChatGPT knot icon --></div>
+  <div class="r-ai-answer region text" data-region="ai-answer"><!-- answer bubble Te recomiendo tres firmas: Ruiz & Asociados, Visa Legal Medellín y... with typing cursor --><p style="font-size:var(--r-ai-answer-font);line-height:1.05;margin:0">ai-answer</p></div>
+  <div class="r-typing-dots region chrome" data-region="typing-dots"><!-- three small grey typing dots --></div>
+  <figure class="r-arrow-buscan region plate" data-region="arrow-buscan"><img src="../../../assets/plates/arrow-buscan.png" alt="" style="width:100%;height:100%;object-fit:contain;object-position:top left"></figure>
+  <div class="r-annot-buscan region text" data-region="annot-buscan"><!-- handwritten annotation Así te buscan --><p style="font-size:var(--r-annot-buscan-font);line-height:1.05;margin:0">annot-buscan</p></div>
+  <figure class="r-arrow-apareces region plate" data-region="arrow-apareces"><img src="../../../assets/plates/arrow-apareces.png" alt="" style="width:100%;height:100%;object-fit:contain;object-position:top left"></figure>
+  <div class="r-annot-apareces region text" data-region="annot-apareces"><!-- handwritten annotation Aquí no apareces --><p style="font-size:var(--r-annot-apareces-font);line-height:1.05;margin:0">annot-apareces</p></div>
+  <div class="r-card region chrome" data-region="card"><!-- white Reranker proposal card with soft shadow overlapping the chat window --></div>
+  <div class="r-card-icon region chrome" data-region="card-icon"><!-- round light badge with green stepped r symbol --></div>
+  <div class="r-card-text region text" data-region="card-text"><!-- Propuesta: agrega abogado de inmigración a tu perfil de Google --><p style="font-size:var(--r-card-text-font);line-height:1.05;margin:0">card-text</p></div>
+  <div class="r-card-alert region chrome" data-region="card-alert"><!-- small amber circle with exclamation mark --></div>
+  <div class="r-btn-aprobar region control" data-region="btn-aprobar"><!-- green button Aprobar: rebuild the control's chrome from the crop (comp-spec.mjs --crop btn-aprobar); its ink box, border, fill, radius, and label size are the comp's --></div>
+  <div class="r-btn-ahora region control" data-region="btn-ahora"><!-- outlined ghost button Ahora no: rebuild the control's chrome from the crop (comp-spec.mjs --crop btn-ahora); its ink box, border, fill, radius, and label size are the comp's --></div>
+</main>
+</body>
+</html>

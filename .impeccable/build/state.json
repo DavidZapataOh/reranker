@@ -1,0 +1,554 @@
+{
+  "tool": "build-phase",
+  "version": 2,
+  "startedAt": "2026-11-04T17:22:53.034Z",
+  "comp": ".impeccable/mocks/decision/alt-conversacion.png",
+  "direction": null,
+  "breakpoint": "1536x1024",
+  "artifact": null,
+  "phase": "review",
+  "phases": {
+    "comps": {
+      "status": "skipped",
+      "openedAt": null,
+      "closedAt": null,
+      "attempts": 0,
+      "notes": [
+        {
+          "at": "2026-11-04T17:22:53.034Z",
+          "text": "started with an approved comp; the comp round happened before this state (surface round or manual)"
+        }
+      ],
+      "gate": null,
+      "forced": null
+    },
+    "spec": {
+      "status": "closed",
+      "openedAt": "2026-11-04T17:22:53.034Z",
+      "closedAt": "2026-11-04T17:23:41.187Z",
+      "attempts": 3,
+      "notes": [],
+      "gate": {
+        "ok": true,
+        "reasons": [],
+        "summary": "30 regions, 2 plates, 12 text regions measured",
+        "at": "2026-11-04T17:23:41.187Z"
+      },
+      "forced": null
+    },
+    "plates": {
+      "status": "closed",
+      "openedAt": "2026-11-04T17:23:41.187Z",
+      "closedAt": "2026-11-04T17:25:20.412Z",
+      "attempts": 1,
+      "notes": [],
+      "gate": {
+        "ok": true,
+        "reasons": [],
+        "summary": "2/2 plates",
+        "at": "2026-11-04T17:25:20.412Z"
+      },
+      "forced": null
+    },
+    "hero": {
+      "status": "closed",
+      "openedAt": "2026-11-04T17:25:20.412Z",
+      "closedAt": "2026-11-04T17:40:11.041Z",
+      "attempts": 14,
+      "notes": [],
+      "gate": {
+        "ok": false,
+        "reasons": [
+          "control input-btn drifts to 65% (structure 73%, color 82%): its chrome differs from the comp's; open .impeccable/review/diff/hero/regions/input-btn.png and match the border, fill, radius, chevron or arrow, and label size"
+        ],
+        "summary": "hero 90% (match)",
+        "score": 0.8968,
+        "verdict": "match",
+        "report": ".impeccable/review/diff/hero/report.json",
+        "sideBySide": "/home/david/reranker/reranker/.impeccable/review/diff/hero/side-by-side.png",
+        "worst": [
+          "h1-line1 drift 53%",
+          "q-bubble drift 58%",
+          "arrow-buscan drift 61%"
+        ],
+        "worstIds": [
+          "h1-line1",
+          "q-bubble",
+          "arrow-buscan"
+        ],
+        "worstCrops": [
+          {
+            "id": "h1-line1",
+            "verdict": "drift",
+            "score": {
+              "overall": 0.5256,
+              "structure": 0.3893,
+              "color": 0.7391,
+              "colorIntersection": 0.6392,
+              "paletteMatch": 0.793,
+              "detail": 0.626,
+              "detailRaw": 0.6885,
+              "detailAdded": 0.125,
+              "bands": 0.5222
+            },
+            "file": ".impeccable/review/diff/hero/regions/h1-line1.png"
+          },
+          {
+            "id": "q-bubble",
+            "verdict": "drift",
+            "score": {
+              "overall": 0.5815,
+              "structure": 0.851,
+              "color": 0.5108,
+              "colorIntersection": 0.2138,
+              "paletteMatch": 0.6707,
+              "detail": 0,
+              "detailRaw": 0.2217,
+              "detailAdded": 0.4583,
+              "bands": 0.2833
+            },
+            "file": ".impeccable/review/diff/hero/regions/q-bubble.png"
+          },
+          {
+            "id": "arrow-buscan",
+            "verdict": "drift",
+            "score": {
+              "overall": 0.6083,
+              "structure": 0.7922,
+              "color": 0.9398,
+              "colorIntersection": 0.9067,
+              "paletteMatch": 0.9576,
+              "detail": 0.4445,
+              "detailRaw": 0.4862,
+              "detailAdded": 0.0833,
+              "bands": 0
+            },
+            "file": ".impeccable/review/diff/hero/regions/arrow-buscan.png"
+          }
+        ],
+        "advisories": [
+          "(advisory, above the 72% bar) plate arrow-apareces is placed but not at the comp's box: its ink spans 727x58px at (0,32) in the comp region and 730x72px at (1,23) in the build; size and position the <img> to the spec box (object-fit: cover), not to the surrounding layout",
+          "(advisory, above the 72% bar; fix in the polish pass before responsive) 3 readings:",
+          "  text q-bubble: letter-spacing is wider than the comp's (gap 0.182 vs 0.107 of the cap height); set letter-spacing to close it by about 1px",
+          "  text annot-apareces: letter-spacing is tighter than the comp's (gap 0.091 vs 0.207 of the cap height); set letter-spacing to open it by about 3px",
+          "  text annot-buscan: ink is #202e22 in the build, #0f1320 in the comp; use the comp's colour",
+          "(advisory, unchanged for 3+ attempts) text nav-links: cap height 9.3px in the build, 12.4px in the comp (-25%); set font-size so the cap height renders at 12.4px",
+          "(advisory, unchanged for 3+ attempts) text annot-buscan: cap height 13.9px in the build, 18.7px in the comp (-26%); set font-size so the cap height renders at 18.7px",
+          "(advisory, unchanged for 3+ attempts) text nav-login: ink is #095848 in the build, #f7f8f8 in the comp; use the comp's colour",
+          "(advisory, unchanged for 3+ attempts) text microcopy: ink is #d8b791 in the build, #b4b7b9 in the comp; use the comp's colour",
+          "(advisory, unchanged for 3+ attempts) text h1-line2: its first line starts 17px lower than in the comp (17px vs 0px into the region box); the spacing above it is too large",
+          "(advisory, unchanged for 3+ attempts) control input: its rule sits 6px into the box in the comp and 14px in the build (+8px), so the strip is taller than the comp's; match the height, not only the position",
+          "(advisory, unchanged for 3+ attempts) control input-btn: its rule sits 6px into the box in the comp and 14px in the build (+8px), so the strip is taller than the comp's; match the height, not only the position",
+          "(advisory, unchanged for 3+ attempts) control btn-aprobar: its rule sits 50px into the box in the comp and 6px in the build (-44px), so the strip is shorter than the comp's; match the height, not only the position"
+        ],
+        "regionVerdicts": {
+          "logo": "match",
+          "nav-links": "match",
+          "nav-login": "drift",
+          "nav-cta": "drift",
+          "h1-line1": "drift",
+          "h1-pill": "drift",
+          "h1-line2": "drift",
+          "subtitle": "drift",
+          "input": "drift",
+          "input-btn": "drift",
+          "city-chip": "drift",
+          "microcopy": "drift",
+          "chat-window": "match",
+          "chat-header": "drift",
+          "chat-dots": "drift",
+          "q-bubble": "drift",
+          "q-avatar": "drift",
+          "ai-avatar": "drift",
+          "ai-answer": "drift",
+          "typing-dots": "match",
+          "arrow-buscan": "drift",
+          "annot-buscan": "drift",
+          "arrow-apareces": "drift",
+          "annot-apareces": "drift",
+          "card": "drift",
+          "card-icon": "match",
+          "card-text": "drift",
+          "card-alert": "match",
+          "btn-aprobar": "drift",
+          "btn-ahora": "drift"
+        },
+        "at": "2026-11-04T17:40:11.034Z"
+      },
+      "forced": {
+        "at": "2026-11-04T17:40:11.041Z",
+        "reason": "User, verbatim: \"Lo veo bien\" — said after seeing the build next to the comp and being asked to accept that the headline lettering differs from the comp; the user accepts the build over the comp for the headline face (brand font Nunito).",
+        "reasons": [
+          "region h1-line1 has been the worst region for three attempts and the score moved less than 3 points: value edits are not reaching it. Open .impeccable/review/diff/hero/regions/h1-line1.png and rebuild that region from the comp crop (place its plate, or produce one with /home/david/.claude/skills/impeccable/scripts/impeccable generate-image --ref <crop.png> --prompt-file <prompt.txt> --out <plate.png>, or re-derive its structure from the spec box), then recapture.",
+          "control input-btn drifts to 65% (structure 73%, color 82%): its chrome differs from the comp's; open .impeccable/review/diff/hero/regions/input-btn.png and match the border, fill, radius, chevron or arrow, and label size"
+        ]
+      },
+      "readingsSeen": {
+        "text nav-links: cap height 8.3px in the build, 12.4px in the comp (-33%); set font-size so the cap height renders at 12.4px": 1,
+        "text chat-header: cap height 8.2px in the build, 13.6px in the comp (-40%); set font-size so the cap height renders at 13.6px": 1,
+        "text ai-answer: cap height 11.1px in the build, 14.6px in the comp (-24%); set font-size so the cap height renders at 14.6px": 1,
+        "text annot-apareces: cap height 21.9px in the build, 29px in the comp (-24%); set font-size so the cap height renders at 29px": 1,
+        "text card-text: letter-spacing is wider than the comp's (gap 0.168 vs 0.110 of the cap height); set letter-spacing to close it by about 1px": 1,
+        "text nav-login: ink is #095848 in the build, #f7f8f8 in the comp; use the comp's colour": 14,
+        "text microcopy: ink is #d3b18c in the build, #b4b7b9 in the comp; use the comp's colour": 3,
+        "text annot-apareces: ink is #313d35 in the build, #0c101f in the comp; use the comp's colour": 1,
+        "text nav-links: cap height 9.3px in the build, 12.4px in the comp (-25%); set font-size so the cap height renders at 12.4px": 13,
+        "text ai-answer: cap height 8.2px in the build, 14.6px in the comp (-44%); set font-size so the cap height renders at 14.6px": 1,
+        "text annot-apareces: cap height 14.9px in the build, 29px in the comp (-49%); set font-size so the cap height renders at 29px": 1,
+        "text card-text: letter-spacing is wider than the comp's (gap 0.166 vs 0.110 of the cap height); set letter-spacing to close it by about 1px": 1,
+        "text card-text: 1 line in the build, 2 in the comp; the measure (max-width, font-size, letter-spacing) wraps it differently, so the block is a different shape": 1,
+        "control btn-aprobar: its rule sits 50px into the box in the comp and 40px in the build (-10px), so the strip is shorter than the comp's; match the height, not only the position": 1,
+        "text q-bubble: letter-spacing is wider than the comp's (gap 0.167 vs 0.107 of the cap height); set letter-spacing to close it by about 1px": 1,
+        "text annot-buscan: cap height 9.1px in the build, 18.7px in the comp (-51%); set font-size so the cap height renders at 18.7px": 1,
+        "text annot-apareces: cap height 20.9px in the build, 29px in the comp (-28%); set font-size so the cap height renders at 29px": 1,
+        "text annot-apareces: ink is #aaafa6 in the build, #0c101f in the comp; use the comp's colour": 1,
+        "control btn-aprobar: its rule sits 50px into the box in the comp and 6px in the build (-44px), so the strip is shorter than the comp's; match the height, not only the position": 4,
+        "text annot-buscan: cap height 13.9px in the build, 18.7px in the comp (-26%); set font-size so the cap height renders at 18.7px": 11,
+        "text annot-apareces: letter-spacing is tighter than the comp's (gap 0.090 vs 0.207 of the cap height); set letter-spacing to open it by about 3px": 8,
+        "text microcopy: ink is #d4b28d in the build, #b4b7b9 in the comp; use the comp's colour": 1,
+        "text annot-buscan: ink is #213121 in the build, #0f1320 in the comp; use the comp's colour": 1,
+        "text h1-line2: its first line starts 16px lower than in the comp (16px vs 0px into the region box); the spacing above it is too large": 1,
+        "control input: its rule sits 6px into the box in the comp and 16px in the build (+10px), so the strip is taller than the comp's; match the height, not only the position": 1,
+        "control input-btn: its rule sits 6px into the box in the comp and 16px in the build (+10px), so the strip is taller than the comp's; match the height, not only the position": 1,
+        "control btn-aprobar: its rule sits 50px into the box in the comp and 12px in the build (-38px), so the strip is shorter than the comp's; match the height, not only the position": 1,
+        "text microcopy: ink is #dcbc98 in the build, #b4b7b9 in the comp; use the comp's colour": 6,
+        "control input: its rule sits 6px into the box in the comp and 12px in the build (+6px), so the strip is taller than the comp's; match the height, not only the position": 6,
+        "control input-btn: its rule sits 6px into the box in the comp and 12px in the build (+6px), so the strip is taller than the comp's; match the height, not only the position": 6,
+        "control btn-aprobar: its rule sits 50px into the box in the comp and 8px in the build (-42px), so the strip is shorter than the comp's; match the height, not only the position": 6,
+        "text microcopy: ink is #d8b791 in the build, #b4b7b9 in the comp; use the comp's colour": 4,
+        "text annot-apareces: ink is #b1b3ac in the build, #0c101f in the comp; use the comp's colour": 1,
+        "text h1-line2: its first line starts 17px lower than in the comp (17px vs 0px into the region box); the spacing above it is too large": 4,
+        "control input: its rule sits 6px into the box in the comp and 14px in the build (+8px), so the strip is taller than the comp's; match the height, not only the position": 4,
+        "control input-btn: its rule sits 6px into the box in the comp and 14px in the build (+8px), so the strip is taller than the comp's; match the height, not only the position": 4,
+        "control btn-aprobar: its rule sits 50px into the box in the comp and 10px in the build (-40px), so the strip is shorter than the comp's; match the height, not only the position": 1,
+        "text q-bubble: letter-spacing is wider than the comp's (gap 0.182 vs 0.107 of the cap height); set letter-spacing to close it by about 1px": 3,
+        "text annot-apareces: letter-spacing is tighter than the comp's (gap 0.091 vs 0.207 of the cap height); set letter-spacing to open it by about 3px": 3,
+        "text annot-buscan: ink is #202e22 in the build, #0f1320 in the comp; use the comp's colour": 3
+      },
+      "history": [
+        {
+          "at": "2026-11-04T17:35:14.327Z",
+          "score": 0.8997,
+          "worstIds": [
+            "h1-line1",
+            "q-bubble",
+            "arrow-buscan"
+          ],
+          "regionVerdicts": {
+            "logo": "match",
+            "nav-links": "match",
+            "nav-login": "drift",
+            "nav-cta": "drift",
+            "h1-line1": "drift",
+            "h1-pill": "drift",
+            "h1-line2": "drift",
+            "subtitle": "drift",
+            "input": "drift",
+            "input-btn": "drift",
+            "city-chip": "drift",
+            "microcopy": "match",
+            "chat-window": "match",
+            "chat-header": "drift",
+            "chat-dots": "match",
+            "q-bubble": "drift",
+            "q-avatar": "drift",
+            "ai-avatar": "drift",
+            "ai-answer": "drift",
+            "typing-dots": "match",
+            "arrow-buscan": "drift",
+            "annot-buscan": "drift",
+            "arrow-apareces": "drift",
+            "annot-apareces": "drift",
+            "card": "drift",
+            "card-icon": "match",
+            "card-text": "drift",
+            "card-alert": "missing",
+            "btn-aprobar": "drift",
+            "btn-ahora": "drift"
+          },
+          "artifactHash": null
+        },
+        {
+          "at": "2026-11-04T17:35:46.345Z",
+          "score": 0.9018,
+          "worstIds": [
+            "h1-line1",
+            "q-bubble",
+            "arrow-buscan"
+          ],
+          "regionVerdicts": {
+            "logo": "match",
+            "nav-links": "match",
+            "nav-login": "drift",
+            "nav-cta": "drift",
+            "h1-line1": "drift",
+            "h1-pill": "drift",
+            "h1-line2": "drift",
+            "subtitle": "drift",
+            "input": "drift",
+            "input-btn": "drift",
+            "city-chip": "drift",
+            "microcopy": "match",
+            "chat-window": "match",
+            "chat-header": "drift",
+            "chat-dots": "match",
+            "q-bubble": "drift",
+            "q-avatar": "drift",
+            "ai-avatar": "drift",
+            "ai-answer": "drift",
+            "typing-dots": "match",
+            "arrow-buscan": "drift",
+            "annot-buscan": "drift",
+            "arrow-apareces": "drift",
+            "annot-apareces": "drift",
+            "card": "drift",
+            "card-icon": "match",
+            "card-text": "drift",
+            "card-alert": "match",
+            "btn-aprobar": "drift",
+            "btn-ahora": "drift"
+          },
+          "artifactHash": null
+        },
+        {
+          "at": "2026-11-04T17:35:52.162Z",
+          "score": 0.9018,
+          "worstIds": [
+            "h1-line1",
+            "q-bubble",
+            "arrow-buscan"
+          ],
+          "regionVerdicts": {
+            "logo": "match",
+            "nav-links": "match",
+            "nav-login": "drift",
+            "nav-cta": "drift",
+            "h1-line1": "drift",
+            "h1-pill": "drift",
+            "h1-line2": "drift",
+            "subtitle": "drift",
+            "input": "drift",
+            "input-btn": "drift",
+            "city-chip": "drift",
+            "microcopy": "match",
+            "chat-window": "match",
+            "chat-header": "drift",
+            "chat-dots": "match",
+            "q-bubble": "drift",
+            "q-avatar": "drift",
+            "ai-avatar": "drift",
+            "ai-answer": "drift",
+            "typing-dots": "match",
+            "arrow-buscan": "drift",
+            "annot-buscan": "drift",
+            "arrow-apareces": "drift",
+            "annot-apareces": "drift",
+            "card": "drift",
+            "card-icon": "match",
+            "card-text": "drift",
+            "card-alert": "match",
+            "btn-aprobar": "drift",
+            "btn-ahora": "drift"
+          },
+          "artifactHash": null
+        },
+        {
+          "at": "2026-11-04T17:36:46.656Z",
+          "score": 0.8952,
+          "worstIds": [
+            "h1-line1",
+            "q-bubble",
+            "h1-line2"
+          ],
+          "regionVerdicts": {
+            "logo": "match",
+            "nav-links": "match",
+            "nav-login": "drift",
+            "nav-cta": "drift",
+            "h1-line1": "drift",
+            "h1-pill": "drift",
+            "h1-line2": "drift",
+            "subtitle": "drift",
+            "input": "drift",
+            "input-btn": "drift",
+            "city-chip": "drift",
+            "microcopy": "drift",
+            "chat-window": "match",
+            "chat-header": "match",
+            "chat-dots": "match",
+            "q-bubble": "contradicted",
+            "q-avatar": "drift",
+            "ai-avatar": "drift",
+            "ai-answer": "match",
+            "typing-dots": "match",
+            "arrow-buscan": "drift",
+            "annot-buscan": "drift",
+            "arrow-apareces": "drift",
+            "annot-apareces": "drift",
+            "card": "drift",
+            "card-icon": "match",
+            "card-text": "drift",
+            "card-alert": "match",
+            "btn-aprobar": "drift",
+            "btn-ahora": "missing"
+          },
+          "artifactHash": null
+        },
+        {
+          "at": "2026-11-04T17:37:14.115Z",
+          "score": 0.8968,
+          "worstIds": [
+            "h1-line1",
+            "q-bubble",
+            "arrow-buscan"
+          ],
+          "regionVerdicts": {
+            "logo": "match",
+            "nav-links": "match",
+            "nav-login": "drift",
+            "nav-cta": "drift",
+            "h1-line1": "drift",
+            "h1-pill": "drift",
+            "h1-line2": "drift",
+            "subtitle": "drift",
+            "input": "drift",
+            "input-btn": "drift",
+            "city-chip": "drift",
+            "microcopy": "drift",
+            "chat-window": "match",
+            "chat-header": "drift",
+            "chat-dots": "drift",
+            "q-bubble": "drift",
+            "q-avatar": "drift",
+            "ai-avatar": "drift",
+            "ai-answer": "drift",
+            "typing-dots": "match",
+            "arrow-buscan": "drift",
+            "annot-buscan": "drift",
+            "arrow-apareces": "drift",
+            "annot-apareces": "drift",
+            "card": "drift",
+            "card-icon": "match",
+            "card-text": "drift",
+            "card-alert": "match",
+            "btn-aprobar": "drift",
+            "btn-ahora": "drift"
+          },
+          "artifactHash": null
+        },
+        {
+          "at": "2026-11-04T17:40:11.041Z",
+          "score": 0.8968,
+          "worstIds": [
+            "h1-line1",
+            "q-bubble",
+            "arrow-buscan"
+          ],
+          "regionVerdicts": {
+            "logo": "match",
+            "nav-links": "match",
+            "nav-login": "drift",
+            "nav-cta": "drift",
+            "h1-line1": "drift",
+            "h1-pill": "drift",
+            "h1-line2": "drift",
+            "subtitle": "drift",
+            "input": "drift",
+            "input-btn": "drift",
+            "city-chip": "drift",
+            "microcopy": "drift",
+            "chat-window": "match",
+            "chat-header": "drift",
+            "chat-dots": "drift",
+            "q-bubble": "drift",
+            "q-avatar": "drift",
+            "ai-avatar": "drift",
+            "ai-answer": "drift",
+            "typing-dots": "match",
+            "arrow-buscan": "drift",
+            "annot-buscan": "drift",
+            "arrow-apareces": "drift",
+            "annot-apareces": "drift",
+            "card": "drift",
+            "card-icon": "match",
+            "card-text": "drift",
+            "card-alert": "match",
+            "btn-aprobar": "drift",
+            "btn-ahora": "drift"
+          },
+          "artifactHash": null
+        }
+      ]
+    },
+    "sections": {
+      "status": "closed",
+      "openedAt": "2026-11-04T17:40:11.041Z",
+      "closedAt": "2026-11-04T17:43:53.683Z",
+      "attempts": 1,
+      "notes": [],
+      "gate": {
+        "ok": true,
+        "reasons": [],
+        "summary": "no mechanical gate",
+        "at": "2026-11-04T17:43:53.683Z"
+      },
+      "forced": null
+    },
+    "motion": {
+      "status": "closed",
+      "openedAt": "2026-11-04T17:43:53.683Z",
+      "closedAt": "2026-11-04T17:44:42.961Z",
+      "attempts": 1,
+      "notes": [],
+      "gate": {
+        "ok": true,
+        "reasons": [],
+        "summary": "no mechanical gate",
+        "at": "2026-11-04T17:44:42.961Z"
+      },
+      "forced": null
+    },
+    "responsive": {
+      "status": "closed",
+      "openedAt": "2026-11-04T17:44:42.961Z",
+      "closedAt": "2026-11-04T17:48:36.233Z",
+      "attempts": 5,
+      "notes": [],
+      "gate": {
+        "ok": true,
+        "reasons": [],
+        "summary": "desktop 89% (match)",
+        "score": 0.8926,
+        "sideBySide": "/home/david/reranker/reranker/.impeccable/review/diff/desktop/side-by-side.png",
+        "at": "2026-11-04T17:48:36.233Z"
+      },
+      "forced": null
+    },
+    "review": {
+      "status": "closed",
+      "openedAt": "2026-11-04T17:48:36.233Z",
+      "closedAt": "2026-11-04T18:03:55.210Z",
+      "attempts": 0,
+      "notes": [],
+      "gate": null,
+      "forced": null
+    }
+  },
+  "finish": {
+    "disposition": "fix",
+    "at": "2026-11-04T18:03:55.210Z",
+    "phaseAtFinish": "review"
+  },
+  "plates": {
+    "arrow-buscan": {
+      "status": "ok",
+      "score": 0.8735,
+      "size": "491x163"
+    },
+    "arrow-apareces": {
+      "status": "ok",
+      "score": 0.8745,
+      "size": "1228x163"
+    }
+  }
+}

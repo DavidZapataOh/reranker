@@ -1,0 +1,44 @@
+{
+  "title": "Elige la estructura de la landing",
+  "question": "La marca ya está definida (verde, ámbar, papel, Nunito, la r escalonada). Lo que eliges aquí es cómo se cuenta la página. Fija una, dale una indicación o pide otra tanda.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "La ciudad",
+      "kicker": "THE ROLL",
+      "lineage": "Mapa vivo de tu ciudad (Medellín/Bogotá)",
+      "thesis": "Tu ciudad como escenario: cuando un cliente pregunta, la IA ilumina dos negocios del mapa. ¿El tuyo prende?",
+      "palette": ["#FAF7F0", "#0F5C45", "#F2B544", "#14211B", "#D9EBD7"],
+      "materials": ["mapa vectorial de calles en tinta suave", "pines escalonados", "recibo de evidencia"],
+      "viewport": "Titular con el motor rotando y el campo nombre + ciudad arriba; debajo, a todo el ancho, un mapa de El Poblado donde la respuesta de ChatGPT se escribe en una tarjeta y dos pines se encienden en verde; el tuyo queda gris con la nota 'Aquí no apareces'.",
+      "risk": "El mapa puede robar protagonismo al campo si no se mantiene sobrio; a las tiendas online (que venden en todo el país) les habla menos.",
+      "comp": ".impeccable/mocks/decision/assigned.png"
+    },
+    {
+      "id": "alt-escalera",
+      "label": "La escalera",
+      "lineage": "El motivo de escalones de la r",
+      "thesis": "La página se sube como el puntaje: cada sección es un escalón, de 'Invisible' a 'De los fijos'.",
+      "palette": ["#FAF7F0", "#0F5C45", "#F2B544", "#14211B", "#D9EBD7"],
+      "materials": ["barra de puntaje en escalones", "tarjetas producto", "recibo de evidencia"],
+      "viewport": "Titular con el motor rotando y el campo arriba; debajo, la tarjeta del puntaje (número grande en Nunito, rango en mono) sobre una escalera de 4 niveles, con la respuesta de la IA escribiéndose al lado. Al bajar, el puntaje sube un escalón por sección.",
+      "risk": "Si el puntaje fijo al hacer scroll se exagera, se siente como un truco; hay que mantenerlo en una sola columna lateral.",
+      "comp": ".impeccable/mocks/decision/alt-escalera.png"
+    },
+    {
+      "id": "alt-conversacion",
+      "label": "La conversación",
+      "lineage": "El chat que ya usan tus clientes",
+      "thesis": "La página es una conversación: el cliente le pregunta a la IA, la IA responde, y Reranker te cuenta qué significa y qué hacer.",
+      "palette": ["#FAF7F0", "#0F5C45", "#F2B544", "#14211B", "#D9EBD7"],
+      "materials": ["ventana de chat neutra", "burbujas con anotaciones a mano", "tarjeta de aprobación 'Corregir'"],
+      "viewport": "Titular con el motor rotando y el campo arriba; debajo, una ventana de chat amplia donde se escribe la pregunta del cliente y la respuesta de ChatGPT palabra por palabra, con notas al margen ('Así te buscan', 'Aquí no apareces') y una tarjeta de Reranker con la corrección para aprobar.",
+      "risk": "Mostrar un chat que parezca la interfaz real de ChatGPT tiene riesgo de marca; hay que dibujar una ventana propia y neutra.",
+      "comp": ".impeccable/mocks/decision/alt-conversacion.png"
+    }
+  ],
+  "reroll": { "registers": ["safer", "bolder"] },
+  "buildPath": { "value": "comp", "toggle": true },
+  "canon": false,
+  "steer": true
+}

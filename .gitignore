@@ -1,0 +1,9 @@
+node_modules/
+.next/
+.vercel/
+.env*
+!.env.example
+# Capturas y diffs de revisión de impeccable (pesados, se regeneran)
+.impeccable/review/
+.impeccable/build/crops/
+.impeccable/config.local.json
