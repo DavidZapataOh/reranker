@@ -10,12 +10,12 @@ export function GoogleTag() {
   if (!GA_ID) return null;
   return (
     <>
-      <Script id="rr-ga-consent" strategy="afterInteractive">
+      <Script id="rr-ga-consent" strategy="lazyOnload">
         {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;
 gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied'});
 gtag('js',new Date());gtag('config','${GA_ID}');`}
       </Script>
-      <Script id="rr-ga" src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+      <Script id="rr-ga" src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="lazyOnload" />
     </>
   );
 }

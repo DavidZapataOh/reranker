@@ -128,11 +128,37 @@ declare global {
   }
 }
 
-/** Sends the event to PostHog and GA4. */
+/* Events fired before PostHog finishes loading (it starts after window "load"). */
+const queued: [string, Props][] = [];
+
+/** Sends the event to PostHog and GA4; PostHog events are queued until it loads. */
 export function track(event: string, props: Props = {}) {
   if (typeof window === "undefined") return;
-  if (POSTHOG_KEY && posthog.__loaded) posthog.capture(event, props);
+  if (POSTHOG_KEY) {
+    if (posthog.__loaded) posthog.capture(event, props);
+    else if (queued.length < 50) queued.push([event, props]);
+  }
   if (GA_ID && window.gtag) window.gtag("event", event, props);
+}
+
+export function flushQueuedEvents() {
+  for (const [event, props] of queued.splice(0)) posthog.capture(event, props);
+}
+
+/** Runs fn once the page has loaded and the browser is idle. Returns a cancel function. */
+export function afterPageLoad(fn: () => void): () => void {
+  let cancelled = false;
+  const run = () => {
+    if (cancelled) return;
+    if (typeof window.requestIdleCallback === "function") window.requestIdleCallback(() => !cancelled && fn(), { timeout: 2000 });
+    else setTimeout(() => !cancelled && fn(), 200);
+  };
+  if (document.readyState === "complete") run();
+  else window.addEventListener("load", run, { once: true });
+  return () => {
+    cancelled = true;
+    window.removeEventListener("load", run);
+  };
 }
 
 /**

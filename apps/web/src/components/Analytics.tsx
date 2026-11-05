@@ -9,6 +9,8 @@ import {
   GA_ID,
   POSTHOG_KEY,
   POSTHOG_REGION,
+  afterPageLoad,
+  flushQueuedEvents,
   readConsent,
   readOrigin,
   track,
@@ -75,8 +77,9 @@ export function Analytics() {
     const origin = readOrigin();
     whatsappRef(); // persists the origin code for the whole visit
 
-    if (POSTHOG_KEY && !posthog.__loaded) {
-      posthog.init(POSTHOG_KEY, {
+    const start = () => {
+      if (POSTHOG_KEY && !posthog.__loaded) {
+        posthog.init(POSTHOG_KEY, {
         api_host: "/ingest",
         ui_host: `https://${POSTHOG_REGION}.posthog.com`,
         defaults: "2025-05-24",
@@ -107,11 +110,19 @@ export function Analytics() {
       };
       posthog.register(baseProps);
       posthog.register_once(firstTouchProps);
-    }
+      flushQueuedEvents();
+      }
+      applyConsent(readConsent());
+    };
 
-    applyConsent(c);
+    // Third-party scripts start only after the page has fully loaded and hydrated:
+    // injecting them earlier puts foreign nodes in the DOM React is hydrating.
+    const cancel = afterPageLoad(start);
     const t = window.setTimeout(() => setShowBanner(c === "pending"), 0);
-    return () => window.clearTimeout(t);
+    return () => {
+      cancel();
+      window.clearTimeout(t);
+    };
   }, []);
 
   // 2 · Reopen the banner from the footer "cookie preferences" link.
