@@ -326,16 +326,19 @@ export function Agencies() {
 }
 
 /* 11 · FAQ */
+/** FAQ copy, shared with the FAQPage structured data in app/page.tsx. */
+export const faqItems: [string, string][] = [
+  ["¿Por qué ChatGPT habla de mi negocio si yo nunca le dije nada?", "La IA arma sus respuestas con lo que encuentra publicado: tu perfil de Google, tus reseñas, directorios y tu página. Por eso conviene saber qué está diciendo y de dónde lo saca."],
+  ["¿Me pueden poner de primeros en ChatGPT?", "No, y nadie puede prometerlo con honestidad. Te mostramos qué responde hoy, corregimos contigo lo que depende de ti y medimos si cambia."],
+  ["Si yo le pregunto a ChatGPT, ¿me sale lo mismo?", "No siempre: la IA cambia sus respuestas de una vez a otra. Por eso preguntamos varias veces y te damos un rango, no una sola captura."],
+  ["¿Cómo sé que la respuesta que me muestran es la real?", "Guardamos cada respuesta tal como la dio la IA, con fecha y hora. Nadie puede editarla, ni siquiera nosotros, y puedes revisarla en reranker.co/verificar."],
+  ["¿Tengo que saber de tecnología o cambiar mi página?", "No. Te decimos una acción a la vez, en palabras normales. Muchas correcciones se hacen en tu perfil de Google."],
+  ["¿Van a publicar algo en nombre de mi negocio sin preguntarme?", "No. Cada cambio te llega como propuesta y solo se aplica si lo apruebas."],
+  ["¿Cuánto cuesta y tengo que firmar permanencia?", "El primer reporte es gratis. Los planes cuestan lo que ves arriba, sin permanencia. Pagas con PSE, Nequi o tarjeta y recibes factura electrónica."],
+];
+
 export function Faq() {
-  const qa = [
-    ["¿Por qué ChatGPT habla de mi negocio si yo nunca le dije nada?", "La IA arma sus respuestas con lo que encuentra publicado: tu perfil de Google, tus reseñas, directorios y tu página. Por eso conviene saber qué está diciendo y de dónde lo saca."],
-    ["¿Me pueden poner de primeros en ChatGPT?", "No, y nadie puede prometerlo con honestidad. Te mostramos qué responde hoy, corregimos contigo lo que depende de ti y medimos si cambia."],
-    ["Si yo le pregunto a ChatGPT, ¿me sale lo mismo?", "No siempre: la IA cambia sus respuestas de una vez a otra. Por eso preguntamos varias veces y te damos un rango, no una sola captura."],
-    ["¿Cómo sé que la respuesta que me muestran es la real?", "Guardamos cada respuesta tal como la dio la IA, con fecha y hora. Nadie puede editarla, ni siquiera nosotros, y puedes revisarla en reranker.co/verificar."],
-    ["¿Tengo que saber de tecnología o cambiar mi página?", "No. Te decimos una acción a la vez, en palabras normales. Muchas correcciones se hacen en tu perfil de Google."],
-    ["¿Van a publicar algo en nombre de mi negocio sin preguntarme?", "No. Cada cambio te llega como propuesta y solo se aplica si lo apruebas."],
-    ["¿Cuánto cuesta y tengo que firmar permanencia?", "El primer reporte es gratis. Los planes cuestan lo que ves arriba, sin permanencia. Pagas con PSE, Nequi o tarjeta y recibes factura electrónica."],
-  ];
+  const qa = faqItems;
   return (
     <Section id="preguntas" labelledBy="faq-title" className="bg-white py-24 md:py-32">
       <div className="grid gap-12 md:grid-cols-[1fr_1.6fr] md:gap-16">
