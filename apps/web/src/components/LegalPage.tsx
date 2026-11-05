@@ -4,7 +4,7 @@ import { Nav } from "./Nav";
 
 export type LegalSection = { id: string; title: string; body: ReactNode };
 
-/** Plantilla de lectura para documentos legales: índice lateral fijo y texto a 68ch. */
+/** Reading layout for legal documents: sticky side index and 68ch text. */
 export function LegalPage({
   title,
   updated,

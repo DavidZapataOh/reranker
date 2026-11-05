@@ -10,19 +10,19 @@ export const engines = [
 ] as const;
 
 const N = engines.length;
-// La lista se repite al final con el primero para que la ranura gire sin salto.
+// The list repeats the first item at the end so the slot rolls over without a jump.
 const loop = [...engines, engines[0]];
 const HOLD = 2200;
 const ROLL = 520;
 const EASE = "cubic-bezier(0.65, 0, 0.2, 1)";
 
 /**
- * Ranura con el motor de IA: el logo y el nombre suben juntos, sin fin.
- * Se pausa con hover, con `paused` (botón del padre) y fuera de pantalla.
- * Con reduced motion queda fija en ChatGPT. Es decorativa: el titular tiene su propio nombre accesible.
+ * AI engine slot: the logo and name roll up together, endlessly.
+ * Pauses on hover, via `paused` (the parent's button) and when off-screen.
+ * With reduced motion it stays on ChatGPT. Decorative: the headline has its own accessible name.
  */
 export function EngineRotator({ paused = false }: { paused?: boolean }) {
-  const [pos, setPos] = useState(0); // 0..N (N = copia del primero)
+  const [pos, setPos] = useState(0); // 0..N (N = copy of the first)
   const [animate, setAnimate] = useState(true);
   const [hover, setHover] = useState(false);
   const [visible, setVisible] = useState(true);
@@ -56,7 +56,7 @@ export function EngineRotator({ paused = false }: { paused?: boolean }) {
     return () => window.clearTimeout(t);
   }, [running, pos]);
 
-  // Al llegar a la copia del primero, vuelve al inicio sin animación.
+  // On reaching the copy of the first, jump back to the start without animation.
   useEffect(() => {
     if (pos !== N) return;
     const t = window.setTimeout(() => {
@@ -85,7 +85,7 @@ export function EngineRotator({ paused = false }: { paused?: boolean }) {
       onMouseLeave={() => setHover(false)}
       className="mx-[0.1em] inline-flex h-[1.3em] translate-y-[-0.04em] items-center gap-[0.2em] rounded-full bg-white pr-[0.36em] pl-[0.24em] align-middle shadow-[0_1px_1px_rgb(20_33_27/0.04),0_8px_24px_-12px_rgb(20_33_27/0.22)] ring-1 ring-line"
     >
-      {/* Logo: todos en la misma caja de 1em, con ajuste óptico */}
+      {/* Logo: all in the same 1em box, optically adjusted */}
       <span className="relative block h-[1em] w-[1em] overflow-hidden">
         <span className="absolute inset-x-0 top-0 block" style={{ transform: `translateY(${-pos}em)`, transition: `transform ${dur}ms ${EASE}` }}>
           {loop.map((e, k) => (
@@ -96,7 +96,7 @@ export function EngineRotator({ paused = false }: { paused?: boolean }) {
           ))}
         </span>
       </span>
-      {/* Nombre: la misma ranura; el ancho se ajusta al motor visible */}
+      {/* Name: the same slot; width adapts to the visible engine */}
       <span
         className="relative block h-[1.2em] overflow-hidden"
         style={{ width: w ? `${w}px` : undefined, transition: `width ${dur}ms ${EASE}` }}

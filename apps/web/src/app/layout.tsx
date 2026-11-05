@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Caveat, JetBrains_Mono, Nunito, Plus_Jakarta_Sans } from "next/font/google";
+import { Analytics } from "@/components/Analytics";
 import "./globals.css";
 
 const display = Nunito({ variable: "--nf-display", subsets: ["latin"], weight: ["800", "900"], display: "swap" });
@@ -34,7 +35,10 @@ export const viewport: Viewport = { themeColor: "#FAF7F0" };
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="es-CO" className={`${display.variable} ${text.variable} ${mono.variable} ${hand.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }

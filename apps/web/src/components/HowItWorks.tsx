@@ -15,7 +15,7 @@ export function HowItWorks() {
   const [auto, setAuto] = useState(true);
   const ref = useRef<HTMLDivElement>(null);
 
-  // Avanza solo mientras está a la vista y nadie lo ha tocado; sin reduced motion.
+  // Auto-advances only while in view and untouched by the user; not with reduced motion.
   useEffect(() => {
     if (!auto || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     let visible = false;

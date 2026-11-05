@@ -133,6 +133,7 @@ const sections: LegalSection[] = [
           <li>Infraestructura y alojamiento en la nube: Amazon Web Services, Cloudflare y Vercel.</li>
           <li>Envío de correos: Resend.</li>
           <li>Pagos: Wompi. Facturación electrónica y contabilidad: Alegra.</li>
+          <li>Medición del sitio: PostHog, Google Analytics y Microsoft Clarity (ver numeral de cookies).</li>
           <li>Asistentes de IA que consultamos (por ejemplo, OpenAI, Google y Perplexity): reciben las preguntas sobre negocios que hacemos en tu nombre, no tus datos de contacto.</li>
         </ul>
         <p>Algunos de estos proveedores procesan datos en Estados Unidos, país que la SIC reconoce con un nivel adecuado de protección (Circular Externa 005 de 2017). No procesamos datos personales en países que no tengan ese nivel sin las garantías que exige la ley.</p>
@@ -170,9 +171,17 @@ const sections: LegalSection[] = [
   },
   {
     id: "cookies",
-    title: "Cookies",
+    title: "Cookies y medición del sitio",
     body: (
-      <p>Usamos cookies necesarias para que el sitio funcione y recuerde tus preferencias, y herramientas de medición con datos agregados para saber cómo se usa el sitio. Puedes bloquear o borrar las cookies desde tu navegador; algunas funciones podrían dejar de funcionar.</p>
+      <>
+        <p>Medimos cómo se usa reranker.co para mejorarlo: de dónde llegan las visitas, qué secciones se leen, en qué se hace clic y dónde falla el flujo. La primera vez que entras te preguntamos si aceptas cookies de medición.</p>
+        <ul>
+          <li><strong>Si aceptas:</strong> usamos cookies de PostHog y Google Analytics para medir tu visita, y PostHog y Microsoft Clarity pueden grabar de forma anónima cómo navegas la página (movimientos, clics y desplazamiento) y armar mapas de calor. En las grabaciones ocultamos todo lo que escribes en los formularios y los nombres de negocios.</li>
+          <li><strong>Si rechazas o no decides:</strong> no instalamos cookies de medición ni grabamos tu visita. Solo contamos visitas de forma agregada, sin cookies y sin identificarte.</li>
+          <li><strong>Cookies necesarias:</strong> guardamos tu decisión sobre las cookies para no preguntarte cada vez.</li>
+        </ul>
+        <p>No usamos cookies de publicidad. Si en el futuro las usamos, te pediremos autorización antes. Puedes cambiar tu decisión cuando quieras en &ldquo;Preferencias de cookies&rdquo;, al pie de cada página, o bloquear y borrar las cookies desde tu navegador.</p>
+      </>
     ),
   },
   {
@@ -198,7 +207,7 @@ export default function Page() {
   return (
     <LegalPage
       title="Política de tratamiento de datos personales"
-      updated="4 de noviembre de 2026"
+      updated="5 de noviembre de 2026"
       intro={<p>En Reranker cuidamos tus datos como cuidamos las respuestas que guardamos: sin cambiarlas y sin usarlas para algo que no sepas. Aquí te contamos qué datos tratamos, para qué y cómo ejercer tus derechos.</p>}
       sections={sections}
     />

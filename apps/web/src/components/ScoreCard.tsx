@@ -5,7 +5,7 @@ import { Example } from "./ui";
 
 const levels = ["Invisible", "A veces", "En la lista", "De los fijos"];
 
-/** El momento de marca: el puntaje sube un escalón (de "A veces" a "En la lista"). */
+/** The brand moment: the score climbs one step (from "A veces" to "En la lista"). */
 export function ScoreCard({ className = "" }: { className?: string }) {
   const ref = useRef<HTMLElement>(null);
   const [up, setUp] = useState(false);
@@ -54,7 +54,7 @@ export function ScoreCard({ className = "" }: { className?: string }) {
         </p>
       </div>
 
-      {/* Escalera de 4 niveles: el motivo de la r escalonada */}
+      {/* 4-level staircase: the stepped-r motif */}
       <div className="mt-8 grid grid-cols-4 items-end gap-2" aria-hidden="true">
         {levels.map((l, i) => (
           <div key={l} className="flex flex-col gap-2">

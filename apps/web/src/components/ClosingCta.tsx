@@ -11,8 +11,8 @@ const asks = [
 ];
 
 /**
- * Cierre: la misma pregunta del hero, ahora con el hueco del nombre del dueño.
- * El formulario manda el nombre a la demo de arriba (evento rr:negocio) y sube.
+ * Closing: the same question as the hero, now with a blank for the owner's business name.
+ * The form sends the name to the demo above (rr:business event) and scrolls up.
  */
 export function ClosingCta() {
   const [k, setK] = useState(0);
@@ -31,7 +31,7 @@ export function ClosingCta() {
     <section aria-labelledby="closing-title" className="py-24 md:py-32">
       <div className="mx-auto max-w-[1280px] px-5 md:px-10">
         <div className="grid overflow-hidden rounded-[32px] bg-white ring-1 ring-line md:grid-cols-[1.05fr_1fr]">
-          {/* Izquierda: la acción */}
+          {/* Left: the action */}
           <div className="min-w-0 p-6 sm:p-8 md:p-14">
             <h2 id="closing-title" className="font-display text-[clamp(2.1rem,3.6vw,3.3rem)] leading-[1.06] font-black tracking-[-0.02em] text-balance text-ink">
               Mira qué le responde la IA a tus clientes hoy.
@@ -40,7 +40,7 @@ export function ClosingCta() {
               className="mt-8"
               onSubmit={(e) => {
                 e.preventDefault();
-                window.dispatchEvent(new CustomEvent("rr:negocio", { detail: name.trim() || "Tu negocio" }));
+                window.dispatchEvent(new CustomEvent("rr:business", { detail: name.trim() || "Tu negocio" }));
                 document.getElementById("demo")?.scrollIntoView({ behavior: "smooth", block: "center" });
               }}
             >
@@ -72,7 +72,7 @@ export function ClosingCta() {
             </form>
           </div>
 
-          {/* Derecha: la pregunta de un cliente, con el hueco de su nombre */}
+          {/* Right: a customer's question, with a blank for their name */}
           <div aria-hidden="true" className="relative flex min-w-0 flex-col justify-center gap-4 bg-paper p-6 sm:p-8 md:border-l md:border-line md:p-12">
             <div key={k} className="step-in space-y-4">
               <p className="ml-auto w-fit max-w-[92%] rounded-2xl rounded-tr-md bg-white px-4 py-3 text-[15.5px] leading-snug text-ink ring-1 ring-line">{ask.q}</p>

@@ -11,6 +11,7 @@
   "dependencies": {
     "lucide-react": "^1.68.0",
     "next": "16.4.5",
+    "posthog-js": "^1.446.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "simple-icons": "^16.36.0"

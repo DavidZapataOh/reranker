@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-/** Entradas al hacer scroll: solo para lo que está bajo el pliegue y solo sin reduced motion. */
+/** Scroll-in entrances: only for content below the fold, and only without reduced motion. */
 export function Reveal() {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;

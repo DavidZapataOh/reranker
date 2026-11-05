@@ -12,8 +12,8 @@ const links = [
 ];
 
 /**
- * Barra fija. En el primer pliegue el botón verde es el del campo del hero (una sola acción verde);
- * el CTA de la barra aparece cuando el campo sale de la vista. En móvil, menú desplegable.
+ * Fixed bar. Above the fold the green button is the hero field's one (a single green action);
+ * the bar's CTA appears once the field leaves the viewport. On mobile, a dropdown menu.
  */
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
@@ -27,7 +27,7 @@ export function Nav() {
     const form = document.querySelector("#reporte form");
     const io = new IntersectionObserver(([e]) => setShowCta(!e.isIntersecting && e.boundingClientRect.top < 0));
     if (form) io.observe(form);
-    else window.setTimeout(() => setShowCta(true), 0); // fuera de la home: el CTA siempre visible
+    else window.setTimeout(() => setShowCta(true), 0); // outside the home page: CTA always visible
     return () => {
       window.clearTimeout(t);
       window.removeEventListener("scroll", onScroll);
@@ -97,7 +97,7 @@ export function Nav() {
         </div>
       </nav>
 
-      {/* Menú móvil */}
+      {/* Mobile menu */}
       <div id="menu-movil" hidden={!open} className="fixed inset-x-0 top-[60px] bottom-0 overflow-y-auto bg-paper px-5 pt-4 pb-10 lg:hidden">
         <ul className="divide-y divide-line border-y border-line">
           {links.map((l) => (

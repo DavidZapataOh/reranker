@@ -17,7 +17,7 @@ const kinds = [
   { k: "Inmobiliarias", Icon: House, q: "Una inmobiliaria confiable para arrendar en Barranquilla" },
 ];
 
-/** A cualquier negocio le preguntan: un tipo de negocio a la vez, su pregunta escribiéndose en una barra. */
+/** Every business gets asked: one business type at a time, its question typing out in a bar. */
 export function ForWho() {
   const [i, setI] = useState(0);
   const [typed, setTyped] = useState(kinds[0].q.length);
@@ -32,7 +32,7 @@ export function ForWho() {
     return () => io.disconnect();
   }, []);
 
-  // Escribe la pregunta del negocio activo, letra por letra.
+  // Types the active business's question, letter by letter.
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const full = kinds[i].q.length;
@@ -52,7 +52,7 @@ export function ForWho() {
     return () => window.clearTimeout(t);
   }, [i, typed, auto, visible]);
 
-  // En móvil la fila se desliza para mostrar el negocio activo (sin mover la página).
+  // On mobile the row slides to show the active business (without scrolling the page).
   useEffect(() => {
     const ul = row.current;
     const li = ul?.children[i] as HTMLElement | undefined;
@@ -75,7 +75,7 @@ export function ForWho() {
       </div>
 
       <div ref={box} className="mx-auto mt-12 max-w-[860px]">
-        {/* La barra donde el cliente escribe */}
+        {/* The bar where the customer types */}
         <div className="flex items-center gap-3 rounded-[26px] bg-paper p-3 pl-6 shadow-[0_1px_2px_rgb(20_33_27/0.05),0_16px_40px_-20px_rgb(20_33_27/0.25)] ring-1 ring-line md:p-3.5 md:pl-7">
           <p className="min-h-[1.5em] flex-1 text-[clamp(1.1rem,2.1vw,1.6rem)] leading-snug text-ink" aria-live="polite">
             <span className="sr-only">Pregunta de ejemplo: </span>
@@ -87,7 +87,7 @@ export function ForWho() {
           </span>
         </div>
 
-        {/* Tipos de negocio: ícono + una palabra */}
+        {/* Business types: icon + one word */}
         <ul ref={row} className="-mx-5 mt-7 flex snap-x scroll-px-5 gap-2.5 overflow-x-auto px-5 pb-2 [scrollbar-width:none] md:mx-0 md:mt-8 md:flex-wrap md:justify-center md:overflow-visible md:px-0">
           {kinds.map(({ k, Icon }, n) => (
             <li key={k} className="shrink-0 snap-start">

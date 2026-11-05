@@ -10,15 +10,15 @@ export function Hero() {
   const [submitted, setSubmitted] = useState<string | null>(null);
   const [paused, setPaused] = useState(false);
 
-  // El formulario del cierre manda el nombre aquí, a la demo.
+  // The closing form sends the name here, to the demo.
   useEffect(() => {
     const on = (e: Event) => {
       const name = (e as CustomEvent<string>).detail;
       setBusiness(name === "Tu negocio" ? "" : name);
       setSubmitted(name);
     };
-    window.addEventListener("rr:negocio", on);
-    return () => window.removeEventListener("rr:negocio", on);
+    window.addEventListener("rr:business", on);
+    return () => window.removeEventListener("rr:business", on);
   }, []);
   const inputId = useId();
   
@@ -67,7 +67,7 @@ export function Hero() {
             </label>
             <input
               id={inputId}
-              name="negocio"
+              name="business"
               autoComplete="organization"
               enterKeyHint="go"
               value={business}

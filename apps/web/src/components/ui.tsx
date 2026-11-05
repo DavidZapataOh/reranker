@@ -41,7 +41,7 @@ export function Example({ className = "" }: { className?: string }) {
   );
 }
 
-/** Icono de trazo uniforme (2px / 24px), esquinas redondeadas. */
+/** Uniform-stroke icon (2px / 24px), rounded corners. */
 export function Icon({ d, className = "h-6 w-6" }: { d: string; className?: string }) {
   return (
     <svg aria-hidden="true" viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -63,7 +63,7 @@ export const icons = {
   plus: "M12 5v14M5 12h14",
 };
 
-/** Contacto público. El correo lo configura el fundador en el dominio. */
+/** Public contact. The founder sets up the email address on the domain. */
 export const contact = {
   whatsapp: "573334017889",
   whatsappLabel: "+57 333 401 7889",

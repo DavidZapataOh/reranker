@@ -2,8 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { Example, H2, Icon, Lede, Section, contact, icons, wa } from "./ui";
 import { ScoreCard } from "./ScoreCard";
+import { CookiePrefsButton } from "./Analytics";
 
-/* 2 · Tres promesas, en el lenguaje de la página: frases con resaltador, sin íconos */
+/* 2 · Three promises, in the page's own language: highlighted phrases, no icons */
 export function Promises() {
   const items = [
     { k: "Gratis y sin registro.", t: "Solo el nombre de tu negocio y tu ciudad." },
@@ -26,7 +27,7 @@ export function Promises() {
   );
 }
 
-/* 3 · El cambio de hábito: frase grande sobre papel, con nota a mano y el dato en metadatos */
+/* 3 · The habit shift: big sentence on paper, with a handwritten note and the stat as metadata */
 export function Shift() {
   return (
     <Section labelledBy="shift-title" className="pb-24 md:pb-32">
@@ -47,7 +48,7 @@ export function Shift() {
   );
 }
 
-/* 5 · Lo que recibes: bento con producto vivo en cada tarjeta */
+/* 5 · What you get: bento with live product in each card */
 export function Bento() {
   return (
     <Section id="producto" labelledBy="bento-title" className="py-24 md:py-32">
@@ -61,7 +62,7 @@ export function Bento() {
         </div>
         <ScoreCard className="md:col-span-3" />
 
-        {/* Competencia */}
+        {/* Competitors */}
         <article className="reveal rounded-3xl bg-white p-6 ring-1 ring-line md:col-span-3 md:p-8">
           <div className="flex items-start justify-between gap-4">
             <div>
@@ -94,7 +95,7 @@ export function Bento() {
           </ol>
         </article>
 
-        {/* Recibo */}
+        {/* Receipt */}
         <article className="reveal rounded-3xl bg-white p-6 ring-1 ring-line md:col-span-2 md:p-7">
           <h3 className="text-[19px] font-bold text-ink">Cada respuesta, guardada tal cual</h3>
           <p className="mt-1 text-[15px] text-ink/65">Para que puedas volver a ella cuando quieras.</p>
@@ -114,7 +115,7 @@ export function Bento() {
           </a>
         </article>
 
-        {/* Corregir */}
+        {/* Fix */}
         <article className="reveal rounded-3xl bg-white p-6 ring-1 ring-line md:col-span-2 md:p-7">
           <h3 className="text-[19px] font-bold text-ink">Corrige en un clic</h3>
           <p className="mt-1 text-[15px] text-ink/65">Te proponemos el cambio. Tú decides.</p>
@@ -130,7 +131,7 @@ export function Bento() {
           <p className="mt-4 text-[13.5px] text-ink/60">Nada se publica sin tu aprobación.</p>
         </article>
 
-        {/* Alertas */}
+        {/* Alerts */}
         <article className="reveal rounded-3xl bg-white p-6 ring-1 ring-line md:col-span-2 md:p-7">
           <h3 className="text-[19px] font-bold text-ink">Te avisamos cuando algo cambia</h3>
           <p className="mt-1 text-[15px] text-ink/65">Por correo, o por WhatsApp si lo prefieres.</p>
@@ -156,7 +157,7 @@ export function Bento() {
   );
 }
 
-/* 8 · Dónde actúa: la IA arma su respuesta con lo que encuentra de ti; ahí nos conectamos */
+/* 8 · Where it acts: the AI builds its answer from what it finds about you; that's where we plug in */
 export function Connect() {
   const reads = [
     { icon: "/engines/google.svg", name: "Perfil de Google", note: "Horarios, categorías, fotos" },
@@ -193,7 +194,7 @@ export function Connect() {
       </div>
 
       <div className="relative mt-14 grid gap-6 lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-0">
-        {/* Líneas que unen todo con el centro (solo escritorio) */}
+        {/* Lines connecting everything to the center (desktop only) */}
         <svg aria-hidden="true" className="pointer-events-none absolute inset-0 hidden h-full w-full lg:block" viewBox="0 0 100 100" preserveAspectRatio="none">
           {ys.map((y) => (
             <g key={y}>
@@ -224,7 +225,7 @@ export function Connect() {
   );
 }
 
-/* 9 · Precios en pesos */
+/* 9 · Pricing in pesos */
 export function Pricing() {
   const plans = [
     {
@@ -301,7 +302,7 @@ export function Pricing() {
   );
 }
 
-/* 10 · Agencias */
+/* 10 · Agencies */
 export function Agencies() {
   return (
     <Section id="agencias" labelledBy="agencies-title" className="py-24 md:py-28">
@@ -324,7 +325,7 @@ export function Agencies() {
   );
 }
 
-/* 11 · Preguntas */
+/* 11 · FAQ */
 export function Faq() {
   const qa = [
     ["¿Por qué ChatGPT habla de mi negocio si yo nunca le dije nada?", "La IA arma sus respuestas con lo que encuentra publicado: tu perfil de Google, tus reseñas, directorios y tu página. Por eso conviene saber qué está diciendo y de dónde lo saca."],
@@ -357,7 +358,7 @@ export function Faq() {
   );
 }
 
-/* Pie: columnas como los referentes + la marca grande como cierre propio */
+/* Footer: columns like the reference sites + the large wordmark as our own sign-off */
 export function Footer() {
   const cols = [
     {
@@ -428,11 +429,12 @@ export function Footer() {
           <ul className="flex gap-6">
             <li><Link href="/politica-de-datos" className="hover:text-green">Política de datos</Link></li>
             <li><Link href="/terminos" className="hover:text-green">Términos</Link></li>
+            <li><CookiePrefsButton /></li>
           </ul>
         </div>
       </div>
 
-      {/* La marca, grande y recortada: el cierre visual propio */}
+      {/* The wordmark, large and cropped: our own visual sign-off */}
       <div aria-hidden="true" className="mx-auto max-w-[1280px] px-5 md:px-10">
         <div
           className="aspect-[609/200] w-full translate-y-[30%] bg-green-light"

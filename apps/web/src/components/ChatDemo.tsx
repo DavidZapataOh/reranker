@@ -7,9 +7,9 @@ const QUESTION = "¿Qué marca de ropa de lino hecha en Colombia me recomiendas?
 const ANSWER = "Te recomiendo tres marcas: Lino Andino, Casa Telar y Hilo Caribe, con envíos a todo el país.";
 
 /**
- * La demo del hero: una ventana propia (no la interfaz de ChatGPT) donde un cliente
- * pregunta y la IA responde palabra por palabra. Datos de ejemplo, negocios ficticios.
- * Escritorio: escenario medido sobre el comp (1536 px) y escalado con unidades cqw.
+ * The hero demo: our own window (not the ChatGPT UI) where a customer
+ * asks and the AI answers word by word. Sample data, fictional businesses.
+ * Desktop: stage measured against the comp (1536 px) and scaled with cqw units.
  */
 export function ChatDemo({ business }: { business: string | null }) {
   const words = ANSWER.split(" ");
@@ -61,7 +61,7 @@ export function ChatDemo({ business }: { business: string | null }) {
   return (
     <div id="demo" ref={ref} className="relative mx-auto mt-[34px] max-w-[1536px] md:mt-[2.05vw] [container-type:inline-size]">
       <div className="relative hidden aspect-[1536/416] w-full md:block">
-        {/* Ventana */}
+        {/* Window */}
         <div
           className="absolute top-0 left-[7.03%] h-[100%] w-[80.86%] rounded-[1.6cqw] bg-white shadow-[0_1px_2px_rgb(20_33_27/0.05),0_24px_60px_-28px_rgb(20_33_27/0.25)] ring-1 ring-line"
           role="group"
@@ -88,7 +88,7 @@ export function ChatDemo({ business }: { business: string | null }) {
           </div>
 
           <div className="absolute inset-x-[0.9cqw] top-[3.85cqw] bottom-[0.9cqw] rounded-[1.05cqw] ring-1 ring-line">
-            {/* Pregunta del cliente */}
+            {/* Customer question */}
             <div className="absolute top-[2.25cqw] right-[2.35cqw] flex items-center gap-[0.6cqw]">
               <p className="rounded-[0.95cqw] bg-bubble px-[1.3cqw] py-[1cqw] text-[1.15cqw] leading-none text-ink">{question}</p>
               <span aria-hidden="true" className="grid h-[2.85cqw] w-[2.85cqw] place-items-center rounded-full bg-[#e7e8ea] text-[#5f666d]">
@@ -99,7 +99,7 @@ export function ChatDemo({ business }: { business: string | null }) {
               </span>
             </div>
 
-            {/* Respuesta de la IA */}
+            {/* AI answer */}
             <div className="absolute top-[7.85cqw] left-[2.75cqw] flex items-start gap-[0.85cqw]">
               <span aria-hidden="true" className="grid h-[4.05cqw] w-[4.05cqw] shrink-0 place-items-center rounded-full bg-bubble">
                 <Image src="/engines/openai.svg" alt="" width={40} height={40} className="h-[2.4cqw] w-[2.4cqw]" />
@@ -122,7 +122,7 @@ export function ChatDemo({ business }: { business: string | null }) {
           </div>
         </div>
 
-        {/* Anotaciones a mano */}
+        {/* Handwritten annotations */}
         <div aria-hidden="true" className={`transition-opacity duration-[250ms] ${phase === "idle" ? "opacity-0" : "opacity-100"}`}>
           <Image src="/plates/arrow-buscan-v2.png" alt="" width={491} height={163} className="absolute top-[19.5%] left-[85.7%] w-[7.4%] -scale-y-100" />
           <p className="absolute top-[13%] left-[89.2%] -rotate-[6deg] font-hand text-[1.6cqw] leading-none font-medium whitespace-nowrap text-ink">
@@ -136,7 +136,7 @@ export function ChatDemo({ business }: { business: string | null }) {
           </p>
         </div>
 
-        {/* Propuesta de Reranker */}
+        {/* Reranker suggestion */}
         <div
           className={`absolute top-[61.5%] left-[59.9%] w-[35.95%] rounded-[1.2cqw] bg-white p-[1.45cqw] shadow-[0_2px_4px_rgb(20_33_27/0.06),0_24px_48px_-16px_rgb(20_33_27/0.24)] ring-1 ring-line ${done ? "step-up" : "opacity-0"}`}
         >
@@ -161,7 +161,7 @@ export function ChatDemo({ business }: { business: string | null }) {
           </div>
         </div>
       </div>
-      {/* Móvil: la misma conversación, apilada y legible */}
+      {/* Mobile: the same conversation, stacked and legible */}
       <div className="px-4 md:hidden">
         <div className="rounded-[22px] bg-white p-3 shadow-[0_1px_2px_rgb(20_33_27/0.05),0_20px_44px_-24px_rgb(20_33_27/0.28)] ring-1 ring-line">
           <p className="px-2 pt-1 pb-3 text-[13px] font-medium text-ink [word-spacing:0.12em]">

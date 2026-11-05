@@ -51,7 +51,7 @@
   }
 }
 
-/* Cursor de escritura de la demo */
+/* Demo typing caret */
 @keyframes caret {
   0%, 49% { opacity: 1; }
   50%, 100% { opacity: 0; }
@@ -80,7 +80,7 @@
   }
 }
 
-/* Entradas: visibles por defecto; el script marca como pendientes solo las que están bajo el pliegue */
+/* Entrances: visible by default; the script marks as pending only those below the fold */
 .reveal.pending { opacity: 0; transform: translateY(14px); }
 .reveal.shown {
   opacity: 1;
@@ -90,7 +90,7 @@
 .bar { transform-origin: left; transition: transform 600ms cubic-bezier(0.2, 0.8, 0.2, 1); }
 .pending .bar { transform: scaleX(0); }
 
-/* Cambio de paso en "Así funciona" */
+/* Step change in "Así funciona" */
 .step-in { animation: step-in 250ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
 .step-in li { animation: step-in 250ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
 @keyframes step-in {
@@ -98,7 +98,7 @@
   to { opacity: 1; transform: none; }
 }
 
-/* Firma de marca: subir dos escalones */
+/* Brand signature: climb two steps */
 .step-up { animation: step-up 340ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
 @keyframes step-up {
   0% { opacity: 0; transform: translateY(12px); }
@@ -107,7 +107,7 @@
   100% { opacity: 1; transform: translateY(0); }
 }
 
-/* Resaltador ámbar (detrás de tinta, nunca ámbar como texto) */
+/* Amber highlighter (behind ink, never amber as text) */
 .marker {
   background-image: linear-gradient(transparent 58%, rgb(242 181 68 / 0.75) 58%, rgb(242 181 68 / 0.75) 92%, transparent 92%);
   box-decoration-break: clone;
@@ -115,7 +115,7 @@
   padding: 0 0.06em;
 }
 
-/* Líneas de conexión: trazo fino de tinta con un pulso que viaja hacia el centro */
+/* Connection lines: thin ink stroke with a pulse traveling toward the center */
 .flow {
   fill: none;
   stroke: rgb(20 33 27 / 0.38);
@@ -127,7 +127,7 @@
 .flow-out { animation-direction: reverse; }
 @keyframes flow { to { stroke-dashoffset: -16; } }
 
-/* Texto legal: legible, ritmo calmado */
+/* Legal text: readable, calm rhythm */
 .legal p { margin-top: 0.85em; font-size: 16.5px; line-height: 1.7; color: rgb(20 33 27 / 0.82); }
 .legal p:first-child { margin-top: 0; }
 .legal ul { margin-top: 0.85em; padding-left: 1.2em; list-style: disc; }
