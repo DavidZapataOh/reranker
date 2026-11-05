@@ -14,10 +14,9 @@ import posthog from "posthog-js";
  * development or without keys the site works the same and sends nothing.
  */
 
-export const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY;
-export const POSTHOG_REGION = process.env.NEXT_PUBLIC_POSTHOG_REGION === "eu" ? "eu" : "us";
-export const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
-export const CLARITY_ID = process.env.NEXT_PUBLIC_CLARITY_ID;
+import { CLARITY_ID, GA_ID, POSTHOG_KEY, POSTHOG_REGION } from "./analytics-config";
+
+export { CLARITY_ID, GA_ID, POSTHOG_KEY, POSTHOG_REGION };
 
 /** Banner copy version, stored with every decision (Colombian Decreto 1377/2013). */
 export const CONSENT_VERSION = "2026-11-05";

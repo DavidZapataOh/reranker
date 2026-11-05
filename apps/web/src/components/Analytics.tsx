@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Script from "next/script";
 import posthog from "posthog-js";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -127,7 +126,7 @@ export function Analytics() {
     if (!anyTool) return;
 
     const onClick = (e: MouseEvent) => {
-      const el = (e.target as Element | null)?.closest("a, button");
+      const el = e.target instanceof Element ? e.target.closest("a, button") : null;
       if (!el || el.closest("[data-no-track]")) return;
       const section_id = sectionOf(el);
       const label = (el.getAttribute("data-cta") || el.getAttribute("aria-label") || el.textContent || "").trim().replace(/\s+/g, " ").slice(0, 60);
@@ -155,14 +154,15 @@ export function Analytics() {
     };
 
     const onFocus = (e: FocusEvent) => {
-      const form = (e.target as Element | null)?.closest("form");
+      const form = e.target instanceof Element ? e.target.closest("form") : null;
       if (!form || started.current.has(form)) return;
       started.current.add(form);
       track("report_form_started", { section_id: sectionOf(form) });
     };
 
     const onSubmit = (e: SubmitEvent) => {
-      const form = e.target as HTMLFormElement;
+      const form = e.target;
+      if (!(form instanceof HTMLFormElement)) return;
       const input = form.querySelector("input");
       // Never send the business name, only whether one was typed.
       track("report_form_submitted", { section_id: sectionOf(form), has_name: Boolean(input?.value.trim()) });
@@ -210,16 +210,6 @@ export function Analytics() {
 
   return (
     <>
-      {GA_ID ? (
-        <>
-          <Script id="rr-ga-consent" strategy="afterInteractive">
-            {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;
-gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied'});
-gtag('js',new Date());gtag('config','${GA_ID}');`}
-          </Script>
-          <Script id="rr-ga" src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
-        </>
-      ) : null}
 
       {anyTool && showBanner ? (
         <div

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Caveat, JetBrains_Mono, Nunito, Plus_Jakarta_Sans } from "next/font/google";
 import { Analytics } from "@/components/Analytics";
+import { GoogleTag } from "@/components/GoogleTag";
 import "./globals.css";
 
 const display = Nunito({ variable: "--nf-display", subsets: ["latin"], weight: ["800", "900"], display: "swap" });
@@ -38,6 +39,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body>
         {children}
         <Analytics />
+        <GoogleTag />
       </body>
     </html>
   );
