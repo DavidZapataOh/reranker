@@ -49,6 +49,14 @@ export function writeConsent(c: Exclude<Consent, "pending">) {
   }
 }
 
+/**
+ * In-memory id for the current visit (lives until the tab reloads; never stored).
+ * Accepting cookies makes PostHog switch from a cookieless identity to a new one,
+ * so funnels count visits by this id to bridge the two.
+ */
+export const VISIT_ID: string =
+  typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
 /* ---------- Origin: which AI assistant sent the visitor ---------- */
 
 const AI_HOSTS: [RegExp, string][] = [

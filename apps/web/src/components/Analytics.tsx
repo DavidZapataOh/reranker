@@ -13,6 +13,7 @@ import {
   readConsent,
   readOrigin,
   track,
+  VISIT_ID,
   whatsappRef,
   writeConsent,
   type Consent,
@@ -95,7 +96,11 @@ export function Analytics() {
         },
       });
       // Skip nulls so an internal navigation never erases the original AI source.
-      baseProps = { device_type: origin.device_type, ...(origin.ai_source ? { ai_source: origin.ai_source } : {}) };
+      baseProps = {
+        visit_id: VISIT_ID,
+        device_type: origin.device_type,
+        ...(origin.ai_source ? { ai_source: origin.ai_source } : {}),
+      };
       firstTouchProps = {
         first_ai_source: origin.ai_source,
         first_referrer_domain: origin.referrer_domain,
