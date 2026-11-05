@@ -30,11 +30,18 @@ function loadClarity() {
   window.clarity?.("consent");
 }
 
+/* Super properties set at init; re-registered after opt-in because switching
+   from cookieless to cookie persistence drops them. */
+let baseProps: Record<string, string | null> = {};
+let firstTouchProps: Record<string, string | null> = {};
+
 /* ---------- Apply the consent decision to every tool ---------- */
 function applyConsent(c: Consent) {
   if (POSTHOG_KEY && posthog.__loaded) {
     if (c === "granted") {
       posthog.opt_in_capturing();
+      posthog.register(baseProps);
+      posthog.register_once(firstTouchProps);
       posthog.startSessionRecording();
     } else {
       // Pending or rejected: PostHog keeps measuring, but cookieless and without replays.
@@ -74,6 +81,8 @@ export function Analytics() {
         ui_host: `https://${POSTHOG_REGION}.posthog.com`,
         defaults: "2025-05-24",
         cookieless_mode: "on_reject",
+        // Treat "no decision yet" as rejected, so pending visitors are counted cookieless.
+        opt_out_capturing_by_default: true,
         person_profiles: "identified_only",
         capture_pageview: "history_change",
         capture_pageleave: true,
@@ -85,12 +94,15 @@ export function Analytics() {
           maskTextSelector: ".marker, [data-mask]",
         },
       });
-      posthog.register({ ai_source: origin.ai_source, device_type: origin.device_type });
-      posthog.register_once({
+      // Skip nulls so an internal navigation never erases the original AI source.
+      baseProps = { device_type: origin.device_type, ...(origin.ai_source ? { ai_source: origin.ai_source } : {}) };
+      firstTouchProps = {
         first_ai_source: origin.ai_source,
         first_referrer_domain: origin.referrer_domain,
         first_landing_path: origin.landing_path,
-      });
+      };
+      posthog.register(baseProps);
+      posthog.register_once(firstTouchProps);
     }
 
     applyConsent(c);
