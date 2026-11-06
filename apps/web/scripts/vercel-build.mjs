@@ -24,12 +24,18 @@ export function runSteps(steps, run = defaultRun) {
   return 0;
 }
 
+export function runtimeBanner(nodeVersion, pnpmVersion) {
+  return `Build runtime: node ${nodeVersion}, pnpm ${pnpmVersion}`;
+}
+
 function defaultRun(command, args) {
   return spawnSync(command, args, { stdio: "inherit" }).status ?? 1;
 }
 
 if (import.meta.main) {
   try {
+    const pnpmVersion = spawnSync("pnpm", ["--version"], { encoding: "utf8" }).stdout?.trim();
+    console.log(runtimeBanner(process.version, pnpmVersion || "unknown"));
     const steps = buildSteps({
       appEnv: process.env.APP_ENV,
       hasDatabasePackage: existsSync(new URL("../../../packages/db/package.json", import.meta.url)),
