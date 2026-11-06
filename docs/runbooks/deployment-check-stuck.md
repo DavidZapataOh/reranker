@@ -22,7 +22,7 @@ gh run list --workflow ci --commit <sha>
 
 - Re-run the run: `gh run rerun <id> --failed`.
 - If a job was renamed, update the required list in Vercel, Settings, Deployment Checks.
-- Force Promote only with the CI green locally: `pnpm check && pnpm typecheck && pnpm test`.
+- Force Promote only with the CI green locally: `pnpm check && pnpm typecheck && pnpm test && pnpm audit --prod --audit-level high && pnpm licenses:check && gitleaks git --redact`.
 
 ## Verify
 
