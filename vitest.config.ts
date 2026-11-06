@@ -1,6 +1,7 @@
 import react from "@vitejs/plugin-react";
 import { playwright } from "@vitest/browser-playwright";
 import { defineConfig } from "vitest/config";
+import { emulateReducedMotion } from "./packages/testing/src/vitest/browser-commands.ts";
 
 const ignored = ["**/node_modules/**", "**/.next/**", "**/e2e/**"];
 
@@ -36,6 +37,7 @@ export default defineConfig({
             enabled: true,
             provider: playwright(),
             headless: true,
+            commands: { emulateReducedMotion },
             instances: [{ browser: "chromium" }],
           },
         },

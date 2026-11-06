@@ -11,7 +11,8 @@
     "start": "next start",
     "typecheck": "next typegen && tsc --noEmit",
     "indexnow": "node scripts/indexnow.mjs",
-    "test": "node --test scripts/*.test.mjs"
+    "test": "vitest run --project unit --project component --coverage --passWithNoTests && node --test scripts/*.test.mjs",
+    "test:smoke": "playwright test --grep @smoke"
   },
   "dependencies": {
     "lucide-react": "1.68.0",
@@ -22,12 +23,19 @@
     "simple-icons": "16.36.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "catalog:",
+    "@playwright/test": "catalog:",
+    "@reranker/testing": "workspace:*",
     "@reranker/typescript-config": "workspace:*",
     "@tailwindcss/turbopack": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
     "tailwindcss": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:",
+    "vitest-browser-react": "catalog:"
   }
 }
