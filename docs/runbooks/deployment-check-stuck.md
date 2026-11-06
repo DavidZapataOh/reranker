@@ -14,7 +14,7 @@ reranker.co keeps serving the previous version.
 gh run list --workflow ci --commit <sha>
 ```
 
-- Check that every required check name exists on the commit: `ci / ci`, `ci / security`, plus the ones added by later workflows.
+- Check that every required check name exists on the commit: `ci / ci`, `ci / security`, `ci / integration`, plus the ones added by later workflows.
 - Check GitHub status for Actions outages.
 - If `ci / ci` failed in the remote cache step with "HTTP 400 Not authorized", the Vercel team is missing the Turborepo CLI OIDC policy for `DavidZapataOh/reranker`. Add it and rerun with `gh run rerun <id> --failed`.
 

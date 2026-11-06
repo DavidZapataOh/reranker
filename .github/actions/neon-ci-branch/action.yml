@@ -23,9 +23,6 @@ outputs:
   db-host-pooled:
     description: Pooled host.
     value: ${{ steps.create.outputs.db_host_pooled || steps.retry.outputs.db_host_pooled }}
-  password:
-    description: Owner role password.
-    value: ${{ steps.create.outputs.password || steps.retry.outputs.password }}
 runs:
   using: composite
   steps:

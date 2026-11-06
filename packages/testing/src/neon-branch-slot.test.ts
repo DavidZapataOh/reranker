@@ -43,7 +43,7 @@ it("calls the Neon API with the bearer key", async () => {
   const f = fakeFetch(0);
   await waitForCiBranchSlot({ apiKey: "k", projectId: "p", fetch: f, sleep: async () => {} });
   expect(f).toHaveBeenCalledWith(
-    "https://console.neon.tech/api/v2/projects/p/branches",
+    "https://console.neon.tech/api/v2/projects/p/branches?search=ci%2F&limit=10000",
     expect.objectContaining({ headers: expect.objectContaining({ Authorization: "Bearer k" }) }),
   );
 });

@@ -87,12 +87,21 @@ jobs:
       - id: affected
         name: Detect affected integration tests
         env:
+          BASE: ${{ steps.scope.outputs.base }}
+          FILTER: ${{ steps.scope.outputs.affected }}
           TURBO_SCM_BASE: ${{ steps.scope.outputs.base }}
         # Turbo lists packages without the script as <NONEXISTENT> and adds ^typecheck dependencies.
+        # It also ignores the files below, which decide how the integration tests run, so they force a full run.
         run: |
-          count=$(pnpm exec turbo run test:integration ${{ steps.scope.outputs.affected }} --dry=json \
+          if [ -n "$BASE" ] && [ -n "$(git diff --name-only "$BASE" HEAD -- .github/actions/neon-ci-branch .github/workflows/ci.yml package.json pnpm-workspace.yaml pnpm-lock.yaml vitest.config.ts)" ]; then
+            echo "Integration infrastructure changed, running every integration test"
+            FILTER=""
+          fi
+          # shellcheck disable=SC2086
+          count=$(pnpm exec turbo run test:integration $FILTER --dry=json \
             | jq '[.tasks[] | select(.task == "test:integration" and .command != "<NONEXISTENT>")] | length')
           echo "count=$count" >> "$GITHUB_OUTPUT"
+          echo "filter=$FILTER" >> "$GITHUB_OUTPUT"
           if [ "$count" = 0 ]; then echo "No integration tests affected"; fi
       - if: steps.affected.outputs.count != '0'
         id: branch
@@ -125,30 +134,50 @@ jobs:
           echo "DATABASE_URL_SYSTEM=postgresql://reranker_system:$system@$DB_HOST_POOLED/neondb?sslmode=verify-full" >> "$GITHUB_ENV"
       - if: steps.affected.outputs.count != '0'
         env:
+          FILTER: ${{ steps.affected.outputs.filter }}
           TURBO_SCM_BASE: ${{ steps.scope.outputs.base }}
           TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
-        run: pnpm exec turbo run test:integration ${{ steps.scope.outputs.affected }}
+        run: pnpm exec turbo run test:integration $FILTER
       - if: steps.affected.outputs.count != '0' && github.event_name == 'pull_request'
-        name: Run the base branch's database tests against the new schema
+        id: migrations
+        name: Detect migration changes
         env:
           BASE: ${{ steps.scope.outputs.base }}
-          TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
-        # The deployed app (N-1) keeps running while a migration rolls out, so it must still work on the new schema.
         run: |
-          if [ -z "$BASE" ] || git diff --quiet "$BASE" HEAD -- packages/db/migrations; then
-            echo "No migration changes"; exit 0
+          if [ -n "$BASE" ] && ! git diff --quiet "$BASE" HEAD -- packages/db/migrations; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No migration changes"
           fi
-          git worktree add ../base origin/main
-          cd ../base
+      # A separate full checkout: the partial clone above cannot fetch the base's blobs without credentials.
+      - if: steps.migrations.outputs.changed == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ steps.scope.outputs.base }}
+          path: n-1
+          persist-credentials: false
+      # The deployed app (N-1) keeps running while a migration rolls out, so it must still work on the new schema.
+      - if: steps.migrations.outputs.changed == 'true'
+        name: Run the base branch's database tests against the new schema
+        working-directory: n-1
+        env:
+          TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
+        run: |
           pnpm install --frozen-lockfile
+          if [ ! -d packages/db ]; then echo "The base branch has no database package yet"; exit 0; fi
           pnpm exec turbo run test:integration --filter=@reranker/db
-      # delete-branch-action installs neonctl with `npm i -g`; pnpm's Node runtime keeps no global bin on PATH.
+      # delete-branch-action runs `npm i -g neonctl@v2`: pnpm's Node runtime keeps no global bin on PATH, and an
+      # unlocked global install would otherwise resolve to whatever was published last and run its install scripts.
       - if: always() && steps.branch.outputs.branch-id != ''
-        name: Give npm a global prefix on PATH
+        name: Prepare npm for the branch cleanup
         env:
           PREFIX: ${{ runner.temp }}/npm-global
         run: |
-          echo "NPM_CONFIG_PREFIX=$PREFIX" >> "$GITHUB_ENV"
+          {
+            echo "NPM_CONFIG_PREFIX=$PREFIX"
+            echo "NPM_CONFIG_BEFORE=2026-11-01T00:00:00Z"
+            echo "NPM_CONFIG_IGNORE_SCRIPTS=true"
+          } >> "$GITHUB_ENV"
           echo "$PREFIX/bin" >> "$GITHUB_PATH"
       - if: always() && steps.branch.outputs.branch-id != ''
         uses: neondatabase/delete-branch-action@4468d825d5a88ef4012f1705a82f02ec3072f776 # v3.2.1

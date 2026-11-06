@@ -7,7 +7,7 @@
 
 ## Impact
 
-GitHub Actions is blocked until the next billing month. Vercel does not promote production deployments because the required checks (`ci / ci`, `ci / security`) never report.
+GitHub Actions is blocked until the next billing month. Vercel does not promote production deployments because the required checks (`ci / ci`, `ci / security`, `ci / integration`) never report.
 
 ## Diagnose
 
@@ -35,7 +35,7 @@ Related setup facts, in case checks fail for reasons other than quota:
 ## Verify
 
 - `gh api /users/DavidZapataOh/settings/billing/usage` shows usage below the limit, or the workflows run again.
-- A fresh push shows `ci / ci` and `ci / security` reporting on the commit.
+- A fresh push shows `ci / ci`, `ci / security` and `ci / integration` reporting on the commit.
 - If Force Promote was used: `vercel inspect https://reranker.co` shows the promoted deployment.
 
 ## Record

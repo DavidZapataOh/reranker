@@ -26,7 +26,9 @@ export async function waitForCiBranchSlot({
 }: WaitForCiBranchSlotOptions): Promise<{ live: number; attempt: number }> {
   let live = 0;
   for (let attempt = 1; attempt <= attempts; attempt++) {
-    const response = await request(`${API}/projects/${encodeURIComponent(projectId)}/branches`, {
+    // The search narrows the page to CI branches and the API's maximum limit keeps it from truncating.
+    const url = `${API}/projects/${encodeURIComponent(projectId)}/branches?search=ci%2F&limit=10000`;
+    const response = await request(url, {
       headers: { Accept: "application/json", Authorization: `Bearer ${apiKey}` },
     });
     if (!response.ok) throw new Error(`Neon API ${response.status}`);

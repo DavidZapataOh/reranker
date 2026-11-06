@@ -33,7 +33,12 @@ it("returns the invalid body as-is with 200", async () => {
 
 it("errors on unhandled requests without consumers opting in", async () => {
   const error = vi.spyOn(console, "error").mockImplementation(() => {});
-  await expect(fetch("https://unhandled.example.test/")).rejects.toThrow();
-  expect(error).toHaveBeenCalledWith(expect.stringContaining("without a matching request handler"));
-  error.mockRestore();
+  try {
+    await expect(fetch("https://unhandled.example.test/")).rejects.toThrow();
+    expect(error).toHaveBeenCalledWith(
+      expect.stringContaining("without a matching request handler"),
+    );
+  } finally {
+    error.mockRestore();
+  }
 });
