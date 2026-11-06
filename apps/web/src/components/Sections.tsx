@@ -60,7 +60,7 @@ export function Shift() {
             className="mt-0 w-[120px]"
           />
         </div>
-        <p className="reveal mt-8 font-mono text-[13px] text-ink/60">
+        <p className="reveal mt-8 font-mono text-[13px] text-ink/65">
           83 % de los colombianos conectados ya usa inteligencia artificial · Google e Ipsos,
           octubre de 2026
         </p>
@@ -145,7 +145,7 @@ export function Bento() {
             <p className="mt-2 font-sans text-[14px] text-ink">
               “Para un taller de confianza en Cali, te sugiero Motor Valle y…”
             </p>
-            <p className="mt-3 text-ink/50">ID rr_7f3a·91c2</p>
+            <p className="mt-3 text-ink/65">ID rr_7f3a·91c2</p>
             <span className="stamp absolute -top-4 -right-3 grid h-[74px] w-[74px] rotate-[-12deg] place-items-center rounded-full bg-amber text-center font-display text-[11px] leading-tight font-black text-ink shadow-soft">
               Guardada
               <br />
@@ -178,7 +178,7 @@ export function Bento() {
               </span>
             </div>
           </div>
-          <p className="mt-4 text-[13.5px] text-ink/60">Nada se publica sin tu aprobación.</p>
+          <p className="mt-4 text-[13.5px] text-ink/65">Nada se publica sin tu aprobación.</p>
         </article>
 
         {/* Alerts */}
@@ -199,7 +199,7 @@ export function Bento() {
               <p className="text-[14px] leading-snug text-ink">
                 Gemini empezó a recomendar a{" "}
                 <strong className="font-semibold">Sonrisa Chicó</strong>.
-                <span className="mt-1 block font-mono text-[12px] text-ink/50">hoy · 08:15</span>
+                <span className="mt-1 block font-mono text-[12px] text-ink/65">hoy · 08:15</span>
               </p>
             </div>
             <div className="flex gap-3 rounded-2xl bg-paper p-4 ring-1 ring-line">
@@ -212,7 +212,7 @@ export function Bento() {
               />
               <p className="text-[14px] leading-snug text-ink">
                 Semana tranquila: nada cambió.
-                <span className="mt-1 block font-mono text-[12px] text-ink/50">lun · 07:00</span>
+                <span className="mt-1 block font-mono text-[12px] text-ink/65">lun · 07:00</span>
               </p>
             </div>
           </div>
@@ -241,10 +241,10 @@ function Tile({ t }: { t: { icon: string | null; name: string; note: string; soo
       </span>
       <span className="min-w-0 flex-1">
         <span className="block text-[15.5px] font-semibold text-ink">{t.name}</span>
-        <span className="block text-[13.5px] text-ink/60">{t.note}</span>
+        <span className="block text-[13.5px] text-ink/65">{t.note}</span>
       </span>
       {t.soon && (
-        <span className="rounded-full bg-bubble px-2 py-0.5 text-[11.5px] font-semibold text-ink/60">
+        <span className="rounded-full bg-bubble px-2 py-0.5 text-[11.5px] font-semibold text-ink/65">
           Pronto
         </span>
       )}
@@ -292,7 +292,7 @@ export function Connect() {
         </svg>
 
         <div className="relative">
-          <p className="mb-3 text-[13px] font-semibold text-ink/55 lg:hidden">Lo que lee la IA</p>
+          <p className="mb-3 text-[13px] font-semibold text-ink/65 lg:hidden">Lo que lee la IA</p>
           <ul className="space-y-4 lg:pr-[22%]">
             {reads.map((t) => (
               <Tile key={t.name} t={t} />
@@ -314,7 +314,7 @@ export function Connect() {
         </div>
 
         <div className="relative">
-          <p className="mb-3 text-[13px] font-semibold text-ink/55 lg:hidden">
+          <p className="mb-3 text-[13px] font-semibold text-ink/65 lg:hidden">
             Por donde te contamos
           </p>
           <ul className="space-y-4 lg:pl-[22%]">
@@ -407,7 +407,7 @@ export function Pricing() {
               <span className="font-display text-[44px] leading-none font-black tracking-[-0.02em] text-ink tabular-nums">
                 {p.price}
               </span>
-              {p.per && <span className="text-[15px] text-ink/60">{p.per}</span>}
+              {p.per && <span className="text-[15px] text-ink/65">{p.per}</span>}
             </p>
             <ul className="mt-7 flex-1 space-y-3">
               {p.items.map((i) => (
@@ -575,7 +575,7 @@ export function Footer() {
           >
             {cols.map((c) => (
               <div key={c.t}>
-                <p className="text-[13px] font-semibold text-ink/50">{c.t}</p>
+                <p className="text-[13px] font-semibold text-ink/65">{c.t}</p>
                 <ul className="mt-4 space-y-3">
                   {c.l.map(([label, href]) => (
                     <li key={label}>
@@ -591,7 +591,7 @@ export function Footer() {
               </div>
             ))}
             <div>
-              <p className="text-[13px] font-semibold text-ink/50">Hablemos</p>
+              <p className="text-[13px] font-semibold text-ink/65">Hablemos</p>
               <ul className="mt-4 space-y-3">
                 <li>
                   <a
@@ -623,7 +623,7 @@ export function Footer() {
           </nav>
         </div>
 
-        <div className="mt-16 flex flex-col gap-3 border-t border-line py-6 text-[13.5px] text-ink/55 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-16 flex flex-col gap-3 border-t border-line py-6 text-[13.5px] text-ink/65 sm:flex-row sm:items-center sm:justify-between">
           <p>© 2026 Reranker</p>
           <ul className="flex gap-6">
             <li>

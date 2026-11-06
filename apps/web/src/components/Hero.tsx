@@ -106,7 +106,7 @@ export function Hero() {
             </button>
           </div>
 
-          <p className="mt-4 text-[14px] text-ink/60 md:mt-[1.2vw] md:text-[clamp(13px,0.92vw,15px)]">
+          <p className="mt-4 text-[14px] text-ink/65 md:mt-[1.2vw] md:text-[clamp(13px,0.92vw,15px)]">
             Gratis{" "}
             <span aria-hidden="true" className="px-1">
               ·

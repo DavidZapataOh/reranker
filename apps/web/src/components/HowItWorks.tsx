@@ -77,7 +77,7 @@ export function HowItWorks() {
             >
               <span
                 className={`grid h-9 w-9 place-items-center rounded-full font-display text-[16px] font-black transition-colors ${
-                  s === i ? "bg-green text-white" : "bg-bubble text-ink/60"
+                  s === i ? "bg-green text-white" : "bg-bubble text-ink/65"
                 }`}
               >
                 {i + 1}
@@ -128,7 +128,7 @@ export function HowItWorks() {
                     >
                       <Image src={src} alt="" width={20} height={20} className="h-5 w-5" />
                       <span className="flex-1 text-[14.5px] text-ink">{n}</span>
-                      <span className="font-mono text-[12px] text-ink/50">en cola</span>
+                      <span className="font-mono text-[12px] text-ink/65">en cola</span>
                     </li>
                   ))}
                 </ul>
@@ -167,9 +167,9 @@ export function HowItWorks() {
             )}
             {s === 2 && (
               <div className="rounded-2xl bg-white p-6 ring-1 ring-line">
-                <p className="text-[14px] text-ink/60">Hotel Brisa Marina · Santa Marta</p>
+                <p className="text-[14px] text-ink/65">Hotel Brisa Marina · Santa Marta</p>
                 <p className="mt-2 font-display text-[56px] leading-none font-black text-ink">34</p>
-                <p className="font-mono text-[12.5px] text-ink/55">entre 28 y 40</p>
+                <p className="font-mono text-[12.5px] text-ink/65">entre 28 y 40</p>
                 <p className="mt-5 text-[15px] text-ink">
                   Sale en tu lugar: <strong className="font-semibold">Casa Rodadero</strong> y{" "}
                   <strong className="font-semibold">Hotel Taganga Azul</strong>.
