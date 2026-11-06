@@ -4,8 +4,17 @@ import { Hero } from "@/components/Hero";
 import { HowItWorks } from "@/components/HowItWorks";
 import { Nav } from "@/components/Nav";
 import { Reveal } from "@/components/Reveal";
+import {
+  Agencies,
+  Bento,
+  Connect,
+  Faq,
+  Footer,
+  Pricing,
+  Promises,
+  Shift,
+} from "@/components/Sections";
 import { StructuredData } from "@/components/StructuredData";
-import { Agencies, Bento, Faq, Footer, Pricing, Promises, Shift, Connect } from "@/components/Sections";
 
 export default function Home() {
   return (

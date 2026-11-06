@@ -1,0 +1,21 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "envMode": "strict",
+  "globalDependencies": ["packages/typescript-config/*.json"],
+  "globalPassThroughEnv": ["COREPACK_HOME"],
+  "remoteCache": { "signature": true },
+  "futureFlags": { "longerSignatureKey": true },
+  "tasks": {
+    "//#check": {},
+    "build": { "dependsOn": ["^build"], "outputs": [".next/**", "!.next/cache/**", "dist/**"] },
+    "web#build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**"],
+      "env": ["NEXT_PUBLIC_*", "APP_ENV", "VERCEL_GIT_COMMIT_SHA"],
+      "passThroughEnv": ["ENABLE_EXPERIMENTAL_COREPACK"]
+    },
+    "typecheck": { "dependsOn": ["^typecheck"] },
+    "test": { "dependsOn": ["^typecheck"], "outputs": ["coverage/**"] },
+    "dev": { "cache": false, "persistent": true }
+  }
+}

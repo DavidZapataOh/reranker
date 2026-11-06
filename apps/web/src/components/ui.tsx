@@ -18,7 +18,15 @@ export function Section({
   );
 }
 
-export function H2({ id, children, className = "" }: { id?: string; children: ReactNode; className?: string }) {
+export function H2({
+  id,
+  children,
+  className = "",
+}: {
+  id?: string;
+  children: ReactNode;
+  className?: string;
+}) {
   return (
     <h2
       id={id}
@@ -30,12 +38,20 @@ export function H2({ id, children, className = "" }: { id?: string; children: Re
 }
 
 export function Lede({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <p className={`mt-4 max-w-[56ch] text-[clamp(1.05rem,1.2vw,1.15rem)] leading-relaxed text-ink/75 ${className}`}>{children}</p>;
+  return (
+    <p
+      className={`mt-4 max-w-[56ch] text-[clamp(1.05rem,1.2vw,1.15rem)] leading-relaxed text-ink/75 ${className}`}
+    >
+      {children}
+    </p>
+  );
 }
 
 export function Example({ className = "" }: { className?: string }) {
   return (
-    <span className={`inline-flex h-6 items-center rounded-full bg-green-light px-2.5 text-[12px] font-semibold text-green ${className}`}>
+    <span
+      className={`inline-flex h-6 items-center rounded-full bg-green-light px-2.5 text-[12px] font-semibold text-green ${className}`}
+    >
       Ejemplo
     </span>
   );
@@ -44,7 +60,16 @@ export function Example({ className = "" }: { className?: string }) {
 /** Uniform-stroke icon (2px / 24px), rounded corners. */
 export function Icon({ d, className = "h-6 w-6" }: { d: string; className?: string }) {
   return (
-    <svg aria-hidden="true" viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d={d} />
     </svg>
   );
@@ -70,4 +95,5 @@ export const contact = {
   email: "hola@reranker.co",
 };
 
-export const wa = (text: string) => `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(text)}`;
+export const wa = (text: string) =>
+  `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(text)}`;

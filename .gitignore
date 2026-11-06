@@ -7,3 +7,9 @@ node_modules/
 .impeccable/review/
 .impeccable/build/crops/
 .impeccable/config.local.json
+.turbo/
+coverage/
+*.tsbuildinfo
+playwright-report/
+test-results/
+.lighthouseci/

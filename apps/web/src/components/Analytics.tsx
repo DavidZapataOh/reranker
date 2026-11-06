@@ -1,23 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import posthog from "posthog-js";
 import { usePathname } from "next/navigation";
+import posthog from "posthog-js";
 import { useEffect, useRef, useState } from "react";
 import {
+  afterPageLoad,
   CLARITY_ID,
+  type Consent,
+  flushQueuedEvents,
   GA_ID,
   POSTHOG_KEY,
   POSTHOG_REGION,
-  afterPageLoad,
-  flushQueuedEvents,
   readConsent,
   readOrigin,
   track,
   VISIT_ID,
   whatsappRef,
   writeConsent,
-  type Consent,
 } from "@/lib/analytics";
 
 const anyTool = Boolean(POSTHOG_KEY || GA_ID || CLARITY_ID);
@@ -48,7 +48,8 @@ function applyConsent(c: Consent) {
     } else {
       // Pending or rejected: PostHog keeps measuring, but cookieless and without replays.
       if (c === "denied") posthog.opt_out_capturing();
-      else if (posthog.get_explicit_consent_status() !== "pending") posthog.clear_opt_in_out_capturing();
+      else if (posthog.get_explicit_consent_status() !== "pending")
+        posthog.clear_opt_in_out_capturing();
       posthog.stopSessionRecording();
     }
   }
@@ -61,7 +62,9 @@ function applyConsent(c: Consent) {
 function sectionOf(el: Element): string {
   const s = el.closest("section[id], section[aria-labelledby], footer, nav, header");
   if (!s) return "other";
-  return s.id || s.getAttribute("aria-labelledby")?.replace(/-title$/, "") || s.tagName.toLowerCase();
+  return (
+    s.id || s.getAttribute("aria-labelledby")?.replace(/-title$/, "") || s.tagName.toLowerCase()
+  );
 }
 
 /** Mounts measurement: tools, funnel events and the cookie banner. */
@@ -80,37 +83,37 @@ export function Analytics() {
     const start = () => {
       if (POSTHOG_KEY && !posthog.__loaded) {
         posthog.init(POSTHOG_KEY, {
-        api_host: "/ingest",
-        ui_host: `https://${POSTHOG_REGION}.posthog.com`,
-        defaults: "2025-05-24",
-        cookieless_mode: "on_reject",
-        // Treat "no decision yet" as rejected, so pending visitors are counted cookieless.
-        opt_out_capturing_by_default: true,
-        person_profiles: "identified_only",
-        capture_pageview: "history_change",
-        capture_pageleave: true,
-        capture_exceptions: true,
-        disable_session_recording: true, // turned on only after consent
-        session_recording: {
-          maskAllInputs: true,
-          // Business names shown in the demo and the closing CTA.
-          maskTextSelector: ".marker, [data-mask]",
-        },
-      });
-      // Skip nulls so an internal navigation never erases the original AI source.
-      baseProps = {
-        visit_id: VISIT_ID,
-        device_type: origin.device_type,
-        ...(origin.ai_source ? { ai_source: origin.ai_source } : {}),
-      };
-      firstTouchProps = {
-        first_ai_source: origin.ai_source,
-        first_referrer_domain: origin.referrer_domain,
-        first_landing_path: origin.landing_path,
-      };
-      posthog.register(baseProps);
-      posthog.register_once(firstTouchProps);
-      flushQueuedEvents();
+          api_host: "/ingest",
+          ui_host: `https://${POSTHOG_REGION}.posthog.com`,
+          defaults: "2025-05-24",
+          cookieless_mode: "on_reject",
+          // Treat "no decision yet" as rejected, so pending visitors are counted cookieless.
+          opt_out_capturing_by_default: true,
+          person_profiles: "identified_only",
+          capture_pageview: "history_change",
+          capture_pageleave: true,
+          capture_exceptions: true,
+          disable_session_recording: true, // turned on only after consent
+          session_recording: {
+            maskAllInputs: true,
+            // Business names shown in the demo and the closing CTA.
+            maskTextSelector: ".marker, [data-mask]",
+          },
+        });
+        // Skip nulls so an internal navigation never erases the original AI source.
+        baseProps = {
+          visit_id: VISIT_ID,
+          device_type: origin.device_type,
+          ...(origin.ai_source ? { ai_source: origin.ai_source } : {}),
+        };
+        firstTouchProps = {
+          first_ai_source: origin.ai_source,
+          first_referrer_domain: origin.referrer_domain,
+          first_landing_path: origin.landing_path,
+        };
+        posthog.register(baseProps);
+        posthog.register_once(firstTouchProps);
+        flushQueuedEvents();
       }
       applyConsent(readConsent());
     };
@@ -140,9 +143,20 @@ export function Analytics() {
       const el = e.target instanceof Element ? e.target.closest("a, button") : null;
       if (!el || el.closest("[data-no-track]")) return;
       const section_id = sectionOf(el);
-      const label = (el.getAttribute("data-cta") || el.getAttribute("aria-label") || el.textContent || "").trim().replace(/\s+/g, " ").slice(0, 60);
+      const label = (
+        el.getAttribute("data-cta") ||
+        el.getAttribute("aria-label") ||
+        el.textContent ||
+        ""
+      )
+        .trim()
+        .replace(/\s+/g, " ")
+        .slice(0, 60);
 
-      if (el instanceof HTMLAnchorElement && /(^|\/\/)(wa\.me|api\.whatsapp\.com)\//.test(el.href)) {
+      if (
+        el instanceof HTMLAnchorElement &&
+        /(^|\/\/)(wa\.me|api\.whatsapp\.com)\//.test(el.href)
+      ) {
         const ref = whatsappRef();
         if (ref) {
           try {
@@ -176,7 +190,10 @@ export function Analytics() {
       if (!(form instanceof HTMLFormElement)) return;
       const input = form.querySelector("input");
       // Never send the business name, only whether one was typed.
-      track("report_form_submitted", { section_id: sectionOf(form), has_name: Boolean(input?.value.trim()) });
+      track("report_form_submitted", {
+        section_id: sectionOf(form),
+        has_name: Boolean(input?.value.trim()),
+      });
     };
 
     document.addEventListener("click", onClick, { capture: true });
@@ -190,6 +207,7 @@ export function Analytics() {
   }, []);
 
   // 4 · Section views: at least half the section or half the viewport visible.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: pathname re-arms the observer on each route change
   useEffect(() => {
     if (!anyTool) return;
     const seen = new Set<string>();
@@ -197,7 +215,8 @@ export function Analytics() {
       (entries) => {
         for (const en of entries) {
           if (!en.isIntersecting) continue;
-          const big = en.intersectionRatio >= 0.5 || en.intersectionRect.height >= window.innerHeight * 0.5;
+          const big =
+            en.intersectionRatio >= 0.5 || en.intersectionRect.height >= window.innerHeight * 0.5;
           if (!big) continue;
           const id = sectionOf(en.target);
           if (seen.has(id)) continue;
@@ -208,7 +227,11 @@ export function Analytics() {
       },
       { threshold: [0, 0.25, 0.5, 0.75] },
     );
-    document.querySelectorAll("main section[id], main section[aria-labelledby], footer").forEach((s) => io.observe(s));
+    document
+      .querySelectorAll("main section[id], main section[aria-labelledby], footer")
+      .forEach((s) => {
+        io.observe(s);
+      });
     return () => io.disconnect();
   }, [pathname]);
 
@@ -221,7 +244,6 @@ export function Analytics() {
 
   return (
     <>
-
       {anyTool && showBanner ? (
         <div
           role="dialog"
@@ -233,8 +255,12 @@ export function Analytics() {
             ¿Nos dejas medir tu visita?
           </p>
           <p className="mt-1.5 text-[14px] leading-relaxed text-ink/70">
-            Usamos cookies para entender cómo se usa el sitio y mejorarlo. Si no aceptas, solo contamos visitas sin cookies.{" "}
-            <Link href="/politica-de-datos#cookies" className="text-green underline underline-offset-[3px]">
+            Usamos cookies para entender cómo se usa el sitio y mejorarlo. Si no aceptas, solo
+            contamos visitas sin cookies.{" "}
+            <Link
+              href="/politica-de-datos#cookies"
+              className="text-green underline underline-offset-[3px]"
+            >
               Política de datos
             </Link>
           </p>
@@ -263,7 +289,12 @@ export function Analytics() {
 /** Footer control to change the consent decision at any time. */
 export function CookiePrefsButton() {
   return (
-    <button type="button" data-no-track onClick={() => window.dispatchEvent(new Event("rr:consent-open"))} className="hover:text-green">
+    <button
+      type="button"
+      data-no-track
+      onClick={() => window.dispatchEvent(new Event("rr:consent-open"))}
+      className="hover:text-green"
+    >
       Preferencias de cookies
     </button>
   );

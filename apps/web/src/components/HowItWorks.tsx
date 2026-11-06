@@ -5,9 +5,18 @@ import { useEffect, useRef, useState } from "react";
 import { H2, Lede, Section } from "./ui";
 
 const steps = [
-  { t: "Escribe el nombre de tu negocio", d: "No necesitas registrarte ni conectar nada para el primer reporte." },
-  { t: "Le preguntamos a la IA como lo haría un cliente", d: "ChatGPT, Gemini, Google y Perplexity, varias veces y de varias formas." },
-  { t: "Ves quién sale y qué cambiar", d: "Tu puntaje, quién aparece en tu lugar y la primera corrección, en palabras normales." },
+  {
+    t: "Escribe el nombre de tu negocio",
+    d: "No necesitas registrarte ni conectar nada para el primer reporte.",
+  },
+  {
+    t: "Le preguntamos a la IA como lo haría un cliente",
+    d: "ChatGPT, Gemini, Google y Perplexity, varias veces y de varias formas.",
+  },
+  {
+    t: "Ves quién sale y qué cambiar",
+    d: "Tu puntaje, quién aparece en tu lugar y la primera corrección, en palabras normales.",
+  },
 ];
 
 export function HowItWorks() {
@@ -19,7 +28,9 @@ export function HowItWorks() {
   useEffect(() => {
     if (!auto || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     let visible = false;
-    const io = new IntersectionObserver(([e]) => (visible = e.isIntersecting), { threshold: 0.4 });
+    const io = new IntersectionObserver(([e]) => (visible = e?.isIntersecting ?? false), {
+      threshold: 0.4,
+    });
     if (ref.current) io.observe(ref.current);
     const t = window.setInterval(() => visible && setS((v) => (v + 1) % 3), 4200);
     return () => {
@@ -37,11 +48,20 @@ export function HowItWorks() {
       <H2 id="how-title">Así funciona.</H2>
       <Lede>Tres pasos y menos de 2 minutos.</Lede>
 
-      <div ref={ref} className="mt-12 grid gap-8 lg:grid-cols-[1fr_1.15fr] lg:items-stretch lg:gap-14">
-        <div role="tablist" aria-label="Pasos" aria-orientation="vertical" className="flex flex-col gap-2">
+      <div
+        ref={ref}
+        className="mt-12 grid gap-8 lg:grid-cols-[1fr_1.15fr] lg:items-stretch lg:gap-14"
+      >
+        <div
+          role="tablist"
+          aria-label="Pasos"
+          aria-orientation="vertical"
+          className="flex flex-col gap-2"
+        >
           {steps.map((st, i) => (
             <button
               key={st.t}
+              type="button"
               role="tab"
               id={`step-${i}`}
               aria-selected={s === i}
@@ -64,28 +84,48 @@ export function HowItWorks() {
               </span>
               <span>
                 <span className="block text-[18px] font-bold text-ink">{st.t}</span>
-                <span className={`mt-1 block text-[15.5px] leading-relaxed text-ink/70 ${s === i ? "" : "max-lg:hidden"}`}>{st.d}</span>
+                <span
+                  className={`mt-1 block text-[15.5px] leading-relaxed text-ink/70 ${s === i ? "" : "max-lg:hidden"}`}
+                >
+                  {st.d}
+                </span>
               </span>
             </button>
           ))}
         </div>
 
-        <div id="step-panel" role="tabpanel" aria-labelledby={`step-${s}`} className="relative flex min-h-[320px] items-center overflow-hidden rounded-3xl bg-paper p-6 pb-14 ring-1 ring-line md:p-9 md:pb-14">
+        <div
+          id="step-panel"
+          role="tabpanel"
+          aria-labelledby={`step-${s}`}
+          className="relative flex min-h-[320px] items-center overflow-hidden rounded-3xl bg-paper p-6 pb-14 ring-1 ring-line md:p-9 md:pb-14"
+        >
           <div key={s} className="step-in w-full">
             {s === 0 && (
               <div className="mx-auto w-full max-w-[440px]">
                 <div className="flex items-center gap-2 rounded-2xl bg-white p-2 pl-4 shadow-soft ring-1 ring-line">
-                  <span className="flex-1 text-[16px] text-ink">Hotel Brisa Marina<span className="caret" /></span>
-                  <span className="rounded-xl bg-green px-4 py-2.5 text-[14px] font-semibold text-white">Ver</span>
+                  <span className="flex-1 text-[16px] text-ink">
+                    Hotel Brisa Marina
+                    <span className="caret" />
+                  </span>
+                  <span className="rounded-xl bg-green px-4 py-2.5 text-[14px] font-semibold text-white">
+                    Ver
+                  </span>
                 </div>
                 <ul className="mt-8 space-y-2.5">
-                  {[
-                    ["/engines/openai.svg", "ChatGPT"],
-                    ["/engines/gemini.svg", "Gemini"],
-                    ["/engines/google.svg", "Google"],
-                    ["/engines/perplexity.svg", "Perplexity"],
-                  ].map(([src, n], k) => (
-                    <li key={n} className="flex items-center gap-3 rounded-xl bg-white/70 px-4 py-3 ring-1 ring-line" style={{ animationDelay: `${150 + k * 120}ms` }}>
+                  {(
+                    [
+                      ["/engines/openai.svg", "ChatGPT"],
+                      ["/engines/gemini.svg", "Gemini"],
+                      ["/engines/google.svg", "Google"],
+                      ["/engines/perplexity.svg", "Perplexity"],
+                    ] as const
+                  ).map(([src, n], k) => (
+                    <li
+                      key={n}
+                      className="flex items-center gap-3 rounded-xl bg-white/70 px-4 py-3 ring-1 ring-line"
+                      style={{ animationDelay: `${150 + k * 120}ms` }}
+                    >
                       <Image src={src} alt="" width={20} height={20} className="h-5 w-5" />
                       <span className="flex-1 text-[14.5px] text-ink">{n}</span>
                       <span className="font-mono text-[12px] text-ink/50">en cola</span>
@@ -96,13 +136,27 @@ export function HowItWorks() {
             )}
             {s === 1 && (
               <ul className="space-y-3">
-                {[
-                  ["/engines/openai.svg", "ChatGPT", "¿Qué hotel me recomiendas en Santa Marta?"],
-                  ["/engines/gemini.svg", "Gemini", "Hotel frente al mar en Santa Marta para ir en pareja"],
-                  ["/engines/google.svg", "Google", "mejores hoteles Santa Marta El Rodadero"],
-                  ["/engines/perplexity.svg", "Perplexity", "Hoteles boutique bien calificados en Santa Marta"],
-                ].map(([src, n, q], k) => (
-                  <li key={n} className="flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-2xl bg-white p-4 ring-1 ring-line" style={{ animationDelay: `${k * 120}ms` }}>
+                {(
+                  [
+                    ["/engines/openai.svg", "ChatGPT", "¿Qué hotel me recomiendas en Santa Marta?"],
+                    [
+                      "/engines/gemini.svg",
+                      "Gemini",
+                      "Hotel frente al mar en Santa Marta para ir en pareja",
+                    ],
+                    ["/engines/google.svg", "Google", "mejores hoteles Santa Marta El Rodadero"],
+                    [
+                      "/engines/perplexity.svg",
+                      "Perplexity",
+                      "Hoteles boutique bien calificados en Santa Marta",
+                    ],
+                  ] as const
+                ).map(([src, n, q], k) => (
+                  <li
+                    key={n}
+                    className="flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-2xl bg-white p-4 ring-1 ring-line"
+                    style={{ animationDelay: `${k * 120}ms` }}
+                  >
                     <Image src={src} alt="" width={24} height={24} className="h-6 w-6" />
                     <span className="w-20 text-[13px] font-semibold text-ink/70">{n}</span>
                     <span className="font-mono text-[12px] text-ink/45 sm:order-last">×10</span>
@@ -117,15 +171,22 @@ export function HowItWorks() {
                 <p className="mt-2 font-display text-[56px] leading-none font-black text-ink">34</p>
                 <p className="font-mono text-[12.5px] text-ink/55">entre 28 y 40</p>
                 <p className="mt-5 text-[15px] text-ink">
-                  Sale en tu lugar: <strong className="font-semibold">Casa Rodadero</strong> y <strong className="font-semibold">Hotel Taganga Azul</strong>.
+                  Sale en tu lugar: <strong className="font-semibold">Casa Rodadero</strong> y{" "}
+                  <strong className="font-semibold">Hotel Taganga Azul</strong>.
                 </p>
                 <p className="mt-2 text-[15px] text-ink">
-                  Primera corrección: <span className="rounded bg-amber/70 px-1">agrega fotos de las habitaciones a tu perfil de Google</span>.
+                  Primera corrección:{" "}
+                  <span className="rounded bg-amber/70 px-1">
+                    agrega fotos de las habitaciones a tu perfil de Google
+                  </span>
+                  .
                 </p>
               </div>
             )}
           </div>
-          <span className="absolute right-6 bottom-5 inline-flex h-6 items-center rounded-full bg-green-light px-2.5 text-[12px] font-semibold text-green">Ejemplo</span>
+          <span className="absolute right-6 bottom-5 inline-flex h-6 items-center rounded-full bg-green-light px-2.5 text-[12px] font-semibold text-green">
+            Ejemplo
+          </span>
         </div>
       </div>
     </Section>

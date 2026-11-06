@@ -15,7 +15,11 @@ export function GoogleTag() {
 gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied'});
 gtag('js',new Date());gtag('config','${GA_ID}');`}
       </Script>
-      <Script id="rr-ga" src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="lazyOnload" />
+      <Script
+        id="rr-ga"
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+        strategy="lazyOnload"
+      />
     </>
   );
 }

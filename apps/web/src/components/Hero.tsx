@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
-import { EngineRotator } from "./EngineRotator";
 import { ChatDemo } from "./ChatDemo";
-
+import { EngineRotator } from "./EngineRotator";
 
 export function Hero() {
   const [business, setBusiness] = useState("");
@@ -21,7 +20,7 @@ export function Hero() {
     return () => window.removeEventListener("rr:business", on);
   }, []);
   const inputId = useId();
-  
+
   return (
     <section id="reporte" aria-labelledby="hero-title" className="relative overflow-x-clip">
       <div className="mx-auto max-w-[1536px] px-5 pt-12 text-center md:px-16 md:pt-[3.65vw]">
@@ -46,7 +45,8 @@ export function Hero() {
         </button>
 
         <p className="mx-auto mt-5 max-w-[1000px] lg:whitespace-nowrap text-[clamp(1.05rem,1.25vw,1.19rem)] leading-snug text-ink/80 md:mt-[1.5vw]">
-          Te mostramos a quién recomiendan ChatGPT, Gemini, Google y Perplexity cuando alguien busca lo que vendes.
+          Te mostramos a quién recomiendan ChatGPT, Gemini, Google y Perplexity cuando alguien busca
+          lo que vendes.
         </p>
 
         <form
@@ -54,11 +54,21 @@ export function Hero() {
           onSubmit={(e) => {
             e.preventDefault();
             setSubmitted(business.trim() || "Tu negocio");
-            document.getElementById("demo")?.scrollIntoView({ behavior: "smooth", block: "center" });
+            document
+              .getElementById("demo")
+              ?.scrollIntoView({ behavior: "smooth", block: "center" });
           }}
         >
           <div className="flex items-center gap-2 rounded-[22px] bg-white p-2 pl-5 shadow-[0_1px_2px_rgb(20_33_27/0.05),0_12px_32px_-14px_rgb(20_33_27/0.22)] ring-1 ring-line transition-shadow focus-within:ring-2 focus-within:ring-green/40">
-            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-[22px] w-[22px] shrink-0 text-ink/70" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              className="h-[22px] w-[22px] shrink-0 text-ink/70"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            >
               <circle cx="11" cy="11" r="7" />
               <path d="m20 20-3.6-3.6" />
             </svg>
@@ -81,15 +91,31 @@ export function Hero() {
             >
               <span className="hidden sm:inline">Ver qué dice la IA</span>
               <span className="sm:hidden">Ver</span>
-              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                className="h-[18px] w-[18px]"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M5 12h13M13 6l6 6-6 6" />
               </svg>
             </button>
           </div>
 
           <p className="mt-4 text-[14px] text-ink/60 md:mt-[1.2vw] md:text-[clamp(13px,0.92vw,15px)]">
-            Gratis <span aria-hidden="true" className="px-1">·</span> Sin registro ni tarjeta{" "}
-            <span aria-hidden="true" className="px-1">·</span> Resultado en menos de 2 minutos
+            Gratis{" "}
+            <span aria-hidden="true" className="px-1">
+              ·
+            </span>{" "}
+            Sin registro ni tarjeta{" "}
+            <span aria-hidden="true" className="px-1">
+              ·
+            </span>{" "}
+            Resultado en menos de 2 minutos
           </p>
         </form>
       </div>

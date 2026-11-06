@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   devIndicators: false,
+  transpilePackages: [],
   // Short tracked links for each channel, e.g. reranker.co/ig (bio) or reranker.co/ig/reel-01.
   // They land on the home page with UTM tags so the dashboard can tell channels apart.
   async redirects() {
@@ -33,8 +34,14 @@ const nextConfig: NextConfig = {
   async rewrites() {
     const region = process.env.NEXT_PUBLIC_POSTHOG_REGION === "eu" ? "eu" : "us";
     return [
-      { source: "/ingest/static/:path*", destination: `https://${region}-assets.i.posthog.com/static/:path*` },
-      { source: "/ingest/array/:path*", destination: `https://${region}-assets.i.posthog.com/array/:path*` },
+      {
+        source: "/ingest/static/:path*",
+        destination: `https://${region}-assets.i.posthog.com/static/:path*`,
+      },
+      {
+        source: "/ingest/array/:path*",
+        destination: `https://${region}-assets.i.posthog.com/array/:path*`,
+      },
       { source: "/ingest/:path*", destination: `https://${region}.i.posthog.com/:path*` },
     ];
   },

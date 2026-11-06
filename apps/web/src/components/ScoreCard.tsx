@@ -17,7 +17,7 @@ export function ScoreCard({ className = "" }: { className?: string }) {
     }
     const io = new IntersectionObserver(
       ([e]) => {
-        if (e.isIntersecting) {
+        if (e?.isIntersecting) {
           io.disconnect();
           window.setTimeout(() => setUp(true), 600);
         }
@@ -33,7 +33,10 @@ export function ScoreCard({ className = "" }: { className?: string }) {
   const range = up ? "entre 46 y 58" : "entre 28 y 40";
 
   return (
-    <article ref={ref} className={`reveal rounded-3xl bg-white p-6 ring-1 ring-line md:p-8 ${className}`}>
+    <article
+      ref={ref}
+      className={`reveal rounded-3xl bg-white p-6 ring-1 ring-line md:p-8 ${className}`}
+    >
       <div className="flex items-start justify-between gap-4">
         <div>
           <h3 className="text-[19px] font-bold text-ink">Tu puntaje en la IA</h3>
@@ -60,13 +63,21 @@ export function ScoreCard({ className = "" }: { className?: string }) {
           <div key={l} className="flex flex-col gap-2">
             <span
               className="relative block rounded-lg transition-[background-color] duration-[250ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
-              style={{ height: 18 + i * 16, backgroundColor: i <= current ? "#0f5c45" : "#d9ebd7", transitionDelay: `${(i - 1) * 150}ms` }}
+              style={{
+                height: 18 + i * 16,
+                backgroundColor: i <= current ? "#0f5c45" : "#d9ebd7",
+                transitionDelay: `${(i - 1) * 150}ms`,
+              }}
             >
               {i === current && (
                 <span className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rounded-full bg-amber ring-4 ring-white" />
               )}
             </span>
-            <span className={`text-[13px] ${i === current ? "font-semibold text-ink" : "text-ink/55"}`}>{l}</span>
+            <span
+              className={`text-[13px] ${i === current ? "font-semibold text-ink" : "text-ink/55"}`}
+            >
+              {l}
+            </span>
           </div>
         ))}
       </div>

@@ -9,7 +9,9 @@ export function Reveal() {
     const els = Array.from(document.querySelectorAll<HTMLElement>(".reveal")).filter(
       (el) => el.getBoundingClientRect().top > window.innerHeight * 0.92,
     );
-    els.forEach((el) => el.classList.add("pending"));
+    els.forEach((el) => {
+      el.classList.add("pending");
+    });
     const io = new IntersectionObserver(
       (entries) =>
         entries.forEach((e) => {
@@ -21,7 +23,9 @@ export function Reveal() {
         }),
       { rootMargin: "0px 0px -8% 0px" },
     );
-    els.forEach((el) => io.observe(el));
+    els.forEach((el) => {
+      io.observe(el);
+    });
     return () => io.disconnect();
   }, []);
   return null;
