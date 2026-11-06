@@ -1,4 +1,4 @@
 {
   "extends": "@reranker/typescript-config/node.json",
-  "include": ["src", "vitest.config.ts"]
+  "include": ["src", "bin", "vitest.config.ts"]
 }
