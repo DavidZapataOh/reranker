@@ -3,9 +3,14 @@ import { existsSync } from "node:fs";
 
 const APP_ENVS = ["development", "preview", "production"];
 
-export function buildSteps({ appEnv, hasDatabasePackage }) {
+export function buildSteps({ appEnv, hasDatabasePackage, isVercel = false }) {
   if (appEnv !== undefined && !APP_ENVS.includes(appEnv)) {
     throw new Error(`Unknown APP_ENV "${appEnv}". Expected one of: ${APP_ENVS.join(", ")}.`);
+  }
+  if (hasDatabasePackage && isVercel && appEnv === undefined) {
+    throw new Error(
+      `APP_ENV must be set on Vercel. Expected one of: ${APP_ENVS.join(", ")}. Refusing to build without running migrations.`,
+    );
   }
   const steps = [];
   // Only deploys that serve traffic touch the database schema.
@@ -28,8 +33,11 @@ export function runtimeBanner(nodeVersion, pnpmVersion) {
   return `Build runtime: node ${nodeVersion}, pnpm ${pnpmVersion}`;
 }
 
-function defaultRun(command, args) {
-  return spawnSync(command, args, { stdio: "inherit" }).status ?? 1;
+export function defaultRun(command, args) {
+  const result = spawnSync(command, args, { stdio: "inherit" });
+  if (result.error)
+    console.error(`Failed to start "${command} ${args.join(" ")}": ${result.error.message}`);
+  return result.status ?? 1;
 }
 
 if (import.meta.main) {
@@ -38,6 +46,7 @@ if (import.meta.main) {
     console.log(runtimeBanner(process.version, pnpmVersion || "unknown"));
     const steps = buildSteps({
       appEnv: process.env.APP_ENV,
+      isVercel: process.env.VERCEL === "1",
       hasDatabasePackage: existsSync(new URL("../../../packages/db/package.json", import.meta.url)),
     });
     process.exit(runSteps(steps));

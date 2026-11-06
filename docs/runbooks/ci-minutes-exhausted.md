@@ -24,7 +24,7 @@ Apply in this order, stopping as soon as usage is back under control:
 1. Reduce the `quality` workflow to Chromium only.
 2. Disable the `nightly` workflow.
 3. Move `security` to a weekly schedule.
-4. Last resort: Force Promote the deployment in Vercel, only after `pnpm check && pnpm typecheck && pnpm test` pass locally on the exact commit.
+4. Last resort: Force Promote the deployment in Vercel, only after `pnpm check && pnpm typecheck && pnpm test && pnpm audit --prod --audit-level high && pnpm licenses:check && gitleaks git --redact` pass locally on the exact commit.
 
 Related setup facts, in case checks fail for reasons other than quota:
 
