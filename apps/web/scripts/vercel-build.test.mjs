@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { buildSteps, runSteps } from "./vercel-build.mjs";
+import { buildSteps, runSteps, runtimeBanner } from "./vercel-build.mjs";
 
 const MIGRATE = { command: "pnpm", args: ["--filter", "@reranker/db", "db:migrate"] };
 const BUILD = { command: "pnpm", args: ["exec", "turbo", "run", "build"] };
@@ -29,4 +29,8 @@ test("a failed migration stops the build and returns its exit code", () => {
   });
   assert.equal(code, 3);
   assert.deepEqual(calls, ["db:migrate"]);
+});
+
+test("the banner names the node and pnpm versions the build runs on", () => {
+  assert.equal(runtimeBanner("v26.13.0", "12.16.1"), "Build runtime: node v26.13.0, pnpm 12.16.1");
 });
