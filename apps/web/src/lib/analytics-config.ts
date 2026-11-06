@@ -5,3 +5,4 @@ export const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 export const CLARITY_ID = process.env.NEXT_PUBLIC_CLARITY_ID;
 
 export const probeOne = 1;
+export const probeTwo = 2;
