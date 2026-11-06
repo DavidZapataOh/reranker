@@ -15,3 +15,4 @@ test-results/
 .lighthouseci/
 apps/web/results.json
 apps/web/.lighthouseci/
+.vitest/
