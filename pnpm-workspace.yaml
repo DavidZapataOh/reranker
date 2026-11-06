@@ -16,6 +16,17 @@ catalog:
   "@biomejs/biome": 2.6.4
   turbo: 2.11.10
   lefthook: 2.2.1
+  vitest: 5.1.0
+  "@vitest/browser-playwright": 5.1.0
+  "@vitest/coverage-v8": 5.1.0
+  "@vitejs/plugin-react": 6.2.1
+  # 1.65.0 clears minimumReleaseAge on 2026-11-08T18:30Z.
+  playwright: 1.64.1
+  "@playwright/test": 1.64.1
+  "@axe-core/playwright": 4.14.0
+  msw: 3.0.3
+  pg: ^8.23.1
+  "@types/pg": ^8.23.1
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - "@reranker/*"

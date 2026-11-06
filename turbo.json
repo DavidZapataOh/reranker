@@ -16,6 +16,25 @@
     },
     "typecheck": { "dependsOn": ["^typecheck"] },
     "test": { "dependsOn": ["^typecheck"], "outputs": ["coverage/**"] },
+    "test:integration": {
+      "dependsOn": ["^typecheck"],
+      "env": ["DATABASE_URL", "DATABASE_URL_SYSTEM", "DATABASE_URL_MIGRATIONS"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/packages/db/migrations/**"]
+    },
+    "test:contract": {
+      "dependsOn": ["^typecheck"],
+      "cache": false,
+      "env": [
+        "DATAFORSEO_LOGIN",
+        "DATAFORSEO_PASSWORD",
+        "BRIGHTDATA_API_KEY_CI",
+        "OPENAI_API_KEY_CI",
+        "GEMINI_API_KEY",
+        "GOOGLE_PLACES_API_KEY_CI",
+        "ANTHROPIC_API_KEY_CI",
+        "XAI_API_KEY_CI"
+      ]
+    },
     "dev": { "cache": false, "persistent": true }
   }
 }
