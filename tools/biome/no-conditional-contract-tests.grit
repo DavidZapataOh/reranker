@@ -1,4 +1,4 @@
-language js;
+language js
 
 or {
   `$t.skipIf($cond)`,
@@ -6,8 +6,5 @@ or {
   `$t.todo($args)`,
   `$ctx.skip($args)`
 } as $call where {
-  register_diagnostic(
-    span = $call,
-    message = "Contract tests must run unconditionally. Read credentials with requireEnv so a missing secret fails the test instead of skipping it."
-  )
+  register_diagnostic(span=$call, message="Contract tests must run unconditionally. Read credentials with requireEnv so a missing secret fails the test instead of skipping it.")
 }
