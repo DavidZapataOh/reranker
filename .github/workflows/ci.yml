@@ -37,6 +37,11 @@ jobs:
           TURBO_SCM_BASE: ${{ steps.scope.outputs.base }}
           TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
         run: pnpm exec turbo run typecheck test ${{ steps.scope.outputs.affected }} --summarize
+      - name: wrong signature key
+        env:
+          TURBO_SCM_BASE: ${{ steps.scope.outputs.base }}
+        run: |
+          TURBO_REMOTE_CACHE_SIGNATURE_KEY="$(openssl rand -base64 48)" pnpm exec turbo run typecheck --filter=web --cache=remote:r --output-logs=full
       - if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
