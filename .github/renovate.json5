@@ -4,9 +4,8 @@
   timezone: "America/Bogota",
   schedule: ["before 6am on monday"],
   minimumReleaseAge: "3 days",
-  // CI only runs on pull requests, so release-age must count as a passing check or PRs never open.
-  internalChecksAsSuccess: true,
-  prCreation: "not-pending",
+  // ci runs on pull requests only, so the PR must exist for its checks to gate automerge.
+  prCreation: "immediate",
   platformAutomerge: false,
   packageRules: [
     // Later rules win: runtime updates are grouped and never automerge, tooling overrides below.
