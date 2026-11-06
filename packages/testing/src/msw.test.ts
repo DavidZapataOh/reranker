@@ -1,7 +1,7 @@
-import { afterAll, afterEach, beforeAll, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, expect, it, vi } from "vitest";
 import { respondAfter, respondInvalid, respondWith5xx, server } from "./msw.ts";
 
-beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
+beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
@@ -29,4 +29,11 @@ it("returns the invalid body as-is with 200", async () => {
   const r = await fetch(URL);
   expect(r.status).toBe(200);
   await expect(r.json()).rejects.toThrow();
+});
+
+it("errors on unhandled requests without consumers opting in", async () => {
+  const error = vi.spyOn(console, "error").mockImplementation(() => {});
+  await expect(fetch("https://unhandled.example.test/")).rejects.toThrow();
+  expect(error).toHaveBeenCalledWith(expect.stringContaining("without a matching request handler"));
+  error.mockRestore();
 });

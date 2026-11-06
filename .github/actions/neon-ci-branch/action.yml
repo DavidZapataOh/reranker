@@ -1,0 +1,70 @@
+name: Neon CI branch
+description: Creates an expiring Neon branch off main for one CI run once a CI branch slot is free.
+inputs:
+  api-key:
+    description: Neon API key scoped to the project.
+    required: true
+  project-id:
+    description: Neon project id.
+    required: true
+  branch-name:
+    description: Name of the branch to create.
+    required: true
+outputs:
+  branch-id:
+    description: Id of the created branch.
+    value: ${{ steps.create.outputs.branch_id || steps.retry.outputs.branch_id }}
+  db-url:
+    description: Direct connection string for the owner role.
+    value: ${{ steps.create.outputs.db_url || steps.retry.outputs.db_url }}
+  db-host:
+    description: Direct host.
+    value: ${{ steps.create.outputs.db_host || steps.retry.outputs.db_host }}
+  db-host-pooled:
+    description: Pooled host.
+    value: ${{ steps.create.outputs.db_host_pooled || steps.retry.outputs.db_host_pooled }}
+  password:
+    description: Owner role password.
+    value: ${{ steps.create.outputs.password || steps.retry.outputs.password }}
+runs:
+  using: composite
+  steps:
+    - name: Wait for a free CI branch slot
+      shell: bash
+      env:
+        NEON_API_KEY: ${{ inputs.api-key }}
+        NEON_PROJECT_ID: ${{ inputs.project-id }}
+      run: node packages/testing/bin/neon-branch-slot.ts
+    - id: expires
+      shell: bash
+      run: echo "at=$(date -u -d '+1 hour' +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
+    - id: create
+      uses: neondatabase/create-branch-action@fb620d43d4c565abaf088b848a4e28e5c4ea4d9c # 6.3.1
+      continue-on-error: true
+      with:
+        project_id: ${{ inputs.project-id }}
+        api_key: ${{ inputs.api-key }}
+        parent_branch: main
+        branch_name: ${{ inputs.branch-name }}
+        expires_at: ${{ steps.expires.outputs.at }}
+        role: neondb_owner
+        ssl: verify-full
+    # Two runs can both see a free slot and race for it; the loser waits again once.
+    - if: steps.create.outcome == 'failure'
+      name: Wait again for a free CI branch slot
+      shell: bash
+      env:
+        NEON_API_KEY: ${{ inputs.api-key }}
+        NEON_PROJECT_ID: ${{ inputs.project-id }}
+      run: node packages/testing/bin/neon-branch-slot.ts
+    - if: steps.create.outcome == 'failure'
+      id: retry
+      uses: neondatabase/create-branch-action@fb620d43d4c565abaf088b848a4e28e5c4ea4d9c # 6.3.1
+      with:
+        project_id: ${{ inputs.project-id }}
+        api_key: ${{ inputs.api-key }}
+        parent_branch: main
+        branch_name: ${{ inputs.branch-name }}
+        expires_at: ${{ steps.expires.outputs.at }}
+        role: neondb_owner
+        ssl: verify-full

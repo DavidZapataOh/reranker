@@ -64,6 +64,90 @@ jobs:
           retention-days: 3
           include-hidden-files: true
           if-no-files-found: ignore
+  integration:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions: { contents: read, id-token: write }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { fetch-depth: 0, filter: "blob:none", persist-credentials: false }
+      - uses: vercel/setup-turborepo-remote-cache-action@49d7b1b46ba4c9251e1977986bfe18336feabc8f # v1.1.0
+        with: { team: "${{ vars.TURBO_TEAM }}" }
+      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
+        with: { cache: true, require-lockfile: true }
+      - id: scope
+        env:
+          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [[ "$BASE" =~ ^[0-9a-f]{40}$ && "$BASE" != 0000000000000000000000000000000000000000 ]] && git cat-file -e "$BASE^{commit}"; then
+            echo "base=$BASE" >> "$GITHUB_OUTPUT"; echo "affected=--affected" >> "$GITHUB_OUTPUT"
+          else
+            echo "affected=" >> "$GITHUB_OUTPUT"
+          fi
+      - id: affected
+        name: Detect affected integration tests
+        env:
+          TURBO_SCM_BASE: ${{ steps.scope.outputs.base }}
+        # Turbo lists packages without the script as <NONEXISTENT> and adds ^typecheck dependencies.
+        run: |
+          count=$(pnpm exec turbo run test:integration ${{ steps.scope.outputs.affected }} --dry=json \
+            | jq '[.tasks[] | select(.task == "test:integration" and .command != "<NONEXISTENT>")] | length')
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          if [ "$count" = 0 ]; then echo "No integration tests affected"; fi
+      - if: steps.affected.outputs.count != '0'
+        id: branch
+        uses: ./.github/actions/neon-ci-branch
+        with:
+          api-key: ${{ secrets.NEON_NONPROD_API_KEY }}
+          project-id: ${{ vars.NEON_PROJECT_ID }}
+          branch-name: ci/run-${{ github.run_id }}-${{ github.run_attempt }}
+      - if: steps.affected.outputs.count != '0'
+        name: Migrate and provision database logins
+        env:
+          DB_URL: ${{ steps.branch.outputs.db-url }}
+          DB_HOST_POOLED: ${{ steps.branch.outputs.db-host-pooled }}
+        run: |
+          echo "DATABASE_URL_MIGRATIONS=$DB_URL" >> "$GITHUB_ENV"
+          if [ ! -d packages/db ]; then
+            echo "DATABASE_URL=$DB_URL" >> "$GITHUB_ENV"
+            echo "DATABASE_URL_SYSTEM=$DB_URL" >> "$GITHUB_ENV"
+            exit 0
+          fi
+          app=$(openssl rand -hex 24); system=$(openssl rand -hex 24)
+          echo "::add-mask::$app"; echo "::add-mask::$system"
+          export DATABASE_URL_MIGRATIONS="$DB_URL"
+          DB_LOGIN_PASSWORDS=$(jq -cn --arg app "$app" --arg system "$system" '{reranker_app: $app, reranker_system: $system}')
+          export DB_LOGIN_PASSWORDS
+          # Migrations create the role groups the logins join.
+          pnpm --filter @reranker/db db:migrate
+          pnpm --filter @reranker/db db:provision-roles
+          echo "DATABASE_URL=postgresql://reranker_app:$app@$DB_HOST_POOLED/neondb?sslmode=verify-full" >> "$GITHUB_ENV"
+          echo "DATABASE_URL_SYSTEM=postgresql://reranker_system:$system@$DB_HOST_POOLED/neondb?sslmode=verify-full" >> "$GITHUB_ENV"
+      - if: steps.affected.outputs.count != '0'
+        env:
+          TURBO_SCM_BASE: ${{ steps.scope.outputs.base }}
+          TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
+        run: pnpm exec turbo run test:integration ${{ steps.scope.outputs.affected }}
+      - if: steps.affected.outputs.count != '0' && github.event_name == 'pull_request'
+        name: Run the base branch's database tests against the new schema
+        env:
+          BASE: ${{ steps.scope.outputs.base }}
+          TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
+        # The deployed app (N-1) keeps running while a migration rolls out, so it must still work on the new schema.
+        run: |
+          if [ -z "$BASE" ] || git diff --quiet "$BASE" HEAD -- packages/db/migrations; then
+            echo "No migration changes"; exit 0
+          fi
+          git worktree add ../base origin/main
+          cd ../base
+          pnpm install --frozen-lockfile
+          pnpm exec turbo run test:integration --filter=@reranker/db
+      - if: always() && steps.branch.outputs.branch-id != ''
+        uses: neondatabase/delete-branch-action@4468d825d5a88ef4012f1705a82f02ec3072f776 # v3.2.1
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          branch: ${{ steps.branch.outputs.branch-id }}
+          api_key: ${{ secrets.NEON_NONPROD_API_KEY }}
   security:
     runs-on: ubuntu-slim
     timeout-minutes: 10

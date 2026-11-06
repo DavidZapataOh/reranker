@@ -16,6 +16,7 @@ export type ExplainPlan = {
 };
 
 // Test-only: the SQL is a literal from the test, never external input.
+// ANALYZE executes the statement, so run writes inside a transaction the test rolls back.
 export async function explain(
   db: Queryable,
   sql: string,
