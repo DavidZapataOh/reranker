@@ -10,7 +10,8 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "next typegen && tsc --noEmit",
-    "indexnow": "node scripts/indexnow.mjs"
+    "indexnow": "node scripts/indexnow.mjs",
+    "test": "node --test scripts/*.test.mjs"
   },
   "dependencies": {
     "lucide-react": "1.68.0",
