@@ -61,6 +61,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${display.variable} ${text.variable} ${mono.variable} ${hand.variable}`}
     >
       <body>
+        <a
+          href="#contenido"
+          className="sr-only rounded-xl bg-white px-4 py-2.5 text-[15px] font-semibold text-ink shadow-soft ring-1 ring-line focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[70]"
+        >
+          Saltar al contenido
+        </a>
         {children}
         <Analytics />
         <GoogleTag />

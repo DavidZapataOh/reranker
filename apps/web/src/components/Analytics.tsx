@@ -247,13 +247,11 @@ export function Analytics() {
       {anyTool && showBanner ? (
         <div
           role="dialog"
-          aria-labelledby="rr-consent-title"
+          aria-label="Aviso de cookies"
           data-no-track
           className="fixed inset-x-3 bottom-3 z-[60] mx-auto max-w-[440px] rounded-2xl bg-white p-5 shadow-[0_1px_2px_rgb(20_33_27/0.06),0_18px_44px_-16px_rgb(20_33_27/0.35)] ring-1 ring-line sm:inset-x-auto sm:left-5 sm:bottom-5 sm:mx-0"
         >
-          <p id="rr-consent-title" className="text-[15.5px] font-semibold text-ink">
-            ¿Nos dejas medir tu visita?
-          </p>
+          <p className="text-[15.5px] font-semibold text-ink">¿Nos dejas medir tu visita?</p>
           <p className="mt-1.5 text-[14px] leading-relaxed text-ink/70">
             Usamos cookies para entender cómo se usa el sitio y mejorarlo. Si no aceptas, solo
             contamos visitas sin cookies.{" "}

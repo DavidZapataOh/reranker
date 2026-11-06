@@ -19,7 +19,7 @@ export function LegalPage({
   return (
     <>
       <Nav />
-      <main className="bg-paper">
+      <main id="contenido" tabIndex={-1} className="bg-paper focus:outline-none">
         <div className="mx-auto max-w-[1180px] px-5 pt-14 pb-24 md:px-10 md:pt-20 md:pb-32">
           <header className="max-w-[68ch]">
             <h1 className="font-display text-[clamp(2.2rem,4vw,3.4rem)] leading-[1.05] font-black tracking-[-0.02em] text-ink">
