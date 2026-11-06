@@ -217,6 +217,9 @@ importers:
       turbo:
         specifier: 'catalog:'
         version: 2.11.10
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
 
   apps/web:
     dependencies:
@@ -239,6 +242,9 @@ importers:
         specifier: 16.36.0
         version: 16.36.0
     devDependencies:
+      '@reranker/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       '@tailwindcss/turbopack':
         specifier: 'catalog:'
         version: 4.3.4
@@ -257,6 +263,8 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
+
+  packages/typescript-config: {}
 
 packages:
 

@@ -21,6 +21,7 @@
     "simple-icons": "16.36.0"
   },
   "devDependencies": {
+    "@reranker/typescript-config": "workspace:*",
     "@tailwindcss/turbopack": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",

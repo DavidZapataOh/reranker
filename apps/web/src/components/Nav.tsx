@@ -26,7 +26,7 @@ export function Nav() {
     window.addEventListener("scroll", onScroll, { passive: true });
     const form = document.querySelector("#reporte form");
     const io = new IntersectionObserver(([e]) =>
-      setShowCta(!e.isIntersecting && e.boundingClientRect.top < 0),
+      setShowCta(e !== undefined && !e.isIntersecting && e.boundingClientRect.top < 0),
     );
     if (form) io.observe(form);
     else window.setTimeout(() => setShowCta(true), 0); // outside the home page: CTA always visible

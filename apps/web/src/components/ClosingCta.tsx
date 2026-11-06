@@ -100,7 +100,7 @@ export function ClosingCta() {
           >
             <div key={k} className="step-in space-y-4">
               <p className="ml-auto w-fit max-w-[92%] rounded-2xl rounded-tr-md bg-white px-4 py-3 text-[15.5px] leading-snug text-ink ring-1 ring-line">
-                {ask.q}
+                {ask?.q}
               </p>
               <div className="flex items-start gap-3">
                 <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white ring-1 ring-line">
@@ -113,7 +113,7 @@ export function ClosingCta() {
                   />
                 </span>
                 <p className="min-w-0 rounded-2xl rounded-tl-md bg-white px-4 py-3 text-[15.5px] leading-relaxed text-ink ring-1 ring-line">
-                  {ask.a}{" "}
+                  {ask?.a}{" "}
                   <span className="marker rounded-sm px-1 font-semibold">
                     {name.trim() || "¿tu negocio?"}
                   </span>

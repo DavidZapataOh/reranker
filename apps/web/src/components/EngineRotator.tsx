@@ -36,7 +36,7 @@ export function EngineRotator({ paused = false }: { paused?: boolean }) {
     const set = () => setReduce(mq.matches);
     const t = window.setTimeout(set, 0);
     mq.addEventListener("change", set);
-    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting));
+    const io = new IntersectionObserver(([e]) => setVisible(e?.isIntersecting ?? false));
     if (wrap.current) io.observe(wrap.current);
     return () => {
       window.clearTimeout(t);

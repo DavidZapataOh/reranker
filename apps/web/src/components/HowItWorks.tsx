@@ -28,7 +28,9 @@ export function HowItWorks() {
   useEffect(() => {
     if (!auto || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     let visible = false;
-    const io = new IntersectionObserver(([e]) => (visible = e.isIntersecting), { threshold: 0.4 });
+    const io = new IntersectionObserver(([e]) => (visible = e?.isIntersecting ?? false), {
+      threshold: 0.4,
+    });
     if (ref.current) io.observe(ref.current);
     const t = window.setInterval(() => visible && setS((v) => (v + 1) % 3), 4200);
     return () => {
@@ -111,12 +113,14 @@ export function HowItWorks() {
                   </span>
                 </div>
                 <ul className="mt-8 space-y-2.5">
-                  {[
-                    ["/engines/openai.svg", "ChatGPT"],
-                    ["/engines/gemini.svg", "Gemini"],
-                    ["/engines/google.svg", "Google"],
-                    ["/engines/perplexity.svg", "Perplexity"],
-                  ].map(([src, n], k) => (
+                  {(
+                    [
+                      ["/engines/openai.svg", "ChatGPT"],
+                      ["/engines/gemini.svg", "Gemini"],
+                      ["/engines/google.svg", "Google"],
+                      ["/engines/perplexity.svg", "Perplexity"],
+                    ] as const
+                  ).map(([src, n], k) => (
                     <li
                       key={n}
                       className="flex items-center gap-3 rounded-xl bg-white/70 px-4 py-3 ring-1 ring-line"
@@ -132,20 +136,22 @@ export function HowItWorks() {
             )}
             {s === 1 && (
               <ul className="space-y-3">
-                {[
-                  ["/engines/openai.svg", "ChatGPT", "¿Qué hotel me recomiendas en Santa Marta?"],
+                {(
                   [
-                    "/engines/gemini.svg",
-                    "Gemini",
-                    "Hotel frente al mar en Santa Marta para ir en pareja",
-                  ],
-                  ["/engines/google.svg", "Google", "mejores hoteles Santa Marta El Rodadero"],
-                  [
-                    "/engines/perplexity.svg",
-                    "Perplexity",
-                    "Hoteles boutique bien calificados en Santa Marta",
-                  ],
-                ].map(([src, n, q], k) => (
+                    ["/engines/openai.svg", "ChatGPT", "¿Qué hotel me recomiendas en Santa Marta?"],
+                    [
+                      "/engines/gemini.svg",
+                      "Gemini",
+                      "Hotel frente al mar en Santa Marta para ir en pareja",
+                    ],
+                    ["/engines/google.svg", "Google", "mejores hoteles Santa Marta El Rodadero"],
+                    [
+                      "/engines/perplexity.svg",
+                      "Perplexity",
+                      "Hoteles boutique bien calificados en Santa Marta",
+                    ],
+                  ] as const
+                ).map(([src, n, q], k) => (
                   <li
                     key={n}
                     className="flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-2xl bg-white p-4 ring-1 ring-line"

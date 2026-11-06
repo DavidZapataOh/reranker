@@ -36,14 +36,16 @@ const kinds = [
 /** Every business gets asked: one business type at a time, its question typing out in a bar. */
 export function ForWho() {
   const [i, setI] = useState(0);
-  const [typed, setTyped] = useState(kinds[0].q.length);
+  const [typed, setTyped] = useState(kinds[0]?.q.length ?? 0);
   const [auto, setAuto] = useState(true);
   const box = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const row = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
-    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: 0.4 });
+    const io = new IntersectionObserver(([e]) => setVisible(e?.isIntersecting ?? false), {
+      threshold: 0.4,
+    });
     if (box.current) io.observe(box.current);
     return () => io.disconnect();
   }, []);
@@ -51,7 +53,7 @@ export function ForWho() {
   // Types the active business's question, letter by letter.
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const full = kinds[i].q.length;
+    const full = kinds[i]?.q.length ?? 0;
     if (reduce) {
       const t = window.setTimeout(() => setTyped(full), 0);
       return () => window.clearTimeout(t);
@@ -98,7 +100,7 @@ export function ForWho() {
             aria-live="polite"
           >
             <span className="sr-only">Pregunta de ejemplo: </span>
-            {kinds[i].q.slice(0, typed)}
+            {kinds[i]?.q.slice(0, typed)}
             <span aria-hidden="true" className="caret" />
           </p>
           <span

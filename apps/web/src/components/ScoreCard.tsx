@@ -17,7 +17,7 @@ export function ScoreCard({ className = "" }: { className?: string }) {
     }
     const io = new IntersectionObserver(
       ([e]) => {
-        if (e.isIntersecting) {
+        if (e?.isIntersecting) {
           io.disconnect();
           window.setTimeout(() => setUp(true), 600);
         }

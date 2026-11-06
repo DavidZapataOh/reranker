@@ -36,7 +36,7 @@ export function ChatDemo({ business }: { business: string | null }) {
     }, 0);
     const io = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting) return;
+        if (!entry?.isIntersecting) return;
         io.disconnect();
         let n = 0;
         setPhase("typing");
