@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
 import { playwright } from "@vitest/browser-playwright";
 import { defineConfig } from "vitest/config";
@@ -48,6 +49,11 @@ export default defineConfig({
           include: ["**/{src,test}/**/*.int.test.ts"],
           exclude: ignored,
           pool: "forks",
+          globalSetup: [
+            fileURLToPath(
+              new URL("./packages/testing/src/vitest/integration-setup.ts", import.meta.url),
+            ),
+          ],
           testTimeout: 30_000,
         },
       },
