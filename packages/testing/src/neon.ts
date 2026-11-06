@@ -1,6 +1,6 @@
 import { requireEnv } from "./env.ts";
 
-const VARIABLES = {
+export const VARIABLES = {
   app: "DATABASE_URL",
   system: "DATABASE_URL_SYSTEM",
   migrations: "DATABASE_URL_MIGRATIONS",

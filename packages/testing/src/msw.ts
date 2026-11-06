@@ -4,6 +4,10 @@ import { delay } from "msw/utils/delay";
 
 export const server = setupServer();
 
+// A request no handler covers means the test would hit the real network; fail it instead of warning.
+const listen = server.listen.bind(server);
+server.listen = (options) => listen({ onUnhandledFrame: "error", ...options });
+
 export function respondWith5xx(url: string, status: 500 | 502 | 503 | 504 = 503): void {
   server.use(http.all(url, () => new HttpResponse(null, { status })));
 }
