@@ -1,0 +1,46 @@
+packages:
+  - apps/*
+  - packages/*
+  - tools/*
+catalogMode: strict
+catalog:
+  next: 16.4.5
+  react: 19.3.0
+  react-dom: 19.3.0
+  typescript: 7.0.2
+  "@types/node": 26.6.6
+  "@types/react": 19.3.0
+  "@types/react-dom": 19.3.0
+  tailwindcss: 4.3.4
+  "@tailwindcss/turbopack": 4.3.4
+  "@biomejs/biome": 2.6.4
+  turbo: 2.11.10
+  lefthook: 2.2.1
+minimumReleaseAge: 4320
+minimumReleaseAgeExclude:
+  - "@reranker/*"
+  # Already served in production; drop once they are 3 days old.
+  - next@16.4.5
+  - "@next/env@16.4.5"
+  - "@next/swc-darwin-arm64@16.4.5"
+  - "@next/swc-darwin-x64@16.4.5"
+  - "@next/swc-linux-arm64-gnu@16.4.5"
+  - "@next/swc-linux-arm64-musl@16.4.5"
+  - "@next/swc-linux-x64-gnu@16.4.5"
+  - "@next/swc-linux-x64-musl@16.4.5"
+  - "@next/swc-win32-arm64-msvc@16.4.5"
+  - "@next/swc-win32-x64-msvc@16.4.5"
+  - posthog-js@1.446.0
+  - "@posthog/core@1.63.1"
+  - "@posthog/types@1.420.0"
+  - "@posthog/browser-common@0.10.6"
+  - lucide-react@1.68.0
+trustPolicy: no-downgrade
+blockExoticSubdeps: true
+strictDepBuilds: true
+allowBuilds:
+  # Installs the git hooks; its postinstall skips CI and never fails the install.
+  lefthook: true
+  # Postinstall only prints a funding banner (transitive via posthog-js).
+  core-js: false
+verifyDepsBeforeRun: error

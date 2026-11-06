@@ -1,6 +1,6 @@
 // Notify Bing (and other IndexNow engines) that reranker.co pages changed.
 // ChatGPT search relies on Bing's index, so run this after each deploy that adds or edits pages:
-//   npm run indexnow
+//   pnpm --filter web indexnow
 const HOST = "reranker.co";
 const KEY = "cda109430c9624bbbebb33e02a6a5f53"; // also served at https://reranker.co/cda109430c9624bbbebb33e02a6a5f53.txt
 

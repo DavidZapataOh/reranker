@@ -1,0 +1,17 @@
+{
+  "name": "reranker",
+  "private": true,
+  "packageManager": "pnpm@12.16.1",
+  "devEngines": { "runtime": { "name": "node", "version": "26.13.0", "onFail": "download" } },
+  "engines": { "node": "26.x" },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "check": "biome check .",
+    "check:fix": "biome check --write .",
+    "licenses:check": "node tools/licenses-check/src/main.ts"
+  },
+  "devDependencies": { "@biomejs/biome": "catalog:", "turbo": "catalog:", "lefthook": "catalog:" }
+}
