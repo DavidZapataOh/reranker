@@ -1,0 +1,33 @@
+{
+  "name": "@reranker/testing",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./env": "./src/env.ts",
+    "./playwright": "./src/playwright.ts",
+    "./factories": "./src/factories.ts",
+    "./neon": "./src/neon.ts",
+    "./db": "./src/db.ts",
+    "./msw": "./src/msw.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --project component --coverage --passWithNoTests",
+    "test:integration": "vitest run --project integration",
+    "test:contract": "vitest run --project contract --passWithNoTests"
+  },
+  "dependencies": {
+    "@axe-core/playwright": "catalog:",
+    "@playwright/test": "catalog:",
+    "msw": "catalog:",
+    "pg": "catalog:"
+  },
+  "devDependencies": {
+    "@reranker/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/pg": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

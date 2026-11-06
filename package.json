@@ -1,6 +1,7 @@
 {
   "name": "reranker",
   "private": true,
+  "type": "module",
   "packageManager": "pnpm@12.16.1",
   "devEngines": {
     "runtime": {
@@ -17,14 +18,21 @@
     "dev": "turbo run dev",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
+    "test:integration": "turbo run test:integration",
+    "test:contract": "turbo run test:contract",
     "check": "biome check .",
     "check:fix": "biome check --write .",
     "licenses:check": "node tools/licenses-check/src/main.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "playwright": "catalog:",
     "turbo": "catalog:",
     "typescript": "catalog:",
-    "lefthook": "catalog:"
+    "lefthook": "catalog:",
+    "vitest": "catalog:"
   }
 }
