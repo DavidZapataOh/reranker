@@ -1,0 +1,63 @@
+name: ci
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  ci:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions: { contents: read, id-token: write }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { fetch-depth: 0, filter: "blob:none", persist-credentials: false }
+      - uses: vercel/setup-turborepo-remote-cache-action@49d7b1b46ba4c9251e1977986bfe18336feabc8f # v1.1.0
+        with: { team: "${{ vars.TURBO_TEAM }}" }
+      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
+        with: { cache: true, require-lockfile: true }
+      - run: pnpm exec biome ci .
+      - run: pnpm audit --prod --audit-level high && pnpm licenses:check
+      - id: scope
+        env:
+          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        # Without a reachable base (first push, force push, manual run) everything runs.
+        run: |
+          if [[ "$BASE" =~ ^[0-9a-f]{40}$ && "$BASE" != 0000000000000000000000000000000000000000 ]] && git cat-file -e "$BASE^{commit}"; then
+            echo "base=$BASE" >> "$GITHUB_OUTPUT"; echo "affected=--affected" >> "$GITHUB_OUTPUT"
+          else
+            echo "affected=" >> "$GITHUB_OUTPUT"
+          fi
+      - env:
+          TURBO_SCM_BASE: ${{ steps.scope.outputs.base }}
+          TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
+        run: pnpm exec turbo run typecheck test ${{ steps.scope.outputs.affected }} --summarize
+      - if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: turbo-summary
+          path: .turbo/runs/*.json
+          retention-days: 3
+          include-hidden-files: true
+          if-no-files-found: ignore
+  security:
+    runs-on: ubuntu-slim
+    timeout-minutes: 10
+    permissions: { contents: read, pull-requests: read }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { fetch-depth: 0, persist-credentials: false }
+      - uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_VERSION: 8.30.1
+          GITLEAKS_ENABLE_COMMENTS: "false"
+          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: "false"
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      - env: { GH_TOKEN: "${{ github.token }}" }
+        run: uvx zizmor@1.32.0 --min-severity medium .github/
