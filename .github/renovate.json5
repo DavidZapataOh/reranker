@@ -4,20 +4,28 @@
   timezone: "America/Bogota",
   schedule: ["before 6am on monday"],
   minimumReleaseAge: "3 days",
+  // CI only runs on pull requests, so release-age must count as a passing check or PRs never open.
+  internalChecksAsSuccess: true,
+  prCreation: "not-pending",
   platformAutomerge: false,
   packageRules: [
+    // Later rules win: runtime updates are grouped and never automerge, tooling overrides below.
     { matchUpdateTypes: ["minor", "patch"], groupName: "non-major dependencies" },
     {
       matchUpdateTypes: ["minor", "patch"],
       matchDepTypes: ["devDependencies"],
+      groupName: "tooling",
       automerge: true,
     },
     {
       matchUpdateTypes: ["minor", "patch"],
       matchDepTypes: ["pnpm.catalog.default"],
       matchPackageNames: ["@biomejs/biome", "turbo", "lefthook", "typescript", "@types/**"],
+      groupName: "tooling",
       automerge: true,
     },
-    { matchManagers: ["github-actions"], matchUpdateTypes: ["digest", "pinDigest"], automerge: true },
+    { matchManagers: ["github-actions"], matchUpdateTypes: ["pinDigest"], automerge: true },
+    // Runner upgrades are deliberate decisions, not bot PRs.
+    { matchDatasources: ["github-runners"], enabled: false },
   ],
 }
