@@ -142,6 +142,14 @@ jobs:
           cd ../base
           pnpm install --frozen-lockfile
           pnpm exec turbo run test:integration --filter=@reranker/db
+      # delete-branch-action installs neonctl with `npm i -g`; pnpm's Node runtime keeps no global bin on PATH.
+      - if: always() && steps.branch.outputs.branch-id != ''
+        name: Give npm a global prefix on PATH
+        env:
+          PREFIX: ${{ runner.temp }}/npm-global
+        run: |
+          echo "NPM_CONFIG_PREFIX=$PREFIX" >> "$GITHUB_ENV"
+          echo "$PREFIX/bin" >> "$GITHUB_PATH"
       - if: always() && steps.branch.outputs.branch-id != ''
         uses: neondatabase/delete-branch-action@4468d825d5a88ef4012f1705a82f02ec3072f776 # v3.2.1
         with:
