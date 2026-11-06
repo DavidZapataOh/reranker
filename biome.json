@@ -33,5 +33,10 @@
       "linter": { "rules": { "suspicious": { "noSkippedTests": "error" } } }
     }
   ],
-  "plugins": []
+  "plugins": [
+    {
+      "path": "./tools/biome/no-conditional-contract-tests.grit",
+      "includes": ["**/*.contract.test.ts"]
+    }
+  ]
 }
