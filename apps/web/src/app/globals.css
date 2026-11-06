@@ -74,8 +74,11 @@
 @media (prefers-reduced-motion: reduce) {
   .caret { animation: none; }
   *, *::before, *::after {
+    /* biome-ignore lint/complexity/noImportantStyles: must beat the animation utilities' own durations */
     animation-duration: 0.01ms !important;
+    /* biome-ignore lint/complexity/noImportantStyles: must beat the animation utilities' own iteration counts */
     animation-iteration-count: 1 !important;
+    /* biome-ignore lint/complexity/noImportantStyles: must beat the transition utilities' own durations */
     transition-duration: 0.01ms !important;
   }
 }

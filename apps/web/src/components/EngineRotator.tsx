@@ -47,6 +47,7 @@ export function EngineRotator({ paused = false }: { paused?: boolean }) {
 
   const running = !reduce && !paused && !hover && visible;
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: pos re-arms the hold timer after every step
   useEffect(() => {
     if (!running) return;
     const t = window.setTimeout(() => {
@@ -89,8 +90,9 @@ export function EngineRotator({ paused = false }: { paused?: boolean }) {
       <span className="relative block h-[1em] w-[1em] overflow-hidden">
         <span className="absolute inset-x-0 top-0 block" style={{ transform: `translateY(${-pos}em)`, transition: `transform ${dur}ms ${EASE}` }}>
           {loop.map((e, k) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: fixed list that never reorders and repeats its first item
             <span key={k} className="grid h-[1em] w-[1em] place-items-center">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
+              {/* biome-ignore lint/performance/noImgElement: tiny static SVG logo, next/image would change the served HTML */}
               <img src={e.icon} alt="" width={64} height={64} className="block" style={{ width: `${e.scale * 0.86}em`, height: `${e.scale * 0.86}em` }} />
             </span>
           ))}
@@ -104,6 +106,7 @@ export function EngineRotator({ paused = false }: { paused?: boolean }) {
         <span className="absolute top-0 left-0 block" style={{ transform: `translateY(${-pos * 1.2}em)`, transition: `transform ${dur}ms ${EASE}` }}>
           {loop.map((e, k) => (
             <span
+              // biome-ignore lint/suspicious/noArrayIndexKey: fixed list that never reorders and repeats its first item
               key={k}
               ref={(el) => {
                 if (k < N) names.current[k] = el;

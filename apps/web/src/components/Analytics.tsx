@@ -190,6 +190,7 @@ export function Analytics() {
   }, []);
 
   // 4 · Section views: at least half the section or half the viewport visible.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: pathname re-arms the observer on each route change
   useEffect(() => {
     if (!anyTool) return;
     const seen = new Set<string>();
@@ -208,7 +209,9 @@ export function Analytics() {
       },
       { threshold: [0, 0.25, 0.5, 0.75] },
     );
-    document.querySelectorAll("main section[id], main section[aria-labelledby], footer").forEach((s) => io.observe(s));
+    document.querySelectorAll("main section[id], main section[aria-labelledby], footer").forEach((s) => {
+      io.observe(s);
+    });
     return () => io.disconnect();
   }, [pathname]);
 

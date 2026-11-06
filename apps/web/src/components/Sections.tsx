@@ -157,6 +157,25 @@ export function Bento() {
   );
 }
 
+function Tile({ t }: { t: { icon: string | null; name: string; note: string; soon?: boolean } }) {
+  return (
+  <li className="flex items-center gap-3.5 rounded-2xl bg-white px-4 py-3.5 shadow-soft ring-1 ring-line">
+    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-paper ring-1 ring-line">
+      {t.icon ? (
+        <Image src={t.icon} alt="" width={24} height={24} className="h-6 w-6" />
+      ) : (
+        <Icon d={t.name === "Correo" ? "M3 6h18v12H3zM3 7l9 6 9-6" : "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"} className="h-[22px] w-[22px] text-ink/75" />
+      )}
+    </span>
+    <span className="min-w-0 flex-1">
+      <span className="block text-[15.5px] font-semibold text-ink">{t.name}</span>
+      <span className="block text-[13.5px] text-ink/60">{t.note}</span>
+    </span>
+    {t.soon && <span className="rounded-full bg-bubble px-2 py-0.5 text-[11.5px] font-semibold text-ink/60">Pronto</span>}
+  </li>
+);
+}
+
 /* 8 · Where it acts: the AI builds its answer from what it finds about you; that's where we plug in */
 export function Connect() {
   const reads = [
@@ -169,22 +188,6 @@ export function Connect() {
     { icon: null, name: "Correo", note: "Tu resumen cada semana" },
     { icon: "/engines/shopify.svg", name: "Shopify", note: "Tu catálogo", soon: true },
   ];
-  const Tile = ({ t }: { t: { icon: string | null; name: string; note: string; soon?: boolean } }) => (
-    <li className="flex items-center gap-3.5 rounded-2xl bg-white px-4 py-3.5 shadow-soft ring-1 ring-line">
-      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-paper ring-1 ring-line">
-        {t.icon ? (
-          <Image src={t.icon} alt="" width={24} height={24} className="h-6 w-6" />
-        ) : (
-          <Icon d={t.name === "Correo" ? "M3 6h18v12H3zM3 7l9 6 9-6" : "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"} className="h-[22px] w-[22px] text-ink/75" />
-        )}
-      </span>
-      <span className="min-w-0 flex-1">
-        <span className="block text-[15.5px] font-semibold text-ink">{t.name}</span>
-        <span className="block text-[13.5px] text-ink/60">{t.note}</span>
-      </span>
-      {t.soon && <span className="rounded-full bg-bubble px-2 py-0.5 text-[11.5px] font-semibold text-ink/60">Pronto</span>}
-    </li>
-  );
   const ys = [16.5, 50, 83.5];
   return (
     <Section id="conexiones" labelledBy="connect-title" className="py-24 md:py-32">

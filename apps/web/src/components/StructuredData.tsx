@@ -64,7 +64,7 @@ export function StructuredData() {
   return (
     <script
       type="application/ld+json"
-      // JSON.stringify output is safe here; "<" is escaped to keep "</script>" out of the payload.
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: our own serialized JSON-LD, the form Next documents; "<" is escaped to keep "</script>" out of the payload
       dangerouslySetInnerHTML={{ __html: JSON.stringify(graph).replace(/</g, "\\u003c") }}
     />
   );

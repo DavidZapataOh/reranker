@@ -18,6 +18,7 @@ export function ChatDemo({ business }: { business: string | null }) {
   const ref = useRef<HTMLDivElement>(null);
   const question = QUESTION;
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: business restarts the typing demo
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let timer: number | undefined;
@@ -62,6 +63,7 @@ export function ChatDemo({ business }: { business: string | null }) {
     <div id="demo" ref={ref} className="relative mx-auto mt-[34px] max-w-[1536px] md:mt-[2.05vw] [container-type:inline-size]">
       <div className="relative hidden aspect-[1536/416] w-full md:block">
         {/* Window */}
+        {/* biome-ignore lint/a11y/useSemanticElements: a fieldset would bring its own border and layout quirks */}
         <div
           className="absolute top-0 left-[7.03%] h-[100%] w-[80.86%] rounded-[1.6cqw] bg-white shadow-[0_1px_2px_rgb(20_33_27/0.05),0_24px_60px_-28px_rgb(20_33_27/0.25)] ring-1 ring-line"
           role="group"
@@ -92,7 +94,7 @@ export function ChatDemo({ business }: { business: string | null }) {
             <div className="absolute top-[2.25cqw] right-[2.35cqw] flex items-center gap-[0.6cqw]">
               <p className="rounded-[0.95cqw] bg-bubble px-[1.3cqw] py-[1cqw] text-[1.15cqw] leading-none text-ink">{question}</p>
               <span aria-hidden="true" className="grid h-[2.85cqw] w-[2.85cqw] place-items-center rounded-full bg-[#e7e8ea] text-[#5f666d]">
-                <svg viewBox="0 0 24 24" className="h-[1.4cqw] w-[1.4cqw]" fill="currentColor">
+                <svg viewBox="0 0 24 24" aria-hidden="true" className="h-[1.4cqw] w-[1.4cqw]" fill="currentColor">
                   <circle cx="12" cy="8" r="4" />
                   <path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7z" />
                 </svg>

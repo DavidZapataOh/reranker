@@ -42,6 +42,7 @@ export function HowItWorks() {
           {steps.map((st, i) => (
             <button
               key={st.t}
+              type="button"
               role="tab"
               id={`step-${i}`}
               aria-selected={s === i}
