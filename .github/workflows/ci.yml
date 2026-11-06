@@ -33,6 +33,25 @@ jobs:
           else
             echo "affected=" >> "$GITHUB_OUTPUT"
           fi
+      - id: browser
+        name: Detect affected component tests
+        env:
+          TURBO_SCM_BASE: ${{ steps.scope.outputs.base }}
+        run: |
+          dirs=$(pnpm exec turbo ls ${{ steps.scope.outputs.affected }} --output=json | jq -r '.packages.items[].path')
+          # shellcheck disable=SC2086
+          if [ -n "$dirs" ] && [ -n "$(git ls-files -- $(printf "%s/**/*.browser.test.tsx " $dirs))" ]; then
+            echo "needed=true" >> "$GITHUB_OUTPUT"
+            echo "version=$(pnpm --filter web exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.browser.outputs.needed == 'true'
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.browser.outputs.version }}
+      - if: steps.browser.outputs.needed == 'true'
+        name: Install Chromium when component tests are affected
+        run: pnpm --filter web exec playwright install --with-deps chromium
       - env:
           TURBO_SCM_BASE: ${{ steps.scope.outputs.base }}
           TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
