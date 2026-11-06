@@ -1,5 +1,5 @@
 name: Neon CI branch
-description: Creates an expiring Neon branch off main for one CI run once a CI branch slot is free.
+description: Creates an expiring Neon branch off main for one CI run, once a CI branch slot is free.
 inputs:
   api-key:
     description: Neon API key scoped to the project.
