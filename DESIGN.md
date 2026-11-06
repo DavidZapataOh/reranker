@@ -183,7 +183,7 @@ Paleta cálida y contenida: papel y tinta hacen casi todo el trabajo; el verde a
 - **Blanco superficie** (surface): tarjetas, ventana de chat, campo de búsqueda, y bandas de sección alternas (Cómo funciona, Para quién, Precios, Preguntas).
 - **Burbuja** (bubble): burbuja de pregunta del cliente, avatares circulares, pista de barras, botón circular del acordeón.
 - **Tinta** (ink): todo el texto, la regla gruesa de 2 px que abre listas editoriales, y la única banda oscura (agencias).
-- **Tinta suave** (ink-soft) y opacidades de tinta (75 %, 65 %, 60 %, 45 %): ledes, descripciones, metadatos y placeholder, en ese orden de jerarquía.
+- **Tinta suave** (ink-soft) y opacidades de tinta (75 %, 65 %, 45 %): ledes, descripciones y metadatos, y placeholder, en ese orden de jerarquía. Ningún texto baja del 65 %, para el 4,5:1 de WCAG 2.2 AA sobre papel; el 45 % queda solo para placeholder.
 - **Línea** (line): todos los bordes y divisores (tinta al 8 %), aplicados como ring de 1 px.
 
 ### Named Rules
@@ -207,7 +207,7 @@ Paleta cálida y contenida: papel y tinta hacen casi todo el trabajo; el verde a
 - **Title** (Jakarta 700, 18–19 px): títulos de tarjeta, pasos, criterios de confianza. Preguntas del FAQ en 17 px 600.
 - **Body / Lede** (16 px 1.5 / clamp 1.05–1.15rem 1.625): ledes a 56ch máx. al 75 % de tinta; cuerpo de tarjeta en 15–15.5 px.
 - **Label** (Jakarta 600, 14–17 px): botones, chips, nombres.
-- **Evidence** (Mono 12–13 px, tinta al 45–60 %): fechas, horas, rangos, IDs, contadores (8/10, ×10), fuentes de datos.
+- **Evidence** (Mono 12–13 px, tinta al 65 % como mínimo, para el 4,5:1 de WCAG 2.2 AA sobre papel): fechas, horas, rangos, IDs, contadores (8/10, ×10), fuentes de datos.
 - **Hand** (Caveat 500, 20–30 px, rotada −4° a −11°): anotaciones en el margen, siempre en tinta, siempre aria-hidden.
 
 ### Named Rules
