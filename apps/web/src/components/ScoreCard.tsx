@@ -50,7 +50,7 @@ export function ScoreCard({ className = "" }: { className?: string }) {
           <span className="sr-only">Puntaje de ejemplo: </span>
           {score}
         </p>
-        <p className="pb-2 font-mono text-[13px] leading-snug text-ink/60">
+        <p className="pb-2 font-mono text-[13px] leading-snug text-ink/65">
           {range}
           <br />
           30 preguntas · 04 nov 2026
@@ -74,7 +74,7 @@ export function ScoreCard({ className = "" }: { className?: string }) {
               )}
             </span>
             <span
-              className={`text-[13px] ${i === current ? "font-semibold text-ink" : "text-ink/55"}`}
+              className={`text-[13px] ${i === current ? "font-semibold text-ink" : "text-ink/65"}`}
             >
               {l}
             </span>

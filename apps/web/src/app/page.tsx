@@ -20,7 +20,7 @@ export default function Home() {
   return (
     <>
       <Nav />
-      <main>
+      <main id="contenido" tabIndex={-1} className="focus:outline-none">
         <Hero />
         <Promises />
         <Shift />

@@ -2,6 +2,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { test as base, expect, type Page } from "@playwright/test";
 import { bypassHeaders } from "./bypass.ts";
 import { createStepCounter, type StepCounter } from "./steps.ts";
+import { assertDeploymentUrl } from "./target.ts";
 
 export const AXE_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] as const;
 
@@ -18,12 +19,13 @@ export const test = base.extend<Fixtures>({
   makeAxeBuilder: async ({ page }, use) => {
     await use(() => new AxeBuilder({ page }).withTags([...AXE_TAGS]));
   },
-  gotoStable: async ({ page }, use) => {
+  gotoStable: async ({ page, baseURL }, use) => {
     await use(async (path) => {
       const response = await page.goto(path, { waitUntil: "load" });
       if (!response?.ok()) {
+        const url = response?.url() ?? new URL(path, baseURL).href;
         throw new Error(
-          `Deployment not reachable: ${response?.url() ?? path} (${response?.status() ?? "no response"})`,
+          `Deployment not reachable: ${url} (${response?.status() ?? "no response"})`,
         );
       }
       await page.evaluate("document.fonts.ready");
@@ -42,4 +44,4 @@ export const test = base.extend<Fixtures>({
   },
 });
 
-export { bypassHeaders, expect };
+export { assertDeploymentUrl, bypassHeaders, expect };

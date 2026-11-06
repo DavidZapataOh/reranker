@@ -19,13 +19,13 @@ export function LegalPage({
   return (
     <>
       <Nav />
-      <main className="bg-paper">
+      <main id="contenido" tabIndex={-1} className="bg-paper focus:outline-none">
         <div className="mx-auto max-w-[1180px] px-5 pt-14 pb-24 md:px-10 md:pt-20 md:pb-32">
           <header className="max-w-[68ch]">
             <h1 className="font-display text-[clamp(2.2rem,4vw,3.4rem)] leading-[1.05] font-black tracking-[-0.02em] text-ink">
               {title}
             </h1>
-            <p className="mt-4 font-mono text-[13px] text-ink/55">
+            <p className="mt-4 font-mono text-[13px] text-ink/65">
               Última actualización: {updated}
             </p>
             <div className="mt-6 text-[17px] leading-relaxed text-ink/80 [&_a]:text-green [&_a]:underline [&_a]:underline-offset-[3px]">
@@ -38,7 +38,7 @@ export function LegalPage({
               aria-label="Contenido"
               className="hidden lg:sticky lg:top-24 lg:block lg:self-start"
             >
-              <p className="text-[13px] font-semibold text-ink/50">Contenido</p>
+              <p className="text-[13px] font-semibold text-ink/65">Contenido</p>
               <ol className="mt-3 space-y-2 border-l border-line pl-4 text-[14.5px]">
                 {sections.map((s, i) => (
                   <li key={s.id}>

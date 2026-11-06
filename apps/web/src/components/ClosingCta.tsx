@@ -87,7 +87,7 @@ export function ClosingCta() {
                   </svg>
                 </button>
               </div>
-              <p className="mt-3.5 text-[14px] text-ink/60">
+              <p className="mt-3.5 text-[14px] text-ink/65">
                 Gratis · Sin registro ni tarjeta · Resultado en menos de 2 minutos
               </p>
             </form>
