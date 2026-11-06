@@ -27,5 +27,11 @@
     },
     "rules": { "nursery": { "noFloatingPromises": "error", "noMisusedPromises": "error" } }
   },
+  "overrides": [
+    {
+      "includes": ["**/*.contract.test.ts"],
+      "linter": { "rules": { "suspicious": { "noSkippedTests": "error" } } }
+    }
+  ],
   "plugins": []
 }
