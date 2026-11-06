@@ -1,0 +1,23 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: ["config:best-practices"],
+  timezone: "America/Bogota",
+  schedule: ["before 6am on monday"],
+  minimumReleaseAge: "3 days",
+  platformAutomerge: false,
+  packageRules: [
+    { matchUpdateTypes: ["minor", "patch"], groupName: "non-major dependencies" },
+    {
+      matchUpdateTypes: ["minor", "patch"],
+      matchDepTypes: ["devDependencies"],
+      automerge: true,
+    },
+    {
+      matchUpdateTypes: ["minor", "patch"],
+      matchDepTypes: ["pnpm.catalog.default"],
+      matchPackageNames: ["@biomejs/biome", "turbo", "lefthook", "typescript", "@types/**"],
+      automerge: true,
+    },
+    { matchManagers: ["github-actions"], matchUpdateTypes: ["digest", "pinDigest"], automerge: true },
+  ],
+}
