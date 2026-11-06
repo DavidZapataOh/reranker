@@ -1,6 +1,18 @@
 "use client";
 
-import { ArrowUp, BedDouble, Dumbbell, GraduationCap, House, PawPrint, Scale, ShoppingBag, Stethoscope, UtensilsCrossed, Wrench } from "lucide-react";
+import {
+  ArrowUp,
+  BedDouble,
+  Dumbbell,
+  GraduationCap,
+  House,
+  PawPrint,
+  Scale,
+  ShoppingBag,
+  Stethoscope,
+  UtensilsCrossed,
+  Wrench,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { H2, Section } from "./ui";
 
@@ -14,7 +26,11 @@ const kinds = [
   { k: "Colegios", Icon: GraduationCap, q: "Un colegio bilingüe cerca de Chía" },
   { k: "Abogados", Icon: Scale, q: "Necesito un abogado de inmigración en Medellín" },
   { k: "Veterinarias", Icon: PawPrint, q: "¿Qué veterinaria atiende urgencias en Cali?" },
-  { k: "Inmobiliarias", Icon: House, q: "Una inmobiliaria confiable para arrendar en Barranquilla" },
+  {
+    k: "Inmobiliarias",
+    Icon: House,
+    q: "Una inmobiliaria confiable para arrendar en Barranquilla",
+  },
 ];
 
 /** Every business gets asked: one business type at a time, its question typing out in a bar. */
@@ -77,18 +93,27 @@ export function ForWho() {
       <div ref={box} className="mx-auto mt-12 max-w-[860px]">
         {/* The bar where the customer types */}
         <div className="flex items-center gap-3 rounded-[26px] bg-paper p-3 pl-6 shadow-[0_1px_2px_rgb(20_33_27/0.05),0_16px_40px_-20px_rgb(20_33_27/0.25)] ring-1 ring-line md:p-3.5 md:pl-7">
-          <p className="min-h-[1.5em] flex-1 text-[clamp(1.1rem,2.1vw,1.6rem)] leading-snug text-ink" aria-live="polite">
+          <p
+            className="min-h-[1.5em] flex-1 text-[clamp(1.1rem,2.1vw,1.6rem)] leading-snug text-ink"
+            aria-live="polite"
+          >
             <span className="sr-only">Pregunta de ejemplo: </span>
             {kinds[i].q.slice(0, typed)}
             <span aria-hidden="true" className="caret" />
           </p>
-          <span aria-hidden="true" className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-ink text-paper md:h-12 md:w-12">
+          <span
+            aria-hidden="true"
+            className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-ink text-paper md:h-12 md:w-12"
+          >
             <ArrowUp className="h-5 w-5" strokeWidth={2.2} />
           </span>
         </div>
 
         {/* Business types: icon + one word */}
-        <ul ref={row} className="-mx-5 mt-7 flex snap-x scroll-px-5 gap-2.5 overflow-x-auto px-5 pb-2 [scrollbar-width:none] md:mx-0 md:mt-8 md:flex-wrap md:justify-center md:overflow-visible md:px-0">
+        <ul
+          ref={row}
+          className="-mx-5 mt-7 flex snap-x scroll-px-5 gap-2.5 overflow-x-auto px-5 pb-2 [scrollbar-width:none] md:mx-0 md:mt-8 md:flex-wrap md:justify-center md:overflow-visible md:px-0"
+        >
           {kinds.map(({ k, Icon }, n) => (
             <li key={k} className="shrink-0 snap-start">
               <button
@@ -96,7 +121,9 @@ export function ForWho() {
                 onClick={() => pick(n)}
                 aria-pressed={i === n}
                 className={`inline-flex h-11 items-center gap-2 rounded-full px-4 text-[15px] transition-colors duration-200 ${
-                  i === n ? "bg-green-light font-semibold text-ink ring-1 ring-green/40" : "bg-paper text-ink ring-1 ring-line hover:bg-green-light/60"
+                  i === n
+                    ? "bg-green-light font-semibold text-ink ring-1 ring-green/40"
+                    : "bg-paper text-ink ring-1 ring-line hover:bg-green-light/60"
                 }`}
               >
                 <Icon aria-hidden="true" className="h-[18px] w-[18px]" strokeWidth={2} />

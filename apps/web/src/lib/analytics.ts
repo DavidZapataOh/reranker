@@ -54,7 +54,9 @@ export function writeConsent(c: Exclude<Consent, "pending">) {
  * so funnels count visits by this id to bridge the two.
  */
 export const VISIT_ID: string =
-  typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
 /* ---------- Origin: which AI assistant sent the visitor ---------- */
 
@@ -150,7 +152,8 @@ export function afterPageLoad(fn: () => void): () => void {
   let cancelled = false;
   const run = () => {
     if (cancelled) return;
-    if (typeof window.requestIdleCallback === "function") window.requestIdleCallback(() => !cancelled && fn(), { timeout: 2000 });
+    if (typeof window.requestIdleCallback === "function")
+      window.requestIdleCallback(() => !cancelled && fn(), { timeout: 2000 });
     else setTimeout(() => !cancelled && fn(), 200);
   };
   if (document.readyState === "complete") run();
@@ -173,9 +176,17 @@ export function whatsappRef(): string | null {
     /* no storage available */
   }
   const o = readOrigin();
-  const raw = o.utm_campaign || o.utm_source || o.ai_source || o.referrer_domain?.replace(/^www\./, "").split(".")[0];
+  const raw =
+    o.utm_campaign ||
+    o.utm_source ||
+    o.ai_source ||
+    o.referrer_domain?.replace(/^www\./, "").split(".")[0];
   if (!raw) return null;
-  const code = raw.toUpperCase().replace(/[^A-Z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 24);
+  const code = raw
+    .toUpperCase()
+    .replace(/[^A-Z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 24);
   try {
     window.sessionStorage.setItem("rr_ref", code);
   } catch {

@@ -11,7 +11,12 @@ if (urls.length === 0) throw new Error("No URLs found in the sitemap");
 const res = await fetch("https://api.indexnow.org/indexnow", {
   method: "POST",
   headers: { "Content-Type": "application/json; charset=utf-8" },
-  body: JSON.stringify({ host: HOST, key: KEY, keyLocation: `https://${HOST}/${KEY}.txt`, urlList: urls }),
+  body: JSON.stringify({
+    host: HOST,
+    key: KEY,
+    keyLocation: `https://${HOST}/${KEY}.txt`,
+    urlList: urls,
+  }),
 });
 console.log(`IndexNow: ${res.status} ${res.statusText} for ${urls.length} URLs`);
 if (res.status >= 400) process.exit(1);

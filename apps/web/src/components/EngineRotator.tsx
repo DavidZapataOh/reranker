@@ -88,12 +88,22 @@ export function EngineRotator({ paused = false }: { paused?: boolean }) {
     >
       {/* Logo: all in the same 1em box, optically adjusted */}
       <span className="relative block h-[1em] w-[1em] overflow-hidden">
-        <span className="absolute inset-x-0 top-0 block" style={{ transform: `translateY(${-pos}em)`, transition: `transform ${dur}ms ${EASE}` }}>
+        <span
+          className="absolute inset-x-0 top-0 block"
+          style={{ transform: `translateY(${-pos}em)`, transition: `transform ${dur}ms ${EASE}` }}
+        >
           {loop.map((e, k) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: fixed list that never reorders and repeats its first item
             <span key={k} className="grid h-[1em] w-[1em] place-items-center">
               {/* biome-ignore lint/performance/noImgElement: tiny static SVG logo, next/image would change the served HTML */}
-              <img src={e.icon} alt="" width={64} height={64} className="block" style={{ width: `${e.scale * 0.86}em`, height: `${e.scale * 0.86}em` }} />
+              <img
+                src={e.icon}
+                alt=""
+                width={64}
+                height={64}
+                className="block"
+                style={{ width: `${e.scale * 0.86}em`, height: `${e.scale * 0.86}em` }}
+              />
             </span>
           ))}
         </span>
@@ -103,7 +113,13 @@ export function EngineRotator({ paused = false }: { paused?: boolean }) {
         className="relative block h-[1.2em] overflow-hidden"
         style={{ width: w ? `${w}px` : undefined, transition: `width ${dur}ms ${EASE}` }}
       >
-        <span className="absolute top-0 left-0 block" style={{ transform: `translateY(${-pos * 1.2}em)`, transition: `transform ${dur}ms ${EASE}` }}>
+        <span
+          className="absolute top-0 left-0 block"
+          style={{
+            transform: `translateY(${-pos * 1.2}em)`,
+            transition: `transform ${dur}ms ${EASE}`,
+          }}
+        >
           {loop.map((e, k) => (
             <span
               // biome-ignore lint/suspicious/noArrayIndexKey: fixed list that never reorders and repeats its first item

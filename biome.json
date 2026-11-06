@@ -1,7 +1,17 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
-  "files": { "includes": ["**", "!**/.next", "!**/next-env.d.ts", "!.impeccable", "!assets", "!**/public", "!**/*.md"] },
+  "files": {
+    "includes": [
+      "**",
+      "!**/.next",
+      "!**/next-env.d.ts",
+      "!.impeccable",
+      "!assets",
+      "!**/public",
+      "!**/*.md"
+    ]
+  },
   "formatter": { "enabled": true, "indentStyle": "space", "indentWidth": 2, "lineWidth": 100 },
   "javascript": { "formatter": { "quoteStyle": "double", "semicolons": "always" } },
   "css": { "parser": { "tailwindDirectives": true } },

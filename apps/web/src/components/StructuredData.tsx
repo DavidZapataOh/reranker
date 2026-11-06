@@ -1,5 +1,5 @@
-import { contact } from "./ui";
 import { faqItems } from "./Sections";
+import { contact } from "./ui";
 
 const BASE = "https://reranker.co";
 
@@ -22,7 +22,12 @@ export function StructuredData() {
         logo: `${BASE}/brand/icon-512.png`,
         email: contact.email,
         telephone: `+${contact.whatsapp}`,
-        address: { "@type": "PostalAddress", addressLocality: "Medellín", addressRegion: "Antioquia", addressCountry: "CO" },
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Medellín",
+          addressRegion: "Antioquia",
+          addressCountry: "CO",
+        },
         areaServed: { "@type": "Country", name: "Colombia" },
       },
       {
@@ -46,8 +51,20 @@ export function StructuredData() {
         publisher: { "@id": `${BASE}/#organization` },
         offers: [
           { "@type": "Offer", name: "Reporte gratis", price: "0", priceCurrency: "COP" },
-          { "@type": "Offer", name: "Esencial", price: "149000", priceCurrency: "COP", description: "Mensual. Un negocio en una ciudad." },
-          { "@type": "Offer", name: "Pro", price: "299000", priceCurrency: "COP", description: "Mensual. Varias sedes o ciudades." },
+          {
+            "@type": "Offer",
+            name: "Esencial",
+            price: "149000",
+            priceCurrency: "COP",
+            description: "Mensual. Un negocio en una ciudad.",
+          },
+          {
+            "@type": "Offer",
+            name: "Pro",
+            price: "299000",
+            priceCurrency: "COP",
+            description: "Mensual. Varias sedes o ciudades.",
+          },
         ],
       },
       {

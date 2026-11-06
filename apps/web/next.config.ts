@@ -33,8 +33,14 @@ const nextConfig: NextConfig = {
   async rewrites() {
     const region = process.env.NEXT_PUBLIC_POSTHOG_REGION === "eu" ? "eu" : "us";
     return [
-      { source: "/ingest/static/:path*", destination: `https://${region}-assets.i.posthog.com/static/:path*` },
-      { source: "/ingest/array/:path*", destination: `https://${region}-assets.i.posthog.com/array/:path*` },
+      {
+        source: "/ingest/static/:path*",
+        destination: `https://${region}-assets.i.posthog.com/static/:path*`,
+      },
+      {
+        source: "/ingest/array/:path*",
+        destination: `https://${region}-assets.i.posthog.com/array/:path*`,
+      },
       { source: "/ingest/:path*", destination: `https://${region}.i.posthog.com/:path*` },
     ];
   },
