@@ -12,8 +12,8 @@ Next.js 16 (App Router) + Tailwind CSS 4 in `apps/web`, inside the project monor
 
 ## Users
 
-- **Primary:** owners of Colombian SMBs with high-ticket customers — aesthetic and dental clinics, boutique hotels, real estate, lawyers, online shops (DTC brands) — first in Bogotá and Medellín. Not technical, live in WhatsApp, distrust marketing "humo". Most are unaware or barely aware that customers ask ChatGPT/Gemini for recommendations; half of the firms not adopting AI call it "irrelevant".
-- **Secondary:** marketing coordinators at those businesses, and Colombian marketing agencies that resell the product.
+- **Primary:** owners of SMBs anywhere in the Spanish-speaking world (anyone in any country can use and pay; distribution effort concentrates in Colombia) with high-ticket customers — aesthetic and dental clinics, boutique hotels, real estate, lawyers, online shops (DTC brands) — first in Bogotá and Medellín. Not technical, live in WhatsApp, distrust marketing "humo". Most are unaware or barely aware that customers ask ChatGPT/Gemini for recommendations; half of the firms not adopting AI call it "irrelevant".
+- **Secondary:** marketing coordinators at those businesses, and marketing agencies that resell the product.
 - **Situation on the landing:** arrive from Meta ads, search, agency referrals or AI answers, mostly on mobile; decide in seconds whether to type their business name.
 
 ## Product Purpose
@@ -24,7 +24,7 @@ Reranker (reranker.co) shows a business owner what ChatGPT, Gemini and Google's 
 
 - City-level measurement in Spanish for local businesses (competitors measure at country level, in English, or for enterprises).
 - Every AI answer is stored as-is with date, engine and city, and can be checked by anyone (the "evidence receipt"). This is shown, never shouted: the founder ruled that headlines must not stress "proof" because users take it for granted.
-- Priced in Colombian pesos, paid by PSE, Nequi or card, with Colombian electronic invoicing. Operated by GLEMO S.A.S. (Medellín).
+- Priced in the visitor's currency, chosen at the edge from the visitor's country: COP in Colombia (PSE, Nequi or card, Colombian electronic invoicing), EUR in the euro area and USD elsewhere (card, Apple Pay or Google Pay). Operated by GLEMO S.A.S. (Medellín).
 
 ## Operating Context
 
@@ -40,7 +40,8 @@ Reranker (reranker.co) shows a business owner what ChatGPT, Gemini and Google's 
 - Free report promise: "menos de 2 minutos" (not "60 segundos") until measured in production.
 - Never promise rankings or positions ("te ponemos primero en ChatGPT" is banned). Never say "tus datos no entrenan IA".
 - Same HTML for humans and bots; no hidden `sr-only` content written for AI crawlers (cloaking risk).
-- Pricing (hypothesis, from RERANKER.md §7): free report $0 · full report COP 149.000 · Pyme Esencial COP 149.000/mes · Pyme Pro COP 299.000/mes; no lock-in.
+- Pricing (founder-approved starting points): free report · Esencial COP 149.000 / €45 / US$39 · Pro COP 299.000 / €95 / US$79 · agencies from COP 249.000 / €179 / US$69, monthly, no lock-in. Prices always carry their currency code or symbol.
+- Example questions and receipts mix cities across Spanish-speaking countries, Colombia included but not exclusive. Receipt labels stay honest: ChatGPT and Perplexity per country, Gemini and Google per city.
 
 ## Brand Commitments
 
@@ -55,7 +56,7 @@ Reranker (reranker.co) shows a business owner what ChatGPT, Gemini and Google's 
 
 - Logo kit: `apps/web/public/brand/` (copied from the internal brand folder).
 - **No customers, testimonials, case studies, press or usage numbers exist yet. None may be fabricated.** AI-generated people may be used only as ambience, never with a name or a quote.
-- External facts usable with source: 83% of connected Colombians use AI (Google/Ipsos, Oct 2026); 45% of Colombian travelers use AI for local recommendations (Booking 2026); 1 in 4 working-age Colombians use generative AI (Microsoft AI Diffusion via Forbes Colombia, Q2 2026).
+- External facts usable with source: 66% of adults in 21 countries, including Spain, Mexico and Argentina, used AI in the last year (Google/Ipsos Multi-Country AI Survey, Jan 2026; shown on the landing); 83% of connected Colombians use AI (Google/Ipsos, Oct 2026); 45% of Colombian travelers use AI for local recommendations (Booking 2026); 1 in 4 working-age Colombians use generative AI (Microsoft AI Diffusion via Forbes Colombia, Q2 2026).
 
 ## Product Principles
 

@@ -4,13 +4,16 @@ import Image from "next/image";
 import { useEffect, useId, useState } from "react";
 
 const asks = [
-  { q: "¿Qué clínica dental me recomiendas en Bucaramanga?", a: "Te recomiendo Dental Cabecera y" },
-  { q: "Un hotel boutique tranquilo en Cartagena, ¿cuál?", a: "Te sugiero Casa Arbórea y" },
+  {
+    q: "¿Qué clínica dental me recomiendas en Ciudad de México?",
+    a: "Te recomiendo Dental Centro y",
+  },
+  { q: "Un hotel boutique tranquilo en Sevilla, ¿cuál?", a: "Te sugiero Casa Arbórea y" },
   {
     q: "Necesito un abogado de inmigración en Bogotá.",
     a: "Puedes escribirle a Ruiz & Asociados y",
   },
-  { q: "¿Dónde compro ropa de lino hecha en Colombia?", a: "Mira Lino Andino y" },
+  { q: "¿Dónde compro ropa de lino en Buenos Aires?", a: "Mira Lino Sur y" },
 ];
 
 /**

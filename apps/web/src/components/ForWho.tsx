@@ -17,19 +17,19 @@ import { useEffect, useRef, useState } from "react";
 import { H2, Section } from "./ui";
 
 const kinds = [
-  { k: "Restaurantes", Icon: UtensilsCrossed, q: "¿Dónde almuerzo rico cerca al parque de la 93?" },
-  { k: "Clínicas", Icon: Stethoscope, q: "¿Qué clínica dental me recomiendas en Pereira?" },
-  { k: "Talleres", Icon: Wrench, q: "Un taller de confianza para mi carro en Bogotá" },
+  { k: "Restaurantes", Icon: UtensilsCrossed, q: "¿Dónde almuerzo rico en Ciudad de México?" },
+  { k: "Clínicas", Icon: Stethoscope, q: "¿Qué clínica dental me recomiendas en Medellín?" },
+  { k: "Talleres", Icon: Wrench, q: "Un taller de confianza para mi auto en Santiago" },
   { k: "Tiendas", Icon: ShoppingBag, q: "¿Dónde compro ropa de lino hecha en Colombia?" },
-  { k: "Hoteles", Icon: BedDouble, q: "Un hotel boutique tranquilo en Villa de Leyva" },
-  { k: "Gimnasios", Icon: Dumbbell, q: "¿Qué gimnasio tiene yoga en Manizales?" },
-  { k: "Colegios", Icon: GraduationCap, q: "Un colegio bilingüe cerca de Chía" },
-  { k: "Abogados", Icon: Scale, q: "Necesito un abogado de inmigración en Medellín" },
-  { k: "Veterinarias", Icon: PawPrint, q: "¿Qué veterinaria atiende urgencias en Cali?" },
+  { k: "Hoteles", Icon: BedDouble, q: "Un hotel boutique tranquilo en Cartagena" },
+  { k: "Gimnasios", Icon: Dumbbell, q: "¿Qué gimnasio tiene yoga en Madrid?" },
+  { k: "Colegios", Icon: GraduationCap, q: "Un colegio bilingüe en Lima" },
+  { k: "Abogados", Icon: Scale, q: "Necesito un abogado laboral en Buenos Aires" },
+  { k: "Veterinarias", Icon: PawPrint, q: "¿Qué veterinaria atiende urgencias en Bogotá?" },
   {
     k: "Inmobiliarias",
     Icon: House,
-    q: "Una inmobiliaria confiable para arrendar en Barranquilla",
+    q: "Una inmobiliaria confiable para rentar en Guadalajara",
   },
 ];
 

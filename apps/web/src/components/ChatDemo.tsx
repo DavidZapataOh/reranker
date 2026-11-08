@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
-const QUESTION = "¿Qué marca de ropa de lino hecha en Colombia me recomiendas?";
+const QUESTION = "¿Qué marca local de ropa de lino me recomiendas?";
 const ANSWER =
   "Te recomiendo tres marcas: Lino Andino, Casa Telar y Hilo Caribe, con envíos a todo el país.";
 

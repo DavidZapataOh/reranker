@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { type Currency, formatPrice, PAYMENT_METHODS, PRICES } from "@/lib/pricing";
 import { CookiePrefsButton } from "./Analytics";
 import { ScoreCard } from "./ScoreCard";
 import { contact, Example, H2, Icon, icons, Lede, Section, wa } from "./ui";
@@ -61,8 +62,8 @@ export function Shift() {
           />
         </div>
         <p className="reveal mt-8 font-mono text-[13px] text-ink/65">
-          83 % de los colombianos conectados ya usa inteligencia artificial · Google e Ipsos,
-          octubre de 2026
+          66 % de los adultos ya usó inteligencia artificial en el último año · Google e Ipsos, 21
+          países, enero de 2026
         </p>
       </div>
     </Section>
@@ -140,10 +141,10 @@ export function Bento() {
             Para que puedas volver a ella cuando quieras.
           </p>
           <div className="relative mt-6 rounded-2xl bg-paper p-5 font-mono text-[12.5px] leading-relaxed text-ink/80 ring-1 ring-line">
-            <p>Perplexity · Cali</p>
+            <p>Perplexity · México</p>
             <p>04 nov 2026 · 10:42</p>
             <p className="mt-2 font-sans text-[14px] text-ink">
-              “Para un taller de confianza en Cali, te sugiero Motor Valle y…”
+              “Para un taller de confianza en Guadalajara, te sugiero Motor Valle y…”
             </p>
             <p className="mt-3 text-ink/65">ID rr_7f3a·91c2</p>
             <span className="stamp absolute -top-4 -right-3 grid h-[74px] w-[74px] rotate-[-12deg] place-items-center rounded-full bg-amber text-center font-display text-[11px] leading-tight font-black text-ink shadow-soft">
@@ -328,12 +329,13 @@ export function Connect() {
   );
 }
 
-/* 9 · Pricing in pesos */
-export function Pricing() {
+/* 9 · Pricing in the visitor's currency */
+export function Pricing({ currency }: { currency: Currency }) {
+  const prices = PRICES[currency];
   const plans = [
     {
       name: "Reporte gratis",
-      price: "$0",
+      price: formatPrice(currency, 0),
       per: "",
       note: "Para ver dónde estás hoy.",
       items: [
@@ -347,7 +349,7 @@ export function Pricing() {
     },
     {
       name: "Esencial",
-      price: "$149.000",
+      price: formatPrice(currency, prices.essential),
       per: "al mes",
       note: "Para un negocio en una ciudad.",
       items: [
@@ -362,7 +364,7 @@ export function Pricing() {
     },
     {
       name: "Pro",
-      price: "$299.000",
+      price: formatPrice(currency, prices.pro),
       per: "al mes",
       note: "Para varias sedes o ciudades.",
       items: [
@@ -378,8 +380,8 @@ export function Pricing() {
   ];
   return (
     <Section id="precios" labelledBy="pricing-title" className="bg-white py-24 md:py-32">
-      <H2 id="pricing-title">Precios en pesos, sin permanencia.</H2>
-      <Lede>Pagas con PSE, Nequi o tarjeta, y cancelas cuando quieras.</Lede>
+      <H2 id="pricing-title">Precios en tu moneda, sin permanencia.</H2>
+      <Lede>Pagas con {PAYMENT_METHODS[currency]}, y cancelas cuando quieras.</Lede>
       <div className="relative mt-12 grid gap-5 lg:grid-cols-3">
         <div
           aria-hidden="true"
@@ -435,7 +437,7 @@ export function Pricing() {
 }
 
 /* 10 · Agencies */
-export function Agencies() {
+export function Agencies({ currency }: { currency: Currency }) {
   return (
     <Section id="agencias" labelledBy="agencies-title" className="py-24 md:py-28">
       <div className="reveal grid gap-8 rounded-[28px] bg-ink p-8 text-paper md:grid-cols-[1.3fr_1fr] md:items-center md:p-14">
@@ -447,8 +449,8 @@ export function Agencies() {
             ¿Tienes una agencia? Mide a tus clientes con tu marca.
           </h2>
           <p className="mt-4 max-w-[48ch] text-[16.5px] leading-relaxed text-paper/75">
-            Reportes con tu logo y tu dominio, en pesos y con margen para ti. El programa de socios
-            empieza en $249.000 al mes.
+            Reportes con tu logo, tu dominio y margen para ti. El programa de socios empieza en{" "}
+            {formatPrice(currency, PRICES[currency].agencies)} al mes.
           </p>
         </div>
         <div className="md:justify-self-end">
@@ -467,8 +469,8 @@ export function Agencies() {
 }
 
 /* 11 · FAQ */
-/** FAQ copy, shared with the FAQPage structured data in app/page.tsx. */
-export const faqItems: [string, string][] = [
+/** FAQ copy, shared with the FAQPage structured data. */
+export const faqItems = (currency: Currency): [string, string][] => [
   [
     "¿Por qué ChatGPT habla de mi negocio si yo nunca le dije nada?",
     "La IA arma sus respuestas con lo que encuentra publicado: tu perfil de Google, tus reseñas, directorios y tu página. Por eso conviene saber qué está diciendo y de dónde lo saca.",
@@ -495,12 +497,12 @@ export const faqItems: [string, string][] = [
   ],
   [
     "¿Cuánto cuesta y tengo que firmar permanencia?",
-    "El primer reporte es gratis. Los planes cuestan lo que ves arriba, sin permanencia. Pagas con PSE, Nequi o tarjeta y recibes factura electrónica.",
+    `El primer reporte es gratis. Los planes cuestan lo que ves arriba, sin permanencia. Pagas con ${PAYMENT_METHODS[currency]}${currency === "cop" ? " y recibes factura electrónica" : ""}.`,
   ],
 ];
 
-export function Faq() {
-  const qa = faqItems;
+export function Faq({ currency }: { currency: Currency }) {
+  const qa = faqItems(currency);
   return (
     <Section id="preguntas" labelledBy="faq-title" className="bg-white py-24 md:py-32">
       <div className="grid gap-12 md:grid-cols-[1fr_1.6fr] md:gap-16">
