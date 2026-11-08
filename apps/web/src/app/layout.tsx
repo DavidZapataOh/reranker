@@ -46,7 +46,8 @@ export const metadata: Metadata = {
     title: "Tus clientes le preguntan a ChatGPT. Que salgas tú.",
     description:
       "Mira qué responden ChatGPT, Gemini, Google y Perplexity cuando alguien busca lo que vendes en tu ciudad.",
-    locale: "es_CO",
+    locale: "es_LA",
+    alternateLocale: ["es_ES"],
     type: "website",
     url: "https://reranker.co",
   },
@@ -57,7 +58,7 @@ export const viewport: Viewport = { themeColor: "#FAF7F0" };
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="es-CO"
+      lang="es"
       className={`${display.variable} ${text.variable} ${mono.variable} ${hand.variable}`}
     >
       <body>

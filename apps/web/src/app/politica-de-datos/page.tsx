@@ -5,10 +5,28 @@ import { contact } from "@/components/ui";
 export const metadata: Metadata = {
   title: "Política de tratamiento de datos personales · Reranker",
   description:
-    "Cómo GLEMO S.A.S. (Reranker) trata tus datos personales, para qué y cómo ejercer tus derechos según la Ley 1581 de 2012.",
+    "Cómo GLEMO S.A.S. (Reranker) trata tus datos personales, para qué, con qué proveedores y cómo ejercer tus derechos, estés donde estés.",
 };
 
 const P = "privacy@reranker.co";
+
+const subprocessors: [string, string, string][] = [
+  ["Vercel", "Alojamiento del sitio y la aplicación", "Estados Unidos y red global"],
+  ["Cloudflare", "Red de entrega y almacenamiento de archivos", "Red global"],
+  ["Amazon Web Services", "Infraestructura y llaves de cifrado", "Estados Unidos"],
+  ["Neon", "Base de datos", "Estados Unidos"],
+  ["Resend", "Envío de correos", "Estados Unidos"],
+  ["PostHog", "Medición del sitio, con tu consentimiento", "Estados Unidos"],
+  ["Google Analytics", "Medición del sitio, con tu consentimiento", "Estados Unidos"],
+  ["Microsoft Clarity", "Medición del sitio, con tu consentimiento", "Estados Unidos"],
+  ["Wompi", "Pagos en Colombia", "Colombia"],
+  ["Alegra", "Facturación electrónica en Colombia", "Colombia"],
+  [
+    "Procesador de pagos para clientes fuera de Colombia",
+    "Cobros, impuestos y facturas fuera de Colombia",
+    "Lo nombramos aquí antes del primer cobro",
+  ],
+];
 
 const sections: LegalSection[] = [
   {
@@ -43,8 +61,11 @@ const sections: LegalSection[] = [
           </li>
         </ul>
         <p>
-          Esta política cumple la Ley 1581 de 2012, el Decreto 1377 de 2013 (compilado en el Decreto
-          1074 de 2015) y las instrucciones de la Superintendencia de Industria y Comercio (SIC).
+          Esta política aplica a todas las personas que usan Reranker, en cualquier país. Se basa en
+          la Ley 1581 de 2012, el Decreto 1377 de 2013 (compilado en el Decreto 1074 de 2015) y las
+          instrucciones de la Superintendencia de Industria y Comercio (SIC). Si estás en la Unión
+          Europea o el Espacio Económico Europeo, lee también el numeral{" "}
+          <a href="#ue">&ldquo;Si estás en la Unión Europea&rdquo;</a>.
         </p>
       </>
     ),
@@ -67,7 +88,8 @@ const sections: LegalSection[] = [
               <td>Visitantes del sitio</td>
               <td>
                 Nombre del negocio y ciudad que escribes para el reporte gratis; datos técnicos
-                básicos (navegador, dirección IP, páginas visitadas).
+                básicos (navegador, dirección IP, páginas visitadas). Usamos el país aproximado de
+                tu conexión para mostrarte los precios en tu moneda, sin guardarlo.
               </td>
             </tr>
             <tr>
@@ -114,7 +136,7 @@ const sections: LegalSection[] = [
           Proponerte correcciones en tu perfil de Google o tu sitio web y aplicarlas solo cuando las
           apruebes.
         </li>
-        <li>Crear y administrar tu cuenta, cobrar los planes y emitir la factura electrónica.</li>
+        <li>Crear y administrar tu cuenta, cobrar los planes y emitir las facturas.</li>
         <li>Enviarte alertas y resúmenes por correo y, si lo aceptas, por WhatsApp.</li>
         <li>Atender tus consultas, reclamos y solicitudes de soporte.</li>
         <li>Enviarte información comercial sobre Reranker, solo si lo autorizas.</li>
@@ -226,33 +248,90 @@ const sections: LegalSection[] = [
   },
   {
     id: "encargados",
-    title: "Con quién compartimos datos y transferencias internacionales",
+    title: "Proveedores que tratan datos y transferencias internacionales",
     body: (
       <>
         <p>
           No vendemos tus datos. Los compartimos solo con proveedores que nos ayudan a prestar el
-          servicio (encargados), bajo contratos que les exigen confidencialidad, seguridad y usar
-          los datos solo para lo que les pedimos:
+          servicio (encargados o subencargados), bajo contratos que les exigen confidencialidad,
+          seguridad y usar los datos solo para lo que les pedimos. Esta es la lista completa:
         </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Proveedor</th>
+              <th>Para qué</th>
+              <th>Dónde</th>
+            </tr>
+          </thead>
+          <tbody>
+            {subprocessors.map(([name, purpose, where]) => (
+              <tr key={name}>
+                <td>{name}</td>
+                <td>{purpose}</td>
+                <td>{where}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p>
+          Los asistentes de IA que consultamos (por ejemplo, OpenAI, Google y Perplexity) y los
+          servicios que capturan sus respuestas reciben las preguntas sobre negocios que hacemos en
+          tu nombre, no tus datos de contacto.
+        </p>
+        <p>
+          Si cambiamos esta lista, actualizamos la fecha de esta política. Si tu empresa necesita un
+          acuerdo de tratamiento de datos (DPA), pídelo a <a href={`mailto:${P}`}>{P}</a>.
+        </p>
+        <p>
+          Estados Unidos está en la lista de países con un nivel adecuado de protección de la SIC
+          (Circular Externa 005 de 2017). No enviamos datos personales a países sin ese nivel sin
+          las garantías que exige la ley.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: "ue",
+    title: "Si estás en la Unión Europea",
+    body: (
+      <>
+        <p>
+          Si estás en la Unión Europea o el Espacio Económico Europeo, el Reglamento General de
+          Protección de Datos (RGPD) también protege tus datos. GLEMO S.A.S. es el responsable.
+        </p>
+        <h3>Por qué tratamos tus datos</h3>
         <ul>
           <li>
-            Infraestructura y alojamiento en la nube: Amazon Web Services, Cloudflare y Vercel.
-          </li>
-          <li>Envío de correos: Resend.</li>
-          <li>Pagos: Wompi. Facturación electrónica y contabilidad: Alegra.</li>
-          <li>
-            Medición del sitio: PostHog, Google Analytics y Microsoft Clarity (ver numeral de
-            cookies).
+            <strong>Para cumplir el contrato:</strong> tu cuenta, tu plan, tus reportes y los
+            cobros.
           </li>
           <li>
-            Asistentes de IA que consultamos (por ejemplo, OpenAI, Google y Perplexity): reciben las
-            preguntas sobre negocios que hacemos en tu nombre, no tus datos de contacto.
+            <strong>Con tu consentimiento:</strong> cookies de medición, mensajes comerciales y
+            alertas por WhatsApp. Puedes retirarlo cuando quieras.
+          </li>
+          <li>
+            <strong>Por interés legítimo:</strong> la seguridad del servicio, prevenir fraudes,
+            mejorarlo con datos agregados y mostrar qué dice la IA de un negocio.
+          </li>
+          <li>
+            <strong>Por obligación legal:</strong> facturación, contabilidad e impuestos.
           </li>
         </ul>
+        <h3>Tus derechos</h3>
         <p>
-          Algunos de estos proveedores procesan datos en Estados Unidos, país que la SIC reconoce
-          con un nivel adecuado de protección (Circular Externa 005 de 2017). No procesamos datos
-          personales en países que no tengan ese nivel sin las garantías que exige la ley.
+          Puedes pedir acceso, rectificación, supresión, limitación del tratamiento y portabilidad
+          de tus datos, y oponerte al tratamiento basado en interés legítimo. Escríbenos a{" "}
+          <a href={`mailto:${P}`}>{P}</a> y te respondemos en un máximo de un mes. También puedes
+          reclamar ante la autoridad de protección de datos de tu país; en España, la Agencia
+          Española de Protección de Datos (AEPD).
+        </p>
+        <h3>Transferencias fuera de Europa</h3>
+        <p>
+          Tratamos tus datos en Colombia y, con los proveedores de la lista, en Estados Unidos. Esos
+          envíos se hacen bajo el Marco de Privacidad de Datos UE-EE. UU. (Data Privacy Framework),
+          cuando el proveedor está certificado, o bajo las cláusulas contractuales tipo de la
+          Comisión Europea.
         </p>
       </>
     ),
@@ -346,10 +425,10 @@ const sections: LegalSection[] = [
     body: (
       <p>
         Solo te enviamos mensajes comerciales si los autorizas, y puedes darte de baja en cualquier
-        momento con un clic o respondiendo &ldquo;no más&rdquo;. Cumplimos la Ley 2300 de 2023: los
-        enviamos solo de lunes a viernes de 7:00 a. m. a 7:00 p. m. y los sábados de 8:00 a. m. a
-        3:00 p. m. Los mensajes del servicio, como alertas que activaste o avisos de pago, no son
-        comerciales.
+        momento con un clic o respondiendo &ldquo;no más&rdquo;. En Colombia cumplimos la Ley 2300
+        de 2023: los enviamos solo de lunes a viernes de 7:00 a. m. a 7:00 p. m. y los sábados de
+        8:00 a. m. a 3:00 p. m. Los mensajes del servicio, como alertas que activaste o avisos de
+        pago, no son comerciales.
       </p>
     ),
   },
@@ -359,8 +438,9 @@ const sections: LegalSection[] = [
     body: (
       <>
         <p>
-          Esta política rige desde el 4 de noviembre de 2026. Las bases de datos se conservan
-          mientras exista la finalidad para la que se recogieron.
+          Esta política rige desde el 4 de noviembre de 2026 y esta versión, desde el 8 de noviembre
+          de 2026. Las bases de datos se conservan mientras exista la finalidad para la que se
+          recogieron.
         </p>
         <p>
           Si hacemos cambios importantes, te avisaremos por correo o en el sitio antes de que
@@ -375,7 +455,7 @@ export default function Page() {
   return (
     <LegalPage
       title="Política de tratamiento de datos personales"
-      updated="5 de noviembre de 2026"
+      updated="8 de noviembre de 2026"
       intro={
         <p>
           En Reranker cuidamos tus datos como cuidamos las respuestas que guardamos: sin cambiarlas

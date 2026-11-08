@@ -43,3 +43,22 @@ test("X-Robots-Tag noindex only on previews @smoke", async ({ request }) => {
     expect(tag ?? "").not.toContain("noindex");
   }
 });
+
+test("home is in neutral Spanish and offers every currency in JSON-LD @smoke", async ({
+  page,
+  gotoStable,
+}) => {
+  await gotoStable("/");
+  await expect(page.locator("html")).toHaveAttribute("lang", "es");
+  await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute("content", "es_LA");
+  const graph = (
+    await Promise.all(
+      (
+        await page.locator('script[type="application/ld+json"]').allTextContents()
+      ).map((b) => JSON.parse(b)["@graph"] ?? []),
+    )
+  ).flat() as { "@type": string; areaServed?: unknown; offers?: { priceCurrency: string }[] }[];
+  expect(graph.some((n) => n.areaServed)).toBe(false);
+  const app = graph.find((n) => n["@type"] === "SoftwareApplication");
+  expect(new Set(app?.offers?.map((o) => o.priceCurrency))).toEqual(new Set(["COP", "EUR", "USD"]));
+});

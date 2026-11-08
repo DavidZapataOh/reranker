@@ -1,3 +1,4 @@
+import { CURRENCIES, type Currency, ISO_CODE, PRICES } from "@/lib/pricing";
 import { faqItems } from "./Sections";
 import { contact } from "./ui";
 
@@ -6,9 +7,9 @@ const BASE = "https://reranker.co";
 /**
  * schema.org JSON-LD for the home page: who operates Reranker, what it is,
  * its public prices and the FAQ. Search engines and AI assistants read this
- * to describe and cite the product accurately. Keep prices in sync with Pricing().
+ * to describe and cite the product accurately. Offers list every currency we sell in.
  */
-export function StructuredData() {
+export function StructuredData({ currency }: { currency: Currency }) {
   const graph = {
     "@context": "https://schema.org",
     "@graph": [
@@ -28,14 +29,13 @@ export function StructuredData() {
           addressRegion: "Antioquia",
           addressCountry: "CO",
         },
-        areaServed: { "@type": "Country", name: "Colombia" },
       },
       {
         "@type": "WebSite",
         "@id": `${BASE}/#website`,
         url: BASE,
         name: "Reranker",
-        inLanguage: "es-CO",
+        inLanguage: "es",
         publisher: { "@id": `${BASE}/#organization` },
       },
       {
@@ -45,32 +45,34 @@ export function StructuredData() {
         applicationCategory: "BusinessApplication",
         operatingSystem: "Web",
         url: BASE,
-        inLanguage: "es-CO",
+        inLanguage: "es",
         description:
-          "Reranker muestra qué recomiendan ChatGPT, Gemini, Google y Perplexity cuando alguien busca lo que vende un negocio en Colombia, y qué cambiar en su perfil de Google o su sitio web para que lo recomienden.",
+          "Reranker muestra qué recomiendan ChatGPT, Gemini, Google y Perplexity cuando alguien busca lo que vende un negocio en su ciudad, y qué cambiar en su perfil de Google o su sitio web para que lo recomienden.",
         publisher: { "@id": `${BASE}/#organization` },
         offers: [
-          { "@type": "Offer", name: "Reporte gratis", price: "0", priceCurrency: "COP" },
-          {
-            "@type": "Offer",
-            name: "Esencial",
-            price: "149000",
-            priceCurrency: "COP",
-            description: "Mensual. Un negocio en una ciudad.",
-          },
-          {
-            "@type": "Offer",
-            name: "Pro",
-            price: "299000",
-            priceCurrency: "COP",
-            description: "Mensual. Varias sedes o ciudades.",
-          },
+          { "@type": "Offer", name: "Reporte gratis", price: "0", priceCurrency: "USD" },
+          ...CURRENCIES.flatMap((c) => [
+            {
+              "@type": "Offer",
+              name: "Esencial",
+              price: String(PRICES[c].essential),
+              priceCurrency: ISO_CODE[c],
+              description: "Mensual. Un negocio en una ciudad.",
+            },
+            {
+              "@type": "Offer",
+              name: "Pro",
+              price: String(PRICES[c].pro),
+              priceCurrency: ISO_CODE[c],
+              description: "Mensual. Varias sedes o ciudades.",
+            },
+          ]),
         ],
       },
       {
         "@type": "FAQPage",
         "@id": `${BASE}/#faq`,
-        mainEntity: faqItems.map(([q, a]) => ({
+        mainEntity: faqItems(currency).map(([q, a]) => ({
           "@type": "Question",
           name: q,
           acceptedAnswer: { "@type": "Answer", text: a },

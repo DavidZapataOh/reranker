@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 const BASE = "https://reranker.co";
 // Bump when a page's content changes meaningfully.
-const UPDATED = "2026-11-05";
+const UPDATED = "2026-11-08";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

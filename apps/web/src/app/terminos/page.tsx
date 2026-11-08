@@ -28,7 +28,7 @@ const sections: LegalSection[] = [
           </li>
           <li>Teléfono y WhatsApp: {contact.whatsappLabel}</li>
           <li>
-            Autoridad de protección al consumidor:{" "}
+            Autoridad de protección al consumidor en Colombia:{" "}
             <a href="https://www.sic.gov.co" target="_blank" rel="noopener">
               Superintendencia de Industria y Comercio
             </a>
@@ -151,9 +151,14 @@ const sections: LegalSection[] = [
           <Link href="/#precios">reranker.co/#precios</Link>.
         </p>
         <p>
-          Los precios están en pesos colombianos y son el valor final que pagas. Las suscripciones
-          son un servicio de computación en la nube excluido de IVA (artículo 476, numeral 21, del
-          Estatuto Tributario). Si algún servicio adicional llevara IVA, su precio ya lo incluiría.
+          Ves los precios en pesos colombianos (COP) si estás en Colombia, en euros (EUR) si estás
+          en la zona euro y en dólares estadounidenses (USD) en el resto del mundo. En Colombia son
+          el valor final que pagas: las suscripciones son un servicio de computación en la nube
+          excluido de IVA (artículo 476, numeral 21, del Estatuto Tributario) y, si algún servicio
+          adicional llevara IVA, su precio ya lo incluiría. Fuera de Colombia, si tu país cobra
+          impuestos sobre servicios digitales, los ves sumados antes de pagar.
+        </p>
+        <p>
           Cada plan tiene límites de uso razonables (negocios, ciudades, preguntas y competidores).
           Si una cuenta los supera de forma sostenida, te avisaremos y podremos limitar el uso o
           proponerte un plan mayor.
@@ -167,10 +172,14 @@ const sections: LegalSection[] = [
     body: (
       <ul>
         <li>
-          Pagas por adelantado con PSE, Nequi o tarjeta, a través de Wompi. Recibes factura
-          electrónica.
+          Pagas por adelantado. En Colombia, con PSE, Nequi o tarjeta a través de Wompi, y recibes
+          factura electrónica. Fuera de Colombia, con tarjeta, Apple Pay o Google Pay a través de
+          nuestro procesador de pagos, que te envía la factura.
         </li>
-        <li>Los planes se renuevan cada mes de forma automática hasta que los canceles.</li>
+        <li>
+          <strong>Los planes se renuevan automáticamente cada mes</strong> y se cobran al mismo
+          medio de pago, hasta que los canceles.
+        </li>
         <li>
           <strong>Puedes cancelar cuando quieras</strong>, desde tu cuenta o escribiendo a{" "}
           <a href={`mailto:${L}`}>{L}</a>, sin penalidades y sin pasos más difíciles que los de
@@ -181,6 +190,10 @@ const sections: LegalSection[] = [
           Si cambia el precio de tu plan, te avisamos con al menos 15 días de anticipación y el
           nuevo precio aplica desde la siguiente renovación.
         </li>
+        <li>
+          No reembolsamos periodos ya pagados ni meses parciales, salvo cuando la ley lo exija, como
+          en el retracto del numeral siguiente.
+        </li>
       </ul>
     ),
   },
@@ -190,9 +203,9 @@ const sections: LegalSection[] = [
     body: (
       <>
         <p>
-          Si eres consumidor según la Ley 1480 de 2011, tienes derecho a retractarte de una compra
-          hecha en línea dentro de los 5 días hábiles siguientes, siempre que el servicio no haya
-          empezado a prestarse con tu acuerdo. Al activar un plan te pedimos que confirmes si
+          Si eres consumidor en Colombia según la Ley 1480 de 2011, en tu primera compra tienes
+          derecho a retractarte dentro de los 5 días hábiles siguientes, siempre que el servicio no
+          haya empezado a prestarse con tu acuerdo. Al activar un plan te pedimos que confirmes si
           quieres empezar de inmediato. Si te retractas a tiempo, te devolvemos el dinero en un
           máximo de 15 días calendario.
         </p>
@@ -200,6 +213,10 @@ const sections: LegalSection[] = [
           También puedes pedir la reversión del pago en los casos del artículo 51 de la Ley 1480
           (fraude, operación no solicitada o servicio no prestado), dentro de los 5 días hábiles
           siguientes a que lo notes, escribiendo a <a href={`mailto:${L}`}>{L}</a> y a tu banco.
+        </p>
+        <p>
+          Si estás en otro país, conservas los derechos que te den las normas de protección al
+          consumidor de tu país.
         </p>
       </>
     ),
@@ -319,7 +336,7 @@ const sections: LegalSection[] = [
         </p>
         <p>
           Estos límites nunca aplican a casos de dolo o culpa grave, y no afectan los derechos que
-          la Ley 1480 de 2011 te reconoce como consumidor.
+          te reconocen como consumidor la Ley 1480 de 2011 o las normas de tu país.
         </p>
       </>
     ),
@@ -346,9 +363,11 @@ const sections: LegalSection[] = [
           respondemos en un máximo de 15 días hábiles.
         </p>
         <p>
-          Estos términos se rigen por la ley colombiana. Si surge una diferencia, buscaremos
+          Estos términos se rigen por la ley colombiana, sin perjuicio de las normas imperativas de
+          protección al consumidor del país del cliente. Si surge una diferencia, buscaremos
           resolverla directamente contigo durante 30 días. Si no lo logramos, podrás acudir a los
-          jueces de Medellín o, si eres consumidor, a la Superintendencia de Industria y Comercio.
+          jueces de Medellín, Colombia, o, si eres consumidor en Colombia, a la Superintendencia de
+          Industria y Comercio.
         </p>
       </>
     ),
@@ -359,7 +378,7 @@ export default function Page() {
   return (
     <LegalPage
       title="Términos y condiciones"
-      updated="4 de noviembre de 2026"
+      updated="8 de noviembre de 2026"
       intro={
         <p>
           Estas son las reglas para usar Reranker, escritas para que se entiendan. Si algo no queda
