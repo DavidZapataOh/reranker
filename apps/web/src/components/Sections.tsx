@@ -405,8 +405,8 @@ export function Pricing({ currency }: { currency: Currency }) {
           >
             <h3 className="text-[18px] font-bold text-ink">{p.name}</h3>
             <p className="mt-1 text-[15px] text-ink/65">{p.note}</p>
-            <p className="mt-6 flex items-baseline gap-2">
-              <span className="font-display text-[44px] leading-none font-black tracking-[-0.02em] text-ink tabular-nums">
+            <p className="mt-6 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+              <span className="font-display text-[38px] leading-none font-black tracking-[-0.02em] whitespace-nowrap sm:text-[44px] text-ink tabular-nums">
                 {p.price}
               </span>
               {p.per && <span className="text-[15px] text-ink/65">{p.per}</span>}
