@@ -47,7 +47,12 @@
               "level": "error",
               "options": {
                 "paths": { "@reranker/testing": "Test-only package." },
-                "patterns": [{ "group": ["@reranker/testing/*"], "message": "Test-only package." }]
+                "patterns": [
+                  {
+                    "group": ["@reranker/testing/*", "**/testing/src/**"],
+                    "message": "Test-only package."
+                  }
+                ]
               }
             }
           }
