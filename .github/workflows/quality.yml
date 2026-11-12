@@ -1,0 +1,116 @@
+name: quality
+on:
+  repository_dispatch:
+    types: [vercel.deployment.ready]
+  workflow_dispatch:
+    inputs:
+      url:
+        description: Deployment URL to test
+        required: true
+        type: string
+      environment:
+        description: Vercel environment of that deployment
+        required: true
+        type: choice
+        options: [preview, production]
+      sha:
+        description: Commit the deployment was built from
+        required: true
+        type: string
+permissions: {}
+run-name: "quality · ${{ github.event.client_payload.environment || inputs.environment }} · ${{ github.event.client_payload.git.shortSha || inputs.sha }}"
+concurrency:
+  group: quality-${{ github.event.client_payload.git.sha || inputs.sha }}-${{ github.event.client_payload.environment || inputs.environment }}
+  cancel-in-progress: true
+jobs:
+  quality:
+    if: github.event_name == 'workflow_dispatch' || github.event.client_payload.project.name == 'reranker'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions: { contents: read, statuses: write, actions: read }
+    env:
+      DEPLOY_URL: ${{ github.event.client_payload.url || inputs.url }}
+      APP_TARGET: ${{ github.event.client_payload.environment || inputs.environment }}
+      TARGET_SHA: ${{ github.event.client_payload.git.sha || inputs.sha }}
+    steps:
+      # Sets the status to pending now and to the job's result in its post step. Only production
+      # writes `quality`, the name Deployment Checks require, so a green preview of the same commit
+      # never satisfies it.
+      - if: github.event_name == 'repository_dispatch'
+        uses: vercel/repository-dispatch/actions/status@30f760c6640485cd92f8c785ef361382555fb712 # v1
+        with:
+          name: ${{ github.event.client_payload.environment == 'production' && 'quality' || 'quality (preview)' }}
+      # Same ref resolution as vercel/repository-dispatch/actions/checkout, without persisting the token.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          persist-credentials: false
+      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
+        with: { cache: true, require-lockfile: true }
+      # Runs before anything receives the bypass secret, so it never reaches a foreign host.
+      - name: Refuse untrusted deployment targets
+        run: |
+          case "$APP_TARGET" in
+            preview | production) ;;
+            *) echo "::error::Unknown deployment environment"; exit 1 ;;
+          esac
+          if ! origin=$(node packages/testing/bin/assert-target.ts "$DEPLOY_URL"); then
+            echo "$origin"
+            exit 1
+          fi
+          echo "PLAYWRIGHT_BASE_URL=$origin" >> "$GITHUB_ENV"
+      - id: browsers
+        name: Resolve Playwright browsers
+        run: |
+          echo "version=$(pnpm --filter web exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+          if [ "$APP_TARGET" = production ]; then
+            echo "list=chromium webkit" >> "$GITHUB_OUTPUT"
+          else
+            echo "list=chromium" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.browsers.outputs.version }}-${{ steps.browsers.outputs.list }}
+      - name: Install browsers
+        env:
+          BROWSERS: ${{ steps.browsers.outputs.list }}
+        run: |
+          # shellcheck disable=SC2086
+          pnpm --filter web exec playwright install --with-deps $BROWSERS
+      # WebKit runs only in production to stay inside the free Actions minutes.
+      - name: End-to-end and accessibility tests
+        env:
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: |
+          projects=(--project=desktop-chromium --project=mobile-chromium)
+          if [ "$APP_TARGET" = production ]; then projects+=(--project=mobile-webkit); fi
+          pnpm --filter web exec playwright test "${projects[@]}"
+      # Non-regression gate, once @reranker/quality exists:
+      # pnpm --filter @reranker/quality compare --playwright apps/web/results.json --lhci apps/web/.lighthouseci --target "$APP_TARGET"
+      - if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: quality-report
+          path: |
+            apps/web/playwright-report
+            apps/web/test-results
+            apps/web/results.json
+          retention-days: 3
+          if-no-files-found: ignore
+      # The status action skips workflow_dispatch, so manual runs set the status themselves.
+      - if: always() && github.event_name == 'workflow_dispatch'
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          JOB_STATUS: ${{ job.status }}
+        with:
+          script: |
+            const { APP_TARGET, JOB_STATUS, TARGET_SHA } = process.env;
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: TARGET_SHA,
+              state: JOB_STATUS === "success" ? "success" : "failure",
+              context: APP_TARGET === "production" ? "quality" : "quality (preview)",
+              target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+            });
