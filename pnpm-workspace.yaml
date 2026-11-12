@@ -31,6 +31,17 @@ catalog:
   msw: 3.0.3
   pg: ^8.23.1
   "@types/pg": ^8.23.1
+  drizzle-orm: 0.45.4
+  drizzle-kit: 0.31.11
+  # Last release with a provenance attestation: from 3.7.7 on, it and its @vercel/oidc and
+  # @vercel/cli-* dependencies ship without one, which trustPolicy rejects.
+  "@vercel/functions": 3.7.6
+  squawk-cli: 2.72.0
+  zod: 4.6.7
+overrides:
+  # @vercel/cli-config 0.2.1 (via @vercel/functions > @vercel/oidc) pins zod 4.1.11, affected by
+  # GHSA-mrhx-c7xc-m3w5; 4.6.7 is the same major and the patched release the workspace uses.
+  "@vercel/cli-config>zod": 4.6.7
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - "@reranker/*"
@@ -62,4 +73,6 @@ allowBuilds:
   lefthook: true
   # Postinstall only prints a funding banner (transitive via posthog-js).
   core-js: false
+  # drizzle-kit's bundler: the postinstall only re-verifies the binary the platform package ships.
+  esbuild: false
 verifyDepsBeforeRun: error
