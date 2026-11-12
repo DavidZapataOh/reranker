@@ -1,7 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
-import { assertDeploymentUrl, bypassHeaders } from "@reranker/testing/playwright";
+import { assertDeploymentUrl } from "@reranker/testing/playwright";
 
-// Validated before bypassHeaders() so the secret never goes to an untrusted host.
+// The fixtures send the bypass secret only to this origin, so it must be ours.
 const deploymentUrl = process.env.PLAYWRIGHT_BASE_URL
   ? assertDeploymentUrl(process.env.PLAYWRIGHT_BASE_URL, { allowProduction: true }).origin
   : undefined;
@@ -20,7 +20,6 @@ export default defineConfig({
   use: {
     baseURL: deploymentUrl ?? localUrl,
     trace: "on-first-retry",
-    extraHTTPHeaders: bypassHeaders(),
   },
   projects: [
     { name: "desktop-chromium", use: { ...devices["Desktop Chrome"] } },

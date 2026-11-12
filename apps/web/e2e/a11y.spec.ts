@@ -3,9 +3,13 @@ import { publicRoutes } from "./routes.ts";
 
 for (const route of publicRoutes) {
   test(`${route.name} has 0 axe violations (WCAG 2.2 AA) @smoke`, async ({
+    page,
     gotoStable,
     makeAxeBuilder,
   }) => {
+    // Entrance fades and the auto-advancing steps keep text mid-opacity at any moment,
+    // which axe reports as low contrast; with reduced motion every text is at rest.
+    await page.emulateMedia({ reducedMotion: "reduce" });
     await gotoStable(route.path);
     expect((await makeAxeBuilder().analyze()).violations).toEqual([]);
   });
