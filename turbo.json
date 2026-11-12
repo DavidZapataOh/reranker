@@ -1,7 +1,7 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
   "envMode": "strict",
-  "globalDependencies": ["packages/typescript-config/*.json"],
+  "globalDependencies": ["packages/typescript-config/*.json", "vitest.config.ts"],
   "globalPassThroughEnv": ["COREPACK_HOME"],
   "remoteCache": { "signature": true },
   "futureFlags": { "longerSignatureKey": true },
