@@ -1,0 +1,138 @@
+name: nightly
+on:
+  schedule:
+    # 05:00 in Bogotá.
+    - cron: "0 10 * * *"
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: nightly
+  cancel-in-progress: false
+jobs:
+  contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions: { contents: read }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
+        with: { cache: true, require-lockfile: true }
+      # A missing secret fails the contract tests that need it; they never skip.
+      - env:
+          DATAFORSEO_LOGIN: ${{ secrets.DATAFORSEO_LOGIN }}
+          DATAFORSEO_PASSWORD: ${{ secrets.DATAFORSEO_PASSWORD }}
+          BRIGHTDATA_API_KEY_CI: ${{ secrets.BRIGHTDATA_API_KEY_CI }}
+          OPENAI_API_KEY_CI: ${{ secrets.OPENAI_API_KEY_CI }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GOOGLE_PLACES_API_KEY_CI: ${{ secrets.GOOGLE_PLACES_API_KEY_CI }}
+          ANTHROPIC_API_KEY_CI: ${{ secrets.ANTHROPIC_API_KEY_CI }}
+          XAI_API_KEY_CI: ${{ secrets.XAI_API_KEY_CI }}
+        run: pnpm exec turbo run test:contract
+  full:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    permissions: { contents: read }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
+        with: { cache: true, require-lockfile: true }
+      - id: playwright
+        name: Resolve Playwright version
+        run: echo "version=$(pnpm --filter web exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}-chromium webkit
+      - name: Install browsers
+        run: pnpm --filter web exec playwright install --with-deps chromium webkit
+      - id: branch
+        uses: ./.github/actions/neon-ci-branch
+        with:
+          api-key: ${{ secrets.NEON_NONPROD_API_KEY }}
+          project-id: ${{ vars.NEON_PROJECT_ID }}
+          branch-name: ci/nightly-${{ github.run_id }}-${{ github.run_attempt }}
+      - uses: ./.github/actions/ci-database
+        with:
+          db-url: ${{ steps.branch.outputs.db-url }}
+          db-host-pooled: ${{ steps.branch.outputs.db-host-pooled }}
+      # Every package, uncached: the nightly is the run that catches what --affected and the cache let through.
+      - name: Unit, component and integration tests
+        run: pnpm exec turbo run test test:integration --force
+      # Runs even when the tests above failed, so one night reports every broken gate.
+      # Retries stay on to tell flaky from broken, and a test that only passes on retry fails the night.
+      - name: Smoke tests against production
+        if: ${{ !cancelled() }}
+        env:
+          STRICT_FLAKY: "1"
+          PLAYWRIGHT_BASE_URL: https://reranker.co
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: pnpm --filter web test:smoke
+      # delete-branch-action runs `npm i -g neonctl@v2`: pnpm's Node runtime keeps no global bin on PATH, and an
+      # unlocked global install would otherwise resolve to whatever was published last and run its install scripts.
+      - if: always() && steps.branch.outputs.branch-id != ''
+        name: Prepare npm for the branch cleanup
+        env:
+          PREFIX: ${{ runner.temp }}/npm-global
+        run: |
+          {
+            echo "NPM_CONFIG_PREFIX=$PREFIX"
+            echo "NPM_CONFIG_BEFORE=2026-11-01T00:00:00Z"
+            echo "NPM_CONFIG_IGNORE_SCRIPTS=true"
+          } >> "$GITHUB_ENV"
+          echo "$PREFIX/bin" >> "$GITHUB_PATH"
+      - if: always() && steps.branch.outputs.branch-id != ''
+        uses: neondatabase/delete-branch-action@4468d825d5a88ef4012f1705a82f02ec3072f776 # v3.2.1
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          branch: ${{ steps.branch.outputs.branch-id }}
+          api_key: ${{ secrets.NEON_NONPROD_API_KEY }}
+      - if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: nightly-report
+          path: |
+            apps/web/playwright-report
+            apps/web/test-results
+            apps/web/results.json
+          retention-days: 3
+          if-no-files-found: ignore
+  report:
+    needs: [contract, full]
+    # Also after a cancellation or a timeout: a night that did not pass must never look green.
+    if: always()
+    runs-on: ubuntu-slim
+    timeout-minutes: 5
+    permissions: { issues: write }
+    env:
+      CONTRACT: ${{ needs.contract.result }}
+      FULL: ${{ needs.full.result }}
+    steps:
+      - if: needs.contract.result == 'success' && needs.full.result == 'success'
+        name: Send the heartbeat
+        env:
+          HEARTBEAT_URL: ${{ secrets.BETTERSTACK_HEARTBEAT_NIGHTLY_URL }}
+        run: |
+          if [ -z "$HEARTBEAT_URL" ]; then
+            echo "No heartbeat configured"
+            exit 0
+          fi
+          curl -fsS --retry 3 -o /dev/null "$HEARTBEAT_URL"
+      # Consecutive red nights comment on the open issue instead of opening one each night.
+      - if: needs.contract.result != 'success' || needs.full.result != 'success'
+        name: Open or update the failure issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          body="$RUN_URL (contract: $CONTRACT, full: $FULL)"
+          gh label create nightly-failure --force --color B60205 --description "The nightly run failed"
+          issue=$(gh issue list --label nightly-failure --state open --limit 1 --json number --jq '.[0].number // empty')
+          if [ -n "$issue" ]; then
+            gh issue comment "$issue" --body "Failed again: $body"
+          else
+            gh issue create --label nightly-failure --title "Nightly failed on $(date -u +%F)" \
+              --body "$body. Runbook: docs/runbooks/nightly-failure.md"
+          fi
