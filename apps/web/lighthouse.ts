@@ -1,5 +1,6 @@
 import { bypassHeaders } from "@reranker/testing/bypass";
 import { assertDeploymentUrl } from "@reranker/testing/target";
+import type { Browser } from "puppeteer-core";
 import { publicRoutes, readTarget } from "./e2e/routes.ts";
 
 type Budget = { scriptBytes: number; totalBytes: number };
@@ -12,9 +13,14 @@ export const budgets: Record<string, Budget> = {
   legal: { scriptBytes: 327_636, totalBytes: 574_113 },
 };
 
-// Previews never load these, so blocking them lets one budget hold for every target.
-// Lighthouse sends extraHeaders to every origin; blocked requests never leave the browser.
-const BLOCKED_THIRD_PARTIES = ["*googletagmanager.com*", "*google-analytics.com*", "*clarity.ms*"];
+// Previews never load the analytics tags and production never loads the Vercel toolbar,
+// so blocking all of them lets one budget hold for every target.
+const BLOCKED_THIRD_PARTIES = [
+  "*googletagmanager.com*",
+  "*google-analytics.com*",
+  "*clarity.ms*",
+  "*vercel.live*",
+];
 
 function exactUrlPattern(href: string): string {
   return `^${href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`;
@@ -26,7 +32,7 @@ export function lighthouseConfig(env: NodeJS.ProcessEnv = process.env) {
     ? assertDeploymentUrl(env.PLAYWRIGHT_BASE_URL, { allowProduction: true }).origin
     : undefined;
   const base = deployment ?? `http://localhost:${env.PORT ?? 3000}`;
-  const headers = deployment ? bypassHeaders() : {};
+  const protectedDeployment = deployment !== undefined && Object.keys(bypassHeaders()).length > 0;
   const production = target === "production";
 
   const assertMatrix = publicRoutes.map((route) => {
@@ -37,12 +43,11 @@ export function lighthouseConfig(env: NodeJS.ProcessEnv = process.env) {
       "categories:best-practices": ["error", { minScore: 0.95 }],
       "resource-summary:script:size": ["error", { maxNumericValue: budget.scriptBytes }],
       "resource-summary:total:size": ["error", { maxNumericValue: budget.totalBytes }],
-      // A new third party would receive the bypass header and escape the budget; block it above.
-      "resource-summary:third-party:count": ["error", { maxNumericValue: 0 }],
     };
     if (production) assertions["categories:seo"] = ["error", { minScore: 0.95 }];
     return {
       matchingUrlPattern: exactUrlPattern(new URL(route.path, base).href),
+      aggregationMethod: "median-run",
       assertions,
     };
   });
@@ -53,15 +58,42 @@ export function lighthouseConfig(env: NodeJS.ProcessEnv = process.env) {
         url: publicRoutes.map((route) => new URL(route.path, base).href),
         numberOfRuns: 3,
         ...(deployment ? {} : { startServerCommand: "pnpm start" }),
+        // Not settings.extraHeaders: Lighthouse sends those to every origin and copies them into each report.
+        ...(protectedDeployment ? { puppeteerScript: "./lighthouse-bypass.cjs" } : {}),
         settings: {
-          ...(Object.keys(headers).length > 0 ? { extraHeaders: JSON.stringify(headers) } : {}),
           blockedUrlPatterns: BLOCKED_THIRD_PARTIES,
           // Every non-production deployment answers with X-Robots-Tag: noindex.
           skipAudits: production ? [] : ["is-crawlable"],
         },
       },
-      assert: { aggregationMethod: "median-run", assertMatrix },
+      assert: { assertMatrix },
       upload: { target: "filesystem", outputDir: ".lighthouseci" },
     },
   };
+}
+
+/**
+ * Runs before Lighthouse in the same browser. Vercel answers the bypass header with a
+ * host-only cookie, which Lighthouse keeps (it never clears cookies), so the secret is
+ * sent once, to the deployment only, and never lands in a report.
+ */
+export async function setBypassCookie(browser: Browser, { url }: { url: string }): Promise<void> {
+  const { origin } = assertDeploymentUrl(url, { allowProduction: true });
+  const headers = { ...bypassHeaders(), "x-vercel-set-bypass-cookie": "true" };
+  const page = await browser.newPage();
+  try {
+    await page.setRequestInterception(true);
+    page.on("request", (request) => {
+      if (new URL(request.url()).origin !== origin) return void request.abort();
+      void request.continue({ headers: { ...request.headers(), ...headers } });
+    });
+    const response = await page.goto(url, { waitUntil: "domcontentloaded" });
+    if (!response?.ok()) {
+      throw new Error(
+        `Bypass cookie not set for ${origin} (${response?.status() ?? "no response"})`,
+      );
+    }
+  } finally {
+    await page.close();
+  }
 }

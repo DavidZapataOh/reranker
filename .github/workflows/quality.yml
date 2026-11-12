@@ -103,12 +103,6 @@ jobs:
         env:
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: pnpm --filter web exec lhci autorun
-      # Lighthouse copies its request headers, the bypass secret included, into every report.
-      - name: Redact the bypass secret from Lighthouse reports
-        if: always()
-        env:
-          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
-        run: node packages/testing/bin/redact-bypass-secret.ts apps/web/.lighthouseci
       # Non-regression gate, once @reranker/quality exists:
       # pnpm --filter @reranker/quality compare --playwright apps/web/results.json --lhci apps/web/.lighthouseci --target "$APP_TARGET"
       - if: always()
@@ -122,6 +116,8 @@ jobs:
             apps/web/.lighthouseci
           retention-days: 3
           if-no-files-found: ignore
+          # .lighthouseci is a dot directory, skipped by default.
+          include-hidden-files: true
       # Runs on cancellation and timeout too; anything but a full pass blocks the deployment.
       - if: always()
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0

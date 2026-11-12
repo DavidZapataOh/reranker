@@ -25,6 +25,8 @@ catalog:
   "@playwright/test": 1.64.1
   "@axe-core/playwright": 4.14.0
   "@lhci/cli": 0.16.0
+  # Same version lighthouse@13.6.0 pins; LHCI loads it for collect.puppeteerScript.
+  puppeteer-core: 25.16.0
   vitest-browser-react: 2.3.0
   msw: 3.0.3
   pg: ^8.23.1
