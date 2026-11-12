@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "catalog:",
+    "@lhci/cli": "catalog:",
     "@playwright/test": "catalog:",
     "@reranker/testing": "workspace:*",
     "@reranker/typescript-config": "workspace:*",
@@ -33,6 +34,7 @@
     "@types/react-dom": "catalog:",
     "@vitest/browser-playwright": "catalog:",
     "@vitest/coverage-v8": "catalog:",
+    "puppeteer-core": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:",

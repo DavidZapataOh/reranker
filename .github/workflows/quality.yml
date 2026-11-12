@@ -95,6 +95,15 @@ jobs:
           projects=(--project=desktop-chromium --project=mobile-chromium)
           if [ "$APP_TARGET" = production ]; then projects+=(--project=mobile-webkit); fi
           pnpm --filter web exec playwright test "${projects[@]}"
+      # Runs after an end-to-end failure too, so one run reports both.
+      - name: Lighthouse budgets
+        if: ${{ !cancelled() }}
+        env:
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: |
+          CHROME_PATH=$(command -v google-chrome)
+          export CHROME_PATH
+          pnpm --filter web exec lhci autorun
       # Non-regression gate, once @reranker/quality exists:
       # pnpm --filter @reranker/quality compare --playwright apps/web/results.json --lhci apps/web/.lighthouseci --target "$APP_TARGET"
       - if: always()
@@ -105,6 +114,7 @@ jobs:
             apps/web/playwright-report
             apps/web/test-results
             apps/web/results.json
+            apps/web/.lighthouseci
           retention-days: 3
           if-no-files-found: ignore
       # Runs on cancellation and timeout too; anything but a full pass blocks the deployment.

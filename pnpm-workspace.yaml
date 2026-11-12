@@ -28,6 +28,9 @@ catalog:
   msw: 3.0.3
   pg: ^8.23.1
   "@types/pg": ^8.23.1
+  "@lhci/cli": 0.16.0
+  # LHCI loads it from apps/web for its puppeteer script; lighthouse's version, so they share one copy.
+  puppeteer-core: 25.16.0
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - "@reranker/*"
@@ -48,6 +51,9 @@ minimumReleaseAgeExclude:
   - "@posthog/browser-common@0.10.6"
   - lucide-react@1.68.0
 trustPolicy: no-downgrade
+trustPolicyExclude:
+  # Moved from trusted publishing to Chrome-versioned builds by Google's own account (via lighthouse).
+  - chromium-bidi@157.0.8090-0
 blockExoticSubdeps: true
 strictDepBuilds: true
 allowBuilds:
