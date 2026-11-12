@@ -22,8 +22,9 @@ on:
         type: string
 permissions: {}
 run-name: "load · ${{ inputs.scenario_glob }} · ${{ inputs.scenario }}"
+# Two runs against one deployment would skew each other's latencies.
 concurrency:
-  group: load
+  group: load-${{ inputs.target_url }}
   cancel-in-progress: false
 jobs:
   load:
