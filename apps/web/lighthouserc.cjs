@@ -8,12 +8,11 @@ const { origin } = assertDeploymentUrl(requireEnv("PLAYWRIGHT_BASE_URL"), {
 });
 const production = appTarget === "production";
 
-// Transferred bytes on a cold cache are deterministic, so they fail hard. Each value is the
-// production baseline plus 5 %. Script budgets include Google's gtag (about 183 KB), which
-// every page loads lazily under Consent Mode, on top of the first-party bundle.
+// Transferred first-party bytes on a cold cache are deterministic, so they fail hard. Each value
+// is the production baseline plus 5 %, except landing scripts, which keep the original target.
 const budgets = {
-  landing: { scriptBytes: 519_698, totalBytes: 773_751 },
-  legal: { scriptBytes: 519_774, totalBytes: 765_374 },
+  landing: { scriptBytes: 345_000, totalBytes: 581_369 },
+  legal: { scriptBytes: 327_656, totalBytes: 573_530 },
 };
 
 const routes = publicRoutes.map((route) => ({
@@ -29,11 +28,19 @@ module.exports = {
       chromePath: process.env.CHROME_PATH,
       puppeteerScript: "./lighthouse-bypass-cookie.cjs",
       settings: {
-        // The preview toolbar is not ours. Not a secret: Lighthouse sends it to every origin.
-        // A JSON string: as an object, Lighthouse's CLI parsing hands Chrome a non-string value.
-        extraHeaders: JSON.stringify({ "x-vercel-skip-toolbar": "1" }),
-        // Previews answer with noindex on purpose.
-        ...(production ? {} : { skipAudits: ["is-crawlable"] }),
+        // Google's tag loads only in production and changes size with Google's releases: blocking
+        // it keeps the gate on our bytes and makes previews measure what production ships.
+        blockedUrlPatterns: ["*googletagmanager.com*", "*google-analytics.com*"],
+        ...(production
+          ? {}
+          : {
+              // The preview toolbar is not ours. Lighthouse sends this header to every origin;
+              // it is not a secret. A JSON string, because as an object Lighthouse's CLI parsing
+              // hands Chrome a non-string value.
+              extraHeaders: JSON.stringify({ "x-vercel-skip-toolbar": "1" }),
+              // Previews answer with noindex on purpose.
+              skipAudits: ["is-crawlable"],
+            }),
       },
     },
     assert: {
@@ -44,17 +51,17 @@ module.exports = {
           assertions: {
             "categories:accessibility": ["error", { minScore: 1 }],
             "categories:best-practices": ["error", { minScore: 0.95 }],
-            ...(production ? { "categories:seo": ["error", { minScore: 0.95 }] } : {}),
+            "categories:seo": ["error", { minScore: 0.95 }],
             "resource-summary:script:size": ["error", { maxNumericValue: budget.scriptBytes }],
             "resource-summary:total:size": ["error", { maxNumericValue: budget.totalBytes }],
           },
         })),
         // LHCI matches entries on the URL Chrome ended on and silently skips runs no entry
-        // matches, so a redirect (or a login page) would pass unasserted. A score above 1 can
-        // never be met, which fails the run and names the stray URL.
+        // matches, so a redirect (or a login page) would pass unasserted. A missing audit always
+        // fails, and the report names the stray URL.
         {
           matchingUrlPattern: `^(?!(?:${routes.map(({ url }) => RegExp.escape(url)).join("|")})$)`,
-          assertions: { "categories:accessibility": ["error", { minScore: 2 }] },
+          assertions: { "unexpected-final-url": "error" },
         },
       ],
     },

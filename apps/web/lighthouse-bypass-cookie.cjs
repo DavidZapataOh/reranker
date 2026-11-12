@@ -50,7 +50,7 @@ module.exports = async (browser, { url }) => {
   const check = await fetch(origin, { headers: cookie ? { cookie } : {}, redirect: "manual" });
   await check.body?.cancel();
   if (!check.ok) {
-    throw new Error(`Vercel did not grant a bypass cookie for ${origin} (status ${check.status})`);
+    throw new Error(`${origin} did not answer 2xx with the bypass cookie (status ${check.status})`);
   }
   if (cookies.length > 0) await browser.setCookie(...cookies);
 };
