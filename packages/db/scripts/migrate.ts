@@ -68,10 +68,13 @@ async function migrateWithRetries(client: pg.Client, opts: MigrationOptions): Pr
 }
 
 async function appliedCount(client: pg.Client): Promise<number> {
+  // Two statements: Postgres resolves every relation at parse time, even in an untaken CASE branch.
+  const exists = await client.query<{ table: string | null }>("select to_regclass($1) as table", [
+    `${MIGRATIONS_SCHEMA}.${MIGRATIONS_TABLE}`,
+  ]);
+  if (!exists.rows[0]?.table) return 0;
   const { rows } = await client.query<{ count: number }>(
-    `select case when to_regclass($1) is null then 0
-       else (select count(*)::int from ${MIGRATIONS_SCHEMA}.${MIGRATIONS_TABLE}) end as count`,
-    [`${MIGRATIONS_SCHEMA}.${MIGRATIONS_TABLE}`],
+    `select count(*)::int as count from ${MIGRATIONS_SCHEMA}.${MIGRATIONS_TABLE}`,
   );
   return rows[0]?.count ?? 0;
 }
