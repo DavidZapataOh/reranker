@@ -12,7 +12,7 @@ export const options = {
     stress: { executor: "constant-vus", vus: 500, duration: "1m" },
   }),
   thresholds: {
-    ...latency({ p95Ms: Number(__ENV.P95_MS || 800) }),
+    ...latency({ p95Ms: 800 }),
     checks: ["rate>0.99"],
   },
 };

@@ -9,6 +9,21 @@
 - `options.scenarios` goes through `only()` from `lib/scenarios.js` and declares two entries:
   - `nominal`: the expected peak rate.
   - `stress`: 10× that rate, selected with `-e SCENARIO=stress`. Its checks and thresholds assert the behavior the feature declares under overload: it queues, answers a clear `429`, or degrades with notice. It never errors out.
+- A feature that declares overload behavior drives both entries with an arrival-rate executor (`constant-arrival-rate` or `ramping-arrival-rate`, stress `rate` = 10 × nominal `rate`). With `constant-vus` the request rate falls as the backend slows down, so the overload never arrives. The static landing keeps `constant-vus`: it declares no overload behavior.
+- When the declared behavior is a `429`, the stress run counts it as expected and asserts it is a clear one, with its own budget:
+
+  ```js
+  import http from "k6/http";
+  import { Rate } from "k6/metrics";
+
+  const stress = __ENV.SCENARIO === "stress";
+  const rejected = new Rate("rejected");
+  if (stress) http.setResponseCallback(http.expectedStatuses({ min: 200, max: 399 }, 429));
+
+  // thresholds: stress ? { ...latency({ p95Ms: 1500 }), rejected: ["rate<0.5"] } : latency({ p95Ms: 300 })
+  // per request: rejected.add(res.status === 429);
+  //   check(res, { "429 is clear": (r) => r.status !== 429 || r.headers["Retry-After"] !== undefined });
+  ```
 - Requests use `baseUrl()` and `params()` from `lib/target.js`: the deployment origin from `TARGET_URL` and the Vercel protection bypass header. Redirects are not followed, so the header never leaves the deployment.
 - Features with a backend run their scenarios, nominal and stress, before shipping and record the result in their plan.
 

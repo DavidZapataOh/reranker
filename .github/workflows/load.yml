@@ -32,7 +32,7 @@ jobs:
     timeout-minutes: 15
     permissions: { contents: read }
     env:
-      TARGET_URL: ${{ inputs.target_url }}
+      INPUT_URL: ${{ inputs.target_url }}
       SCENARIO_GLOB: ${{ inputs.scenario_glob }}
       SCENARIO: ${{ inputs.scenario }}
       P95_MS: ${{ inputs.p95_ms }}
@@ -43,18 +43,21 @@ jobs:
       - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
         with: { install: false }
       # Runs before anything receives the bypass secret, so it never reaches a foreign host.
-      - name: Refuse production and untrusted targets
+      - id: target
+        name: Refuse production and untrusted targets
         run: |
-          if ! origin=$(node packages/testing/bin/assert-target.ts "$TARGET_URL" --preview-only); then
+          if ! origin=$(node packages/testing/bin/assert-target.ts "$INPUT_URL" --preview-only); then
             echo "$origin"
             exit 1
           fi
-          echo "TARGET_URL=$origin" >> "$GITHUB_ENV"
+          echo "origin=$origin" >> "$GITHUB_OUTPUT"
       - uses: grafana/setup-k6-action@43b9fc21641a76002687994433dd586f56e791b1 # v1.2.2
         with: { k6-version: "2.3.0" }
       # k6 reads TARGET_URL, SCENARIO, P95_MS and the secret from the environment.
       - name: Run scenarios
         env:
+          # The origin the guard validated, never the raw input.
+          TARGET_URL: ${{ steps.target.outputs.origin }}
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: |
           shopt -s globstar nullglob
