@@ -7,7 +7,7 @@
 - One file per scenario: `load/<area>/<scenario>.js`. `load/lib/` holds shared helpers and is never run.
 - Each scenario exports `options` with:
   - a `nominal` profile whose `thresholds` come from the budget its owning plan declares, built with `latency({ p95Ms, errorRate })` from `lib/thresholds.js`;
-  - a `stress` profile at 10× the nominal rate, selected with `SCENARIO=stress`, whose thresholds check the behavior the plan declares under overload: it queues, answers a clear 429, or degrades with notice. It never fails silently.
+  - a `stress` profile at 10× the nominal rate, selected with `SCENARIO=stress`, on an arrival-rate executor so the rate holds even when responses slow down, whose thresholds check the behavior the plan declares under overload: it queues, answers a clear 429, or degrades with notice. It never fails silently.
 - Requests go to `baseUrl()` with `params()` from `lib/target.js`. `params()` carries the Vercel protection bypass header and does not follow redirects, so the secret never leaves the deployment.
 - Every plan with a backend adds its scenario here and records the result of a run before it ships.
 

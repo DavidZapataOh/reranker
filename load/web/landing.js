@@ -3,7 +3,7 @@ import http from "k6/http";
 import { baseUrl, params } from "../lib/target.js";
 import { latency } from "../lib/thresholds.js";
 
-// One visit per second per user: 50 users is the nominal rate, stress is 10× that.
+// Nominal: 50 visitors each loading the page once per second, about 50 requests per second.
 const NOMINAL_VUS = 50;
 const SCENARIO = __ENV.SCENARIO || "nominal";
 
@@ -13,11 +13,23 @@ const scenarios = {
     // A protection redirect is not an HTTP failure to k6, so the 200 check counts too.
     thresholds: { ...latency({ p95Ms: Number(__ENV.P95_MS || 800) }), checks: ["rate>0.99"] },
   },
-  // The landing is static and served from Vercel's edge: at 10× it keeps answering, or
-  // the edge rejects with a clear 429. A 5xx or a dropped connection is a failure.
+  // An open model holds 10× the nominal rate even if responses slow down, where more VUs
+  // would just wait longer. The landing is static on Vercel's edge: it keeps answering or
+  // the edge rejects with a clear 429. A 5xx, a dropped connection or unsent load fails.
   stress: {
-    options: { executor: "constant-vus", vus: NOMINAL_VUS * 10, duration: "1m" },
-    thresholds: { checks: ["rate>0.99"], http_req_failed: ["rate<0.01"] },
+    options: {
+      executor: "constant-arrival-rate",
+      rate: NOMINAL_VUS * 10,
+      timeUnit: "1s",
+      duration: "1m",
+      preAllocatedVUs: 200,
+      maxVUs: 1000,
+    },
+    thresholds: {
+      checks: ["rate>0.99"],
+      http_req_failed: ["rate<0.01"],
+      dropped_iterations: [`count<${NOMINAL_VUS * 10 * 60 * 0.01}`],
+    },
   },
 };
 
@@ -42,8 +54,8 @@ export default function () {
   const res = http.get(url, requestParams);
   if (SCENARIO === "stress") {
     check(res, { "served or rejected with 429": (r) => r.status === 200 || r.status === 429 });
-  } else {
-    check(res, { "status 200": (r) => r.status === 200 });
+    return;
   }
+  check(res, { "status 200": (r) => r.status === 200 });
   sleep(1);
 }
