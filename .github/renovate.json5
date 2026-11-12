@@ -24,6 +24,9 @@
       automerge: true,
     },
     { matchManagers: ["github-actions"], matchUpdateTypes: ["pinDigest"], automerge: true },
+    // 2.2.2 was published by hand without the provenance 2.2.1 had, and pnpm's trust policy
+    // refuses it; wait for a release published from CI again.
+    { matchPackageNames: ["lefthook"], allowedVersions: "!/^2\\.2\\.2$/" },
     // Runner upgrades are deliberate decisions, not bot PRs.
     { matchDatasources: ["github-runners"], enabled: false },
   ],
