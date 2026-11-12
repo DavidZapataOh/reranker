@@ -67,7 +67,7 @@ curl -sS https://console.neon.tech/api/v2/projects/$NONPROD_PROJECT_ID/branches 
   | jq '{branch: .branch.name, parent: .branch.parent_id, host: .endpoints[0].host}'
 ```
 
-When previews leave `preview` in a state no open pull request needs (a migration that was edited or abandoned makes `db:migrate` fail naming it), reset it from its parent in the console (Branches → `preview` → Reset from parent) and run step 4 on it again.
+Previews can leave `preview` in a state no open pull request needs: a migration edited after a preview ran it, or one merged with an older timestamp, makes `db:migrate` fail naming that migration, while one from an abandoned pull request leaves its schema behind silently. In either case reset it from its parent in the console (Branches → `preview` → Reset from parent) and run step 4 on it again.
 
 ### 2. Keys
 
@@ -83,9 +83,9 @@ From Console → project → Connect, with "Connection pooling" off for the dire
 | `DATABASE_URL_MIGRATIONS` | direct | owner | Vercel, Sensitive: Production (`reranker-prod` `main`) and Preview (`reranker-nonprod` `preview`) |
 | `DATABASE_URL` | pooled | `reranker_app` | Vercel Production and Preview, same branches; also local `.env` (`preview`) |
 | `DATABASE_URL_SYSTEM` | pooled | `reranker_system` | Vercel Production and Preview, same branches; also local `.env` (`preview`) |
+| `DB_POOL_MAX` | – | – | Optional, only to tune pool size per instance (1–20) |
 
 The Vercel build runs `db:migrate` for every Preview and Production deployment once `packages/db` exists, so `DATABASE_URL_MIGRATIONS` must be set in both before the first deployment that includes the package; without it the build stops before `next build`.
-| `DB_POOL_MAX` | – | – | Optional, only to tune pool size per instance (1–20) |
 
 ### 4. Schema and logins
 
