@@ -1,0 +1,37 @@
+{
+  "name": "@reranker/db",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./env": "./src/env.ts",
+    "./schema": "./src/schema/index.ts",
+    "./auth-adapter": "./src/auth-adapter.ts"
+  },
+  "scripts": {
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "node scripts/migrate.ts",
+    "db:check": "drizzle-kit check && squawk --config .squawk.toml --no-error-on-unmatched-pattern 'migrations/*.sql' 'migrations/concurrent/*.sql'",
+    "db:provision-roles": "node scripts/provision-roles.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --coverage",
+    "test:integration": "vitest run --project integration"
+  },
+  "dependencies": {
+    "@reranker/schema": "workspace:*",
+    "@vercel/functions": "catalog:",
+    "drizzle-orm": "catalog:",
+    "pg": "catalog:"
+  },
+  "devDependencies": {
+    "@reranker/testing": "workspace:*",
+    "@reranker/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/pg": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "drizzle-kit": "catalog:",
+    "squawk-cli": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

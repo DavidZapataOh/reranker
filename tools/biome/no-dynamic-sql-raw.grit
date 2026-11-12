@@ -1,0 +1,6 @@
+language js
+
+`sql.raw($arg)` as $call where {
+  $arg <: not JsStringLiteralExpression(),
+  register_diagnostic(span=$call, message="sql.raw only takes a string literal. Pass values through the sql`` template so they become bound parameters, and identifiers through sql.identifier.")
+}
