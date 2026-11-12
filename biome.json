@@ -29,6 +29,28 @@
   },
   "overrides": [
     {
+      "includes": [
+        "apps/web/src/**",
+        "packages/*/src/**",
+        "!packages/testing/**",
+        "!**/*.test.ts",
+        "!**/*.test.tsx"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": { "@reranker/testing": "Test-only package." },
+                "patterns": [{ "group": ["@reranker/testing/*"], "message": "Test-only package." }]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
       "includes": ["**/*.contract.test.ts"],
       "linter": { "rules": { "suspicious": { "noSkippedTests": "error" } } }
     }

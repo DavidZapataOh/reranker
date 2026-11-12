@@ -6,6 +6,9 @@ import { emulateReducedMotion } from "./packages/testing/src/vitest/browser-comm
 
 const ignored = ["**/node_modules/**", "**/.next/**", "**/e2e/**"];
 
+// Evidence, statistics and schema code decides what customers are told, so an untested path there
+// is a wrong claim. Those packages re-export this config as
+// mergeConfig(root, { test: { coverage: { thresholds: CRITICAL_COVERAGE } } }).
 export const CRITICAL_COVERAGE = { lines: 95, branches: 90 } as const;
 
 // Globs are relative to the package that re-exports this config.
