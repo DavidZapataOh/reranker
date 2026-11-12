@@ -30,9 +30,11 @@ const DDL = `
     label text not null unique
   );
   alter table app.tenancy_probe enable row level security;
+  -- The cast keeps the scalar subquery an array expression: bare ((select …)) parses as
+  -- ANY (subquery) and compares uuid with uuid[]. The subquery still runs once as an InitPlan.
   create policy tenancy_probe_tenant_isolation on app.tenancy_probe as permissive for all to app_tenant
-    using (tenant_id = any ((select app.current_tenant_ids())))
-    with check (tenant_id = any ((select app.current_tenant_ids())));
+    using (tenant_id = any ((select app.current_tenant_ids())::uuid[]))
+    with check (tenant_id = any ((select app.current_tenant_ids())::uuid[]));
   create policy tenancy_probe_system_access on app.tenancy_probe as permissive for all to app_system
     using (true) with check (true);
 `;

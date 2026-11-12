@@ -18,8 +18,8 @@ beforeAll(async () => {
       create table app.pool_probe (id uuid primary key default uuidv7(), tenant_id uuid not null);
       alter table app.pool_probe enable row level security;
       create policy pool_probe_tenant_isolation on app.pool_probe as permissive for all to app_tenant
-        using (tenant_id = any ((select app.current_tenant_ids())))
-        with check (tenant_id = any ((select app.current_tenant_ids())));
+        using (tenant_id = any ((select app.current_tenant_ids())::uuid[]))
+        with check (tenant_id = any ((select app.current_tenant_ids())::uuid[]));
     `),
   );
 });
