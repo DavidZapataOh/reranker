@@ -30,7 +30,7 @@
   "overrides": [
     {
       "includes": [
-        "apps/web/src/**",
+        "apps/*/src/**",
         "packages/*/src/**",
         "!packages/testing/**",
         "!**/*.test.ts",
