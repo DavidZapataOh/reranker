@@ -23,7 +23,7 @@ on:
 permissions: {}
 run-name: "load · ${{ inputs.scenario }} · ${{ inputs.scenario_glob }}"
 concurrency:
-  group: load
+  group: load-${{ inputs.target_url }}
   cancel-in-progress: false
 jobs:
   load:
@@ -54,18 +54,21 @@ jobs:
         run: |
           shopt -s nullglob
           # shellcheck disable=SC2206 # the input is a glob to expand
-          files=($SCENARIO_GLOB)
+          matched=($SCENARIO_GLOB)
+          files=()
+          for file in "${matched[@]}"; do
+            case "$file" in
+              *..*) echo "::error::Not a scenario file: $file"; exit 1 ;;
+              # Shared helpers, so a glob such as load/*/*.js can run every area.
+              load/lib/*) ;;
+              load/*/*.js) files+=("$file") ;;
+              *) echo "::error::Not a scenario file: $file"; exit 1 ;;
+            esac
+          done
           if [ "${#files[@]}" -eq 0 ]; then
             echo "::error::No scenario file matches the glob"
             exit 1
           fi
-          for file in "${files[@]}"; do
-            case "$file" in
-              load/lib/* | *..*) echo "::error::Not a scenario file: $file"; exit 1 ;;
-              load/*/*.js) ;;
-              *) echo "::error::Not a scenario file: $file"; exit 1 ;;
-            esac
-          done
           printf '%s\n' "${files[@]}" > "$RUNNER_TEMP/scenarios.txt"
       # Pinned rather than latest so a k6 release lands through a reviewed change.
       - uses: grafana/setup-k6-action@43b9fc21641a76002687994433dd586f56e791b1 # v1.2.2
