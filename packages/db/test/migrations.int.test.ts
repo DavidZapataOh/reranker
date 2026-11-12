@@ -139,6 +139,33 @@ describe("runMigrations", () => {
     });
   });
 
+  test("fails naming a migration merged with an older timestamp or edited after it ran", async () => {
+    await withScratchDatabase(async (url) => {
+      const base = await migrationsWith(PROBE_TABLE);
+      await runMigrations({ url, ...base });
+
+      // A branch merged later whose migration was generated earlier: drizzle would skip it.
+      const late = await migrationsWith({
+        ...PROBE_TABLE,
+        "9001_migration_probe_late": "alter table app.migration_probe add column late text;",
+      });
+      const journalPath = join(late.migrationsFolder, "meta", "_journal.json");
+      const journal = JSON.parse(await readFile(journalPath, "utf8")) as Journal;
+      const probeEntry = journal.entries.find((entry) => entry.tag === "9000_migration_probe");
+      const lateEntry = journal.entries.find((entry) => entry.tag === "9001_migration_probe_late");
+      if (probeEntry === undefined || lateEntry === undefined) throw new Error("journal fixture");
+      lateEntry.when = probeEntry.when - 500;
+      await writeFile(journalPath, JSON.stringify(journal));
+      await expect(runMigrations({ url, ...late })).rejects.toThrow(/9001_migration_probe_late/);
+
+      await writeFile(
+        join(base.migrationsFolder, "9000_migration_probe.sql"),
+        "create table app.migration_probe (id integer primary key, label text, extra text);",
+      );
+      await expect(runMigrations({ url, ...base })).rejects.toThrow(/9000_migration_probe/);
+    });
+  });
+
   test("a concurrent build that times out behind an older transaction is rebuilt on retry", async () => {
     await withScratchDatabase(async (url) => {
       const folder = await migrationsWith(PROBE_TABLE, {

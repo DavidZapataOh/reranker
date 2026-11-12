@@ -1,6 +1,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { readMigrationFiles } from "drizzle-orm/migrator";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
 import pg from "pg";
@@ -46,6 +47,7 @@ export async function runMigrations(options: MigrationOptions): Promise<Migratio
       }),
     );
     const applied = (await countApplied(client)) - before;
+    await assertJournalApplied(client, options.migrationsFolder);
 
     // Index builds on populated tables can outlast any fixed limit and CONCURRENTLY never blocks writes.
     await client.query("select set_config('statement_timeout', '0', false)");
@@ -68,6 +70,27 @@ async function countApplied(client: pg.Client): Promise<number> {
     "select count(*)::int as count from drizzle.__drizzle_migrations",
   );
   return result.rows[0]?.count ?? 0;
+}
+
+// drizzle only applies files newer than the last recorded one and never compares contents, so a
+// file edited after it ran, or merged with an older timestamp, would be skipped without notice.
+async function assertJournalApplied(client: pg.Client, migrationsFolder: string): Promise<void> {
+  const journal = JSON.parse(
+    await readFile(join(migrationsFolder, "meta", "_journal.json"), "utf8"),
+  ) as { entries: { tag: string }[] };
+  const files = readMigrationFiles({ migrationsFolder });
+  const { rows } = await client.query<{ hash: string }>(
+    "select hash from drizzle.__drizzle_migrations",
+  );
+  const recorded = new Set(rows.map((row) => row.hash));
+  const missing = journal.entries
+    .filter((_, index) => !recorded.has(files[index]?.hash ?? ""))
+    .map((entry) => entry.tag);
+  if (missing.length > 0) {
+    throw new Error(
+      `Migrations in the journal that this database never ran as written: ${missing.join(", ")}`,
+    );
+  }
 }
 
 async function withLockRetries<T>(retries: number, run: () => Promise<T>): Promise<T> {

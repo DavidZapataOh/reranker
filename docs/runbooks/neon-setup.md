@@ -16,7 +16,9 @@ Without these steps the app has no database: `@reranker/db` refuses to start whe
 | Project | Root branch | Owner role | Compute | Use |
 |---|---|---|---|---|
 | `reranker-prod` | `main` | `reranker_owner` | autoscaling 0.25–1 CU, scale to zero after 5 min | Production |
-| `reranker-nonprod` | `main` | `neondb_owner` | autoscaling 0.25–0.5 CU, scale to zero after 5 min | Local development, previews and one expiring child branch per CI run |
+| `reranker-nonprod` | `main`, with the child `preview` | `neondb_owner` | autoscaling 0.25–0.5 CU, scale to zero after 5 min | `main` stays unmigrated: it is the parent every CI run forks from. `preview` serves Vercel Preview and local development |
+
+`main` in `reranker-nonprod` is never migrated by hand, by a preview or locally. A preview builds an unmerged branch and runs `db:migrate`; if that ran on `main`, every later CI branch would inherit migrations that `main` of the repository may never get, and CI would stop testing the schema production will have. CI migrates each ephemeral branch itself. With up to 8 CI branches alive, `main` and `preview` stay within the 10-branch cap.
 
 Both live in `aws-us-east-1` on Postgres 18 (`uuidv7()` is native from 18; Neon never upgrades a major version in place) with the database `neondb`. Each Free project has its own 100 CU-hours, 1 GB and 10 branches per month, so CI never spends production compute. The CI owner stays `neondb_owner` because `.github/actions/neon-ci-branch` connects with that role.
 
@@ -56,6 +58,17 @@ curl -sS https://console.neon.tech/api/v2/projects \
 
 Repeat for `reranker-nonprod` with `"autoscaling_limit_max_cu": 0.5` and without `role_name` (Neon names it `neondb_owner`). The response carries the owner password once; it goes straight into the encrypted variables of step 3 and nowhere else.
 
+Then create the `preview` branch of `reranker-nonprod` from `main`, with its own read-write compute:
+
+```bash
+curl -sS https://console.neon.tech/api/v2/projects/$NONPROD_PROJECT_ID/branches \
+  -H "Authorization: Bearer $NEON_API_KEY" -H "Content-Type: application/json" \
+  -d '{ "branch": { "name": "preview" }, "endpoints": [{ "type": "read_write" }] }' \
+  | jq '{branch: .branch.name, parent: .branch.parent_id, host: .endpoints[0].host}'
+```
+
+When previews leave `preview` in a state no open pull request needs (a migration that was edited or abandoned makes `db:migrate` fail naming it), reset it from its parent in the console (Branches → `preview` → Reset from parent) and run step 4 on it again.
+
 ### 2. Keys
 
 - GitHub: an API key scoped to `reranker-nonprod` only, stored as the secret `NEON_NONPROD_API_KEY`; its project id is the repository variable `NEON_PROJECT_ID`.
@@ -67,14 +80,16 @@ From Console → project → Connect, with "Connection pooling" off for the dire
 
 | Variable | Host | Role | Where |
 |---|---|---|---|
-| `DATABASE_URL_MIGRATIONS` | direct | owner | Vercel, Sensitive, Production (`reranker-prod`) and Preview (`reranker-nonprod`) |
-| `DATABASE_URL` | pooled | `reranker_app` | Vercel Production and Preview |
-| `DATABASE_URL_SYSTEM` | pooled | `reranker_system` | Vercel Production and Preview |
+| `DATABASE_URL_MIGRATIONS` | direct | owner | Vercel, Sensitive: Production (`reranker-prod` `main`) and Preview (`reranker-nonprod` `preview`) |
+| `DATABASE_URL` | pooled | `reranker_app` | Vercel Production and Preview, same branches; also local `.env` (`preview`) |
+| `DATABASE_URL_SYSTEM` | pooled | `reranker_system` | Vercel Production and Preview, same branches; also local `.env` (`preview`) |
+
+The Vercel build runs `db:migrate` for every Preview and Production deployment once `packages/db` exists, so `DATABASE_URL_MIGRATIONS` must be set in both before the first deployment that includes the package; without it the build stops before `next build`.
 | `DB_POOL_MAX` | – | – | Optional, only to tune pool size per instance (1–20) |
 
 ### 4. Schema and logins
 
-Run once per root branch, from a trusted machine, with the owner's direct string:
+Run on `reranker-prod` `main` and on `reranker-nonprod` `preview` (never on nonprod `main`), from a trusted machine, with the owner's direct string of that branch:
 
 ```bash
 export DATABASE_URL_MIGRATIONS='postgresql://<owner>:<password>@<direct-host>/neondb?sslmode=verify-full'
@@ -83,7 +98,7 @@ DB_LOGIN_PASSWORDS="$(jq -cn --arg app "$(openssl rand -hex 24)" --arg system "$
   '{reranker_app: $app, reranker_system: $system}')" pnpm --filter @reranker/db db:provision-roles
 ```
 
-Passwords need at least 60 bits of entropy (Neon's rule for SQL roles); 48 hex characters carry 192. Put them only in the `DATABASE_URL` and `DATABASE_URL_SYSTEM` values of step 3. `db:provision-roles` is idempotent: running it again resets the passwords and memberships to what it receives. CI does both steps by itself on every ephemeral branch (`.github/actions/ci-database`).
+Passwords need at least 60 bits of entropy (Neon's rule for SQL roles); 48 hex characters carry 192. Put them only in the `DATABASE_URL` and `DATABASE_URL_SYSTEM` values of step 3. `db:provision-roles` is idempotent: running it again sets both passwords to what it receives and grants each login its group and the 15 s statement timeout again. It never removes other memberships, so after any manual `grant` check `select r.rolname, g.rolname from pg_auth_members m join pg_roles r on r.oid = m.member join pg_roles g on g.oid = m.roleid where r.rolname like 'reranker\_%'` shows only `reranker_app → app_tenant` and `reranker_system → app_system`. Neon keeps roles per branch and copies them only when a child branch is created, so logins provisioned on `preview` never reach nonprod `main`; each CI branch gets its own from `.github/actions/ci-database`, which also migrates it.
 
 ### Move production to Launch
 
