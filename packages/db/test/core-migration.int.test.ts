@@ -96,6 +96,32 @@ describe("core migration", () => {
     ]);
   });
 
+  test("functions the migration owner creates later are not executable without a grant", async () => {
+    await owner.query("begin");
+    try {
+      for (const schema of SCHEMAS) {
+        await owner.query(
+          `create function ${schema}.default_privileges_probe() returns int language sql as 'select 1'`,
+        );
+        const { rows } = await owner.query(
+          `select r as role, has_function_privilege(r, $1, 'EXECUTE') as ok
+           from unnest(array['app_tenant', 'app_system', 'public']) r`,
+          [`${schema}.default_privileges_probe()`],
+        );
+        expect({ schema, rows }).toEqual({
+          schema,
+          rows: [
+            { role: "app_tenant", ok: false },
+            { role: "app_system", ok: false },
+            { role: "public", ok: false },
+          ],
+        });
+      }
+    } finally {
+      await owner.query("rollback");
+    }
+  });
+
   test("tables the migration owner creates get the grants of each schema", async () => {
     const expected: Record<string, Record<string, readonly string[]>> = {
       app: { app_tenant: PRIVILEGES, app_system: PRIVILEGES },

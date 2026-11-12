@@ -1,10 +1,14 @@
 import { AppError, Uuid } from "@reranker/schema";
 import { type ExtractTablesWithRelations, sql } from "drizzle-orm";
-import type { NodePgTransaction } from "drizzle-orm/node-postgres";
+import { drizzle, type NodePgTransaction } from "drizzle-orm/node-postgres";
 import type { PgTransactionConfig } from "drizzle-orm/pg-core";
-import { database, type Schema } from "./client.ts";
-import { toDbError } from "./errors.ts";
+import type pg from "pg";
+import { pool } from "./client.ts";
+import { isServerError, toDbError } from "./errors.ts";
 import type { DbPool } from "./events.ts";
+import * as schema from "./schema/index.ts";
+
+type Schema = typeof schema;
 
 export type TenantId = string & { readonly __brand: "TenantId" };
 
@@ -100,15 +104,41 @@ async function run<T>(
   const config: PgTransactionConfig = {};
   if (opts.isolation !== undefined) config.isolationLevel = opts.isolation;
   if (opts.readOnly === true) config.accessMode = "read only";
+
+  let client: pg.PoolClient;
   try {
-    return await database(kind).transaction(
-      body,
-      Object.keys(config).length > 0 ? config : undefined,
-    );
+    client = await pool(kind).connect();
   } catch (error) {
     throw toDbError(error, ctx);
   }
+  // The client is checked out here, not by drizzle: drizzle releases it only when BEGIN succeeds,
+  // so a failed BEGIN would keep a pool slot forever.
+  let bodyError: unknown = NO_ERROR;
+  let broken = false;
+  try {
+    return await drizzle({ client, schema, casing: "snake_case" }).transaction(
+      async (tx) => {
+        try {
+          return await body(tx);
+        } catch (error) {
+          bodyError = error;
+          throw error;
+        }
+      },
+      Object.keys(config).length > 0 ? config : undefined,
+    );
+  } catch (error) {
+    // The body's own error means ROLLBACK ran and the connection is clean. A server error from
+    // BEGIN, COMMIT or ROLLBACK leaves it usable too. Anything else (socket closed, protocol
+    // error) leaves its state unknown, so the client is destroyed instead of reused.
+    broken = error !== bodyError && !isServerError(error);
+    throw toDbError(error, ctx);
+  } finally {
+    client.release(broken);
+  }
 }
+
+const NO_ERROR = Symbol("no error");
 
 function statementTimeout(opts: TxOptions): string {
   const ms = opts.statementTimeoutMs ?? DEFAULT_STATEMENT_TIMEOUT_MS;

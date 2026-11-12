@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { sql } from "drizzle-orm";
 import type pg from "pg";
 import { afterAll, beforeAll, expect, test } from "vitest";
-import { closeDatabases, database } from "../src/client.ts";
+import { closeDatabases, pool } from "../src/client.ts";
 import { asTenantId, withTenant } from "../src/index.ts";
 import { createProbe, dropProbe, probeTable } from "./support/probe.ts";
 import { connect, ownerUrl } from "./support/scratch-database.ts";
@@ -73,9 +73,11 @@ test("after an RLS violation and a statement timeout the same connection starts 
     withTenant(A, (tx) => tx.execute(sql`select pg_sleep(1)`), { statementTimeoutMs: 100 }),
   ).rejects.toMatchObject({ code: "timeout" });
 
-  // max 1: this runs on the client both failures used, without setting anything first.
-  const { rows } = await database("app").execute<{ ids: string | null; timeout: string }>(
-    sql`select current_setting('app.tenant_ids', true) as ids, current_setting('statement_timeout') as timeout`,
+  // Server errors keep the client: max 1, so this runs on the one both failures used, without
+  // setting anything first.
+  expect(pool("app").totalCount).toBe(1);
+  const { rows } = await pool("app").query<{ ids: string | null; timeout: string }>(
+    "select current_setting('app.tenant_ids', true) as ids, current_setting('statement_timeout') as timeout",
   );
   expect(rows[0]?.ids ?? "").toBe("");
   expect(rows[0]?.timeout).toBe("15s");

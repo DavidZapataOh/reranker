@@ -10,8 +10,9 @@ const POOL_WAIT_TIMEOUT = "timeout exceeded when trying to connect";
 const CONNECTION_LOST = [
   "Connection terminated due to connection timeout",
   "Connection terminated unexpectedly",
+  "Client has encountered a connection error and is not queryable",
 ];
-const NETWORK_CODES = new Set(["ECONNREFUSED", "ECONNRESET", "ETIMEDOUT"]);
+const NETWORK_CODES = new Set(["ECONNREFUSED", "ECONNRESET", "ETIMEDOUT", "EPIPE"]);
 
 // Seconds before a retry can succeed: a freed pool slot comes fast, a resumed compute does not.
 const RETRY_POOL_SECONDS = 2;
@@ -39,7 +40,16 @@ export function toDbError(error: unknown, ctx: DbErrorContext): unknown {
   ) {
     return unavailable(root, RETRY_POOL_SECONDS, `${ctx.pool} connection failed`);
   }
+  // Any other driver failure still must not carry drizzle's query text and parameters to logs.
+  if (error instanceof DrizzleQueryError) {
+    return new AppError("internal", { detail: `${ctx.pool} query failed`, cause: root });
+  }
   return error;
+}
+
+/** True when Postgres itself answered with an error, so the connection is still usable. */
+export function isServerError(error: unknown): boolean {
+  return findDatabaseError(error) !== undefined;
 }
 
 function fromDatabaseError(pg: DatabaseError, ctx: DbErrorContext): AppError {

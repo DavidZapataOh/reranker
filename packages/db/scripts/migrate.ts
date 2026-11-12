@@ -100,18 +100,6 @@ async function runConcurrent(client: pg.Client, folder: string, retries: number)
     .sort();
   if (files.length === 0) return [];
 
-  // An interrupted CREATE INDEX CONCURRENTLY leaves an invalid index that IF NOT EXISTS would keep.
-  // The advisory lock guarantees no other runner is building one right now.
-  const { rows } = await client.query<{ statement: string }>(
-    `select format('drop index concurrently if exists %I.%I', n.nspname, c.relname) as statement
-     from pg_index i join pg_class c on c.oid = i.indexrelid join pg_namespace n on n.oid = c.relnamespace
-     where not i.indisvalid and n.nspname = any($1)`,
-    [SCHEMAS],
-  );
-  for (const { statement } of rows) {
-    await withLockRetries(retries, () => client.query(statement));
-  }
-
   for (const file of files) {
     const statements = (await readFile(join(folder, file), "utf8"))
       .split(BREAKPOINT)
@@ -119,10 +107,29 @@ async function runConcurrent(client: pg.Client, folder: string, retries: number)
       .filter((statement) => statement.length > 0);
     // Each statement runs on its own: CONCURRENTLY is refused inside a transaction block.
     for (const statement of statements) {
-      await withLockRetries(retries, () => client.query(statement));
+      await withLockRetries(retries, async () => {
+        // A build that timed out waiting for older transactions has already committed an invalid
+        // index, which IF NOT EXISTS would then keep; every attempt starts by dropping those.
+        await dropInvalidIndexes(client);
+        await client.query(statement);
+      });
     }
   }
   return files;
+}
+
+// The advisory lock guarantees no other runner is building an index right now, so every invalid
+// index in the product schemas is a leftover of an interrupted build.
+async function dropInvalidIndexes(client: pg.Client): Promise<void> {
+  const { rows } = await client.query<{ statement: string }>(
+    `select format('drop index concurrently if exists %I.%I', n.nspname, c.relname) as statement
+     from pg_index i join pg_class c on c.oid = i.indexrelid join pg_namespace n on n.oid = c.relnamespace
+     where not i.indisvalid and n.nspname = any($1)`,
+    [SCHEMAS],
+  );
+  for (const { statement } of rows) {
+    await client.query(statement);
+  }
 }
 
 async function assertIndexesValid(client: pg.Client): Promise<void> {

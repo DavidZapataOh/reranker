@@ -25,6 +25,13 @@ test("a second run only updates, and memberships and attributes stay exact", asy
   const again = await provisionRoles({ url: ownerUrl(), passwords });
   expect(again).toEqual({ created: [], updated: ["reranker_app", "reranker_system"] });
 
+  // The owner ran those statements, so it sees their full text in pg_stat_statements if kept.
+  const leaked = await owner.query(
+    "select count(*)::int as n from pg_stat_statements where strpos(query, $1) > 0 or strpos(query, $2) > 0",
+    [passwords.reranker_app, passwords.reranker_system],
+  );
+  expect(leaked.rows[0].n).toBe(0);
+
   const { rows } = await owner.query(
     `select r.rolname, r.rolcanlogin, r.rolbypassrls, r.rolsuper, r.rolcreaterole, r.rolcreatedb,
             array_agg(g.rolname order by g.rolname)::text[] as groups

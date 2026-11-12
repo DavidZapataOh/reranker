@@ -42,5 +42,6 @@ alter default privileges in schema auth
 alter default privileges in schema ops
   grant select, insert, update, delete on tables to app_system;
 --> statement-breakpoint
--- Functions are executable by PUBLIC by default; new ones in these schemas must be granted explicitly.
-alter default privileges in schema app, auth, public_panel, ops revoke execute on functions from public;
+-- Functions are executable by PUBLIC by default and per-schema defaults cannot take a global grant
+-- away, so this is global for the migrating role: every new function needs an explicit grant.
+alter default privileges revoke execute on functions from public;

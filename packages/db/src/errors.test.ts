@@ -2,7 +2,7 @@ import { AppError } from "@reranker/schema";
 import { DrizzleQueryError } from "drizzle-orm/errors";
 import { DatabaseError } from "pg";
 import { afterEach, describe, expect, test, vi } from "vitest";
-import { toDbError } from "./errors.ts";
+import { isServerError, toDbError } from "./errors.ts";
 import { setDbEventSink } from "./events.ts";
 
 function pgError(code: string): DatabaseError {
@@ -62,6 +62,20 @@ describe("toDbError", () => {
       retryAfterSeconds: 2,
       cause: timeout,
     });
+  });
+
+  test("any other driver failure wrapped by drizzle becomes internal without the query or params", () => {
+    const root = new Error("Received unexpected commandComplete message from backend.");
+    const out = toDbError(new DrizzleQueryError("select $1", ["a@b.co"], root), {
+      pool: "system",
+    }) as AppError;
+    expect(out).toMatchObject({ code: "internal", cause: root });
+    expect(out.message).not.toMatch(/select|a@b\.co/);
+  });
+
+  test("isServerError tells a Postgres answer from a transport failure", () => {
+    expect(isServerError(new DrizzleQueryError("select 1", [], pgError("42501")))).toBe(true);
+    expect(isServerError(new Error("Connection terminated unexpectedly"))).toBe(false);
   });
 
   test("passes AppError and unrelated errors through as the same reference", () => {

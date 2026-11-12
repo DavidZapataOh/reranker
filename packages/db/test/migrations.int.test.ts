@@ -138,6 +138,37 @@ describe("runMigrations", () => {
       }
     });
   });
+
+  test("a concurrent build that times out behind an older transaction is rebuilt on retry", async () => {
+    await withScratchDatabase(async (url) => {
+      const folder = await migrationsWith(PROBE_TABLE, {
+        "0000_migration_probe_label.sql":
+          "create index concurrently if not exists migration_probe_label_idx on app.migration_probe (label);",
+      });
+      await runMigrations({
+        ...folder,
+        url,
+        concurrentFolder: join(folder.migrationsFolder, "none"),
+      });
+
+      // A row lock held open makes the build wait for this transaction after it has already
+      // committed the (invalid) catalog entry; it is released during the first backoff.
+      const holder = await connect(url);
+      await holder.query("begin");
+      await holder.query("update app.migration_probe set label = label where id = 1");
+      const release = setTimeout(() => {
+        void holder.query("rollback");
+      }, 1500);
+      try {
+        const result = await runMigrations({ ...folder, url, lockTimeout: "1s", retries: 3 });
+        expect(result.concurrent).toEqual(["0000_migration_probe_label.sql"]);
+        expect(await isValid(holder)).toBe(true);
+      } finally {
+        clearTimeout(release);
+        await holder.end();
+      }
+    });
+  });
 });
 
 async function isValid(client: Awaited<ReturnType<typeof connect>>): Promise<boolean> {

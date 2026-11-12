@@ -109,6 +109,7 @@ export async function provisionRoles(options: {
       result[exists ? "updated" : "created"].push(login);
     }
     await client.query("commit");
+    await forgetPasswordStatements(client);
     return result;
   } catch (error) {
     await client.query("rollback").catch(() => undefined);
@@ -116,6 +117,19 @@ export async function provisionRoles(options: {
   } finally {
     await client.end();
   }
+}
+
+// pg_stat_statements keeps utility statements verbatim and does not mask the password literal,
+// so anyone with pg_read_all_stats could read the runtime passwords there.
+async function forgetPasswordStatements(client: pg.Client): Promise<void> {
+  const { rows } = await client.query<{ installed: boolean }>(
+    "select exists (select from pg_extension where extname = 'pg_stat_statements') as installed",
+  );
+  if (rows[0]?.installed !== true) return;
+  await client.query(
+    `select pg_stat_statements_reset(userid, dbid, queryid) from pg_stat_statements
+     where query ~* '^\\s*(create|alter)\\s+role\\s.*\\spassword\\s'`,
+  );
 }
 
 async function execFormatted(client: pg.Client, template: string, args: string[]): Promise<void> {
