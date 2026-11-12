@@ -46,6 +46,30 @@
             "noRestrictedImports": {
               "level": "error",
               "options": {
+                "paths": {
+                  "@reranker/testing": "Test-only package.",
+                  "@reranker/db/auth-adapter": "Runs queries outside any tenant transaction; only packages/auth may use it."
+                },
+                "patterns": [
+                  {
+                    "group": ["@reranker/testing/*", "**/testing/src/**"],
+                    "message": "Test-only package."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["packages/auth/src/**", "!**/*.test.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
                 "paths": { "@reranker/testing": "Test-only package." },
                 "patterns": [
                   {
@@ -64,6 +88,7 @@
     {
       "path": "./tools/biome/no-conditional-contract-tests.grit",
       "includes": ["**/*.contract.test.ts"]
-    }
+    },
+    { "path": "./tools/biome/no-dynamic-sql-raw.grit" }
   ]
 }

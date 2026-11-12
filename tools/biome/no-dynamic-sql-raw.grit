@@ -1,0 +1,6 @@
+language js
+
+`sql.raw($value)` where {
+  not $value <: string(),
+  register_diagnostic(span=$value, message="sql.raw only accepts a string literal. Interpolate values with the sql template tag so they are sent as parameters.")
+}
