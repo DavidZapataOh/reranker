@@ -15,7 +15,9 @@ runs:
       env:
         DB_URL: ${{ inputs.db-url }}
         DB_HOST_POOLED: ${{ inputs.db-host-pooled }}
-      run: |
+      # Only ci and nightly call this, never from a pull_request_target or workflow_run trigger, and every
+      # value written comes from Neon or openssl, never from the event.
+      run: | # zizmor: ignore[github-env]
         echo "DATABASE_URL_MIGRATIONS=$DB_URL" >> "$GITHUB_ENV"
         if [ ! -d packages/db ]; then
           echo "DATABASE_URL=$DB_URL" >> "$GITHUB_ENV"
