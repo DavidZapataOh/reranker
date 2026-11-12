@@ -1,0 +1,101 @@
+name: load
+on:
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: Preview deployment URL (production is refused)
+        required: true
+        type: string
+      scenario_glob:
+        description: Scenario files to run, e.g. load/web/*.js
+        required: true
+        type: string
+      scenario:
+        description: Load profile each scenario runs
+        required: true
+        default: nominal
+        type: choice
+        options: [nominal, stress]
+      p95_ms:
+        description: Override the p95 latency budget in milliseconds
+        required: false
+        type: string
+permissions: {}
+run-name: "load · ${{ inputs.scenario }} · ${{ inputs.scenario_glob }}"
+concurrency:
+  group: load
+  cancel-in-progress: false
+jobs:
+  load:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions: { contents: read }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      # Only the Node runtime for the target guard; k6 runs the scenarios without packages.
+      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
+        with: { install: false }
+      # Runs before anything receives the bypass secret, so it never reaches a foreign host,
+      # and never lets load reach the production site real users are on.
+      - name: Refuse untrusted or production targets
+        env:
+          DEPLOY_URL: ${{ inputs.target_url }}
+        run: |
+          if ! origin=$(node packages/testing/bin/assert-target.ts "$DEPLOY_URL" --preview-only); then
+            echo "$origin"
+            exit 1
+          fi
+          echo "TARGET_URL=$origin" >> "$GITHUB_ENV"
+      - id: scenarios
+        name: Resolve scenario files
+        env:
+          SCENARIO_GLOB: ${{ inputs.scenario_glob }}
+        run: |
+          shopt -s nullglob
+          # shellcheck disable=SC2206 # the input is a glob to expand
+          files=($SCENARIO_GLOB)
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "::error::No scenario file matches the glob"
+            exit 1
+          fi
+          for file in "${files[@]}"; do
+            case "$file" in
+              load/lib/* | *..*) echo "::error::Not a scenario file: $file"; exit 1 ;;
+              load/*/*.js) ;;
+              *) echo "::error::Not a scenario file: $file"; exit 1 ;;
+            esac
+          done
+          printf '%s\n' "${files[@]}" > "$RUNNER_TEMP/scenarios.txt"
+      # Pinned rather than latest so a k6 release lands through a reviewed change.
+      - uses: grafana/setup-k6-action@43b9fc21641a76002687994433dd586f56e791b1 # v1.2.2
+        with:
+          k6-version: 2.3.0
+      # Every scenario runs even when an earlier one fails, so one dispatch reports every broken budget.
+      # k6 reads the system environment; `-e NAME` without a value would blank it instead.
+      - name: Run scenarios
+        env:
+          SCENARIO: ${{ inputs.scenario }}
+          P95_MS: ${{ inputs.p95_ms }}
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: |
+          mkdir -p load-results
+          failed=0
+          while IFS= read -r file; do
+            name=${file#load/}
+            name=${name%.js}
+            echo "::group::$file"
+            if ! k6 run --summary-export="load-results/summary-${name//\//-}.json" "$file"; then
+              echo "::error file=$file::Scenario failed its thresholds or did not run"
+              failed=1
+            fi
+            echo "::endgroup::"
+          done < "$RUNNER_TEMP/scenarios.txt"
+          exit "$failed"
+      - if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: load-results
+          path: load-results
+          retention-days: 3
+          if-no-files-found: ignore
