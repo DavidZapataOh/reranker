@@ -31,12 +31,16 @@ test("keyboard: skip link first, then every interactive element shows a visible 
     await page.keyboard.press("Tab");
     const focused = page.locator(":focus");
     if ((await focused.count()) === 0) continue;
-    const seen = await focused.evaluate((el) => {
-      if (el.hasAttribute("data-tab-seen")) return true;
+    const stop = await focused.evaluate((el) => {
+      // Vercel can still inject its preview toolbar (x-vercel-skip-toolbar notwithstanding);
+      // it sits after the page in the tab order and is not ours to test.
+      if (el.localName === "vercel-live-feedback") return "vendor";
+      if (el.hasAttribute("data-tab-seen")) return "seen";
       el.setAttribute("data-tab-seen", "");
-      return false;
+      return "new";
     });
-    if (seen) break;
+    if (stop === "vendor") continue;
+    if (stop === "seen") break;
     const [html, ring] = await focused.evaluate((el) => {
       if (!(el instanceof HTMLElement)) return [el.outerHTML.slice(0, 120), false] as const;
       // Text fields draw their ring on the wrapper that also holds the submit button.
