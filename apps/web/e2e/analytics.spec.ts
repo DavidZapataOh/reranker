@@ -12,11 +12,17 @@ function recordRequests(page: Page, pattern: RegExp): string[] {
   return hits;
 }
 
-// Third-party tools start after window load once the browser is idle.
+// Third-party tools start after window load once the browser is idle. Safari has no
+// requestIdleCallback; the app falls back to a 200 ms timeout there, and so does this.
 async function settleAnalytics(page: Page) {
   await page.waitForLoadState("load");
   await page.evaluate(
-    () => new Promise((resolve) => requestIdleCallback(resolve, { timeout: 3000 })),
+    () =>
+      new Promise((resolve) => {
+        if (typeof window.requestIdleCallback === "function")
+          window.requestIdleCallback(resolve, { timeout: 3000 });
+        else setTimeout(resolve, 200);
+      }),
   );
   await page.waitForLoadState("networkidle");
 }
