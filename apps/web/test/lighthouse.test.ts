@@ -244,6 +244,13 @@ describe("assertions as LHCI evaluates them", () => {
     );
   });
 
+  it("fails a run that ends on a URL no route expects, such as a redirect", () => {
+    const stray = `${PRODUCTION}/login`;
+    const lhrs = [...withinBudget, ...runs(stray, { script: 1, total: 1 })];
+    const failed = getAllAssertionResults(config().ci.assert, lhrs).filter((r) => !r.passed);
+    expect(failed.map((r) => r.url)).toEqual([stray]);
+  });
+
   it("fails / on script size when a heavy dependency lands on the landing", () => {
     const home = `${PRODUCTION}/`;
     const lhrs = [
@@ -274,7 +281,7 @@ describe("lighthouserc.cjs", () => {
     const loaded = JSON.parse(stdout);
     expect(loaded.budgets).toEqual(budgets);
     expect(loaded.ci.collect.url).toEqual(publicRoutes.map((r) => new URL(r.path, PREVIEW).href));
-    expect(loaded.ci.assert.assertMatrix).toHaveLength(publicRoutes.length);
+    expect(loaded.ci.assert.assertMatrix).toHaveLength(publicRoutes.length + 1);
   });
 
   it("exports the bypass cookie script for collect.puppeteerScript", async () => {

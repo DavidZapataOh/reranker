@@ -52,6 +52,15 @@ export function lighthouseConfig(env: NodeJS.ProcessEnv = process.env) {
     };
   });
 
+  // A run that ends anywhere else (a redirect, a login page) would match no entry and pass
+  // unasserted; this entry fails it instead.
+  const expected = publicRoutes.map((route) => exactUrlPattern(new URL(route.path, base).href));
+  assertMatrix.push({
+    matchingUrlPattern: `^(?!(?:${expected.join("|")})).*$`,
+    aggregationMethod: "median-run",
+    assertions: { "resource-summary:total:size": ["error", { maxNumericValue: 0 }] },
+  });
+
   return {
     ci: {
       collect: {
