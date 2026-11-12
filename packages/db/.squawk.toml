@@ -1,0 +1,9 @@
+pg_version = "18.0"
+# drizzle applies every pending migration inside one transaction.
+assume_in_transaction = true
+excluded_rules = [
+  # The runner sets lock_timeout and statement_timeout on its session before migrating.
+  "require-timeout-settings",
+  # Migrations run exactly once inside a recorded transaction, so guards like IF NOT EXISTS add nothing.
+  "prefer-robust-stmts",
+]
