@@ -9,9 +9,10 @@ const { origin } = assertDeploymentUrl(requireEnv("PLAYWRIGHT_BASE_URL"), {
 const production = appTarget === "production";
 
 // Transferred bytes on a cold cache are deterministic, so they fail hard. Each value is the
-// production baseline plus 5 %, except landing scripts, which stay at the original target.
+// production baseline plus 5 %. Script budgets include Google's gtag (about 183 KB), which
+// every page loads lazily under Consent Mode, on top of the first-party bundle.
 const budgets = {
-  landing: { scriptBytes: 345_000, totalBytes: 773_751 },
+  landing: { scriptBytes: 519_698, totalBytes: 773_751 },
   legal: { scriptBytes: 519_774, totalBytes: 765_374 },
 };
 
