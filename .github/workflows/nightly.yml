@@ -4,8 +4,6 @@ on:
     # 05:00 in Bogotá.
     - cron: "0 10 * * *"
   workflow_dispatch:
-  push:
-    branches: [ab-od-t10]
 permissions: {}
 concurrency:
   group: nightly
