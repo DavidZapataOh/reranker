@@ -37,17 +37,26 @@ module.exports = {
       },
     },
     assert: {
-      assertMatrix: routes.map(({ url, budget }) => ({
-        matchingUrlPattern: `^${RegExp.escape(url)}$`,
-        aggregationMethod: "median-run",
-        assertions: {
-          "categories:accessibility": ["error", { minScore: 1 }],
-          "categories:best-practices": ["error", { minScore: 0.95 }],
-          ...(production ? { "categories:seo": ["error", { minScore: 0.95 }] } : {}),
-          "resource-summary:script:size": ["error", { maxNumericValue: budget.scriptBytes }],
-          "resource-summary:total:size": ["error", { maxNumericValue: budget.totalBytes }],
+      assertMatrix: [
+        ...routes.map(({ url, budget }) => ({
+          matchingUrlPattern: `^${RegExp.escape(url)}$`,
+          aggregationMethod: "median-run",
+          assertions: {
+            "categories:accessibility": ["error", { minScore: 1 }],
+            "categories:best-practices": ["error", { minScore: 0.95 }],
+            ...(production ? { "categories:seo": ["error", { minScore: 0.95 }] } : {}),
+            "resource-summary:script:size": ["error", { maxNumericValue: budget.scriptBytes }],
+            "resource-summary:total:size": ["error", { maxNumericValue: budget.totalBytes }],
+          },
+        })),
+        // LHCI matches entries on the URL Chrome ended on and silently skips runs no entry
+        // matches, so a redirect (or a login page) would pass unasserted. A score above 1 can
+        // never be met, which fails the run and names the stray URL.
+        {
+          matchingUrlPattern: `^(?!(?:${routes.map(({ url }) => RegExp.escape(url)).join("|")})$)`,
+          assertions: { "categories:accessibility": ["error", { minScore: 2 }] },
         },
-      })),
+      ],
     },
     upload: { target: "filesystem", outputDir: ".lighthouseci" },
   },

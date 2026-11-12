@@ -1,16 +1,17 @@
 const { bypassHeaders } = require("@reranker/testing/bypass");
+const { assertDeploymentUrl } = require("@reranker/testing/target");
 
 const SAME_SITE = { lax: "Lax", strict: "Strict", none: "None" };
 
 // Session cookie pinned to the deployment host, whatever Domain or expiry Vercel sends:
 // the browser only lives for this collection.
-function toCookie(setCookie, host) {
+function toCookie(setCookie, hostname) {
   const [pair, ...attributes] = setCookie.split(";");
   const separator = pair.indexOf("=");
   const cookie = {
     name: pair.slice(0, separator).trim(),
     value: pair.slice(separator + 1).trim(),
-    domain: host,
+    domain: hostname,
     path: "/",
   };
   for (const attribute of attributes) {
@@ -34,13 +35,14 @@ module.exports = async (browser, { url }) => {
   const headers = bypassHeaders();
   if (Object.keys(headers).length === 0) return;
 
-  const { origin, host } = new URL(url);
+  // LHCI passes whatever --collect.url says, which may not be the validated config URL.
+  const { origin, hostname } = assertDeploymentUrl(url, { allowProduction: true });
   const response = await fetch(origin, {
     headers: { ...headers, "x-vercel-set-bypass-cookie": "true" },
     redirect: "manual",
   });
   await response.body?.cancel();
-  const cookies = response.headers.getSetCookie().map((header) => toCookie(header, host));
+  const cookies = response.headers.getSetCookie().map((header) => toCookie(header, hostname));
 
   // A rejected secret also sets a cookie (the SSO nonce) and Lighthouse would then audit the
   // login page under another URL, which no assertion matches. Prove the cookies open the site.
