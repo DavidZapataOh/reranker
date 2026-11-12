@@ -26,8 +26,8 @@ export async function createProbe(owner: pg.Client, name: string): Promise<void>
     create index ${name}_tenant_id_idx on app.${name} (tenant_id);
     alter table app.${name} enable row level security;
     create policy ${name}_tenant_isolation on app.${name} as permissive for all to app_tenant
-      using (tenant_id = any ((select app.current_tenant_ids())))
-      with check (tenant_id = any ((select app.current_tenant_ids())));
+      using (tenant_id = any ((select app.current_tenant_ids())::uuid[]))
+      with check (tenant_id = any ((select app.current_tenant_ids())::uuid[]));
     create policy ${name}_system_access on app.${name} as permissive for all to app_system
       using (true) with check (true);
   `);
