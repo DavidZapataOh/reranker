@@ -93,7 +93,7 @@ jobs:
         # Turbo lists packages without the script as <NONEXISTENT> and adds ^typecheck dependencies.
         # It also ignores the files below, which decide how the integration tests run, so they force a full run.
         run: |
-          if [ -n "$BASE" ] && [ -n "$(git diff --name-only "$BASE" HEAD -- .github/actions/neon-ci-branch .github/workflows/ci.yml package.json pnpm-workspace.yaml pnpm-lock.yaml vitest.config.ts)" ]; then
+          if [ -n "$BASE" ] && [ -n "$(git diff --name-only "$BASE" HEAD -- .github/actions/neon-ci-branch .github/actions/ci-database .github/workflows/ci.yml package.json pnpm-workspace.yaml pnpm-lock.yaml vitest.config.ts)" ]; then
             echo "Integration infrastructure changed, running every integration test"
             FILTER=""
           fi
@@ -111,27 +111,10 @@ jobs:
           project-id: ${{ vars.NEON_PROJECT_ID }}
           branch-name: ci/run-${{ github.run_id }}-${{ github.run_attempt }}
       - if: steps.affected.outputs.count != '0'
-        name: Migrate and provision database logins
-        env:
-          DB_URL: ${{ steps.branch.outputs.db-url }}
-          DB_HOST_POOLED: ${{ steps.branch.outputs.db-host-pooled }}
-        run: |
-          echo "DATABASE_URL_MIGRATIONS=$DB_URL" >> "$GITHUB_ENV"
-          if [ ! -d packages/db ]; then
-            echo "DATABASE_URL=$DB_URL" >> "$GITHUB_ENV"
-            echo "DATABASE_URL_SYSTEM=$DB_URL" >> "$GITHUB_ENV"
-            exit 0
-          fi
-          app=$(openssl rand -hex 24); system=$(openssl rand -hex 24)
-          echo "::add-mask::$app"; echo "::add-mask::$system"
-          export DATABASE_URL_MIGRATIONS="$DB_URL"
-          DB_LOGIN_PASSWORDS=$(jq -cn --arg app "$app" --arg system "$system" '{reranker_app: $app, reranker_system: $system}')
-          export DB_LOGIN_PASSWORDS
-          # Migrations create the role groups the logins join.
-          pnpm --filter @reranker/db db:migrate
-          pnpm --filter @reranker/db db:provision-roles
-          echo "DATABASE_URL=postgresql://reranker_app:$app@$DB_HOST_POOLED/neondb?sslmode=verify-full" >> "$GITHUB_ENV"
-          echo "DATABASE_URL_SYSTEM=postgresql://reranker_system:$system@$DB_HOST_POOLED/neondb?sslmode=verify-full" >> "$GITHUB_ENV"
+        uses: ./.github/actions/ci-database
+        with:
+          db-url: ${{ steps.branch.outputs.db-url }}
+          db-host-pooled: ${{ steps.branch.outputs.db-host-pooled }}
       - if: steps.affected.outputs.count != '0'
         env:
           FILTER: ${{ steps.affected.outputs.filter }}

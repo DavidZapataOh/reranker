@@ -1,0 +1,36 @@
+name: CI database
+description: Migrates a Neon CI branch, provisions the app and system logins with fresh passwords and exports the test connection strings to the job.
+inputs:
+  db-url:
+    description: Direct connection string for the owner role.
+    required: true
+  db-host-pooled:
+    description: Pooled host.
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Migrate and provision database logins
+      shell: bash
+      env:
+        DB_URL: ${{ inputs.db-url }}
+        DB_HOST_POOLED: ${{ inputs.db-host-pooled }}
+      # Only ci and nightly call this, never from a pull_request_target or workflow_run trigger, and every
+      # value written comes from Neon or openssl, never from the event.
+      run: | # zizmor: ignore[github-env]
+        echo "DATABASE_URL_MIGRATIONS=$DB_URL" >> "$GITHUB_ENV"
+        if [ ! -d packages/db ]; then
+          echo "DATABASE_URL=$DB_URL" >> "$GITHUB_ENV"
+          echo "DATABASE_URL_SYSTEM=$DB_URL" >> "$GITHUB_ENV"
+          exit 0
+        fi
+        app=$(openssl rand -hex 24); system=$(openssl rand -hex 24)
+        echo "::add-mask::$app"; echo "::add-mask::$system"
+        export DATABASE_URL_MIGRATIONS="$DB_URL"
+        DB_LOGIN_PASSWORDS=$(jq -cn --arg app "$app" --arg system "$system" '{reranker_app: $app, reranker_system: $system}')
+        export DB_LOGIN_PASSWORDS
+        # Migrations create the role groups the logins join.
+        pnpm --filter @reranker/db db:migrate
+        pnpm --filter @reranker/db db:provision-roles
+        echo "DATABASE_URL=postgresql://reranker_app:$app@$DB_HOST_POOLED/neondb?sslmode=verify-full" >> "$GITHUB_ENV"
+        echo "DATABASE_URL_SYSTEM=postgresql://reranker_system:$system@$DB_HOST_POOLED/neondb?sslmode=verify-full" >> "$GITHUB_ENV"
