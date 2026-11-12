@@ -116,7 +116,7 @@ export function Bento() {
               { n: "Tu negocio", v: 1, you: true },
             ].map((r, i) => (
               <li key={r.n} className="grid grid-cols-[1.4rem_1fr_auto] items-center gap-3">
-                <span className="font-mono text-[13px] text-ink/45">{i + 1}</span>
+                <span className="font-mono text-[13px] text-ink/65">{i + 1}</span>
                 <div>
                   <p className={`text-[15px] ${r.you ? "font-semibold text-ink" : "text-ink/85"}`}>
                     {r.n}

@@ -36,10 +36,10 @@ test("every JSON-LD block parses and declares Organization, WebSite, SoftwareApp
   );
 });
 
-test("X-Robots-Tag noindex only on previews @smoke", async ({ request }) => {
+test("X-Robots-Tag noindex only on previews @smoke", async ({ request, baseURL }) => {
   const tag = (await request.get("/")).headers()["x-robots-tag"];
   if (appTarget === "preview") expect(tag).toContain("noindex");
-  if (process.env.PLAYWRIGHT_BASE_URL === "https://reranker.co") {
+  if (baseURL && new URL(baseURL).host === "reranker.co") {
     expect(tag ?? "").not.toContain("noindex");
   }
 });

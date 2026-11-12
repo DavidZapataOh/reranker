@@ -34,12 +34,26 @@ test("keyboard: skip link first, then every interactive element shows a visible 
     });
     if (seen) break;
     const [html, ring] = await focused.evaluate((el) => {
+      if (!(el instanceof HTMLElement)) return [el.outerHTML.slice(0, 120), false] as const;
       // Text fields draw their ring on the wrapper that also holds the submit button.
       const target = el.matches("input, select, textarea") ? (el.parentElement ?? el) : el;
-      const s = getComputedStyle(target);
+      // Finish focus transitions so the styles read are the settled ones.
+      const read = () => {
+        for (const a of target.getAnimations()) a.finish();
+        const s = getComputedStyle(target);
+        return {
+          outline: s.outlineStyle !== "none" && Number.parseFloat(s.outlineWidth) >= 2,
+          look: `${s.outlineStyle} ${s.outlineWidth} ${s.outlineColor} | ${s.boxShadow}`,
+          shadow: s.boxShadow !== "none",
+        };
+      };
+      const focusedStyle = read();
+      // A shadow that is there without focus (cards, buttons) is not a focus indicator.
+      el.blur();
+      const unfocusedStyle = read();
+      el.focus();
       const visible =
-        (s.outlineStyle !== "none" && Number.parseFloat(s.outlineWidth) >= 2) ||
-        s.boxShadow !== "none";
+        (focusedStyle.outline || focusedStyle.shadow) && focusedStyle.look !== unfocusedStyle.look;
       return [el.outerHTML.slice(0, 120), visible] as const;
     });
     visited.push(html);

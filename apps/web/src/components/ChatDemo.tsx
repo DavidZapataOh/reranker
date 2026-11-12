@@ -78,12 +78,18 @@ export function ChatDemo({ business }: { business: string | null }) {
             <p className="text-[1.05cqw] font-medium text-ink [word-spacing:0.14em]">
               {business ? (
                 <>
-                  Así le respondería la IA a tus clientes <span className="text-ink/45">·</span>{" "}
+                  Así le respondería la IA a tus clientes{" "}
+                  <span aria-hidden="true" className="text-ink/45">
+                    ·
+                  </span>{" "}
                   Ejemplo para <span className="font-semibold">{business}</span>
                 </>
               ) : (
                 <>
-                  Así le responde la IA a tus clientes <span className="text-ink/45">·</span>{" "}
+                  Así le responde la IA a tus clientes{" "}
+                  <span aria-hidden="true" className="text-ink/45">
+                    ·
+                  </span>{" "}
                   Ejemplo
                 </>
               )}
@@ -236,7 +242,11 @@ export function ChatDemo({ business }: { business: string | null }) {
       <div className="px-4 md:hidden">
         <div className="rounded-[22px] bg-white p-3 shadow-[0_1px_2px_rgb(20_33_27/0.05),0_20px_44px_-24px_rgb(20_33_27/0.28)] ring-1 ring-line">
           <p className="px-2 pt-1 pb-3 text-[13px] font-medium text-ink [word-spacing:0.12em]">
-            Así le responde la IA a tus clientes <span className="text-ink/45">·</span> Ejemplo
+            Así le responde la IA a tus clientes{" "}
+            <span aria-hidden="true" className="text-ink/45">
+              ·
+            </span>{" "}
+            Ejemplo
           </p>
           <div className="rounded-2xl p-3 ring-1 ring-line">
             <p
