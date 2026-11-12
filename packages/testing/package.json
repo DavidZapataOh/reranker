@@ -3,7 +3,9 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./bypass": "./src/bypass.ts",
     "./env": "./src/env.ts",
+    "./target": "./src/target.ts",
     "./playwright": "./src/playwright.ts",
     "./factories": "./src/factories.ts",
     "./neon": "./src/neon.ts",

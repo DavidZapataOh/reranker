@@ -8,11 +8,13 @@ export const publicRoutes: PublicRoute[] = [
 
 const TARGETS = ["local", "preview", "production"] as const;
 
-function readTarget(value = "local"): (typeof TARGETS)[number] {
+export type AppTarget = (typeof TARGETS)[number];
+
+export function readTarget(value = "local"): AppTarget {
   const target = TARGETS.find((t) => t === value);
   if (!target)
     throw new Error(`Unknown APP_TARGET "${value}". Expected one of: ${TARGETS.join(", ")}.`);
   return target;
 }
 
-export const appTarget: "local" | "preview" | "production" = readTarget(process.env.APP_TARGET);
+export const appTarget: AppTarget = readTarget(process.env.APP_TARGET);

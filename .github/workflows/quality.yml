@@ -57,7 +57,8 @@ jobs:
       - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
         with: { cache: true, require-lockfile: true }
       # Runs before anything receives the bypass secret, so it never reaches a foreign host.
-      - name: Refuse untrusted deployment targets
+      - id: target
+        name: Refuse untrusted deployment targets
         run: |
           case "$APP_TARGET" in
             preview | production) ;;
@@ -95,6 +96,13 @@ jobs:
           projects=(--project=desktop-chromium --project=mobile-chromium)
           if [ "$APP_TARGET" = production ]; then projects+=(--project=mobile-webkit); fi
           pnpm --filter web exec playwright test "${projects[@]}"
+      # Runs even when end-to-end failed, so one deployment reports every broken gate.
+      # Never without the validated target: LHCI would fall back to a local server.
+      - name: Lighthouse budgets
+        if: ${{ !cancelled() && steps.target.outcome == 'success' }}
+        env:
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: pnpm --filter web exec lhci autorun
       # Non-regression gate, once @reranker/quality exists:
       # pnpm --filter @reranker/quality compare --playwright apps/web/results.json --lhci apps/web/.lighthouseci --target "$APP_TARGET"
       - if: always()
@@ -105,8 +113,11 @@ jobs:
             apps/web/playwright-report
             apps/web/test-results
             apps/web/results.json
+            apps/web/.lighthouseci
           retention-days: 3
           if-no-files-found: ignore
+          # .lighthouseci is a dot directory, skipped by default.
+          include-hidden-files: true
       # Runs on cancellation and timeout too; anything but a full pass blocks the deployment.
       - if: always()
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
