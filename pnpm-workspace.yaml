@@ -24,6 +24,7 @@ catalog:
   playwright: 1.64.1
   "@playwright/test": 1.64.1
   "@axe-core/playwright": 4.14.0
+  "@lhci/cli": 0.16.0
   vitest-browser-react: 2.3.0
   msw: 3.0.3
   pg: ^8.23.1
@@ -48,6 +49,10 @@ minimumReleaseAgeExclude:
   - "@posthog/browser-common@0.10.6"
   - lucide-react@1.68.0
 trustPolicy: no-downgrade
+trustPolicyExclude:
+  # Chromium-versioned builds come from the Chromium infra account without provenance;
+  # puppeteer-core 25.16.0 (trusted publisher, via @lhci/cli) pins this exact version.
+  - chromium-bidi@157.0.8090-0
 blockExoticSubdeps: true
 strictDepBuilds: true
 allowBuilds:
