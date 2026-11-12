@@ -27,19 +27,28 @@ jobs:
     if: github.event_name == 'workflow_dispatch' || github.event.client_payload.project.name == 'reranker'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
-    permissions: { contents: read, statuses: write, actions: read }
+    permissions: { contents: read, statuses: write }
     env:
       DEPLOY_URL: ${{ github.event.client_payload.url || inputs.url }}
       APP_TARGET: ${{ github.event.client_payload.environment || inputs.environment }}
       TARGET_SHA: ${{ github.event.client_payload.git.sha || inputs.sha }}
+      # Only production writes `quality`, the name Deployment Checks require, so a green
+      # preview of the same commit never satisfies it.
+      STATUS_CONTEXT: ${{ (github.event.client_payload.environment || inputs.environment) == 'production' && 'quality' || 'quality (preview)' }}
     steps:
-      # Sets the status to pending now and to the job's result in its post step. Only production
-      # writes `quality`, the name Deployment Checks require, so a green preview of the same commit
-      # never satisfies it.
-      - if: github.event_name == 'repository_dispatch'
-        uses: vercel/repository-dispatch/actions/status@30f760c6640485cd92f8c785ef361382555fb712 # v1
+      # Not vercel/repository-dispatch/actions/status: its post step reports a cancelled or
+      # timed-out run as success. The status is bound to the deployment's commit either way.
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
-          name: ${{ github.event.client_payload.environment == 'production' && 'quality' || 'quality (preview)' }}
+          script: |
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: process.env.TARGET_SHA,
+              state: "pending",
+              context: process.env.STATUS_CONTEXT,
+              target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+            });
       # Same ref resolution as vercel/repository-dispatch/actions/checkout, without persisting the token.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -98,19 +107,20 @@ jobs:
             apps/web/results.json
           retention-days: 3
           if-no-files-found: ignore
-      # The status action skips workflow_dispatch, so manual runs set the status themselves.
-      - if: always() && github.event_name == 'workflow_dispatch'
+      # Runs on cancellation and timeout too; anything but a full pass blocks the deployment.
+      - if: always()
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           JOB_STATUS: ${{ job.status }}
         with:
           script: |
-            const { APP_TARGET, JOB_STATUS, TARGET_SHA } = process.env;
+            const { JOB_STATUS, STATUS_CONTEXT, TARGET_SHA } = process.env;
+            const state = { success: "success", cancelled: "error" }[JOB_STATUS] ?? "failure";
             await github.rest.repos.createCommitStatus({
               owner: context.repo.owner,
               repo: context.repo.repo,
               sha: TARGET_SHA,
-              state: JOB_STATUS === "success" ? "success" : "failure",
-              context: APP_TARGET === "production" ? "quality" : "quality (preview)",
+              state,
+              context: STATUS_CONTEXT,
               target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
             });
