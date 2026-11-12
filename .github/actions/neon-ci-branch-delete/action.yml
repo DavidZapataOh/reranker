@@ -13,24 +13,20 @@ inputs:
 runs:
   using: composite
   steps:
-    # delete-branch-action runs `npm i -g neonctl@v2`: pnpm's Node runtime keeps no global bin on PATH, and an
-    # unlocked global install would otherwise resolve to whatever was published last and run its install scripts.
-    # Cleanup runs after failed steps too, so no step here may depend on their success.
-    - name: Prepare npm for the branch cleanup
-      if: always()
+    # The Neon API directly, as neonctl does: delete-branch-action installs neonctl unpinned with `npm i -g`.
+    # A branch that already expired is gone, which is the goal.
+    - name: Delete the Neon CI branch
       shell: bash
       env:
-        PREFIX: ${{ runner.temp }}/npm-global
+        NEON_API_KEY: ${{ inputs.api-key }}
+        PROJECT_ID: ${{ inputs.project-id }}
+        BRANCH_ID: ${{ inputs.branch-id }}
       run: |
-        {
-          echo "NPM_CONFIG_PREFIX=$PREFIX"
-          echo "NPM_CONFIG_BEFORE=2026-11-01T00:00:00Z"
-          echo "NPM_CONFIG_IGNORE_SCRIPTS=true"
-        } >> "$GITHUB_ENV"
-        echo "$PREFIX/bin" >> "$GITHUB_PATH"
-    - if: always()
-      uses: neondatabase/delete-branch-action@4468d825d5a88ef4012f1705a82f02ec3072f776 # v3.2.1
-      with:
-        project_id: ${{ inputs.project-id }}
-        branch: ${{ inputs.branch-id }}
-        api_key: ${{ inputs.api-key }}
+        status=$(curl -sS --retry 3 --max-time 30 -o /dev/null -w '%{http_code}' -X DELETE \
+          -H "Authorization: Bearer $NEON_API_KEY" -H "Accept: application/json" \
+          "https://console.neon.tech/api/v2/projects/$PROJECT_ID/branches/$BRANCH_ID")
+        case "$status" in
+          2??) echo "Deleted $BRANCH_ID" ;;
+          404) echo "$BRANCH_ID was already gone" ;;
+          *) echo "::error::Neon answered $status deleting $BRANCH_ID; it expires within the hour"; exit 1 ;;
+        esac

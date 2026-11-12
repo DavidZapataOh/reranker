@@ -1,5 +1,5 @@
 name: CI database
-description: Migrates a fresh CI branch, provisions random-password logins and exports the DATABASE_URL variables for the rest of the job.
+description: Migrates a fresh CI branch and provisions its logins with random passwords.
 inputs:
   db-url:
     description: Direct connection string for the branch owner role.
@@ -7,28 +7,34 @@ inputs:
   db-host-pooled:
     description: Pooled host of the branch.
     required: true
+outputs:
+  database-url:
+    description: Tenant-scoped login (DATABASE_URL).
+    value: ${{ steps.provision.outputs.database-url }}
+  database-url-system:
+    description: System login (DATABASE_URL_SYSTEM).
+    value: ${{ steps.provision.outputs.database-url-system }}
 runs:
   using: composite
   steps:
-    - name: Migrate and provision database logins
+    - id: provision
+      name: Migrate and provision database logins
       shell: bash
       env:
-        DB_URL: ${{ inputs.db-url }}
+        DATABASE_URL_MIGRATIONS: ${{ inputs.db-url }}
         DB_HOST_POOLED: ${{ inputs.db-host-pooled }}
       run: |
-        echo "DATABASE_URL_MIGRATIONS=$DB_URL" >> "$GITHUB_ENV"
         if [ ! -d packages/db ]; then
-          echo "DATABASE_URL=$DB_URL" >> "$GITHUB_ENV"
-          echo "DATABASE_URL_SYSTEM=$DB_URL" >> "$GITHUB_ENV"
+          echo "database-url=$DATABASE_URL_MIGRATIONS" >> "$GITHUB_OUTPUT"
+          echo "database-url-system=$DATABASE_URL_MIGRATIONS" >> "$GITHUB_OUTPUT"
           exit 0
         fi
         app=$(openssl rand -hex 24); system=$(openssl rand -hex 24)
         echo "::add-mask::$app"; echo "::add-mask::$system"
-        export DATABASE_URL_MIGRATIONS="$DB_URL"
         DB_LOGIN_PASSWORDS=$(jq -cn --arg app "$app" --arg system "$system" '{reranker_app: $app, reranker_system: $system}')
         export DB_LOGIN_PASSWORDS
         # Migrations create the role groups the logins join.
         pnpm --filter @reranker/db db:migrate
         pnpm --filter @reranker/db db:provision-roles
-        echo "DATABASE_URL=postgresql://reranker_app:$app@$DB_HOST_POOLED/neondb?sslmode=verify-full" >> "$GITHUB_ENV"
-        echo "DATABASE_URL_SYSTEM=postgresql://reranker_system:$system@$DB_HOST_POOLED/neondb?sslmode=verify-full" >> "$GITHUB_ENV"
+        echo "database-url=postgresql://reranker_app:$app@$DB_HOST_POOLED/neondb?sslmode=verify-full" >> "$GITHUB_OUTPUT"
+        echo "database-url-system=postgresql://reranker_system:$system@$DB_HOST_POOLED/neondb?sslmode=verify-full" >> "$GITHUB_OUTPUT"

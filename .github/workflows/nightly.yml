@@ -51,7 +51,8 @@ jobs:
           api-key: ${{ secrets.NEON_NONPROD_API_KEY }}
           project-id: ${{ vars.NEON_PROJECT_ID }}
           branch-name: ci/nightly-${{ github.run_id }}-${{ github.run_attempt }}
-      - uses: ./.github/actions/ci-database
+      - id: db
+        uses: ./.github/actions/ci-database
         with:
           db-url: ${{ steps.branch.outputs.db-url }}
           db-host-pooled: ${{ steps.branch.outputs.db-host-pooled }}
@@ -66,10 +67,14 @@ jobs:
       - run: pnpm --filter web exec playwright install --with-deps chromium webkit
       # Every package, uncached: the night catches what --affected and the cache let through.
       - env:
+          DATABASE_URL: ${{ steps.db.outputs.database-url }}
+          DATABASE_URL_SYSTEM: ${{ steps.db.outputs.database-url-system }}
+          DATABASE_URL_MIGRATIONS: ${{ steps.branch.outputs.db-url }}
           TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
         run: pnpm exec turbo run test test:integration --force
       # Retries stay on so a test that only passes on retry is reported as flaky, and
-      # STRICT_FLAKY makes that fail the night. Smoke tests never write data.
+      # STRICT_FLAKY makes that fail the night. Smoke tests only read pages; the consent test
+      # loads analytics on production, as production quality runs do.
       - name: Smoke tests on production
         if: ${{ !cancelled() }}
         env:

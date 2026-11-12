@@ -19,6 +19,7 @@ gh run download <run id> --name nightly-report
 - `full` red with `flaky` in the Playwright summary: a test only passed on retry. Open `playwright-report/index.html` from the artifact and read the trace of the failed attempt.
 - `full` red without `flaky`: a real failure. Check whether `main` changed since the last green night (`gh run list --workflow nightly.yml`).
 - `full` red before the tests: the Neon CI branch could not be created. See the `neon-ci-branch` step output and `neonctl branches list --project-id <nonprod>`.
+- A job shows `cancelled`: someone cancelled the run or it timed out. The night did not run fully either way; rerun it.
 - No issue but the heartbeat is missing: the run did not start or the `report` job failed. Check `gh run list --workflow nightly.yml` and GitHub status.
 
 ## Mitigate

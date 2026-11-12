@@ -111,12 +111,16 @@ jobs:
           project-id: ${{ vars.NEON_PROJECT_ID }}
           branch-name: ci/run-${{ github.run_id }}-${{ github.run_attempt }}
       - if: steps.affected.outputs.count != '0'
+        id: db
         uses: ./.github/actions/ci-database
         with:
           db-url: ${{ steps.branch.outputs.db-url }}
           db-host-pooled: ${{ steps.branch.outputs.db-host-pooled }}
       - if: steps.affected.outputs.count != '0'
         env:
+          DATABASE_URL: ${{ steps.db.outputs.database-url }}
+          DATABASE_URL_SYSTEM: ${{ steps.db.outputs.database-url-system }}
+          DATABASE_URL_MIGRATIONS: ${{ steps.branch.outputs.db-url }}
           FILTER: ${{ steps.affected.outputs.filter }}
           TURBO_SCM_BASE: ${{ steps.scope.outputs.base }}
           TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
@@ -144,6 +148,9 @@ jobs:
         name: Run the base branch's database tests against the new schema
         working-directory: n-1
         env:
+          DATABASE_URL: ${{ steps.db.outputs.database-url }}
+          DATABASE_URL_SYSTEM: ${{ steps.db.outputs.database-url-system }}
+          DATABASE_URL_MIGRATIONS: ${{ steps.branch.outputs.db-url }}
           TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
         run: |
           pnpm install --frozen-lockfile
