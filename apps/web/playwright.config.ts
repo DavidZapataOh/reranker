@@ -1,10 +1,12 @@
 import { defineConfig, devices } from "@playwright/test";
-import { assertDeploymentUrl, bypassHeaders } from "@reranker/testing/playwright";
+import { assertDeploymentUrl } from "@reranker/testing/playwright";
 
-const deploymentUrl = process.env.PLAYWRIGHT_BASE_URL;
+// The fixtures send the bypass secret only to this origin, so it must be ours.
+const deploymentUrl = process.env.PLAYWRIGHT_BASE_URL
+  ? assertDeploymentUrl(process.env.PLAYWRIGHT_BASE_URL, { allowProduction: true }).origin
+  : undefined;
 // `next start` reads PORT too, so both sides agree when 3000 is taken.
 const localUrl = `http://localhost:${process.env.PORT ?? 3000}`;
-if (deploymentUrl) assertDeploymentUrl(deploymentUrl, { allowProduction: true });
 
 export default defineConfig({
   testDir: "./e2e",
@@ -18,7 +20,6 @@ export default defineConfig({
   use: {
     baseURL: deploymentUrl ?? localUrl,
     trace: "on-first-retry",
-    extraHTTPHeaders: bypassHeaders(),
   },
   projects: [
     { name: "desktop-chromium", use: { ...devices["Desktop Chrome"] } },

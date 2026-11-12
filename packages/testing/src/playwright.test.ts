@@ -18,12 +18,12 @@ describe("bypassHeaders", () => {
     );
   });
 
-  it("sends the bypass and asks Vercel to set the cookie", () => {
+  it("sends the bypass and skips the preview toolbar, without the cookie redirect", () => {
     vi.stubEnv("CI", "true");
     vi.stubEnv("VERCEL_AUTOMATION_BYPASS_SECRET", "s3cret");
     expect(bypassHeaders()).toEqual({
       "x-vercel-protection-bypass": "s3cret",
-      "x-vercel-set-bypass-cookie": "true",
+      "x-vercel-skip-toolbar": "1",
     });
   });
 });

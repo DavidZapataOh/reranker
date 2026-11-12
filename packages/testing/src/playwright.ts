@@ -16,6 +16,26 @@ type Fixtures = {
 };
 
 export const test = base.extend<Fixtures>({
+  // Not `use.extraHTTPHeaders`: the browser would send those to every origin the page loads.
+  context: async ({ context, baseURL }, use) => {
+    const headers = bypassHeaders();
+    if (baseURL && Object.keys(headers).length > 0) {
+      const { origin } = new URL(baseURL);
+      await context.route(
+        (url) => url.origin === origin,
+        (route) => route.continue({ headers: { ...route.request().headers(), ...headers } }),
+      );
+    }
+    await use(context);
+  },
+  request: async ({ playwright, baseURL }, use) => {
+    const request = await playwright.request.newContext({
+      ...(baseURL ? { baseURL } : {}),
+      extraHTTPHeaders: bypassHeaders(),
+    });
+    await use(request);
+    await request.dispose();
+  },
   makeAxeBuilder: async ({ page }, use) => {
     await use(() => new AxeBuilder({ page }).withTags([...AXE_TAGS]));
   },

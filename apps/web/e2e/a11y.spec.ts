@@ -3,9 +3,13 @@ import { publicRoutes } from "./routes.ts";
 
 for (const route of publicRoutes) {
   test(`${route.name} has 0 axe violations (WCAG 2.2 AA) @smoke`, async ({
+    page,
     gotoStable,
     makeAxeBuilder,
   }) => {
+    // Entrance fades and the auto-advancing steps keep text mid-opacity at any moment,
+    // which axe reports as low contrast; with reduced motion every text is at rest.
+    await page.emulateMedia({ reducedMotion: "reduce" });
     await gotoStable(route.path);
     expect((await makeAxeBuilder().analyze()).violations).toEqual([]);
   });
@@ -27,19 +31,37 @@ test("keyboard: skip link first, then every interactive element shows a visible 
     await page.keyboard.press("Tab");
     const focused = page.locator(":focus");
     if ((await focused.count()) === 0) continue;
-    const seen = await focused.evaluate((el) => {
-      if (el.hasAttribute("data-tab-seen")) return true;
+    const stop = await focused.evaluate((el) => {
+      // Vercel can still inject its preview toolbar (x-vercel-skip-toolbar notwithstanding);
+      // it sits after the page in the tab order and is not ours to test.
+      if (el.localName === "vercel-live-feedback") return "vendor";
+      if (el.hasAttribute("data-tab-seen")) return "seen";
       el.setAttribute("data-tab-seen", "");
-      return false;
+      return "new";
     });
-    if (seen) break;
+    if (stop === "vendor") continue;
+    if (stop === "seen") break;
     const [html, ring] = await focused.evaluate((el) => {
+      if (!(el instanceof HTMLElement)) return [el.outerHTML.slice(0, 120), false] as const;
       // Text fields draw their ring on the wrapper that also holds the submit button.
       const target = el.matches("input, select, textarea") ? (el.parentElement ?? el) : el;
-      const s = getComputedStyle(target);
+      // Finish focus transitions so the styles read are the settled ones.
+      const read = () => {
+        for (const a of target.getAnimations()) a.finish();
+        const s = getComputedStyle(target);
+        return {
+          outline: s.outlineStyle !== "none" && Number.parseFloat(s.outlineWidth) >= 2,
+          look: `${s.outlineStyle} ${s.outlineWidth} ${s.outlineColor} | ${s.boxShadow}`,
+          shadow: s.boxShadow !== "none",
+        };
+      };
+      const focusedStyle = read();
+      // A shadow that is there without focus (cards, buttons) is not a focus indicator.
+      el.blur();
+      const unfocusedStyle = read();
+      el.focus();
       const visible =
-        (s.outlineStyle !== "none" && Number.parseFloat(s.outlineWidth) >= 2) ||
-        s.boxShadow !== "none";
+        (focusedStyle.outline || focusedStyle.shadow) && focusedStyle.look !== unfocusedStyle.look;
       return [el.outerHTML.slice(0, 120), visible] as const;
     });
     visited.push(html);

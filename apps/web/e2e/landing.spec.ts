@@ -34,7 +34,17 @@ test("consent banner appears once and remembers the choice @smoke", async ({
   const banner = page.getByRole("dialog", { name: /cookies/i });
   await expect(banner).toBeVisible();
   await banner.getByRole("button", { name: "Rechazar" }).click();
-  await page.reload();
+  // The banner only renders after hydration, so "hidden" means nothing until the effect
+  // that decides it has run. That same effect stores the visit's origin code: wait for it.
+  await page.evaluate(() => sessionStorage.removeItem("rr_ref"));
+  await gotoStable("/?utm_campaign=consent-check");
+  await page.waitForFunction(() => sessionStorage.getItem("rr_ref") === "CONSENT-CHECK");
+  await page.evaluate(
+    () =>
+      new Promise((resolve) =>
+        setTimeout(() => requestAnimationFrame(() => requestAnimationFrame(resolve)), 0),
+      ),
+  );
   await expect(banner).toBeHidden();
 });
 

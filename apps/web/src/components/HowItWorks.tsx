@@ -159,7 +159,7 @@ export function HowItWorks() {
                   >
                     <Image src={src} alt="" width={24} height={24} className="h-6 w-6" />
                     <span className="w-20 text-[13px] font-semibold text-ink/70">{n}</span>
-                    <span className="font-mono text-[12px] text-ink/45 sm:order-last">×10</span>
+                    <span className="font-mono text-[12px] text-ink/65 sm:order-last">×10</span>
                     <span className="w-full text-[15px] text-ink sm:w-auto sm:flex-1">{q}</span>
                   </li>
                 ))}
