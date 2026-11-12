@@ -28,6 +28,8 @@ jobs:
           GOOGLE_PLACES_API_KEY_CI: ${{ secrets.GOOGLE_PLACES_API_KEY_CI }}
           ANTHROPIC_API_KEY_CI: ${{ secrets.ANTHROPIC_API_KEY_CI }}
           XAI_API_KEY_CI: ${{ secrets.XAI_API_KEY_CI }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY_CI }}
+          NEON_API_KEY: ${{ secrets.NEON_NONPROD_API_KEY }}
         run: pnpm exec turbo run test:contract
   full:
     runs-on: ubuntu-24.04
@@ -67,6 +69,8 @@ jobs:
         env:
           STRICT_FLAKY: "1"
           PLAYWRIGHT_BASE_URL: https://reranker.co
+          # Production-only smoke checks (the PostHog proxy, analytics after consent) skip under the default "local".
+          APP_TARGET: production
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: pnpm --filter web test:smoke
       # delete-branch-action runs `npm i -g neonctl@v2`: pnpm's Node runtime keeps no global bin on PATH, and an

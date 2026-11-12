@@ -32,7 +32,9 @@
         "GEMINI_API_KEY",
         "GOOGLE_PLACES_API_KEY_CI",
         "ANTHROPIC_API_KEY_CI",
-        "XAI_API_KEY_CI"
+        "XAI_API_KEY_CI",
+        "RESEND_API_KEY",
+        "NEON_API_KEY"
       ]
     },
     "dev": { "cache": false, "persistent": true }
