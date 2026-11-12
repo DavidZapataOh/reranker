@@ -1,10 +1,12 @@
 import { defineConfig, devices } from "@playwright/test";
 import { assertDeploymentUrl, bypassHeaders } from "@reranker/testing/playwright";
 
-const deploymentUrl = process.env.PLAYWRIGHT_BASE_URL;
+// Validated before bypassHeaders() so the secret never goes to an untrusted host.
+const deploymentUrl = process.env.PLAYWRIGHT_BASE_URL
+  ? assertDeploymentUrl(process.env.PLAYWRIGHT_BASE_URL, { allowProduction: true }).origin
+  : undefined;
 // `next start` reads PORT too, so both sides agree when 3000 is taken.
 const localUrl = `http://localhost:${process.env.PORT ?? 3000}`;
-if (deploymentUrl) assertDeploymentUrl(deploymentUrl, { allowProduction: true });
 
 export default defineConfig({
   testDir: "./e2e",
