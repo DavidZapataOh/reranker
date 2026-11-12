@@ -27,7 +27,7 @@ test("a second run only updates, and memberships and attributes stay exact", asy
 
   const { rows } = await owner.query(
     `select r.rolname, r.rolcanlogin, r.rolbypassrls, r.rolsuper, r.rolcreaterole, r.rolcreatedb,
-            array_agg(g.rolname order by g.rolname) as groups
+            array_agg(g.rolname order by g.rolname)::text[] as groups
      from pg_roles r
      join pg_auth_members m on m.member = r.oid
      join pg_roles g on g.oid = m.roleid

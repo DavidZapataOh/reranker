@@ -1,0 +1,6 @@
+language js
+
+`sql.raw($text)` as $call where {
+  $text <: not r"^(?:\"[^\"]*\"|'[^']*')$",
+  register_diagnostic(span=$call, message="sql.raw only takes a string literal. Pass values as parameters with the sql`` template and identifiers with sql.identifier, so no input can reach the SQL text.")
+}

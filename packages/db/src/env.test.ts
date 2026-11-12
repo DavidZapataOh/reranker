@@ -56,6 +56,12 @@ test("rejects a missing DATABASE_URL_SYSTEM and a url that is not postgres", () 
   ).toThrow(/DATABASE_URL:/);
 });
 
+test.each(["", "not a url"])("rejects DATABASE_URL=%j as invalid configuration", (value) => {
+  expect(() => readDbEnv({ DATABASE_URL: value, DATABASE_URL_SYSTEM: POOLED_SYSTEM })).toThrow(
+    /Invalid database environment\. DATABASE_URL:/,
+  );
+});
+
 test("never echoes the connection string in the error", () => {
   expect(() =>
     readDbEnv({ DATABASE_URL: DIRECT_OWNER, DATABASE_URL_SYSTEM: POOLED_SYSTEM }),

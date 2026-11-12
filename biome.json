@@ -62,6 +62,7 @@
     }
   ],
   "plugins": [
+    { "path": "./tools/biome/no-dynamic-sql-raw.grit" },
     {
       "path": "./tools/biome/no-conditional-contract-tests.grit",
       "includes": ["**/*.contract.test.ts"]

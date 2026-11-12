@@ -8,8 +8,13 @@ const postgresUrl = z.url({ protocol: POSTGRES_PROTOCOL });
 // direct connections. Local Postgres has no pooler host, so the rule only applies to Neon.
 const pooledUrl = postgresUrl.refine(
   (value) => {
-    const host = new URL(value).hostname;
-    return !host.endsWith(".neon.tech") || host.split(".")[0]?.endsWith("-pooler") === true;
+    // zod still runs refinements after a failed url check, so the value may not parse.
+    const host = URL.parse(value)?.hostname;
+    return (
+      host === undefined ||
+      !host.endsWith(".neon.tech") ||
+      host.split(".")[0]?.endsWith("-pooler") === true
+    );
   },
   { message: "must use the Neon pooler host (-pooler)" },
 );
