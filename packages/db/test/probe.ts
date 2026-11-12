@@ -14,7 +14,9 @@ export function defineProbe(prefix: string) {
   const create = () =>
     withClient("migrations", async (owner) => {
       const t = `app.${owner.escapeIdentifier(name)}`;
-      const predicate = "tenant_id = any ((select app.current_tenant_ids()))";
+      // Without the cast Postgres reads ANY ((select …)) as a subquery and compares uuid to uuid[];
+      // the scalar subquery still runs once per statement as an InitPlan.
+      const predicate = "tenant_id = any ((select app.current_tenant_ids())::uuid[])";
       await owner.query(`
         create table ${t} (id uuid primary key default uuidv7(), tenant_id uuid not null, label text);
         create index on ${t} (tenant_id);

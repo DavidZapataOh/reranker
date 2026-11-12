@@ -21,7 +21,7 @@ test("each login belongs only to its group and holds no elevated attribute", asy
     const result = await owner.query(
       `select r.rolname, r.rolcanlogin, r.rolbypassrls, r.rolsuper, r.rolcreaterole, r.rolcreatedb,
               array(select g.rolname from pg_auth_members m join pg_roles g on g.oid = m.roleid
-                    where m.member = r.oid order by 1) as groups
+                    where m.member = r.oid order by 1)::text[] as groups
        from pg_roles r where r.rolname in ('reranker_app', 'reranker_system') order by 1`,
     );
     expect(result.rows).toEqual([
