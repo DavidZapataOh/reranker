@@ -31,6 +31,11 @@ catalog:
   msw: 3.0.3
   pg: ^8.23.1
   "@types/pg": ^8.23.1
+  drizzle-orm: 0.45.4
+  drizzle-kit: 0.31.11
+  "@vercel/functions": 3.10.6
+  squawk-cli: ^2.70.0
+  zod: 4.6.7
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - "@reranker/*"
@@ -55,6 +60,12 @@ trustPolicyExclude:
   # Chromium-versioned builds come from the Chromium infra account without provenance;
   # puppeteer-core 25.16.0 (trusted publisher, via @lhci/cli) pins this exact version.
   - chromium-bidi@157.0.8090-0
+  # Vercel moved from provenance-attested bot releases (2.x) to npm trusted publishing from its
+  # GitHub repo (3.x), which pnpm ranks as a downgrade; these exact versions are that publisher's.
+  - "@vercel/functions@3.10.6"
+  - "@vercel/oidc@4.0.6"
+  - "@vercel/cli-config@0.3.6"
+  - "@vercel/cli-exec@1.0.1"
 blockExoticSubdeps: true
 strictDepBuilds: true
 allowBuilds:
@@ -62,4 +73,7 @@ allowBuilds:
   lefthook: true
   # Postinstall only prints a funding banner (transitive via posthog-js).
   core-js: false
+  # drizzle-kit's bundler: the platform binary comes from its optional @esbuild/* package; the
+  # postinstall only re-validates it.
+  esbuild: false
 verifyDepsBeforeRun: error

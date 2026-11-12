@@ -9,6 +9,7 @@
       "!.impeccable",
       "!assets",
       "!**/public",
+      "!packages/db/migrations/meta",
       "!**/*.md"
     ]
   },
