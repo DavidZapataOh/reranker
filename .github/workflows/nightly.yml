@@ -1,0 +1,160 @@
+name: nightly
+on:
+  schedule:
+    # 05:00 in Colombia.
+    - cron: "0 10 * * *"
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: nightly-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions: { contents: read, id-token: write }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - uses: vercel/setup-turborepo-remote-cache-action@49d7b1b46ba4c9251e1977986bfe18336feabc8f # v1.1.0
+        with: { team: "${{ vars.TURBO_TEAM }}" }
+      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
+        with: { cache: true, require-lockfile: true }
+      # A contract whose secret is missing fails naming it; it never skips.
+      - env:
+          TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
+          DATAFORSEO_LOGIN: ${{ secrets.DATAFORSEO_LOGIN }}
+          DATAFORSEO_PASSWORD: ${{ secrets.DATAFORSEO_PASSWORD }}
+          BRIGHTDATA_API_KEY_CI: ${{ secrets.BRIGHTDATA_API_KEY_CI }}
+          OPENAI_API_KEY_CI: ${{ secrets.OPENAI_API_KEY_CI }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GOOGLE_PLACES_API_KEY_CI: ${{ secrets.GOOGLE_PLACES_API_KEY_CI }}
+          ANTHROPIC_API_KEY_CI: ${{ secrets.ANTHROPIC_API_KEY_CI }}
+          XAI_API_KEY_CI: ${{ secrets.XAI_API_KEY_CI }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY_CI }}
+          NEON_API_KEY: ${{ secrets.NEON_NONPROD_API_KEY }}
+        run: pnpm exec turbo run test:contract
+  full:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    permissions: { contents: read, id-token: write }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - uses: vercel/setup-turborepo-remote-cache-action@49d7b1b46ba4c9251e1977986bfe18336feabc8f # v1.1.0
+        with: { team: "${{ vars.TURBO_TEAM }}" }
+      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
+        with: { cache: true, require-lockfile: true }
+      - id: branch
+        uses: ./.github/actions/neon-ci-branch
+        with:
+          api-key: ${{ secrets.NEON_NONPROD_API_KEY }}
+          project-id: ${{ vars.NEON_PROJECT_ID }}
+          branch-name: ci/nightly-${{ github.run_id }}-${{ github.run_attempt }}
+      - uses: ./.github/actions/ci-database
+        with:
+          db-url: ${{ steps.branch.outputs.db-url }}
+          db-host-pooled: ${{ steps.branch.outputs.db-host-pooled }}
+      - id: browsers
+        name: Resolve Playwright version
+        run: echo "version=$(pnpm --filter web exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+      # Same key as production quality runs, which install the same browsers.
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.browsers.outputs.version }}-chromium webkit
+      - run: pnpm --filter web exec playwright install --with-deps chromium webkit
+      # Every package, uncached: the night catches what --affected and the cache let through.
+      - env:
+          TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
+        run: pnpm exec turbo run test test:integration --force
+      # Retries stay on so a test that only passes on retry is reported as flaky, and
+      # STRICT_FLAKY makes that fail the night. Smoke tests never write data.
+      - name: Smoke tests on production
+        if: ${{ !cancelled() }}
+        env:
+          STRICT_FLAKY: "1"
+          APP_TARGET: production
+          PLAYWRIGHT_BASE_URL: https://reranker.co
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: pnpm --filter web test:smoke
+      - if: always() && steps.branch.outputs.branch-id != ''
+        uses: ./.github/actions/neon-ci-branch-delete
+        with:
+          api-key: ${{ secrets.NEON_NONPROD_API_KEY }}
+          project-id: ${{ vars.NEON_PROJECT_ID }}
+          branch-id: ${{ steps.branch.outputs.branch-id }}
+      - if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: nightly-report
+          path: |
+            apps/web/playwright-report
+            apps/web/test-results
+            apps/web/results.json
+          retention-days: 3
+          if-no-files-found: ignore
+  report:
+    needs: [contract, full]
+    if: always()
+    runs-on: ubuntu-slim
+    timeout-minutes: 5
+    permissions: { issues: write }
+    steps:
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          CONTRACT: ${{ needs.contract.result }}
+          FULL: ${{ needs.full.result }}
+          HEARTBEAT_URL: ${{ secrets.BETTERSTACK_HEARTBEAT_NIGHTLY_URL }}
+        with:
+          script: |
+            const { CONTRACT, FULL, HEARTBEAT_URL } = process.env;
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+
+            if (CONTRACT === "success" && FULL === "success") {
+              if (!HEARTBEAT_URL) {
+                core.notice("BETTERSTACK_HEARTBEAT_NIGHTLY_URL is not set; skipping the heartbeat.");
+                return;
+              }
+              for (let attempt = 1; ; attempt++) {
+                try {
+                  const res = await fetch(HEARTBEAT_URL, { signal: AbortSignal.timeout(10_000) });
+                  if (res.ok) return;
+                  throw new Error(`HTTP ${res.status}`);
+                } catch (error) {
+                  if (attempt === 3) throw error;
+                  await new Promise((r) => setTimeout(r, attempt * 2_000));
+                }
+              }
+            }
+
+            // The missing heartbeat alerts too; the issue says where to look.
+            const label = "nightly-failure";
+            const repo = context.repo;
+            try {
+              await github.rest.issues.createLabel({ ...repo, name: label, color: "b60205" });
+            } catch (error) {
+              if (error.status !== 422) throw error;
+            }
+            const summary = `${runUrl}\n\ncontract: ${CONTRACT} · full: ${FULL}\n\nRunbook: docs/runbooks/nightly-failure.md`;
+            const labelled = await github.paginate(github.rest.issues.listForRepo, {
+              ...repo,
+              labels: label,
+              state: "open",
+              per_page: 100,
+            });
+            // One open issue collects consecutive red nights.
+            const open = labelled.find((issue) => !issue.pull_request);
+            if (open) {
+              await github.rest.issues.createComment({ ...repo, issue_number: open.number, body: summary });
+              core.notice(`Commented on #${open.number}`);
+            } else {
+              const date = new Date().toISOString().slice(0, 10);
+              const { data } = await github.rest.issues.create({
+                ...repo,
+                title: `Nightly failed on ${date}`,
+                body: summary,
+                labels: [label],
+              });
+              core.notice(`Opened #${data.number}`);
+            }

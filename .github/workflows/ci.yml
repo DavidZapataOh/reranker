@@ -93,7 +93,7 @@ jobs:
         # Turbo lists packages without the script as <NONEXISTENT> and adds ^typecheck dependencies.
         # It also ignores the files below, which decide how the integration tests run, so they force a full run.
         run: |
-          if [ -n "$BASE" ] && [ -n "$(git diff --name-only "$BASE" HEAD -- .github/actions/neon-ci-branch .github/workflows/ci.yml package.json pnpm-workspace.yaml pnpm-lock.yaml vitest.config.ts)" ]; then
+          if [ -n "$BASE" ] && [ -n "$(git diff --name-only "$BASE" HEAD -- .github/actions .github/workflows/ci.yml package.json pnpm-workspace.yaml pnpm-lock.yaml vitest.config.ts)" ]; then
             echo "Integration infrastructure changed, running every integration test"
             FILTER=""
           fi
@@ -111,27 +111,10 @@ jobs:
           project-id: ${{ vars.NEON_PROJECT_ID }}
           branch-name: ci/run-${{ github.run_id }}-${{ github.run_attempt }}
       - if: steps.affected.outputs.count != '0'
-        name: Migrate and provision database logins
-        env:
-          DB_URL: ${{ steps.branch.outputs.db-url }}
-          DB_HOST_POOLED: ${{ steps.branch.outputs.db-host-pooled }}
-        run: |
-          echo "DATABASE_URL_MIGRATIONS=$DB_URL" >> "$GITHUB_ENV"
-          if [ ! -d packages/db ]; then
-            echo "DATABASE_URL=$DB_URL" >> "$GITHUB_ENV"
-            echo "DATABASE_URL_SYSTEM=$DB_URL" >> "$GITHUB_ENV"
-            exit 0
-          fi
-          app=$(openssl rand -hex 24); system=$(openssl rand -hex 24)
-          echo "::add-mask::$app"; echo "::add-mask::$system"
-          export DATABASE_URL_MIGRATIONS="$DB_URL"
-          DB_LOGIN_PASSWORDS=$(jq -cn --arg app "$app" --arg system "$system" '{reranker_app: $app, reranker_system: $system}')
-          export DB_LOGIN_PASSWORDS
-          # Migrations create the role groups the logins join.
-          pnpm --filter @reranker/db db:migrate
-          pnpm --filter @reranker/db db:provision-roles
-          echo "DATABASE_URL=postgresql://reranker_app:$app@$DB_HOST_POOLED/neondb?sslmode=verify-full" >> "$GITHUB_ENV"
-          echo "DATABASE_URL_SYSTEM=postgresql://reranker_system:$system@$DB_HOST_POOLED/neondb?sslmode=verify-full" >> "$GITHUB_ENV"
+        uses: ./.github/actions/ci-database
+        with:
+          db-url: ${{ steps.branch.outputs.db-url }}
+          db-host-pooled: ${{ steps.branch.outputs.db-host-pooled }}
       - if: steps.affected.outputs.count != '0'
         env:
           FILTER: ${{ steps.affected.outputs.filter }}
@@ -166,25 +149,12 @@ jobs:
           pnpm install --frozen-lockfile
           if [ ! -d packages/db ]; then echo "The base branch has no database package yet"; exit 0; fi
           pnpm exec turbo run test:integration --filter=@reranker/db
-      # delete-branch-action runs `npm i -g neonctl@v2`: pnpm's Node runtime keeps no global bin on PATH, and an
-      # unlocked global install would otherwise resolve to whatever was published last and run its install scripts.
       - if: always() && steps.branch.outputs.branch-id != ''
-        name: Prepare npm for the branch cleanup
-        env:
-          PREFIX: ${{ runner.temp }}/npm-global
-        run: |
-          {
-            echo "NPM_CONFIG_PREFIX=$PREFIX"
-            echo "NPM_CONFIG_BEFORE=2026-11-01T00:00:00Z"
-            echo "NPM_CONFIG_IGNORE_SCRIPTS=true"
-          } >> "$GITHUB_ENV"
-          echo "$PREFIX/bin" >> "$GITHUB_PATH"
-      - if: always() && steps.branch.outputs.branch-id != ''
-        uses: neondatabase/delete-branch-action@4468d825d5a88ef4012f1705a82f02ec3072f776 # v3.2.1
+        uses: ./.github/actions/neon-ci-branch-delete
         with:
-          project_id: ${{ vars.NEON_PROJECT_ID }}
-          branch: ${{ steps.branch.outputs.branch-id }}
-          api_key: ${{ secrets.NEON_NONPROD_API_KEY }}
+          api-key: ${{ secrets.NEON_NONPROD_API_KEY }}
+          project-id: ${{ vars.NEON_PROJECT_ID }}
+          branch-id: ${{ steps.branch.outputs.branch-id }}
   security:
     runs-on: ubuntu-slim
     timeout-minutes: 10

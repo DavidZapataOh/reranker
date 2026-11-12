@@ -1,0 +1,36 @@
+name: Delete Neon CI branch
+description: Deletes the CI branch created by neon-ci-branch. Call it with if-always so cancelled and failed runs clean up too.
+inputs:
+  api-key:
+    description: Neon API key scoped to the project.
+    required: true
+  project-id:
+    description: Neon project id.
+    required: true
+  branch-id:
+    description: Id of the branch to delete.
+    required: true
+runs:
+  using: composite
+  steps:
+    # delete-branch-action runs `npm i -g neonctl@v2`: pnpm's Node runtime keeps no global bin on PATH, and an
+    # unlocked global install would otherwise resolve to whatever was published last and run its install scripts.
+    # Cleanup runs after failed steps too, so no step here may depend on their success.
+    - name: Prepare npm for the branch cleanup
+      if: always()
+      shell: bash
+      env:
+        PREFIX: ${{ runner.temp }}/npm-global
+      run: |
+        {
+          echo "NPM_CONFIG_PREFIX=$PREFIX"
+          echo "NPM_CONFIG_BEFORE=2026-11-01T00:00:00Z"
+          echo "NPM_CONFIG_IGNORE_SCRIPTS=true"
+        } >> "$GITHUB_ENV"
+        echo "$PREFIX/bin" >> "$GITHUB_PATH"
+    - if: always()
+      uses: neondatabase/delete-branch-action@4468d825d5a88ef4012f1705a82f02ec3072f776 # v3.2.1
+      with:
+        project_id: ${{ inputs.project-id }}
+        branch: ${{ inputs.branch-id }}
+        api_key: ${{ inputs.api-key }}
