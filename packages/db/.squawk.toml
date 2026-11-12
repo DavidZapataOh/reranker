@@ -1,0 +1,10 @@
+pg_version = "18.0"
+# drizzle's migrate() applies every pending file inside one transaction. Files in
+# migrations/concurrent run outside it and start with "-- squawk-disable-assume-in-transaction".
+assume_in_transaction = true
+excluded_rules = [
+  # The runner sets lock_timeout and statement_timeout on the session before migrating.
+  "require-timeout-settings",
+  # Each migration runs exactly once, recorded in the same transaction that applies it.
+  "prefer-robust-stmts",
+]

@@ -10,7 +10,7 @@
   "scripts": {
     "db:generate": "drizzle-kit generate",
     "db:migrate": "node scripts/migrate.ts",
-    "db:check": "drizzle-kit check && squawk --config .squawk.toml migrations/*.sql",
+    "db:check": "drizzle-kit check && squawk --config .squawk.toml 'migrations/*.sql' 'migrations/concurrent/*.sql'",
     "db:provision-roles": "node scripts/provision-roles.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --project unit --coverage",

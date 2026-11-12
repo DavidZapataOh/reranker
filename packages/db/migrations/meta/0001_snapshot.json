@@ -1,0 +1,23 @@
+{
+  "id": "9abfa07f-ba6c-49bf-8d15-b72cceec8253",
+  "prevId": "a2df0b84-b53a-4e35-bb70-7aecc860ccab",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {},
+  "enums": {},
+  "schemas": {
+    "app": "app",
+    "auth": "auth",
+    "ops": "ops",
+    "public_panel": "public_panel"
+  },
+  "views": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
