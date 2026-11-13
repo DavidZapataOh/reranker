@@ -139,11 +139,64 @@ test("Term opens the definition with a descriptive name and title", async () => 
       .
     </p>,
   );
-  const trigger = page.getByRole("button", { name: /^preliminar ?, qué significa$/ });
+  const trigger = page.getByRole("button", { name: "preliminar, qué significa" });
   await userEvent.click(trigger);
   const dialog = page.getByRole("dialog", { name: "¿Qué significa preliminar?" });
   await expect.element(dialog).toBeVisible();
   await expectNoAxeViolations(document.body);
   await userEvent.keyboard("{Escape}");
   expect(document.activeElement).toBe(trigger.element());
+});
+
+test("a drag-select that ends on the backdrop keeps the sheet open, a real tap closes it", async () => {
+  await render(sheet);
+  await userEvent.click(pick("button"));
+  const dialog = pick<HTMLDialogElement>("dialog");
+  // Browsers report the common ancestor (the dialog) as the click target after a drag across its edge.
+  pick("dialog p").dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+  dialog.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  expect(dialog.open).toBe(true);
+  dialog.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+  dialog.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  expect(dialog.open).toBe(false);
+});
+
+test("Tab wraps from the last focusable to the first and Shift+Tab the other way", async () => {
+  await render(sheet);
+  await userEvent.click(pick("button"));
+  const dialog = pick<HTMLDialogElement>("dialog");
+  const body = pick<HTMLElement>("dialog [data-sheet-body]");
+  const close = page.getByRole("button", { name: "Cerrar" }).element();
+  body.focus();
+  await userEvent.tab({ shift: true });
+  expect(document.activeElement).toBe(close);
+  await userEvent.tab();
+  expect(document.activeElement).toBe(body);
+  expect(dialog.open).toBe(true);
+});
+
+test("wrapping also covers form fields inside the definition", async () => {
+  await render(
+    <Sheet trigger={<button type="button">Ayuda</button>} title="Título">
+      <input aria-label="Campo" />
+    </Sheet>,
+  );
+  await userEvent.click(pick("button"));
+  const close = page.getByRole("button", { name: "Cerrar" }).element();
+  const input = pick<HTMLInputElement>("dialog input");
+  close.focus();
+  await userEvent.tab();
+  expect(document.activeElement).toBe(pick("dialog [data-sheet-body]"));
+  input.focus();
+  await userEvent.tab();
+  expect(document.activeElement).toBe(close);
+});
+
+test("the page cannot scroll behind an open sheet and scrolls again after", async () => {
+  await render(sheet);
+  expect(getComputedStyle(document.body).overflow).not.toBe("hidden");
+  await userEvent.click(pick("button"));
+  expect(getComputedStyle(document.body).overflow).toBe("hidden");
+  await userEvent.keyboard("{Escape}");
+  expect(getComputedStyle(document.body).overflow).not.toBe("hidden");
 });

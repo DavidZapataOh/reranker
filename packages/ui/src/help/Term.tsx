@@ -23,7 +23,8 @@ export function Term({
           className="underline decoration-dotted decoration-ink/50 underline-offset-4"
         >
           {children}
-          <span className="sr-only">{copy.sheet.termHint}</span>
+          {/* Zero-size inline text, not sr-only: an absolute span makes the accessible name read "term , qué significa". */}
+          <span className="text-[0px]">{copy.sheet.termHint}</span>
         </button>
       }
     >

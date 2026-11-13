@@ -16,7 +16,8 @@ import { createPortal } from "react-dom";
 import { buttonClass } from "../actions/variants.ts";
 import { copy } from "../copy.ts";
 
-const focusable = "a[href], button:not(:disabled), [tabindex='0']";
+const focusable =
+  "a[href], button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex='-1'])";
 
 // Chromium lets Tab leave a modal dialog for the browser UI; wrapping keeps it on the sheet.
 function wrapTab(event: KeyboardEvent<HTMLDialogElement>) {
@@ -41,6 +42,8 @@ export function Sheet({
   const ref = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
   const [host, setHost] = useState<HTMLElement | null>(null);
+  // A drag that starts in the text and ends on the backdrop reports the dialog as the click target.
+  const pressedOnBackdrop = useRef(false);
   const dialogId = useId();
   const titleId = useId();
 
@@ -51,8 +54,10 @@ export function Sheet({
     onClick: (event: MouseEvent<HTMLButtonElement>) => {
       trigger.props.onClick?.(event);
       if (event.defaultPrevented) return;
-      ref.current?.showModal();
-      setOpen(true);
+      const dialog = ref.current;
+      if (!dialog) return;
+      if (!dialog.open) dialog.showModal();
+      setOpen(dialog.open);
     },
     "aria-haspopup": "dialog",
     "aria-expanded": open,
@@ -70,10 +75,13 @@ export function Sheet({
             aria-labelledby={titleId}
             onClose={() => setOpen(false)}
             onKeyDown={wrapTab}
-            onClick={(event) => {
-              if (event.target === ref.current) ref.current?.close();
+            onPointerDown={(event) => {
+              pressedOnBackdrop.current = event.target === ref.current;
             }}
-            className="fixed inset-x-0 top-auto bottom-0 m-0 md:top-0 md:bottom-0 max-h-[85dvh] w-full max-w-none flex-col rounded-t-3xl bg-surface p-0 text-ink shadow-lift backdrop:bg-ink/40 open:flex md:inset-y-0 md:mx-auto md:my-auto md:max-w-md md:rounded-3xl"
+            onClick={(event) => {
+              if (event.target === ref.current && pressedOnBackdrop.current) ref.current?.close();
+            }}
+            className="fixed inset-x-0 top-auto bottom-0 m-0 max-h-[85dvh] w-full max-w-none flex-col rounded-t-3xl bg-surface p-0 text-ink shadow-lift backdrop:bg-ink/40 open:flex md:inset-y-0 md:mx-auto md:my-auto md:max-w-md md:rounded-3xl"
           >
             <div
               data-sheet-body
