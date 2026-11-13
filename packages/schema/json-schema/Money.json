@@ -1,0 +1,25 @@
+{
+  "$id": "https://reranker.co/schemas/Money.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "amount_minor": {
+      "maximum": 9007199254740991,
+      "minimum": -9007199254740991,
+      "type": "integer"
+    },
+    "currency": {
+      "enum": [
+        "COP",
+        "USD",
+        "EUR"
+      ],
+      "type": "string"
+    }
+  },
+  "required": [
+    "amount_minor",
+    "currency"
+  ],
+  "type": "object"
+}

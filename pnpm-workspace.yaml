@@ -34,6 +34,9 @@ catalog:
   zod: 4.6.7
   use-intl: 4.14.9
   fast-check: 4.10.2
+  ajv: 8.20.0
+  ajv-formats: 3.0.1
+  tsx: 4.23.15
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - "@reranker/*"
@@ -65,4 +68,6 @@ allowBuilds:
   lefthook: true
   # Postinstall only prints a funding banner (transitive via posthog-js).
   core-js: false
+  # The platform binary ships as an optional dependency; the postinstall only verifies it (tsx).
+  esbuild: false
 verifyDepsBeforeRun: error

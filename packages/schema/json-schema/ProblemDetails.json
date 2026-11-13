@@ -1,0 +1,96 @@
+{
+  "$id": "https://reranker.co/schemas/ProblemDetails.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "code": {
+      "enum": [
+        "invalid_request",
+        "validation_failed",
+        "unauthenticated",
+        "forbidden",
+        "data_policy_required",
+        "not_found",
+        "conflict",
+        "rate_limited",
+        "turnstile_failed",
+        "idempotency_key_required",
+        "idempotency_key_reused",
+        "consent_required",
+        "business_not_found",
+        "evidence_not_found",
+        "spend_cap_reached",
+        "capacity_unavailable",
+        "free_report_unavailable",
+        "provider_unavailable",
+        "service_unavailable",
+        "timeout",
+        "internal"
+      ],
+      "type": "string"
+    },
+    "detail": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "errors": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "pointer": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "pointer",
+          "code",
+          "detail"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "instance": {
+      "type": "string"
+    },
+    "request_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "retry_after": {
+      "maximum": 9007199254740991,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "status": {
+      "maximum": 599,
+      "minimum": 400,
+      "type": "integer"
+    },
+    "title": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "type": {
+      "format": "uri",
+      "type": "string"
+    }
+  },
+  "required": [
+    "type",
+    "title",
+    "status",
+    "detail",
+    "code",
+    "request_id"
+  ],
+  "type": "object"
+}
