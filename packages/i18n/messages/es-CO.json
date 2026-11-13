@@ -1,0 +1,20 @@
+{
+  "common": {
+    "appName": "Reranker"
+  },
+  "errors": {
+    "validation": {
+      "invalid_type": "{expected, select, number {Escribe un número} string {Escribe un texto} boolean {Elige una opción} date {Escribe una fecha válida} array {Agrega al menos un elemento} object {Completa este grupo de datos} other {El tipo de este dato no es válido}}",
+      "too_small": "{origin, select, string {Escribe al menos {minimum} caracteres} number {El valor debe ser {inclusive, select, true {mayor o igual a} other {mayor que}} {minimum}} array {Agrega al menos {minimum} elementos} set {Agrega al menos {minimum} elementos} date {La fecha es demasiado anterior} other {El valor es demasiado pequeño}}",
+      "too_big": "{origin, select, string {Escribe máximo {maximum} caracteres} number {El valor debe ser {inclusive, select, true {menor o igual a} other {menor que}} {maximum}} array {Agrega máximo {maximum} elementos} set {Agrega máximo {maximum} elementos} date {La fecha es demasiado posterior} other {El valor es demasiado grande}}",
+      "invalid_format": "{format, select, email {Escribe un correo válido, como nombre@negocio.com} url {Escribe una dirección web completa, que empiece por https://} uuid {Escribe un identificador válido} other {Revisa el formato de este dato}}",
+      "not_multiple_of": "El valor debe ser múltiplo de {divisor}",
+      "unrecognized_keys": "{count, plural, one {Hay un campo que no reconocemos} other {Hay # campos que no reconocemos}}",
+      "invalid_union": "Revisa este dato, no coincide con ninguna opción válida",
+      "invalid_key": "Una de las claves no es válida",
+      "invalid_element": "Uno de los elementos no es válido",
+      "invalid_value": "Elige una de las opciones disponibles",
+      "custom": "Revisa este dato, no es válido"
+    }
+  }
+}
