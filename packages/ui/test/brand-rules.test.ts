@@ -25,7 +25,8 @@ const hexOutsideTheme = (list: Source[]) =>
   matches(list, /#[0-9a-f]{3,8}\b/i, ["src/styles/theme.css", "src/tokens.ts"]);
 const amberText = (list: Source[]) => [
   ...matches(list, /\b(?:text|fill|stroke|decoration|caret)-amber\b/),
-  ...matches(list, /color:\s*(?:#f2b544|var\(--color-amber\))/i),
+  ...matches(list, /(?<![\w-])color["']?:\s*["']?(?:#f2b544|var\(--color-amber\))/i),
+  ...matches(list, /\btext-\[(?:#f2b544|var\(--color-amber\))\]/i),
 ];
 const violetClasses = (list: Source[]) => matches(list, /\b(?:violet|purple|fuchsia)-\d{2,3}\b/);
 const whatsappGreen = (list: Source[]) => matches(list, /#25d366/i);
@@ -54,7 +55,10 @@ function actionBackground(list: Source[]): string[] {
       else primaryUses += 1;
     }
   }
-  if (primaryUses > 1) found.push(`${actionVariantsPath} paints bg-action ${primaryUses} times`);
+  const hasVariants = list.some((s) => s.path === actionVariantsPath);
+  if (hasVariants && primaryUses !== 1) {
+    found.push(`${actionVariantsPath} paints bg-action ${primaryUses} times`);
+  }
   return found;
 }
 
@@ -90,6 +94,7 @@ const purpleColors = (variables: Record<string, string>) =>
 
 test("the source set is not empty", () => {
   expect(sources.map((s) => s.path)).toContain("src/styles/theme.css");
+  expect(sources.some((s) => /\.tsx?$/.test(s.path))).toBe(true);
 });
 
 test("no hex colors outside theme.css and tokens.ts", () => {
@@ -106,6 +111,15 @@ test("amber is never text", () => {
   expect(amberText(planted("a { color: var(--color-amber); }", "src/x.css"))).toHaveLength(1);
   expect(amberText(planted("a { color: #F2B544; }", "src/x.css"))).toHaveLength(1);
   expect(amberText(planted('<i className="bg-amber">'))).toEqual([]);
+  expect(amberText(planted("a { background-color: var(--color-amber); }", "src/x.css"))).toEqual(
+    [],
+  );
+  expect(amberText(planted("a { border-color: #f2b544; }", "src/x.css"))).toEqual([]);
+  expect(amberText(planted('<p style={{ color: "var(--color-amber)" }} />'))).toHaveLength(1);
+  expect(amberText(planted("<p style={{ color: '#f2b544' }} />"))).toHaveLength(1);
+  expect(amberText(planted('<p className="text-[var(--color-amber)]" />'))).toHaveLength(1);
+  expect(amberText(planted('<p className="text-[#F2B544]" />'))).toHaveLength(1);
+  expect(amberText(planted('<p className="bg-[#f2b544]" />'))).toEqual([]);
 });
 
 test("no violet, purple or fuchsia", () => {
@@ -133,7 +147,7 @@ test("only the primary button variant paints bg-action", () => {
   expect(
     actionBackground(variants('{ primary: "bg-action", secondary: "bg-action-soft" }')),
   ).toEqual([]);
-  expect(actionBackground(variants('{ primary: "x", secondary: "bg-action" }'))).toHaveLength(1);
+  expect(actionBackground(variants('{ primary: "x", secondary: "bg-action" }'))).toHaveLength(2);
   expect(actionBackground(variants('{ primary: "bg-action bg-action" }'))).toHaveLength(1);
 });
 
@@ -158,6 +172,11 @@ test("no color gradients", () => {
 test("no dangerouslySetInnerHTML", () => {
   expect(innerHtml(sources)).toEqual([]);
   expect(innerHtml(planted("<div dangerouslySetInnerHTML={{ __html: x }} />"))).toHaveLength(1);
+});
+
+test("an existing variants file paints bg-action exactly once", () => {
+  expect(actionBackground(planted('{ primary: "px-4" }', actionVariantsPath))).toHaveLength(1);
+  expect(actionBackground(planted('{ primary: "bg-action" }', actionVariantsPath))).toEqual([]);
 });
 
 test("fixed copy never asks for human contact", () => {
