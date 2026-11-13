@@ -1,15 +1,24 @@
 const origin = "https://reranker.co";
 const verifyPath = "/verificar/";
+// The URL parser silently drops tab, CR and LF, so they could hide a path that only exists after parsing.
+// biome-ignore lint/suspicious/noControlCharactersInRegex: matching control characters is the point
+const controlCharacter = /[\u0000-\u001f\u007f]/;
 
-// The pattern pins the literal form; parsing then catches what browsers normalize (%2e%2e, backslashes, tabs).
+// Validates the parsed form and returns it, so the rendered href is exactly what was checked.
 export function assertVerifyUrl(url: string): string {
-  const relative = /^\/verificar\/[^/\\]/.test(url);
-  if (relative || /^https:\/\/reranker\.co\//.test(url)) {
+  const relative = url.startsWith(verifyPath);
+  if (!controlCharacter.test(url) && (relative || /^https:\/\//i.test(url))) {
     const parsed = new URL(url, origin);
-    const staysOnPath =
-      !relative ||
-      (parsed.pathname.startsWith(verifyPath) && parsed.pathname.length > verifyPath.length);
-    if (parsed.origin === origin && staysOnPath) return url;
+    const { pathname } = parsed;
+    if (
+      parsed.origin === origin &&
+      pathname.startsWith(verifyPath) &&
+      pathname.length > verifyPath.length &&
+      !pathname.includes("//") &&
+      !pathname.split("/").includes("..")
+    ) {
+      return relative ? pathname + parsed.search + parsed.hash : parsed.href;
+    }
   }
   throw new TypeError(`Not a Reranker verification link: ${JSON.stringify(url)}`);
 }

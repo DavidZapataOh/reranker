@@ -8,11 +8,20 @@ const textOf = (markup: string) => markup.replace(/<[^>]+>/g, "").replaceAll("&q
 test("only Reranker's own verification links are accepted", () => {
   for (const ok of [
     "/verificar/8F2K",
-    "https://reranker.co/v/8F2K",
-    "/verificar/8F2K?ref=correo",
+    "/verificar/8F2K?ref=correo#sello",
+    "https://reranker.co/verificar/8F2K",
+    "https://reranker.co/verificar/8F2K?ref=correo",
   ]) {
     expect(assertVerifyUrl(ok)).toBe(ok);
   }
+});
+
+test("the returned link is the canonical form that was validated", () => {
+  expect(assertVerifyUrl("/verificar/a b")).toBe("/verificar/a%20b");
+  expect(assertVerifyUrl("/verificar/8F2K/./x")).toBe("/verificar/8F2K/x");
+  expect(assertVerifyUrl("https://RERANKER.co/verificar/8F2K")).toBe(
+    "https://reranker.co/verificar/8F2K",
+  );
 });
 
 test("hostile or malformed verification links are rejected", () => {
@@ -40,6 +49,20 @@ test("hostile or malformed verification links are rejected", () => {
     " https://reranker.co/v/1",
     "http://reranker.co/v/1",
     "",
+    "/verificar/\t/evil.com",
+    "/verificar/x\n/admin",
+    "/verificar/x\r",
+    "/verificar/x\u0000",
+    "/verificar/x\u007f",
+    "/verificar/x//y",
+    "https://reranker.co/v/8F2K",
+    "https://reranker.co/admin",
+    "https://reranker.co/verificar/",
+    "https://reranker.co/v/../../x",
+    "https://reranker.co/verificar/../admin",
+    "https://reranker.co/verificar/%2e%2e/admin",
+    "https://reranker.co/\\evil.com",
+    "https://reranker.co/verificar/x//evil.com",
   ]) {
     expect(() => assertVerifyUrl(bad), bad).toThrow(TypeError);
   }

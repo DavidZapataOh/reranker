@@ -1,33 +1,52 @@
 export type Span = { start: number; end: number; kind: "self" | "competitor" };
 
-const isLowSurrogate = (code: number) => code >= 0xdc00 && code <= 0xdfff;
-const isHighSurrogate = (code: number) => code >= 0xd800 && code <= 0xdbff;
+const graphemes = new Intl.Segmenter(undefined, { granularity: "grapheme" });
 
-// Offsets are UTF-16 indices; a boundary between the halves of a surrogate pair would render two broken glyphs.
-function splitsPair(text: string, index: number): boolean {
-  return (
-    index > 0 &&
-    index < text.length &&
-    isHighSurrogate(text.charCodeAt(index - 1)) &&
-    isLowSurrogate(text.charCodeAt(index))
-  );
+// Offsets are UTF-16 indices; an edge inside a character (surrogate pair, combining accent, ZWJ emoji, flag)
+// would split it across a <mark> and render broken glyphs.
+function boundaries(text: string): number[] {
+  const edges = Array.from(graphemes.segment(text), ({ index }) => index);
+  edges.push(text.length);
+  return edges;
+}
+
+function firstAtOrAfter(edges: readonly number[], index: number): number {
+  let low = 0;
+  let high = edges.length - 1;
+  while (low < high) {
+    const mid = (low + high) >> 1;
+    if ((edges[mid] as number) < index) low = mid + 1;
+    else high = mid;
+  }
+  return edges[low] as number;
+}
+
+function lastAtOrBefore(edges: readonly number[], index: number): number {
+  let low = 0;
+  let high = edges.length - 1;
+  while (low < high) {
+    const mid = (low + high + 1) >> 1;
+    if ((edges[mid] as number) > index) high = mid - 1;
+    else low = mid;
+  }
+  return edges[low] as number;
 }
 
 // Ranges come from model extraction and can be reversed, out of bounds, overlapping or fractional.
 export function normalizeSpans(text: string, spans: readonly Span[]): Span[] {
-  const clamped: Span[] = [];
+  if (spans.length === 0) return [];
+  const edges = boundaries(text);
+  const snapped: Span[] = [];
   for (const { start, end, kind } of spans) {
     if (Number.isNaN(start) || Number.isNaN(end)) continue;
-    let from = Math.min(Math.max(Math.ceil(start), 0), text.length);
-    let to = Math.min(Math.max(Math.floor(end), 0), text.length);
-    if (splitsPair(text, from)) from -= 1;
-    if (splitsPair(text, to)) to += 1;
-    if (to > from) clamped.push({ start: from, end: to, kind });
+    const from = firstAtOrAfter(edges, Math.min(Math.max(start, 0), text.length));
+    const to = lastAtOrBefore(edges, Math.min(Math.max(end, 0), text.length));
+    if (to > from) snapped.push({ start: from, end: to, kind });
   }
-  clamped.sort((a, b) => a.start - b.start);
+  snapped.sort((a, b) => a.start - b.start);
   const result: Span[] = [];
   let lastEnd = 0;
-  for (const span of clamped) {
+  for (const span of snapped) {
     if (span.start < lastEnd) continue;
     result.push(span);
     lastEnd = span.end;

@@ -47,32 +47,73 @@ test("reversed, negative and non-integer ranges never produce a highlight", () =
   ).toEqual([{ start: 0, end: 6, kind: "competitor" }]);
 });
 
-test("a range never splits an emoji in half", () => {
+const graphemeBoundaries = (text: string) => {
+  const edges = new Set([text.length]);
+  for (const { index } of new Intl.Segmenter(undefined, { granularity: "grapheme" }).segment(
+    text,
+  )) {
+    edges.add(index);
+  }
+  return edges;
+};
+
+test("range edges snap inward to whole characters, never splitting one across a mark", () => {
   // "👍" is two UTF-16 code units at 2..4.
   expect(normalizeSpans("ok👍 sí", [{ start: 3, end: 5, kind: "self" }])).toEqual([
-    { start: 2, end: 5, kind: "self" },
+    { start: 4, end: 5, kind: "self" },
+  ]);
+  // A decomposed "é" (e + U+0301) at 3..5 stays whole.
+  expect(normalizeSpans("Cafe\u0301 Sur", [{ start: 0, end: 4, kind: "self" }])).toEqual([
+    { start: 0, end: 3, kind: "self" },
+  ]);
+  // A family emoji (ZWJ sequence, 8 code units) and a flag (4 code units) are single characters.
+  const family = "Hola 👨‍👩‍👧 y 🇨🇴";
+  expect(normalizeSpans(family, [{ start: 7, end: 18, kind: "self" }])).toEqual([
+    { start: 13, end: 16, kind: "self" },
+  ]);
+  expect(normalizeSpans(family, [{ start: 5, end: 13, kind: "competitor" }])).toEqual([
+    { start: 5, end: 13, kind: "competitor" },
   ]);
 });
 
-const spanArb = fc.record({
-  start: fc.oneof(fc.integer({ min: -20, max: 80 }), fc.double()),
-  end: fc.oneof(fc.integer({ min: -20, max: 80 }), fc.double()),
-  kind: fc.constantFrom<Span["kind"]>("self", "competitor"),
-});
+// Edges mostly land inside the text so the interesting cases (mid-character, overlapping) come up often.
+const edgeFor = (length: number) =>
+  fc.oneof(
+    { weight: 4, arbitrary: fc.integer({ min: -3, max: length + 3 }) },
+    { weight: 1, arbitrary: fc.double() },
+  );
+const spansFor = (length: number) =>
+  fc.array(
+    fc.record({
+      start: edgeFor(length),
+      end: edgeFor(length),
+      kind: fc.constantFrom<Span["kind"]>("self", "competitor"),
+    }),
+    { maxLength: 12 },
+  );
+const withSpans = (text: fc.Arbitrary<string>) =>
+  text.chain((t) => fc.tuple(fc.constant(t), spansFor(t.length)));
 
 test("any extraction output normalizes to ordered, disjoint, non-empty ranges inside the text", () => {
   fc.assert(
     fc.property(
-      fc.string({ maxLength: 60, unit: "binary" }),
-      fc.array(spanArb, { maxLength: 12 }),
-      (text, spans) => {
+      withSpans(
+        fc.oneof(
+          fc.string({ maxLength: 60, unit: "binary" }),
+          fc.string({ maxLength: 30, unit: "grapheme" }),
+          fc.constantFrom("Cafe\u0301 👨‍👩‍👧 🇨🇴 Sur", "ok👍 sí"),
+        ),
+      ),
+      ([text, spans]) => {
         const out = normalizeSpans(text, spans);
+        const edges = graphemeBoundaries(text);
         let previousEnd = 0;
         for (const s of out) {
           expect(Number.isInteger(s.start) && Number.isInteger(s.end)).toBe(true);
           expect(s.start).toBeGreaterThanOrEqual(previousEnd);
           expect(s.end).toBeGreaterThan(s.start);
           expect(s.end).toBeLessThanOrEqual(text.length);
+          expect(edges.has(s.start) && edges.has(s.end)).toBe(true);
           previousEnd = s.end;
         }
       },
@@ -82,16 +123,10 @@ test("any extraction output normalizes to ordered, disjoint, non-empty ranges in
 
 test("any extraction output keeps the whole answer text, in order", () => {
   fc.assert(
-    fc.property(
-      fc.string({ maxLength: 60, unit: "grapheme" }),
-      fc.array(spanArb, { maxLength: 12 }),
-      (text, spans) => {
-        const markup = html(
-          <Bubble role="answer" engine="gemini" text={text} highlights={spans} />,
-        );
-        expect(answerOf(markup)).toBe(text);
-      },
-    ),
+    fc.property(withSpans(fc.string({ maxLength: 60, unit: "grapheme" })), ([text, spans]) => {
+      const markup = html(<Bubble role="answer" engine="gemini" text={text} highlights={spans} />);
+      expect(answerOf(markup)).toBe(text);
+    }),
   );
 });
 
