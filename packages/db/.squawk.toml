@@ -1,6 +1,7 @@
 pg_version = "18"
-# Drizzle wraps every migration file in one transaction; files under migrations/concurrent
-# opt out with `-- squawk-disable-assume-in-transaction`.
+# Drizzle wraps every migration file in one transaction. Files under migrations/concurrent must
+# start with `-- squawk-disable-assume-in-transaction`, because CREATE INDEX CONCURRENTLY cannot
+# run inside one.
 assume_in_transaction = true
 excluded_rules = [
   # The runner sets lock_timeout and statement_timeout on its session before applying files.
