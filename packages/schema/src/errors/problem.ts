@@ -35,16 +35,24 @@ type Translator = ReturnType<typeof getTranslator<"errors">>;
 type MessageKey = Parameters<Translator>[0];
 type Params = Record<string, string | number>;
 
-// One translator per locale keeps compiled ICU messages cached across calls.
-const translators = new Map<Locale, Translator>();
+function rethrow(error: Error): never {
+  throw error;
+}
 
-function translatorFor(locale: Locale): Translator {
-  let t = translators.get(locale);
-  if (!t) {
-    t = getTranslator(locale, "errors");
-    translators.set(locale, t);
+// One translator per locale keeps compiled ICU messages cached across calls. Field params come
+// from callers, so field details use a strict translator that throws instead of rendering a key.
+const translators = new Map<Locale, { t: Translator; strict: Translator }>();
+
+function translatorsFor(locale: Locale): { t: Translator; strict: Translator } {
+  let pair = translators.get(locale);
+  if (!pair) {
+    pair = {
+      t: getTranslator(locale, "errors"),
+      strict: getTranslator(locale, "errors", { onError: rethrow }),
+    };
+    translators.set(locale, pair);
   }
-  return t;
+  return pair;
 }
 
 function toMessageParams(params: Record<string, unknown> | undefined): Params {
@@ -56,16 +64,24 @@ function toMessageParams(params: Record<string, unknown> | undefined): Params {
   return result;
 }
 
-function fieldDetail(t: Translator, field: FieldError): string {
+// A rule without a message, or params that cannot fill it, gets the generic field message.
+function fieldDetail(strict: Translator, field: FieldError): string {
   const key = `validation.${field.code}` as MessageKey;
-  return t.has(key) ? t(key, toMessageParams(field.params)) : t("validation.custom");
+  if (strict.has(key)) {
+    try {
+      return strict(key, toMessageParams(field.params));
+    } catch {
+      // Params that cannot fill the message get the generic one below.
+    }
+  }
+  return strict("validation.custom");
 }
 
 export function toProblem(
   error: unknown,
   ctx: { locale: Locale; instance?: string; requestId?: string },
 ): ProblemDetails {
-  const t = translatorFor(ctx.locale);
+  const { t, strict } = translatorsFor(ctx.locale);
   const known = isAppError(error) && error.code !== "internal" ? error : undefined;
   const code: ErrorCode = known?.code ?? "internal";
   const definition: { status: number; retryAfterSeconds?: number } = ERRORS[code];
@@ -91,7 +107,7 @@ export function toProblem(
     problem.errors = known.fieldErrors.map((field) => ({
       pointer: field.pointer,
       code: field.code,
-      detail: fieldDetail(t, field),
+      detail: fieldDetail(strict, field),
     }));
   }
   return problem;
