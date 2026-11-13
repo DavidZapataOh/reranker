@@ -10,13 +10,16 @@ export function TextField({
   id,
   className,
   type,
+  "aria-describedby": callerDescribedBy,
   ...rest
 }: InputHTMLAttributes<HTMLInputElement> & { label: string; hint?: string; error?: string }) {
   const generated = useId();
   const inputId = id ?? generated;
   const hintId = `${inputId}-hint`;
   const errorId = `${inputId}-error`;
-  const describedBy = [hint ? hintId : null, error ? errorId : null].filter(Boolean).join(" ");
+  const describedBy = [callerDescribedBy, hint ? hintId : null, error ? errorId : null]
+    .filter(Boolean)
+    .join(" ");
   const email =
     type === "email"
       ? { inputMode: "email", autoComplete: "email", autoCapitalize: "none", spellCheck: false }
@@ -39,7 +42,7 @@ export function TextField({
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy || undefined}
         className={cx(
-          "mt-2 min-h-12 w-full rounded-xl bg-surface px-4 text-[16px] text-ink ring-1 ring-ink/30 placeholder:text-ink/45 disabled:opacity-60",
+          "mt-2 min-h-12 w-full rounded-xl bg-surface px-4 text-[16px] text-ink ring-1 ring-ink/55 placeholder:text-ink/45 disabled:opacity-60",
           error && "ring-2 ring-ink",
           className,
         )}

@@ -4,7 +4,7 @@ import { buttonClass } from "../actions/variants.ts";
 import { cx } from "../cx.ts";
 
 const tones = {
-  hero: "rounded-field bg-surface p-2 pl-5 shadow-float ring-1 ring-border focus-within:ring-2 focus-within:ring-green/40",
+  hero: "rounded-field bg-surface p-2 pl-5 shadow-float ring-1 transition-shadow ring-border focus-within:ring-2 focus-within:ring-green/40",
   paper:
     "rounded-[18px] bg-paper p-2 pl-4 ring-1 ring-border focus-within:ring-2 focus-within:ring-green/40",
 } as const;
@@ -56,7 +56,8 @@ export function SearchField({
         />
         <button
           type="submit"
-          className={buttonClass("primary", "xl", "shrink-0 rounded-[13px] px-4 md:px-6")}
+          disabled={inputProps.disabled}
+          className={buttonClass("primary", "search", "shrink-0")}
         >
           {submitShortLabel ? (
             <>

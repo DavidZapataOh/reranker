@@ -67,6 +67,15 @@ test("Checkbox links its error", () => {
   expect(h).toContain('aria-invalid="true"');
 });
 
-test("FieldError announces politely", () => {
-  expect(html(<FieldError id="e">Algo</FieldError>)).toContain('id="e"');
+test("FieldError is an assertive alert with the given id", () => {
+  const h = html(<FieldError id="e">Algo</FieldError>);
+  expect(h).toContain('id="e"');
+  expect(h).toContain('role="alert"');
+});
+
+test("TextField keeps a caller aria-describedby next to its own ids", () => {
+  const t = html(<TextField label="Nombre" error="Falta" aria-describedby="extra" />);
+  const ids = /aria-describedby="([^"]+)"/.exec(t)?.[1]?.split(" ") ?? [];
+  expect(ids).toHaveLength(2);
+  expect(ids).toContain("extra");
 });

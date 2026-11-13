@@ -24,7 +24,7 @@ export function Checkbox({
             required={required}
             aria-invalid={error ? true : undefined}
             aria-describedby={error ? errorId : undefined}
-            className="peer size-6 cursor-pointer appearance-none rounded-lg bg-surface ring-1 ring-ink/30 checked:bg-green checked:ring-green"
+            className="peer size-6 cursor-pointer appearance-none rounded-lg bg-surface ring-1 ring-ink/55 checked:bg-green checked:ring-green"
           />
           <svg
             aria-hidden="true"

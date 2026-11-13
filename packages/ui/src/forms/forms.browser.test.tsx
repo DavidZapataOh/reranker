@@ -4,6 +4,7 @@ import { cleanup, render } from "vitest-browser-react";
 import { expectNoAxeViolations } from "../../test/axe.ts";
 import { tokens } from "../tokens.ts";
 import { Checkbox } from "./Checkbox.tsx";
+import { CodeField } from "./CodeField.tsx";
 import { SearchField } from "./SearchField.tsx";
 import { TextField } from "./TextField.tsx";
 
@@ -138,4 +139,70 @@ test("every field has no axe violations in each state", async () => {
     </SearchField>,
   );
   await expectNoAxeViolations(container);
+});
+
+test("the search button has the landing's radius, padding and height", async () => {
+  await page.viewport(360, 640);
+  const { container } = await render(
+    <SearchField
+      label="Nombre"
+      inputProps={{}}
+      submitLabel="Ver mi reporte"
+      submitShortLabel="Ver"
+    />,
+  );
+  const button = pick(container, "button");
+  let s = getComputedStyle(button);
+  expect([s.borderTopLeftRadius, s.paddingLeft, s.paddingRight]).toEqual(["13px", "16px", "16px"]);
+  expect(button.getBoundingClientRect().height).toBeGreaterThanOrEqual(56);
+  await page.viewport(1024, 768);
+  s = getComputedStyle(button);
+  expect([s.paddingLeft, s.paddingRight]).toEqual(["24px", "24px"]);
+  await page.viewport(414, 640);
+});
+
+test("the search button is disabled with its input", async () => {
+  const { container } = await render(
+    <SearchField label="Nombre" inputProps={{ disabled: true }} submitLabel="Ver" />,
+  );
+  expect((pick(container, "button") as HTMLButtonElement).disabled).toBe(true);
+});
+
+function luminance([r, g, b]: number[]): number {
+  const [lr, lg, lb] = [r, g, b].map((v) => {
+    const c = (v ?? 0) / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * (lr ?? 0) + 0.7152 * (lg ?? 0) + 0.0722 * (lb ?? 0);
+}
+// Chromium reports ring colors in oklab, so a canvas composites them over white into plain sRGB.
+function ringContrastOnWhite(el: Element): number {
+  const layers = getComputedStyle(el).boxShadow.split(/,\s*(?=\w+\()/);
+  const ring = layers.find((l) => /\b0px 0px 0px [12]px$/.test(l.trim()));
+  if (!ring) throw new Error(`no ring layer: ${getComputedStyle(el).boxShadow}`);
+  const context = document.createElement("canvas").getContext("2d");
+  if (!context) throw new Error("no canvas");
+  context.fillStyle = "white";
+  context.fillRect(0, 0, 1, 1);
+  context.fillStyle = ring.trim().replace(/\s+0px 0px 0px [12]px$/, "");
+  context.fillRect(0, 0, 1, 1);
+  const pixel = [...context.getImageData(0, 0, 1, 1).data];
+  return 1.05 / (luminance(pixel) + 0.05);
+}
+
+test("control boundaries have at least 3:1 contrast against white", async () => {
+  const { container } = await render(
+    <div className="bg-surface p-4">
+      <TextField label="Correo" />
+      <Checkbox name="t">Acepto</Checkbox>
+      <CodeField name="c" label="Código" />
+    </div>,
+  );
+  for (const el of [
+    pick(container, 'input:not([type="checkbox"])'),
+    pick(container, 'input[type="checkbox"]'),
+    pick(container, '[aria-hidden="true"] > span'),
+  ]) {
+    expect(ringContrastOnWhite(el)).toBeGreaterThanOrEqual(3);
+  }
 });

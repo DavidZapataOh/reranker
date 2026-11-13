@@ -66,7 +66,7 @@ export function CodeField({
               // biome-ignore lint/suspicious/noArrayIndexKey: the cells are positional and never reorder
               key={i}
               className={cx(
-                "grid h-14 w-12 place-items-center rounded-xl bg-surface font-mono text-[24px] font-semibold text-ink ring-1 ring-ink/30",
+                "grid h-14 w-12 place-items-center rounded-xl bg-surface font-mono text-[24px] font-semibold text-ink ring-1 ring-ink/55",
                 error && "ring-2 ring-ink",
               )}
             >
