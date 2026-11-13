@@ -8,6 +8,7 @@ import {
   ProviderCostSchema,
   sumCosts,
 } from "../src/cost";
+import { AppError } from "../src/errors";
 
 describe("provider cost", () => {
   test("fields are read-only at compile time", () => {
@@ -27,20 +28,20 @@ describe("provider cost", () => {
       ).amount_micros,
     ).toBe(600_000);
     expect(cost(0, "USD").amount_micros).toBe(0);
-    expect(() => costFromMajor("0.0000001", "USD")).toThrow();
-    expect(() => cost(-1, "USD")).toThrow();
+    expect(() => costFromMajor("0.0000001", "USD")).toThrow(AppError);
+    expect(() => cost(-1, "USD")).toThrow(AppError);
   });
 
   test("costFromMajor rejects negatives, malformed input and unsafe magnitudes", () => {
-    expect(() => costFromMajor("-0.5", "USD")).toThrow();
-    expect(() => costFromMajor("1e3", "USD")).toThrow();
+    expect(() => costFromMajor("-0.5", "USD")).toThrow(AppError);
+    expect(() => costFromMajor("1e3", "USD")).toThrow(AppError);
     expect(costFromMajor("0.5", "EUR")).toEqual({ amount_micros: 500_000, currency: "EUR" });
-    expect(() => costFromMajor("99999999999999999999", "USD")).toThrow();
+    expect(() => costFromMajor("99999999999999999999", "USD")).toThrow(AppError);
   });
 
   test("cost rejects non-integers and unknown currencies", () => {
-    expect(() => cost(1.5, "USD")).toThrow();
-    expect(() => cost(1, "GBP" as never)).toThrow();
+    expect(() => cost(1.5, "USD")).toThrow(AppError);
+    expect(() => cost(1, "GBP" as never)).toThrow(AppError);
   });
 
   test("addCost is associative and commutative and rejects mixed currencies", () => {
@@ -51,20 +52,20 @@ describe("provider cost", () => {
         expect(addCost(a, b)).toEqual(addCost(b, a));
       }),
     );
-    expect(() => addCost(cost(1, "COP"), cost(1, "USD"))).toThrow();
-    expect(() => addCost(cost(Number.MAX_SAFE_INTEGER, "USD"), cost(1, "USD"))).toThrow();
+    expect(() => addCost(cost(1, "COP"), cost(1, "USD"))).toThrow(AppError);
+    expect(() => addCost(cost(Number.MAX_SAFE_INTEGER, "USD"), cost(1, "USD"))).toThrow(AppError);
   });
 
   test("sumCosts of nothing is zero and checks the currency", () => {
     expect(sumCosts([], "USD")).toEqual(cost(0, "USD"));
-    expect(() => sumCosts([cost(1, "COP")], "USD")).toThrow();
+    expect(() => sumCosts([cost(1, "COP")], "USD")).toThrow(AppError);
   });
 
   test("compareCost orders costs of the same currency", () => {
     expect(compareCost(cost(1, "USD"), cost(2, "USD"))).toBe(-1);
     expect(compareCost(cost(2, "USD"), cost(2, "USD"))).toBe(0);
     expect(compareCost(cost(3, "USD"), cost(2, "USD"))).toBe(1);
-    expect(() => compareCost(cost(1, "USD"), cost(1, "EUR"))).toThrow();
+    expect(() => compareCost(cost(1, "USD"), cost(1, "EUR"))).toThrow(AppError);
   });
 
   test("ProviderCostSchema rejects negatives, fractions and extra keys", () => {

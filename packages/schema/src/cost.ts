@@ -1,5 +1,6 @@
 import type { CurrencyCode } from "./currencies";
 import { assertCurrency, CURRENCY_CODES, parseScaled, toSafeInteger } from "./decimal";
+import { AppError } from "./errors/app-error";
 import { registerSchema } from "./registry";
 import { z } from "./z";
 
@@ -18,7 +19,9 @@ export type ProviderCost = Readonly<z.infer<typeof ProviderCostSchema>>;
 export function cost(amountMicros: number, currency: CurrencyCode): ProviderCost {
   assertCurrency(currency);
   if (!Number.isSafeInteger(amountMicros) || amountMicros < 0) {
-    throw new RangeError("Cost must be a non-negative safe integer in micro-units");
+    throw new AppError("internal", {
+      detail: "Cost must be a non-negative safe integer in micro-units",
+    });
   }
   return { amount_micros: amountMicros, currency };
 }
@@ -29,7 +32,7 @@ export function costFromMajor(value: string, currency: CurrencyCode): ProviderCo
 
 function assertSameCurrency(a: ProviderCost, b: ProviderCost): void {
   if (a.currency !== b.currency) {
-    throw new TypeError("Cannot combine costs in different currencies");
+    throw new AppError("internal", { detail: "Cannot combine costs in different currencies" });
   }
 }
 

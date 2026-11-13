@@ -3,6 +3,111 @@
     "appName": "Reranker"
   },
   "errors": {
+    "invalid_request": {
+      "title": "No pudimos procesar la solicitud",
+      "detail": "Lo que enviaste llegó incompleto o dañado. Recarga la página y vuelve a intentarlo.",
+      "action": "Recargar la página"
+    },
+    "validation_failed": {
+      "title": "Revisa los datos marcados",
+      "detail": "Algunos datos no están bien escritos. Corrige los campos marcados y envía de nuevo.",
+      "action": "Corregir los datos"
+    },
+    "unauthenticated": {
+      "title": "Inicia sesión para continuar",
+      "detail": "Tu sesión terminó o todavía no has entrado. Inicia sesión con tu correo y vuelve a intentarlo.",
+      "action": "Iniciar sesión"
+    },
+    "forbidden": {
+      "title": "No tienes acceso a esta sección",
+      "detail": "Tu cuenta no tiene permiso para ver o cambiar esto. Revisa que entraste con el correo correcto.",
+      "action": "Cambiar de cuenta"
+    },
+    "data_policy_required": {
+      "title": "Acepta la política de datos para seguir",
+      "detail": "Para continuar necesitamos que aceptes la versión vigente de nuestra política de tratamiento de datos.",
+      "action": "Revisar y aceptar"
+    },
+    "not_found": {
+      "title": "No encontramos lo que buscas",
+      "detail": "No existe o ya no está disponible. Revisa la dirección o vuelve al inicio.",
+      "action": "Volver al inicio"
+    },
+    "conflict": {
+      "title": "Esto ya existe o acaba de cambiar",
+      "detail": "El dato ya estaba registrado o alguien lo cambió hace un momento. Recarga la página para ver lo más reciente e inténtalo otra vez.",
+      "action": "Recargar la página"
+    },
+    "rate_limited": {
+      "title": "Demasiados intentos seguidos",
+      "detail": "Por seguridad pausamos los intentos un momento. Espera {minutes, plural, one {{seconds, plural, one {# segundo} other {# segundos}}} other {# minutos}} y vuelve a intentarlo.",
+      "action": "Esperar e intentar de nuevo"
+    },
+    "turnstile_failed": {
+      "title": "No pudimos confirmar que eres una persona",
+      "detail": "La verificación de seguridad venció o no se completó. Recarga la página y envía el formulario de nuevo.",
+      "action": "Recargar la página"
+    },
+    "idempotency_key_required": {
+      "title": "No pudimos procesar el envío",
+      "detail": "El formulario llegó incompleto. Recarga la página y vuelve a enviarlo.",
+      "action": "Recargar la página"
+    },
+    "idempotency_key_reused": {
+      "title": "Ya recibimos un envío parecido",
+      "detail": "Antes llegó este mismo envío con datos distintos. Recarga la página y envía el formulario de nuevo.",
+      "action": "Recargar la página"
+    },
+    "consent_required": {
+      "title": "Falta tu autorización",
+      "detail": "Para continuar marca la casilla que autoriza el uso de tus datos y envía de nuevo.",
+      "action": "Marcar la casilla"
+    },
+    "business_not_found": {
+      "title": "No encontramos ese negocio",
+      "detail": "No lo encontramos en Google Maps ni su página web. Revisa el nombre o pega la dirección de su página y vuelve a intentarlo.",
+      "action": "Revisar los datos del negocio"
+    },
+    "evidence_not_found": {
+      "title": "No encontramos esa captura",
+      "detail": "El código no corresponde a ninguna captura. Revisa que lo copiaste completo.",
+      "action": "Revisar el código"
+    },
+    "spend_cap_reached": {
+      "title": "Llegamos al límite de hoy",
+      "detail": "Por hoy alcanzamos el máximo de consultas. Vuelve a intentarlo en {minutes, plural, one {{seconds, plural, one {# segundo} other {# segundos}}} other {# minutos}}.",
+      "action": "Volver más tarde"
+    },
+    "capacity_unavailable": {
+      "title": "Estamos atendiendo muchas solicitudes",
+      "detail": "En este momento hay mucha demanda. Espera {minutes, plural, one {{seconds, plural, one {# segundo} other {# segundos}}} other {# minutos}} y vuelve a intentarlo.",
+      "action": "Intentar de nuevo"
+    },
+    "free_report_unavailable": {
+      "title": "El reporte gratis está en pausa",
+      "detail": "Lo pausamos por un momento. Vuelve a intentarlo en {minutes, plural, one {{seconds, plural, one {# segundo} other {# segundos}}} other {# minutos}}.",
+      "action": "Intentar más tarde"
+    },
+    "provider_unavailable": {
+      "title": "Un servicio que usamos no responde",
+      "detail": "Uno de los servicios con los que medimos no está respondiendo. Vuelve a intentarlo en {minutes, plural, one {{seconds, plural, one {# segundo} other {# segundos}}} other {# minutos}}.",
+      "action": "Intentar más tarde"
+    },
+    "service_unavailable": {
+      "title": "Tenemos una falla temporal",
+      "detail": "Parte de nuestro sistema no está respondiendo. Espera {minutes, plural, one {{seconds, plural, one {# segundo} other {# segundos}}} other {# minutos}} y vuelve a intentarlo.",
+      "action": "Intentar de nuevo"
+    },
+    "timeout": {
+      "title": "Esto tardó más de lo normal",
+      "detail": "La respuesta no llegó a tiempo. Espera {minutes, plural, one {{seconds, plural, one {# segundo} other {# segundos}}} other {# minutos}} y vuelve a intentarlo.",
+      "action": "Intentar de nuevo"
+    },
+    "internal": {
+      "title": "Algo salió mal de nuestro lado",
+      "detail": "Tuvimos un error inesperado y no es por algo que hayas hecho. Vuelve a intentarlo en unos minutos.",
+      "action": "Intentar de nuevo"
+    },
     "validation": {
       "invalid_type": "{expected, select, number {Escribe un número} string {Escribe un texto} boolean {Elige una opción} date {Escribe una fecha válida} array {Agrega al menos un elemento} object {Completa este grupo de datos} other {El tipo de este dato no es válido}}",
       "too_small": "{origin, select, string {Escribe al menos {minimum} caracteres} number {El valor debe ser {inclusive, select, true {mayor o igual a} other {mayor que}} {minimum}} array {Agrega al menos {minimum} elementos} set {Agrega al menos {minimum} elementos} date {La fecha es demasiado anterior} other {El valor es demasiado pequeño}}",

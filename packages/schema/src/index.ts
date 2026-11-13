@@ -11,6 +11,23 @@ export { CountryConfig } from "./country";
 export { CURRENCIES } from "./currencies";
 export { AppEnv, CaptureChannel, CaptureProvider, EngineId } from "./domain";
 export {
+  type ActionResult,
+  AppError,
+  type AppErrorOptions,
+  ERROR_CODES,
+  ERRORS,
+  type ErrorCode,
+  type FieldError,
+  fromZodError,
+  IdempotencyKeyHeader,
+  isAppError,
+  PROBLEM_CONTENT_TYPE,
+  ProblemDetails,
+  type ProblemRoot,
+  toActionResult,
+  toProblem,
+} from "./errors";
+export {
   add,
   allocate,
   compare,
