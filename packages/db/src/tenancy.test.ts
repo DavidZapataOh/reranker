@@ -16,7 +16,7 @@ vi.mock("./client", () => {
   const touched = () => {
     throw new Error("pool touched");
   };
-  return { appDb: touched, systemDb: touched };
+  return { appPool: touched, systemPool: touched };
 });
 
 const A = asTenantId(randomUUID());
@@ -30,6 +30,11 @@ test("asTenantId lowercases and rejects non-uuid input", () => {
   expect(asTenantId(A.toUpperCase())).toBe(A);
   for (const bad of ["x", "", `${A},${B}`, `{${A}}`, ` ${A}`]) {
     expect(() => asTenantId(bad)).toThrow(expect.objectContaining({ code: "internal" }));
+  }
+  for (const notString of [123, null, undefined, { toLowerCase: () => A }]) {
+    expect(() => asTenantId(notString as unknown as string)).toThrow(
+      expect.objectContaining({ code: "internal" }),
+    );
   }
 });
 
@@ -59,8 +64,8 @@ test.each(["", "a", "Auth", "1auth", "auth reports", `a${"b".repeat(64)}`, "auth
   },
 );
 
-test.each([0, -1, 1.5, Number.NaN, Number.POSITIVE_INFINITY])(
-  "rejects statementTimeoutMs %s, which would disable or break the per-transaction timeout",
+test.each([0, -1, 1.5, Number.NaN, Number.POSITIVE_INFINITY, 60_001])(
+  "rejects statementTimeoutMs %s, outside 1..60000 ms",
   async (statementTimeoutMs) => {
     await expect(withTenant(A, async () => 1, { statementTimeoutMs })).rejects.toMatchObject({
       code: "internal",

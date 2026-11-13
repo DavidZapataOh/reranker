@@ -5,7 +5,7 @@ import { eq, inArray, sql } from "drizzle-orm";
 import pg from "pg";
 import { afterAll, afterEach, beforeAll, expect, test, vi } from "vitest";
 import { endPools } from "../src/client";
-import { asTenantId, withSystem, withTenant, withTenants } from "../src/tenancy";
+import { asTenantId, type TenantTx, withSystem, withTenant, withTenants } from "../src/tenancy";
 import { createProbeTable } from "./probe";
 
 const A = asTenantId(randomUUID());
@@ -218,4 +218,18 @@ test("withSystem tx carries app.system_reason and statement_timeout locally", as
       ).rows[0],
   );
   expect(tenant).toEqual({ reason: "", timeout: "5s" });
+});
+
+test("a handle kept past the callback cannot reach the connection that went back to the pool", async () => {
+  let stored: TenantTx | undefined;
+  let pending: PromiseLike<unknown> | undefined;
+  await withTenant(A, async (tx) => {
+    stored = tx;
+    pending = tx.select().from(probe());
+  });
+  expect(() => stored?.select().from(probe())).toThrow(
+    expect.objectContaining({ code: "internal" }),
+  );
+  const late = await Promise.resolve(pending).catch((e: unknown) => e);
+  expect((late as Error).cause ?? late).toMatchObject({ code: "internal" });
 });

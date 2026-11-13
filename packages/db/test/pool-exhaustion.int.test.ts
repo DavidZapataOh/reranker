@@ -1,8 +1,9 @@
 import { randomUUID } from "node:crypto";
 import { sql } from "drizzle-orm";
 import pg from "pg";
-import { afterAll, beforeAll, expect, test, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, expect, test, vi } from "vitest";
 import { appPool, endPools } from "../src/client";
+import { type DbEvent, resetDbEventsForTest, setDbEventSink } from "../src/events";
 import { asTenantId, withTenant } from "../src/tenancy";
 import { createProbeTable } from "./probe";
 
@@ -17,6 +18,67 @@ let probeTable: Awaited<ReturnType<typeof createProbeTable>>;
 
 beforeAll(async () => {
   probeTable = await createProbeTable();
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
+  resetDbEventsForTest();
+});
+
+// Fails the first statement that starts with `prefix` and lets every other one reach Neon.
+function failOnce(prefix: string, error: Error) {
+  const original = pg.Client.prototype.query;
+  let pending = true;
+  vi.spyOn(pg.Client.prototype, "query").mockImplementation(function (
+    this: pg.Client,
+    ...args: unknown[]
+  ) {
+    const [query] = args;
+    const text = typeof query === "string" ? query : (query as { text: string }).text;
+    if (pending && text.startsWith(prefix)) {
+      pending = false;
+      return Promise.reject(error);
+    }
+    return (original as (...a: unknown[]) => unknown).apply(this, args);
+  } as typeof original);
+}
+
+const session = async () =>
+  (
+    await appPool().query<{ tenants: string; timeout: string }>(
+      "select coalesce(current_setting('app.tenant_ids', true), '') as tenants, current_setting('statement_timeout') as timeout",
+    )
+  ).rows[0];
+
+test("a failed BEGIN gives the only slot back: the next transaction runs at once", async () => {
+  expect(await withTenant(A, async () => 0)).toBe(0);
+  const dropped = Object.assign(new pg.DatabaseError("terminating connection", 0, "error"), {
+    code: "57P01",
+  });
+  failOnce("begin", dropped);
+  await expect(withTenant(A, async () => 1)).rejects.toMatchObject({
+    code: "service_unavailable",
+  });
+  vi.restoreAllMocks();
+  expect(appPool().totalCount).toBe(appPool().idleCount);
+  const started = performance.now();
+  expect(await withTenant(A, async () => 2)).toBe(2);
+  expect(performance.now() - started).toBeLessThan(1500);
+});
+
+test("a failed ROLLBACK keeps the original 42501 and its event, and the slot comes back clean", async () => {
+  const events: DbEvent[] = [];
+  setDbEventSink((event) => events.push(event));
+  failOnce("rollback", new Error("Connection terminated unexpectedly"));
+  const error = await withTenant(A, (tx) =>
+    tx.insert(probeTable.table).values({ tenantId: B }),
+  ).catch((e: unknown) => e);
+  vi.restoreAllMocks();
+  expect(error).toMatchObject({ code: "internal", cause: { code: "42501" } });
+  expect(events).toEqual([{ name: "db_rls_violation", pool: "app", pgCode: "42501" }]);
+  expect(appPool().totalCount).toBe(appPool().idleCount);
+  expect(await session()).toEqual({ tenants: "", timeout: "15s" });
+  expect(await withTenant(A, async () => 3)).toBe(3);
 });
 
 afterAll(async () => {
@@ -72,12 +134,6 @@ test("after a 42501 and a 57014 the same connection starts clean (empty app.tena
     return (original as (...a: unknown[]) => unknown).apply(this, args);
   } as typeof original);
   const probe = probeTable.table;
-  const session = async () =>
-    (
-      await appPool().query<{ tenants: string; timeout: string }>(
-        "select coalesce(current_setting('app.tenant_ids', true), '') as tenants, current_setting('statement_timeout') as timeout",
-      )
-    ).rows[0];
 
   await expect(
     withTenant(A, (tx) => tx.insert(probe).values({ tenantId: B })),

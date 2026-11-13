@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { appDb, appPool, endPools, systemDb, systemPool, verifiedTlsUrl } from "./client";
+import { appPool, endPools, systemPool, verifiedTlsUrl } from "./client";
 
 const attach = vi.hoisted(() => vi.fn());
 vi.mock("@vercel/functions", () => ({ attachDatabasePool: attach }));
@@ -62,8 +62,7 @@ describe("pools", () => {
         "verify-full",
       );
     }
-    expect(appDb()).toBe(appDb());
-    expect(systemDb()).not.toBe(appDb());
+    expect(systemPool()).not.toBe(appPool());
   });
 
   test("DB_POOL_MAX caps both pools", () => {
@@ -71,13 +70,15 @@ describe("pools", () => {
     expect([appPool().options.max, systemPool().options.max]).toEqual([1, 1]);
   });
 
-  test("only attach to Vercel when running there", () => {
+  test("attach to Vercel only when running there", async () => {
     appPool();
-    expect(attach).not.toHaveBeenCalled();
-    vi.stubEnv("VERCEL", "1");
-    expect(attach).toHaveBeenCalledTimes(0);
     systemPool();
-    expect(attach).toHaveBeenCalledWith(systemPool());
+    expect(attach).not.toHaveBeenCalled();
+    await endPools();
+    vi.stubEnv("VERCEL", "1");
+    const pool = appPool();
+    expect(attach).toHaveBeenCalledTimes(1);
+    expect(attach).toHaveBeenCalledWith(pool);
   });
 
   test("an idle client error is logged without its message and does not throw", () => {

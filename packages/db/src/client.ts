@@ -1,5 +1,4 @@
 import { attachDatabasePool } from "@vercel/functions";
-import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import { readDbEnv } from "./env";
 
@@ -36,7 +35,6 @@ function createPool(name: PoolName): pg.Pool {
 }
 
 const pools = new Map<PoolName, pg.Pool>();
-const databases = new Map<PoolName, NodePgDatabase>();
 
 // Created on first use so importing the package never needs the database environment.
 function pool(name: PoolName): pg.Pool {
@@ -48,23 +46,11 @@ function pool(name: PoolName): pg.Pool {
   return existing;
 }
 
-function database(name: PoolName): NodePgDatabase {
-  let existing = databases.get(name);
-  if (!existing) {
-    existing = drizzle({ client: pool(name), casing: "snake_case" });
-    databases.set(name, existing);
-  }
-  return existing;
-}
-
-export const appDb = (): NodePgDatabase => database("app");
-export const systemDb = (): NodePgDatabase => database("system");
 export const appPool = (): pg.Pool => pool("app");
 export const systemPool = (): pg.Pool => pool("system");
 
 export async function endPools(): Promise<void> {
   const open = [...pools.values()];
   pools.clear();
-  databases.clear();
   await Promise.all(open.map((p) => p.end()));
 }

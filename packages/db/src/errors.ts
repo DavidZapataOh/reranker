@@ -40,10 +40,15 @@ export function toDbError(err: unknown, ctx: Ctx): unknown {
   // Drizzle wraps every driver failure and puts the SQL and its parameters in the message.
   if (err instanceof DrizzleQueryError) {
     const translated = toDbError(err.cause, ctx);
-    return translated === err.cause ? err : translated;
+    if (translated !== err.cause || isAppError(translated)) return translated;
+    return new AppError("internal", { cause: err.cause });
   }
   if (err instanceof pg.DatabaseError) return fromPg(err, ctx);
   if (!(err instanceof Error) || isAppError(err)) return err;
+  // pg reports a dropped socket without a code.
+  if (err.message.startsWith("Connection terminated")) {
+    return new AppError("service_unavailable", { retryAfterSeconds: 2, cause: err });
+  }
   if (err.message.startsWith("timeout exceeded when trying to connect")) {
     emitDbEvent({
       name: "db_pool_exhausted",
