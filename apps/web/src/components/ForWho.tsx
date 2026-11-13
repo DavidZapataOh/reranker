@@ -1,5 +1,6 @@
 "use client";
 
+import { Headline, Section } from "@reranker/ui";
 import {
   ArrowUp,
   BedDouble,
@@ -14,7 +15,6 @@ import {
   Wrench,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { H2, Section } from "./ui";
 
 const kinds = [
   { k: "Restaurantes", Icon: UtensilsCrossed, q: "¿Dónde almuerzo rico en Ciudad de México?" },
@@ -87,9 +87,9 @@ export function ForWho() {
   return (
     <Section id="para-quien" labelledBy="who-title" className="bg-white py-24 md:py-32">
       <div className="text-center">
-        <H2 id="who-title" className="mx-auto max-w-[18ch]">
+        <Headline id="who-title" className="mx-auto max-w-[18ch]">
           A cualquier negocio le preguntan.
-        </H2>
+        </Headline>
       </div>
 
       <div ref={box} className="mx-auto mt-12 max-w-[860px]">

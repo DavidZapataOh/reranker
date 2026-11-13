@@ -1,8 +1,8 @@
 "use client";
 
+import { Headline, Lede, Section } from "@reranker/ui";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { H2, Lede, Section } from "./ui";
 
 const steps = [
   {
@@ -45,7 +45,7 @@ export function HowItWorks() {
   };
   return (
     <Section id="como-funciona" labelledBy="how-title" className="bg-white py-24 md:py-32">
-      <H2 id="how-title">Así funciona.</H2>
+      <Headline id="how-title">Así funciona.</Headline>
       <Lede>Tres pasos y menos de 2 minutos.</Lede>
 
       <div

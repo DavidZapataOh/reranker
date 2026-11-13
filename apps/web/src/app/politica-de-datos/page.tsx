@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { LegalPage, type LegalSection } from "@/components/LegalPage";
-import { contact } from "@/components/ui";
+import { contact } from "@/lib/contact";
 
 export const metadata: Metadata = {
   title: "Política de tratamiento de datos personales · Reranker",
