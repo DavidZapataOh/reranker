@@ -1,9 +1,11 @@
+import { EvidenceSeal, ExampleChip, Headline, Lede, Section } from "@reranker/ui";
+import { Icon, icons } from "@reranker/ui/icons";
 import Image from "next/image";
 import Link from "next/link";
+import { contact, wa } from "@/lib/contact";
 import { type Currency, formatPrice, PAYMENT_METHODS, PRICES } from "@/lib/pricing";
 import { CookiePrefsButton } from "./Analytics";
 import { ScoreCard } from "./ScoreCard";
-import { contact, Example, H2, Icon, icons, Lede, Section, wa } from "./ui";
 
 /* 2 · Three promises, in the page's own language: highlighted phrases, no icons */
 export function Promises() {
@@ -74,7 +76,7 @@ export function Shift() {
 export function Bento() {
   return (
     <Section id="producto" labelledBy="bento-title" className="py-24 md:py-32">
-      <H2 id="bento-title">Todo lo que la IA dice de ti, en un solo lugar.</H2>
+      <Headline id="bento-title">Todo lo que la IA dice de ti, en un solo lugar.</Headline>
       <Lede>
         Sin jerga: quién sale cuando te buscan, qué tan seguido apareces tú y qué cambiar primero.
       </Lede>
@@ -106,7 +108,7 @@ export function Bento() {
                 Clínicas dentales · Bogotá · 10 preguntas
               </p>
             </div>
-            <Example />
+            <ExampleChip />
           </div>
           <ol className="mt-7 space-y-3.5">
             {[
@@ -147,11 +149,7 @@ export function Bento() {
               “Para un taller de confianza en Guadalajara, te sugiero Motor Valle y…”
             </p>
             <p className="mt-3 text-ink/65">ID rr_7f3a·91c2</p>
-            <span className="stamp absolute -top-4 -right-3 grid h-[74px] w-[74px] rotate-[-12deg] place-items-center rounded-full bg-amber text-center font-display text-[11px] leading-tight font-black text-ink shadow-soft">
-              Guardada
-              <br />
-              sin editar
-            </span>
+            <EvidenceSeal variant="stamp" className="stamp absolute -top-4 -right-3" />
           </div>
           <a
             href="#preguntas"
@@ -269,7 +267,7 @@ export function Connect() {
   return (
     <Section id="conexiones" labelledBy="connect-title" className="py-24 md:py-32">
       <div className="max-w-[640px]">
-        <H2 id="connect-title">Corregimos donde la IA lee.</H2>
+        <Headline id="connect-title">Corregimos donde la IA lee.</Headline>
         <Lede>
           La IA arma su respuesta con lo que encuentra de ti en internet. Ahí hacemos los cambios, y
           te avisamos por donde ya hablas.
@@ -380,7 +378,7 @@ export function Pricing({ currency }: { currency: Currency }) {
   ];
   return (
     <Section id="precios" labelledBy="pricing-title" className="bg-white py-24 md:py-32">
-      <H2 id="pricing-title">Precios en tu moneda, sin permanencia.</H2>
+      <Headline id="pricing-title">Precios en tu moneda, sin permanencia.</Headline>
       <Lede>Pagas con {PAYMENT_METHODS[currency]}, y cancelas cuando quieras.</Lede>
       <div className="relative mt-12 grid gap-5 lg:grid-cols-3">
         <div
@@ -506,7 +504,7 @@ export function Faq({ currency }: { currency: Currency }) {
   return (
     <Section id="preguntas" labelledBy="faq-title" className="bg-white py-24 md:py-32">
       <div className="grid gap-12 md:grid-cols-[1fr_1.6fr] md:gap-16">
-        <H2 id="faq-title">Lo que nos preguntan los dueños.</H2>
+        <Headline id="faq-title">Lo que nos preguntan los dueños.</Headline>
         <div className="divide-y divide-line border-y border-line">
           {qa.map(([q, a]) => (
             <details key={q} className="group py-1">

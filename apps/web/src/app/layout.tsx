@@ -1,33 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Caveat, JetBrains_Mono, Nunito, Plus_Jakarta_Sans } from "next/font/google";
 import { Analytics } from "@/components/Analytics";
 import { GoogleTag } from "@/components/GoogleTag";
+import { fontVariables } from "./fonts";
 import "./globals.css";
-
-const display = Nunito({
-  variable: "--nf-display",
-  subsets: ["latin"],
-  weight: ["800", "900"],
-  display: "swap",
-});
-const text = Plus_Jakarta_Sans({
-  variable: "--nf-text",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-});
-const mono = JetBrains_Mono({
-  variable: "--nf-mono",
-  subsets: ["latin"],
-  weight: ["400", "600"],
-  display: "swap",
-});
-const hand = Caveat({
-  variable: "--nf-hand",
-  subsets: ["latin"],
-  weight: ["500", "600"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://reranker.co"),
@@ -57,10 +32,7 @@ export const viewport: Viewport = { themeColor: "#FAF7F0" };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="es"
-      className={`${display.variable} ${text.variable} ${mono.variable} ${hand.variable}`}
-    >
+    <html lang="es" className={fontVariables}>
       <body>
         <a
           href="#contenido"

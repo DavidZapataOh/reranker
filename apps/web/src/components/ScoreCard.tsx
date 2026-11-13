@@ -1,9 +1,9 @@
 "use client";
 
+import { ExampleChip, StepBars } from "@reranker/ui";
 import { useEffect, useRef, useState } from "react";
-import { Example } from "./ui";
 
-const levels = ["Invisible", "A veces", "En la lista", "De los fijos"];
+const levels = ["Invisible", "A veces", "En la lista", "De los fijos"] as const;
 
 /** The brand moment: the score climbs one step (from "A veces" to "En la lista"). */
 export function ScoreCard({ className = "" }: { className?: string }) {
@@ -42,7 +42,7 @@ export function ScoreCard({ className = "" }: { className?: string }) {
           <h3 className="text-[19px] font-bold text-ink">Tu puntaje en la IA</h3>
           <p className="mt-1 text-[15px] text-ink/65">Qué tan seguido te nombra, de 0 a 100.</p>
         </div>
-        <Example />
+        <ExampleChip />
       </div>
 
       <div className="mt-6 flex items-end gap-4" aria-live="polite">
@@ -57,30 +57,7 @@ export function ScoreCard({ className = "" }: { className?: string }) {
         </p>
       </div>
 
-      {/* 4-level staircase: the stepped-r motif */}
-      <div className="mt-8 grid grid-cols-4 items-end gap-2" aria-hidden="true">
-        {levels.map((l, i) => (
-          <div key={l} className="flex flex-col gap-2">
-            <span
-              className="relative block rounded-lg transition-[background-color] duration-[250ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
-              style={{
-                height: 18 + i * 16,
-                backgroundColor: i <= current ? "#0f5c45" : "#d9ebd7",
-                transitionDelay: `${(i - 1) * 150}ms`,
-              }}
-            >
-              {i === current && (
-                <span className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rounded-full bg-amber ring-4 ring-white" />
-              )}
-            </span>
-            <span
-              className={`text-[13px] ${i === current ? "font-semibold text-ink" : "text-ink/65"}`}
-            >
-              {l}
-            </span>
-          </div>
-        ))}
-      </div>
+      <StepBars current={current} labels={levels} />
       <p className="mt-5 text-[14px] text-ink/65">
         {up ? "Subiste un escalón: ya estás en la lista." : "Hoy la IA te nombra a veces."}
       </p>

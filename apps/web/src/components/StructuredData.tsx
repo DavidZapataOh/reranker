@@ -1,8 +1,8 @@
 import { DEFAULT_LOCALE } from "@reranker/i18n";
 import { DEFAULT_COUNTRY_CODE, getCountry } from "@reranker/i18n/countries";
+import { contact } from "@/lib/contact";
 import { CURRENCIES, type Currency, DEFAULT_CURRENCY, isoCode, PRICES } from "@/lib/pricing";
 import { faqItems } from "./Sections";
-import { contact } from "./ui";
 
 const BASE = "https://reranker.co";
 const LANGUAGE = new Intl.Locale(DEFAULT_LOCALE).language;

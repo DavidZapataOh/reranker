@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage, type LegalSection } from "@/components/LegalPage";
-import { contact } from "@/components/ui";
+import { contact } from "@/lib/contact";
 
 export const metadata: Metadata = {
   title: "Términos y condiciones · Reranker",
