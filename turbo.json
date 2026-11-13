@@ -39,6 +39,7 @@
         "NEON_PROJECT_ID",
         "NEON_NONPROD_PROJECT_ID"
       ],
+      "passThroughEnv": ["DB_LOGIN_PASSWORDS"],
       "inputs": ["$TURBO_DEFAULT$"]
     },
     "test:contract": {

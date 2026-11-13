@@ -46,6 +46,9 @@ catalog:
   "@vercel/functions": 3.7.6
   squawk-cli: ^2.70.0
   "@neondatabase/api-client": ^2.7.3
+overrides:
+  # GHSA-mrhx-c7xc-m3w5: @vercel/cli-config pins zod 4.1.11.
+  "@vercel/cli-config>zod": 4.6.7
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - "@reranker/*"
