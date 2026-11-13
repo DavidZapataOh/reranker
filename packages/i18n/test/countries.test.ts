@@ -1,3 +1,7 @@
+/// <reference lib="esnext.intl" />
+/// <reference lib="esnext.temporal" />
+// Node 26 ships Temporal and Intl.Locale#getTimeZones; the package lib stays at es2024.
+
 import { describe, expect, test } from "vitest";
 import {
   billingFor,
@@ -71,6 +75,20 @@ describe("country registry", () => {
       ES: "Europe/Madrid",
       CO: "America/Bogota",
     });
+  });
+
+  test("every time zone belongs to its own country", () => {
+    // CLDR lists legacy aliases (Asia/Saigon), so zones are compared as Temporal does.
+    const sameZone = (a: string, b: string) => {
+      const instant = Temporal.Instant.fromEpochMilliseconds(0);
+      return instant.toZonedDateTimeISO(a).equals(instant.toZonedDateTimeISO(b));
+    };
+    const foreign = measurableCountries().filter((country) => {
+      const own = new Intl.Locale(`und-${country.code}`).getTimeZones() ?? [];
+      return !own.some((zone) => sameZone(zone, country.timeZone));
+    });
+    expect(foreign.map((country) => `${country.code} ${country.timeZone}`)).toEqual([]);
+    expect(getCountry("VN").timeZone).toBe("Asia/Ho_Chi_Minh");
   });
 
   test("Colombia's hand-written provider data matches the official lists", () => {

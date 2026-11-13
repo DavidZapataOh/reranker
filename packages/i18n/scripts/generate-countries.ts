@@ -191,7 +191,14 @@ for (const country of [...serp.byCountry.keys()].sort()) {
     continue;
   }
   const zones = tz.zones.get(country) ?? [];
-  const timeZone = capitals.zones.get(country) ?? (zones.length === 1 ? zones[0] : undefined);
+  // GeoNames can give a capital another country's zone (Hanoi → Asia/Bangkok).
+  const capitalZone = capitals.zones.get(country);
+  const timeZone =
+    capitalZone && zones.includes(capitalZone)
+      ? capitalZone
+      : zones.length === 1
+        ? zones[0]
+        : undefined;
   const name = names.of(country);
   if (!timeZone || !name) {
     unresolved.push(
@@ -234,7 +241,7 @@ const header = [
     ([engine, list]) => `// - Bright Data ${engine}: ${list.url} (${list.codes.size} countries)`,
   ),
   `// - Time zones: capital (PPLC) of ${capitals.url} (${capitals.rows} rows, ${capitals.zones.size} capitals, last modified ${capitals.lastModified});`,
-  `//   otherwise the only zone of ${tz.url} (tzdb ${tz.version})`,
+  `//   when it is one of the country's zones in ${tz.url} (tzdb ${tz.version}), otherwise its only zone`,
   `// - Spanish names: CLDR ${process.versions.cldr} (es-CO)`,
   ...(skipped.length > 0
     ? [`// Skipped as uninhabited territories (policy.ts): ${skipped.join(", ")}`]

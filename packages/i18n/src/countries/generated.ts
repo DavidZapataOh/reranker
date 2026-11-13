@@ -6,7 +6,7 @@
 // - Bright Data gemini: https://raw.githubusercontent.com/brightdata/answer-engines-country-codes/f3937d9f75fe864e56680fc04a0faf60ec63e3be/gemini_countries.csv (222 countries)
 // - Bright Data perplexity: https://raw.githubusercontent.com/brightdata/answer-engines-country-codes/f3937d9f75fe864e56680fc04a0faf60ec63e3be/perplexity_countries.csv (223 countries)
 // - Time zones: capital (PPLC) of https://download.geonames.org/export/dump/cities15000.zip (34215 rows, 241 capitals, last modified Thu, 12 Nov 2026 02:42:54 GMT);
-//   otherwise the only zone of https://data.iana.org/time-zones/tzdb/zone.tab (tzdb 2026f)
+//   when it is one of the country's zones in https://data.iana.org/time-zones/tzdb/zone.tab (tzdb 2026f), otherwise its only zone
 // - Spanish names: CLDR 48.0 (es-CO)
 // Skipped as uninhabited territories (policy.ts): AQ, HM, UM
 export const PROVIDER_COVERAGE = {
@@ -1415,7 +1415,7 @@ export const PROVIDER_COVERAGE = {
   },
   VN: {
     name: "Vietnam",
-    timeZone: "Asia/Bangkok",
+    timeZone: "Asia/Ho_Chi_Minh",
     dataforseoLocationCode: 2704,
     brightdataCountry: "VN",
     engines: ["chatgpt", "gemini", "google-ai-overview", "perplexity"],
