@@ -23,7 +23,7 @@ afterAll(() => {
 function biomeCi(path: string, code: string) {
   const dir = mkdtempSync(join(tmpdir(), "biome-plugin-"));
   workspaces.push(dir);
-  cpSync(join(ROOT, "biome.json"), join(dir, "biome.json"));
+  cpSync(join(ROOT, "biome.jsonc"), join(dir, "biome.jsonc"));
   mkdirSync(join(dir, "tools/biome"), { recursive: true });
   for (const plugin of readdirSync(PLUGINS).filter((name) => name.endsWith(".grit"))) {
     cpSync(join(PLUGINS, plugin), join(dir, "tools/biome", plugin));
