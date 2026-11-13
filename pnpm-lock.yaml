@@ -411,6 +411,9 @@ importers:
       '@neondatabase/api-client':
         specifier: 'catalog:'
         version: 2.7.3(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1)
+      '@reranker/testing':
+        specifier: workspace:*
+        version: link:../testing
       '@reranker/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config

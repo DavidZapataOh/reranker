@@ -1,4 +1,8 @@
 {
   "extends": "@reranker/typescript-config/library.json",
+  "compilerOptions": {
+    // @reranker/testing is consumed from source and imports its siblings with .ts extensions.
+    "allowImportingTsExtensions": true
+  },
   "include": ["src", "test", "scripts", "drizzle.config.ts"]
 }

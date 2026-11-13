@@ -39,7 +39,7 @@
         "NEON_PROJECT_ID",
         "NEON_NONPROD_PROJECT_ID"
       ],
-      "inputs": ["src/**", "migrations/**", "test/**"]
+      "inputs": ["$TURBO_DEFAULT$"]
     },
     "test:contract": {
       "dependsOn": ["^typecheck"],
