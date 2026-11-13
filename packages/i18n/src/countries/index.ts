@@ -1,3 +1,4 @@
+import type { EngineId } from "../engines";
 import { DEFAULT_LOCALE, type Locale } from "../locales";
 import { co } from "./co";
 import { PROVIDER_COVERAGE } from "./generated";
@@ -5,8 +6,6 @@ import { BILLING_BLOCKED, ENGINE_EXCLUSIONS, EURO_AREA, NOT_MEASURED } from "./p
 
 type CoverageCode = keyof typeof PROVIDER_COVERAGE;
 type GeneratedCode = Exclude<CoverageCode, typeof co.code | (typeof NOT_MEASURED)[number]>;
-
-export type EngineId = (typeof PROVIDER_COVERAGE)[CoverageCode]["engines"][number];
 
 export type ProviderCoverage = {
   readonly name: string;

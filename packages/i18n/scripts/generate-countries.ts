@@ -3,6 +3,7 @@
 import { writeFileSync } from "node:fs";
 import { inflateRawSync } from "node:zlib";
 import { UNINHABITED_TERRITORIES } from "../src/countries/policy.ts";
+import type { EngineId } from "../src/engines.ts";
 
 const OUTPUT = new URL("../src/countries/generated.ts", import.meta.url);
 
@@ -15,7 +16,6 @@ const GEONAMES_CITIES = "https://download.geonames.org/export/dump/cities15000.z
 
 // V0 engine → provider lists that can capture it. DataForSEO's Gemini LLM Scraper locations
 // are only served to authenticated API calls, so Gemini coverage comes from Bright Data alone.
-type EngineId = "chatgpt" | "gemini" | "google-ai-overview" | "perplexity";
 const BRIGHTDATA_ENGINES = {
   chatgpt: "chatgpt_countries.csv",
   gemini: "gemini_countries.csv",
