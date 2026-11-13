@@ -56,6 +56,9 @@ jobs:
           TURBO_SCM_BASE: ${{ steps.scope.outputs.base }}
           TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
         run: pnpm exec turbo run typecheck test ${{ steps.scope.outputs.affected }} --summarize
+      # --affected never selects this package when only the root Biome config changes.
+      - name: Test Biome plugins against the current configuration
+        run: pnpm --filter @reranker/biome-plugins test
       # git diff ignores untracked files, so the status check is what catches a new or orphaned artifact.
       - name: Check JSON Schema artifacts are current
         run: |
