@@ -1,0 +1,9 @@
+language js
+
+`sql.raw($arg)` where {
+  not or {
+    $arg <: JsStringLiteralExpression(),
+    and { $arg <: JsTemplateExpression(tag=.), not $arg <: contains JsTemplateElement() }
+  },
+  register_diagnostic(span=$arg, message="sql.raw only takes a string literal. Pass values through the sql`` template so they are sent as parameters.", severity="error")
+}
