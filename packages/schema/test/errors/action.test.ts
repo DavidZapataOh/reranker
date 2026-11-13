@@ -51,3 +51,26 @@ test("rethrow that returns lets the error become a problem", async () => {
   expect(seen).toHaveLength(1);
   expect(r).toMatchObject({ ok: false, problem: { code: "conflict" } });
 });
+
+test("onError sees unexpected errors only", async () => {
+  const seen: unknown[] = [];
+  const onError = (e: unknown) => void seen.push(e);
+  const boom = new Error("boom");
+  const redirect = new Error("NEXT_REDIRECT");
+  const rethrow = (e: unknown) => {
+    if (e === redirect) throw e;
+  };
+  const failWith = (e: unknown) => async () => {
+    throw e;
+  };
+  expect(await toActionResult(failWith(boom), { locale: "es-CO", onError })).toMatchObject({
+    ok: false,
+    problem: { code: "internal" },
+  });
+  await toActionResult(failWith(new AppError("conflict")), { locale: "es-CO", onError });
+  await toActionResult(async () => 1, { locale: "es-CO", onError });
+  await expect(
+    toActionResult(failWith(redirect), { locale: "es-CO", rethrow, onError }),
+  ).rejects.toBe(redirect);
+  expect(seen).toEqual([boom]);
+});

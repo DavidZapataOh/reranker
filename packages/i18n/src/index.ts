@@ -1,3 +1,4 @@
+// Types and data from @reranker/i18n; runtime validators from @reranker/schema.
 export { CURRENCIES, type CurrencyCode } from "./currencies";
 export { ENGINES, type EngineId } from "./engines";
 export {

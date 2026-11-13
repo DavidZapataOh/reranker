@@ -2,6 +2,9 @@ import { CURRENCIES, type CurrencyCode } from "./currencies";
 import { AppError } from "./errors/app-error";
 
 const DECIMAL = /^(-?)(\d+)(?:\.(\d+))?$/;
+// A safe integer has at most 16 digits, so no safe amount needs more characters than this; the cap
+// stops attacker-sized strings before the regex and BigInt spend time on them.
+const MAX_DECIMAL_LENGTH = 32;
 
 export const CURRENCY_CODES = Object.keys(CURRENCIES) as [CurrencyCode, ...CurrencyCode[]];
 
@@ -23,7 +26,11 @@ export function parseScaled(value: string | number, scale: number): bigint {
   if (typeof value === "number" && !Number.isFinite(value)) {
     throw new AppError("internal", { detail: "Amount must be finite" });
   }
-  const match = DECIMAL.exec(String(value));
+  const text = String(value);
+  if (text.length > MAX_DECIMAL_LENGTH) {
+    throw new AppError("internal", { detail: "Amount is too long to be a safe number" });
+  }
+  const match = DECIMAL.exec(text);
   if (!match) {
     throw new AppError("internal", { detail: "Amount must be a plain decimal number" });
   }

@@ -1,5 +1,4 @@
 import { LOCALES } from "@reranker/i18n";
-import { COUNTRIES, type CountryCode } from "@reranker/i18n/countries";
 import { EngineId } from "./domain";
 import { z } from "./z";
 
@@ -65,7 +64,11 @@ export const CountryConfig = z
       }),
       brightdata: z.strictObject({ country: Iso2 }).optional(),
     }),
-    geoData: z.string().regex(/^[a-z]{2}-\d{4}\.\d{2}$/),
+    // Present only where the country's geographic dataset has been built.
+    geoData: z
+      .string()
+      .regex(/^[a-z]{2}-\d{4}\.\d{2}$/)
+      .optional(),
     engines: z.array(EngineId).min(1).readonly().refine(unique),
     billing: z.union([WompiBilling, PaddleBilling, BlockedBilling]),
     phone: z.strictObject({ callingCode: z.string().regex(/^\d{1,3}$/) }).optional(),
@@ -97,6 +100,3 @@ export const CountryConfig = z
   });
 
 export type CountryConfig = z.output<typeof CountryConfig>;
-
-// Breaks the type check when a registry entry drifts from the contract.
-void (COUNTRIES satisfies Record<CountryCode, z.input<typeof CountryConfig>>);

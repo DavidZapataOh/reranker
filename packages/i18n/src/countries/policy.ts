@@ -8,10 +8,19 @@ type CoverageCode = keyof typeof PROVIDER_COVERAGE;
 export const NOT_MEASURED = ["CU"] as const;
 
 // Territories with no permanent population or businesses, no capital in GeoNames and either
-// no IANA zone (HM) or several (AQ, UM), so no single local time exists. The generator skips
-// them; any other country without a resolvable zone stops it.
+// no IANA zone (BV, HM) or several (AQ, UM), so no single local time exists. The generator skips
+// them; any other country without a resolvable zone stops it unless TIME_ZONES names one.
 // https://download.geonames.org/export/dump/ · https://data.iana.org/time-zones/tzdb/zone.tab
-export const UNINHABITED_TERRITORIES = ["AQ", "HM", "UM"] as const;
+export const UNINHABITED_TERRITORIES = ["AQ", "BV", "HM", "UM"] as const;
+
+// Countries the generator cannot resolve on its own. Palestine has two zones and no capital in
+// GeoNames; its government sits in Ramallah, in the West Bank zone (zone.tab: Asia/Hebron).
+// Kosovo has no entry in zone.tab; tzdb's europe file keeps it on Europe/Belgrade, the zone of
+// its capital Pristina in GeoNames. https://data.iana.org/time-zones/tzdb/europe
+export const TIME_ZONES: Readonly<Record<string, string>> = {
+  PS: "Asia/Hebron",
+  XK: "Europe/Belgrade",
+};
 
 // OpenAI does not offer ChatGPT in Venezuela, so a proxied answer measures nothing local:
 // https://help.openai.com/en/articles/7947663-chatgpt-supported-countries
@@ -78,7 +87,7 @@ export const EURO_AREA = [
 
 // States outside the euro area whose official currency is the euro, by monetary agreement
 // (AD, MC, SM, VA) or de facto (ME, XK): https://economy-finance.ec.europa.eu/euro/use-euro/euro-outside-euro-area_en
-// (read 2026-11-12). Only those the providers cover become countries; XK is not covered yet.
+// (read 2026-11-12). Only those the providers cover become countries.
 export const EURO_OFFICIAL_CURRENCY = ["AD", "MC", "ME", "SM", "VA", "XK"] as const;
 
 // Territories with their own ISO code whose official currency is the euro: the French overseas

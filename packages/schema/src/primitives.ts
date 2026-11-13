@@ -1,5 +1,5 @@
 import { LOCALES } from "@reranker/i18n";
-import { COUNTRIES } from "@reranker/i18n/countries";
+import { COUNTRY_CODES } from "@reranker/i18n/countries";
 import { CURRENCY_CODES } from "./decimal";
 import { z } from "./z";
 
@@ -7,7 +7,7 @@ export const Uuid = z.uuid();
 export const Timestamp = z.iso.datetime();
 export const DateOnly = z.iso.date();
 
-export const CountryCode = z.enum(Object.keys(COUNTRIES) as [keyof typeof COUNTRIES]);
+export const CountryCode = z.enum(COUNTRY_CODES);
 export type CountryCode = z.infer<typeof CountryCode>;
 export const CurrencyCode = z.enum(CURRENCY_CODES);
 export type CurrencyCode = z.infer<typeof CurrencyCode>;

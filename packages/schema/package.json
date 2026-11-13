@@ -2,6 +2,9 @@
   "name": "@reranker/schema",
   "private": true,
   "type": "module",
+  "sideEffects": [
+    "./src/z.ts"
+  ],
   "exports": {
     ".": "./src/index.ts"
   },

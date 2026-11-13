@@ -89,3 +89,16 @@ test("invalid_element is translated when raised manually", () => {
     .safeParse("x");
   expect(r.error?.issues[0]?.message).toBe(t("invalid_element"));
 });
+
+test("a refinement names its catalog message through params.code", () => {
+  const specific = z
+    .string()
+    .refine(() => false, { params: { code: "invalid_value" } })
+    .safeParse("x");
+  expect(specific.error?.issues[0]?.message).toBe(t("invalid_value"));
+  const unknown = z
+    .string()
+    .refine(() => false, { params: { code: "no_such_rule" } })
+    .safeParse("x");
+  expect(unknown.error?.issues[0]?.message).toBe(t("custom"));
+});
