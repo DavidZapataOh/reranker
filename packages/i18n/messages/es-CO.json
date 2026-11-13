@@ -40,7 +40,7 @@
     },
     "rate_limited": {
       "title": "Demasiados intentos seguidos",
-      "detail": "Por seguridad pausamos los intentos un momento. Espera {minutes, plural, one {{seconds, plural, one {# segundo} other {# segundos}}} other {# minutos}} y vuelve a intentarlo.",
+      "detail": "Por seguridad pausamos los intentos un momento. Espera {hours, plural, =0 {{minutes, plural, one {{seconds, plural, one {# segundo} other {# segundos}}} other {# minutos}}} one {# hora} other {# horas}} y vuelve a intentarlo.",
       "action": "Esperar e intentar de nuevo"
     },
     "turnstile_failed": {
@@ -74,33 +74,33 @@
       "action": "Revisar el código"
     },
     "spend_cap_reached": {
-      "title": "Llegamos al límite de hoy",
-      "detail": "Por hoy alcanzamos el máximo de consultas. Vuelve a intentarlo en {minutes, plural, one {{seconds, plural, one {# segundo} other {# segundos}}} other {# minutos}}.",
+      "title": "Llegamos al límite de consultas",
+      "detail": "Alcanzamos el máximo de consultas por ahora. Vuelve a intentarlo en {hours, plural, =0 {{minutes, plural, one {{seconds, plural, one {# segundo} other {# segundos}}} other {# minutos}}} one {# hora} other {# horas}}.",
       "action": "Volver más tarde"
     },
     "capacity_unavailable": {
       "title": "Estamos atendiendo muchas solicitudes",
-      "detail": "En este momento hay mucha demanda. Espera {minutes, plural, one {{seconds, plural, one {# segundo} other {# segundos}}} other {# minutos}} y vuelve a intentarlo.",
+      "detail": "En este momento hay mucha demanda. Espera {hours, plural, =0 {{minutes, plural, one {{seconds, plural, one {# segundo} other {# segundos}}} other {# minutos}}} one {# hora} other {# horas}} y vuelve a intentarlo.",
       "action": "Intentar de nuevo"
     },
     "free_report_unavailable": {
       "title": "El reporte gratis está en pausa",
-      "detail": "Lo pausamos por un momento. Vuelve a intentarlo en {minutes, plural, one {{seconds, plural, one {# segundo} other {# segundos}}} other {# minutos}}.",
+      "detail": "Lo pausamos por un momento. Vuelve a intentarlo en {hours, plural, =0 {{minutes, plural, one {{seconds, plural, one {# segundo} other {# segundos}}} other {# minutos}}} one {# hora} other {# horas}}.",
       "action": "Intentar más tarde"
     },
     "provider_unavailable": {
       "title": "Un servicio que usamos no responde",
-      "detail": "Uno de los servicios con los que medimos no está respondiendo. Vuelve a intentarlo en {minutes, plural, one {{seconds, plural, one {# segundo} other {# segundos}}} other {# minutos}}.",
+      "detail": "Uno de los servicios con los que medimos no está respondiendo. Vuelve a intentarlo en {hours, plural, =0 {{minutes, plural, one {{seconds, plural, one {# segundo} other {# segundos}}} other {# minutos}}} one {# hora} other {# horas}}.",
       "action": "Intentar más tarde"
     },
     "service_unavailable": {
       "title": "Tenemos una falla temporal",
-      "detail": "Parte de nuestro sistema no está respondiendo. Espera {minutes, plural, one {{seconds, plural, one {# segundo} other {# segundos}}} other {# minutos}} y vuelve a intentarlo.",
+      "detail": "Parte de nuestro sistema no está respondiendo. Espera {hours, plural, =0 {{minutes, plural, one {{seconds, plural, one {# segundo} other {# segundos}}} other {# minutos}}} one {# hora} other {# horas}} y vuelve a intentarlo.",
       "action": "Intentar de nuevo"
     },
     "timeout": {
       "title": "Esto tardó más de lo normal",
-      "detail": "La respuesta no llegó a tiempo. Espera {minutes, plural, one {{seconds, plural, one {# segundo} other {# segundos}}} other {# minutos}} y vuelve a intentarlo.",
+      "detail": "La respuesta no llegó a tiempo. Espera {hours, plural, =0 {{minutes, plural, one {{seconds, plural, one {# segundo} other {# segundos}}} other {# minutos}}} one {# hora} other {# horas}} y vuelve a intentarlo.",
       "action": "Intentar de nuevo"
     },
     "internal": {

@@ -26,7 +26,7 @@ test("rate_limited problem validates with Spanish title and retry_after", () => 
     code: "rate_limited",
   });
   expect(p.title).toBe(t("rate_limited.title"));
-  expect(p.detail).toBe(t("rate_limited.detail", { seconds: 30, minutes: 1 }));
+  expect(p.detail).toBe(t("rate_limited.detail", { seconds: 30, minutes: 1, hours: 0 }));
   expect(p.detail).toContain("30");
 });
 
@@ -123,4 +123,46 @@ test("a branded value with an unknown code becomes internal", () => {
 
 test("problem content type", () => {
   expect(PROBLEM_CONTENT_TYPE).toBe("application/problem+json");
+});
+
+test("caller wait times are rounded up to whole seconds and never below one", () => {
+  const wait = (value: number) => new AppError("rate_limited", { retryAfterSeconds: value });
+  expect(wait(30.5).retryAfterSeconds).toBe(31);
+  expect(wait(0).retryAfterSeconds).toBe(1);
+  expect(wait(-5).retryAfterSeconds).toBe(1);
+  expect(wait(Number.NaN).retryAfterSeconds).toBeUndefined();
+  expect(wait(Number.POSITIVE_INFINITY).retryAfterSeconds).toBeUndefined();
+  const p = toProblem(wait(30.5), { locale: "es-CO" });
+  expect(p.retry_after).toBe(31);
+  expect(p.detail).toContain("31 segundos");
+  expect(ProblemDetails.safeParse(p).success).toBe(true);
+});
+
+test("a non-finite wait falls back to the code default", () => {
+  const p = toProblem(new AppError("rate_limited", { retryAfterSeconds: Number.NaN }), {
+    locale: "es-CO",
+  });
+  expect(p.retry_after).toBe(60);
+});
+
+test("non-retryable codes ignore a caller wait", () => {
+  const e = new AppError("not_found", { retryAfterSeconds: 30 });
+  expect(e.retryAfterSeconds).toBeUndefined();
+  expect("retry_after" in toProblem(e, { locale: "es-CO" })).toBe(false);
+});
+
+test("long waits are spoken in hours", () => {
+  const p = toProblem(new AppError("spend_cap_reached"), { locale: "es-CO" });
+  expect(p.retry_after).toBe(3600);
+  expect(p.detail).toContain("1 hora");
+  expect(p.detail).not.toMatch(/60 minutos|hoy/);
+  expect(p.title).not.toMatch(/hoy/);
+  const two = toProblem(new AppError("spend_cap_reached", { retryAfterSeconds: 7200 }), {
+    locale: "es-CO",
+  });
+  expect(two.detail).toContain("2 horas");
+  const short = toProblem(new AppError("spend_cap_reached", { retryAfterSeconds: 300 }), {
+    locale: "es-CO",
+  });
+  expect(short.detail).toContain("5 minutos");
 });

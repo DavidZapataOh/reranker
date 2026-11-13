@@ -17,6 +17,12 @@ export type AppErrorOptions = {
 // A global symbol survives duplicated module copies across bundles, where `instanceof` fails.
 const BRAND = Symbol.for("reranker.app_error");
 
+// A wait only makes sense for retryable codes; fractions round up so clients never retry early.
+function normalizeRetryAfter(retryable: boolean, seconds: number | undefined): number | undefined {
+  if (!retryable || seconds === undefined || !Number.isFinite(seconds)) return undefined;
+  return Math.max(1, Math.ceil(seconds));
+}
+
 export class AppError extends Error {
   readonly code: ErrorCode;
   readonly status: number;
@@ -37,7 +43,7 @@ export class AppError extends Error {
     this.status = ERRORS[code].status;
     this.retryable = ERRORS[code].retryable;
     this.params = options.params;
-    this.retryAfterSeconds = options.retryAfterSeconds;
+    this.retryAfterSeconds = normalizeRetryAfter(this.retryable, options.retryAfterSeconds);
     this.fieldErrors = options.fieldErrors;
   }
 }

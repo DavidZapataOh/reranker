@@ -43,7 +43,7 @@ test("retryable codes carry a positive default wait and the rest carry none", ()
 
 test("every code has title, detail and action in es-CO without technical codes", () => {
   const t = getTranslator("es-CO", "errors");
-  const params = { seconds: 30, minutes: 1 };
+  const params = { seconds: 30, minutes: 1, hours: 0 };
   for (const code of ERROR_CODES) {
     for (const key of ["title", "detail", "action"] as const) {
       const id = `${code}.${key}` as Parameters<typeof t>[0];

@@ -74,6 +74,7 @@ export function toProblem(
   if (retryAfter !== undefined) {
     params.seconds = retryAfter;
     params.minutes = Math.ceil(retryAfter / 60);
+    params.hours = retryAfter >= 3600 ? Math.ceil(retryAfter / 3600) : 0;
   }
 
   const problem: ProblemDetails = {
