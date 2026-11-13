@@ -14,6 +14,9 @@ const pages = [
   { path: "/home/usd", name: "home-usd" },
 ] as const;
 
+// Timers and scroll reveals keep the page changing, so parity is checked in its settled state.
+test.use({ reducedMotion: "reduce" });
+
 const env = process.env.UI_BASELINE ?? "local";
 
 // Class names are the only thing a styling refactor may legitimately rewrite; build hashes
@@ -33,6 +36,7 @@ for (const { path, name } of pages) {
       fullPage: true,
       animations: "disabled",
       maxDiffPixels: 0,
+      timeout: 20_000,
     });
 
     if (testInfo.project.name !== "desktop-chromium") return;

@@ -20,6 +20,7 @@
     },
     "typecheck": { "dependsOn": ["^typecheck"] },
     "test": { "dependsOn": ["^typecheck"], "outputs": ["coverage/**"] },
+    "@reranker/ui#test": { "dependsOn": ["^typecheck"], "outputs": [] },
     "@reranker/biome-plugins#test": {
       "dependsOn": ["^typecheck"],
       "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/biome.jsonc", "$TURBO_ROOT$/tools/biome/**"]

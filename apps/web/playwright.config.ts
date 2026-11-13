@@ -8,6 +8,10 @@ const deploymentUrl = process.env.PLAYWRIGHT_BASE_URL
 // `next start` reads PORT too, so both sides agree when 3000 is taken.
 const localUrl = `http://localhost:${process.env.PORT ?? 3000}`;
 
+// Some sandboxes hang on Chromium screenshots unless GPU rasterization is off; CI leaves this unset.
+const chromiumArgs = process.env.PLAYWRIGHT_CHROMIUM_ARGS?.split(/\s+/).filter(Boolean);
+const chromiumLaunch = chromiumArgs?.length ? { launchOptions: { args: chromiumArgs } } : {};
+
 export default defineConfig({
   testDir: "./e2e",
   // Parity baselines are per environment and never committed.
@@ -24,8 +28,8 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   projects: [
-    { name: "desktop-chromium", use: { ...devices["Desktop Chrome"] } },
-    { name: "mobile-chromium", use: { ...devices["Pixel 7"] } },
+    { name: "desktop-chromium", use: { ...devices["Desktop Chrome"], ...chromiumLaunch } },
+    { name: "mobile-chromium", use: { ...devices["Pixel 7"], ...chromiumLaunch } },
     { name: "mobile-webkit", use: { ...devices["iPhone 15"] } },
   ],
   ...(deploymentUrl
