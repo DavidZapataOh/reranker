@@ -2,6 +2,9 @@ import tailwindcss from "@tailwindcss/vite";
 import { playwright } from "@vitest/browser-playwright";
 import { defineConfig } from "vitest/config";
 
+// Some sandboxes hang on Chromium screenshots unless GPU rasterization is off; CI leaves this unset.
+const chromiumArgs = process.env.PLAYWRIGHT_CHROMIUM_ARGS?.split(/\s+/).filter(Boolean);
+
 export default defineConfig({
   test: {
     projects: [
@@ -21,7 +24,9 @@ export default defineConfig({
           setupFiles: ["./test/browser-setup.ts"],
           browser: {
             enabled: true,
-            provider: playwright(),
+            provider: playwright(
+              chromiumArgs?.length ? { launchOptions: { args: chromiumArgs } } : {},
+            ),
             headless: true,
             instances: [{ browser: "chromium" }],
           },
