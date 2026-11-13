@@ -108,10 +108,13 @@ test("fails without hanging when an ACCESS EXCLUSIVE lock is held", {
   });
   const alterFolder = await withProbeMigrations("alter", [
     createProbe,
-    "alter table app.migration_probe add column note text;",
+    `select nextval('public.migration_attempts');
+--> statement-breakpoint
+alter table app.migration_probe add column note text;`,
   ]);
 
   const holder = await connect();
+  await holder.query("create sequence public.migration_attempts");
   const holderPid = (await holder.query<{ pid: number }>("select pg_backend_pid() as pid")).rows[0]
     ?.pid;
   await holder.query("begin");
@@ -133,6 +136,83 @@ test("fails without hanging when an ACCESS EXCLUSIVE lock is held", {
   );
   expect(Number(rows[0]?.count)).toBe(0);
   await holder.query("rollback");
+  // nextval survives the rollback, so it counts the attempts.
+  expect(await attempts(observer)).toBe(3);
+});
+
+async function attempts(client: pg.Client): Promise<number> {
+  const { rows } = await client.query<{ value: string }>(
+    "select case when is_called then last_value else 0 end as value from public.migration_attempts",
+  );
+  return Number(rows[0]?.value);
+}
+
+test("a held migration lock fails clearly after the wait bound", { timeout: 60_000 }, async () => {
+  const holder = await connect();
+  await holder.query("select pg_advisory_lock(hashtext('reranker.migrate'))");
+
+  const started = Date.now();
+  await expect(runMigrations({ ...opts(), lockWaitTimeout: "2s" })).rejects.toThrow(
+    "Another migration held the migration lock for more than 2s",
+  );
+  expect(Date.now() - started).toBeLessThan(15_000);
+
+  await holder.query("select pg_advisory_unlock(hashtext('reranker.migrate'))");
+  expect((await runMigrations(opts())).applied).toBeGreaterThan(0);
+});
+
+test("an error other than a lock timeout is not retried", { timeout: 60_000 }, async () => {
+  const client = await connect();
+  await client.query("create sequence public.migration_attempts");
+  const folder = await withProbeMigrations("division", [
+    `select nextval('public.migration_attempts');
+--> statement-breakpoint
+select 1 / 0;`,
+  ]);
+  await expect(runMigrations({ ...opts(), migrationsFolder: folder })).rejects.toMatchObject({
+    cause: { code: "22012" },
+  });
+  expect(await attempts(client)).toBe(1);
+});
+
+test("a migration failing partway leaves the schema unchanged", { timeout: 60_000 }, async () => {
+  const base = await runMigrations(opts());
+  const folder = await withProbeMigrations("partial", [
+    `${createProbe}
+--> statement-breakpoint
+alter table app.missing_table add column note text;`,
+  ]);
+  await expect(runMigrations({ ...opts(), migrationsFolder: folder })).rejects.toThrow();
+
+  const client = await connect();
+  const { rows } = await client.query<{ probe: string | null; applied: string }>(
+    `select to_regclass('app.migration_probe')::text as probe,
+            (select count(*) from drizzle.__drizzle_migrations) as applied`,
+  );
+  expect(rows[0]).toEqual({ probe: null, applied: String(base.applied) });
+});
+
+test("unquoted index names are case-folded and quoted ones kept", { timeout: 60_000 }, async () => {
+  const folder = await withProbeMigrations("case", [createProbe]);
+  const concurrent = join(workDir, "case-indexes");
+  await mkdir(concurrent);
+  await writeFile(
+    join(concurrent, "0001_folded.sql"),
+    "CREATE INDEX CONCURRENTLY IF NOT EXISTS MigrationProbeLabelIdx ON app.migration_probe (label);\n",
+  );
+  await writeFile(
+    join(concurrent, "0002_quoted.sql"),
+    'create index concurrently if not exists "MigrationProbeIdIdx" on app.migration_probe (id);\n',
+  );
+  const run = () =>
+    runMigrations({ ...opts(), migrationsFolder: folder, concurrentFolder: concurrent });
+
+  expect((await run()).concurrent).toEqual(["0001_folded.sql", "0002_quoted.sql"]);
+  // A wrong lookup would miss the existing index and report the file as built again.
+  expect((await run()).concurrent).toEqual([]);
+  const client = await connect();
+  expect(await indexValidity(client, "migrationprobelabelidx")).toBe(true);
+  expect(await indexValidity(client, "MigrationProbeIdIdx")).toBe(true);
 });
 
 async function indexValidity(client: pg.Client, name: string): Promise<boolean | undefined> {
@@ -260,4 +340,21 @@ insert into app.migration_probe select g, md5(g::text) from generate_series(1, 3
   });
   expect(result.concurrent).toEqual(["0001_migration_probe_label_idx.sql"]);
   expect(await indexValidity(await connect(), "migration_probe_label_idx")).toBe(true);
+});
+
+test("the CLI refuses a pooler url before connecting", async () => {
+  const child = spawn("pnpm", ["exec", "tsx", "scripts/migrate.ts"], {
+    cwd: packageDir,
+    env: {
+      ...process.env,
+      DATABASE_URL_MIGRATIONS: "postgresql://u:x@ep-unreachable-pooler.us-east-1.aws.neon.tech/db",
+    },
+  });
+  let stderr = "";
+  child.stderr.on("data", (chunk: Buffer) => {
+    stderr += chunk.toString();
+  });
+  const code = await new Promise<number | null>((resolve) => child.on("close", resolve));
+  expect(code).not.toBe(0);
+  expect(stderr).toContain("must use the direct host, not the pooler");
 });

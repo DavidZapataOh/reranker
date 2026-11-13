@@ -63,3 +63,14 @@ test("rejects a missing DATABASE_URL_SYSTEM or a non-postgres url", () => {
     readDbEnv({ DATABASE_URL: "https://example.com", DATABASE_URL_SYSTEM: pooledSystem }),
   ).toThrow(/DATABASE_URL/);
 });
+
+test("rejects a migrations url on the pooler host", () => {
+  expect(() =>
+    readDbEnv({
+      DATABASE_URL: pooledApp,
+      DATABASE_URL_SYSTEM: pooledSystem,
+      DATABASE_URL_MIGRATIONS:
+        "postgresql://reranker_owner:x@ep-a-pooler.us-east-1.aws.neon.tech/neondb",
+    }),
+  ).toThrow(/DATABASE_URL_MIGRATIONS: must use the direct host, not the pooler/);
+});

@@ -13,6 +13,7 @@ export type RunMigrationsOptions = {
   retries?: number;
   lockTimeout?: string;
   statementTimeout?: string;
+  lockWaitTimeout?: string;
 };
 
 export type MigrationResult = { applied: number; concurrent: string[] };
@@ -24,6 +25,11 @@ const MIGRATIONS_TABLE = "__drizzle_migrations";
 // Only the idempotent form is accepted so a deploy interrupted mid-build can always be rerun.
 const CONCURRENT_INDEX =
   /^create\s+(?:unique\s+)?index\s+concurrently\s+if\s+not\s+exists\s+("?[a-z_][a-z0-9_]*"?)\s+on\s+(?:only\s+)?((?:"?[a-z_][a-z0-9_]*"?\.)?"?[a-z_][a-z0-9_]*"?)[\s(]/i;
+
+const MIGRATION_LOCK = "hashtext('reranker.migrate')";
+
+// Unquoted identifiers fold to lower case in Postgres; quoted ones are kept as written.
+const identifier = (raw: string) => (raw.startsWith('"') ? raw.slice(1, -1) : raw.toLowerCase());
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -70,7 +76,7 @@ function parseConcurrentIndex(file: string, sql: string): { index: string; table
   if (!match?.[1] || !match[2] || statement.includes(";")) {
     throw new Error(`${file} must hold a single CREATE INDEX CONCURRENTLY IF NOT EXISTS statement`);
   }
-  return { index: match[1].replaceAll('"', ""), table: match[2] };
+  return { index: identifier(match[1]), table: match[2] };
 }
 
 // CREATE INDEX CONCURRENTLY cannot run inside a transaction, and an interrupted one leaves an
@@ -122,15 +128,28 @@ export async function runMigrations({
   retries = 3,
   lockTimeout = "3s",
   statementTimeout = "60s",
+  lockWaitTimeout = "5min",
 }: RunMigrationsOptions): Promise<MigrationResult> {
   // Generous connect timeout: the first connection may have to wake a suspended Neon compute.
   const client = new pg.Client({ connectionString: url, connectionTimeoutMillis: 15_000 });
   await client.connect();
   let locked = false;
   try {
+    // A build killed mid-run must not keep its backend, and the lock, alive.
+    await client.query("select set_config('client_connection_check_interval', '10s', false)");
     // Drizzle's migrator takes no lock, so two deploys migrating the same branch would race.
-    // A session lock is safe here because this is the direct connection, never the pooler.
-    await client.query("select pg_advisory_lock(hashtext('reranker.migrate'))");
+    // A session lock is safe here because this is the direct connection, never the pooler;
+    // the wait is bounded so a stuck holder fails the deploy instead of hanging it.
+    await client.query("select set_config('lock_timeout', $1, false)", [lockWaitTimeout]);
+    try {
+      await client.query(`select pg_advisory_lock(${MIGRATION_LOCK})`);
+    } catch (error) {
+      if (databaseError(error)?.code !== LOCK_NOT_AVAILABLE) throw error;
+      throw new Error(
+        `Another migration held the migration lock for more than ${lockWaitTimeout}`,
+        { cause: error },
+      );
+    }
     locked = true;
     await client.query("select set_config('lock_timeout', $1, false)", [lockTimeout]);
     await client.query("select set_config('statement_timeout', $1, false)", [statementTimeout]);
@@ -164,9 +183,7 @@ export async function runMigrations({
     // Ending the session releases the lock as well, so a failed unlock must not mask the
     // migration error that brought us here.
     if (locked) {
-      await client
-        .query("select pg_advisory_unlock(hashtext('reranker.migrate'))")
-        .catch(() => undefined);
+      await client.query(`select pg_advisory_unlock(${MIGRATION_LOCK})`).catch(() => undefined);
     }
     await client.end();
   }
