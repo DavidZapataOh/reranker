@@ -572,6 +572,9 @@ importers:
 
   packages/ui:
     dependencies:
+      '@reranker/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       react-email:
         specifier: 'catalog:'
         version: 6.11.7(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@8.1.1)
@@ -603,6 +606,9 @@ importers:
       esbuild:
         specifier: 'catalog:'
         version: 0.28.2
+      fast-check:
+        specifier: 'catalog:'
+        version: 4.10.2
       react:
         specifier: 'catalog:'
         version: 19.3.0

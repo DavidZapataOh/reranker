@@ -26,7 +26,11 @@
       "playwright": "recommended",
       "drizzle": "recommended"
     },
-    "rules": { "nursery": { "noFloatingPromises": "error", "noMisusedPromises": "error" } }
+    "rules": {
+      "nursery": { "noFloatingPromises": "error", "noMisusedPromises": "error" },
+      // A component prop named role (a chat bubble's speaker) is not an ARIA role.
+      "a11y": { "useValidAriaRole": { "level": "error", "options": { "ignoreNonDom": true } } }
+    }
   },
   "overrides": [
     {
