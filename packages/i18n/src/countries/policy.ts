@@ -93,7 +93,6 @@ export const EURO_OFFICIAL_CURRENCY = ["AD", "MC", "ME", "SM", "VA", "XK"] as co
 // Territories with their own ISO code whose official currency is the euro: the French overseas
 // departments and collectivities served by IEDOM (https://www.iedom.fr/Nos-territoires-d-intervention-et-nos-agences?lang=en,
 // read 2026-11-12) and Åland (https://visitaland.com/en/practical-info/aland-in-brief/, read 2026-11-12).
-// Only MF, PM and TF are covered by the providers today.
 export const EURO_TERRITORIES = [
   "AX",
   "BL",
