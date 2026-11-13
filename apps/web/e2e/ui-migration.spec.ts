@@ -17,6 +17,12 @@ const pages = [
 // Timers and scroll reveals keep the page changing, so parity is checked in its settled state.
 test.use({ reducedMotion: "reduce" });
 
+// The baselines are never committed, so without them the guard has nothing to compare to.
+test.skip(
+  !process.env.UI_BASELINE,
+  "UI_BASELINE is not set: no parity baseline to compare against",
+);
+
 const env = process.env.UI_BASELINE ?? "local";
 
 // Class names are the only thing a styling refactor may legitimately rewrite; build hashes
@@ -43,9 +49,17 @@ for (const { path, name } of pages) {
     const html = normalizeHtml(await page.content());
     const baselinePath = join("e2e", "__ui-baseline__", "html", env, `${name}.html`);
     const previous = await readFile(baselinePath, "utf8").catch(() => undefined);
-    if (previous === undefined || testInfo.config.updateSnapshots === "all") {
-      await mkdir(dirname(baselinePath), { recursive: true });
-      await writeFile(baselinePath, html);
+    const mode = testInfo.config.updateSnapshots;
+    const update = mode === "all" || (mode === "changed" && html !== previous);
+    if (update || previous === undefined) {
+      if (update || mode === "missing") {
+        await mkdir(dirname(baselinePath), { recursive: true });
+        await writeFile(baselinePath, html);
+      }
+      // Like toHaveScreenshot, a freshly written baseline is not a pass.
+      if (previous === undefined && !update) {
+        throw new Error(`HTML baseline missing: ${baselinePath}. Run with --update-snapshots.`);
+      }
       return;
     }
     expect(html).toBe(previous);
