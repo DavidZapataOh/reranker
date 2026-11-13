@@ -1,9 +1,14 @@
 export { Button } from "./actions/Button.tsx";
 export { LinkButton } from "./actions/LinkButton.tsx";
 export { type ButtonSize, type ButtonVariant, buttonClass } from "./actions/variants.ts";
+export { Bubble } from "./conversation/Bubble.tsx";
+export { EngineMark } from "./conversation/EngineMark.tsx";
+export { Highlight } from "./conversation/Highlight.tsx";
+export { normalizeSpans, type Span } from "./conversation/spans.ts";
 export { cx } from "./cx.ts";
 export { StepBars } from "./data/StepBars.tsx";
 export { EvidenceSeal, type EvidenceSealProps } from "./evidence/EvidenceSeal.tsx";
+export { assertVerifyUrl } from "./evidence/verifyUrl.ts";
 export { ExampleChip } from "./feedback/ExampleChip.tsx";
 export { Checkbox } from "./forms/Checkbox.tsx";
 export { CodeField, sanitizeCode } from "./forms/CodeField.tsx";

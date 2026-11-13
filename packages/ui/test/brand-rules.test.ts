@@ -183,9 +183,11 @@ test("fixed copy never asks for human contact", () => {
   const values = (tree: unknown): string[] =>
     typeof tree === "string"
       ? [tree]
-      : tree && typeof tree === "object"
-        ? Object.values(tree).flatMap(values)
-        : [];
+      : typeof tree === "function"
+        ? values(tree("x", "x"))
+        : tree && typeof tree === "object"
+          ? Object.values(tree).flatMap(values)
+          : [];
   expect(humanContact(values(copy))).toEqual([]);
   expect(humanContact(values({ a: { b: "Agenda una llamada" } }))).toHaveLength(1);
   expect(humanContact(["Pide una demo", "Reunión", "Escríbenos por WhatsApp"])).toHaveLength(3);
