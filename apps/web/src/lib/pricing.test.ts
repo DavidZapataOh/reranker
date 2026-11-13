@@ -8,7 +8,7 @@ describe("currencyForCountry", () => {
     expect(currencyForCountry("co")).toBe("cop");
   });
 
-  test.each(["ES", "FR", "DE", "IT", "PT", "IE", "BG", "HR", "AD", "MC", "ME"])(
+  test.each(["ES", "FR", "DE", "IT", "PT", "IE", "BG", "HR", "AD", "MC", "ME", "PM", "MF", "TF"])(
     "%s pays in euros",
     (country) => {
       expect(currencyForCountry(country)).toBe("eur");

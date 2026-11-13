@@ -22,7 +22,7 @@
     "test": { "dependsOn": ["^typecheck"], "outputs": ["coverage/**"] },
     "@reranker/biome-plugins#test": {
       "dependsOn": ["^typecheck"],
-      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/biome.json"]
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/biome.json", "$TURBO_ROOT$/tools/biome/**"]
     },
     "test:integration": {
       "dependsOn": ["^typecheck"],

@@ -148,6 +148,10 @@ describe("billing", () => {
     },
   );
 
+  test.each(["MF", "PM", "TF"])("the euro territory %s pays Paddle in EUR", (code) => {
+    expect(billingFor(code)).toEqual({ provider: "paddle", currency: "EUR" });
+  });
+
   test("Cuba, Venezuela, Nicaragua and Paddle's unsupported countries cannot pay", () => {
     for (const code of ["CU", "VE", "NI", "AF", "IR", "ZW", "RU", "CW"]) {
       expect(billingFor(code)).toEqual({ blocked: true });

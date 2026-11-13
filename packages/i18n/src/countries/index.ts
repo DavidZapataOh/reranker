@@ -7,6 +7,7 @@ import {
   ENGINE_EXCLUSIONS,
   EURO_AREA,
   EURO_OFFICIAL_CURRENCY,
+  EURO_TERRITORIES,
   NOT_MEASURED,
 } from "./policy";
 
@@ -23,7 +24,11 @@ export type ProviderCoverage = {
 
 const BLOCKED = { blocked: true } as const;
 
-const BILLED_IN_EUROS: readonly string[] = [...EURO_AREA, ...EURO_OFFICIAL_CURRENCY];
+const BILLED_IN_EUROS: readonly string[] = [
+  ...EURO_AREA,
+  ...EURO_OFFICIAL_CURRENCY,
+  ...EURO_TERRITORIES,
+];
 
 type PaddleBilling = { readonly provider: "paddle"; readonly currency: "EUR" | "USD" };
 
