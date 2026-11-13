@@ -60,8 +60,14 @@ jobs:
       - name: Check JSON Schema artifacts are current
         run: |
           pnpm --filter @reranker/schema build:json-schema
-          git diff --exit-code packages/schema/json-schema
-          test -z "$(git status --porcelain packages/schema/json-schema)"
+          {
+            git diff --exit-code packages/schema/json-schema &&
+              test -z "$(git status --porcelain packages/schema/json-schema)"
+          } || {
+            echo "::error::JSON Schema artifacts are stale: run pnpm --filter @reranker/schema build:json-schema and commit"
+            git status --porcelain packages/schema/json-schema
+            exit 1
+          }
       - if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:

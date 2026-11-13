@@ -9,7 +9,7 @@
     "//#check": {},
     "build": { "dependsOn": ["^build"], "outputs": [".next/**", "!.next/cache/**", "dist/**"] },
     "build:json-schema": {
-      "inputs": ["src/**", "scripts/**"],
+      "inputs": ["src/**", "scripts/**", "$TURBO_ROOT$/packages/i18n/src/**"],
       "outputs": ["json-schema/**"]
     },
     "web#build": {
