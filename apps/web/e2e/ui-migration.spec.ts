@@ -16,9 +16,6 @@ const pages = [
 
 // Timers and scroll reveals keep the page changing, so parity is checked in its settled state.
 test.use({ reducedMotion: "reduce" });
-// The hero rotator occasionally keeps a stale width under heavy parallel load. A real
-// regression fails every attempt.
-test.describe.configure({ retries: 3 });
 
 // The baselines are never committed, so without them the guard has nothing to compare to.
 test.skip(
@@ -41,10 +38,6 @@ function normalizeHtml(html: string): string {
 for (const { path, name } of pages) {
   test(`${name} matches the baseline`, async ({ page, gotoStable }, testInfo) => {
     await gotoStable(path);
-    // The hero rotator measures its width on mount, which can precede the web font; a resize
-    // makes it re-measure so the capture does not depend on that race.
-    await page.waitForTimeout(300);
-    await page.evaluate(() => window.dispatchEvent(new Event("resize")));
     await expect(page).toHaveScreenshot(`${name}.png`, {
       fullPage: true,
       animations: "disabled",
