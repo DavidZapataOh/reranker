@@ -25,6 +25,12 @@ describe("currencies", () => {
 });
 
 describe("money", () => {
+  test("fields are read-only at compile time", () => {
+    const m = money(1, "COP");
+    // @ts-expect-error amount_minor is read-only
+    m.amount_minor = 1.5;
+  });
+
   test("fromMajor parses exact decimals", () => {
     expect(fromMajor("149000", "COP")).toEqual({ amount_minor: 14_900_000, currency: "COP" });
     expect(fromMajor("149000.5", "COP").amount_minor).toBe(14_900_050);

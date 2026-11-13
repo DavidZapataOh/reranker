@@ -11,7 +11,7 @@ export const MoneySchema = registerSchema(
   }),
 );
 
-export type Money = z.infer<typeof MoneySchema>;
+export type Money = Readonly<z.infer<typeof MoneySchema>>;
 
 export type Rounding = "half_up" | "down";
 

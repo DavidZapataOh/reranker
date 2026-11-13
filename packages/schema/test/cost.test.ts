@@ -10,6 +10,14 @@ import {
 } from "../src/cost";
 
 describe("provider cost", () => {
+  test("fields are read-only at compile time", () => {
+    const c = cost(1, "USD");
+    // @ts-expect-error amount_micros is read-only
+    c.amount_micros = 1.5;
+    // @ts-expect-error costFromMajor takes decimal strings only
+    costFromMajor(0.5, "USD");
+  });
+
   test("costs in micro-units", () => {
     expect(costFromMajor("0.0012", "USD")).toEqual({ amount_micros: 1_200, currency: "USD" });
     expect(
@@ -26,8 +34,7 @@ describe("provider cost", () => {
   test("costFromMajor rejects negatives, malformed input and unsafe magnitudes", () => {
     expect(() => costFromMajor("-0.5", "USD")).toThrow();
     expect(() => costFromMajor("1e3", "USD")).toThrow();
-    expect(() => costFromMajor(Number.NaN, "USD")).toThrow();
-    expect(costFromMajor(0.5, "EUR")).toEqual({ amount_micros: 500_000, currency: "EUR" });
+    expect(costFromMajor("0.5", "EUR")).toEqual({ amount_micros: 500_000, currency: "EUR" });
     expect(() => costFromMajor("99999999999999999999", "USD")).toThrow();
   });
 

@@ -13,7 +13,7 @@ export const ProviderCostSchema = registerSchema(
   }),
 );
 
-export type ProviderCost = z.infer<typeof ProviderCostSchema>;
+export type ProviderCost = Readonly<z.infer<typeof ProviderCostSchema>>;
 
 export function cost(amountMicros: number, currency: CurrencyCode): ProviderCost {
   assertCurrency(currency);
@@ -23,7 +23,7 @@ export function cost(amountMicros: number, currency: CurrencyCode): ProviderCost
   return { amount_micros: amountMicros, currency };
 }
 
-export function costFromMajor(value: string | number, currency: CurrencyCode): ProviderCost {
+export function costFromMajor(value: string, currency: CurrencyCode): ProviderCost {
   return cost(toSafeInteger(parseScaled(value, MICROS_SCALE)), currency);
 }
 
