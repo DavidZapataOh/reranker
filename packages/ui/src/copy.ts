@@ -3,7 +3,7 @@ export const copy = {
   seal: { stampLines: ["Guardada", "sin editar"] },
   sheet: {
     close: "Cerrar",
-    termHint: ", qué significa",
+    termHint: "qué significa",
     termTitle: (term: string) => `¿Qué significa ${term}?`,
   },
 } as const;

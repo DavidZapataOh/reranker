@@ -4,15 +4,17 @@ import type { ReactNode } from "react";
 import { copy } from "../copy.ts";
 import { Sheet } from "./Sheet.tsx";
 
+// The accessible name is built explicitly because a visually hidden suffix is read inconsistently across screen readers.
 export function Term({
   term,
   definition,
   children,
+  label,
 }: {
   term: string;
   definition: ReactNode;
-  children: ReactNode;
-}) {
+} & ({ children: string; label?: string } | { children: ReactNode; label: string })) {
+  const text = label ?? (children as string);
   return (
     <Sheet
       title={copy.sheet.termTitle(term)}
@@ -20,11 +22,10 @@ export function Term({
         <button
           type="button"
           data-term={term}
+          aria-label={`${text}, ${copy.sheet.termHint}`}
           className="underline decoration-dotted decoration-ink/50 underline-offset-4"
         >
           {children}
-          {/* Zero-size inline text, not sr-only: an absolute span makes the accessible name read "term , qué significa". */}
-          <span className="text-[0px]">{copy.sheet.termHint}</span>
         </button>
       }
     >
