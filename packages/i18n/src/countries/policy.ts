@@ -1,7 +1,7 @@
+import type { EngineId } from "../engines";
 import type { PROVIDER_COVERAGE } from "./generated";
 
 type CoverageCode = keyof typeof PROVIDER_COVERAGE;
-type EngineId = (typeof PROVIDER_COVERAGE)[CoverageCode]["engines"][number];
 
 // No engine is officially offered in Cuba and Google Maps Platform lists it as a prohibited
 // territory: https://cloud.google.com/maps-platform/terms/maps-prohibited-territories

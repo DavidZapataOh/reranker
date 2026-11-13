@@ -8,7 +8,8 @@ export {
   sumCosts,
 } from "./cost";
 export { CountryConfig } from "./country";
-export { CURRENCIES, type CurrencyCode } from "./currencies";
+export { CURRENCIES } from "./currencies";
+export { AppEnv, CaptureChannel, CaptureProvider, EngineId } from "./domain";
 export {
   add,
   allocate,
@@ -22,5 +23,18 @@ export {
   subtract,
   sum,
 } from "./money";
+export {
+  CountryCode,
+  CurrencyCode,
+  Cursor,
+  DateOnly,
+  Email,
+  LocaleCode,
+  Page,
+  PageQuery,
+  Timestamp,
+  Url,
+  Uuid,
+} from "./primitives";
 export { registerSchema } from "./registry";
 export { z } from "./z";

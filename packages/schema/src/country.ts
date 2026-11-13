@@ -1,9 +1,7 @@
 import { LOCALES } from "@reranker/i18n";
 import { COUNTRIES, type CountryCode } from "@reranker/i18n/countries";
+import { EngineId } from "./domain";
 import { z } from "./z";
-
-// Same literals as EngineId: the closed list of engines measured in V0.
-const ENGINE_IDS = ["chatgpt", "gemini", "google-ai-overview", "perplexity"] as const;
 
 const Iso2 = z.string().regex(/^[A-Z]{2}$/);
 const Locale = z.enum(LOCALES);
@@ -68,7 +66,7 @@ export const CountryConfig = z
       brightdata: z.strictObject({ country: Iso2 }).optional(),
     }),
     geoData: z.string().regex(/^[a-z]{2}-\d{4}\.\d{2}$/),
-    engines: z.array(z.enum(ENGINE_IDS)).min(1).readonly().refine(unique),
+    engines: z.array(EngineId).min(1).readonly().refine(unique),
     billing: z.union([WompiBilling, PaddleBilling, BlockedBilling]),
     phone: z.strictObject({ callingCode: z.string().regex(/^\d{1,3}$/) }).optional(),
     legalEntity: z
