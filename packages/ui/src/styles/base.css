@@ -1,0 +1,29 @@
+@layer base {
+  html {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    font-family: var(--font-sans);
+    word-spacing: 0.04em;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  ::selection {
+    background: var(--color-green-light);
+    color: var(--color-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-green);
+    outline-offset: 3px;
+    border-radius: 8px;
+  }
+  input {
+    caret-color: var(--color-green);
+  }
+  a {
+    text-underline-offset: 3px;
+  }
+}
