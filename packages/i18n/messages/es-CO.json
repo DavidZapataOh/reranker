@@ -1,6 +1,36 @@
 {
   "common": {
-    "appName": "Reranker"
+    "appName": "Reranker",
+    "range": {
+      "percent": "entre {lo} y {hi}"
+    },
+    "actions": {
+      "continue": "Continuar",
+      "back": "Volver",
+      "retry": "Intentar de nuevo",
+      "close": "Cerrar",
+      "cancel": "Cancelar",
+      "save": "Guardar cambios",
+      "goHome": "Volver al inicio",
+      "copy": "Copiar",
+      "copied": "Copiado"
+    },
+    "status": {
+      "loading": "Cargando…",
+      "sending": "Enviando…",
+      "saving": "Guardando…",
+      "saved": "Cambios guardados"
+    },
+    "form": {
+      "required": "Este dato es obligatorio",
+      "optional": "Opcional"
+    },
+    "a11y": {
+      "skipToContent": "Ir al contenido",
+      "openMenu": "Abrir el menú",
+      "closeMenu": "Cerrar el menú",
+      "newTab": "(se abre en otra pestaña)"
+    }
   },
   "errors": {
     "invalid_request": {
@@ -120,6 +150,52 @@
       "invalid_element": "Uno de los elementos no es válido",
       "invalid_value": "Elige una de las opciones disponibles",
       "custom": "Revisa este dato, no es válido"
+    }
+  },
+  "auth": {
+    "signIn": {
+      "title": "Entra a Reranker",
+      "google": "Continuar con Google",
+      "emailLabel": "Tu correo",
+      "emailSubmit": "Mandarme un código",
+      "codeSentTo": "Escribe el código que te mandamos a {maskedEmail}",
+      "codeLabel": "Código de 6 dígitos",
+      "resendIn": "Reenviar en {seconds} s",
+      "resend": "Reenviar el código"
+    },
+    "code": {
+      "expired": "Ese código ya venció. Te mandamos uno nuevo",
+      "invalid": "Ese código no es el que te mandamos. Revisa el último correo",
+      "tooManyAttempts": "Escribiste mal el código {attempts, plural, one {# vez} other {# veces}}; pide uno nuevo",
+      "emailUnavailable": "No pudimos mandar el código. Prueba con Google o intenta en un minuto"
+    },
+    "dataPolicy": {
+      "title": "Para guardar tus reportes necesitamos tu autorización para tratar tus datos",
+      "checkbox": "Autorizo a {legalName} a tratar mis datos según la política de datos",
+      "accept": "Aceptar y continuar",
+      "decline": "No acepto"
+    },
+    "reports": {
+      "title": "Tus reportes",
+      "emptyTitle": "Todavía no tienes reportes",
+      "emptyBody": "Haz tu reporte gratis en 2 minutos",
+      "emptyAction": "Hacer mi reporte gratis"
+    },
+    "signOut": "Cerrar sesión"
+  },
+  "legal": {
+    "dataPolicy": "Política de datos",
+    "terms": "Términos",
+    "cookiePreferences": "Preferencias de cookies",
+    "copyright": "© {year} Reranker",
+    "operatedBy": "Reranker es una marca de {legalName}",
+    "lastUpdated": "Última actualización: {date, date, long}",
+    "cookieBanner": {
+      "label": "Aviso de cookies",
+      "title": "¿Nos dejas medir tu visita?",
+      "body": "Usamos cookies para entender cómo se usa el sitio y mejorarlo. Si no aceptas, solo contamos visitas sin cookies.",
+      "accept": "Aceptar",
+      "reject": "Rechazar"
     }
   }
 }

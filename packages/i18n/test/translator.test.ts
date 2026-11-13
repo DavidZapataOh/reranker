@@ -10,3 +10,12 @@ test("hasLocale", () => {
   expect(hasLocale("en")).toBe(false);
   expect(hasLocale(undefined)).toBe(false);
 });
+
+test("onError receives messages that cannot be rendered", () => {
+  const errors: string[] = [];
+  const t = getTranslator("es-CO", "errors.validation", {
+    onError: (error) => errors.push(error.code),
+  });
+  t("invalid_format");
+  expect(errors).toEqual(["FORMATTING_ERROR"]);
+});

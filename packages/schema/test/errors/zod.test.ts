@@ -64,6 +64,6 @@ test("field error details use errors.validation and fall back to custom", () => 
       code: "too_small",
       detail: v("too_small", { origin: "string", minimum: 2 }),
     },
-    { pointer: "/form/x", code: "invalid_format", detail: v("invalid_format", {}) },
+    { pointer: "/form/x", code: "invalid_format", detail: v("custom") },
   ]);
 });

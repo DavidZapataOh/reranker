@@ -13,12 +13,16 @@
     "generate:countries": "node scripts/generate-countries.ts"
   },
   "dependencies": {
+    "@formatjs/intl-localematcher": "catalog:",
+    "negotiator": "catalog:",
     "use-intl": "catalog:"
   },
   "devDependencies": {
     "@reranker/typescript-config": "workspace:*",
+    "@types/negotiator": "catalog:",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
+    "intl-messageformat": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }
