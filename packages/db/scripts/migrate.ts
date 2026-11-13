@@ -148,12 +148,16 @@ export async function runMigrations({
 
     const files = (await readdir(concurrentFolder)).filter((file) => file.endsWith(".sql")).sort();
     const concurrent: string[] = [];
+    // Index builds scale with table size, so only lock_timeout bounds them; a statement
+    // timeout would fail every deploy once a table outgrows it.
+    await client.query("select set_config('statement_timeout', '0', false)");
     for (const file of files) {
       const sql = await readFile(join(concurrentFolder, file), "utf8");
       if (await withLockRetries(retries, () => applyConcurrentIndex(client, file, sql))) {
         concurrent.push(file);
       }
     }
+    await client.query("select set_config('statement_timeout', $1, false)", [statementTimeout]);
     await assertIndexesValid(client);
     return { applied, concurrent };
   } finally {

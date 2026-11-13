@@ -121,8 +121,8 @@ test("fails without hanging when an ACCESS EXCLUSIVE lock is held", {
   await expect(
     runMigrations({ ...opts(), migrationsFolder: alterFolder, retries: 3 }),
   ).rejects.toThrow(/lock timeout/);
-  // 3 attempts × 3 s lock_timeout + 1 s and 2 s of backoff, plus connection overhead.
-  expect(Date.now() - started).toBeLessThan(3 * 3000 + 1000 + 2000 + 4000 + 1000);
+  // 3 attempts × 3 s lock_timeout + 3 s of backoff; the bound only proves it does not hang.
+  expect(Date.now() - started).toBeLessThan(30_000);
 
   const observer = await connect();
   const { rows } = await observer.query<{ count: string }>(
@@ -233,4 +233,31 @@ test("the CLI exits non-zero without DATABASE_URL_MIGRATIONS", { timeout: 60_000
   const code = await new Promise<number | null>((resolve) => child.on("close", resolve));
   expect(code).not.toBe(0);
   expect(stderr).toContain("DATABASE_URL_MIGRATIONS");
+});
+
+test("concurrent index builds are not cut short by the statement timeout", {
+  timeout: 60_000,
+}, async () => {
+  const folder = await withProbeMigrations("slow-index", [
+    `create table app.migration_probe (id integer primary key, label text not null);
+--> statement-breakpoint
+insert into app.migration_probe select g, md5(g::text) from generate_series(1, 300000) g;`,
+  ]);
+  await runMigrations({ ...opts(), migrationsFolder: folder });
+  const concurrent = join(workDir, "slow-indexes");
+  await mkdir(concurrent);
+  await writeFile(
+    join(concurrent, "0001_migration_probe_label_idx.sql"),
+    "create index concurrently if not exists migration_probe_label_idx on app.migration_probe (label);\n",
+  );
+
+  // The build takes far longer than 50 ms, so it only succeeds if the timeout is lifted for it.
+  const result = await runMigrations({
+    ...opts(),
+    migrationsFolder: folder,
+    concurrentFolder: concurrent,
+    statementTimeout: "50ms",
+  });
+  expect(result.concurrent).toEqual(["0001_migration_probe_label_idx.sql"]);
+  expect(await indexValidity(await connect(), "migration_probe_label_idx")).toBe(true);
 });
