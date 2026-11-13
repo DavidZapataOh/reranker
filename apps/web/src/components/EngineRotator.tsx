@@ -142,6 +142,10 @@ export function EngineRotator({ paused = false }: { paused?: boolean }) {
             </span>
           ))}
         </span>
+        {/* Sizes the slot in server HTML, before there is a measurement, so hydration moves nothing */}
+        <span className="invisible block h-[1.2em] w-max leading-[1.2em] whitespace-nowrap">
+          {engines[current]?.name}.
+        </span>
       </span>
     </span>
   );

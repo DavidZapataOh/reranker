@@ -1,5 +1,6 @@
 import type { Page } from "@playwright/test";
 import { expect, test } from "@reranker/testing/playwright";
+import { clsSince, recordShifts, type Shift } from "./layout-shifts";
 
 // Layout must hold whether the web fonts arrive late or never: next/font's metric-adjusted
 // fallbacks are what keep the swap from moving content.
@@ -11,34 +12,6 @@ test.use({ reducedMotion: "reduce" });
 // /_next/static/immutable/media/; any web font under /_next/static/ is one of ours.
 const fonts = (url: URL) =>
   url.pathname.startsWith("/_next/static/") && /\.woff2?$/.test(url.pathname);
-
-type Shift = { start: number; value: number; hadRecentInput: boolean };
-
-// Installed before any page script so no shift escapes, however early it happens.
-async function recordShifts(page: Page) {
-  await page.addInitScript(() => {
-    const shifts: Shift[] = [];
-    Object.assign(window, { __shifts: shifts });
-    new PerformanceObserver((list) => {
-      for (const entry of list.getEntries() as (PerformanceEntry & Shift)[]) {
-        shifts.push({
-          start: entry.startTime,
-          value: entry.value,
-          hadRecentInput: entry.hadRecentInput,
-        });
-      }
-    }).observe({ type: "layout-shift", buffered: true });
-  });
-}
-
-const clsSince = (page: Page, since: number) =>
-  page.evaluate(
-    (after: number) =>
-      (window as unknown as { __shifts: Shift[] }).__shifts
-        .filter((s) => s.start > after && !s.hadRecentInput)
-        .reduce((total, s) => total + s.value, 0),
-    since,
-  );
 
 // Hydration settles the hero (the demo's answer, the engine slot's width) on its own schedule;
 // shifts from it are not the fonts', so measuring starts once the page has gone quiet.
