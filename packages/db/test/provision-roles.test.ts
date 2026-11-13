@@ -25,8 +25,10 @@ test("rejects unset, malformed, non-object and unknown-login input without echoi
     other: "secretvalue",
   });
   expect(() => parseLoginPasswords(raw)).toThrow(/unknown logins: other/);
+  const weak = '{"reranker_app":"hunter2","reranker_system":"%s"}'.replace("%s", strong);
+  expect(() => parseLoginPasswords(weak)).toThrow(/entropy/);
   try {
-    parseLoginPasswords(`{"reranker_app":"hunter2hunter2","reranker_system":"${strong}"}`);
+    parseLoginPasswords(weak);
   } catch (error) {
     expect((error as Error).message).not.toContain("hunter2");
   }
