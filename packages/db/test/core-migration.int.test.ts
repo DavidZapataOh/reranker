@@ -89,6 +89,20 @@ test("current_tenant_ids is NULL without the variable and parses a uuid[] litera
   }
 });
 
+test("current_tenant_ids rejects malformed input and treats an empty array as no tenants", async () => {
+  await client.query("begin");
+  try {
+    await client.query("select set_config('app.tenant_ids', '{}', true)");
+    expect(await rows("select app.current_tenant_ids() as ids")).toEqual([{ ids: [] }]);
+    await client.query("select set_config('app.tenant_ids', 'garbage', true)");
+    await expect(client.query("select app.current_tenant_ids()")).rejects.toMatchObject({
+      code: "22P02",
+    });
+  } finally {
+    await client.query("rollback");
+  }
+});
+
 test("schema usage grants: app_tenant → app, public_panel only; app_system → all four; PUBLIC → none", async () => {
   const usage = async (role: string) => {
     const result: Record<string, boolean | undefined> = {};

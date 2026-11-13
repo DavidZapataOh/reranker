@@ -17,7 +17,7 @@ $$;
 --> statement-breakpoint
 create function app.current_tenant_ids() returns uuid[]
   language sql stable parallel safe
-  as $$ select nullif(current_setting('app.tenant_ids', true), '')::uuid[] $$;
+  as $$ select nullif(pg_catalog.current_setting('app.tenant_ids', true), '')::pg_catalog.uuid[] $$;
 --> statement-breakpoint
 revoke all on schema app, auth, public_panel, ops from public;
 --> statement-breakpoint
@@ -29,6 +29,7 @@ grant usage on schema app, auth, public_panel, ops to app_system;
 --> statement-breakpoint
 grant execute on function app.current_tenant_ids() to app_tenant, app_system;
 --> statement-breakpoint
+-- Default privileges only cover tables created by reranker_owner, so migrations must run as that role.
 alter default privileges for role reranker_owner in schema app
   grant select, insert, update, delete on tables to app_tenant, app_system;
 --> statement-breakpoint
