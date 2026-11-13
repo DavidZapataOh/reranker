@@ -1,6 +1,8 @@
 // Regenerates src/countries/generated.ts from the providers' official coverage lists.
 // Usage: pnpm --filter @reranker/i18n generate:countries
 import { writeFileSync } from "node:fs";
+import { inflateRawSync } from "node:zlib";
+import { UNINHABITED_TERRITORIES } from "../src/countries/policy.ts";
 
 const OUTPUT = new URL("../src/countries/generated.ts", import.meta.url);
 
@@ -9,6 +11,7 @@ const DATAFORSEO_CHATGPT_DOCS =
   "https://docs.dataforseo.com/v3/ai_optimization/chat_gpt/llm_scraper/locations/";
 const BRIGHTDATA_REPO = "brightdata/answer-engines-country-codes";
 const IANA_TZDB = "https://data.iana.org/time-zones/tzdb/";
+const GEONAMES_CITIES = "https://download.geonames.org/export/dump/cities15000.zip";
 
 // V0 engine → provider lists that can capture it. DataForSEO's Gemini LLM Scraper locations
 // are only served to authenticated API calls, so Gemini coverage comes from Bright Data alone.
@@ -114,20 +117,58 @@ async function brightdataCountries() {
 }
 
 // zone.tab lists one country per line (zone1970.tab merges countries that share a zone).
-async function firstZones() {
+async function zonesByCountry() {
   const version = (await fetchText(`${IANA_TZDB}version`)).trim();
   const url = `${IANA_TZDB}zone.tab`;
-  const zones = new Map<string, string>();
+  const zones = new Map<string, string[]>();
   for (const line of (await fetchText(url)).split("\n")) {
     if (line.startsWith("#") || line.trim() === "") continue;
     const [country = "", , zone = ""] = line.split("\t");
-    if (!zones.has(country)) zones.set(assertIso2(country, url), zone);
+    const list = zones.get(assertIso2(country, url)) ?? [];
+    zones.set(country, [...list, zone]);
   }
   return { url, version, zones };
 }
 
+// The archive holds a single deflated file; its sizes live in the central directory.
+function unzipSingleFile(archive: Buffer): Buffer {
+  const end = archive.lastIndexOf(Buffer.from([0x50, 0x4b, 0x05, 0x06]));
+  if (end < 0) throw new Error("Not a zip archive");
+  const entry = archive.readUInt32LE(end + 16);
+  const method = archive.readUInt16LE(entry + 10);
+  const size = archive.readUInt32LE(entry + 20);
+  const local = archive.readUInt32LE(entry + 42);
+  const start = local + 30 + archive.readUInt16LE(local + 26) + archive.readUInt16LE(local + 28);
+  const data = archive.subarray(start, start + size);
+  if (method === 0) return data;
+  if (method === 8) return inflateRawSync(data);
+  throw new Error(`Unsupported zip compression method ${method}`);
+}
+
+// A country's working hours follow its capital; zone.tab's first zone is often a remote
+// island (Brazil → Noronha, Australia → Lord Howe).
+async function capitalZones() {
+  const response = await fetch(GEONAMES_CITIES);
+  if (!response.ok) throw new Error(`GET ${GEONAMES_CITIES} answered ${response.status}`);
+  const lastModified = response.headers.get("last-modified") ?? "unknown";
+  const text = unzipSingleFile(Buffer.from(await response.arrayBuffer())).toString("utf8");
+  const zones = new Map<string, string>();
+  let rows = 0;
+  for (const line of text.split("\n")) {
+    if (line.trim() === "") continue;
+    rows++;
+    const columns = line.split("\t");
+    const [featureCode = "", country = ""] = [columns[7], columns[8]];
+    const zone = columns[17] ?? "";
+    if (featureCode !== "PPLC") continue;
+    if (zones.has(country)) throw new Error(`Two capitals for ${country} in ${GEONAMES_CITIES}`);
+    zones.set(assertIso2(country, GEONAMES_CITIES), zone);
+  }
+  return { url: GEONAMES_CITIES, lastModified, rows, zones };
+}
+
 const fetchedOn = new Date().toISOString().slice(0, 10);
-const [serp, chatgpt, brightdata, tz] = await Promise.all([
+const [serp, chatgpt, brightdata, tz, capitals] = await Promise.all([
   dataforseoLocations(DATAFORSEO_SERP_DOCS, "locations_serp_google", ["Country"]),
   // Taiwan and Hong Kong are listed as regions but targeted as countries.
   dataforseoLocations(DATAFORSEO_CHATGPT_DOCS, "locations_ai_optimization_chat_gpt_llm_scraper", [
@@ -135,18 +176,27 @@ const [serp, chatgpt, brightdata, tz] = await Promise.all([
     "Region",
   ]),
   brightdataCountries(),
-  firstZones(),
+  zonesByCountry(),
+  capitalZones(),
 ]);
 
 const names = new Intl.DisplayNames(["es-CO"], { type: "region", fallback: "none" });
 const skipped: string[] = [];
+const unresolved: string[] = [];
 const entries: string[] = [];
 
 for (const country of [...serp.byCountry.keys()].sort()) {
-  const timeZone = tz.zones.get(country);
+  if ((UNINHABITED_TERRITORIES as readonly string[]).includes(country)) {
+    skipped.push(country);
+    continue;
+  }
+  const zones = tz.zones.get(country) ?? [];
+  const timeZone = capitals.zones.get(country) ?? (zones.length === 1 ? zones[0] : undefined);
   const name = names.of(country);
   if (!timeZone || !name) {
-    skipped.push(`${country} (${timeZone ? "no CLDR name" : "no IANA time zone"})`);
+    unresolved.push(
+      `${country} (${name ? `zones: ${zones.join(", ") || "none"}` : "no CLDR name"})`,
+    );
     continue;
   }
   const inBrightdata = (engine: keyof typeof BRIGHTDATA_ENGINES) =>
@@ -171,6 +221,10 @@ for (const country of [...serp.byCountry.keys()].sort()) {
   );
 }
 
+if (unresolved.length > 0) {
+  throw new Error(`No single time zone or name for: ${unresolved.join("; ")}`);
+}
+
 const header = [
   "// Generated by scripts/generate-countries.ts. Do not edit; rerun the script instead.",
   `// Fetched ${fetchedOn}:`,
@@ -179,9 +233,12 @@ const header = [
   ...Object.entries(brightdata.lists).map(
     ([engine, list]) => `// - Bright Data ${engine}: ${list.url} (${list.codes.size} countries)`,
   ),
-  `// - Time zones: ${tz.url} (tzdb ${tz.version}), first zone listed per country`,
+  `// - Time zones: capital (PPLC) of ${capitals.url} (${capitals.rows} rows, ${capitals.zones.size} capitals, last modified ${capitals.lastModified});`,
+  `//   otherwise the only zone of ${tz.url} (tzdb ${tz.version})`,
   `// - Spanish names: CLDR ${process.versions.cldr} (es-CO)`,
-  ...(skipped.length > 0 ? [`// Skipped: ${skipped.join(", ")}`] : []),
+  ...(skipped.length > 0
+    ? [`// Skipped as uninhabited territories (policy.ts): ${skipped.join(", ")}`]
+    : []),
 ];
 
 writeFileSync(

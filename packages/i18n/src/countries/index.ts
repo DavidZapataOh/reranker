@@ -5,7 +5,16 @@ import { BILLING_BLOCKED, ENGINE_EXCLUSIONS, EURO_AREA, NOT_MEASURED } from "./p
 
 type CoverageCode = keyof typeof PROVIDER_COVERAGE;
 type GeneratedCode = Exclude<CoverageCode, typeof co.code | (typeof NOT_MEASURED)[number]>;
-type EngineId = (typeof PROVIDER_COVERAGE)[CoverageCode]["engines"][number];
+
+export type EngineId = (typeof PROVIDER_COVERAGE)[CoverageCode]["engines"][number];
+
+export type ProviderCoverage = {
+  readonly name: string;
+  readonly timeZone: string;
+  readonly dataforseoLocationCode: number;
+  readonly brightdataCountry?: string;
+  readonly engines: readonly EngineId[];
+};
 
 const BLOCKED = { blocked: true } as const;
 
@@ -20,9 +29,8 @@ function paddleOrBlocked(code: string): PaddleBilling | typeof BLOCKED {
 }
 
 // Every country speaks the only shipped locale until regional profiles exist.
-function fromCoverage<C extends GeneratedCode>(code: C) {
-  const coverage: (typeof PROVIDER_COVERAGE)[CoverageCode] = PROVIDER_COVERAGE[code];
-  const excluded = ENGINE_EXCLUSIONS[code] ?? [];
+export function toCountry<C extends string>(code: C, coverage: ProviderCoverage) {
+  const excluded: readonly EngineId[] = ENGINE_EXCLUSIONS[code as CoverageCode] ?? [];
   return {
     code,
     name: coverage.name,
@@ -31,24 +39,28 @@ function fromCoverage<C extends GeneratedCode>(code: C) {
     timeZone: coverage.timeZone,
     providers: {
       dataforseo: { locationCode: coverage.dataforseoLocationCode },
-      ...("brightdataCountry" in coverage
-        ? { brightdata: { country: coverage.brightdataCountry } }
-        : {}),
+      ...(coverage.brightdataCountry === undefined
+        ? {}
+        : { brightdata: { country: coverage.brightdataCountry } }),
     },
     geoData: `${code.toLowerCase()}-2026.11`,
-    engines: coverage.engines.filter((engine) => !excluded.includes(engine)) as readonly EngineId[],
+    engines: coverage.engines.filter((engine) => !excluded.includes(engine)),
     billing: paddleOrBlocked(code),
   } as const;
 }
 
-const generatedCodes = Object.keys(PROVIDER_COVERAGE).filter(
-  (code): code is GeneratedCode =>
-    code !== co.code && !(NOT_MEASURED as readonly string[]).includes(code),
-);
+// Colombia is hand-written in co.ts; policy decides which covered countries are measured.
+export function buildCountries(coverage: Readonly<Record<string, ProviderCoverage>>) {
+  return Object.fromEntries(
+    Object.entries(coverage)
+      .filter(([code]) => code !== co.code && !(NOT_MEASURED as readonly string[]).includes(code))
+      .map(([code, entry]) => [code, toCountry(code, entry)]),
+  );
+}
 
 export const COUNTRIES = {
-  ...(Object.fromEntries(generatedCodes.map((code) => [code, fromCoverage(code)])) as {
-    readonly [C in GeneratedCode]: ReturnType<typeof fromCoverage<C>>;
+  ...(buildCountries(PROVIDER_COVERAGE) as {
+    readonly [C in GeneratedCode]: ReturnType<typeof toCountry<C>>;
   }),
   [co.code]: co,
 };

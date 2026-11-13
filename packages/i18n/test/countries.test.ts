@@ -1,12 +1,14 @@
 import { describe, expect, test } from "vitest";
 import {
   billingFor,
+  buildCountries,
   COUNTRIES,
   countryForLocale,
   DEFAULT_COUNTRY_CODE,
   getCountry,
   isMeasurable,
   measurableCountries,
+  type ProviderCoverage,
 } from "../src/countries";
 import { PROVIDER_COVERAGE } from "../src/countries/generated";
 import type { Locale } from "../src/locales";
@@ -40,6 +42,35 @@ describe("country registry", () => {
     expect(isMeasurable("NI")).toBe(true);
     expect(getCountry("NI").engines).toEqual(PROVIDER_COVERAGE.NI.engines);
     expect(getCountry("NI").engines).toContain("chatgpt");
+  });
+
+  test("policy applies even when a provider starts covering a country", () => {
+    const everyEngine: ProviderCoverage = {
+      name: "Prueba",
+      timeZone: "America/Caracas",
+      dataforseoLocationCode: 1,
+      engines: ["chatgpt", "gemini", "google-ai-overview", "perplexity"],
+    };
+    const built = buildCountries({ CU: everyEngine, VE: everyEngine, CO: everyEngine });
+    expect(Object.keys(built)).toEqual(["VE"]);
+    expect(built.VE?.engines).toEqual(["gemini", "google-ai-overview", "perplexity"]);
+    expect(built.VE?.billing).toEqual({ blocked: true });
+    expect(built.VE?.providers).not.toHaveProperty("brightdata");
+  });
+
+  test("time zones follow each country's capital", () => {
+    const zones = Object.fromEntries(
+      ["BR", "AU", "CA", "US", "MX", "ES", "CO"].map((code) => [code, getCountry(code).timeZone]),
+    );
+    expect(zones).toEqual({
+      BR: "America/Sao_Paulo",
+      AU: "Australia/Sydney",
+      CA: "America/Toronto",
+      US: "America/New_York",
+      MX: "America/Mexico_City",
+      ES: "Europe/Madrid",
+      CO: "America/Bogota",
+    });
   });
 
   test("Colombia's hand-written provider data matches the official lists", () => {

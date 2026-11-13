@@ -5,9 +5,10 @@
 // - Bright Data chatgpt: https://raw.githubusercontent.com/brightdata/answer-engines-country-codes/f3937d9f75fe864e56680fc04a0faf60ec63e3be/chatgpt_countries.csv (212 countries)
 // - Bright Data gemini: https://raw.githubusercontent.com/brightdata/answer-engines-country-codes/f3937d9f75fe864e56680fc04a0faf60ec63e3be/gemini_countries.csv (222 countries)
 // - Bright Data perplexity: https://raw.githubusercontent.com/brightdata/answer-engines-country-codes/f3937d9f75fe864e56680fc04a0faf60ec63e3be/perplexity_countries.csv (223 countries)
-// - Time zones: https://data.iana.org/time-zones/tzdb/zone.tab (tzdb 2026f), first zone listed per country
+// - Time zones: capital (PPLC) of https://download.geonames.org/export/dump/cities15000.zip (34215 rows, 241 capitals, last modified Thu, 12 Nov 2026 02:42:54 GMT);
+//   otherwise the only zone of https://data.iana.org/time-zones/tzdb/zone.tab (tzdb 2026f)
 // - Spanish names: CLDR 48.0 (es-CO)
-// Skipped: HM (no IANA time zone)
+// Skipped as uninhabited territories (policy.ts): AQ, HM, UM
 export const PROVIDER_COVERAGE = {
   AD: {
     name: "Andorra",
@@ -58,12 +59,6 @@ export const PROVIDER_COVERAGE = {
     brightdataCountry: "AO",
     engines: ["chatgpt", "gemini", "google-ai-overview", "perplexity"],
   },
-  AQ: {
-    name: "Antártida",
-    timeZone: "Antarctica/McMurdo",
-    dataforseoLocationCode: 2010,
-    engines: ["google-ai-overview"],
-  },
   AR: {
     name: "Argentina",
     timeZone: "America/Argentina/Buenos_Aires",
@@ -87,7 +82,7 @@ export const PROVIDER_COVERAGE = {
   },
   AU: {
     name: "Australia",
-    timeZone: "Australia/Lord_Howe",
+    timeZone: "Australia/Sydney",
     dataforseoLocationCode: 2036,
     brightdataCountry: "AU",
     engines: ["chatgpt", "gemini", "google-ai-overview", "perplexity"],
@@ -185,7 +180,7 @@ export const PROVIDER_COVERAGE = {
   },
   BR: {
     name: "Brasil",
-    timeZone: "America/Noronha",
+    timeZone: "America/Sao_Paulo",
     dataforseoLocationCode: 2076,
     brightdataCountry: "BR",
     engines: ["chatgpt", "gemini", "google-ai-overview", "perplexity"],
@@ -220,7 +215,7 @@ export const PROVIDER_COVERAGE = {
   },
   CA: {
     name: "Canadá",
-    timeZone: "America/St_Johns",
+    timeZone: "America/Toronto",
     dataforseoLocationCode: 2124,
     brightdataCountry: "CA",
     engines: ["chatgpt", "gemini", "google-ai-overview", "perplexity"],
@@ -440,7 +435,7 @@ export const PROVIDER_COVERAGE = {
   },
   FM: {
     name: "Micronesia",
-    timeZone: "Pacific/Chuuk",
+    timeZone: "Pacific/Pohnpei",
     dataforseoLocationCode: 2583,
     brightdataCountry: "FM",
     engines: ["chatgpt", "gemini", "google-ai-overview", "perplexity"],
@@ -1364,7 +1359,7 @@ export const PROVIDER_COVERAGE = {
   },
   UA: {
     name: "Ucrania",
-    timeZone: "Europe/Simferopol",
+    timeZone: "Europe/Kyiv",
     dataforseoLocationCode: 2804,
     brightdataCountry: "UA",
     engines: ["chatgpt", "gemini", "google-ai-overview", "perplexity"],
@@ -1375,12 +1370,6 @@ export const PROVIDER_COVERAGE = {
     dataforseoLocationCode: 2800,
     brightdataCountry: "UG",
     engines: ["chatgpt", "gemini", "google-ai-overview", "perplexity"],
-  },
-  UM: {
-    name: "Islas menores alejadas de EE. UU.",
-    timeZone: "Pacific/Midway",
-    dataforseoLocationCode: 2581,
-    engines: ["google-ai-overview"],
   },
   US: {
     name: "Estados Unidos",
@@ -1398,7 +1387,7 @@ export const PROVIDER_COVERAGE = {
   },
   UZ: {
     name: "Uzbekistán",
-    timeZone: "Asia/Samarkand",
+    timeZone: "Asia/Tashkent",
     dataforseoLocationCode: 2860,
     brightdataCountry: "UZ",
     engines: ["chatgpt", "gemini", "google-ai-overview", "perplexity"],
@@ -1426,7 +1415,7 @@ export const PROVIDER_COVERAGE = {
   },
   VN: {
     name: "Vietnam",
-    timeZone: "Asia/Ho_Chi_Minh",
+    timeZone: "Asia/Bangkok",
     dataforseoLocationCode: 2704,
     brightdataCountry: "VN",
     engines: ["chatgpt", "gemini", "google-ai-overview", "perplexity"],

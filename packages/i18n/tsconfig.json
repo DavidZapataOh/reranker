@@ -1,4 +1,6 @@
 {
   "extends": "@reranker/typescript-config/library.json",
+  // The generator runs on Node's type stripping, which needs explicit .ts imports.
+  "compilerOptions": { "allowImportingTsExtensions": true },
   "include": ["src", "test", "messages", "scripts"]
 }
