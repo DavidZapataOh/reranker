@@ -1,4 +1,4 @@
-import { AppError } from "@reranker/schema";
+import { AppError, isAppError } from "@reranker/schema";
 import pg from "pg";
 import { emitDbEvent } from "./events";
 
@@ -38,7 +38,7 @@ function fromPg(err: pg.DatabaseError, ctx: Ctx): AppError {
 
 export function toDbError(err: unknown, ctx: Ctx): unknown {
   if (err instanceof pg.DatabaseError) return fromPg(err, ctx);
-  if (!(err instanceof Error) || (err as { name?: string }).name === "AppError") return err;
+  if (!(err instanceof Error) || isAppError(err)) return err;
   if (err.message.startsWith("timeout exceeded when trying to connect")) {
     emitDbEvent({
       name: "db_pool_exhausted",

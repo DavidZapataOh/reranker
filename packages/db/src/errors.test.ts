@@ -21,6 +21,8 @@ describe("toDbError", () => {
     [pgError("53300"), "service_unavailable", 30],
     [pgError("57P03"), "service_unavailable", 30],
     [pgError("08006"), "service_unavailable", 2],
+    [pgError("57P01"), "service_unavailable", 2],
+    [Object.assign(new Error("read ECONNRESET"), { code: "ECONNRESET" }), "service_unavailable", 2],
     [new Error("timeout exceeded when trying to connect"), "service_unavailable", 2],
     [
       Object.assign(new Error("connect ECONNREFUSED"), { code: "ECONNREFUSED" }),
@@ -46,6 +48,13 @@ describe("toDbError", () => {
     expect(toDbError(app, { pool: "app" })).toBe(app);
     expect(toDbError(plain, { pool: "app" })).toBe(plain);
     expect(toDbError("text", { pool: "app" })).toBe("text");
+  });
+
+  test("translates a plain error that only borrows the AppError name", () => {
+    const impostor = Object.assign(new Error("boom"), { name: "AppError", code: "ECONNRESET" });
+    const out = toDbError(impostor, { pool: "app" }) as AppError;
+    expect(out).not.toBe(impostor);
+    expect(out.code).toBe("service_unavailable");
   });
 
   test("emits db_rls_violation on 42501 and db_compute_unavailable on 53300/57P03", () => {

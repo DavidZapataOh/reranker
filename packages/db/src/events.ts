@@ -22,6 +22,8 @@ const poolHits: number[] = [];
 function poolAlertDue(now: number): boolean {
   while (poolHits.length > 0 && now - (poolHits[0] as number) >= POOL_WINDOW_MS) poolHits.shift();
   poolHits.push(now);
+  // Only the newest THRESHOLD + 1 hits can decide the alert, so older ones are dead weight.
+  if (poolHits.length > POOL_THRESHOLD + 1) poolHits.shift();
   return poolHits.length > POOL_THRESHOLD;
 }
 
@@ -32,6 +34,10 @@ export function emitDbEvent(event: DbEvent): void {
   } catch {
     // Observability must never turn a database failure into a different one.
   }
+}
+
+export function dbPoolHitCountForTest(): number {
+  return poolHits.length;
 }
 
 export function resetDbEventsForTest(): void {
