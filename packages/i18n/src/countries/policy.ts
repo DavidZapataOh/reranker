@@ -75,3 +75,8 @@ export const EURO_AREA = [
   "SI",
   "SK",
 ] as const;
+
+// States outside the euro area whose official currency is the euro, by monetary agreement
+// (AD, MC, SM, VA) or de facto (ME, XK): https://economy-finance.ec.europa.eu/euro/use-euro/euro-outside-euro-area_en
+// (read 2026-11-12). Only those the providers cover become countries; XK is not covered yet.
+export const EURO_OFFICIAL_CURRENCY = ["AD", "MC", "ME", "SM", "VA", "XK"] as const;

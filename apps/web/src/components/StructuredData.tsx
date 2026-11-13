@@ -1,8 +1,11 @@
-import { CURRENCIES, type Currency, ISO_CODE, PRICES } from "@/lib/pricing";
+import { DEFAULT_LOCALE } from "@reranker/i18n";
+import { DEFAULT_COUNTRY_CODE, getCountry } from "@reranker/i18n/countries";
+import { CURRENCIES, type Currency, DEFAULT_CURRENCY, isoCode, PRICES } from "@/lib/pricing";
 import { faqItems } from "./Sections";
 import { contact } from "./ui";
 
 const BASE = "https://reranker.co";
+const LANGUAGE = new Intl.Locale(DEFAULT_LOCALE).language;
 
 /**
  * schema.org JSON-LD for the home page: who operates Reranker, what it is,
@@ -27,7 +30,7 @@ export function StructuredData({ currency }: { currency: Currency }) {
           "@type": "PostalAddress",
           addressLocality: "Medellín",
           addressRegion: "Antioquia",
-          addressCountry: "CO",
+          addressCountry: getCountry(DEFAULT_COUNTRY_CODE).code,
         },
       },
       {
@@ -35,7 +38,7 @@ export function StructuredData({ currency }: { currency: Currency }) {
         "@id": `${BASE}/#website`,
         url: BASE,
         name: "Reranker",
-        inLanguage: "es",
+        inLanguage: LANGUAGE,
         publisher: { "@id": `${BASE}/#organization` },
       },
       {
@@ -45,25 +48,30 @@ export function StructuredData({ currency }: { currency: Currency }) {
         applicationCategory: "BusinessApplication",
         operatingSystem: "Web",
         url: BASE,
-        inLanguage: "es",
+        inLanguage: LANGUAGE,
         description:
           "Reranker muestra qué recomiendan ChatGPT, Gemini, Google y Perplexity cuando alguien busca lo que vende un negocio en su ciudad, y qué cambiar en su perfil de Google o su sitio web para que lo recomienden.",
         publisher: { "@id": `${BASE}/#organization` },
         offers: [
-          { "@type": "Offer", name: "Reporte gratis", price: "0", priceCurrency: "USD" },
+          {
+            "@type": "Offer",
+            name: "Reporte gratis",
+            price: "0",
+            priceCurrency: isoCode(DEFAULT_CURRENCY),
+          },
           ...CURRENCIES.flatMap((c) => [
             {
               "@type": "Offer",
               name: "Esencial",
               price: String(PRICES[c].essential),
-              priceCurrency: ISO_CODE[c],
+              priceCurrency: isoCode(c),
               description: "Mensual. Un negocio en una ciudad.",
             },
             {
               "@type": "Offer",
               name: "Pro",
               price: String(PRICES[c].pro),
-              priceCurrency: ISO_CODE[c],
+              priceCurrency: isoCode(c),
               description: "Mensual. Varias sedes o ciudades.",
             },
           ]),

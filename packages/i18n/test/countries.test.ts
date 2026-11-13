@@ -141,6 +141,13 @@ describe("billing", () => {
     expect(billingFor("DK")).toEqual({ provider: "paddle", currency: "USD" });
   });
 
+  test.each(["AD", "MC", "ME", "SM", "VA"])(
+    "%s uses the euro as its official currency and pays Paddle in EUR",
+    (code) => {
+      expect(billingFor(code)).toEqual({ provider: "paddle", currency: "EUR" });
+    },
+  );
+
   test("Cuba, Venezuela, Nicaragua and Paddle's unsupported countries cannot pay", () => {
     for (const code of ["CU", "VE", "NI", "AF", "IR", "ZW", "RU", "CW"]) {
       expect(billingFor(code)).toEqual({ blocked: true });

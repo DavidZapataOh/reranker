@@ -4,6 +4,7 @@ import { writeFileSync } from "node:fs";
 import { inflateRawSync } from "node:zlib";
 import { UNINHABITED_TERRITORIES } from "../src/countries/policy.ts";
 import type { EngineId } from "../src/engines.ts";
+import { DEFAULT_LOCALE } from "../src/locales.ts";
 
 const OUTPUT = new URL("../src/countries/generated.ts", import.meta.url);
 
@@ -180,7 +181,7 @@ const [serp, chatgpt, brightdata, tz, capitals] = await Promise.all([
   capitalZones(),
 ]);
 
-const names = new Intl.DisplayNames(["es-CO"], { type: "region", fallback: "none" });
+const names = new Intl.DisplayNames([DEFAULT_LOCALE], { type: "region", fallback: "none" });
 const skipped: string[] = [];
 const unresolved: string[] = [];
 const entries: string[] = [];
@@ -242,7 +243,7 @@ const header = [
   ),
   `// - Time zones: capital (PPLC) of ${capitals.url} (${capitals.rows} rows, ${capitals.zones.size} capitals, last modified ${capitals.lastModified});`,
   `//   when it is one of the country's zones in ${tz.url} (tzdb ${tz.version}), otherwise its only zone`,
-  `// - Spanish names: CLDR ${process.versions.cldr} (es-CO)`,
+  `// - Spanish names: CLDR ${process.versions.cldr} (${DEFAULT_LOCALE})`,
   ...(skipped.length > 0
     ? [`// Skipped as uninhabited territories (policy.ts): ${skipped.join(", ")}`]
     : []),

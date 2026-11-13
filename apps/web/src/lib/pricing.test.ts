@@ -1,3 +1,4 @@
+import { billingFor, measurableCountries } from "@reranker/i18n/countries";
 import { describe, expect, test } from "vitest";
 import { currencyForCountry, formatPrice, PRICES } from "./pricing";
 
@@ -21,8 +22,23 @@ describe("currencyForCountry", () => {
     },
   );
 
-  test.each([null, undefined, "", "  "])("unknown country %j defaults to dollars", (country) => {
+  test.each([null, undefined, "", "  ", "XX", "ZZZ"])(
+    "unknown country %j defaults to dollars",
+    (country) => {
+      expect(currencyForCountry(country)).toBe("usd");
+    },
+  );
+
+  test.each(["CU", "VE", "NI", "RU"])("%s cannot pay, so it sees dollars", (country) => {
     expect(currencyForCountry(country)).toBe("usd");
+  });
+
+  test("shows the currency checkout charges in every country", () => {
+    for (const { code } of measurableCountries()) {
+      const billing = billingFor(code);
+      const charged = "currency" in billing ? billing.currency : "USD";
+      expect(currencyForCountry(code), code).toBe(charged.toLowerCase());
+    }
   });
 });
 
