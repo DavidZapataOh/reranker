@@ -1,4 +1,5 @@
 import { AppError } from "@reranker/schema";
+import { DrizzleQueryError } from "drizzle-orm";
 import pg from "pg";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { toDbError } from "./errors";
@@ -55,6 +56,23 @@ describe("toDbError", () => {
     const out = toDbError(impostor, { pool: "app" }) as AppError;
     expect(out).not.toBe(impostor);
     expect(out.code).toBe("service_unavailable");
+  });
+
+  test("unwraps the query error drizzle wraps around driver errors", () => {
+    const driver = pgError("23505");
+    const wrapped = new DrizzleQueryError("insert into app.reports", ["secret"], driver);
+    const out = toDbError(wrapped, { pool: "app" }) as AppError;
+    expect(out.code).toBe("conflict");
+    expect(out.cause).toBe(driver);
+    const network = Object.assign(new Error("read ECONNRESET"), { code: "ECONNRESET" });
+    expect(
+      toDbError(new DrizzleQueryError("select 1", [], network), { pool: "app" }),
+    ).toMatchObject({ code: "service_unavailable" });
+  });
+
+  test("keeps a drizzle query error whose cause is unknown", () => {
+    const wrapped = new DrizzleQueryError("select 1", [], new Error("boom"));
+    expect(toDbError(wrapped, { pool: "app" })).toBe(wrapped);
   });
 
   test("emits db_rls_violation on 42501 and db_compute_unavailable on 53300/57P03", () => {

@@ -43,7 +43,10 @@
             "noRestrictedImports": {
               "level": "error",
               "options": {
-                "paths": { "zod": "Import z from @reranker/schema, which configures zod." },
+                "paths": {
+                  "zod": "Import z from @reranker/schema, which configures zod.",
+                  "@reranker/db/auth-adapter": "The connection without tenant or system settings is only for packages/auth."
+                },
                 "patterns": [
                   {
                     "group": ["zod/*"],
@@ -73,7 +76,8 @@
               "options": {
                 "paths": {
                   "@reranker/testing": "Test-only package.",
-                  "zod": "Import z from @reranker/schema, which configures zod."
+                  "zod": "Import z from @reranker/schema, which configures zod.",
+                  "@reranker/db/auth-adapter": "The connection without tenant or system settings is only for packages/auth."
                 },
                 "patterns": [
                   {
@@ -99,7 +103,10 @@
             "noRestrictedImports": {
               "level": "error",
               "options": {
-                "paths": { "@reranker/testing": "Test-only package." },
+                "paths": {
+                  "@reranker/testing": "Test-only package.",
+                  "@reranker/db/auth-adapter": "The connection without tenant or system settings is only for packages/auth."
+                },
                 "patterns": [
                   {
                     "group": ["@reranker/testing/*", "**/testing/src/**"],
@@ -111,9 +118,82 @@
           }
         }
       }
+    },
+    {
+      "includes": ["packages/schema/**/*.test.ts", "packages/schema/**/*.test.tsx"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "@reranker/db/auth-adapter": "The connection without tenant or system settings is only for packages/auth."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    // packages/auth is the one consumer of the auth adapter; these blocks restate the other
+    // restrictions without it.
+    {
+      "includes": ["packages/auth/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": { "zod": "Import z from @reranker/schema, which configures zod." },
+                "patterns": [
+                  {
+                    "group": ["zod/*"],
+                    "message": "Import z from @reranker/schema, which configures zod."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["packages/auth/src/**", "!**/*.test.ts", "!**/*.test.tsx"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "@reranker/testing": "Test-only package.",
+                  "zod": "Import z from @reranker/schema, which configures zod."
+                },
+                "patterns": [
+                  {
+                    "group": ["@reranker/testing/*", "**/testing/src/**"],
+                    "message": "Test-only package."
+                  },
+                  {
+                    "group": ["zod/*"],
+                    "message": "Import z from @reranker/schema, which configures zod."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
     }
   ],
   "plugins": [
+    // Covers tests too: a dynamic sql.raw is an injection path wherever it runs.
+    {
+      "path": "./tools/biome/no-dynamic-sql-raw.grit",
+      "includes": ["**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs}"]
+    },
     {
       "path": "./tools/biome/no-conditional-contract-tests.grit",
       "includes": ["**/*.contract.test.ts"]

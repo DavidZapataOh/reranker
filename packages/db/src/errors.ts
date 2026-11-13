@@ -1,8 +1,8 @@
 import { AppError, isAppError } from "@reranker/schema";
+import { DrizzleQueryError } from "drizzle-orm";
 import pg from "pg";
 import { emitDbEvent } from "./events";
-
-export type SystemReason = string;
+import type { SystemReason } from "./tenancy";
 
 type Ctx = { pool: "app" | "system"; reason?: SystemReason };
 
@@ -37,6 +37,11 @@ function fromPg(err: pg.DatabaseError, ctx: Ctx): AppError {
 }
 
 export function toDbError(err: unknown, ctx: Ctx): unknown {
+  // Drizzle wraps every driver failure and puts the SQL and its parameters in the message.
+  if (err instanceof DrizzleQueryError) {
+    const translated = toDbError(err.cause, ctx);
+    return translated === err.cause ? err : translated;
+  }
   if (err instanceof pg.DatabaseError) return fromPg(err, ctx);
   if (!(err instanceof Error) || isAppError(err)) return err;
   if (err.message.startsWith("timeout exceeded when trying to connect")) {
