@@ -1,0 +1,34 @@
+@theme {
+  --color-paper: #faf7f0;
+  --color-ink: #14211b;
+  --color-ink-soft: #14211bb3;
+  --color-line: #14211b14;
+  --color-green: #0f5c45;
+  --color-green-deep: #0b4a37;
+  --color-green-light: #d9ebd7;
+  --color-amber: #f2b544;
+  --color-bubble: #f1f2ef;
+  --color-surface: #ffffff;
+
+  --color-action: var(--color-green);
+  --color-action-hover: var(--color-green-deep);
+  --color-action-soft: var(--color-green-light);
+  --color-canvas: var(--color-paper);
+  --color-text: var(--color-ink);
+  --color-text-soft: var(--color-ink-soft);
+  --color-border: var(--color-line);
+
+  --font-display: var(--nf-display), ui-rounded, "SF Pro Rounded", system-ui, sans-serif;
+  --font-sans: var(--nf-text), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--nf-mono), ui-monospace, "SFMono-Regular", monospace;
+  --font-hand: var(--nf-hand), "Segoe Print", cursive;
+
+  --ease-out-brand: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --shadow-soft: 0 1px 2px rgb(20 33 27 / 0.06), 0 4px 16px rgb(20 33 27 / 0.06);
+  --shadow-lift: 0 2px 4px rgb(20 33 27 / 0.06), 0 18px 40px -12px rgb(20 33 27 / 0.18);
+  --shadow-float: 0 1px 2px rgb(20 33 27 / 0.05), 0 12px 32px -14px rgb(20 33 27 / 0.22);
+
+  --radius-field: 22px;
+  --radius-card: 24px;
+  --radius-band: 28px;
+}
