@@ -1,3 +1,6 @@
+export { Button } from "./actions/Button.tsx";
+export { LinkButton } from "./actions/LinkButton.tsx";
+export { type ButtonSize, type ButtonVariant, buttonClass } from "./actions/variants.ts";
 export { cx } from "./cx.ts";
 export { StepBars } from "./data/StepBars.tsx";
 export { EvidenceSeal, type EvidenceSealProps } from "./evidence/EvidenceSeal.tsx";
