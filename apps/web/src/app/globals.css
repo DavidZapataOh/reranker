@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "@reranker/ui/styles.css";
 @source "../../../../packages/ui/src";
+/* Token names are data, not class names; scanning them would emit unused utilities. */
+@source not "../../../../packages/ui/src/tokens.ts";
 
 /* Entrances: visible by default; the script marks as pending only those below the fold */
 .reveal.pending {
