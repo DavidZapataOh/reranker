@@ -14,7 +14,7 @@
   "scripts": {
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx scripts/migrate.ts",
-    "db:check": "tsx scripts/check.ts",
+    "db:check": "drizzle-kit check && squawk --config .squawk.toml --no-error-on-unmatched-pattern migrations/*.sql migrations/concurrent/*.sql",
     "db:provision-roles": "tsx scripts/provision-roles.ts",
     "db:usage": "tsx scripts/neon-usage.ts",
     "db:bench": "tsx scripts/bench.ts",
