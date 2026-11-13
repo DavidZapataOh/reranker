@@ -1,5 +1,5 @@
 import type { z } from "../z";
-import { safeParams } from "../z";
+import { issueCode, safeParams } from "../z";
 import { AppError } from "./app-error";
 
 export type ProblemRoot = "body" | "query" | "headers" | "params" | "form";
@@ -14,7 +14,7 @@ export function fromZodError(error: z.ZodError, root: ProblemRoot): AppError {
     detail: `Invalid ${root}`,
     fieldErrors: error.issues.map((issue) => ({
       pointer: `/${root}${issue.path.map((segment) => `/${escapeToken(segment)}`).join("")}`,
-      code: issue.code,
+      code: issueCode(issue),
       params: safeParams(issue),
     })),
     cause: error,

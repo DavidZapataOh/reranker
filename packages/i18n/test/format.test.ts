@@ -153,16 +153,9 @@ describe("formatPercent input guard", () => {
 });
 
 describe("translator formats", () => {
-  test("getFormats exposes the country's money and date styles", () => {
+  // Money reaches messages already formatted by formatMoney, which picks symbol or code per viewer.
+  test("getFormats exposes date styles and no money style", () => {
     expect(getFormats("es-CO")).toEqual({
-      number: {
-        money: {
-          style: "currency",
-          currency: "COP",
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0,
-        },
-      },
       dateTime: {
         short: { day: "numeric", month: "short", year: "numeric" },
         long: { day: "numeric", month: "long", year: "numeric" },
@@ -176,11 +169,6 @@ describe("translator formats", () => {
     expect(new Intl.DateTimeFormat("es-CO", long).format(date)).toBe(
       new Intl.DateTimeFormat("es-CO", { dateStyle: "long" }).format(date),
     );
-  });
-
-  test("the money format matches formatMoney", () => {
-    const { money: style } = getFormats("es-CO").number;
-    expect(new Intl.NumberFormat("es-CO", style).format(149_000)).toBe(`$${nbsp}149.000`);
   });
 
   test("the translator formats dates in the country's time zone", () => {

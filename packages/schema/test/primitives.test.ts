@@ -1,5 +1,15 @@
+import { COUNTRY_CODES } from "@reranker/i18n/countries";
 import { describe, expect, test } from "vitest";
-import { DateOnly, Email, Page, PageQuery, Timestamp, Url, Uuid } from "../src/primitives";
+import {
+  CountryCode,
+  DateOnly,
+  Email,
+  Page,
+  PageQuery,
+  Timestamp,
+  Url,
+  Uuid,
+} from "../src/primitives";
 
 describe("primitives", () => {
   test("Email normalizes and validates", () => {
@@ -38,4 +48,10 @@ describe("primitives", () => {
       next_cursor: null,
     });
   });
+});
+
+test("CountryCode accepts exactly the generated measurable codes", () => {
+  expect(CountryCode.options).toEqual(COUNTRY_CODES);
+  expect(CountryCode.safeParse("PR").success).toBe(true);
+  expect(CountryCode.safeParse("CU").success).toBe(false);
 });

@@ -1,6 +1,6 @@
-import { countryForLocale } from "./countries/index";
+import { billingFor, countryForLocale } from "./countries/index";
 import { CURRENCIES, type CurrencyCode } from "./currencies";
-import { chargedCurrency, defaultTimeZone } from "./formats";
+import { defaultTimeZone } from "./formats";
 import type { Locale } from "./locales";
 import { getTranslator } from "./translator";
 
@@ -58,6 +58,12 @@ function toDecimal(amount: number, exponent: number): Intl.StringNumericLiteral 
   const sign = amount < 0 ? "-" : "";
   const cut = digits.length - exponent;
   return `${sign}${digits.slice(0, cut)}.${digits.slice(cut)}` as Intl.StringNumericLiteral;
+}
+
+// The currency a country is charged in; countries that cannot pay have none.
+function chargedCurrency(country: string): CurrencyCode | undefined {
+  const billing = billingFor(country);
+  return "currency" in billing ? billing.currency : undefined;
 }
 
 // "$" alone is read as the visitor's own currency, so outside its country the code is shown.

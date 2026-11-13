@@ -1,8 +1,12 @@
 import { LOCALES } from "@reranker/i18n";
-import { COUNTRIES, getCountry } from "@reranker/i18n/countries";
+import { COUNTRIES, type CountryCode, getCountry } from "@reranker/i18n/countries";
 import { describe, expect, test } from "vitest";
 import { CountryConfig } from "../src/country";
 import { CURRENCIES } from "../src/currencies";
+import type { z } from "../src/z";
+
+// Breaks the type check when a registry entry drifts from the contract.
+COUNTRIES satisfies Record<CountryCode, z.input<typeof CountryConfig>>;
 
 const co = getCountry("CO");
 
@@ -11,6 +15,13 @@ describe("CountryConfig", () => {
     for (const country of Object.values(COUNTRIES)) {
       expect(CountryConfig.safeParse(country).error).toBeUndefined();
     }
+  });
+
+  test("geographic data is optional and only CO declares it", () => {
+    const { geoData, ...withoutGeoData } = co;
+    expect(geoData).toBe("co-2026.11");
+    expect(CountryConfig.safeParse(withoutGeoData).success).toBe(true);
+    expect(getCountry("MX")).not.toHaveProperty("geoData");
   });
 
   test("CO currency exists in CURRENCIES", () => {

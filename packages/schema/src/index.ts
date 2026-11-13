@@ -1,3 +1,6 @@
+// Types and data from @reranker/i18n; runtime validators from @reranker/schema.
+// Client-safe: only z's configuration has side effects, so a browser bundle keeps what it imports;
+// toProblem and toActionResult belong on the server, where the error catalog is loaded.
 export {
   addCost,
   compareCost,

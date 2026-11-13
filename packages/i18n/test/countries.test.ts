@@ -2,11 +2,13 @@
 /// <reference lib="esnext.temporal" />
 // Node 26 ships Temporal and Intl.Locale#getTimeZones; the package lib stays at es2024.
 
-import { describe, expect, test } from "vitest";
+import { describe, expect, expectTypeOf, test } from "vitest";
 import {
   billingFor,
   buildCountries,
   COUNTRIES,
+  COUNTRY_CODES,
+  type CountryCode,
   countryForLocale,
   DEFAULT_COUNTRY_CODE,
   getCountry,
@@ -15,6 +17,7 @@ import {
   type ProviderCoverage,
 } from "../src/countries";
 import { PROVIDER_COVERAGE } from "../src/countries/generated";
+import { TIME_ZONES } from "../src/countries/policy";
 import type { Locale } from "../src/locales";
 
 describe("country registry", () => {
@@ -85,6 +88,8 @@ describe("country registry", () => {
     };
     const foreign = measurableCountries().filter((country) => {
       const own = new Intl.Locale(`und-${country.code}`).getTimeZones() ?? [];
+      // CLDR assigns no zone to Kosovo; policy names it.
+      if (own.length === 0) return TIME_ZONES[country.code] !== country.timeZone;
       return !own.some((zone) => sameZone(zone, country.timeZone));
     });
     expect(foreign.map((country) => `${country.code} ${country.timeZone}`)).toEqual([]);
@@ -104,8 +109,8 @@ describe("country registry", () => {
       expect(country.code).toBe(code);
       expect(country.locales).toEqual(["es-CO"]);
       expect(country.defaultLocale).toBe("es-CO");
-      expect(country.geoData).toBe(`${code.toLowerCase()}-2026.11`);
       if (code === "CO") continue;
+      expect(country).not.toHaveProperty("geoData");
       const coverage = PROVIDER_COVERAGE[code as keyof typeof PROVIDER_COVERAGE];
       expect(country.name).toBe(coverage.name);
       expect(country.timeZone).toBe(coverage.timeZone);
@@ -117,6 +122,36 @@ describe("country registry", () => {
       }
       expect(country).not.toHaveProperty("commercialContact");
     }
+  });
+
+  test("geographic data is declared only where the dataset exists", () => {
+    expect(getCountry("CO").geoData).toBe("co-2026.11");
+    const withGeoData = measurableCountries().filter((country) => "geoData" in country);
+    expect(withGeoData.map((country) => country.code)).toEqual(["CO"]);
+  });
+
+  test("the generated code list is exactly the registry's keys", () => {
+    expect([...COUNTRY_CODES].sort()).toEqual(Object.keys(COUNTRIES).sort());
+    expectTypeOf<keyof typeof COUNTRIES>().toEqualTypeOf<CountryCode>();
+  });
+
+  test("territories DataForSEO lists as top-level regions are registered", () => {
+    expect(getCountry("PR").providers.dataforseo.locationCode).toBe(2630);
+    expect(getCountry("HK").providers.dataforseo.locationCode).toBe(2344);
+    expect(getCountry("TW").providers.dataforseo.locationCode).toBe(2158);
+    expect(getCountry("PR").timeZone).toBe("America/Puerto_Rico");
+    expect(getCountry("PS").timeZone).toBe("Asia/Hebron");
+    expect(getCountry("XK").timeZone).toBe("Europe/Belgrade");
+  });
+
+  test("Bright Data's country comes only from its Perplexity list", () => {
+    for (const [code, coverage] of Object.entries(PROVIDER_COVERAGE)) {
+      const engines: readonly string[] = coverage.engines;
+      expect("brightdataCountry" in coverage, code).toBe(engines.includes("perplexity"));
+    }
+    // Listed by Bright Data for Gemini but not for Perplexity.
+    expect(PROVIDER_COVERAGE.IO.engines).toContain("gemini");
+    expect(getCountry("IO").providers).not.toHaveProperty("brightdata");
   });
 
   test("cold email is allowed only in Colombia", () => {
@@ -158,7 +193,20 @@ describe("billing", () => {
     }
   });
 
-  test("an unknown country has no billing", () => {
-    expect(() => billingFor("XX")).toThrow("Unknown country: XX");
+  test("an unknown country cannot pay and says why", () => {
+    expect(billingFor("XX")).toEqual({ blocked: true, reason: "unknown_country" });
+    expect(billingFor("")).toEqual({ blocked: true, reason: "unknown_country" });
+  });
+
+  test("US territories and Asian regions pay Paddle in USD", () => {
+    for (const code of ["PR", "VI", "GU", "HK", "TW", "MO"]) {
+      expect(billingFor(code), code).toEqual({ provider: "paddle", currency: "USD" });
+    }
+  });
+
+  test("euro territories DataForSEO lists as regions pay Paddle in EUR", () => {
+    for (const code of ["GF", "GP", "MQ", "RE", "YT", "XK"]) {
+      expect(billingFor(code), code).toEqual({ provider: "paddle", currency: "EUR" });
+    }
   });
 });

@@ -67,3 +67,18 @@ test("field error details use errors.validation and fall back to custom", () => 
     { pointer: "/form/x", code: "invalid_format", detail: v("custom") },
   ]);
 });
+
+test("a refinement's catalog code becomes the field error code", () => {
+  const r = z
+    .object({ plan: z.string().refine(() => false, { params: { code: "invalid_value" } }) })
+    .safeParse({ plan: "x" });
+  const p = toProblem(fromZodError(failure(r), "body"), { locale: "es-CO" });
+  expect(p.errors).toEqual([
+    { pointer: "/body/plan", code: "invalid_value", detail: v("invalid_value") },
+  ]);
+  const generic = z
+    .string()
+    .refine(() => false, { params: { code: "no_such_rule" } })
+    .safeParse("x");
+  expect(fromZodError(failure(generic), "body").fieldErrors?.[0]?.code).toBe("custom");
+});

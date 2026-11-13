@@ -1,6 +1,7 @@
 import type { EngineId } from "../engines";
-import { DEFAULT_LOCALE, type Locale } from "../locales";
+import { DEFAULT_LOCALE } from "../locales";
 import { co } from "./co";
+import type { CountryCode } from "./codes";
 import { PROVIDER_COVERAGE } from "./generated";
 import {
   BILLING_BLOCKED,
@@ -23,20 +24,21 @@ export type ProviderCoverage = {
 };
 
 const BLOCKED = { blocked: true } as const;
+const UNKNOWN = { blocked: true, reason: "unknown_country" } as const;
 
-const BILLED_IN_EUROS: readonly string[] = [
-  ...EURO_AREA,
-  ...EURO_OFFICIAL_CURRENCY,
-  ...EURO_TERRITORIES,
+const BILLED_IN_EUROS: readonly (readonly string[])[] = [
+  EURO_AREA,
+  EURO_OFFICIAL_CURRENCY,
+  EURO_TERRITORIES,
 ];
 
 type PaddleBilling = { readonly provider: "paddle"; readonly currency: "EUR" | "USD" };
 
-export type Billing = typeof co.billing | PaddleBilling | typeof BLOCKED;
+export type Billing = typeof co.billing | PaddleBilling | typeof BLOCKED | typeof UNKNOWN;
 
 function paddleOrBlocked(code: string): PaddleBilling | typeof BLOCKED {
   if ((BILLING_BLOCKED as readonly string[]).includes(code)) return BLOCKED;
-  const currency = BILLED_IN_EUROS.includes(code) ? "EUR" : "USD";
+  const currency = BILLED_IN_EUROS.some((list) => list.includes(code)) ? "EUR" : "USD";
   return { provider: "paddle", currency };
 }
 
@@ -55,7 +57,6 @@ export function toCountry<C extends string>(code: C, coverage: ProviderCoverage)
         ? {}
         : { brightdata: { country: coverage.brightdataCountry } }),
     },
-    geoData: `${code.toLowerCase()}-2026.11`,
     engines: coverage.engines.filter((engine) => !excluded.includes(engine)),
     billing: paddleOrBlocked(code),
   } as const;
@@ -70,14 +71,20 @@ export function buildCountries(coverage: Readonly<Record<string, ProviderCoverag
   );
 }
 
-export const COUNTRIES = {
-  ...(buildCountries(PROVIDER_COVERAGE) as {
-    readonly [C in GeneratedCode]: ReturnType<typeof toCountry<C>>;
-  }),
-  [co.code]: co,
-};
+function registry() {
+  return {
+    ...(buildCountries(PROVIDER_COVERAGE) as {
+      readonly [C in GeneratedCode]: ReturnType<typeof toCountry<C>>;
+    }),
+    [co.code]: co,
+  };
+}
 
-export type CountryCode = keyof typeof COUNTRIES;
+// Pure, so a bundle that only takes COUNTRY_CODES from this entry drops the registry's data.
+export const COUNTRIES = /* @__PURE__ */ registry();
+
+export { COUNTRY_CODES, type CountryCode } from "./codes";
+export { countryForLocale } from "./profiles";
 export type Country = (typeof COUNTRIES)[CountryCode];
 
 export const DEFAULT_COUNTRY_CODE: CountryCode = co.code;
@@ -98,20 +105,8 @@ export function measurableCountries(): readonly Country[] {
 }
 
 // Blocked countries answer even when they are not measurable, so checkout never offers them.
+// Any other code outside the registry cannot pay either, with a reason a caller can tell apart.
 export function billingFor(code: string): Billing {
   if ((BILLING_BLOCKED as readonly string[]).includes(code)) return BLOCKED;
-  return getCountry(code).billing;
-}
-
-// A locale belongs to the country of its region subtag, never to a neighbor sharing it.
-export function countryForLocale(locale: Locale): CountryCode {
-  const region = new Intl.Locale(locale).region;
-  if (
-    region &&
-    isMeasurable(region) &&
-    (getCountry(region).locales as readonly string[]).includes(locale)
-  ) {
-    return region;
-  }
-  throw new Error(`No country for locale: ${locale}`);
+  return isMeasurable(code) ? COUNTRIES[code].billing : UNKNOWN;
 }

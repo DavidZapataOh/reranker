@@ -33,6 +33,8 @@
       "includes": ["**/*.contract.test.ts"],
       "linter": { "rules": { "suspicious": { "noSkippedTests": "error" } } }
     },
+    // An override's noRestrictedImports options replace those of earlier matching overrides
+    // instead of merging, so every block that restricts other imports repeats the zod rule.
     {
       "includes": ["**", "!packages/schema/**"],
       "linter": {

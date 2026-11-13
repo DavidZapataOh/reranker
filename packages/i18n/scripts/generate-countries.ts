@@ -2,11 +2,12 @@
 // Usage: pnpm --filter @reranker/i18n generate:countries
 import { writeFileSync } from "node:fs";
 import { inflateRawSync } from "node:zlib";
-import { UNINHABITED_TERRITORIES } from "../src/countries/policy.ts";
+import { NOT_MEASURED, TIME_ZONES, UNINHABITED_TERRITORIES } from "../src/countries/policy.ts";
 import type { EngineId } from "../src/engines.ts";
 import { DEFAULT_LOCALE } from "../src/locales.ts";
 
 const OUTPUT = new URL("../src/countries/generated.ts", import.meta.url);
+const CODES_OUTPUT = new URL("../src/countries/codes.ts", import.meta.url);
 
 const DATAFORSEO_SERP_DOCS = "https://docs.dataforseo.com/v3/serp/google/locations/";
 const DATAFORSEO_CHATGPT_DOCS =
@@ -80,7 +81,13 @@ function assertIso2(code: string, source: string): string {
   return code;
 }
 
-async function dataforseoLocations(docsUrl: string, prefix: string, types: readonly string[]) {
+// DataForSEO files some territories with their own ISO code (Puerto Rico, Hong Kong, Taiwan)
+// as top-level regions instead of countries; a region with a parent is a subdivision.
+function isCountryLevel(type: string, parent: string): boolean {
+  return type === "Country" || (type === "Region" && parent === "");
+}
+
+async function dataforseoLocations(docsUrl: string, prefix: string) {
   const csvUrl = linkedCsv(await fetchText(docsUrl), prefix);
   const [header, ...rows] = parseCsv(await fetchText(csvUrl));
   const columns = [
@@ -92,8 +99,8 @@ async function dataforseoLocations(docsUrl: string, prefix: string, types: reado
   ];
   if (header?.join(",") !== columns.join(",")) throw new Error(`Unexpected header in ${csvUrl}`);
   const byCountry = new Map<string, number>();
-  for (const [code = "", , , iso = "", type = ""] of rows) {
-    if (!types.includes(type)) continue;
+  for (const [code = "", , parent = "", iso = "", type = ""] of rows) {
+    if (!isCountryLevel(type, parent)) continue;
     const country = assertIso2(iso, csvUrl);
     if (byCountry.has(country)) throw new Error(`Duplicate ${country} in ${csvUrl}`);
     byCountry.set(country, Number(code));
@@ -170,12 +177,8 @@ async function capitalZones() {
 
 const fetchedOn = new Date().toISOString().slice(0, 10);
 const [serp, chatgpt, brightdata, tz, capitals] = await Promise.all([
-  dataforseoLocations(DATAFORSEO_SERP_DOCS, "locations_serp_google", ["Country"]),
-  // Taiwan and Hong Kong are listed as regions but targeted as countries.
-  dataforseoLocations(DATAFORSEO_CHATGPT_DOCS, "locations_ai_optimization_chat_gpt_llm_scraper", [
-    "Country",
-    "Region",
-  ]),
+  dataforseoLocations(DATAFORSEO_SERP_DOCS, "locations_serp_google"),
+  dataforseoLocations(DATAFORSEO_CHATGPT_DOCS, "locations_ai_optimization_chat_gpt_llm_scraper"),
   brightdataCountries(),
   zonesByCountry(),
   capitalZones(),
@@ -185,6 +188,7 @@ const names = new Intl.DisplayNames([DEFAULT_LOCALE], { type: "region", fallback
 const skipped: string[] = [];
 const unresolved: string[] = [];
 const entries: string[] = [];
+const codes: string[] = [];
 
 for (const country of [...serp.byCountry.keys()].sort()) {
   if ((UNINHABITED_TERRITORIES as readonly string[]).includes(country)) {
@@ -195,11 +199,12 @@ for (const country of [...serp.byCountry.keys()].sort()) {
   // GeoNames can give a capital another country's zone (Hanoi → Asia/Bangkok).
   const capitalZone = capitals.zones.get(country);
   const timeZone =
-    capitalZone && zones.includes(capitalZone)
+    TIME_ZONES[country] ??
+    (capitalZone && zones.includes(capitalZone)
       ? capitalZone
       : zones.length === 1
         ? zones[0]
-        : undefined;
+        : undefined);
   const name = names.of(country);
   if (!timeZone || !name) {
     unresolved.push(
@@ -215,14 +220,15 @@ for (const country of [...serp.byCountry.keys()].sort()) {
   // Every row comes from DataForSEO's Google SERP list, which captures AI Overviews.
   engines.push("google-ai-overview");
   if (inBrightdata("perplexity")) engines.push("perplexity");
-  const brightdataListed = Object.values(brightdata.lists).some((list) => list.codes.has(country));
+  codes.push(country);
   entries.push(
     [
       `  ${country}: {`,
       `    name: ${JSON.stringify(name)},`,
       `    timeZone: ${JSON.stringify(timeZone)},`,
       `    dataforseoLocationCode: ${serp.byCountry.get(country)},`,
-      ...(brightdataListed ? [`    brightdataCountry: "${country}",`] : []),
+      // Bright Data is the Perplexity UI capture; its other lists only decide engines.
+      ...(inBrightdata("perplexity") ? [`    brightdataCountry: "${country}",`] : []),
       `    engines: [${engines.map((engine) => `"${engine}"`).join(", ")}],`,
       "  },",
     ].join("\n"),
@@ -252,5 +258,20 @@ const header = [
 writeFileSync(
   OUTPUT,
   `${header.join("\n")}\nexport const PROVIDER_COVERAGE = {\n${entries.join("\n")}\n} as const;\n`,
+);
+// Codes alone, so validating a country code never loads the registry's data.
+const measured = codes.filter((code) => !(NOT_MEASURED as readonly string[]).includes(code));
+writeFileSync(
+  CODES_OUTPUT,
+  [
+    "// Generated by scripts/generate-countries.ts. Do not edit; rerun the script instead.",
+    "// Measurable countries: the providers' coverage minus NOT_MEASURED (policy.ts).",
+    "export const COUNTRY_CODES = [",
+    ...measured.map((code) => `  "${code}",`),
+    "] as const;",
+    "",
+    "export type CountryCode = (typeof COUNTRY_CODES)[number];",
+    "",
+  ].join("\n"),
 );
 console.log(`Wrote ${entries.length} countries to ${OUTPUT.pathname}`);
