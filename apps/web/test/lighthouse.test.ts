@@ -178,6 +178,12 @@ describe("lighthouseConfig", () => {
     ]);
   });
 
+  it("skips is-crawlable on a production deployment's generated URL, which Vercel serves noindex", () => {
+    const held = configFor({ CI: "", PLAYWRIGHT_BASE_URL: PREVIEW, APP_TARGET: "production" });
+    expect(held.ci.collect.settings.skipAudits).toEqual(["is-crawlable"]);
+    expect(matrixFor(held, `${PREVIEW}/`)["categories:seo"]).toEqual(["error", { minScore: 0.95 }]);
+  });
+
   it("refuses a route without a budget", () => {
     publicRoutes.push({ path: "/nueva", name: "new", budgetKey: "missing", screen: "new" });
     try {

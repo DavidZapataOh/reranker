@@ -3,6 +3,8 @@ import { assertDeploymentUrl } from "@reranker/testing/target";
 import type { Browser } from "puppeteer-core";
 import { publicRoutes, readTarget } from "./e2e/routes.ts";
 
+const PRODUCTION_ORIGIN = "https://reranker.co";
+
 type Budget = { scriptBytes: number; totalBytes: number };
 type Assertion = ["error", { minScore: number } | { maxNumericValue: number }];
 
@@ -34,6 +36,7 @@ export function lighthouseConfig(env: NodeJS.ProcessEnv = process.env) {
   const base = deployment ?? `http://localhost:${env.PORT ?? 3000}`;
   const protectedDeployment = deployment !== undefined && Object.keys(bypassHeaders()).length > 0;
   const production = target === "production";
+  const crawlable = production && deployment === PRODUCTION_ORIGIN;
 
   const assertMatrix = publicRoutes.map((route) => {
     const budget = budgets[route.budgetKey];
@@ -71,8 +74,9 @@ export function lighthouseConfig(env: NodeJS.ProcessEnv = process.env) {
         ...(protectedDeployment ? { puppeteerScript: "./lighthouse-bypass.cjs" } : {}),
         settings: {
           blockedUrlPatterns: BLOCKED_THIRD_PARTIES,
-          // Every non-production deployment answers with X-Robots-Tag: noindex.
-          skipAudits: production ? [] : ["is-crawlable"],
+          // Vercel serves every generated deployment URL with X-Robots-Tag: noindex, production
+          // included; only reranker.co is meant to be crawled.
+          skipAudits: crawlable ? [] : ["is-crawlable"],
         },
       },
       assert: { assertMatrix },
