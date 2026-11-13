@@ -10,6 +10,8 @@ const localUrl = `http://localhost:${process.env.PORT ?? 3000}`;
 
 export default defineConfig({
   testDir: "./e2e",
+  // Parity baselines are per environment and never committed.
+  snapshotPathTemplate: `e2e/__ui-baseline__/{arg}-${process.env.UI_BASELINE ?? "local"}-{projectName}{ext}`,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
