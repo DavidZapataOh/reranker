@@ -2,7 +2,14 @@ import type { EngineId } from "../engines";
 import { DEFAULT_LOCALE, type Locale } from "../locales";
 import { co } from "./co";
 import { PROVIDER_COVERAGE } from "./generated";
-import { BILLING_BLOCKED, ENGINE_EXCLUSIONS, EURO_AREA, NOT_MEASURED } from "./policy";
+import {
+  BILLING_BLOCKED,
+  ENGINE_EXCLUSIONS,
+  EURO_AREA,
+  EURO_OFFICIAL_CURRENCY,
+  EURO_TERRITORIES,
+  NOT_MEASURED,
+} from "./policy";
 
 type CoverageCode = keyof typeof PROVIDER_COVERAGE;
 type GeneratedCode = Exclude<CoverageCode, typeof co.code | (typeof NOT_MEASURED)[number]>;
@@ -17,13 +24,19 @@ export type ProviderCoverage = {
 
 const BLOCKED = { blocked: true } as const;
 
+const BILLED_IN_EUROS: readonly string[] = [
+  ...EURO_AREA,
+  ...EURO_OFFICIAL_CURRENCY,
+  ...EURO_TERRITORIES,
+];
+
 type PaddleBilling = { readonly provider: "paddle"; readonly currency: "EUR" | "USD" };
 
 export type Billing = typeof co.billing | PaddleBilling | typeof BLOCKED;
 
 function paddleOrBlocked(code: string): PaddleBilling | typeof BLOCKED {
   if ((BILLING_BLOCKED as readonly string[]).includes(code)) return BLOCKED;
-  const currency = (EURO_AREA as readonly string[]).includes(code) ? "EUR" : "USD";
+  const currency = BILLED_IN_EUROS.includes(code) ? "EUR" : "USD";
   return { provider: "paddle", currency };
 }
 

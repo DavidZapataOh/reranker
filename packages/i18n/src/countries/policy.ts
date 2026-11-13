@@ -75,3 +75,25 @@ export const EURO_AREA = [
   "SI",
   "SK",
 ] as const;
+
+// States outside the euro area whose official currency is the euro, by monetary agreement
+// (AD, MC, SM, VA) or de facto (ME, XK): https://economy-finance.ec.europa.eu/euro/use-euro/euro-outside-euro-area_en
+// (read 2026-11-12). Only those the providers cover become countries; XK is not covered yet.
+export const EURO_OFFICIAL_CURRENCY = ["AD", "MC", "ME", "SM", "VA", "XK"] as const;
+
+// Territories with their own ISO code whose official currency is the euro: the French overseas
+// departments and collectivities served by IEDOM (https://www.iedom.fr/Nos-territoires-d-intervention-et-nos-agences?lang=en,
+// read 2026-11-12) and Åland (https://visitaland.com/en/practical-info/aland-in-brief/, read 2026-11-12).
+// Only MF, PM and TF are covered by the providers today.
+export const EURO_TERRITORIES = [
+  "AX",
+  "BL",
+  "GF",
+  "GP",
+  "MF",
+  "MQ",
+  "PM",
+  "RE",
+  "TF",
+  "YT",
+] as const;

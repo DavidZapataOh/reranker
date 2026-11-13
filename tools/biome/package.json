@@ -1,0 +1,16 @@
+{
+  "name": "@reranker/biome-plugins",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "catalog:",
+    "@reranker/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

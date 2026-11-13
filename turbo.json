@@ -20,6 +20,10 @@
     },
     "typecheck": { "dependsOn": ["^typecheck"] },
     "test": { "dependsOn": ["^typecheck"], "outputs": ["coverage/**"] },
+    "@reranker/biome-plugins#test": {
+      "dependsOn": ["^typecheck"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/biome.json", "$TURBO_ROOT$/tools/biome/**"]
+    },
     "test:integration": {
       "dependsOn": ["^typecheck"],
       "env": ["DATABASE_URL", "DATABASE_URL_SYSTEM", "DATABASE_URL_MIGRATIONS"],

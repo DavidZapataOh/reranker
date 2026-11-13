@@ -16,6 +16,7 @@
     "test:smoke": "playwright test --grep @smoke"
   },
   "dependencies": {
+    "@reranker/i18n": "workspace:*",
     "lucide-react": "1.68.0",
     "next": "catalog:",
     "posthog-js": "1.446.0",

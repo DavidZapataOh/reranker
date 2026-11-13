@@ -34,13 +34,63 @@
       "linter": { "rules": { "suspicious": { "noSkippedTests": "error" } } }
     },
     {
+      "includes": ["**", "!packages/schema/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": { "zod": "Import z from @reranker/schema, which configures zod." },
+                "patterns": [
+                  {
+                    "group": ["zod/*"],
+                    "message": "Import z from @reranker/schema, which configures zod."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
       "includes": [
         "apps/web/src/**",
         "packages/*/src/**",
         "!packages/testing/**",
+        "!packages/schema/**",
         "!**/*.test.ts",
         "!**/*.test.tsx"
       ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "@reranker/testing": "Test-only package.",
+                  "zod": "Import z from @reranker/schema, which configures zod."
+                },
+                "patterns": [
+                  {
+                    "group": ["@reranker/testing/*", "**/testing/src/**"],
+                    "message": "Test-only package."
+                  },
+                  {
+                    "group": ["zod/*"],
+                    "message": "Import z from @reranker/schema, which configures zod."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["packages/schema/src/**", "!**/*.test.ts", "!**/*.test.tsx"],
       "linter": {
         "rules": {
           "style": {
@@ -65,6 +115,17 @@
     {
       "path": "./tools/biome/no-conditional-contract-tests.grit",
       "includes": ["**/*.contract.test.ts"]
+    },
+    {
+      "path": "./tools/biome/no-country-literals.grit",
+      "includes": [
+        "**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs}",
+        "!packages/i18n/src/countries/**",
+        "!packages/i18n/src/locales.ts",
+        "!packages/schema/src/country.ts",
+        "!**/*.test.{ts,tsx}",
+        "!**/e2e/**"
+      ]
     }
   ]
 }

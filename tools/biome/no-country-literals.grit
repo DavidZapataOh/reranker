@@ -1,0 +1,12 @@
+language js
+
+or {
+  JsStringLiteralExpression(),
+  TsStringLiteralType(),
+  JsLiteralMemberName(),
+  JsxString(),
+  JsTemplateExpression()
+} as $literal where {
+  $literal <: r"^[\"'`](?:COP|CO|EUR|es-CO|America/Bogota|wompi|alegra|paddle)[\"'`]$",
+  register_diagnostic(span=$literal, message="Use the country registry (@reranker/i18n/countries) instead of a hard-coded country, currency, locale, time zone or payment provider.", severity="error")
+}
