@@ -130,8 +130,8 @@ async function forbiddenAttributes(client: pg.Client, login: string): Promise<st
 }
 
 // Only attributes that are actually set are altered: on Neon an ALTER ROLE right after the
-// CREATE ROLE of the same transaction loses the password, and clearing REPLICATION or BYPASSRLS
-// needs a role holding them, which assertExact reports if the owner cannot.
+// CREATE ROLE of the same transaction loses the password. The owner cannot clear REPLICATION or
+// BYPASSRLS, so such an ALTER fails with 42501 and the run aborts loudly.
 async function clearAttributes(client: pg.Client, login: string): Promise<void> {
   const clauses = (await forbiddenAttributes(client, login)).map(
     (name) => ATTRIBUTES[name as keyof typeof ATTRIBUTES],
@@ -163,6 +163,7 @@ export async function provisionRoles({
   const result: ProvisionResult = { created: [], updated: [] };
   let began = false;
   let purged = false;
+  let failure: string | undefined;
   try {
     await client.connect();
     await client.query("begin");
@@ -195,7 +196,7 @@ export async function provisionRoles({
     // Only the message is kept: driver errors can carry the failing statement.
     const code = error instanceof pg.DatabaseError ? ` (${error.code})` : "";
     const message = error instanceof Error ? error.message : "unknown error";
-    throw new Error(`Provisioning the database logins failed${code}: ${message}`);
+    failure = `Provisioning the database logins failed${code}: ${message}`;
   } finally {
     try {
       purged = await purgeStatementStats(client);
@@ -203,7 +204,9 @@ export async function provisionRoles({
       await client.end();
     }
   }
-  if (!purged) throw new Error("Could not purge the role statements from pg_stat_statements");
+  const unpurged = "statement statistics could not be purged, rotate these passwords";
+  if (failure) throw new Error(purged ? failure : `${failure}; ${unpurged}`);
+  if (!purged) throw new Error(`Could not provision cleanly: ${unpurged}`);
   return result;
 }
 

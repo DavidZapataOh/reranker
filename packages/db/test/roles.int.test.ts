@@ -18,6 +18,10 @@ const strongPassword = () => randomBytes(24).toString("hex");
 
 // The logins are shared with every other suite and the CI job's own urls, so the passwords in the
 // environment are reused as they are; only a local run without them makes up new ones.
+// Without the variable in CI the suite would rotate the shared logins away from the job's urls.
+if (process.env.CI && !process.env.DB_LOGIN_PASSWORDS) {
+  throw new Error("DB_LOGIN_PASSWORDS must be exported to the test steps in CI");
+}
 const passwords: LoginPasswords = process.env.DB_LOGIN_PASSWORDS
   ? parseLoginPasswords(process.env.DB_LOGIN_PASSWORDS)
   : { reranker_app: strongPassword(), reranker_system: strongPassword() };
@@ -168,12 +172,11 @@ test("no plaintext password reaches pg_stat_statements and the stored secret is 
     );
     expect(count?.count).toBe("0");
   }
-  const secrets = await rows<{ rolpassword: string | null }>(
+  const secrets = await rows<{ rolpassword: string }>(
     "select rolpassword from pg_authid where rolname in ('reranker_app', 'reranker_system')",
-  ).catch(() => undefined);
-  if (secrets) {
-    for (const secret of secrets) expect(secret.rolpassword).toMatch(/^SCRAM-SHA-256\$/);
-  }
+  );
+  expect(secrets).toHaveLength(2);
+  for (const secret of secrets) expect(secret.rolpassword).toMatch(/^SCRAM-SHA-256\$/);
 });
 
 test("a hostile password is stored verbatim and never executed", async () => {
