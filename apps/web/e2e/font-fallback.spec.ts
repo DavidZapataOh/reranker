@@ -7,7 +7,10 @@ import { expect, test } from "@reranker/testing/playwright";
 // The hero demo types its answer on a timer; reduced motion fills it in at once.
 test.use({ reducedMotion: "reduce" });
 
-const fonts = "**/_next/static/media/**";
+// next start serves next/font files from /_next/static/media/, Vercel from
+// /_next/static/immutable/media/; any web font under /_next/static/ is one of ours.
+const fonts = (url: URL) =>
+  url.pathname.startsWith("/_next/static/") && /\.woff2?$/.test(url.pathname);
 
 type Shift = { start: number; value: number; hadRecentInput: boolean };
 
@@ -73,7 +76,8 @@ test("the landing does not move when late web fonts swap in", async ({ page }) =
   });
   await page.route(fonts, async (route) => {
     await released;
-    await route.continue();
+    // fallback, not continue: the fixture's context route adds the deployment bypass headers.
+    await route.fallback();
   });
 
   const navigated = Date.now();
