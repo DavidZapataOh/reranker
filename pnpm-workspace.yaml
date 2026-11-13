@@ -41,6 +41,11 @@ catalog:
   ajv: 8.20.0
   ajv-formats: 3.0.1
   tsx: 4.23.15
+  drizzle-orm: ^0.45.4
+  drizzle-kit: ^0.31.11
+  "@vercel/functions": 3.10.6
+  squawk-cli: ^2.70.0
+  "@neondatabase/api-client": ^2.7.3
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - "@reranker/*"
@@ -65,6 +70,12 @@ trustPolicyExclude:
   # Chromium-versioned builds come from the Chromium infra account without provenance;
   # puppeteer-core 25.16.0 (trusted publisher, via @lhci/cli) pins this exact version.
   - chromium-bidi@157.0.8090-0
+  # Vercel publishes these without provenance after earlier releases had it; @vercel/functions
+  # (attachDatabasePool) pulls the rest in.
+  - "@vercel/functions@3.10.6"
+  - "@vercel/oidc@4.0.6"
+  - "@vercel/cli-config@0.3.6"
+  - "@vercel/cli-exec@1.0.1"
 blockExoticSubdeps: true
 strictDepBuilds: true
 allowBuilds:

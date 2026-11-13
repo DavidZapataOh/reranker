@@ -1,0 +1,43 @@
+{
+  "name": "@reranker/db",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./env": "./src/env.ts",
+    "./schema": "./src/schema/index.ts",
+    "./auth-adapter": "./src/auth-adapter.ts",
+    "./testing": "./src/testing.ts",
+    "./neon-usage": "./src/neon-usage.ts"
+  },
+  "scripts": {
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "db:check": "tsx scripts/check.ts",
+    "db:provision-roles": "tsx scripts/provision-roles.ts",
+    "db:usage": "tsx scripts/neon-usage.ts",
+    "db:bench": "tsx scripts/bench.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --coverage --passWithNoTests",
+    "test:integration": "vitest run --project integration --passWithNoTests"
+  },
+  "dependencies": {
+    "@reranker/schema": "workspace:*",
+    "@vercel/functions": "catalog:",
+    "drizzle-orm": "catalog:",
+    "pg": "catalog:"
+  },
+  "devDependencies": {
+    "@neondatabase/api-client": "catalog:",
+    "@reranker/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/pg": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "drizzle-kit": "catalog:",
+    "squawk-cli": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
