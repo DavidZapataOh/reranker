@@ -1,4 +1,4 @@
 {
   "extends": "@reranker/typescript-config/library.json",
-  "include": ["src", "test", "messages"]
+  "include": ["src", "test", "messages", "scripts"]
 }
