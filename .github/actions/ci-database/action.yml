@@ -17,6 +17,7 @@ runs:
         DB_HOST_POOLED: ${{ inputs.db-host-pooled }}
       # Only ci and nightly call this, never from a pull_request_target or workflow_run trigger, and every
       # value written comes from Neon or openssl, never from the event.
+      # The passwords go to the job so suites that provision the logins again reuse them.
       run: | # zizmor: ignore[github-env]
         echo "DATABASE_URL_MIGRATIONS=$DB_URL" >> "$GITHUB_ENV"
         if [ ! -d packages/db ]; then
@@ -32,5 +33,6 @@ runs:
         # Migrations create the role groups the logins join.
         pnpm --filter @reranker/db db:migrate
         pnpm --filter @reranker/db db:provision-roles
+        echo "DB_LOGIN_PASSWORDS=$DB_LOGIN_PASSWORDS" >> "$GITHUB_ENV"
         echo "DATABASE_URL=postgresql://reranker_app:$app@$DB_HOST_POOLED/neondb?sslmode=verify-full" >> "$GITHUB_ENV"
         echo "DATABASE_URL_SYSTEM=postgresql://reranker_system:$system@$DB_HOST_POOLED/neondb?sslmode=verify-full" >> "$GITHUB_ENV"

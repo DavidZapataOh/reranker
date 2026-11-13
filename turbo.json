@@ -29,6 +29,19 @@
       "env": ["DATABASE_URL", "DATABASE_URL_SYSTEM", "DATABASE_URL_MIGRATIONS"],
       "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/packages/db/migrations/**"]
     },
+    "@reranker/db#test:integration": {
+      "dependsOn": ["^typecheck"],
+      "env": [
+        "DATABASE_URL",
+        "DATABASE_URL_SYSTEM",
+        "DATABASE_URL_MIGRATIONS",
+        "NEON_API_KEY",
+        "NEON_PROJECT_ID",
+        "NEON_NONPROD_PROJECT_ID"
+      ],
+      "passThroughEnv": ["DB_LOGIN_PASSWORDS"],
+      "inputs": ["$TURBO_DEFAULT$"]
+    },
     "test:contract": {
       "dependsOn": ["^typecheck"],
       "cache": false,
