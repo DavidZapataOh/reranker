@@ -16,7 +16,7 @@ const pooledUrl = postgresUrl.refine((value) => !isNeon(value) || isNeonPooler(v
 
 // Migrations hold a session advisory lock; through the transaction-mode pooler the unlock can
 // land on another server connection and leave the lock held, blocking every later deploy.
-const directUrl = postgresUrl.refine((value) => !isNeonPooler(value), {
+export const directUrl = postgresUrl.refine((value) => !isNeonPooler(value), {
   error: "must use the direct host, not the pooler",
 });
 

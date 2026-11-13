@@ -44,7 +44,7 @@ runs:
         parent_branch: main
         branch_name: ${{ inputs.branch-name }}
         expires_at: ${{ steps.expires.outputs.at }}
-        role: neondb_owner
+        role: reranker_owner
         ssl: verify-full
     # Two runs can both see a free slot and race for it; the loser waits again once.
     - if: steps.create.outcome == 'failure'
@@ -63,5 +63,5 @@ runs:
         parent_branch: main
         branch_name: ${{ inputs.branch-name }}
         expires_at: ${{ steps.expires.outputs.at }}
-        role: neondb_owner
+        role: reranker_owner
         ssl: verify-full
