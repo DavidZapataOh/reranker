@@ -10,6 +10,8 @@ export { CodeField, sanitizeCode } from "./forms/CodeField.tsx";
 export { FieldError } from "./forms/FieldError.tsx";
 export { SearchField } from "./forms/SearchField.tsx";
 export { TextField } from "./forms/TextField.tsx";
+export { Sheet } from "./help/Sheet.tsx";
+export { Term } from "./help/Term.tsx";
 export { Headline } from "./layout/Headline.tsx";
 export { Lede } from "./layout/Lede.tsx";
 export { Section } from "./layout/Section.tsx";

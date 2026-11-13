@@ -23,6 +23,9 @@
   input {
     caret-color: var(--color-green);
   }
+  body:has(dialog[open]) {
+    overflow: hidden;
+  }
   a {
     text-underline-offset: 3px;
   }
