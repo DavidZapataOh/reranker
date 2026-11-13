@@ -12,5 +12,9 @@ test("rejects a duplicate id", () => {
 });
 
 test("rejects ids that are not PascalCase", () => {
-  expect(() => registerSchema("money", z.string())).toThrow();
+  expect(() => registerSchema("money", z.string())).toThrow("Schema id must be PascalCase: money");
+});
+
+test("rejects a one-character id", () => {
+  expect(() => registerSchema("A", z.string())).toThrow("Schema id must be PascalCase: A");
 });
