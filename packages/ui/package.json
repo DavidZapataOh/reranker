@@ -1,0 +1,44 @@
+{
+  "name": "@reranker/ui",
+  "private": true,
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./styles.css": "./src/styles/index.css",
+    "./tokens": "./src/tokens.ts",
+    "./email": "./src/email/index.ts",
+    "./icons": "./src/icons.tsx"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "email:dev": "email dev --dir src/email/previews"
+  },
+  "dependencies": {
+    "react-email": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@reranker/typescript-config": "workspace:*",
+    "@react-email/ui": "catalog:",
+    "@tailwindcss/vite": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
+    "axe-core": "catalog:",
+    "esbuild": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:",
+    "vitest-browser-react": "catalog:"
+  }
+}

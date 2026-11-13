@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "@reranker/ui/styles.css";
+@source "../../../../packages/ui/src";
 
 @theme {
   --color-paper: #faf7f0;
