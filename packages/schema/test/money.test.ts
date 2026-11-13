@@ -1,6 +1,7 @@
 import fc from "fast-check";
 import { describe, expect, test } from "vitest";
 import { CURRENCIES } from "../src/currencies";
+import { AppError } from "../src/errors";
 import {
   add,
   allocate,
@@ -36,14 +37,14 @@ describe("money", () => {
     expect(fromMajor("149000.5", "COP").amount_minor).toBe(14_900_050);
     expect(fromMajor("-1.25", "USD").amount_minor).toBe(-125);
     expect(fromMajor("12.5", "EUR")).toEqual({ amount_minor: 1250, currency: "EUR" });
-    expect(() => fromMajor("1.234", "USD")).toThrow();
-    expect(() => fromMajor("1e3", "COP")).toThrow();
+    expect(() => fromMajor("1.234", "USD")).toThrow(AppError);
+    expect(() => fromMajor("1e3", "COP")).toThrow(AppError);
   });
 
   test("fromMajor accepts finite numbers only", () => {
     expect(fromMajor(1.25, "USD").amount_minor).toBe(125);
-    expect(() => fromMajor(Number.NaN, "USD")).toThrow();
-    expect(() => fromMajor(Number.POSITIVE_INFINITY, "USD")).toThrow();
+    expect(() => fromMajor(Number.NaN, "USD")).toThrow(AppError);
+    expect(() => fromMajor(Number.POSITIVE_INFINITY, "USD")).toThrow(AppError);
   });
 
   test("fromMajor normalizes negative zero", () => {
@@ -52,7 +53,7 @@ describe("money", () => {
   });
 
   test("fromMajor rejects values beyond the safe integer range", () => {
-    expect(() => fromMajor("99999999999999999999", "COP")).toThrow();
+    expect(() => fromMajor("99999999999999999999", "COP")).toThrow(AppError);
   });
 
   test("multiplyByBps applies VAT 19 %", () => {
@@ -67,11 +68,11 @@ describe("money", () => {
   test("multiplyByBps does not overflow in the intermediate product", () => {
     const big = money(Number.MAX_SAFE_INTEGER, "COP");
     expect(multiplyByBps(big, 10_000)).toEqual(big);
-    expect(() => multiplyByBps(big, 20_000)).toThrow();
+    expect(() => multiplyByBps(big, 20_000)).toThrow(AppError);
   });
 
   test("multiplyByBps rejects non-integer basis points", () => {
-    expect(() => multiplyByBps(money(1, "COP"), 1.5)).toThrow();
+    expect(() => multiplyByBps(money(1, "COP"), 1.5)).toThrow(AppError);
   });
 
   test("allocate sums exactly to the original amount", () => {
@@ -97,10 +98,10 @@ describe("money", () => {
   });
 
   test("allocate rejects invalid weights", () => {
-    expect(() => allocate(money(1, "COP"), [])).toThrow();
-    expect(() => allocate(money(1, "COP"), [0, 0])).toThrow();
-    expect(() => allocate(money(1, "COP"), [-1, 2])).toThrow();
-    expect(() => allocate(money(1, "COP"), [1.5])).toThrow();
+    expect(() => allocate(money(1, "COP"), [])).toThrow(AppError);
+    expect(() => allocate(money(1, "COP"), [0, 0])).toThrow(AppError);
+    expect(() => allocate(money(1, "COP"), [-1, 2])).toThrow(AppError);
+    expect(() => allocate(money(1, "COP"), [1.5])).toThrow(AppError);
   });
 
   test("add is associative and commutative", () => {
@@ -124,23 +125,23 @@ describe("money", () => {
     expect(compare(money(1, "COP"), money(2, "COP"))).toBe(-1);
     expect(compare(money(2, "COP"), money(2, "COP"))).toBe(0);
     expect(compare(money(3, "COP"), money(2, "COP"))).toBe(1);
-    expect(() => compare(money(1, "COP"), money(1, "USD"))).toThrow();
+    expect(() => compare(money(1, "COP"), money(1, "USD"))).toThrow(AppError);
   });
 
   test("mixing currencies throws", () => {
-    expect(() => add(money(1, "COP"), money(1, "USD"))).toThrow();
-    expect(() => subtract(money(1, "USD"), money(1, "EUR"))).toThrow();
-    expect(() => sum([money(1, "COP")], "USD")).toThrow();
+    expect(() => add(money(1, "COP"), money(1, "USD"))).toThrow(AppError);
+    expect(() => subtract(money(1, "USD"), money(1, "EUR"))).toThrow(AppError);
+    expect(() => sum([money(1, "COP")], "USD")).toThrow(AppError);
   });
 
   test("safe-integer limit", () => {
-    expect(() => money(Number.MAX_SAFE_INTEGER + 1, "COP")).toThrow();
-    expect(() => add(money(Number.MAX_SAFE_INTEGER, "COP"), money(1, "COP"))).toThrow();
-    expect(() => money(1.5, "COP")).toThrow();
+    expect(() => money(Number.MAX_SAFE_INTEGER + 1, "COP")).toThrow(AppError);
+    expect(() => add(money(Number.MAX_SAFE_INTEGER, "COP"), money(1, "COP"))).toThrow(AppError);
+    expect(() => money(1.5, "COP")).toThrow(AppError);
   });
 
   test("rejects unknown currencies at runtime", () => {
-    expect(() => money(1, "GBP" as never)).toThrow();
+    expect(() => money(1, "GBP" as never)).toThrow(AppError);
   });
 
   test("sum of nothing is zero", () => {
@@ -155,4 +156,17 @@ describe("money", () => {
       false,
     );
   });
+});
+
+test("money violations are internal errors whose detail stays in logs", () => {
+  const thrown = (() => {
+    try {
+      add(money(1, "COP"), money(1, "USD"));
+    } catch (error) {
+      return error;
+    }
+  })();
+  expect(thrown).toBeInstanceOf(AppError);
+  expect(thrown).toMatchObject({ code: "internal", status: 500 });
+  expect((thrown as AppError).message).toMatch(/different currencies/);
 });

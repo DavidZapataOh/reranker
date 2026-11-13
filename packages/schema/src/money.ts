@@ -1,5 +1,6 @@
 import { CURRENCIES, type CurrencyCode } from "./currencies";
 import { assertCurrency, CURRENCY_CODES, parseScaled, toSafeInteger } from "./decimal";
+import { AppError } from "./errors/app-error";
 import { registerSchema } from "./registry";
 import { z } from "./z";
 
@@ -18,7 +19,7 @@ export type Rounding = "half_up" | "down";
 export function money(amountMinor: number, currency: CurrencyCode): Money {
   assertCurrency(currency);
   if (!Number.isSafeInteger(amountMinor)) {
-    throw new RangeError("Amount must be a safe integer in minor units");
+    throw new AppError("internal", { detail: "Amount must be a safe integer in minor units" });
   }
   return { amount_minor: amountMinor === 0 ? 0 : amountMinor, currency };
 }
@@ -30,7 +31,7 @@ export function fromMajor(value: string | number, currency: CurrencyCode): Money
 
 function assertSameCurrency(a: Money, b: Money): void {
   if (a.currency !== b.currency) {
-    throw new TypeError("Cannot combine amounts in different currencies");
+    throw new AppError("internal", { detail: "Cannot combine amounts in different currencies" });
   }
 }
 
@@ -59,7 +60,7 @@ const BPS_DENOMINATOR = 10_000n;
 // BigInt keeps the intermediate product exact even next to the safe-integer limit.
 export function multiplyByBps(m: Money, bps: number, rounding: Rounding = "half_up"): Money {
   if (!Number.isSafeInteger(bps)) {
-    throw new RangeError("Basis points must be a safe integer");
+    throw new AppError("internal", { detail: "Basis points must be a safe integer" });
   }
   const negative = m.amount_minor < 0;
   const product = BigInt(Math.abs(m.amount_minor)) * BigInt(Math.abs(bps));
@@ -74,11 +75,11 @@ export function multiplyByBps(m: Money, bps: number, rounding: Rounding = "half_
 // Largest remainder: leftover units go to the biggest remainders, ties to the lowest index.
 export function allocate(m: Money, weights: readonly number[]): Money[] {
   if (weights.length === 0 || weights.some((w) => !Number.isSafeInteger(w) || w < 0)) {
-    throw new RangeError("Weights must be non-negative safe integers");
+    throw new AppError("internal", { detail: "Weights must be non-negative safe integers" });
   }
   const total = weights.reduce((acc, w) => acc + BigInt(w), 0n);
   if (total === 0n) {
-    throw new RangeError("Weights must add up to more than zero");
+    throw new AppError("internal", { detail: "Weights must add up to more than zero" });
   }
   const amount = BigInt(Math.abs(m.amount_minor));
   const shares = weights.map((w) => (amount * BigInt(w)) / total);

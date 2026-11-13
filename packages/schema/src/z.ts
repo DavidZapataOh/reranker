@@ -7,7 +7,7 @@ const t = getTranslator(DEFAULT_LOCALE, "errors.validation");
 type Params = Record<string, string | number>;
 
 // Only metadata is forwarded to the message: never `input`, which can hold personal data.
-function safeParams(iss: z.core.$ZodRawIssue): Params {
+export function safeParams(iss: object): Params {
   const params: Params = {};
   const raw = iss as Record<string, unknown>;
   for (const key of ["origin", "minimum", "maximum", "inclusive", "format", "divisor"]) {
