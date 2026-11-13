@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, readdirSync, rmSync } from "node:fs";
+import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -47,7 +47,7 @@ test.each(["create-index-new-table.sql", "drop-column-allowed.sql", "concurrent-
 test("all committed migrations pass db:check and are actually linted", () => {
   const result = run("pnpm", ["db:check"]);
   expect(result.status, result.stdout + result.stderr).toBe(0);
-  const expected = readdirSync(join(packageDir, "migrations")).filter((f) => f.endsWith(".sql"));
+  const expected = listMigrationFiles(join(packageDir, "migrations"));
   expect(result.stdout).toMatch(new RegExp(`in ${expected.length} files?\\b`));
 }, 60_000);
 
