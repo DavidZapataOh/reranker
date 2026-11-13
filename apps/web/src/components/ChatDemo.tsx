@@ -273,9 +273,13 @@ export function ChatDemo({ business }: { business: string | null }) {
               </span>
               <p className="min-h-[4.5rem] flex-1 rounded-2xl rounded-tl-md bg-white px-3.5 py-2.5 text-[15px] leading-snug text-ink ring-1 ring-line">
                 <span className="sr-only">ChatGPT responde: {ANSWER}</span>
-                <span aria-hidden="true">
-                  {answerText}
-                  {!done && <span className="caret" />}
+                {/* The full answer, hidden, holds the bubble at its final height so typing pushes nothing below */}
+                <span aria-hidden="true" className="grid">
+                  <span className="invisible [grid-area:1/1]">{ANSWER}</span>
+                  <span className="[grid-area:1/1]">
+                    {answerText}
+                    {!done && <span className="caret" />}
+                  </span>
                 </span>
               </p>
             </div>
