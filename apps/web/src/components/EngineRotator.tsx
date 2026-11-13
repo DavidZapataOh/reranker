@@ -70,10 +70,19 @@ export function EngineRotator({ paused = false }: { paused?: boolean }) {
   const current = pos % N;
 
   useLayoutEffect(() => {
-    const measure = () => setW(names.current[current]?.offsetWidth ?? null);
+    const el = names.current[current];
+    const measure = () => setW(el?.offsetWidth ?? null);
     measure();
     window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
+    // The first measurement can precede the web font, so re-measure when it or the name resizes.
+    document.fonts?.addEventListener("loadingdone", measure);
+    const ro = new ResizeObserver(measure);
+    if (el) ro.observe(el);
+    return () => {
+      window.removeEventListener("resize", measure);
+      document.fonts?.removeEventListener("loadingdone", measure);
+      ro.disconnect();
+    };
   }, [current]);
 
   const dur = animate ? ROLL : 0;
