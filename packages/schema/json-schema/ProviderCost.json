@@ -1,0 +1,25 @@
+{
+  "$id": "https://reranker.co/schemas/ProviderCost.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "amount_micros": {
+      "maximum": 9007199254740991,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "currency": {
+      "enum": [
+        "COP",
+        "USD",
+        "EUR"
+      ],
+      "type": "string"
+    }
+  },
+  "required": [
+    "amount_micros",
+    "currency"
+  ],
+  "type": "object"
+}

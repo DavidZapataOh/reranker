@@ -8,8 +8,12 @@
   "tasks": {
     "//#check": {},
     "build": { "dependsOn": ["^build"], "outputs": [".next/**", "!.next/cache/**", "dist/**"] },
+    "build:json-schema": {
+      "inputs": ["src/**", "scripts/**", "$TURBO_ROOT$/packages/i18n/src/**"],
+      "outputs": ["json-schema/**"]
+    },
     "web#build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "@reranker/schema#build:json-schema"],
       "outputs": [".next/**", "!.next/cache/**"],
       "env": ["NEXT_PUBLIC_*", "APP_ENV", "VERCEL_GIT_COMMIT_SHA"],
       "passThroughEnv": ["ENABLE_EXPERIMENTAL_COREPACK"]
