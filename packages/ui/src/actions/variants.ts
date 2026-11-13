@@ -9,7 +9,7 @@ const base =
 const variants: Record<ButtonVariant, string> = {
   primary: "bg-action text-white hover:bg-action-hover",
   secondary: "bg-surface text-ink ring-1 ring-ink/15 hover:ring-ink/30",
-  "on-ink": "bg-paper text-ink hover:bg-action-soft",
+  "on-ink": "bg-paper text-ink hover:bg-action-soft focus-visible:outline-paper",
 };
 
 // Minimum heights, not fixed ones, so text at 200% zoom is never clipped.

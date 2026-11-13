@@ -82,3 +82,21 @@ test("has no axe violations for any variant, size and state", async () => {
     }
   }
 });
+
+test("the on-ink focus ring is paper so it stays visible on ink, other variants keep green", async () => {
+  await render(
+    <div className="bg-ink p-4">
+      <Button variant="on-ink">Buscar</Button>
+    </div>,
+  );
+  await userEvent.tab();
+  expect(getComputedStyle(document.activeElement ?? document.body).outlineColor).toBe(
+    "rgb(250, 247, 240)",
+  );
+  await cleanup();
+  await render(<Button>Buscar</Button>);
+  await userEvent.tab();
+  expect(getComputedStyle(document.activeElement ?? document.body).outlineColor).toBe(
+    "rgb(15, 92, 69)",
+  );
+});
