@@ -44,7 +44,15 @@ function biomeCi(path: string, code: string) {
     ],
     { cwd: dir, encoding: "utf8" },
   );
-  const { diagnostics } = JSON.parse(result.stdout) as { diagnostics: Diagnostic[] };
+  let report: { diagnostics: Diagnostic[] };
+  try {
+    report = JSON.parse(result.stdout);
+  } catch {
+    throw new Error(
+      `Biome produced no JSON report (exit ${result.status}): ${result.stderr || result.stdout}`,
+    );
+  }
+  const { diagnostics } = report;
   return {
     exitCode: result.status,
     countryLiterals: diagnostics.filter((d) => d.message === MESSAGE).length,
@@ -62,6 +70,8 @@ describe("no-country-literals", () => {
     ["const z = `America/Bogota`;"],
     ["export const html = <html lang='es-CO' />;"],
     ['export const html = <html lang="es-CO" />;'],
+    ['export type X = "COP";'],
+    ['export const o = { "CO": 1 };'],
     ["pay('wompi');"],
     ["invoice({ provider: 'alegra' });"],
     ["checkout('paddle');"],
@@ -100,7 +110,7 @@ describe("no-country-literals", () => {
       // biome-ignore lint/suspicious/noTemplateCurlyInString: source text under test
       "export const v = `COP ${s}`;",
       "export const w = { COP: 1 };",
-      'export type T = "COP";',
+      "export const x = { CO: 1 };",
     ].join("\n");
     expect(biomeCi("apps/web/src/a.ts", code)).toMatchObject({ exitCode: 0, countryLiterals: 0 });
   });

@@ -2,6 +2,8 @@ language js
 
 or {
   JsStringLiteralExpression(),
+  TsStringLiteralType(),
+  JsLiteralMemberName(),
   JsxString(),
   JsTemplateExpression()
 } as $literal where {
