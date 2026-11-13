@@ -62,8 +62,11 @@ function toDecimal(amount: number, exponent: number): Intl.StringNumericLiteral 
 
 // "$" alone is read as the visitor's own currency, so outside its country the code is shown.
 function currencyDisplay(currency: CurrencyCode, opts: MoneyFormatOptions): "symbol" | "code" {
+  // Edge headers arrive in arbitrary case and the registry lookup is exact.
   const country =
-    opts.viewerCountry === undefined ? countryForLocale(opts.locale) : opts.viewerCountry;
+    opts.viewerCountry === undefined
+      ? countryForLocale(opts.locale)
+      : (opts.viewerCountry?.trim().toUpperCase() ?? null);
   return country !== null && chargedCurrency(country) === currency ? "symbol" : "code";
 }
 
@@ -102,6 +105,7 @@ export function formatNumber(value: number, opts: FormatOptions): string {
 
 // The RAE's Ortografía separates the figure and "%" with a no-break space; ICU's es-CO data does not.
 export function formatPercent(ratio: number, opts: PercentFormatOptions): string {
+  if (!Number.isFinite(ratio)) throw new TypeError(`Ratio must be a finite number: ${ratio}`);
   const options: Intl.NumberFormatOptions = { style: "percent" };
   if (opts.maximumFractionDigits !== undefined) {
     options.maximumFractionDigits = opts.maximumFractionDigits;

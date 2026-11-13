@@ -69,6 +69,16 @@ describe("formatMoney", () => {
   });
 });
 
+describe("viewerCountry normalization", () => {
+  const cop = money(14_900_000, "COP");
+
+  test("trims and uppercases the country before the lookup", () => {
+    expect(formatMoney(cop, { ...es, viewerCountry: " co " })).toBe(`$${nbsp}149.000`);
+    expect(formatMoney(cop, { ...es, viewerCountry: "co" })).toBe(`$${nbsp}149.000`);
+    expect(formatMoney(cop, { ...es, viewerCountry: " mx" })).toBe(`COP${nbsp}149.000`);
+  });
+});
+
 describe("formatCost", () => {
   test("keeps provider precision down to the micro-unit", () => {
     expect(formatCost(cost(1_200, "USD"), es)).toBe(`US$${nbsp}0,0012`);
@@ -128,6 +138,17 @@ describe("numbers and percentages", () => {
   test("percent range", () => {
     expect(formatPercentRange(0.2, 0.45, es)).toBe(`entre 20${nbsp}% y 45${nbsp}%`);
     expect(formatPercentRange(0.2, 0.45, es).replaceAll(nbsp, " ")).toBe("entre 20 % y 45 %");
+  });
+});
+
+describe("formatPercent input guard", () => {
+  test.each([
+    ["NaN", Number.NaN],
+    ["Infinity", Number.POSITIVE_INFINITY],
+    ["-Infinity", Number.NEGATIVE_INFINITY],
+  ])("rejects %s with a TypeError", (_name, value) => {
+    expect(() => formatPercent(value, es)).toThrow(TypeError);
+    expect(() => formatPercent(value, es)).toThrow(/finite/);
   });
 });
 
