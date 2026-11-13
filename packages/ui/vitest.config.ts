@@ -18,6 +18,16 @@ export default defineConfig({
       },
       {
         plugins: [tailwindcss()],
+        // Pre-bundling must share one React between the components and the renderer, or hooks see a null dispatcher.
+        optimizeDeps: {
+          include: [
+            "react",
+            "react/jsx-dev-runtime",
+            "react-dom",
+            "react-dom/client",
+            "vitest-browser-react",
+          ],
+        },
         test: {
           name: "component",
           include: ["src/**/*.browser.test.tsx", "test/**/*.browser.test.tsx"],
