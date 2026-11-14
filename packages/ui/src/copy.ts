@@ -19,6 +19,7 @@ export const copy = {
       'Guardamos esta respuesta tal como la dio la IA, con fecha, hora y ciudad. Nadie puede editarla, ni nosotros. Si alguien cambiara una sola letra, el botón "Comprobar" lo mostraría.',
     verify: "Comprobar esta respuesta",
   },
+  email: { unsubscribe: "Dejar de recibir estos correos" },
   sheet: {
     close: "Cerrar",
     termHint: "qué significa",

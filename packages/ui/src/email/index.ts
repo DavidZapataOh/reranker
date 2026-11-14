@@ -1,0 +1,9 @@
+export { EmailBubble } from "./EmailBubble.tsx";
+export { EmailButton } from "./EmailButton.tsx";
+export { EmailCode } from "./EmailCode.tsx";
+export { EmailFooter } from "./EmailFooter.tsx";
+export { EmailHeading } from "./EmailHeading.tsx";
+export { EmailLayout } from "./EmailLayout.tsx";
+export { EmailSeal } from "./EmailSeal.tsx";
+export { EmailText } from "./EmailText.tsx";
+export { emailTailwindConfig } from "./tailwind.config.ts";
