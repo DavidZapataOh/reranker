@@ -22,6 +22,7 @@ jobs:
       - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
         with: { cache: true, require-lockfile: true }
       - run: pnpm exec biome ci .
+      - run: pnpm env:example --check
       - run: pnpm audit --prod --audit-level high && pnpm licenses:check
       - id: scope
         env:
@@ -53,6 +54,8 @@ jobs:
         name: Install Chromium when component tests are affected
         run: pnpm --filter web exec playwright install --with-deps chromium
       - env:
+          # `next typegen` loads next.config.ts, which reads the environment name.
+          APP_ENV: development
           TURBO_SCM_BASE: ${{ steps.scope.outputs.base }}
           TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
         run: pnpm exec turbo run typecheck test ${{ steps.scope.outputs.affected }} --summarize
