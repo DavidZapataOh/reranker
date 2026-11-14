@@ -4,56 +4,56 @@ packages:
   - tools/*
 catalogMode: strict
 catalog:
-  next: 16.4.5
-  react: 19.3.0
-  react-dom: 19.3.0
+  next: 16.4.6
+  react: 19.3.1
+  react-dom: 19.3.1
   typescript: 7.0.2
   "@types/node": 26.6.6
   "@types/react": 19.3.0
   "@types/react-dom": 19.3.0
-  tailwindcss: 4.3.4
-  "@tailwindcss/turbopack": 4.3.4
-  "@tailwindcss/vite": 4.3.4
+  tailwindcss: 4.3.5
+  "@tailwindcss/turbopack": 4.3.5
+  "@tailwindcss/vite": 4.3.5
   "@biomejs/biome": 2.6.6
   turbo: 2.11.10
   lefthook: 2.2.1
   vitest: 5.1.0
   "@vitest/browser-playwright": 5.1.0
   "@vitest/coverage-v8": 5.1.0
-  "@vitejs/plugin-react": 6.2.1
+  "@vitejs/plugin-react": 6.3.0
   # 1.65.0 clears minimumReleaseAge on 2026-11-08T18:30Z.
-  playwright: 1.64.1
-  "@playwright/test": 1.64.1
+  playwright: 1.65.0
+  "@playwright/test": 1.65.0
   "@axe-core/playwright": 4.14.0
   "@lhci/cli": 0.16.0
   # Same version lighthouse@13.6.0 pins; LHCI loads it for collect.puppeteerScript.
-  puppeteer-core: 25.16.0
+  puppeteer-core: 25.17.0
   vitest-browser-react: 2.3.0
   axe-core: 4.14.0
   esbuild: 0.28.2
-  react-email: 6.11.7
-  "@react-email/ui": 6.11.7
-  msw: 3.0.3
+  react-email: 6.11.11
+  "@react-email/ui": 6.11.11
+  msw: 3.0.5
   pg: ^8.23.1
   "@types/pg": ^8.23.1
   zod: 4.6.7
-  use-intl: 4.14.9
+  use-intl: 4.15.0
   "@formatjs/intl-localematcher": 0.10.1
   negotiator: 1.1.0
   "@types/negotiator": 0.6.5
-  intl-messageformat: 12.1.4
+  intl-messageformat: 12.1.5
   fast-check: 4.10.2
   ajv: 8.20.0
   ajv-formats: 3.0.1
   tsx: 4.23.15
   drizzle-orm: ^0.45.4
   drizzle-kit: ^0.31.11
-  "@vercel/functions": 3.7.6
-  better-auth: 1.7.18
-  "@better-auth/drizzle-adapter": 1.7.18
-  auth: 1.7.18
-  resend: 6.37.0
-  posthog-node: 5.63.0
+  "@vercel/functions": 3.11.1
+  better-auth: 1.7.20
+  "@better-auth/drizzle-adapter": 1.7.20
+  auth: 1.7.20
+  resend: 6.38.0
+  posthog-node: 5.68.2
   squawk-cli: ^2.70.0
   "@neondatabase/api-client": ^2.7.3
 overrides:
