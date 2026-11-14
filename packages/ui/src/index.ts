@@ -13,6 +13,7 @@ export { StatusBadge } from "./data/StatusBadge.tsx";
 export { StepBars } from "./data/StepBars.tsx";
 export { LEVEL_CUTS, LEVEL_ORDER, scoreSentence } from "./data/scale.ts";
 export { EvidenceSeal, type EvidenceSealProps } from "./evidence/EvidenceSeal.tsx";
+export { EvidenceStamp } from "./evidence/EvidenceStamp.tsx";
 export { assertVerifyUrl } from "./evidence/verifyUrl.ts";
 export { EmptyState } from "./feedback/EmptyState.tsx";
 export { ErrorState } from "./feedback/ErrorState.tsx";

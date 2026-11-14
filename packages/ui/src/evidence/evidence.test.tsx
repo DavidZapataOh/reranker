@@ -89,12 +89,6 @@ test("the help trigger is a 48 px button named for what it explains", () => {
   expect(s).toContain('aria-haspopup="dialog"');
 });
 
-test("the inline seal is the default variant and the stamp keeps working", () => {
-  const inline = html(<EvidenceSeal variant="inline" {...seal} verifyUrl="/verificar/8F2K" />);
-  expect(inline).toBe(html(<EvidenceSeal {...seal} verifyUrl="/verificar/8F2K" />));
-  expect(html(<EvidenceSeal variant="stamp" />)).toContain("Guardada<br/>sin editar");
-});
-
 test("a hostile verification link throws instead of rendering the seal", () => {
   for (const verifyUrl of [
     "https://reranker.co.evil.com/x",

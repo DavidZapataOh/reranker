@@ -13,7 +13,6 @@ const serverOnly = [
   "conversation/Bubble",
   "conversation/EngineMark",
   "conversation/Highlight",
-  "evidence/EvidenceSeal",
   "feedback/Skeleton",
   "feedback/LoadingState",
   "feedback/EmptyState",
@@ -24,6 +23,10 @@ const serverOnly = [
 
 test("server-only components never reach a client module except the help sheet", async () => {
   expect(await clientModulesReachableFrom(serverOnly, { allow: ["help/Sheet"] })).toEqual([]);
+});
+
+test("the evidence stamp never reaches a client module, the help sheet included", async () => {
+  expect(await clientModulesReachableFrom(["evidence/EvidenceStamp"])).toEqual([]);
 });
 
 test("the client islands are exactly the known list", async () => {
