@@ -575,6 +575,9 @@ importers:
       '@reranker/i18n':
         specifier: workspace:*
         version: link:../i18n
+      '@reranker/schema':
+        specifier: workspace:*
+        version: link:../schema
       react-email:
         specifier: 'catalog:'
         version: 6.11.7(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@8.1.1)

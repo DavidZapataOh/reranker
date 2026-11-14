@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@reranker/i18n": "workspace:*",
+    "@reranker/schema": "workspace:*",
     "react-email": "catalog:"
   },
   "peerDependencies": {

@@ -47,13 +47,10 @@ test("reversed, negative and non-integer ranges never produce a highlight", () =
   ).toEqual([{ start: 0, end: 6, kind: "competitor" }]);
 });
 
+const segmenter = new Intl.Segmenter(undefined, { granularity: "grapheme" });
 const graphemeBoundaries = (text: string) => {
   const edges = new Set([text.length]);
-  for (const { index } of new Intl.Segmenter(undefined, { granularity: "grapheme" }).segment(
-    text,
-  )) {
-    edges.add(index);
-  }
+  for (const { index } of segmenter.segment(text)) edges.add(index);
   return edges;
 };
 
@@ -94,41 +91,81 @@ const spansFor = (length: number) =>
 const withSpans = (text: fc.Arbitrary<string>) =>
   text.chain((t) => fc.tuple(fc.constant(t), spansFor(t.length)));
 
-test("any extraction output normalizes to ordered, disjoint, non-empty ranges inside the text", () => {
-  fc.assert(
-    fc.property(
-      withSpans(
-        fc.oneof(
-          fc.string({ maxLength: 60, unit: "binary" }),
-          fc.string({ maxLength: 30, unit: "grapheme" }),
-          fc.constantFrom("Cafe\u0301 👨‍👩‍👧 🇨🇴 Sur", "ok👍 sí"),
-        ),
+// Any code point, lone surrogates included, with the ones that build multi-unit characters weighted in
+// (combining accent, ZWJ, VS16, regional indicators, emoji). fast-check's "binary" unit covers the same
+// range but builds a table of every code point on first use, over a second even on a fast machine.
+const codePoint = fc
+  .oneof(
+    { weight: 3, arbitrary: fc.integer({ min: 0, max: 0x10ffff }) },
+    {
+      weight: 1,
+      arbitrary: fc.constantFrom(
+        0x301,
+        0x200d,
+        0xfe0f,
+        0x1f1e8,
+        0x1f1f4,
+        0x1f468,
+        0x1f469,
+        0x1f467,
+        0x1f44d,
+        0xd83d,
+        0xdc4d,
       ),
-      ([text, spans]) => {
-        const out = normalizeSpans(text, spans);
-        const edges = graphemeBoundaries(text);
-        let previousEnd = 0;
-        for (const s of out) {
-          expect(Number.isInteger(s.start) && Number.isInteger(s.end)).toBe(true);
-          expect(s.start).toBeGreaterThanOrEqual(previousEnd);
-          expect(s.end).toBeGreaterThan(s.start);
-          expect(s.end).toBeLessThanOrEqual(text.length);
-          expect(edges.has(s.start) && edges.has(s.end)).toBe(true);
-          previousEnd = s.end;
-        }
-      },
-    ),
-  );
-});
+    },
+  )
+  .map((cp) => String.fromCodePoint(cp));
+// Explicit so the budget does not move with fast-check's defaults; each run costs well under a millisecond.
+const PROPERTY_RUNS = 300;
+const PROPERTY_TIMEOUT_MS = 20_000;
 
-test("any extraction output keeps the whole answer text, in order", () => {
-  fc.assert(
-    fc.property(withSpans(fc.string({ maxLength: 60, unit: "grapheme" })), ([text, spans]) => {
-      const markup = html(<Bubble role="answer" engine="gemini" text={text} highlights={spans} />);
-      expect(answerOf(markup)).toBe(text);
-    }),
-  );
-});
+test(
+  "any extraction output normalizes to ordered, disjoint, non-empty ranges inside the text",
+  () => {
+    fc.assert(
+      fc.property(
+        withSpans(
+          fc.oneof(
+            fc.string({ maxLength: 60, unit: codePoint }),
+            fc.string({ maxLength: 30, unit: "grapheme" }),
+            fc.constantFrom("Cafe\u0301 👨‍👩‍👧 🇨🇴 Sur", "ok👍 sí"),
+          ),
+        ),
+        ([text, spans]) => {
+          const out = normalizeSpans(text, spans);
+          const edges = graphemeBoundaries(text);
+          let previousEnd = 0;
+          for (const s of out) {
+            expect(Number.isInteger(s.start) && Number.isInteger(s.end)).toBe(true);
+            expect(s.start).toBeGreaterThanOrEqual(previousEnd);
+            expect(s.end).toBeGreaterThan(s.start);
+            expect(s.end).toBeLessThanOrEqual(text.length);
+            expect(edges.has(s.start) && edges.has(s.end)).toBe(true);
+            previousEnd = s.end;
+          }
+        },
+      ),
+      { numRuns: PROPERTY_RUNS },
+    );
+  },
+  PROPERTY_TIMEOUT_MS,
+);
+
+test(
+  "any extraction output keeps the whole answer text, in order",
+  () => {
+    fc.assert(
+      fc.property(withSpans(fc.string({ maxLength: 60, unit: "grapheme" })), ([text, spans]) => {
+        const markup = html(
+          <Bubble role="answer" engine="gemini" text={text} highlights={spans} />,
+        );
+        expect(answerOf(markup)).toBe(text);
+      }),
+      { numRuns: PROPERTY_RUNS },
+    );
+  },
+  PROPERTY_TIMEOUT_MS,
+);
 
 test("the answer is rendered as text, never as HTML, and the business is highlighted", () => {
   const text = "<img src=x onerror=alert(1)> Motor Valle";
