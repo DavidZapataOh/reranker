@@ -91,3 +91,14 @@ export const tokens = {
     hand: font("--font-hand", "Caveat"),
   },
 } as const;
+
+// The brand's dark palette, for the clients that honor prefers-color-scheme in email.
+const dark = { background: "#14211b", surface: "#1c2c24", text: "#faf7f0" } as const;
+
+export const darkColor = {
+  ...dark,
+  textSoft: toOpaque(`${dark.text}b3`, dark.surface),
+  line: toOpaque(`${dark.text}1f`, dark.surface),
+  codeBackground: tokens.color.green,
+  codeText: dark.text,
+} as const;

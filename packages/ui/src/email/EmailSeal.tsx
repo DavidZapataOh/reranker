@@ -20,10 +20,10 @@ export function EmailSeal({
 }) {
   const href = absoluteVerifyUrl(verifyUrl);
   return (
-    <Text className="m-0 mb-4 font-mono text-[13px] leading-5 text-ink">
+    <Text className="rr-ink m-0 mb-4 font-mono text-[13px] leading-5 text-ink">
       ✔ {copy.seal.inline(capturedAtLabel, cityLabel)}
       {" · "}
-      <Link href={href} className="text-green underline">
+      <Link href={href} className="rr-link text-green underline">
         {copy.seal.verify}
       </Link>
     </Text>
