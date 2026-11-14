@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import type { AppEnv, z } from "@reranker/schema";
+import type { z } from "@reranker/schema";
 
 type Fragment = z.ZodObject;
 
@@ -16,7 +16,7 @@ export function renderExample(fragments: readonly Fragment[]): string {
       const meta = (schema as z.ZodType).meta() as
         | { kind?: string; description?: string }
         | undefined;
-      entries.set(name, { kind: meta?.kind ?? "config", description: meta?.description });
+      entries.set(name, { kind: meta?.kind ?? "secret", description: meta?.description });
     }
   }
   const blocks = [...entries]
@@ -31,8 +31,6 @@ export function renderExample(fragments: readonly Fragment[]): string {
 export function checkExample(path: string, fragments: readonly Fragment[]): boolean {
   return existsSync(path) && readFileSync(path, "utf8") === renderExample(fragments);
 }
-
-export type { AppEnv };
 
 if (import.meta.main) {
   const root = new URL("../../../", import.meta.url);

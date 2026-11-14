@@ -14,7 +14,7 @@ const fragments = [
   }),
 ];
 
-test("renders one commented line per variable, sorted, APP_ENV included", () => {
+test("renders one commented line per variable, sorted, APP_ENV included, unannotated as Secret", () => {
   const out = renderExample(fragments);
   expect(out).toBe(
     [
@@ -24,7 +24,7 @@ test("renders one commented line per variable, sorted, APP_ENV included", () => 
       "# Runtime environment: development, preview or production (Config)",
       "APP_ENV=",
       "",
-      "# (Config)",
+      "# (Secret)",
       "NO_META=",
       "",
       "# Token for the zed service (Secret)",
