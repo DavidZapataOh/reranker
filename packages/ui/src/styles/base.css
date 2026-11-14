@@ -23,7 +23,7 @@
   input {
     caret-color: var(--color-green);
   }
-  body:has(dialog[open]) {
+  body:has(dialog:modal) {
     overflow: hidden;
   }
   a {

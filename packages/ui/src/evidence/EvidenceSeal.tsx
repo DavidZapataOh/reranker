@@ -1,38 +1,15 @@
 import { LinkButton } from "../actions/LinkButton.tsx";
 import { copy } from "../copy.ts";
-import { cx } from "../cx.ts";
 import { Sheet } from "../help/Sheet.tsx";
 import { assertVerifyUrl } from "./verifyUrl.ts";
 
-export type EvidenceSealProps =
-  | { variant?: "inline"; capturedAtLabel: string; cityLabel: string; verifyUrl: string }
-  | { variant: "stamp"; className?: string };
-
-function Stamp({ className }: { className?: string | undefined }) {
-  const [first, second] = copy.seal.stampLines;
-  return (
-    <span
-      className={cx(
-        "grid h-[74px] w-[74px] rotate-[-12deg] place-items-center rounded-full bg-amber text-center font-display text-[11px] leading-tight font-black text-ink shadow-soft",
-        className,
-      )}
-    >
-      {first}
-      <br />
-      {second}
-    </span>
-  );
-}
-
-function Inline({
-  capturedAtLabel,
-  cityLabel,
-  verifyUrl,
-}: {
+export type EvidenceSealProps = {
   capturedAtLabel: string;
   cityLabel: string;
   verifyUrl: string;
-}) {
+};
+
+export function EvidenceSeal({ capturedAtLabel, cityLabel, verifyUrl }: EvidenceSealProps) {
   const href = assertVerifyUrl(verifyUrl);
   return (
     <div data-seal className="flex items-center gap-2 font-mono text-[13px] leading-snug text-ink">
@@ -79,8 +56,4 @@ function Inline({
       </Sheet>
     </div>
   );
-}
-
-export function EvidenceSeal(props: EvidenceSealProps) {
-  return props.variant === "stamp" ? <Stamp className={props.className} /> : <Inline {...props} />;
 }

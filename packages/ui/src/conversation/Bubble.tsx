@@ -33,7 +33,7 @@ export function Bubble({
   role: "question" | "answer";
   engine?: EngineId;
   text: string;
-  highlights?: Span[];
+  highlights?: readonly Span[];
   collapsedLines?: number;
 }) {
   const clamped =

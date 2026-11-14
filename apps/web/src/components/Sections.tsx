@@ -1,4 +1,4 @@
-import { EvidenceSeal, ExampleChip, Headline, Lede, Section } from "@reranker/ui";
+import { EvidenceStamp, ExampleChip, Headline, Lede, Section } from "@reranker/ui";
 import { Icon, icons } from "@reranker/ui/icons";
 import Image from "next/image";
 import Link from "next/link";
@@ -149,7 +149,7 @@ export function Bento() {
               “Para un taller de confianza en Guadalajara, te sugiero Motor Valle y…”
             </p>
             <p className="mt-3 text-ink/65">ID rr_7f3a·91c2</p>
-            <EvidenceSeal variant="stamp" className="stamp absolute -top-4 -right-3" />
+            <EvidenceStamp className="stamp absolute -top-4 -right-3" />
           </div>
           <a
             href="#preguntas"
