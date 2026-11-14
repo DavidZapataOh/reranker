@@ -16,3 +16,4 @@ test-results/
 apps/web/results.json
 apps/web/.lighthouseci/
 .vitest/
+__screenshots__/

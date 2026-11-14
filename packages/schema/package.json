@@ -6,7 +6,8 @@
     "./src/z.ts"
   ],
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./measurement": "./src/measurement/types.ts"
   },
   "scripts": {
     "build:json-schema": "tsx scripts/export-json-schema.ts",

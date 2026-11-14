@@ -24,4 +24,16 @@ export const copy = {
     termHint: "qué significa",
     termTitle: (term: string) => `¿Qué significa ${term}?`,
   },
+  score: {
+    score: "Puntaje",
+    between: "entre",
+    and: "y",
+    atMost: "a lo sumo",
+    preliminary: "preliminar",
+    insufficient: "Pocos datos para darte un nivel",
+  },
+  sample: {
+    of: "de",
+    in: "en",
+  },
 } as const;
