@@ -21,12 +21,12 @@
     "@reranker/schema": "workspace:*",
     "@reranker/telemetry": "workspace:*",
     "@reranker/ui": "workspace:*",
-    "lucide-react": "1.68.0",
+    "lucide-react": "1.72.0",
     "next": "catalog:",
-    "posthog-js": "1.446.0",
+    "posthog-js": "1.447.12",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "simple-icons": "16.36.0"
+    "simple-icons": "16.37.0"
   },
   "devDependencies": {
     "@axe-core/playwright": "catalog:",

@@ -71,7 +71,7 @@ jobs:
           fi
           printf '%s\n' "${files[@]}" > "$RUNNER_TEMP/scenarios.txt"
       # Pinned rather than latest so a k6 release lands through a reviewed change.
-      - uses: grafana/setup-k6-action@43b9fc21641a76002687994433dd586f56e791b1 # v1.2.2
+      - uses: grafana/setup-k6-action@c47136d33d365efbeb9ae7266908b5dcf98cdece # v1.3.0
         with:
           k6-version: 2.3.0
       # Every scenario runs even when an earlier one fails, so one dispatch reports every broken budget.
