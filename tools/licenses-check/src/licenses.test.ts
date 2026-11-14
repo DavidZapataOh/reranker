@@ -42,6 +42,7 @@ test("allowlist matches the supply-chain policy exactly", () => {
     "CC0-1.0",
     "ISC",
     "MIT",
+    "MIT-0",
     "MPL-2.0",
     "Python-2.0",
     "Unlicense",

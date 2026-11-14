@@ -103,6 +103,19 @@ export function forbiddenIn<T extends z.ZodType>(
   return withMeta(forbidden.pipe(schema.optional()) as unknown as z.ZodOptional<T>, schema);
 }
 
+/** Accepts the value only in the listed environments, for a form that is safe in development and nowhere else. */
+export function onlyIn<T extends z.ZodType>(
+  envs: readonly AppEnv[],
+  schema: T,
+): z.ZodPipe<z.ZodUnknown, T> {
+  const gate = z.unknown().superRefine((_, ctx) => {
+    if (scope === undefined || !envs.includes(scope)) {
+      ctx.addIssue({ code: "custom", message: "not allowed in this environment" });
+    }
+  });
+  return gate.pipe(schema);
+}
+
 type Fragment = z.ZodObject;
 type Intersect<U> = (U extends unknown ? (u: U) => void : never) extends (i: infer I) => void
   ? I
