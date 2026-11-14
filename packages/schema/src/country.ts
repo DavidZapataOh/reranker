@@ -75,6 +75,7 @@ export const CountryConfig = z
     legalEntity: z
       .strictObject({
         name: z.string().min(1),
+        city: z.string().min(1),
         taxId: z.strictObject({ type: z.enum(["NIT"]), value: z.string().min(1) }),
       })
       .optional(),
