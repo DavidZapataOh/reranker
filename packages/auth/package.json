@@ -5,24 +5,32 @@
   "sideEffects": false,
   "exports": {
     "./env": "./src/env.ts",
-    "./permissions": "./src/permissions.ts"
+    "./permissions": "./src/permissions.ts",
+    "./send-auth-email": "./src/send-auth-email.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --project unit --coverage --passWithNoTests"
+    "test": "vitest run --project unit --coverage --passWithNoTests",
+    "test:contract": "vitest run --project contract --passWithNoTests"
   },
   "dependencies": {
     "@better-auth/drizzle-adapter": "catalog:",
     "@reranker/env": "workspace:*",
+    "@reranker/i18n": "workspace:*",
     "@reranker/schema": "workspace:*",
+    "@reranker/telemetry": "workspace:*",
+    "@reranker/ui": "workspace:*",
     "@vercel/functions": "catalog:",
     "better-auth": "catalog:",
+    "react": "catalog:",
     "react-email": "catalog:",
     "resend": "catalog:"
   },
   "devDependencies": {
+    "@reranker/testing": "workspace:*",
     "@reranker/typescript-config": "workspace:*",
     "@types/node": "catalog:",
+    "@types/react": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "auth": "catalog:",
     "typescript": "catalog:",
