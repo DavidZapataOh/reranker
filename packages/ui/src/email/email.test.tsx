@@ -40,6 +40,8 @@ describe("email base", () => {
     expect(html).toContain('name="color-scheme" content="light"');
     expect(html).toContain('name="supported-color-schemes" content="light"');
     expect(html).not.toMatch(/#[0-9a-f]{8}\b/i);
+    // Gmail drops declarations it can't parse, so none of these may reach the HTML.
+    expect(html).not.toMatch(/rgba\(|var\(--|oklch\(|calc\(/);
     const [r, g, b] = [1, 3, 5].map((i) => Number.parseInt(tokens.color.green.slice(i, i + 2), 16));
     expect(html.replaceAll(" ", "")).toContain(`background-color:rgb(${r},${g},${b})`);
     expect(html).toContain("Dejar de recibir estos correos");
@@ -50,6 +52,8 @@ describe("email base", () => {
     const text = await render(sample("Hola"), { plainText: true });
     expect(text).toContain("Ver reporte");
     expect(text).toContain("Respuesta guardada");
+    expect(text).toContain("https://reranker.co/verificar/8F2K");
+    expect(text).toContain("https://reranker.co/reporte/abc");
     expect(text).not.toContain("<");
   });
 
