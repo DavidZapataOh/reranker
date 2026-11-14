@@ -17,3 +17,4 @@ apps/web/results.json
 apps/web/.lighthouseci/
 .vitest/
 __screenshots__/
+.claude/worktrees/
