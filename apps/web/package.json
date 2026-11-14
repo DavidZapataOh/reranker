@@ -19,6 +19,7 @@
     "@reranker/env": "workspace:*",
     "@reranker/i18n": "workspace:*",
     "@reranker/schema": "workspace:*",
+    "@reranker/telemetry": "workspace:*",
     "@reranker/ui": "workspace:*",
     "lucide-react": "1.68.0",
     "next": "catalog:",
