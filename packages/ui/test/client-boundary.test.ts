@@ -1,7 +1,7 @@
-import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { expect, test } from "vitest";
+import { expect, onTestFinished, test } from "vitest";
 import { clientModules, clientModulesReachableFrom } from "./client-graph.ts";
 
 const serverOnly = [
@@ -32,6 +32,7 @@ test("the client islands are exactly the known list", async () => {
 
 test("the guard follows extensionless imports, index re-exports and side-effect imports", async () => {
   const root = await mkdtemp(join(tmpdir(), "client-graph-"));
+  onTestFinished(() => rm(root, { recursive: true, force: true }));
   await mkdir(join(root, "lib"));
   await writeFile(join(root, "entry.tsx"), 'import "./lib";\nexport const a = 1;\n');
   await writeFile(join(root, "lib/index.ts"), 'export * from "./deep";\n');

@@ -1,8 +1,9 @@
+import { fileURLToPath } from "node:url";
 import { gzipSync } from "node:zlib";
 import { build } from "esbuild";
 import { expect, test } from "vitest";
 
-const root = new URL("..", import.meta.url).pathname;
+const root = fileURLToPath(new URL("..", import.meta.url));
 
 async function bundle(entries: string[]): Promise<Uint8Array> {
   const { outputFiles } = await build({
