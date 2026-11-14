@@ -2,13 +2,18 @@ import { defineEnv } from "@reranker/env";
 import { describe, expect, test } from "vitest";
 import { fragments } from "./env";
 
-const key = { NEXT_PUBLIC_POSTHOG_KEY: "phc_test" };
+const key = {
+  NEXT_PUBLIC_POSTHOG_KEY: "phc_test",
+  POSTHOG_PROJECT_TOKEN: "phc_test",
+  POSTHOG_HOST: "https://us.i.posthog.com",
+};
 
 describe("web environment", () => {
   test("development needs nothing beyond APP_ENV", () => {
     expect(defineEnv(fragments, { APP_ENV: "development" })).toEqual({
       APP_ENV: "development",
       NEXT_PUBLIC_POSTHOG_REGION: "us",
+      LOG_LEVEL: "info",
     });
   });
 
@@ -20,6 +25,14 @@ describe("web environment", () => {
       expect(() => defineEnv(fragments, { APP_ENV, NEXT_PUBLIC_POSTHOG_KEY: "" })).toThrowError(
         /NEXT_PUBLIC_POSTHOG_KEY \(missing\)/,
       );
+    }
+  });
+
+  test("preview and production require the server PostHog token and host", () => {
+    for (const APP_ENV of ["preview", "production"]) {
+      expect(() =>
+        defineEnv(fragments, { APP_ENV, NEXT_PUBLIC_POSTHOG_KEY: "phc_test" }),
+      ).toThrowError(/POSTHOG_PROJECT_TOKEN \(missing\), POSTHOG_HOST \(missing\)/);
     }
   });
 

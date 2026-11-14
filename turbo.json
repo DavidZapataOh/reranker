@@ -15,7 +15,20 @@
     "web#build": {
       "dependsOn": ["^build", "@reranker/schema#build:json-schema"],
       "outputs": [".next/**", "!.next/cache/**"],
-      "env": ["NEXT_PUBLIC_*", "APP_ENV", "VERCEL_GIT_COMMIT_SHA"],
+      "env": [
+        "NEXT_PUBLIC_*",
+        "APP_ENV",
+        "VERCEL_GIT_COMMIT_SHA",
+        "POSTHOG_PROJECT_TOKEN",
+        "POSTHOG_HOST",
+        "POSTHOG_PROJECT_ID",
+        "POSTHOG_API_KEY",
+        "POSTHOG_QUERY_READ_KEY",
+        "OPS_ALERT_EMAIL",
+        "LOG_LEVEL",
+        "BETTERSTACK_HEARTBEAT_DAILY_URL",
+        "GITHUB_BILLING_READ_TOKEN"
+      ],
       "passThroughEnv": ["ENABLE_EXPERIMENTAL_COREPACK"]
     },
     "typecheck": { "dependsOn": ["^typecheck"] },

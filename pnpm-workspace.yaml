@@ -53,6 +53,7 @@ catalog:
   "@better-auth/drizzle-adapter": 1.7.18
   auth: 1.7.18
   resend: 6.37.0
+  posthog-node: 5.63.0
   squawk-cli: ^2.70.0
   "@neondatabase/api-client": ^2.7.3
 overrides:

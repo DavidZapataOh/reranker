@@ -1,0 +1,28 @@
+{
+  "name": "@reranker/telemetry",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./env": "./src/env.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --coverage --passWithNoTests"
+  },
+  "dependencies": {
+    "@reranker/analytics": "workspace:*",
+    "@reranker/env": "workspace:*",
+    "@reranker/schema": "workspace:*",
+    "next": "catalog:",
+    "posthog-node": "catalog:"
+  },
+  "devDependencies": {
+    "@reranker/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

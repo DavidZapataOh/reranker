@@ -1,5 +1,6 @@
 import { config, defineEnv, forbiddenIn, requiredIn } from "@reranker/env";
 import { z } from "@reranker/schema";
+import { telemetryEnv } from "@reranker/telemetry/env";
 
 // The landing reads these through NEXT_PUBLIC_* at build time; they are declared here so a
 // deployment missing one fails before it serves traffic.
@@ -23,7 +24,7 @@ export const webEnv = z.object({
   ),
 });
 
-export const fragments = [webEnv] as const;
+export const fragments = [webEnv, telemetryEnv] as const;
 
 let validated: ReturnType<typeof compose> | undefined;
 
