@@ -19,6 +19,7 @@
       "passThroughEnv": ["ENABLE_EXPERIMENTAL_COREPACK"]
     },
     "typecheck": { "dependsOn": ["^typecheck"] },
+    "web#typecheck": { "dependsOn": ["^typecheck"], "env": ["APP_ENV"] },
     "test": { "dependsOn": ["^typecheck"], "outputs": ["coverage/**"] },
     "@reranker/ui#test": { "dependsOn": ["^typecheck"], "outputs": [] },
     "@reranker/biome-plugins#test": {

@@ -1,7 +1,13 @@
+import { appEnv } from "@reranker/env";
 import type { NextConfig } from "next";
+import { getEnv } from "./src/env";
+
+// A production deployment missing a variable must fail here, before it can become a candidate.
+if (process.env.APP_ENV === "production") getEnv();
 
 const nextConfig: NextConfig = {
   /* config options here */
+  env: { APP_ENV: appEnv() },
   devIndicators: false,
   transpilePackages: ["@reranker/ui"],
   // Short tracked links for each channel, e.g. reranker.co/ig (bio) or reranker.co/ig/reel-01.
