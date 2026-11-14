@@ -5,7 +5,8 @@
   "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
-    "./example": "./src/example.ts"
+    "./example": "./src/example.ts",
+    "./catalog": "./src/catalog.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
