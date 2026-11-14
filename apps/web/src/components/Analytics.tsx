@@ -41,7 +41,7 @@ let firstTouchProps: Record<string, string | null> = {};
 function applyConsent(c: Consent) {
   if (POSTHOG_KEY && posthog.__loaded) {
     if (c === "granted") {
-      posthog.opt_in_capturing();
+      posthog.opt_in_capturing({ captureProperties: baseProps });
       posthog.register(baseProps);
       posthog.register_once(firstTouchProps);
       posthog.startSessionRecording();
@@ -102,6 +102,7 @@ export function Analytics() {
         });
         // Skip nulls so an internal navigation never erases the original AI source.
         baseProps = {
+          ...(process.env.APP_ENV ? { app_env: process.env.APP_ENV } : {}),
           visit_id: VISIT_ID,
           device_type: origin.device_type,
           ...(origin.ai_source ? { ai_source: origin.ai_source } : {}),
