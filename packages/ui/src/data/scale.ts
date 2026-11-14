@@ -20,7 +20,8 @@ export const LEVEL_BANDS = LEVEL_ORDER.map((level, i) => {
   return { level, x, width: (EDGES[i + 1] ?? SCALE_MAX) - x };
 });
 
-const onScale = (n: number) => Number.isFinite(n) && n >= 0 && n <= SCALE_MAX;
+// The statistics round to integers outward, so a fraction or a value outside its own range is a bug upstream.
+const onScale = (n: number) => Number.isInteger(n) && n >= 0 && n <= SCALE_MAX;
 
 export function assertScore(score: ScoreEstimate): void {
   const { value, lower, upper, atMost } = score;
@@ -28,11 +29,12 @@ export function assertScore(score: ScoreEstimate): void {
     !onScale(value) ||
     !onScale(lower) ||
     !onScale(upper) ||
-    lower > upper ||
+    lower > value ||
+    value > upper ||
     (atMost !== null && !onScale(atMost))
   ) {
     throw new RangeError(
-      `Score out of the 0–100 scale: value ${value}, lower ${lower}, upper ${upper}, atMost ${atMost}`,
+      `Invalid score: value ${value}, lower ${lower}, upper ${upper}, atMost ${atMost}`,
     );
   }
 }

@@ -44,7 +44,7 @@ export function DotSample({
               cx={i * STEP + STEP / 2}
               cy={STEP / 2}
               r={RADIUS}
-              className={i < filled ? "fill-green" : "fill-none stroke-ink/45"}
+              className={i < filled ? "fill-green" : "fill-none stroke-ink/55"}
               strokeWidth={1.5}
             />
           ))}

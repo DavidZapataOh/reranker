@@ -177,7 +177,7 @@ test("the bracket is always inside the scale, at least one unit wide, and covers
   );
 });
 
-test("a score outside the scale or not a number fails loudly instead of drawing NaN", () => {
+test("a score that is off the scale, fractional or outside its own range fails loudly", () => {
   for (const bad of [
     { lower: Number.NaN },
     { upper: Number.POSITIVE_INFINITY },
@@ -186,6 +186,12 @@ test("a score outside the scale or not a number fails loudly instead of drawing 
     { lower: 50, upper: 40 },
     { value: Number.NaN },
     { atMost: Number.NaN },
+    { value: 42.5 },
+    { lower: 37.9 },
+    { upper: 46.2 },
+    { atMost: 6.5 },
+    { value: 37, lower: 38, upper: 46 },
+    { value: 47, lower: 38, upper: 46 },
   ]) {
     expect(() => rule(est(bad))).toThrow(RangeError);
     expect(() => scoreSentence(est(bad), L)).toThrow(RangeError);

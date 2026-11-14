@@ -2,13 +2,15 @@ import type { LevelKey, ScoreEstimate } from "@reranker/schema/measurement";
 import { cx } from "../cx.ts";
 import { activeLevels, LEVEL_BANDS, levelCaption, rangeGeometry, scoreSentence } from "./scale.ts";
 
-// On a phone the four names only fit spread in order; from sm up each one sits under its band,
-// the first two meeting at the 40 cut because the 0–10 band is too narrow to hold a name.
+// In a narrow figure the four names only fit spread in order; from 24rem of the figure's own width
+// each one sits under its band, the first two meeting at the 40 cut because the 0–10 band is too
+// narrow to hold a name. The figure is the container so a narrow card column on a wide screen still
+// gets the spread layout.
 const namePosition: Record<LevelKey, string> = {
-  invisible: "sm:left-0",
-  sometimes: "sm:right-[calc(60%+6px)]",
-  on_the_list: "sm:left-[calc(40%+6px)]",
-  regular: "sm:right-0",
+  invisible: "@sm:left-0",
+  sometimes: "@sm:right-[calc(60%+6px)]",
+  on_the_list: "@sm:left-[calc(40%+6px)]",
+  regular: "@sm:right-0",
 };
 
 export function ScoreRule({
@@ -22,7 +24,7 @@ export function ScoreRule({
   const active = new Set(activeLevels(score.levelDisplay));
   const range = rangeGeometry(score.lower, score.upper);
   return (
-    <figure aria-label={sentence} className="w-full">
+    <figure aria-label={sentence} className="@container w-full">
       <svg
         viewBox="0 0 100 24"
         preserveAspectRatio="none"
@@ -55,7 +57,7 @@ export function ScoreRule({
         />
       </svg>
       <div
-        className="mt-2 flex flex-wrap justify-between gap-x-3 sm:relative sm:block sm:h-5"
+        className="mt-2 flex flex-wrap justify-between gap-x-3 @sm:relative @sm:block @sm:h-5"
         aria-hidden="true"
       >
         {LEVEL_BANDS.map(({ level }) => (
@@ -63,7 +65,7 @@ export function ScoreRule({
             key={level}
             data-level-name={level}
             className={cx(
-              "text-[13px] whitespace-nowrap sm:absolute sm:top-0",
+              "text-[13px] whitespace-nowrap @sm:absolute @sm:top-0",
               namePosition[level],
               active.has(level) ? "font-semibold text-ink" : "text-ink/65",
             )}
