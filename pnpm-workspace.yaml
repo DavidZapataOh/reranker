@@ -49,6 +49,10 @@ catalog:
   drizzle-orm: ^0.45.4
   drizzle-kit: ^0.31.11
   "@vercel/functions": 3.7.6
+  better-auth: 1.7.18
+  "@better-auth/drizzle-adapter": 1.7.18
+  auth: 1.7.18
+  resend: 6.37.0
   squawk-cli: ^2.70.0
   "@neondatabase/api-client": ^2.7.3
 overrides:

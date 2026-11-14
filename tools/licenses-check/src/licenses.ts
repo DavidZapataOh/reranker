@@ -12,6 +12,7 @@ export const ALLOWED_LICENSES: ReadonlySet<string> = new Set([
   "CC0-1.0",
   "ISC",
   "MIT",
+  "MIT-0",
   "MPL-2.0",
   "Python-2.0",
   "Unlicense",

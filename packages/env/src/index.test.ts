@@ -6,6 +6,7 @@ import {
   defineEnv,
   EnvValidationError,
   forbiddenIn,
+  onlyIn,
   requiredIn,
   resetAppEnv,
   secret,
@@ -185,5 +186,29 @@ describe("appEnv", () => {
     expect(() => appEnv()).toThrowError(/APP_ENV/);
     vi.stubEnv("APP_ENV", "preview");
     expect(appEnv()).toBe("preview");
+  });
+});
+
+describe("onlyIn", () => {
+  const local = z.object({
+    URL: z.union([
+      z.url({ protocol: /^https$/ }),
+      onlyIn(["development"], z.literal("http://localhost")),
+    ]),
+  });
+
+  test("accepts the gated form in the listed environments only", () => {
+    expect(defineEnv([local], { APP_ENV: "development", URL: "http://localhost" }).URL).toBe(
+      "http://localhost",
+    );
+    expect(() =>
+      defineEnv([local], { APP_ENV: "production", URL: "http://localhost" }),
+    ).toThrowError(/URL \(invalid\)/);
+  });
+
+  test("still validates the value inside the listed environments", () => {
+    expect(() =>
+      defineEnv([local], { APP_ENV: "development", URL: "http://elsewhere" }),
+    ).toThrowError(/URL \(invalid\)/);
   });
 });
