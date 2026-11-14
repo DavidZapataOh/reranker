@@ -40,14 +40,28 @@ describe("sendAuthEmail", () => {
     expect(payload).toMatchObject({
       from: "Reranker <codigos@mail.reranker.co>",
       to: "ana@example.co",
-      subject: "Tu código para entrar a Reranker: 482913",
+      subject: "482913 es tu código para entrar a Reranker",
     });
-    expect(payload.html).toContain("482 913");
-    expect(payload.text).toContain("482 913");
+    expect(payload.html).toContain('lang="es-CO"');
+    expect(payload.html).toMatch(/>482913<\/td>/);
+    expect(payload.text).toContain("482913");
+    expect(payload.text).not.toMatch(/482\s+913/);
     expect(payload.text).not.toContain("<");
     expect(options).toEqual({
       idempotencyKey: idempotencyKey("sign-in-code", "ana@example.co", "482913"),
     });
+  });
+
+  test("passes the requested place to the email and keeps it out of the subject", async () => {
+    await sendAuthEmail("sign-in-code", "ana@example.co", {
+      otp: "482913",
+      locale: "es-CO",
+      requestedFrom: { city: "Cali", country: "Colombia" },
+    });
+    const [payload] = resend.send.mock.calls[0] ?? [];
+    expect(payload.html).toContain("Se pidió desde Cali, Colombia.");
+    expect(payload.text).toContain("Se pidió desde Cali, Colombia.");
+    expect(payload.subject).not.toContain("Cali");
   });
 
   test("imports without the key and creates the client once, on the first send", async () => {

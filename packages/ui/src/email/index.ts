@@ -1,3 +1,4 @@
+export { BRAND_MARK_URL, EmailBrandMark } from "./EmailBrandMark.tsx";
 export { EmailBubble } from "./EmailBubble.tsx";
 export { EmailButton } from "./EmailButton.tsx";
 export { EmailCode } from "./EmailCode.tsx";

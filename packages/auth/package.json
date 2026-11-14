@@ -5,8 +5,10 @@
   "sideEffects": false,
   "exports": {
     "./env": "./src/env.ts",
+    "./email-locale": "./src/email-locale.ts",
     "./permissions": "./src/permissions.ts",
-    "./send-auth-email": "./src/send-auth-email.ts"
+    "./send-auth-email": "./src/send-auth-email.ts",
+    "./sign-in-code": "./src/sign-in-code.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

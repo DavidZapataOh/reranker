@@ -5,7 +5,11 @@ export const co = {
   locales: ["es-CO"],
   timeZone: "America/Bogota",
   phone: { callingCode: "57" },
-  legalEntity: { name: "GLEMO S.A.S.", taxId: { type: "NIT", value: "902091972-5" } },
+  legalEntity: {
+    name: "GLEMO S.A.S.",
+    city: "Medellín",
+    taxId: { type: "NIT", value: "902091972-5" },
+  },
   identityDocumentTypes: ["CC", "CE", "NIT", "PP", "TI", "PPT"],
   dataProtection: { law: "Ley 1581 de 2012", authority: "SIC" },
   providers: {

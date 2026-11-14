@@ -1,21 +1,26 @@
 import { createHash } from "node:crypto";
 import { defineEnv } from "@reranker/env";
+import { DEFAULT_LOCALE, type Locale } from "@reranker/i18n";
 import { AppError } from "@reranker/schema";
 import { captureServerEvent } from "@reranker/telemetry";
 import { createElement } from "react";
 import { render } from "react-email";
 import { Resend } from "resend";
-import { SignInCodeEmail, signInCodeCopy } from "./emails/sign-in-code";
+import { type RequestedFrom, SignInCodeEmail, signInCodeCopy } from "./emails/sign-in-code";
 import { authEnv } from "./env";
 
 const FROM = "Reranker <codigos@mail.reranker.co>";
 
 const sendEnv = authEnv.pick({ RESEND_API_KEY: true });
 
+export type SignInCodeData = { otp: string; locale?: Locale; requestedFrom?: RequestedFrom };
+
 const templates = {
   "sign-in-code": {
-    subject: ({ otp }: { otp: string }) => signInCodeCopy.subject(otp),
-    element: ({ otp }: { otp: string }) => createElement(SignInCodeEmail, { otp }),
+    subject: ({ otp, locale = DEFAULT_LOCALE }: SignInCodeData) =>
+      signInCodeCopy[locale].subject(otp),
+    element: ({ otp, locale = DEFAULT_LOCALE, requestedFrom }: SignInCodeData) =>
+      createElement(SignInCodeEmail, { otp, locale, requestedFrom }),
   },
 };
 
@@ -39,7 +44,7 @@ export function idempotencyKey(template: AuthEmailTemplate, to: string, otp: str
 export async function sendAuthEmail(
   template: "sign-in-code",
   to: string,
-  data: { otp: string },
+  data: SignInCodeData,
 ): Promise<{ id: string }> {
   const { subject, element } = templates[template];
   const node = element(data);

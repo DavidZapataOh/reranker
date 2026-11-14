@@ -10,7 +10,10 @@ import {
 
 export default function Base() {
   return (
-    <EmailLayout preview="Tu reporte está listo">
+    <EmailLayout
+      preview="Tu reporte está listo"
+      footer={<EmailFooter legal="GLEMO S.A.S." unsubscribeUrl="https://reranker.co/baja/x" />}
+    >
       <EmailHeading>Tu reporte está listo</EmailHeading>
       <EmailText>Esto es lo que respondió ChatGPT cuando le preguntamos por tu negocio.</EmailText>
       <EmailBubble
@@ -23,7 +26,6 @@ export default function Base() {
         verifyUrl="https://reranker.co/verificar/8F2K"
       />
       <EmailButton href="https://reranker.co/reporte/abc">Ver reporte</EmailButton>
-      <EmailFooter legalName="GLEMO S.A.S." unsubscribeUrl="https://reranker.co/baja/x" />
     </EmailLayout>
   );
 }

@@ -35,6 +35,15 @@ const nextConfig: NextConfig = {
       },
     ]);
   },
+  // Mail clients keep requesting email assets for years, so those files never change under a URL.
+  async headers() {
+    return [
+      {
+        source: "/email/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+    ];
+  },
   // PostHog reverse proxy: events go through reranker.co/ingest so ad blockers don't drop them.
   skipTrailingSlashRedirect: true,
   async rewrites() {
