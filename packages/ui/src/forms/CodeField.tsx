@@ -3,13 +3,8 @@
 import type { ChangeEvent, ClipboardEvent } from "react";
 import { useId, useRef, useState } from "react";
 import { cx } from "../cx.ts";
+import { CODE_LENGTH, sanitizeCode } from "./code.ts";
 import { FieldError } from "./FieldError.tsx";
-
-const LENGTH = 6;
-
-export function sanitizeCode(raw: string): string {
-  return raw.replace(/\D/g, "").slice(0, LENGTH);
-}
 
 export function CodeField({
   name,
@@ -34,7 +29,7 @@ export function CodeField({
     // The DOM value is written first so a form submitted below already carries the clean code.
     input.value = next;
     setCode(next);
-    if (next.length < LENGTH) {
+    if (next.length < CODE_LENGTH) {
       delivered.current = null;
       return;
     }
@@ -61,7 +56,7 @@ export function CodeField({
       </label>
       <div className={cx("relative mt-2 w-full max-w-[328px]", disabled && "opacity-60")}>
         <div aria-hidden="true" className="flex gap-2">
-          {Array.from({ length: LENGTH }, (_, i) => (
+          {Array.from({ length: CODE_LENGTH }, (_, i) => (
             <span
               // biome-ignore lint/suspicious/noArrayIndexKey: the cells are positional and never reorder
               key={i}
@@ -82,7 +77,7 @@ export function CodeField({
           inputMode="numeric"
           autoComplete="one-time-code"
           pattern="[0-9]{6}"
-          maxLength={LENGTH}
+          maxLength={CODE_LENGTH}
           enterKeyHint="go"
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? errorId : undefined}

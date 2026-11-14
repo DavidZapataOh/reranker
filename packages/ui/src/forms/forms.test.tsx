@@ -1,7 +1,8 @@
 import { renderToStaticMarkup as html } from "react-dom/server";
 import { expect, test } from "vitest";
 import { Checkbox } from "./Checkbox.tsx";
-import { CodeField, sanitizeCode } from "./CodeField.tsx";
+import { CodeField } from "./CodeField.tsx";
+import { sanitizeCode } from "./code.ts";
 import { FieldError } from "./FieldError.tsx";
 import { SearchField } from "./SearchField.tsx";
 import { TextField } from "./TextField.tsx";
@@ -78,4 +79,26 @@ test("TextField keeps a caller aria-describedby next to its own ids", () => {
   const ids = /aria-describedby="([^"]+)"/.exec(t)?.[1]?.split(" ") ?? [];
   expect(ids).toHaveLength(2);
   expect(ids).toContain("extra");
+});
+
+test("Checkbox forwards native input attributes without losing its own a11y wiring", () => {
+  const h = html(
+    <Checkbox
+      name="terms"
+      defaultChecked
+      value="yes"
+      disabled
+      aria-describedby="note"
+      error="Falta"
+    >
+      Acepto
+    </Checkbox>,
+  );
+  expect(h).toContain('type="checkbox"');
+  expect(h).toContain('name="terms"');
+  expect(h).toContain('checked=""');
+  expect(h).toContain('value="yes"');
+  expect(h).toContain('disabled=""');
+  expect(h).toContain('aria-invalid="true"');
+  expect(h).toMatch(/aria-describedby="note [^"]+"/);
 });

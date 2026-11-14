@@ -29,6 +29,10 @@ test("the evidence stamp never reaches a client module, the help sheet included"
   expect(await clientModulesReachableFrom(["evidence/EvidenceStamp"])).toEqual([]);
 });
 
+test("the code helpers can be imported from server code", async () => {
+  expect(await clientModulesReachableFrom(["forms/code"])).toEqual([]);
+});
+
 test("the client islands are exactly the known list", async () => {
   expect(await clientModules()).toEqual(["forms/CodeField.tsx", "help/Sheet.tsx", "help/Term.tsx"]);
 });

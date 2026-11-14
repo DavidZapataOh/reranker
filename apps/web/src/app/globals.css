@@ -3,6 +3,11 @@
 @source "../../../../packages/ui/src";
 /* Token names are data, not class names; scanning them would emit unused utilities. */
 @source not "../../../../packages/ui/src/tokens.ts";
+/* Tests and email templates never ship in the landing; their class strings would emit unused utilities. */
+@source not "../../../../packages/ui/src/**/*.test.tsx";
+@source not "../../../../packages/ui/test";
+@source not "../../../../packages/ui/src/email";
+@source not "../**/*.test.tsx";
 
 /* Entrances: visible by default; the script marks as pending only those below the fold */
 .reveal.pending {

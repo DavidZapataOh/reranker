@@ -2,7 +2,7 @@ import { renderToStaticMarkup as html } from "react-dom/server";
 import { expect, test } from "vitest";
 import { Term } from "./Term.tsx";
 
-test("Term renders a button with the term and a screen-reader suffix, never hover-only", () => {
+test("Term renders a button with the term and a descriptive aria-label, never hover-only", () => {
   const h = html(
     <Term term="preliminar" definition="Es preliminar porque…">
       preliminar

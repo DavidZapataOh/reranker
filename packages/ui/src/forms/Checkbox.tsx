@@ -1,30 +1,36 @@
-import type { ReactNode } from "react";
+import type { InputHTMLAttributes, ReactNode } from "react";
 import { useId } from "react";
+import { cx } from "../cx.ts";
 import { FieldError } from "./FieldError.tsx";
 
 export function Checkbox({
   name,
-  required,
   children,
   error,
-}: {
+  className,
+  "aria-describedby": callerDescribedBy,
+  ...rest
+}: Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "children"> & {
   name: string;
-  required?: boolean;
   children: ReactNode;
   error?: string;
 }) {
   const errorId = useId();
+  const describedBy = [callerDescribedBy, error ? errorId : null].filter(Boolean).join(" ");
   return (
     <div>
       <label className="flex min-h-12 cursor-pointer items-center gap-3 py-2 text-[16px]">
         <span className="relative inline-grid size-6 shrink-0 place-items-center">
           <input
+            {...rest}
             type="checkbox"
             name={name}
-            required={required}
             aria-invalid={error ? true : undefined}
-            aria-describedby={error ? errorId : undefined}
-            className="peer size-6 cursor-pointer appearance-none rounded-lg bg-surface ring-1 ring-ink/55 checked:bg-green checked:ring-green"
+            aria-describedby={describedBy || undefined}
+            className={cx(
+              "peer size-6 cursor-pointer appearance-none rounded-lg bg-surface ring-1 ring-ink/55 checked:bg-green checked:ring-green",
+              className,
+            )}
           />
           <svg
             aria-hidden="true"
