@@ -59,14 +59,14 @@ export function CodeField({
       <label htmlFor={id} className="block text-[15px] font-semibold">
         {label}
       </label>
-      <div className={cx("relative mt-2 w-fit", disabled && "opacity-60")}>
+      <div className={cx("relative mt-2 w-full max-w-[328px]", disabled && "opacity-60")}>
         <div aria-hidden="true" className="flex gap-2">
           {Array.from({ length: LENGTH }, (_, i) => (
             <span
               // biome-ignore lint/suspicious/noArrayIndexKey: the cells are positional and never reorder
               key={i}
               className={cx(
-                "grid h-14 w-12 place-items-center rounded-xl bg-surface font-mono text-[24px] font-semibold text-ink ring-1 ring-ink/55",
+                "grid h-14 min-w-0 flex-1 place-items-center rounded-xl bg-surface font-mono text-[24px] font-semibold text-ink ring-1 ring-ink/55",
                 error && "ring-2 ring-ink",
               )}
             >

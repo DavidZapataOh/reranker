@@ -1,5 +1,5 @@
 import { afterEach, expect, test, vi } from "vitest";
-import { userEvent } from "vitest/browser";
+import { page, userEvent } from "vitest/browser";
 import { cleanup, render } from "vitest-browser-react";
 import { expectNoAxeViolations } from "../../test/axe.ts";
 import { CodeField } from "./CodeField.tsx";
@@ -125,6 +125,19 @@ test("the cells are 48 by 56 and the input has no axe violations in every state"
     expect([rect?.width, rect?.height]).toEqual([48, 56]);
     await cleanup();
   }
+});
+
+test("the six cells fit a 320 px screen with its 16 px gutters", async () => {
+  await page.viewport(320, 640);
+  const { container } = await render(
+    <div className="px-4">
+      <CodeField name="code" label="Código" />
+    </div>,
+  );
+  const cells = [...container.querySelectorAll('[aria-hidden="true"] > *')];
+  expect(cells.at(-1)?.getBoundingClientRect().right).toBeLessThanOrEqual(304);
+  expect(field(container).getBoundingClientRect().right).toBeLessThanOrEqual(304);
+  expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(320);
 });
 
 test("the input is a target of at least 48 px and shows focus on its cells", async () => {
