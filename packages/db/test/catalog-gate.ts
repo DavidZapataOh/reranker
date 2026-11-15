@@ -49,7 +49,7 @@ const TABLES = `
 // app_tenant has the privileges of (reranker_app, app_tenant itself, or a role they inherit).
 const POLICIES = `
   select c.relname as table, p.polpermissive as permissive, p.polcmd as cmd,
-    array(select case when r = 0 then 'public' else pg_get_userbyid(r) end from unnest(p.polroles) r) as roles,
+    array(select case when r = 0 then 'public' else pg_get_userbyid(r)::text end from unnest(p.polroles) r) as roles,
     exists (
       select 1 from unnest(p.polroles) r
       where r = 0 or exists (
@@ -61,8 +61,9 @@ const POLICIES = `
   from pg_policy p join pg_class c on c.oid = p.polrelid join pg_namespace n on n.oid = c.relnamespace
   where n.nspname = 'app'`;
 
+// Cast to text: node-postgres parses text[] but returns name[] as a raw string.
 const COLUMNS = (rel: string, keys: string, count: string) => `
-  array(select coalesce(a.attname, '<expression>')
+  array(select coalesce(a.attname::text, '<expression>')
     from unnest(${keys}::int2[]) with ordinality key_column(attnum, ord)
     left join pg_attribute a on a.attrelid = ${rel} and a.attnum = key_column.attnum
     where key_column.ord <= ${count} order by key_column.ord)`;
