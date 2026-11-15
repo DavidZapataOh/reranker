@@ -63,9 +63,9 @@ const POLICIES = `
 
 const COLUMNS = (rel: string, keys: string, count: string) => `
   array(select coalesce(a.attname, '<expression>')
-    from unnest(${keys}::int2[]) with ordinality k(attnum, ord)
-    left join pg_attribute a on a.attrelid = ${rel} and a.attnum = k.attnum
-    where k.ord <= ${count} order by k.ord)`;
+    from unnest(${keys}::int2[]) with ordinality key_column(attnum, ord)
+    left join pg_attribute a on a.attrelid = ${rel} and a.attnum = key_column.attnum
+    where key_column.ord <= ${count} order by key_column.ord)`;
 
 const INDEXES = `
   select c.relname as table, ${COLUMNS("i.indrelid", "i.indkey", "i.indnkeyatts")} as columns,
