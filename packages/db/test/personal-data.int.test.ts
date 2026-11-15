@@ -11,8 +11,9 @@ const concurrentFolder = fileURLToPath(new URL("../migrations/concurrent", impor
 
 const SUSPICIOUS = /(^|_)(email|phone|name|ip_address|user_agent|document_number)($|_)/;
 
-// Suspicious by name but not personal: teams are named by the product, not by people.
-const NOT_PERSONAL = new Set(["auth.teams.name"]);
+// Suspicious by name but not personal: teams are named by the product, not by people, and
+// email_verified is a flag, not an address.
+const NOT_PERSONAL = new Set(["auth.teams.name", "auth.users.email_verified"]);
 
 const inventoried = new Set(
   PERSONAL_DATA.map((entry) => `${entry.schema}.${entry.table}.${entry.column}`),
