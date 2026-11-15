@@ -12,7 +12,7 @@ import type { RequestedFrom } from "./emails/sign-in-code";
 import { authEnv } from "./env";
 import { MEMBER_FIELDS, ORG_FIELDS } from "./organizations";
 import { ac, roles } from "./permissions";
-import { AUTH_RATE_RULES } from "./rate-limits";
+import { AUTH_RATE_RULES, EMAIL_SENDING_PATHS } from "./rate-limits";
 import { sendAuthEmail } from "./send-auth-email";
 import { SIGN_IN_CODE_TTL_SECONDS } from "./sign-in-code";
 
@@ -46,17 +46,27 @@ async function savedLocale(
     const found = await ctx.context.internalAdapter.findUserByEmail(email);
     return (found?.user as { locale?: string | null } | undefined)?.locale ?? undefined;
   } catch (error) {
-    ctx.context.logger.warn("Sign-in code sent without the saved locale", error);
+    // Drizzle errors carry the query parameters, the address among them, so only the class is logged.
+    ctx.context.logger.warn(
+      "Sign-in code sent without the saved locale",
+      error instanceof Error ? error.name : "unknown",
+    );
     return undefined;
   }
 }
 
 // Runs in the background through runInBackgroundOrAwait, whose handler logs a rejection; a
 // failed Resend call also emits auth_email_failed inside sendAuthEmail.
+// The plugin calls this for password reset, email change and core email verification too. V0 has
+// none of them (new users come out of /sign-in/email-otp already verified), so only sign-in sends.
 async function sendSignInCode(
-  { email, otp }: { email: string; otp: string },
+  { email, otp, type }: { email: string; otp: string; type: string },
   ctx?: GenericEndpointContext,
 ): Promise<void> {
+  if (type !== "sign-in") {
+    ctx?.context.logger.warn("Email code not sent for an unsupported flow", type);
+    return;
+  }
   const locale = resolveEmailLocale({
     userLocale: ctx ? await savedLocale(ctx, email) : undefined,
     acceptLanguage: ctx?.headers?.get("accept-language"),
@@ -95,7 +105,10 @@ export const auth = betterAuth({
       requireEmailVerification: true,
     },
   },
-  account: { accountLinking: { enabled: true, trustedProviders: ["google"] } },
+  account: {
+    accountLinking: { enabled: true, trustedProviders: ["google"] },
+    encryptOAuthTokens: true,
+  },
   session: {
     expiresIn: 60 * 60 * 24 * 30,
     updateAge: 60 * 60 * 24,
@@ -146,7 +159,7 @@ export const auth = betterAuth({
     captcha({
       provider: "cloudflare-turnstile",
       secretKey: env.TURNSTILE_SECRET_KEY,
-      endpoints: ["/email-otp/send-verification-otp"],
+      endpoints: EMAIL_SENDING_PATHS,
     }),
     nextCookies(),
   ],

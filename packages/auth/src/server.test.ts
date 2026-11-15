@@ -63,6 +63,10 @@ describe("auth configuration", () => {
     });
     expect(AUTH_RATE_RULES).toEqual({
       "/email-otp/send-verification-otp": { window: 600, max: 3 },
+      "/email-otp/request-password-reset": { window: 600, max: 3 },
+      "/forget-password/email-otp": { window: 600, max: 3 },
+      "/email-otp/request-email-change": { window: 600, max: 3 },
+      "/send-verification-email": { window: 600, max: 3 },
       "/sign-in/email-otp": { window: 60, max: 5 },
       "/sign-in/social": { window: 60, max: 10 },
       "/delete-user": { window: 3600, max: 3 },
@@ -102,11 +106,17 @@ describe("auth configuration", () => {
     });
   });
 
-  test("Turnstile guards the code request", () => {
+  test("Turnstile guards every path that can send an email", () => {
     expect(plugin("captcha").options).toMatchObject({
       provider: "cloudflare-turnstile",
       secretKey: "turnstile-secret",
-      endpoints: ["/email-otp/send-verification-otp"],
+      endpoints: [
+        "/email-otp/send-verification-otp",
+        "/email-otp/request-password-reset",
+        "/forget-password/email-otp",
+        "/email-otp/request-email-change",
+        "/send-verification-email",
+      ],
     });
   });
 
@@ -116,9 +126,9 @@ describe("auth configuration", () => {
       prompt: "select_account",
       requireEmailVerification: true,
     });
-    expect(auth.options.account?.accountLinking).toEqual({
-      enabled: true,
-      trustedProviders: ["google"],
+    expect(auth.options.account).toMatchObject({
+      accountLinking: { enabled: true, trustedProviders: ["google"] },
+      encryptOAuthTokens: true,
     });
   });
 
@@ -134,7 +144,11 @@ describe("auth configuration", () => {
 });
 
 type Sender = (
-  data: { email: string; otp: string; type: "sign-in" },
+  data: {
+    email: string;
+    otp: string;
+    type: "sign-in" | "email-verification" | "forget-password" | "change-email";
+  },
   ctx?: unknown,
 ) => Promise<void>;
 
@@ -203,15 +217,29 @@ describe("sending the sign-in code", () => {
 
   test("a failed user lookup still sends the code, and is logged", async () => {
     email.sendAuthEmail.mockResolvedValue({ id: "email-1" });
-    const failure = new Error("connection terminated");
+    // Drizzle puts the query parameters, the address among them, in its error message.
+    const failure = new TypeError("Failed query: select … params: ana@example.co");
     const { ctx, warn } = fakeContext({ lookup: () => Promise.reject(failure) });
     await send()(data, ctx);
     expect(email.sendAuthEmail).toHaveBeenCalledWith("sign-in-code", "ana@example.co", {
       otp: "482913",
       locale: "es-CO",
     });
-    expect(warn).toHaveBeenCalledWith(expect.any(String), failure);
+    expect(warn).toHaveBeenCalledWith(expect.any(String), "TypeError");
+    expect(JSON.stringify(warn.mock.calls)).not.toContain("ana@example.co");
   });
+
+  test.each(["email-verification", "forget-password", "change-email"] as const)(
+    "never sends a %s code: V0 signs in with codes only",
+    async (type) => {
+      const { ctx, warn, findUserByEmail } = fakeContext({});
+      await send()({ ...data, type }, ctx);
+      expect(email.sendAuthEmail).not.toHaveBeenCalled();
+      expect(findUserByEmail).not.toHaveBeenCalled();
+      expect(warn).toHaveBeenCalledWith(expect.any(String), type);
+      expect(JSON.stringify(warn.mock.calls)).not.toContain("ana@example.co");
+    },
+  );
 
   test("works without an endpoint context", async () => {
     email.sendAuthEmail.mockResolvedValue({ id: "email-1" });
