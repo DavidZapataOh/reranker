@@ -1,7 +1,7 @@
 import { endPools, withSystem } from "@reranker/db";
 import { alertDeliveries } from "@reranker/db/schema";
 import { and, gte, lt, sql } from "drizzle-orm";
-import { afterAll, beforeEach, expect, test } from "vitest";
+import { afterAll, beforeAll, beforeEach, expect, test } from "vitest";
 import { claimDelivery } from "./delivery";
 
 // A random day far in the future: the daily cap counts rows, and nothing else writes there.
@@ -37,15 +37,28 @@ async function countBetween(from: Date, to: Date): Promise<number> {
   return rows[0]?.n ?? 0;
 }
 
+// The parallel cases open one connection per claim; the default system pool of 3 would queue the
+// rest past its 2 s checkout timeout while the advisory lock serializes the claims.
+const PARALLEL = 20;
+const savedPoolMax = process.env.DB_POOL_MAX;
+
+beforeAll(() => {
+  process.env.DB_POOL_MAX = String(PARALLEL);
+});
 beforeEach(cleanup);
 afterAll(async () => {
-  await cleanup();
-  await endPools();
+  try {
+    await cleanup();
+    await endPools();
+  } finally {
+    if (savedPoolMax === undefined) delete process.env.DB_POOL_MAX;
+    else process.env.DB_POOL_MAX = savedPoolMax;
+  }
 });
 
 test("20 parallel claims in the same hour insert one row", async () => {
   const results = await Promise.all(
-    Array.from({ length: 20 }, () => claimDelivery("jobs-spend-cap-reached", at("10:15"))),
+    Array.from({ length: PARALLEL }, () => claimDelivery("jobs-spend-cap-reached", at("10:15"))),
   );
   expect(results.filter(Boolean)).toHaveLength(1);
 });
@@ -68,7 +81,7 @@ test("the daily cap of 15 holds across kinds", async () => {
 
 test("the cap holds under parallel claims of different kinds", async () => {
   const results = await Promise.all(
-    Array.from({ length: 25 }, (_, i) => claimDelivery(`p${i}`, at("12:30"))),
+    Array.from({ length: PARALLEL }, (_, i) => claimDelivery(`p${i}`, at("12:30"))),
   );
   expect(results.filter(Boolean)).toHaveLength(15);
 });

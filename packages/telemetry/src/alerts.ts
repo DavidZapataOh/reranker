@@ -5,6 +5,7 @@ import { runAfter } from "./after";
 import { claimDelivery } from "./delivery";
 import { telemetryEnv } from "./env";
 import { captureServerEvent } from "./events";
+import { log } from "./logger";
 import { scrub } from "./scrub";
 
 export type OpsAlertSeverity = "info" | "warning" | "critical";
@@ -58,6 +59,10 @@ function resend(key: string): Resend {
   return client;
 }
 
+function reason(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
 function finalSeverity(kind: OpsAlertKind, payload: Record<string, unknown>): OpsAlertSeverity {
   const override = payload.severity;
   return override === "warning" || override === "critical" ? override : opsAlerts[kind].severity;
@@ -77,7 +82,7 @@ async function email(
   if (!env.OPS_ALERT_EMAIL || !env.RESEND_API_KEY) {
     if (!warnedUnconfigured) {
       warnedUnconfigured = true;
-      console.warn("ops.alert.email_unconfigured");
+      log.warn("ops.alert.email_unconfigured");
     }
     return;
   }
@@ -93,7 +98,7 @@ async function email(
     },
     { idempotencyKey: `ops-alert/${kind}/${bucket.toISOString()}` },
   );
-  if (error) console.error("ops.alert.email_failed", scrub({ kind, name: error.name }));
+  if (error) log.error("ops.alert.email_failed", { kind, name: error.name });
 }
 
 /**
@@ -108,7 +113,7 @@ export async function sendOpsAlert(
     const severity = finalSeverity(kind, payload);
     const env = appEnv();
     const safe = scrub(payload);
-    (severity === "critical" ? console.error : console.warn)("ops.alert", { kind, ...safe });
+    (severity === "critical" ? log.error : log.warn)("ops.alert", { kind, ...safe });
     captureServerEvent(
       { name: "ops_alert", props: { kind, severity, env } },
       { subject: { system: true } },
@@ -116,10 +121,10 @@ export async function sendOpsAlert(
     if (severity !== "critical" || env !== "production") return;
     runAfter(() =>
       email(kind, severity, safe).catch((error) =>
-        console.error("ops.alert.email_failed", scrub(error)),
+        log.error("ops.alert.email_failed", { kind, error: reason(error) }),
       ),
     );
   } catch (error) {
-    console.error(scrub(error));
+    log.error("ops.alert.failed", { kind, error: reason(error) });
   }
 }

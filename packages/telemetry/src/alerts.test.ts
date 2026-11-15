@@ -6,6 +6,8 @@ const mocks = vi.hoisted(() => ({
   construct: vi.fn(),
   capture: vi.fn(),
   claim: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
   tasks: [] as (() => Promise<void>)[],
 }));
 
@@ -18,6 +20,7 @@ vi.mock("resend", () => ({
   },
 }));
 vi.mock("./events", () => ({ captureServerEvent: mocks.capture }));
+vi.mock("./logger", () => ({ log: { warn: mocks.warn, error: mocks.error } }));
 vi.mock("./delivery", () => ({ claimDelivery: mocks.claim }));
 vi.mock("./after", () => ({
   runAfter: (fn: () => Promise<void>) => {
@@ -37,8 +40,6 @@ beforeEach(() => {
   vi.stubEnv("RESEND_API_KEY", "re_test");
   mocks.claim.mockResolvedValue(true);
   mocks.send.mockResolvedValue({ data: { id: "email-1" }, error: null });
-  vi.spyOn(console, "warn").mockImplementation(() => {});
-  vi.spyOn(console, "error").mockImplementation(() => {});
 });
 
 afterEach(() => {
@@ -59,7 +60,7 @@ describe("sendOpsAlert", () => {
       },
       { subject: { system: true } },
     );
-    expect(console.warn).toHaveBeenCalledWith(
+    expect(mocks.warn).toHaveBeenCalledWith(
       "ops.alert",
       expect.objectContaining({ kind: "free-tier-quota", source: "neon", pct: 82 }),
     );
@@ -69,7 +70,7 @@ describe("sendOpsAlert", () => {
     vi.stubEnv("APP_ENV", "development");
     resetAppEnv();
     await sendOpsAlert("uptime-down", {});
-    expect(console.error).toHaveBeenCalledWith(
+    expect(mocks.error).toHaveBeenCalledWith(
       "ops.alert",
       expect.objectContaining({ kind: "uptime-down" }),
     );
@@ -145,9 +146,9 @@ describe("sendOpsAlert", () => {
     await flush();
     expect(mocks.claim).not.toHaveBeenCalled();
     expect(mocks.send).not.toHaveBeenCalled();
-    const unset = vi
-      .mocked(console.warn)
-      .mock.calls.filter(([message]) => message === "ops.alert.email_unconfigured");
+    const unset = mocks.warn.mock.calls.filter(
+      ([message]) => message === "ops.alert.email_unconfigured",
+    );
     expect(unset).toHaveLength(1);
   });
 
@@ -158,7 +159,10 @@ describe("sendOpsAlert", () => {
     });
     await sendOpsAlert("uptime-down", {});
     await expect(flush()).resolves.toBeUndefined();
-    expect(console.error).toHaveBeenCalledWith("ops.alert.email_failed", expect.anything());
+    expect(mocks.error).toHaveBeenCalledWith("ops.alert.email_failed", {
+      kind: "uptime-down",
+      name: "rate_limit_exceeded",
+    });
   });
 
   test("a failing claim never throws", async () => {
@@ -166,7 +170,7 @@ describe("sendOpsAlert", () => {
     await sendOpsAlert("uptime-down", {});
     await expect(flush()).resolves.toBeUndefined();
     expect(mocks.send).not.toHaveBeenCalled();
-    expect(console.error).toHaveBeenCalled();
+    expect(mocks.error).toHaveBeenCalled();
   });
 
   test("a failing capture never throws", async () => {
@@ -179,7 +183,7 @@ describe("sendOpsAlert", () => {
   test("redacts personal data from the payload in logs and email", async () => {
     await sendOpsAlert("uptime-down", { note: "contact ana@example.co", email: "ana@example.co" });
     await flush();
-    const logged = JSON.stringify(vi.mocked(console.error).mock.calls);
+    const logged = JSON.stringify(mocks.error.mock.calls);
     const sent = JSON.stringify(mocks.send.mock.calls);
     expect(logged).not.toContain("ana@example.co");
     expect(sent).not.toContain("ana@example.co");
