@@ -179,6 +179,9 @@ catalogs:
     '@lhci/cli':
       specifier: 0.16.0
       version: 0.16.0
+    '@neon/sdk':
+      specifier: 7.13.0
+      version: 7.13.0
     '@neondatabase/api-client':
       specifier: ^2.7.3
       version: 2.7.3
@@ -563,6 +566,9 @@ importers:
         specifier: 'catalog:'
         version: 8.23.1
     devDependencies:
+      '@neon/sdk':
+        specifier: 'catalog:'
+        version: 7.13.0
       '@neondatabase/api-client':
         specifier: 'catalog:'
         version: 2.7.3(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1)
@@ -1988,6 +1994,10 @@ packages:
   '@mswjs/interceptors@0.45.11':
     resolution: {integrity: sha512-+ISPERIRIHhSVnFQRGCP9jDJXxn0/z2+pWWbXUym6JUfpUCRW2Pvro4P9RBKGYUKTKAULszKurKMTQIsaJUIgQ==}
     engines: {node: '>=22'}
+
+  '@neon/sdk@7.13.0':
+    resolution: {integrity: sha512-jJji3C+yJAOSMdK2trYnxhg2Zqh8J4FjUgiBK8B4pjVnhTfygIDjGw2JjxEbhO7hc9KfN/iMwhkO0WwmfH4H+Q==}
+    engines: {node: '>=20.19.0'}
 
   '@neondatabase/api-client@2.7.3':
     resolution: {integrity: sha512-hqJmcd8qeCNjcsSNlz77peGIwB9SLj8NC6kK6AjPRyb4bUvXB+TCmffx5893/0oRHYjqpua0nBLa5ql8z6acmw==}
@@ -6396,6 +6406,8 @@ snapshots:
       rettime: 0.11.12
     transitivePeerDependencies:
       - supports-color
+
+  '@neon/sdk@7.13.0': {}
 
   '@neondatabase/api-client@2.7.3(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1)':
     dependencies:
