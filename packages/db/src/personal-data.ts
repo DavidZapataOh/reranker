@@ -9,6 +9,7 @@ export type PersonalDataEntry = {
 };
 
 const ACCOUNT_LIFETIME = "Lifetime of the account";
+const ORGANIZATION_LIFETIME = "Lifetime of the organization";
 
 /** Every column that holds personal data (Ley 1581), with why it is kept and how it is erased. */
 export const PERSONAL_DATA = [
@@ -42,6 +43,15 @@ export const PERSONAL_DATA = [
   {
     schema: "auth",
     table: "users",
+    column: "locale",
+    category: "identifier",
+    purpose: "Language of the account's emails and screens",
+    retention: ACCOUNT_LIFETIME,
+    erasure: "cascade",
+  },
+  {
+    schema: "auth",
+    table: "users",
     column: "data_policy_version",
     category: "content",
     purpose: "Proof of the data authorization the user accepted",
@@ -63,7 +73,34 @@ export const PERSONAL_DATA = [
     column: "name",
     category: "identifier",
     purpose: "Business name, which can be the owner's own name",
-    retention: "Lifetime of the organization",
+    retention: ORGANIZATION_LIFETIME,
+    erasure: "cascade",
+  },
+  {
+    schema: "auth",
+    table: "organizations",
+    column: "slug",
+    category: "identifier",
+    purpose: "Address of the organization's pages, derived from its name",
+    retention: ORGANIZATION_LIFETIME,
+    erasure: "cascade",
+  },
+  {
+    schema: "auth",
+    table: "organizations",
+    column: "logo",
+    category: "identifier",
+    purpose: "Business logo, which can show the owner",
+    retention: ORGANIZATION_LIFETIME,
+    erasure: "cascade",
+  },
+  {
+    schema: "auth",
+    table: "organizations",
+    column: "metadata",
+    category: "content",
+    purpose: "Free-form organization details",
+    retention: ORGANIZATION_LIFETIME,
     erasure: "cascade",
   },
   {
@@ -83,6 +120,15 @@ export const PERSONAL_DATA = [
     purpose: "Device shown in the open sessions list",
     retention: "30 days after the session expires",
     erasure: "job",
+  },
+  {
+    schema: "auth",
+    table: "accounts",
+    column: "account_id",
+    category: "identifier",
+    purpose: "Google account id that links sign-ins to the user",
+    retention: ACCOUNT_LIFETIME,
+    erasure: "cascade",
   },
   {
     schema: "auth",
