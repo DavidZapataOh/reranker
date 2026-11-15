@@ -29,6 +29,13 @@
       "when": 1794704219844,
       "tag": "0003_auth_custom_indexes",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794709414432,
+      "tag": "0004_alert_deliveries",
+      "breakpoints": true
     }
   ]
 }

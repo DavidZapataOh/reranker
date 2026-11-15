@@ -9,14 +9,18 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --project unit --coverage --passWithNoTests"
+    "test": "vitest run --project unit --coverage --passWithNoTests",
+    "test:integration": "vitest run --project integration --passWithNoTests"
   },
   "dependencies": {
     "@reranker/analytics": "workspace:*",
+    "@reranker/db": "workspace:*",
     "@reranker/env": "workspace:*",
     "@reranker/schema": "workspace:*",
+    "drizzle-orm": "catalog:",
     "next": "catalog:",
-    "posthog-node": "catalog:"
+    "posthog-node": "catalog:",
+    "resend": "catalog:"
   },
   "devDependencies": {
     "@reranker/typescript-config": "workspace:*",
