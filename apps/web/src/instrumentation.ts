@@ -12,4 +12,6 @@ export async function register() {
     globalThis.__envError = error instanceof Error ? error : new Error(String(error));
     throw error;
   }
+  const { registerLogger } = await import("@reranker/telemetry");
+  registerLogger();
 }
