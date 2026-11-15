@@ -451,15 +451,22 @@ describe("pooler", () => {
     } finally {
       await pool.end();
     }
-    const viaTenancy = await Promise.all(
-      range(200).map(async (i) => {
-        const tenant = pick(i);
-        const seen = await withTenant(tenant, (tx) =>
-          tx.select({ tenantId: probe.isolationProbe.tenantId }).from(probe.isolationProbe),
-        );
-        return { tenant, seen: seen.map((row) => row.tenantId) };
+    // As many workers as pooled connections: every connection is reused by both tenants, and
+    // none of the 200 waits past the pool's 2 s checkout timeout in the queue.
+    const viaTenancy: { tenant: TenantId; seen: string[] }[] = [];
+    let next = 0;
+    await Promise.all(
+      range(Number(process.env.DB_POOL_MAX)).map(async () => {
+        while (next < 200) {
+          const tenant = pick(next++);
+          const seen = await withTenant(tenant, (tx) =>
+            tx.select({ tenantId: probe.isolationProbe.tenantId }).from(probe.isolationProbe),
+          );
+          viaTenancy.push({ tenant, seen: seen.map((row) => row.tenantId) });
+        }
       }),
     );
+    expect(viaTenancy).toHaveLength(200);
     expect(
       viaTenancy.filter((r) => r.seen.length !== 3 || r.seen.some((t) => t !== r.tenant)),
     ).toHaveLength(0);
