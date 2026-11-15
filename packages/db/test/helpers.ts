@@ -23,6 +23,20 @@ export async function createScratchDatabase(prefix: string): Promise<ScratchData
   return {
     name,
     url: url.toString(),
-    drop: () => withAdmin(`drop database if exists ${name} with (force)`),
+    drop: () => dropWithRetry(() => withAdmin(`drop database if exists ${name} with (force)`)),
   };
+}
+
+// A compute that has just woken up connects to every database as a superuser for its own
+// maintenance, and FORCE cannot terminate those sessions; they end within seconds.
+async function dropWithRetry(drop: () => Promise<void>, attempts = 15): Promise<void> {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return await drop();
+    } catch (error) {
+      const code = (error as { code?: unknown }).code;
+      if (attempt >= attempts || (code !== "42501" && code !== "55006")) throw error;
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+    }
+  }
 }
