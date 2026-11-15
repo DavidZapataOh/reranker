@@ -1,4 +1,5 @@
 import type { CaptureChannel, CaptureProvider, EngineId } from "@reranker/schema";
+import { log } from "@reranker/telemetry";
 import { definitionsEtag, warmUp } from "./client";
 import { CaptureChannelDisabledError, FlagsNotReadyError } from "./errors";
 import { evaluate, on } from "./evaluate";
@@ -17,7 +18,7 @@ export type SwitchSnapshot = {
 };
 
 function blocked(input: CaptureInput, flags: FlagKey[]): CaptureChannelDisabledError {
-  console.warn("capture.blocked", { ...input, flags });
+  log.warn("capture.blocked", { ...input, flags });
   return new CaptureChannelDisabledError(flags);
 }
 

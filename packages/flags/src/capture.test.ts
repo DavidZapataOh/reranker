@@ -11,8 +11,8 @@ import { setAppEnv, setupFlagsTests } from "../test/lifecycle";
 import { getFlagsClient } from "./client";
 import type { FlagKey } from "./flag-keys.gen";
 
-const mocks = vi.hoisted(() => ({ alert: vi.fn(async () => {}) }));
-vi.mock("@reranker/telemetry", () => ({ sendOpsAlert: mocks.alert }));
+const mocks = vi.hoisted(() => ({ alert: vi.fn(async () => {}), warn: vi.fn() }));
+vi.mock("@reranker/telemetry", () => ({ sendOpsAlert: mocks.alert, log: { warn: mocks.warn } }));
 
 const { assertCaptureAllowed, captureSwitchSnapshot } = await import("./capture");
 const { CaptureChannelDisabledError, FlagsNotReadyError } = await import("./errors");
@@ -123,14 +123,13 @@ describe("assertCaptureAllowed", () => {
   });
 
   test("disabled capture logs WARN capture.blocked with provider, channel, engine", async () => {
-    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     serveDefinitions(withOff(ALL_ON, ["capture-provider-dataforseo"]));
     await assertCaptureAllowed({
       channel: "ui-vendor",
       provider: "dataforseo",
       engine: "gemini",
     }).catch(() => {});
-    expect(warn).toHaveBeenCalledWith("capture.blocked", {
+    expect(mocks.warn).toHaveBeenCalledWith("capture.blocked", {
       channel: "ui-vendor",
       provider: "dataforseo",
       engine: "gemini",
