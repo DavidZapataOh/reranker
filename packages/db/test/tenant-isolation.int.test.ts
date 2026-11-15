@@ -188,103 +188,107 @@ describe("catalog gate", () => {
   });
 
   const runtimeRole = `gate_runtime_${randomBytes(4).toString("hex")}`;
-  test.each([
+  // [table, rule it breaks, DDL creating it]
+  const gateCases: [string, string, string][] = (
     [
-      "create table app.gate_no_policy (id uuid primary key, tenant_id uuid not null)",
-      "gate_no_policy",
-      "tenant_policy",
-    ],
-    [
-      `${tenantTableSql("gate_simple_fk")} alter table app.gate_simple_fk add column other_id uuid references app.isolation_probe(id);`,
-      "gate_simple_fk",
-      "composite_fk",
-    ],
-    [tenantTableSql("gate_no_fixture"), "gate_no_fixture", "fixture"],
-    [
-      tenantTableSql("gate_no_index", { unique: "id, tenant_id", index: false }),
-      "gate_no_index",
-      "tenant_index",
-    ],
-    [
-      "create table public_panel.gate_tenant (id uuid primary key, tenant_id uuid)",
-      "gate_tenant",
-      "shared_no_tenant",
-    ],
-    [
-      "create table ops.gate_grant (id uuid primary key); grant select on ops.gate_grant to app_tenant",
-      "gate_grant",
-      "ops_no_tenant_privilege",
-    ],
-    [
-      "create table auth.gate_auth (id uuid primary key); grant select on auth.gate_auth to app_tenant",
-      "gate_auth",
-      "auth_no_tenant_privilege",
-    ],
-    [
-      "create table public_panel.gate_write (id uuid primary key); grant insert on public_panel.gate_write to app_tenant",
-      "gate_write",
-      "shared_select_only",
-    ],
-    [
-      `${tenantTableSql("gate_public")} grant select on app.gate_public to public;`,
-      "gate_public",
-      "no_public_grants",
-    ],
-    [
-      tenantTableSql("gate_open", { tenantPolicy: "using (true) with check (true)" }),
-      "gate_open",
-      "tenant_policy",
-    ],
-    [
-      tenantTableSql("gate_or_true", {
-        tenantPolicy: `using (${TENANT_EXPRESSION} or true) with check (${TENANT_EXPRESSION})`,
-      }),
-      "gate_or_true",
-      "tenant_policy",
-    ],
-    [
-      tenantTableSql("gate_open_check", {
-        tenantPolicy: `using (${TENANT_EXPRESSION}) with check (true)`,
-      }),
-      "gate_open_check",
-      "tenant_policy",
-    ],
-    [
-      `${tenantTableSql("gate_extra")} create policy gate_extra_public on app.gate_extra for select to public using (true);`,
-      "gate_extra",
-      "tenant_policy",
-    ],
-    [
-      tenantTableSql("gate_system_to_tenant").replace(
-        "for all to app_system",
-        "for all to app_tenant",
-      ),
-      "gate_system_to_tenant",
-      "tenant_policy",
-    ],
-    [tenantTableSql("gate_no_rls", { rls: false }), "gate_no_rls", "rls_enabled"],
-    [
-      tenantTableSql("gate_nullable", {
-        tenantColumn: "tenant_id uuid references auth.organizations(id) on delete cascade",
-      }),
-      "gate_nullable",
-      "tenant_id_not_null",
-    ],
-    [tenantTableSql("gate_no_unique", { unique: "" }), "gate_no_unique", "tenant_id_id_unique"],
-    [
-      tenantTableSql("gate_no_cascade", {
-        tenantColumn: "tenant_id uuid not null references auth.organizations(id)",
-      }),
-      "gate_no_cascade",
-      "tenant_fk_cascade",
-    ],
-    ["create table app.gate_no_system (id uuid primary key)", "gate_no_system", "system_policy"],
-    [
-      `${tenantTableSql("gate_owned")} create role ${runtimeRole} nologin in role app_tenant; grant ${runtimeRole} to current_user; grant create on schema app to ${runtimeRole}; alter table app.gate_owned owner to ${runtimeRole};`,
-      "gate_owned",
-      "runtime_not_owner",
-    ],
-  ])("gate rejects %s naming the table", async (ddl, table, rule) => {
+      [
+        "create table app.gate_no_policy (id uuid primary key, tenant_id uuid not null)",
+        "gate_no_policy",
+        "tenant_policy",
+      ],
+      [
+        `${tenantTableSql("gate_simple_fk")} alter table app.gate_simple_fk add column other_id uuid references app.isolation_probe(id);`,
+        "gate_simple_fk",
+        "composite_fk",
+      ],
+      [tenantTableSql("gate_no_fixture"), "gate_no_fixture", "fixture"],
+      [
+        tenantTableSql("gate_no_index", { unique: "id, tenant_id", index: false }),
+        "gate_no_index",
+        "tenant_index",
+      ],
+      [
+        "create table public_panel.gate_tenant (id uuid primary key, tenant_id uuid)",
+        "gate_tenant",
+        "shared_no_tenant",
+      ],
+      [
+        "create table ops.gate_grant (id uuid primary key); grant select on ops.gate_grant to app_tenant",
+        "gate_grant",
+        "ops_no_tenant_privilege",
+      ],
+      [
+        "create table auth.gate_auth (id uuid primary key); grant select on auth.gate_auth to app_tenant",
+        "gate_auth",
+        "auth_no_tenant_privilege",
+      ],
+      [
+        "create table public_panel.gate_write (id uuid primary key); grant insert on public_panel.gate_write to app_tenant",
+        "gate_write",
+        "shared_select_only",
+      ],
+      [
+        `${tenantTableSql("gate_public")} grant select on app.gate_public to public;`,
+        "gate_public",
+        "no_public_grants",
+      ],
+      [
+        tenantTableSql("gate_open", { tenantPolicy: "using (true) with check (true)" }),
+        "gate_open",
+        "tenant_policy",
+      ],
+      [
+        tenantTableSql("gate_or_true", {
+          tenantPolicy: `using (${TENANT_EXPRESSION} or true) with check (${TENANT_EXPRESSION})`,
+        }),
+        "gate_or_true",
+        "tenant_policy",
+      ],
+      [
+        tenantTableSql("gate_open_check", {
+          tenantPolicy: `using (${TENANT_EXPRESSION}) with check (true)`,
+        }),
+        "gate_open_check",
+        "tenant_policy",
+      ],
+      [
+        `${tenantTableSql("gate_extra")} create policy gate_extra_public on app.gate_extra for select to public using (true);`,
+        "gate_extra",
+        "tenant_policy",
+      ],
+      [
+        tenantTableSql("gate_system_to_tenant").replace(
+          "for all to app_system",
+          "for all to app_tenant",
+        ),
+        "gate_system_to_tenant",
+        "tenant_policy",
+      ],
+      [tenantTableSql("gate_no_rls", { rls: false }), "gate_no_rls", "rls_enabled"],
+      [
+        tenantTableSql("gate_nullable", {
+          tenantColumn: "tenant_id uuid references auth.organizations(id) on delete cascade",
+        }),
+        "gate_nullable",
+        "tenant_id_not_null",
+      ],
+      [tenantTableSql("gate_no_unique", { unique: "" }), "gate_no_unique", "tenant_id_id_unique"],
+      [
+        tenantTableSql("gate_no_cascade", {
+          tenantColumn: "tenant_id uuid not null references auth.organizations(id)",
+        }),
+        "gate_no_cascade",
+        "tenant_fk_cascade",
+      ],
+      ["create table app.gate_no_system (id uuid primary key)", "gate_no_system", "system_policy"],
+      [
+        `${tenantTableSql("gate_owned")} create role ${runtimeRole} nologin in role app_tenant; grant ${runtimeRole} to current_user; grant create on schema app to ${runtimeRole}; alter table app.gate_owned owner to ${runtimeRole};`,
+        "gate_owned",
+        "runtime_not_owner",
+      ],
+    ] as [string, string, string][]
+  ).map(([ddl, table, rule]) => [table, rule, ddl]);
+  test.each(gateCases)("gate rejects %s for %s, naming the table", async (table, rule, ddl) => {
     await inRolledBackTx(owner, async (c) => {
       await c.query(ddl);
       expect(await runCatalogGate(c, fixtureTables)).toContainEqual(

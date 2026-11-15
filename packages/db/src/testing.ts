@@ -24,9 +24,8 @@ export function defineTenantFixture<T extends PgTable>(
   if (getTableConfig(table).schema !== "app") {
     throw new Error(`${name}: tenant fixtures are only for tables in the app schema`);
   }
-  const columns: Record<string, PgColumn> = getTableColumns(table);
-  const id = Object.values(columns).find((column) => column.name === "id");
-  const tenantId = Object.values(columns).find((column) => column.name === "tenant_id");
+  // The keys tenantTable gives them; with snake_case casing the column names may still be camelCase.
+  const { id, tenantId }: Record<string, PgColumn | undefined> = getTableColumns(table);
   if (!id || !tenantId) throw new Error(`${name}: a tenant table needs id and tenant_id columns`);
   return { name, table, id, tenantId, build: async (tenant, tx) => build(tenant, tx) };
 }
