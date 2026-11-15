@@ -1,7 +1,11 @@
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 
+const telemetry = vi.hoisted(() => ({ registerLogger: vi.fn() }));
+vi.mock("@reranker/telemetry", () => telemetry);
+
 beforeEach(() => {
   vi.resetModules();
+  telemetry.registerLogger.mockClear();
   globalThis.__envError = undefined;
 });
 
@@ -19,6 +23,7 @@ test("validates on the node runtime and passes with a complete environment", asy
   vi.stubEnv("APP_ENV", "development");
   await expect(register()).resolves.toBeUndefined();
   expect(globalThis.__envError).toBeUndefined();
+  expect(telemetry.registerLogger).toHaveBeenCalledOnce();
 });
 
 test("keeps the error for the health check and rethrows it", async () => {
@@ -27,10 +32,12 @@ test("keeps the error for the health check and rethrows it", async () => {
   vi.stubEnv("NEXT_PUBLIC_POSTHOG_KEY", "");
   await expect(register()).rejects.toThrowError(/NEXT_PUBLIC_POSTHOG_KEY \(missing\)/);
   expect(globalThis.__envError?.message).toMatch(/NEXT_PUBLIC_POSTHOG_KEY \(missing\)/);
+  expect(telemetry.registerLogger).not.toHaveBeenCalled();
 });
 
 test("does nothing outside the node runtime", async () => {
   vi.stubEnv("NEXT_RUNTIME", "edge");
   vi.stubEnv("APP_ENV", "");
   await expect(register()).resolves.toBeUndefined();
+  expect(telemetry.registerLogger).not.toHaveBeenCalled();
 });
