@@ -376,6 +376,9 @@ importers:
       '@reranker/env':
         specifier: workspace:*
         version: link:../../packages/env
+      '@reranker/flags':
+        specifier: workspace:*
+        version: link:../../packages/flags
       '@reranker/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
@@ -621,6 +624,46 @@ importers:
       '@vitest/coverage-v8':
         specifier: 'catalog:'
         version: 5.1.0(@vitest/browser@5.1.0)(vitest@5.1.0)
+      tsx:
+        specifier: 'catalog:'
+        version: 4.23.15
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vitest:
+        specifier: 'catalog:'
+        version: 5.1.0(@opentelemetry/api@1.10.0)(@types/node@26.6.6)(@vitest/browser-playwright@5.1.0)(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(msw@3.0.3(@types/node@26.6.6)(supports-color@8.1.1)(typescript@7.0.2)(vite@8.3.5(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)))(vite@8.3.5(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  packages/flags:
+    dependencies:
+      '@reranker/env':
+        specifier: workspace:*
+        version: link:../env
+      '@reranker/schema':
+        specifier: workspace:*
+        version: link:../schema
+      '@reranker/telemetry':
+        specifier: workspace:*
+        version: link:../telemetry
+      posthog-node:
+        specifier: 'catalog:'
+        version: 5.63.0(@opentelemetry/api@1.10.0)(rxjs@7.8.2)
+    devDependencies:
+      '@reranker/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@reranker/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 26.6.6
+      '@vitest/coverage-v8':
+        specifier: 'catalog:'
+        version: 5.1.0(@vitest/browser@5.1.0)(vitest@5.1.0)
+      msw:
+        specifier: 'catalog:'
+        version: 3.0.3(@types/node@26.6.6)(supports-color@8.1.1)(typescript@7.0.2)(vite@8.3.5(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
       tsx:
         specifier: 'catalog:'
         version: 4.23.15
