@@ -21,11 +21,14 @@ const ROWS_PER_TENANT = 1000;
 const WARMUP = 50;
 const ITERATIONS = 1000;
 const OVERHEAD_BUDGET_MS = 5;
+// A plain lookup this fast means the client sits next to the compute, where the absolute budget applies.
+const COLOCATED_PK_P95_MS = 2;
 const IDLE_TIMEOUT_MS = 120_000;
 const REPORT = fileURLToPath(new URL("../../bench-report.json", import.meta.url));
 
 type Report = {
   overheadP95Ms: number;
+  rttBudgetMs: number;
   pkP95Ms: number;
   tenantP95Ms: number;
   explain: { nodeType: string; indexName: string | null; hasInitPlan: boolean };
@@ -238,6 +241,9 @@ async function main(): Promise<string[]> {
 
     const report: Report = {
       overheadP95Ms: round(tenantP95Ms - pkP95Ms),
+      // withTenant adds three round trips (BEGIN, set_config, COMMIT); beyond them it may spend
+      // at most the absolute budget, so the gate holds from a runner far from the database.
+      rttBudgetMs: round(3 * pkP95Ms + OVERHEAD_BUDGET_MS),
       pkP95Ms: round(pkP95Ms),
       tenantP95Ms: round(tenantP95Ms),
       explain,
@@ -247,9 +253,14 @@ async function main(): Promise<string[]> {
     console.log(JSON.stringify(report));
 
     const failures: string[] = [];
-    if (!(report.overheadP95Ms <= OVERHEAD_BUDGET_MS)) {
+    if (!(report.overheadP95Ms <= report.rttBudgetMs)) {
       failures.push(
-        `withTenant overhead p95 ${report.overheadP95Ms} ms > ${OVERHEAD_BUDGET_MS} ms`,
+        `withTenant overhead p95 ${report.overheadP95Ms} ms > ${report.rttBudgetMs} ms (3 round trips + ${OVERHEAD_BUDGET_MS} ms)`,
+      );
+    }
+    if (report.pkP95Ms <= COLOCATED_PK_P95_MS && !(report.overheadP95Ms <= OVERHEAD_BUDGET_MS)) {
+      failures.push(
+        `withTenant overhead p95 ${report.overheadP95Ms} ms > ${OVERHEAD_BUDGET_MS} ms next to the database`,
       );
     }
     if (explain.nodeType !== "Index Scan" || explain.indexName !== "isolation_probe_pkey") {
