@@ -39,7 +39,7 @@ const rows: Row[] = [
   ["POSTHOG_HOST", "config", ALL, false, "08", true],
   ["NEXT_PUBLIC_GA_ID", "config", PROD, false, "landing", true],
   ["NEXT_PUBLIC_CLARITY_ID", "config", PROD, false, "landing", true],
-  ["POSTHOG_FEATURE_FLAGS_KEY", "secret", ALL, false, "08"],
+  ["POSTHOG_FEATURE_FLAGS_KEY", "secret", ALL, false, "08", true],
   ["POSTHOG_API_KEY", "secret", PROD, false, "08"],
   ["POSTHOG_PROJECT_ID", "config", PROD, false, "08", true],
   ["POSTHOG_READONLY_API_KEY", "secret", NONE, true, "08"],

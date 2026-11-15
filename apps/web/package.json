@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@reranker/env": "workspace:*",
+    "@reranker/flags": "workspace:*",
     "@reranker/i18n": "workspace:*",
     "@reranker/schema": "workspace:*",
     "@reranker/telemetry": "workspace:*",

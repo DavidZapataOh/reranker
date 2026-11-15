@@ -1,0 +1,31 @@
+{
+  "name": "@reranker/flags",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./env": "./src/env.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --coverage --passWithNoTests",
+    "flags:gen": "tsx scripts/gen.ts"
+  },
+  "dependencies": {
+    "@reranker/env": "workspace:*",
+    "@reranker/schema": "workspace:*",
+    "@reranker/telemetry": "workspace:*",
+    "posthog-node": "catalog:"
+  },
+  "devDependencies": {
+    "@reranker/testing": "workspace:*",
+    "@reranker/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "msw": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

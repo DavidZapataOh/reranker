@@ -36,6 +36,15 @@ describe("web environment", () => {
     }
   });
 
+  test("the flags key is optional everywhere and must be a project secret key when set", () => {
+    for (const APP_ENV of ["development", "preview", "production"]) {
+      expect(defineEnv(fragments, { APP_ENV, ...key }).POSTHOG_FEATURE_FLAGS_KEY).toBeUndefined();
+    }
+    expect(() =>
+      defineEnv(fragments, { APP_ENV: "production", ...key, POSTHOG_FEATURE_FLAGS_KEY: "phx_1" }),
+    ).toThrowError(/POSTHOG_FEATURE_FLAGS_KEY \(invalid\)/);
+  });
+
   test("GA and Clarity ids are accepted only in production", () => {
     const ids = { NEXT_PUBLIC_GA_ID: "G-TEST", NEXT_PUBLIC_CLARITY_ID: "abc123" };
     expect(defineEnv(fragments, { APP_ENV: "production", ...key, ...ids })).toMatchObject(ids);
