@@ -1,4 +1,5 @@
 export { runAfter } from "./after";
+export { type OpsAlertKind, type OpsAlertSeverity, opsAlerts, sendOpsAlert } from "./alerts";
 export { telemetryEnv } from "./env";
 export { captureServerEvent } from "./events";
 export { getPostHogServer } from "./posthog-server";

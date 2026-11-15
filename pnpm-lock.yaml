@@ -689,18 +689,27 @@ importers:
       '@reranker/analytics':
         specifier: workspace:*
         version: link:../analytics
+      '@reranker/db':
+        specifier: workspace:*
+        version: link:../db
       '@reranker/env':
         specifier: workspace:*
         version: link:../env
       '@reranker/schema':
         specifier: workspace:*
         version: link:../schema
+      drizzle-orm:
+        specifier: 'catalog:'
+        version: 0.45.4(@opentelemetry/api@1.10.0)(@types/pg@8.23.1)(kysely@0.29.8)(pg@8.23.1)
       next:
         specifier: 'catalog:'
         version: 16.4.5(@babel/core@7.29.13(supports-color@8.1.1))(@opentelemetry/api@1.10.0)(@playwright/test@1.64.1)(@types/node@26.6.6)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       posthog-node:
         specifier: 'catalog:'
         version: 5.63.0(@opentelemetry/api@1.10.0)(rxjs@7.8.2)
+      resend:
+        specifier: 'catalog:'
+        version: 6.37.0(@react-email/render@2.3.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0))
     devDependencies:
       '@reranker/typescript-config':
         specifier: workspace:*
