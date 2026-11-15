@@ -18,7 +18,7 @@
     "db:check": "tsx scripts/check.ts",
     "db:provision-roles": "tsx scripts/provision-roles.ts",
     "db:usage": "tsx scripts/neon-usage.ts",
-    "db:bench": "tsx scripts/bench.ts",
+    "db:bench": "tsx test/bench/tenant-tx.bench.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --project unit --coverage --passWithNoTests",
     "test:integration": "vitest run --project integration --passWithNoTests"
@@ -30,6 +30,7 @@
     "pg": "catalog:"
   },
   "devDependencies": {
+    "@neon/sdk": "catalog:",
     "@neondatabase/api-client": "catalog:",
     "@reranker/testing": "workspace:*",
     "@reranker/typescript-config": "workspace:*",

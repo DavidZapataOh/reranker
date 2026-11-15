@@ -109,7 +109,7 @@ jobs:
           if-no-files-found: ignore
   integration:
     runs-on: ubuntu-24.04
-    timeout-minutes: 12
+    timeout-minutes: 15
     permissions: { contents: read, id-token: write }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -141,9 +141,11 @@ jobs:
             FILTER=""
           fi
           # shellcheck disable=SC2086
-          count=$(pnpm exec turbo run test:integration $FILTER --dry=json \
-            | jq '[.tasks[] | select(.task == "test:integration" and .command != "<NONEXISTENT>")] | length')
+          tasks=$(pnpm exec turbo run test:integration $FILTER --dry=json \
+            | jq '[.tasks[] | select(.task == "test:integration" and .command != "<NONEXISTENT>")]')
+          count=$(jq length <<< "$tasks")
           echo "count=$count" >> "$GITHUB_OUTPUT"
+          echo "db=$(jq 'any(.package == "@reranker/db")' <<< "$tasks")" >> "$GITHUB_OUTPUT"
           echo "filter=$FILTER" >> "$GITHUB_OUTPUT"
           if [ "$count" = 0 ]; then echo "No integration tests affected"; fi
       - if: steps.affected.outputs.count != '0'
@@ -164,6 +166,23 @@ jobs:
           TURBO_SCM_BASE: ${{ steps.scope.outputs.base }}
           TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
         run: pnpm exec turbo run test:integration $FILTER
+      # Budgets fail the job. Suspending the compute is safe: the branch belongs to this run alone,
+      # and the script refuses any branch whose name does not start with ci/.
+      - if: steps.affected.outputs.db == 'true'
+        id: bench
+        name: Benchmark tenant transactions and the cold start
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_NONPROD_API_KEY }}
+          NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
+          NEON_BRANCH_ID: ${{ steps.branch.outputs.branch-id }}
+        run: pnpm --filter @reranker/db db:bench
+      - if: always() && steps.bench.outcome != 'skipped'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: bench-report
+          path: packages/db/bench-report.json
+          retention-days: 3
+          if-no-files-found: warn
       - if: steps.affected.outputs.count != '0' && github.event_name == 'pull_request'
         id: migrations
         name: Detect migration changes

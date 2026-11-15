@@ -18,3 +18,4 @@ apps/web/.lighthouseci/
 .vitest/
 __screenshots__/
 .claude/worktrees/
+packages/db/bench-report.json

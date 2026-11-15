@@ -4,21 +4,19 @@ import { fileURLToPath } from "node:url";
 import { AppError } from "@reranker/schema";
 import { createTenant } from "@reranker/testing/factories";
 import { getTestDatabaseUrl } from "@reranker/testing/neon";
-import { generateDrizzleJson, generateMigration } from "drizzle-kit/api";
 import { eq, inArray, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { uuid } from "drizzle-orm/pg-core";
 import pg from "pg";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import config from "../drizzle.config";
 import { runMigrations } from "../scripts/migrate";
 import { endPools } from "../src/client";
-import * as schema from "../src/schema";
 import { appSchema, organizations } from "../src/schema";
 import { type TenantId, withSystem, withTenant, withTenants } from "../src/tenancy";
 import { defineTenantFixture, type TenantFixture } from "../src/testing";
 import { runCatalogGate } from "./catalog-gate";
 import { createScratchDatabase, type ScratchDatabase } from "./helpers";
+import { onDatabase, probeStatements } from "./probe/database";
 import * as probe from "./probe/isolation-probe.schema";
 
 // One fixture per table in `app`; the catalog gate fails for a table without one.
@@ -40,20 +38,6 @@ const saved = {
   DATABASE_URL_SYSTEM: process.env.DATABASE_URL_SYSTEM,
   DB_POOL_MAX: process.env.DB_POOL_MAX,
 };
-
-function onDatabase(url: string, name: string): string {
-  const target = new URL(url);
-  target.pathname = `/${name}`;
-  return target.toString();
-}
-
-// The DDL drizzle-kit would emit for the probe tables on top of the production schema.
-async function probeStatements(): Promise<string[]> {
-  const filter = [config.schemaFilter ?? []].flat();
-  const base = generateDrizzleJson({ ...schema }, undefined, filter, "snake_case");
-  const withProbe = generateDrizzleJson({ ...schema, ...probe }, base.id, filter, "snake_case");
-  return generateMigration(base, withProbe);
-}
 
 beforeAll(async () => {
   const pooled = { app: getTestDatabaseUrl("app"), system: getTestDatabaseUrl("system") };
