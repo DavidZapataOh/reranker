@@ -18,7 +18,7 @@ export type SwitchSnapshot = {
 };
 
 function blocked(input: CaptureInput, flags: FlagKey[]): CaptureChannelDisabledError {
-  log.warn("capture.blocked", { ...input, flags });
+  log.warn("capture.blocked", { ...input, flags: flags.join(",") });
   return new CaptureChannelDisabledError(flags);
 }
 

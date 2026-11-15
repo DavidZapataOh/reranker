@@ -133,7 +133,7 @@ describe("assertCaptureAllowed", () => {
       channel: "ui-vendor",
       provider: "dataforseo",
       engine: "gemini",
-      flags: ["capture-provider-dataforseo"],
+      flags: "capture-provider-dataforseo",
     });
   });
 });
