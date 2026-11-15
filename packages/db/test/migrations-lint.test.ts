@@ -1,10 +1,10 @@
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { expect, test } from "vitest";
-import { listMigrationFiles } from "../scripts/check";
+import { configuredExclusions, listMigrationFiles, squawkRuns } from "../scripts/check";
 
 const packageDir = fileURLToPath(new URL("..", import.meta.url));
 
@@ -48,7 +48,11 @@ test("all committed migrations pass db:check and are actually linted", () => {
   const result = run("pnpm", ["db:check"]);
   expect(result.status, result.stdout + result.stderr).toBe(0);
   const expected = listMigrationFiles(join(packageDir, "migrations"));
-  expect(result.stdout).toMatch(new RegExp(`in ${expected.length} files?\\b`));
+  const linted = [...result.stdout.matchAll(/Found 0 issues in (\d+) files?\b/g)].reduce(
+    (sum, [, count]) => sum + Number(count),
+    0,
+  );
+  expect(linted).toBe(expected.length);
 }, 60_000);
 
 test("db:check refuses to pass when no migration file is found", () => {
@@ -58,4 +62,24 @@ test("db:check refuses to pass when no migration file is found", () => {
   } finally {
     rmSync(empty, { recursive: true });
   }
+});
+
+test("only the Better Auth migrations skip the column-type rules its CLI decides", () => {
+  const runs = squawkRuns(
+    ["migrations/0001_core.sql", "migrations/0002_auth.sql", "migrations/concurrent/0001_x.sql"],
+    ["require-timeout-settings"],
+  );
+  expect(runs).toEqual([
+    ["migrations/0001_core.sql", "migrations/concurrent/0001_x.sql"],
+    [
+      "--exclude",
+      "require-timeout-settings,prefer-timestamp-tz,prefer-bigint-over-int",
+      "migrations/0002_auth.sql",
+    ],
+  ]);
+});
+
+test("the Better Auth run keeps the configured exclusions", () => {
+  const toml = readFileSync(join(packageDir, ".squawk.toml"), "utf8");
+  expect(configuredExclusions(toml)).toEqual(["require-timeout-settings", "prefer-robust-stmts"]);
 });

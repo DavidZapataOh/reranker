@@ -15,6 +15,20 @@
       "when": 1794545244627,
       "tag": "0001_core",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794704211909,
+      "tag": "0002_auth",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794704219844,
+      "tag": "0003_auth_custom_indexes",
+      "breakpoints": true
     }
   ]
 }

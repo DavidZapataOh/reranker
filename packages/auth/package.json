@@ -13,10 +13,14 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run --project unit --coverage --passWithNoTests",
-    "test:contract": "vitest run --project contract --passWithNoTests"
+    "test:contract": "vitest run --project contract --passWithNoTests",
+    "auth:generate": "auth generate --config src/server.ts --output ../db/src/schema/auth.ts --yes && node scripts/annotate-self-references.ts ../db/src/schema/auth.ts",
+    "auth:check": "auth check schema --config src/server.ts",
+    "test:integration": "vitest run --project integration --passWithNoTests"
   },
   "dependencies": {
     "@better-auth/drizzle-adapter": "catalog:",
+    "@reranker/db": "workspace:*",
     "@reranker/env": "workspace:*",
     "@reranker/i18n": "workspace:*",
     "@reranker/schema": "workspace:*",
@@ -32,9 +36,12 @@
     "@reranker/testing": "workspace:*",
     "@reranker/typescript-config": "workspace:*",
     "@types/node": "catalog:",
+    "@types/pg": "catalog:",
     "@types/react": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "auth": "catalog:",
+    "drizzle-orm": "catalog:",
+    "pg": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }
