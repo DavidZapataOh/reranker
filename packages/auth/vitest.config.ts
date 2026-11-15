@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
 
 // The shared config only picks up .ts tests, and the email tests render JSX.
@@ -16,8 +17,19 @@ export default defineConfig({
         test: {
           name: "unit",
           environment: "node",
-          include: ["src/**/*.test.{ts,tsx}"],
+          include: ["{src,scripts}/**/*.test.{ts,tsx}"],
           exclude: ["**/*.{int,contract}.test.*"],
+        },
+      },
+      {
+        test: {
+          name: "integration",
+          include: ["src/**/*.int.test.ts"],
+          pool: "forks",
+          globalSetup: [
+            fileURLToPath(new URL("../testing/src/vitest/integration-setup.ts", import.meta.url)),
+          ],
+          testTimeout: 30_000,
         },
       },
       {
