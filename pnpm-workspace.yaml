@@ -101,6 +101,9 @@ trustPolicyExclude:
   - "@vercel/oidc@4.0.9"
   - "@vercel/cli-config@0.4.0"
   - "@vercel/cli-exec@1.0.1"
+  # SWC publishes through trusted publishing without provenance; the workflow compiler pins
+  # @swc/core 1.15.3 and its plugin needs that exact runtime. Linux x64 covers WSL, CI and Vercel.
+  - "@swc/core-linux-x64-gnu@1.15.3"
 blockExoticSubdeps: true
 strictDepBuilds: true
 allowBuilds:
