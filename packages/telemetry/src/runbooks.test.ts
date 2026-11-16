@@ -1,5 +1,8 @@
 import { describe, expect, test } from "vitest";
 import { checkRunbooks, type RunbookDocs, type RunbookRegistry } from "./runbooks";
+// Imported up front: the module graph (Resend, OpenTelemetry, zod) can take longer to load on a
+// busy runner than a test may run.
+import { repoProblems } from "./runbooks-repo";
 
 const SECTIONS = ["Trigger", "Impact", "Diagnose", "Mitigate", "Verify", "Record"];
 
@@ -152,8 +155,7 @@ describe("checkRunbooks", () => {
 });
 
 describe("the repository", () => {
-  test("its runbooks pass the check", async () => {
-    const { repoProblems } = await import("./runbooks-repo");
+  test("its runbooks pass the check", () => {
     expect(repoProblems()).toEqual([]);
   });
 });
