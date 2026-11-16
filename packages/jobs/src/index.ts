@@ -1,5 +1,15 @@
 export { type JobsConfig, jobsEnv, loadJobsConfig } from "./config";
 export { nextResetAt, spendDay } from "./day";
+export {
+  InvalidInputError,
+  NON_RETRYABLE,
+  NotFoundError,
+  ProviderRejectedError,
+  ProviderUnavailableError,
+  QuotaExceededError,
+  RateLimitedError,
+  SpendCapExceededError,
+} from "./errors";
 export type {
   JobPriority,
   PaidProvider,
@@ -8,3 +18,4 @@ export type {
   SpendPurpose,
   SpendRegionPool,
 } from "./providers";
+export { toStepError } from "./step-errors";
