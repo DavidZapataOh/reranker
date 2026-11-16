@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@posthog/next": "catalog:",
+    "@reranker/db": "workspace:*",
     "@reranker/env": "workspace:*",
     "@reranker/flags": "workspace:*",
     "@reranker/i18n": "workspace:*",

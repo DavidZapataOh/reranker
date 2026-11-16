@@ -24,6 +24,8 @@ function fromPg(err: pg.DatabaseError, ctx: Ctx): AppError {
     case "42501":
       event("db_rls_violation", code, ctx);
       return new AppError("internal", { cause });
+    // 53000: Neon suspended the compute because the plan ran out of compute hours.
+    case "53000":
     case "53300":
     case "57P03":
       event("db_compute_unavailable", code, ctx);
