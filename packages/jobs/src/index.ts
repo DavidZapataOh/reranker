@@ -18,3 +18,4 @@ export type {
   SpendPurpose,
   SpendRegionPool,
 } from "./providers";
+export { type StartOnceResult, startOnce } from "./start-once";
