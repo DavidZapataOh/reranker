@@ -1,3 +1,4 @@
+export { type BreakerState, breakerCheck, breakerRecord } from "./breaker";
 export { type JobsConfig, jobsEnv, loadJobsConfig } from "./config";
 export { nextResetAt, spendDay } from "./day";
 export {
