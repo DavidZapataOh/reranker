@@ -1,6 +1,7 @@
 [
   {
     "id": "exceptions-in-production",
+    "runbook": "exceptions-in-production.md",
     "insight": {
       "short_id": "Q1Prz3Se",
       "name": "Excepciones en producción",
@@ -16,6 +17,7 @@
   },
   {
     "id": "ops-alerts",
+    "runbook": "exceptions-in-production.md",
     "insight": {
       "name": "Alertas de operación",
       "query": "SELECT count() AS alertas FROM events WHERE event = 'ops_alert' AND properties.app_env = 'production' AND {filters}",
@@ -30,6 +32,7 @@
   },
   {
     "id": "lcp-p75",
+    "runbook": "exceptions-in-production.md",
     "insight": {
       "name": "LCP p75 en producción",
       "query": "SELECT quantile(0.75)(toFloat(properties.$web_vitals_LCP_value)) AS lcp_p75 FROM events WHERE event = '$web_vitals' AND properties.app_env = 'production' AND {filters}",
