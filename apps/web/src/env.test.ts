@@ -61,6 +61,13 @@ describe("web environment", () => {
     }
   });
 
+  test("the cron secret is optional and too short a value is rejected", () => {
+    expect(defineEnv(fragments, { APP_ENV: "preview", ...key }).CRON_SECRET).toBeUndefined();
+    expect(() =>
+      defineEnv(fragments, { APP_ENV: "preview", ...key, CRON_SECRET: "short" }),
+    ).toThrowError(/CRON_SECRET \(invalid\)/);
+  });
+
   test("the PostHog region defaults to us and rejects unknown values", () => {
     expect(defineEnv(fragments, { APP_ENV: "preview", ...key })).toMatchObject({
       NEXT_PUBLIC_POSTHOG_REGION: "us",

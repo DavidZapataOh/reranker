@@ -1,4 +1,4 @@
-import { config, defineEnv, forbiddenIn, requiredIn } from "@reranker/env";
+import { config, defineEnv, forbiddenIn, requiredIn, secret } from "@reranker/env";
 import { flagsEnv } from "@reranker/flags/env";
 import { z } from "@reranker/schema";
 import { telemetryEnv } from "@reranker/telemetry/env";
@@ -25,7 +25,15 @@ export const webEnv = z.object({
   ),
 });
 
-export const fragments = [webEnv, telemetryEnv, flagsEnv] as const;
+// Optional until the scheduled jobs ship it; while unset, production keeps the ops routes closed.
+export const opsEnv = z.object({
+  CRON_SECRET: secret(
+    z.string().min(16).optional(),
+    "Bearer that Vercel Cron and operators send to protected routes",
+  ),
+});
+
+export const fragments = [webEnv, telemetryEnv, flagsEnv, opsEnv] as const;
 
 let validated: ReturnType<typeof compose> | undefined;
 

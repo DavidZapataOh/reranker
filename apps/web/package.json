@@ -16,6 +16,7 @@
     "test:smoke": "playwright test --grep @smoke"
   },
   "dependencies": {
+    "@posthog/next": "catalog:",
     "@reranker/env": "workspace:*",
     "@reranker/flags": "workspace:*",
     "@reranker/i18n": "workspace:*",
@@ -33,6 +34,7 @@
     "@axe-core/playwright": "catalog:",
     "@lhci/cli": "catalog:",
     "@playwright/test": "catalog:",
+    "@posthog/nextjs-config": "catalog:",
     "@reranker/testing": "workspace:*",
     "@reranker/typescript-config": "workspace:*",
     "@tailwindcss/turbopack": "catalog:",
@@ -41,6 +43,7 @@
     "@types/react-dom": "catalog:",
     "@vitest/browser-playwright": "catalog:",
     "@vitest/coverage-v8": "catalog:",
+    "posthog-node": "catalog:",
     "puppeteer-core": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",

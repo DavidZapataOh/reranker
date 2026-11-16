@@ -1,11 +1,18 @@
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 
-const telemetry = vi.hoisted(() => ({ registerLogger: vi.fn() }));
+const telemetry = vi.hoisted(() => ({ registerLogger: vi.fn(), getPostHogServer: vi.fn() }));
 vi.mock("@reranker/telemetry", () => telemetry);
+const posthogNext = vi.hoisted(() => ({
+  handler: vi.fn(),
+  createOnRequestError: vi.fn(),
+}));
+vi.mock("@posthog/next", () => posthogNext);
 
 beforeEach(() => {
   vi.resetModules();
   telemetry.registerLogger.mockClear();
+  telemetry.getPostHogServer.mockClear();
+  posthogNext.createOnRequestError.mockReset().mockReturnValue(posthogNext.handler);
   globalThis.__envError = undefined;
 });
 
@@ -24,6 +31,7 @@ test("validates on the node runtime and passes with a complete environment", asy
   await expect(register()).resolves.toBeUndefined();
   expect(globalThis.__envError).toBeUndefined();
   expect(telemetry.registerLogger).toHaveBeenCalledOnce();
+  expect(telemetry.getPostHogServer).toHaveBeenCalledOnce();
 });
 
 test("keeps the error for the health check and rethrows it", async () => {
@@ -33,6 +41,7 @@ test("keeps the error for the health check and rethrows it", async () => {
   await expect(register()).rejects.toThrowError(/NEXT_PUBLIC_POSTHOG_KEY \(missing\)/);
   expect(globalThis.__envError?.message).toMatch(/NEXT_PUBLIC_POSTHOG_KEY \(missing\)/);
   expect(telemetry.registerLogger).not.toHaveBeenCalled();
+  expect(telemetry.getPostHogServer).not.toHaveBeenCalled();
 });
 
 test("does nothing outside the node runtime", async () => {
@@ -40,4 +49,20 @@ test("does nothing outside the node runtime", async () => {
   vi.stubEnv("APP_ENV", "");
   await expect(register()).resolves.toBeUndefined();
   expect(telemetry.registerLogger).not.toHaveBeenCalled();
+});
+
+test("reports request errors to PostHog with the server token, scrubbed", async () => {
+  vi.stubEnv("POSTHOG_PROJECT_TOKEN", "phc_test");
+  vi.stubEnv("POSTHOG_HOST", "https://us.i.posthog.com");
+  const { onRequestError } = await import("./instrumentation");
+  expect(onRequestError).toBe(posthogNext.handler);
+  expect(posthogNext.createOnRequestError).toHaveBeenCalledWith(
+    expect.objectContaining({
+      apiKey: "phc_test",
+      host: "https://us.i.posthog.com",
+      disabled: false,
+      serverOptions: expect.objectContaining({ disableGeoip: true }),
+      beforeCapture: expect.any(Function),
+    }),
+  );
 });

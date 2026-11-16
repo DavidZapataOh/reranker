@@ -5,7 +5,8 @@
   "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
-    "./env": "./src/env.ts"
+    "./env": "./src/env.ts",
+    "./scrub": "./src/scrub.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
