@@ -77,6 +77,19 @@ function fieldDetail(strict: Translator, field: FieldError): string {
   return strict("validation.custom");
 }
 
+// The catalog's wait messages pick the largest unit that fits from these three values.
+export function retryAfterParams(seconds: number): {
+  seconds: number;
+  minutes: number;
+  hours: number;
+} {
+  return {
+    seconds,
+    minutes: Math.ceil(seconds / 60),
+    hours: seconds >= 3600 ? Math.ceil(seconds / 3600) : 0,
+  };
+}
+
 export function toProblem(
   error: unknown,
   ctx: { locale: Locale; instance?: string; requestId?: string },
@@ -87,11 +100,7 @@ export function toProblem(
   const definition: { status: number; retryAfterSeconds?: number } = ERRORS[code];
   const retryAfter = known?.retryAfterSeconds ?? definition.retryAfterSeconds;
   const params: Params = { ...known?.params };
-  if (retryAfter !== undefined) {
-    params.seconds = retryAfter;
-    params.minutes = Math.ceil(retryAfter / 60);
-    params.hours = retryAfter >= 3600 ? Math.ceil(retryAfter / 3600) : 0;
-  }
+  if (retryAfter !== undefined) Object.assign(params, retryAfterParams(retryAfter));
 
   const problem: ProblemDetails = {
     type: TYPE_BASE + code,

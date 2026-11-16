@@ -1,5 +1,6 @@
 import { appEnv } from "@reranker/env";
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
 import { getEnv } from "./src/env";
 import { withSourceMaps } from "./src/lib/source-maps";
 
@@ -73,5 +74,7 @@ const nextConfig: NextConfig = {
   },
 };
 
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
+
 // The outermost wrapper, as @posthog/nextjs-config requires, so its build hooks run.
-export default withSourceMaps(nextConfig);
+export default withSourceMaps(withNextIntl(nextConfig));

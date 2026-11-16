@@ -39,6 +39,7 @@ catalog:
   pg: ^8.23.1
   "@types/pg": ^8.23.1
   zod: 4.6.7
+  next-intl: 4.14.9
   use-intl: 4.14.9
   "@formatjs/intl-localematcher": 0.10.1
   negotiator: 1.1.0
@@ -103,4 +104,8 @@ allowBuilds:
   # The postinstall downloads the source-map CLI binary; the CLI fetches it on first run instead,
   # so only builds that upload source maps pay for it.
   "@posthog/cli": false
+  # next-intl's message extractor: the platform binaries ship as optional dependencies; the
+  # postinstall only verifies them (@swc/core) or builds from source on request (@parcel/watcher).
+  "@swc/core": false
+  "@parcel/watcher": false
 verifyDepsBeforeRun: error

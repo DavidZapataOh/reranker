@@ -4,6 +4,20 @@ import { describe, expect, test, vi } from "vitest";
 vi.stubEnv("APP_ENV", "development");
 const { default: nextConfig } = await import("../next.config");
 
+describe("next-intl", () => {
+  test("resolves its request config to src/i18n/request.ts", () => {
+    const alias = nextConfig.turbopack?.resolveAlias?.["next-intl/config"];
+    expect(alias).toBe("./src/i18n/request.ts");
+  });
+
+  test("keeps the app's own Turbopack rules", () => {
+    expect(nextConfig.turbopack?.rules?.["*.css"]).toEqual({
+      loaders: ["@tailwindcss/turbopack"],
+      as: "*.css",
+    });
+  });
+});
+
 describe("next config headers", () => {
   test("serves email assets as immutable", async () => {
     const rules = (await nextConfig.headers?.()) ?? [];

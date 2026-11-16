@@ -4,6 +4,8 @@ export const publicRoutes: PublicRoute[] = [
   { path: "/", name: "home", budgetKey: "landing", screen: "landing" },
   { path: "/terminos", name: "terms", budgetKey: "legal", screen: "terms" },
   { path: "/politica-de-datos", name: "data-policy", budgetKey: "legal", screen: "data-policy" },
+  // Same shell and scripts as the legal pages, with a shorter document.
+  { path: "/errores/rate_limited", name: "error", budgetKey: "legal", screen: "error" },
 ];
 
 const TARGETS = ["local", "preview", "production"] as const;

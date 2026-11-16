@@ -7,6 +7,7 @@ import {
   isAppError,
   PROBLEM_CONTENT_TYPE,
   ProblemDetails,
+  retryAfterParams,
   toProblem,
   z,
 } from "../../src/index";
@@ -28,6 +29,14 @@ test("rate_limited problem validates with Spanish title and retry_after", () => 
   expect(p.title).toBe(t("rate_limited.title"));
   expect(p.detail).toBe(t("rate_limited.detail", { seconds: 30, minutes: 1, hours: 0 }));
   expect(p.detail).toContain("30");
+});
+
+test("retryAfterParams says the wait in the largest unit that fits", () => {
+  expect(retryAfterParams(30)).toEqual({ seconds: 30, minutes: 1, hours: 0 });
+  expect(retryAfterParams(300)).toEqual({ seconds: 300, minutes: 5, hours: 0 });
+  expect(retryAfterParams(3600)).toEqual({ seconds: 3600, minutes: 60, hours: 1 });
+  expect(t("spend_cap_reached.detail", retryAfterParams(3600))).toContain("1 hora");
+  expect(t("rate_limited.detail", retryAfterParams(60))).toContain("60 segundos");
 });
 
 test("retryable codes always carry retry_after", () => {

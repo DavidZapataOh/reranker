@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { getLocale } from "next-intl/server";
 import { Analytics } from "@/components/Analytics";
 import { GoogleTag } from "@/components/GoogleTag";
 import { fontVariables } from "./fonts";
@@ -30,9 +31,11 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = { themeColor: "#FAF7F0" };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const locale = await getLocale();
   return (
-    <html lang="es" className={fontVariables}>
+    // Neutral Spanish: the same pages serve every Spanish-speaking country.
+    <html lang={new Intl.Locale(locale).language} className={fontVariables}>
       <body>
         <a
           href="#contenido"
