@@ -16,7 +16,9 @@ function ping(headers: Record<string, string> = {}) {
 }
 
 beforeEach(() => {
+  vi.stubEnv("APP_ENV", "preview");
   vi.stubEnv("CRON_SECRET", CRON_SECRET);
+  resetAppEnv();
   api.start.mockReset();
   api.start.mockResolvedValue({ runId: "wrun_test" });
 });
