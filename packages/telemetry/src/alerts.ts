@@ -29,6 +29,9 @@ export const opsAlerts = {
     source: "flags",
   },
   "free-tier-quota": { severity: "warning", runbook: "free-tier-quota.md", source: "digest" },
+  "db-rls-violation": { severity: "critical", runbook: "db-rls-violation.md", source: "db" },
+  "db-pool-exhausted": { severity: "warning", runbook: "db-pool-exhausted.md", source: "db" },
+  "neon-quota": { severity: "warning", runbook: "neon-quota.md", source: "digest" },
   "uptime-down": { severity: "critical", runbook: "uptime-down.md", source: "betterstack" },
   "heartbeat-missed": {
     severity: "critical",
@@ -60,6 +63,7 @@ export const externalAlerts = {
 export const procedures = [
   "rotate-secret.md",
   "neon-setup.md",
+  "db-rotate-password.md",
 ] as const satisfies readonly string[];
 
 const FROM = "Reranker alertas <alertas@reranker.co>";

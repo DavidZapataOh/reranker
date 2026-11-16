@@ -104,6 +104,20 @@ describe("sendOpsAlert", () => {
     expect(options.idempotencyKey).toMatch(/^ops-alert\/uptime-down\//);
   });
 
+  test("emails an RLS violation with its runbook and a quota alert only when raised to critical", async () => {
+    await sendOpsAlert("db-rls-violation", { pool: "app" });
+    await sendOpsAlert("db-pool-exhausted", { pool: "app" });
+    await sendOpsAlert("neon-quota", { pct: 82 });
+    await flush();
+    expect(mocks.send).toHaveBeenCalledOnce();
+    expect(mocks.send.mock.calls[0]?.[0].text).toContain("/docs/runbooks/db-rls-violation.md");
+
+    mocks.send.mockClear();
+    await sendOpsAlert("neon-quota", { pct: 96, severity: "critical" });
+    await flush();
+    expect(mocks.send.mock.calls[0]?.[0].subject).toBe("[critical] neon-quota");
+  });
+
   test("10 sends in the same hour deliver one email and ten events", async () => {
     mocks.claim.mockResolvedValueOnce(true).mockResolvedValue(false);
     for (let i = 0; i < 10; i++) await sendOpsAlert("uptime-down", {});
