@@ -1,3 +1,4 @@
+export { type BreakerState, breakerCheck, breakerRecord } from "./breaker";
 export { type JobsConfig, jobsEnv, loadJobsConfig } from "./config";
 export { nextResetAt, spendDay } from "./day";
 export {
@@ -10,6 +11,7 @@ export {
   RateLimitedError,
   SpendCapExceededError,
 } from "./errors";
+export { assertOpaqueKey } from "./keys";
 export type {
   JobPriority,
   PaidProvider,
@@ -18,3 +20,4 @@ export type {
   SpendPurpose,
   SpendRegionPool,
 } from "./providers";
+export { type BucketLimits, peekTokens, refundTokens, takeTokens } from "./rate";
