@@ -32,6 +32,12 @@ test("Headline is the section h2 with the display scale", () => {
   );
 });
 
+test("Headline can be a page's h1 with the same scale", () => {
+  expect(html(<Headline as="h1">t</Headline>)).toBe(
+    '<h1 class="font-display text-[clamp(2rem,3.4vw,3.05rem)] leading-[1.08] font-black tracking-[-0.02em] text-balance text-ink">t</h1>',
+  );
+});
+
 test("Lede is the paragraph under a headline", () => {
   expect(html(<Lede>l</Lede>)).toBe(
     '<p class="mt-4 max-w-[56ch] text-[clamp(1.05rem,1.2vw,1.15rem)] leading-relaxed text-ink/75">l</p>',

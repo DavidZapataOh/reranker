@@ -24,9 +24,11 @@ export {
   fromZodError,
   IdempotencyKeyHeader,
   isAppError,
+  isErrorCode,
   PROBLEM_CONTENT_TYPE,
   ProblemDetails,
   type ProblemRoot,
+  retryAfterParams,
   toActionResult,
   toProblem,
 } from "./errors";

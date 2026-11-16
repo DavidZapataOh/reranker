@@ -5,7 +5,8 @@
   "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
-    "./countries": "./src/countries/index.ts"
+    "./countries": "./src/countries/index.ts",
+    "./messages/*.json": "./messages/*.json"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

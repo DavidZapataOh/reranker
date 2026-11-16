@@ -26,6 +26,7 @@
     "@reranker/ui": "workspace:*",
     "lucide-react": "1.68.0",
     "next": "catalog:",
+    "next-intl": "catalog:",
     "posthog-js": "1.446.0",
     "react": "catalog:",
     "react-dom": "catalog:",
