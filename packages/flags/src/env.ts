@@ -8,7 +8,8 @@ export const flagsEnv = z.object({
   POSTHOG_FEATURE_FLAGS_KEY: requiredIn(
     ["production"],
     secret(
-      z.string().startsWith("phs_"),
+      // Project secret keys (phs_) in production; CI reads with its read-only personal key (phx_).
+      z.string().regex(/^ph[sx]_/, "must be a PostHog secret or personal API key"),
       "PostHog project secret API key with feature_flag:read, for local flag evaluation",
     ),
   ),
