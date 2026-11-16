@@ -1,0 +1,29 @@
+{
+  "name": "@reranker/jobs",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./env": "./src/env.ts",
+    "./step-errors": "./src/step-errors.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --coverage --passWithNoTests"
+  },
+  "dependencies": {
+    "@reranker/env": "workspace:*",
+    "@reranker/flags": "workspace:*",
+    "@reranker/i18n": "workspace:*",
+    "@reranker/schema": "workspace:*",
+    "workflow": "catalog:"
+  },
+  "devDependencies": {
+    "@reranker/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
