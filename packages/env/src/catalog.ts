@@ -42,7 +42,11 @@ const rows: Row[] = [
   ["POSTHOG_FEATURE_FLAGS_KEY", "secret", ALL, false, "08", true],
   ["POSTHOG_API_KEY", "secret", PROD, false, "08"],
   ["POSTHOG_PROJECT_ID", "config", PROD, false, "08", true],
+  // Inactive until the founder adds them to GitHub: personal API key with feature_flag:read, and
+  // the CI copies of the flags key and project token that the nightly flags contract test reads.
   ["POSTHOG_READONLY_API_KEY", "secret", NONE, true, "08"],
+  ["POSTHOG_FEATURE_FLAGS_KEY_CI", "secret", NONE, true, "08"],
+  ["POSTHOG_PROJECT_TOKEN_CI", "config", NONE, true, "08"],
   ["POSTHOG_PERSONAL_API_KEY", "secret", NONE, true, "S03-04"],
   ["OPS_ALERT_EMAIL", "config", PROD_PREV, false, "08"],
   ["POSTHOG_QUERY_READ_KEY", "secret", PROD, false, "08"],

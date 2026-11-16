@@ -10,7 +10,10 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run --project unit --coverage --passWithNoTests",
-    "flags:gen": "tsx scripts/gen.ts"
+    "test:contract": "vitest run --project contract --passWithNoTests",
+    "flags:gen": "tsx scripts/gen.ts",
+    "flags:sync": "tsx scripts/sync.ts",
+    "flags:check": "tsx scripts/check.ts"
   },
   "dependencies": {
     "@reranker/env": "workspace:*",
