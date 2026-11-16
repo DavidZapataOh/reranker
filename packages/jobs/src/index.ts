@@ -18,4 +18,3 @@ export type {
   SpendPurpose,
   SpendRegionPool,
 } from "./providers";
-export { toStepError } from "./step-errors";
