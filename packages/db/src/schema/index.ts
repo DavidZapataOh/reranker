@@ -1,4 +1,5 @@
 export { capabilityHash, id, tenantId, timestamps } from "./_columns";
+export { costMicrosColumn, moneyColumns } from "./_money";
 export { appSystem, appTenant } from "./_roles";
 export { appSchema, authSchema, opsSchema, publicPanelSchema } from "./_schemas";
 export { opsTable, sameTenant, sharedTable, tenantTable } from "./_tables";
