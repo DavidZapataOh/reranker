@@ -31,6 +31,12 @@ test("LGPL libvips is allowed only for the sharp prebuilt binaries", () => {
   assert.equal(isLicenseAllowed("LGPL-3.0-or-later", "other-lib"), false);
 });
 
+test("an unlicensed manifest is allowed only for the Vercel CLI auth package", () => {
+  assert.equal(isLicenseAllowed("Unknown", "@vercel/cli-auth"), true);
+  assert.equal(isLicenseAllowed("Unknown", "@vercel/cli-auth-extra"), false);
+  assert.equal(isLicenseAllowed("Unknown", "other-lib"), false);
+});
+
 test("allowlist matches the supply-chain policy exactly", () => {
   assert.deepEqual([...ALLOWED_LICENSES].sort(), [
     "0BSD",
