@@ -21,17 +21,17 @@
     "db:bench": "tsx test/bench/tenant-tx.bench.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --project unit --coverage --passWithNoTests",
+    "test:contract": "vitest run --project contract --passWithNoTests",
     "test:integration": "vitest run --project integration --passWithNoTests"
   },
   "dependencies": {
+    "@neon/sdk": "catalog:",
     "@reranker/schema": "workspace:*",
     "@vercel/functions": "catalog:",
     "drizzle-orm": "catalog:",
     "pg": "catalog:"
   },
   "devDependencies": {
-    "@neon/sdk": "catalog:",
-    "@neondatabase/api-client": "catalog:",
     "@reranker/testing": "workspace:*",
     "@reranker/typescript-config": "workspace:*",
     "@types/node": "catalog:",

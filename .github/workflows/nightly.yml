@@ -30,6 +30,7 @@ jobs:
           XAI_API_KEY_CI: ${{ secrets.XAI_API_KEY_CI }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY_CI }}
           NEON_API_KEY: ${{ secrets.NEON_NONPROD_API_KEY }}
+          NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
           POSTHOG_READONLY_API_KEY: ${{ secrets.POSTHOG_READONLY_API_KEY }}
           POSTHOG_FEATURE_FLAGS_KEY: ${{ secrets.POSTHOG_READONLY_API_KEY }}
           POSTHOG_PROJECT_TOKEN: ${{ vars.POSTHOG_PROJECT_TOKEN_CI }}

@@ -70,7 +70,8 @@
         "ANTHROPIC_API_KEY_CI",
         "XAI_API_KEY_CI",
         "RESEND_API_KEY",
-        "NEON_API_KEY"
+        "NEON_API_KEY",
+        "NEON_PROJECT_ID"
       ]
     },
     "dev": { "cache": false, "persistent": true }
