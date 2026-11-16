@@ -115,7 +115,7 @@ jobs:
           if-no-files-found: ignore
   integration:
     runs-on: ubuntu-24.04
-    # Up to 15 min queueing for one of 3 Neon CI branch slots, then the tests and the benchmark.
+    # Up to 15 min queueing for a Neon CI branch slot, then the tests and the benchmark.
     timeout-minutes: 35
     permissions: { contents: read, id-token: write }
     steps:
