@@ -19,6 +19,7 @@ describe("toDbError", () => {
     [pgError("23505"), "conflict", undefined],
     [pgError("42501"), "internal", undefined],
     [pgError("23503"), "internal", undefined],
+    [pgError("53000"), "service_unavailable", 30],
     [pgError("53300"), "service_unavailable", 30],
     [pgError("57P03"), "service_unavailable", 30],
     [pgError("08006"), "service_unavailable", 2],
