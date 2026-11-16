@@ -28,7 +28,7 @@ export default defineConfig({
           name: "unit",
           environment: "node",
           include: ["**/{src,test}/**/*.test.ts"],
-          exclude: [...ignored, "**/*.{int,contract,browser}.test.*"],
+          exclude: [...ignored, "**/*.{int,contract,browser,workflow}.test.*"],
         },
       },
       {

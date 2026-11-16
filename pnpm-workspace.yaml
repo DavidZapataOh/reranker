@@ -65,6 +65,8 @@ catalog:
   "@neon/sdk": 7.13.0
   "@posthog/next": 0.11.0
   "@posthog/nextjs-config": 1.12.2
+  workflow: 5.4.0
+  "@workflow/vitest": 5.0.8
 overrides:
   # GHSA-mrhx-c7xc-m3w5: @vercel/cli-config pins zod 4.1.11.
   "@vercel/cli-config>zod": 4.6.7
