@@ -70,6 +70,12 @@ catalog:
 overrides:
   # GHSA-mrhx-c7xc-m3w5: @vercel/cli-config pins zod 4.1.11.
   "@vercel/cli-config>zod": 4.6.7
+  # GHSA-mrhx-c7xc-m3w5: the workflow runtime pins zod ~4.5.4 and @vercel/cli-auth pins 4.1.11;
+  # no 4.5 patch exists, so they move to the patched minor of the same major.
+  "zod@<4.6.6": 4.6.7
+  # GHSA-xjj6-f33q-929c, GHSA-4w7w-5xrc-9h26, GHSA-2m5v-pch6-74hx, GHSA-qrxm-fqhp-jwvm: the
+  # workflow worlds pin undici 7.30.0.
+  "undici@>=7.0.0 <7.30.1": 7.30.2
   # @workflow/cli declares chokidar 4.0.3 (no provenance) but never imports it; 5.0.0 is the
   # same maintainer's attested release.
   "@workflow/cli>chokidar": 5.0.0
