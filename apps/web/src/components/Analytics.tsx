@@ -93,6 +93,7 @@ export function Analytics() {
           capture_pageview: "history_change",
           capture_pageleave: true,
           capture_exceptions: true,
+          capture_performance: { web_vitals: true },
           disable_session_recording: true, // turned on only after consent
           session_recording: {
             maskAllInputs: true,

@@ -1,0 +1,45 @@
+[
+  {
+    "id": "exceptions-in-production",
+    "insight": {
+      "short_id": "Q1Prz3Se",
+      "name": "Excepciones en producción",
+      "query": "SELECT count() AS errores FROM events WHERE event = '$exception' AND properties.app_env = 'production' AND {filters}",
+      "date_from": "-1h"
+    },
+    "alert": {
+      "name": "Error en reranker.co",
+      "calculation_interval": "hourly",
+      "threshold": { "type": "absolute", "bounds": { "upper": 0 } },
+      "config": { "type": "HogQLAlertConfig", "column": "errores", "evaluation": "first_row" }
+    }
+  },
+  {
+    "id": "ops-alerts",
+    "insight": {
+      "name": "Alertas de operación",
+      "query": "SELECT count() AS alertas FROM events WHERE event = 'ops_alert' AND properties.app_env = 'production' AND {filters}",
+      "date_from": "-1h"
+    },
+    "alert": {
+      "name": "Alertas de operación",
+      "calculation_interval": "hourly",
+      "threshold": { "type": "absolute", "bounds": { "upper": 0 } },
+      "config": { "type": "HogQLAlertConfig", "column": "alertas", "evaluation": "first_row" }
+    }
+  },
+  {
+    "id": "lcp-p75",
+    "insight": {
+      "name": "LCP p75 en producción",
+      "query": "SELECT quantile(0.75)(toFloat(properties.$web_vitals_LCP_value)) AS lcp_p75 FROM events WHERE event = '$web_vitals' AND properties.app_env = 'production' AND {filters}",
+      "date_from": "-7d"
+    },
+    "alert": {
+      "name": "LCP p75 alto",
+      "calculation_interval": "daily",
+      "threshold": { "type": "absolute", "bounds": { "upper": 2500 } },
+      "config": { "type": "HogQLAlertConfig", "column": "lcp_p75", "evaluation": "first_row" }
+    }
+  }
+]
