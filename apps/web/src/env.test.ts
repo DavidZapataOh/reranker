@@ -36,10 +36,13 @@ describe("web environment", () => {
     }
   });
 
-  test("the flags key is optional everywhere and must be a project secret key when set", () => {
-    for (const APP_ENV of ["development", "preview", "production"]) {
+  test("the flags key is required in production only and must be a project secret key", () => {
+    for (const APP_ENV of ["development", "preview"]) {
       expect(defineEnv(fragments, { APP_ENV, ...key }).POSTHOG_FEATURE_FLAGS_KEY).toBeUndefined();
     }
+    expect(() => defineEnv(fragments, { APP_ENV: "production", ...key })).toThrowError(
+      /POSTHOG_FEATURE_FLAGS_KEY \(missing\)/,
+    );
     expect(() =>
       defineEnv(fragments, { APP_ENV: "production", ...key, POSTHOG_FEATURE_FLAGS_KEY: "phx_1" }),
     ).toThrowError(/POSTHOG_FEATURE_FLAGS_KEY \(invalid\)/);
@@ -47,7 +50,10 @@ describe("web environment", () => {
 
   test("GA and Clarity ids are accepted only in production", () => {
     const ids = { NEXT_PUBLIC_GA_ID: "G-TEST", NEXT_PUBLIC_CLARITY_ID: "abc123" };
-    expect(defineEnv(fragments, { APP_ENV: "production", ...key, ...ids })).toMatchObject(ids);
+    const flags = { POSTHOG_FEATURE_FLAGS_KEY: "phs_test" };
+    expect(defineEnv(fragments, { APP_ENV: "production", ...key, ...flags, ...ids })).toMatchObject(
+      ids,
+    );
     for (const APP_ENV of ["preview", "development"]) {
       expect(() => defineEnv(fragments, { APP_ENV, ...key, ...ids })).toThrowError(
         /NEXT_PUBLIC_GA_ID \(forbidden\), NEXT_PUBLIC_CLARITY_ID \(forbidden\)/,
