@@ -39,6 +39,16 @@ async function times<T>(n: number, fn: (i: number) => Promise<T>): Promise<T[]> 
 const list = (values: unknown[]) => sql.param(values);
 const pgCode = (code: string) => ({ cause: expect.objectContaining({ code }) });
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+// Polls until some backend waits on a lock held by `pid`, so a test can order two transactions.
+async function waitUntilBlockedBy(pid: number) {
+  for (let attempt = 0; attempt < 400; attempt++) {
+    const { blocked } = await one<{ blocked: boolean }>(sql`select exists (
+      select from pg_stat_activity a where ${pid}::int = any (pg_blocking_pids(a.pid))) as blocked`);
+    if (blocked) return;
+    await delay(25);
+  }
+  throw new Error(`no backend waited on ${pid}`);
+}
 
 const PRIMARY_KEYS: Record<string, string[]> = {
   alert_deliveries: ["kind", "bucket_hour"],
@@ -157,6 +167,34 @@ describe("catalog", () => {
     }
   });
 
+  test("every function runs with a pinned search_path", async () => {
+    const rows = await system<{ name: string; config: string[] | null }>(sql`
+      select p.proname as name, p.proconfig as config
+        from pg_proc p join pg_namespace s on s.oid = p.pronamespace
+       where s.nspname = 'ops' order by 1`);
+    expect(rows).toEqual(
+      [...FUNCTIONS]
+        .sort()
+        .map((name) => ({ name, config: ["search_path=pg_catalog, ops, app, pg_temp"] })),
+    );
+  });
+
+  test("functions the migration owner creates later are not executable by PUBLIC", async () => {
+    const rows = await system<{ schema: string | null; grantee: string; privilege: string }>(sql`
+      select n.nspname as schema, coalesce(g.rolname, 'PUBLIC') as grantee,
+             a.privilege_type as privilege
+        from pg_default_acl d
+        left join pg_namespace n on n.oid = d.defaclnamespace
+       cross join aclexplode(d.defaclacl) a
+        left join pg_roles g on g.oid = a.grantee
+       where d.defaclrole = 'reranker_owner'::regrole and d.defaclobjtype = 'f'
+       order by 1 nulls first, 2`);
+    expect(rows).toEqual([
+      { schema: null, grantee: "reranker_owner", privilege: "EXECUTE" },
+      { schema: "ops", grantee: "app_system", privilege: "EXECUTE" },
+    ]);
+  });
+
   test("the tenant role cannot read ops nor call its functions", async () => {
     await expect(asTenant(sql`select * from ops.spend_counters`)).rejects.toMatchObject(
       pgCode("42501"),
@@ -220,20 +258,22 @@ describe("token buckets", () => {
   });
 
   test("tokens refill with elapsed time", async () => {
-    // One token per second; the clock is moved through updated_at so round trips do not matter.
+    // One token per 100 s, and the clock is moved through updated_at: the seconds that round
+    // trips take add hundredths of a token, never a whole one.
     const key = unique("bucket");
-    expect((await take([key], [10], [1], [10])).ok).toBe(true);
-    const denied = await take([key], [10], [1], [1]);
+    const refill = 0.01;
+    expect((await take([key], [10], [refill], [10])).ok).toBe(true);
+    const denied = await take([key], [10], [refill], [1]);
     expect(denied.ok).toBe(false);
-    expect(denied.retry_after_ms).toBeGreaterThan(0);
-    expect(denied.retry_after_ms).toBeLessThanOrEqual(1000);
-    await system(sql`update ops.rate_buckets set updated_at = updated_at - interval '3 seconds'
+    expect(denied.retry_after_ms).toBeGreaterThan(90_000);
+    expect(denied.retry_after_ms).toBeLessThanOrEqual(100_000);
+    await system(sql`update ops.rate_buckets set updated_at = updated_at - interval '300 seconds'
       where key = ${key}`);
-    const { remaining } = await peek(key, 10, 1);
+    const { remaining } = await peek(key, 10, refill);
     expect(remaining).toBeGreaterThanOrEqual(3);
-    expect(remaining).toBeLessThan(4);
-    expect((await take([key], [10], [1], [3])).ok).toBe(true);
-    expect((await take([key], [10], [1], [2])).ok).toBe(false);
+    expect(remaining).toBeLessThan(3.5);
+    expect((await take([key], [10], [refill], [3])).ok).toBe(true);
+    expect((await take([key], [10], [refill], [1])).ok).toBe(false);
   });
 
   test("several buckets are taken all or nothing", async () => {
@@ -256,6 +296,27 @@ describe("token buckets", () => {
     expect((await take([key], [3], [perHour.refill], [1])).ok).toBe(true);
     await refund(key, 3, perHour.refill, 10);
     expect((await peek(key, 3, perHour.refill)).remaining).toBeCloseTo(3, 6);
+  });
+
+  test("a cost above the cap is rejected, since it could never be granted", async () => {
+    await expect(take([unique("bucket")], [2], [1], [3])).rejects.toMatchObject(pgCode("22023"));
+  });
+
+  test("a bucket deleted while the take waits for its lock denies instead of granting", async () => {
+    const key = unique("bucket");
+    expect((await take([key], [5], [0.001], [1])).ok).toBe(true);
+    let pending: Promise<Take> | undefined;
+    await withSystem("test.ops", async (tx) => {
+      const { rows } = await tx.execute(
+        sql`select pg_backend_pid() as pid from ops.rate_buckets where key = ${key} for update`,
+      );
+      pending = take([key], [5], [0.001], [1]);
+      await waitUntilBlockedBy(Number(rows[0]?.pid));
+      await tx.execute(sql`delete from ops.rate_buckets where key = ${key}`);
+    });
+    const denied = await pending;
+    expect(denied?.ok).toBe(false);
+    expect(denied?.retry_after_ms).toBeGreaterThan(0);
   });
 
   test("mismatched arrays and non-positive refills are rejected", async () => {
@@ -345,6 +406,13 @@ type Reservation = {
 };
 
 const DAY = "2026-11-16";
+// Every reservation carries the global scope; this cap keeps it out of the tests' way.
+const GLOBAL_CAP = 1_000_000_000_000_000;
+// A day of its own keeps a test's stale reservations and counters away from every other test.
+const uniqueDay = () =>
+  new Date(Date.UTC(2100 + Math.floor(Math.random() * 800), 0, 1 + Math.floor(Math.random() * 365)))
+    .toISOString()
+    .slice(0, 10);
 
 const reserve = (opts: {
   scopes: string[];
@@ -353,9 +421,13 @@ const reserve = (opts: {
   pool?: string;
   fallback?: { scope: string; cap: number };
   day?: string;
-}) =>
-  one<Reservation>(sql`select * from ops.reserve_spend(${opts.day ?? DAY}::date,
-    ${list(opts.scopes)}::text[], ${list(opts.caps)}::bigint[], ${opts.fallback?.scope ?? null},
+  currency?: string | null;
+  withoutGlobal?: boolean;
+}) => {
+  const scopes = opts.withoutGlobal ? opts.scopes : ["global", ...opts.scopes];
+  const caps = opts.withoutGlobal ? opts.caps : [GLOBAL_CAP, ...opts.caps];
+  return one<Reservation>(sql`select * from ops.reserve_spend(${opts.day ?? DAY}::date,
+    ${list(scopes)}::text[], ${list(caps)}::bigint[], ${opts.fallback?.scope ?? null},
     ${opts.fallback?.cap ?? null}::bigint, ${opts.amount}::bigint,
     ${JSON.stringify({
       provider: "dataforseo",
@@ -365,8 +437,9 @@ const reserve = (opts: {
       pool: opts.pool ?? null,
       ref_type: "test",
       ref_id: randomUUID(),
-      currency: "USD",
+      currency: opts.currency === undefined ? "USD" : opts.currency,
     })}::jsonb)`);
+};
 const settle = async (id: string, actual: number) =>
   (await one<{ ok: boolean }>(sql`select ops.settle_spend(${id}::uuid, ${actual}::bigint) as ok`))
     .ok;
@@ -394,7 +467,11 @@ describe("spend caps", () => {
     expect(results.filter((result) => result.ledger_id)).toHaveLength(25);
     const denied = results.filter((result) => !result.ledger_id);
     expect(denied.every((result) => result.denied_scope === scope)).toBe(true);
-    expect(denied[0]).toMatchObject({ scopes: [scope], used: ["1000000"], caps: ["1000000"] });
+    expect(denied[0]).toMatchObject({
+      scopes: ["global", scope],
+      used: [expect.any(String), "1000000"],
+      caps: [String(GLOBAL_CAP), "1000000"],
+    });
     expect(await used(scope)).toBe(1_000_000);
   });
 
@@ -441,7 +518,10 @@ describe("spend caps", () => {
     const borrowed = granted.filter((result) => result.scopes.includes(verified));
     expect(borrowed).toHaveLength(10);
     const row = await ledger(borrowed[0]?.ledger_id as string);
-    expect(row).toMatchObject({ pool: `verified-${suffix}`, scopes: [purpose, verified] });
+    expect(row).toMatchObject({
+      pool: `verified-${suffix}`,
+      scopes: ["global", purpose, verified],
+    });
     expect(results.find((result) => !result.ledger_id)?.denied_scope).toBe(purpose);
   });
 
@@ -520,6 +600,138 @@ describe("spend caps", () => {
     expect((await ledger(old)).status).toBe("released");
     expect((await ledger(fresh)).status).toBe("reserved");
     expect(await used(scope, "2026-10-01")).toBe(100);
+  });
+
+  test("every scope set starts with global, the first lock of its day", async () => {
+    await expect(
+      reserve({ scopes: [unique("purpose")], caps: [100], amount: 1, withoutGlobal: true }),
+    ).rejects.toMatchObject(pgCode("22023"));
+    await expect(
+      reserve({ scopes: [`channel:${randomUUID()}`], caps: [100], amount: 1 }),
+    ).rejects.toMatchObject(pgCode("22023"));
+  });
+
+  test("a currency other than the counters' is rejected and charges nothing", async () => {
+    const [scope, day] = [unique("purpose"), uniqueDay()];
+    await reserve({ scopes: [scope], caps: [1000], amount: 10, day });
+    await expect(
+      reserve({ scopes: [scope], caps: [1000], amount: 10, day, currency: "EUR" }),
+    ).rejects.toMatchObject(pgCode("22023"));
+    await expect(
+      reserve({ scopes: [unique("purpose")], caps: [1000], amount: 10, currency: null }),
+    ).rejects.toMatchObject(pgCode("22023"));
+    expect(await used(scope, day)).toBe(10);
+  });
+
+  test("release_stale_reservations refuses a window shorter than 15 minutes", async () => {
+    for (const window of ["14 minutes 59 seconds", null]) {
+      await expect(
+        system(
+          sql`select ops.release_stale_reservations(${uniqueDay()}::date, ${window}::interval)`,
+        ),
+      ).rejects.toMatchObject(pgCode("22023"));
+    }
+  });
+
+  test("a settle and a stale release of one reservation count it once, never below zero", async () => {
+    const [scope, day] = [unique("purpose"), uniqueDay()];
+    const reserveStale = async () => {
+      const id = (await reserve({ scopes: [scope], caps: [1_000_000], amount: 4000, day }))
+        .ledger_id as string;
+      await system(sql`update ops.spend_ledger set created_at = created_at - interval '16 minutes'
+        where id = ${id}::uuid`);
+      return id;
+    };
+    const releaseStale = async () =>
+      Number(
+        (
+          await one<{ n: number }>(
+            sql`select ops.release_stale_reservations(${day}::date, interval '15 minutes') as n`,
+          )
+        ).n,
+      );
+
+    // The settle holds the ledger row, so the release skips it instead of waiting.
+    const settledFirst = await reserveStale();
+    await withSystem("test.ops", async (tx) => {
+      await tx.execute(sql`select ops.settle_spend(${settledFirst}::uuid, 3100)`);
+      expect(await releaseStale()).toBe(0);
+    });
+    expect(await ledger(settledFirst)).toMatchObject({ status: "settled", actual: "3100" });
+    expect(await used(scope, day)).toBe(3100);
+
+    // The release holds it, so the settle waits and then finds nothing left to settle.
+    const releasedFirst = await reserveStale();
+    let late: Promise<boolean> | undefined;
+    await withSystem("test.ops", async (tx) => {
+      const { rows } = await tx.execute(sql`select pg_backend_pid() as pid,
+        ops.release_stale_reservations(${day}::date, interval '15 minutes') as n`);
+      expect(Number(rows[0]?.n)).toBe(1);
+      late = settle(releasedFirst, 3100);
+      await waitUntilBlockedBy(Number(rows[0]?.pid));
+    });
+    expect(await late).toBe(false);
+    expect(await ledger(releasedFirst)).toMatchObject({ status: "released", actual: "0" });
+    expect(await used(scope, day)).toBe(3100);
+
+    // Unordered and many at once: every reservation ends settled or released, never both.
+    const ids = await Promise.all(Array.from({ length: 10 }, reserveStale));
+    const [settles] = await Promise.all([
+      Promise.all(ids.map((id) => settle(id, 3100))),
+      releaseStale(),
+      releaseStale(),
+    ]);
+    const statuses = await Promise.all(ids.map(async (id) => (await ledger(id)).status));
+    const settled = statuses.filter((status) => status === "settled").length;
+    expect(statuses.every((status) => status === "settled" || status === "released")).toBe(true);
+    expect(settles.filter(Boolean)).toHaveLength(settled);
+    expect(await used(scope, day)).toBe(3100 * (1 + settled));
+  });
+
+  test("an elsewhere pool stays charged under the fallback and, exhausted, never triggers it", async () => {
+    const suffix = randomUUID();
+    const [purpose, anon, verified, elsewhere] = [
+      `purpose:test-${suffix}`,
+      `pool:anon-${suffix}`,
+      `pool:verified-${suffix}`,
+      `pool:elsewhere-${suffix}`,
+    ];
+    const day = uniqueDay();
+    const attempt = (caps: { anon: number; elsewhere: number }) =>
+      reserve({
+        scopes: [purpose, anon, elsewhere],
+        caps: [1_000_000, caps.anon, caps.elsewhere],
+        amount: 40_000,
+        pool: `anon-${suffix}`,
+        fallback: { scope: verified, cap: 400_000 },
+        day,
+      });
+
+    expect((await attempt({ anon: 40_000, elsewhere: 200_000 })).scopes).toEqual([
+      "global",
+      purpose,
+      anon,
+      elsewhere,
+    ]);
+    const borrowed = await attempt({ anon: 40_000, elsewhere: 200_000 });
+    expect(borrowed.scopes).toEqual(["global", purpose, verified, elsewhere]);
+    expect(await ledger(borrowed.ledger_id as string)).toMatchObject({
+      pool: `verified-${suffix}`,
+      scopes: ["global", purpose, verified, elsewhere],
+    });
+    expect(await used(elsewhere, day)).toBe(80_000);
+    expect(await used(verified, day)).toBe(40_000);
+
+    // Elsewhere alone is short while the pool has room: denied there, the fallback untouched.
+    const elsewhereShort = await attempt({ anon: 400_000, elsewhere: 80_000 });
+    expect(elsewhereShort).toMatchObject({ ledger_id: null, denied_scope: elsewhere });
+    expect(elsewhereShort.scopes).toEqual(["global", purpose, anon, elsewhere]);
+    // Both short: the pool is not the only one, so the fallback is not tried either.
+    const bothShort = await attempt({ anon: 40_000, elsewhere: 80_000 });
+    expect(bothShort).toMatchObject({ ledger_id: null, denied_scope: anon });
+    expect(await used(verified, day)).toBe(40_000);
+    expect(await used(elsewhere, day)).toBe(80_000);
+    expect(await used(anon, day)).toBe(40_000);
   });
 
   test("invalid arguments are rejected", async () => {
@@ -637,6 +849,15 @@ describe("velocity", () => {
     const key = unique("velocity");
     await seedVelocity(key, 11, 12, 0);
     expect((await recordVelocity(key, false, 0)).count10m).toBe(1);
+  });
+
+  test("a null or negative spend is rejected", async () => {
+    await expect(
+      system(sql`select * from ops.record_velocity(${unique("velocity")}, false, null::bigint)`),
+    ).rejects.toMatchObject(pgCode("22023"));
+    await expect(recordVelocity(unique("velocity"), false, -1)).rejects.toMatchObject(
+      pgCode("22023"),
+    );
   });
 
   test("concurrent records are all counted", async () => {
