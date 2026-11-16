@@ -116,7 +116,8 @@ describe("assertCaptureAllowed", () => {
     await expect(assertCaptureAllowed(API_OPENAI)).rejects.toBeInstanceOf(FlagsNotReadyError);
   });
 
-  test("without a flags key the client never loads and capture stays closed", async () => {
+  test("without a flags key (previews) the client never loads and capture stays closed", async () => {
+    setAppEnv("preview");
     vi.stubEnv("POSTHOG_FEATURE_FLAGS_KEY", "");
     serveDefinitions(ALL_ON);
     await expect(assertCaptureAllowed(API_OPENAI)).rejects.toBeInstanceOf(FlagsNotReadyError);

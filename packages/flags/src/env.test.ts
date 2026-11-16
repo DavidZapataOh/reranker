@@ -5,12 +5,15 @@ import { flagsEnv } from "./env";
 
 const posthog = { POSTHOG_PROJECT_TOKEN: "phc_test", POSTHOG_HOST: "https://us.i.posthog.com" };
 
-test("the flags key is optional until it exists in every environment", () => {
-  for (const APP_ENV of ["development", "preview", "production"]) {
+test("the flags key is required in production and optional elsewhere", () => {
+  for (const APP_ENV of ["development", "preview"]) {
     expect(
       defineEnv([flagsEnv], { APP_ENV, ...posthog }).POSTHOG_FEATURE_FLAGS_KEY,
     ).toBeUndefined();
   }
+  expect(() => defineEnv([flagsEnv], { APP_ENV: "production", ...posthog })).toThrowError(
+    /POSTHOG_FEATURE_FLAGS_KEY \(missing\)/,
+  );
 });
 
 test("the flags key must be a project secret key and an empty value counts as unset", () => {
@@ -21,9 +24,9 @@ test("the flags key must be a project secret key and an empty value counts as un
   expect(() =>
     defineEnv([flagsEnv], { ...env, POSTHOG_FEATURE_FLAGS_KEY: "phc_abc" }),
   ).toThrowError(/POSTHOG_FEATURE_FLAGS_KEY \(invalid\)/);
-  expect(
-    defineEnv([flagsEnv], { ...env, POSTHOG_FEATURE_FLAGS_KEY: "" }).POSTHOG_FEATURE_FLAGS_KEY,
-  ).toBeUndefined();
+  expect(() => defineEnv([flagsEnv], { ...env, POSTHOG_FEATURE_FLAGS_KEY: "" })).toThrowError(
+    /POSTHOG_FEATURE_FLAGS_KEY \(missing\)/,
+  );
 });
 
 test("token and host are the telemetry declarations, not copies", () => {
