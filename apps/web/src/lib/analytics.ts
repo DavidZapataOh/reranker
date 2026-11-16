@@ -130,21 +130,29 @@ declare global {
   }
 }
 
-/* Events fired before PostHog finishes loading (it starts after window "load"). */
-const queued: [string, Props][] = [];
+/* Calls made before PostHog finishes loading (it starts after window "load"). */
+const queued: (() => void)[] = [];
+
+function whenLoaded(call: () => void) {
+  if (posthog.__loaded) call();
+  else if (queued.length < 50) queued.push(call);
+}
 
 /** Sends the event to PostHog and GA4; PostHog events are queued until it loads. */
 export function track(event: string, props: Props = {}) {
   if (typeof window === "undefined") return;
-  if (POSTHOG_KEY) {
-    if (posthog.__loaded) posthog.capture(event, props);
-    else if (queued.length < 50) queued.push([event, props]);
-  }
+  if (POSTHOG_KEY) whenLoaded(() => posthog.capture(event, props));
   if (GA_ID && window.gtag) window.gtag("event", event, props);
 }
 
+/** Reports an error that an error boundary caught, so autocapture never sees it; queued like events. */
+export function captureException(error: unknown) {
+  if (typeof window === "undefined" || !POSTHOG_KEY) return;
+  whenLoaded(() => posthog.captureException(error));
+}
+
 export function flushQueuedEvents() {
-  for (const [event, props] of queued.splice(0)) posthog.capture(event, props);
+  for (const call of queued.splice(0)) call();
 }
 
 /** Runs fn once the page has loaded and the browser is idle. Returns a cancel function. */

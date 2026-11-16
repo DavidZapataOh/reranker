@@ -1,6 +1,7 @@
 import { appEnv } from "@reranker/env";
 import type { NextConfig } from "next";
 import { getEnv } from "./src/env";
+import { withSourceMaps } from "./src/lib/source-maps";
 
 // A production deployment missing a variable must fail here, before it can become a candidate.
 if (process.env.APP_ENV === "production") getEnv();
@@ -72,4 +73,5 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// The outermost wrapper, as @posthog/nextjs-config requires, so its build hooks run.
+export default withSourceMaps(nextConfig);
