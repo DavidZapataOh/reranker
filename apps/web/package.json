@@ -13,6 +13,8 @@
     "typecheck": "next typegen && tsc --noEmit",
     "indexnow": "node scripts/indexnow.mjs",
     "test": "vitest run --project unit --project component --coverage --passWithNoTests && node --test scripts/*.test.mjs",
+    "test:integration": "pnpm run test:workflow",
+    "test:workflow": "vitest run --config vitest.workflow.config.ts",
     "test:smoke": "playwright test --grep @smoke"
   },
   "dependencies": {
@@ -24,13 +26,15 @@
     "@reranker/schema": "workspace:*",
     "@reranker/telemetry": "workspace:*",
     "@reranker/ui": "workspace:*",
+    "drizzle-orm": "catalog:",
     "lucide-react": "1.68.0",
     "next": "catalog:",
     "next-intl": "catalog:",
     "posthog-js": "1.446.0",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "simple-icons": "16.36.0"
+    "simple-icons": "16.36.0",
+    "workflow": "catalog:"
   },
   "devDependencies": {
     "@axe-core/playwright": "catalog:",
@@ -45,6 +49,7 @@
     "@types/react-dom": "catalog:",
     "@vitest/browser-playwright": "catalog:",
     "@vitest/coverage-v8": "catalog:",
+    "@workflow/vitest": "catalog:",
     "posthog-node": "catalog:",
     "puppeteer-core": "catalog:",
     "tailwindcss": "catalog:",

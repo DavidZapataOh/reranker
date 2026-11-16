@@ -50,7 +50,10 @@ describe("web environment", () => {
 
   test("GA and Clarity ids are accepted only in production", () => {
     const ids = { NEXT_PUBLIC_GA_ID: "G-TEST", NEXT_PUBLIC_CLARITY_ID: "abc123" };
-    const flags = { POSTHOG_FEATURE_FLAGS_KEY: "phs_test" };
+    const flags = {
+      POSTHOG_FEATURE_FLAGS_KEY: "phs_test",
+      CRON_SECRET: "cron-secret-with-enough-length",
+    };
     expect(defineEnv(fragments, { APP_ENV: "production", ...key, ...flags, ...ids })).toMatchObject(
       ids,
     );
@@ -61,8 +64,11 @@ describe("web environment", () => {
     }
   });
 
-  test("the cron secret is optional and too short a value is rejected", () => {
+  test("the cron secret is required in production only and too short a value is rejected", () => {
     expect(defineEnv(fragments, { APP_ENV: "preview", ...key }).CRON_SECRET).toBeUndefined();
+    expect(() =>
+      defineEnv(fragments, { APP_ENV: "production", ...key, POSTHOG_FEATURE_FLAGS_KEY: "phs_1" }),
+    ).toThrowError(/CRON_SECRET \(missing\)/);
     expect(() =>
       defineEnv(fragments, { APP_ENV: "preview", ...key, CRON_SECRET: "short" }),
     ).toThrowError(/CRON_SECRET \(invalid\)/);

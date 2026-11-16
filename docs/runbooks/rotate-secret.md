@@ -71,7 +71,7 @@ Required. Update the "Last rotation" cell of the row in this file in the same pu
 | `CAPACITY_HMAC_KEY` | Prod, Prev, Dev | not active yet | 180 days |
 | `FREE_REPORT_CHOICE_KEY` | Prod, Prev, Dev | not active yet | 180 days |
 | `QUALITY_CANARY_TOKEN` | Prod, Prev, Dev, GH | not active yet | 180 days |
-| `CRON_SECRET` | Prod, Prev | not active yet | 180 days |
+| `CRON_SECRET` | Prod, Prev | not rotated yet | 180 days |
 | `DATAFORSEO_LOGIN` | Prod, Prev, Dev, GH | not active yet | 180 days |
 | `DATAFORSEO_PASSWORD` | Prod, Prev, Dev, GH | not active yet | 180 days |
 | `OPENAI_API_KEY` | Prod, Prev, Dev | not active yet | 180 days |

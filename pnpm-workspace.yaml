@@ -65,9 +65,20 @@ catalog:
   "@neon/sdk": 7.13.0
   "@posthog/next": 0.11.0
   "@posthog/nextjs-config": 1.12.2
+  workflow: 5.4.0
+  "@workflow/vitest": 5.0.8
 overrides:
   # GHSA-mrhx-c7xc-m3w5: @vercel/cli-config pins zod 4.1.11.
   "@vercel/cli-config>zod": 4.6.7
+  # GHSA-mrhx-c7xc-m3w5: the workflow runtime pins zod ~4.5.4 and @vercel/cli-auth pins 4.1.11;
+  # no 4.5 patch exists, so they move to the patched minor of the same major.
+  "zod@<4.6.6": 4.6.7
+  # GHSA-xjj6-f33q-929c, GHSA-4w7w-5xrc-9h26, GHSA-2m5v-pch6-74hx, GHSA-qrxm-fqhp-jwvm: the
+  # workflow worlds pin undici 7.30.0.
+  "undici@>=7.0.0 <7.30.1": 7.30.2
+  # @workflow/cli declares chokidar 4.0.3 (no provenance) but never imports it; 5.0.0 is the
+  # same maintainer's attested release.
+  "@workflow/cli>chokidar": 5.0.0
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - "@reranker/*"
@@ -92,6 +103,15 @@ trustPolicyExclude:
   # Chromium-versioned builds come from the Chromium infra account without provenance;
   # puppeteer-core 25.16.0 (trusted publisher, via @lhci/cli) pins this exact version.
   - chromium-bidi@157.0.8090-0
+  # Vercel publishes these through trusted publishing without provenance attestations;
+  # workflow@5.4.0's core requires them. Exact versions only: a newer one is checked again.
+  - "@vercel/functions@3.11.2"
+  - "@vercel/oidc@4.0.9"
+  - "@vercel/cli-config@0.4.0"
+  - "@vercel/cli-exec@1.0.1"
+  # SWC publishes through trusted publishing without provenance; the workflow compiler pins
+  # @swc/core 1.15.3 and its plugin needs that exact runtime. Linux x64 covers WSL, CI and Vercel.
+  - "@swc/core-linux-x64-gnu@1.15.3"
 blockExoticSubdeps: true
 strictDepBuilds: true
 allowBuilds:
@@ -108,4 +128,7 @@ allowBuilds:
   # postinstall only verifies them (@swc/core) or builds from source on request (@parcel/watcher).
   "@swc/core": false
   "@parcel/watcher": false
+  # cbor-x's native decoder (via the workflow runtime): the platform binaries ship as optional
+  # dependencies; the install script only locates them.
+  cbor-extract: false
 verifyDepsBeforeRun: error

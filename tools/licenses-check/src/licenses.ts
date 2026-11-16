@@ -29,6 +29,12 @@ export const LICENSE_EXCEPTIONS: ReadonlyArray<{
     license: "LGPL-3.0-or-later",
     reason: "prebuilt libvips loaded dynamically by sharp (next/image)",
   },
+  {
+    packagePattern: "@vercel/cli-auth",
+    license: "Unknown",
+    reason:
+      "ships the Apache-2.0 LICENSE file but no license field (vercel/vercel); CLI-only, via @workflow/cli",
+  },
 ];
 
 const matchesPattern = (pattern: string, name: string): boolean =>

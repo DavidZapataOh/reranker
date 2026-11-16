@@ -2,6 +2,7 @@
   "extends": "@reranker/typescript-config/nextjs.json",
   "compilerOptions": {
     "allowImportingTsExtensions": true,
+    "plugins": [{ "name": "next" }, { "name": "workflow" }],
     "paths": {
       "@/*": ["./src/*"]
     }

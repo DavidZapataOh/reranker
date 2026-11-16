@@ -25,11 +25,10 @@ export const webEnv = z.object({
   ),
 });
 
-// Optional until the scheduled jobs ship it; while unset, production keeps the ops routes closed.
 export const opsEnv = z.object({
-  CRON_SECRET: secret(
-    z.string().min(16).optional(),
-    "Bearer that Vercel Cron and operators send to protected routes",
+  CRON_SECRET: requiredIn(
+    ["production"],
+    secret(z.string().min(16), "Bearer that Vercel Cron and operators send to protected routes"),
   ),
 });
 

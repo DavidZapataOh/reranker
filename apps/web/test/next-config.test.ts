@@ -1,8 +1,21 @@
 import { existsSync } from "node:fs";
+import { PHASE_PRODUCTION_SERVER } from "next/constants";
 import { describe, expect, test, vi } from "vitest";
 
 vi.stubEnv("APP_ENV", "development");
-const { default: nextConfig } = await import("../next.config");
+const { default: exported } = await import("../next.config");
+// The server phase resolves the config without running the workflow build.
+const nextConfig =
+  typeof exported === "function"
+    ? await exported(PHASE_PRODUCTION_SERVER, { defaultConfig: {} })
+    : exported;
+
+describe("workflows", () => {
+  test("the config is wrapped by withWorkflow", () => {
+    expect(typeof exported).toBe("function");
+    expect(nextConfig.serverExternalPackages).toEqual(expect.arrayContaining([expect.any(String)]));
+  });
+});
 
 describe("next-intl", () => {
   test("resolves its request config to src/i18n/request.ts", () => {

@@ -1,6 +1,6 @@
 import { resetAppEnv } from "@reranker/env";
 import { afterEach, expect, test, vi } from "vitest";
-import { opsGuard } from "./ops-guard";
+import { hasCronBearer, opsGuard } from "./ops-guard";
 
 const CRON_SECRET = "cron-secret-with-enough-length";
 
@@ -49,4 +49,22 @@ test("preview is open behind deployment protection", () => {
 test("development is open", () => {
   setAppEnv("development");
   expect(opsGuard(req({}))).toBeNull();
+});
+
+test("the cron bearer check accepts only the exact bearer in every environment", () => {
+  for (const env of ["development", "preview", "production"]) {
+    setAppEnv(env);
+    vi.stubEnv("CRON_SECRET", CRON_SECRET);
+    expect(hasCronBearer(req({ authorization: `Bearer ${CRON_SECRET}` }))).toBe(true);
+    expect(hasCronBearer(req({}))).toBe(false);
+    expect(hasCronBearer(req({ authorization: CRON_SECRET }))).toBe(false);
+    expect(hasCronBearer(req({ authorization: `Bearer ${CRON_SECRET}x` }))).toBe(false);
+  }
+});
+
+test("the cron bearer check fails closed while the cron secret is unset", () => {
+  setAppEnv("development");
+  vi.stubEnv("CRON_SECRET", "");
+  expect(hasCronBearer(req({ authorization: "Bearer " }))).toBe(false);
+  expect(hasCronBearer(req({ authorization: "Bearer undefined" }))).toBe(false);
 });
