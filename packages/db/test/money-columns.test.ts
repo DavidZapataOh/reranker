@@ -4,7 +4,10 @@ import { CURRENCIES } from "@reranker/i18n";
 import { getTableConfig } from "drizzle-orm/pg-core";
 import { expect, test } from "vitest";
 import { costMicrosColumn, moneyColumns } from "../src/schema";
-import { moneyProbe } from "./probe/money-probe.schema";
+import { probeStatements } from "./probe/database";
+import * as probe from "./probe/money-probe.schema";
+
+const { moneyProbe } = probe;
 
 const migrations = fileURLToPath(new URL("../migrations", import.meta.url));
 
@@ -36,10 +39,10 @@ test("column names derive from the prefix", () => {
 
 test("columns are not null and typed by their domains", () => {
   const columns = Object.fromEntries(getTableConfig(moneyProbe).columns.map((c) => [c.name, c]));
-  expect(columns.price_amount_minor?.getSQLType()).toBe("amount_minor");
-  expect(columns.price_currency?.getSQLType()).toBe("currency_code");
-  expect(columns.cost_amount_micros?.getSQLType()).toBe("amount_micros");
-  expect(columns.cost_currency?.getSQLType()).toBe("currency_code");
+  expect(columns.price_amount_minor?.getSQLType()).toBe('app"."amount_minor');
+  expect(columns.price_currency?.getSQLType()).toBe('app"."currency_code');
+  expect(columns.cost_amount_micros?.getSQLType()).toBe('app"."amount_micros');
+  expect(columns.cost_currency?.getSQLType()).toBe('app"."currency_code');
   for (const column of Object.values(columns).filter((c) => c.name.includes("_")))
     expect(column.notNull).toBe(true);
 });
@@ -48,4 +51,10 @@ test("amounts map between driver strings and numbers", () => {
   const column = getTableConfig(moneyProbe).columns.find((c) => c.name === "price_amount_minor");
   expect(column?.mapFromDriverValue("14900000")).toBe(14_900_000);
   expect(column?.mapToDriverValue(14_900_000)).toBe(14_900_000);
+});
+
+test("drizzle-kit emits schema-qualified domain types", async () => {
+  const ddl = (await probeStatements(probe)).join("\n");
+  expect(ddl).toContain('"price_amount_minor" "app"."amount_minor" NOT NULL');
+  expect(ddl).toContain('"cost_currency" "app"."currency_code" NOT NULL');
 });

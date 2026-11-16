@@ -1,17 +1,19 @@
 import { customType } from "drizzle-orm/pg-core";
 
-// Unqualified: drizzle-kit quotes the whole type string, so a schema prefix would name one identifier.
-// The domains (in public) carry the range and currency checks, so every table that stores money gets them
-// from the database and not from each caller. node-postgres returns bigint as a string; the
-// domain bounds keep every stored value a safe integer, so Number never loses precision.
+// The domains live in `app` because the migration role cannot create objects in `public` on Neon.
+// drizzle-kit quotes a custom type's whole string as one identifier, so the closing and opening
+// quotes around the dot make it emit "app"."name"; the schema stays explicit whatever the
+// search_path. The domains carry the range and currency checks, so every table that stores money
+// gets them from the database. node-postgres returns bigint as a string; the bounds keep every
+// stored value a safe integer, so Number never loses precision.
 const amount = (domain: "amount_minor" | "amount_micros") =>
   customType<{ data: number; driverData: string | number }>({
-    dataType: () => domain,
+    dataType: () => `app"."${domain}`,
     fromDriver: (value) => Number(value),
   });
 
 const currency = customType<{ data: string; driverData: string }>({
-  dataType: () => "currency_code",
+  dataType: () => 'app"."currency_code',
 });
 
 const amountMinor = amount("amount_minor");
