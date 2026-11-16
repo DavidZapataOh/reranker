@@ -68,6 +68,9 @@ catalog:
 overrides:
   # GHSA-mrhx-c7xc-m3w5: @vercel/cli-config pins zod 4.1.11.
   "@vercel/cli-config>zod": 4.6.7
+  # @workflow/cli declares chokidar 4.0.3 (no provenance) but never imports it; 5.0.0 is the
+  # same maintainer's attested release.
+  "@workflow/cli>chokidar": 5.0.0
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - "@reranker/*"
@@ -92,6 +95,12 @@ trustPolicyExclude:
   # Chromium-versioned builds come from the Chromium infra account without provenance;
   # puppeteer-core 25.16.0 (trusted publisher, via @lhci/cli) pins this exact version.
   - chromium-bidi@157.0.8090-0
+  # Vercel publishes these through trusted publishing without provenance attestations;
+  # workflow@5.4.0's core requires them. Exact versions only: a newer one is checked again.
+  - "@vercel/functions@3.11.2"
+  - "@vercel/oidc@4.0.9"
+  - "@vercel/cli-config@0.4.0"
+  - "@vercel/cli-exec@1.0.1"
 blockExoticSubdeps: true
 strictDepBuilds: true
 allowBuilds:
@@ -108,4 +117,7 @@ allowBuilds:
   # postinstall only verifies them (@swc/core) or builds from source on request (@parcel/watcher).
   "@swc/core": false
   "@parcel/watcher": false
+  # cbor-x's native decoder (via the workflow runtime): the platform binaries ship as optional
+  # dependencies; the install script only locates them.
+  cbor-extract: false
 verifyDepsBeforeRun: error
