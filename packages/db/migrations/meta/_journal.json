@@ -43,6 +43,27 @@
       "when": 1794855555459,
       "tag": "0005_money_domains",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1794866865907,
+      "tag": "0006_ops_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1794866867037,
+      "tag": "0007_ops_functions",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1794869561830,
+      "tag": "0008_ops_functions_hardening",
+      "breakpoints": true
     }
   ]
 }
