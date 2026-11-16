@@ -14,18 +14,18 @@
     "test:integration": "vitest run --project integration"
   },
   "dependencies": {
+    "@reranker/db": "workspace:*",
     "@reranker/env": "workspace:*",
     "@reranker/flags": "workspace:*",
     "@reranker/i18n": "workspace:*",
     "@reranker/schema": "workspace:*",
+    "drizzle-orm": "catalog:",
     "workflow": "catalog:"
   },
   "devDependencies": {
-    "@reranker/db": "workspace:*",
     "@reranker/typescript-config": "workspace:*",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
-    "drizzle-orm": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }
