@@ -220,14 +220,20 @@ describe("token buckets", () => {
   });
 
   test("tokens refill with elapsed time", async () => {
+    // One token per second; the clock is moved through updated_at so round trips do not matter.
     const key = unique("bucket");
-    expect((await take([key], [2], [20], [2])).ok).toBe(true);
-    const denied = await take([key], [2], [20], [1]);
+    expect((await take([key], [10], [1], [10])).ok).toBe(true);
+    const denied = await take([key], [10], [1], [1]);
     expect(denied.ok).toBe(false);
     expect(denied.retry_after_ms).toBeGreaterThan(0);
-    expect(denied.retry_after_ms).toBeLessThanOrEqual(50);
-    await delay(denied.retry_after_ms + 20);
-    expect((await take([key], [2], [20], [1])).ok).toBe(true);
+    expect(denied.retry_after_ms).toBeLessThanOrEqual(1000);
+    await system(sql`update ops.rate_buckets set updated_at = updated_at - interval '3 seconds'
+      where key = ${key}`);
+    const { remaining } = await peek(key, 10, 1);
+    expect(remaining).toBeGreaterThanOrEqual(3);
+    expect(remaining).toBeLessThan(4);
+    expect((await take([key], [10], [1], [3])).ok).toBe(true);
+    expect((await take([key], [10], [1], [2])).ok).toBe(false);
   });
 
   test("several buckets are taken all or nothing", async () => {
