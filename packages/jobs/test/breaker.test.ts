@@ -1,0 +1,40 @@
+import { beforeEach, describe, expect, test, vi } from "vitest";
+
+const execute = vi.fn();
+const withSystem = vi.fn(async (_reason: string, fn: (tx: unknown) => unknown) => fn({ execute }));
+vi.mock("@reranker/db", () => ({ withSystem }));
+
+vi.stubEnv("APP_ENV", "development");
+const { breakerCheck, breakerRecord } = await import("../src/breaker");
+
+beforeEach(() => {
+  execute.mockReset();
+  withSystem.mockClear();
+});
+
+describe("breakerCheck", () => {
+  test("is one system statement and maps the row", async () => {
+    execute.mockResolvedValue({ rows: [{ state: "open", retry_after_ms: 28_000 }] });
+    await expect(breakerCheck("dataforseo")).resolves.toEqual({
+      state: "open",
+      retryAfterMs: 28_000,
+    });
+    expect(withSystem).toHaveBeenCalledTimes(1);
+    expect(withSystem.mock.calls[0]?.[0]).toBe("jobs.breaker");
+    expect(execute).toHaveBeenCalledTimes(1);
+  });
+
+  test("fails loudly when the function returns nothing", async () => {
+    execute.mockResolvedValue({ rows: [] });
+    await expect(breakerCheck("dataforseo", "main")).rejects.toThrow("no row");
+  });
+});
+
+describe("breakerRecord", () => {
+  test.each(["success", "failure"] as const)("is one system statement for %s", async (outcome) => {
+    execute.mockResolvedValue({ rows: [] });
+    await breakerRecord("openai", outcome);
+    expect(withSystem).toHaveBeenCalledTimes(1);
+    expect(execute).toHaveBeenCalledTimes(1);
+  });
+});
