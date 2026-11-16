@@ -14,8 +14,8 @@ catalog:
   tailwindcss: 4.3.4
   "@tailwindcss/turbopack": 4.3.4
   "@tailwindcss/vite": 4.3.4
-  "@biomejs/biome": 2.6.6
-  turbo: 2.11.10
+  "@biomejs/biome": 2.6.7
+  turbo: 2.11.11
   lefthook: 2.2.1
   vitest: 5.1.0
   # Same version vitest runs on; packages that use import.meta.glob take its types from vite/client.
