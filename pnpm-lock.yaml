@@ -403,6 +403,9 @@ importers:
       '@reranker/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@reranker/jobs':
+        specifier: workspace:*
+        version: link:../../packages/jobs
       '@reranker/schema':
         specifier: workspace:*
         version: link:../../packages/schema
@@ -740,6 +743,40 @@ importers:
       intl-messageformat:
         specifier: 'catalog:'
         version: 12.1.4
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vitest:
+        specifier: 'catalog:'
+        version: 5.1.0(@opentelemetry/api@1.10.0)(@types/node@26.6.6)(@vitest/browser-playwright@5.1.0)(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(msw@3.0.3(@types/node@26.6.6)(supports-color@8.1.1)(typescript@7.0.2)(vite@8.3.5(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)))(vite@8.3.5(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15))
+
+  packages/jobs:
+    dependencies:
+      '@reranker/env':
+        specifier: workspace:*
+        version: link:../env
+      '@reranker/flags':
+        specifier: workspace:*
+        version: link:../flags
+      '@reranker/i18n':
+        specifier: workspace:*
+        version: link:../i18n
+      '@reranker/schema':
+        specifier: workspace:*
+        version: link:../schema
+      workflow:
+        specifier: 'catalog:'
+        version: 5.4.0(@aws-sdk/credential-provider-web-identity@3.972.49)(@nestjs/common@12.5.0(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@12.5.0(@nestjs/common@12.5.0(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@8.1.1))(reflect-metadata@0.2.2)(rxjs@7.8.2))(@opentelemetry/api@1.10.0)(@swc/cli@0.8.2(@swc/core@1.15.3(@swc/helpers@0.5.23))(chokidar@5.0.0)(supports-color@8.1.1))(@swc/core@1.15.3(@swc/helpers@0.5.23))(@swc/helpers@0.5.23)(confbox@0.3.2)(dotenv@17.4.2)(jiti@2.7.0)(magic-string@1.4.5)(next@16.4.5(@babel/core@7.29.13(supports-color@8.1.1))(@opentelemetry/api@1.10.0)(@playwright/test@1.64.1)(@types/node@26.6.6)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(oxc-parser@0.152.0)(react@19.3.0)(rolldown@1.2.16)(supports-color@8.1.1)(typescript@7.0.2)(ws@8.22.1)
+    devDependencies:
+      '@reranker/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 26.6.6
+      '@vitest/coverage-v8':
+        specifier: 'catalog:'
+        version: 5.1.0(@vitest/browser@5.1.0)(vitest@5.1.0)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2

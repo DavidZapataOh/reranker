@@ -1,5 +1,6 @@
 import { config, defineEnv, forbiddenIn, requiredIn, secret } from "@reranker/env";
 import { flagsEnv } from "@reranker/flags/env";
+import { jobsEnv } from "@reranker/jobs/env";
 import { z } from "@reranker/schema";
 import { telemetryEnv } from "@reranker/telemetry/env";
 
@@ -32,7 +33,7 @@ export const opsEnv = z.object({
   ),
 });
 
-export const fragments = [webEnv, telemetryEnv, flagsEnv, opsEnv] as const;
+export const fragments = [webEnv, telemetryEnv, flagsEnv, opsEnv, jobsEnv] as const;
 
 let validated: ReturnType<typeof compose> | undefined;
 
