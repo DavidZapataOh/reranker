@@ -23,6 +23,7 @@ jobs:
         with: { cache: true, require-lockfile: true }
       - run: pnpm exec biome ci .
       - run: pnpm env:example --check
+      - run: pnpm runbooks:check
       - run: pnpm audit --prod --audit-level high && pnpm licenses:check
       - id: scope
         env:

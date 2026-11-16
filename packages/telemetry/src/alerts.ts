@@ -39,6 +39,29 @@ export const opsAlerts = {
 
 export type OpsAlertKind = keyof typeof opsAlerts;
 
+/**
+ * Alerts raised by a provider or a workflow rather than by the application. They never pass
+ * through `sendOpsAlert`; the registry only ties each one to its runbook.
+ */
+export const externalAlerts = {
+  "ci-minutes-exhausted": { runbook: "ci-minutes-exhausted.md", source: "github" },
+  "deployment-check-stuck": { runbook: "deployment-check-stuck.md", source: "vercel" },
+  "nightly-failure": { runbook: "nightly-failure.md", source: "github" },
+  "quality-check-failed": { runbook: "quality-check-failed.md", source: "github" },
+} as const satisfies Record<
+  string,
+  {
+    runbook: string;
+    source: "posthog" | "github" | "vercel" | "betterstack" | "google-cloud" | "openai";
+  }
+>;
+
+/** Runbooks for procedures nobody is alerted about; each owning plan adds its own. */
+export const procedures = [
+  "rotate-secret.md",
+  "neon-setup.md",
+] as const satisfies readonly string[];
+
 const FROM = "Reranker alertas <alertas@reranker.co>";
 const RUNBOOKS = "https://github.com/DavidZapataOh/reranker/blob/main/docs/runbooks";
 

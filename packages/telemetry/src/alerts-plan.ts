@@ -19,6 +19,8 @@ const Interval = z.enum(["hourly", "daily", "weekly", "monthly"]);
 export const DesiredAlerts = z.array(
   z.object({
     id: z.string(),
+    // Read by runbooks:check; PostHog never sees it.
+    runbook: z.string().optional(),
     insight: z.object({
       short_id: z.string().optional(),
       name: z.string(),

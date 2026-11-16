@@ -25,6 +25,7 @@
     "secrets:audit": "pnpm --filter @reranker/env exec tsx scripts/audit-github-secrets.ts",
     "flags:sync": "pnpm --filter @reranker/flags flags:sync",
     "flags:check": "pnpm --filter @reranker/flags flags:check",
+    "runbooks:check": "pnpm --filter @reranker/telemetry runbooks:check",
     "env:example": "pnpm --filter @reranker/env exec tsx src/example.ts",
     "licenses:check": "node tools/licenses-check/src/main.ts"
   },
