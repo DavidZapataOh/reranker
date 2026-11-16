@@ -6,9 +6,11 @@
   "exports": {
     ".": "./src/index.ts",
     "./env": "./src/env.ts",
-    "./scrub": "./src/scrub.ts"
+    "./scrub": "./src/scrub.ts",
+    "./posthog-rest": "./src/posthog-rest.ts"
   },
   "scripts": {
+    "alerts:apply": "tsx scripts/apply-alerts.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --project unit --coverage --passWithNoTests",
     "test:integration": "vitest run --project integration --passWithNoTests"
@@ -28,9 +30,12 @@
     "resend": "catalog:"
   },
   "devDependencies": {
+    "@reranker/testing": "workspace:*",
     "@reranker/typescript-config": "workspace:*",
     "@types/node": "catalog:",
+    "msw": "catalog:",
     "@vitest/coverage-v8": "catalog:",
+    "tsx": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }
