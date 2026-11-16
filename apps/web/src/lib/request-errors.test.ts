@@ -1,10 +1,22 @@
 import { gunzipSync } from "node:zlib";
+import { resetAppEnv } from "@reranker/env";
 import { PostHog } from "posthog-node";
-import { describe, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { requestErrorOptions } from "./request-errors";
 
 const PII = /ana\.prueba@reranker\.co|310 555 1234/;
 const env = { POSTHOG_PROJECT_TOKEN: "phc_test", POSTHOG_HOST: "https://us.i.posthog.com" };
+
+// scrubEvent stamps app_env on every event, so the environment must be known.
+beforeEach(() => {
+  vi.stubEnv("APP_ENV", "preview");
+  resetAppEnv();
+});
+
+afterEach(() => {
+  vi.unstubAllEnvs();
+  resetAppEnv();
+});
 
 function decode(body: unknown): string {
   if (typeof body === "string") return body;
