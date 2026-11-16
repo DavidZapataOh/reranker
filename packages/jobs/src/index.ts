@@ -1,3 +1,4 @@
+export { type BatchOptions, type BatchResult, runBatch } from "./batch";
 export { type JobsConfig, jobsEnv, loadJobsConfig } from "./config";
 export { nextResetAt, spendDay } from "./day";
 export {
