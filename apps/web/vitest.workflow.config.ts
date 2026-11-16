@@ -11,6 +11,8 @@ export default defineConfig({
     name: "workflow",
     include: ["test/**/*.workflow.test.ts"],
     environment: "node",
+    // The local world is a development runtime; telemetry reads APP_ENV to stay local.
+    env: { APP_ENV: "development" },
     globalSetup: [
       fileURLToPath(
         new URL("../../packages/testing/src/vitest/integration-setup.ts", import.meta.url),
