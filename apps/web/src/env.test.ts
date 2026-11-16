@@ -44,7 +44,7 @@ describe("web environment", () => {
       /POSTHOG_FEATURE_FLAGS_KEY \(missing\)/,
     );
     expect(() =>
-      defineEnv(fragments, { APP_ENV: "production", ...key, POSTHOG_FEATURE_FLAGS_KEY: "phx_1" }),
+      defineEnv(fragments, { APP_ENV: "production", ...key, POSTHOG_FEATURE_FLAGS_KEY: "phc_1" }),
     ).toThrowError(/POSTHOG_FEATURE_FLAGS_KEY \(invalid\)/);
   });
 
