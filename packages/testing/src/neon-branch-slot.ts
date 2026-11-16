@@ -14,12 +14,13 @@ export function countLiveCiBranches(branches: { name: string }[]): number {
   return branches.filter((b) => b.name.startsWith("ci/")).length;
 }
 
-// Neon caps branches per project; queueing here keeps parallel runs from failing on the limit.
+// Each live CI branch holds its own copy of the test data, and the Free plan caps a project at
+// 1 GB of storage across branches; queueing keeps parallel runs well under it.
 export async function waitForCiBranchSlot({
   apiKey,
   projectId,
-  max = 8,
-  attempts = 5,
+  max = 3,
+  attempts = 15,
   delayMs = 60_000,
   fetch: request = fetch,
   sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
