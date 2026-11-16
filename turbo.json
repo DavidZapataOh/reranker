@@ -14,7 +14,7 @@
     },
     "web#build": {
       "dependsOn": ["^build", "@reranker/schema#build:json-schema"],
-      "outputs": [".next/**", "!.next/cache/**"],
+      "outputs": [".next/**", "!.next/cache/**", "src/app/.well-known/workflow/**"],
       "env": [
         "NEXT_PUBLIC_*",
         "APP_ENV",
@@ -28,7 +28,8 @@
         "OPS_ALERT_EMAIL",
         "LOG_LEVEL",
         "BETTERSTACK_HEARTBEAT_DAILY_URL",
-        "GITHUB_BILLING_READ_TOKEN"
+        "GITHUB_BILLING_READ_TOKEN",
+        "CRON_SECRET"
       ],
       "passThroughEnv": ["ENABLE_EXPERIMENTAL_COREPACK"]
     },

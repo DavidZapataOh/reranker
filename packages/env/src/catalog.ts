@@ -91,7 +91,7 @@ const rows: Row[] = [
   ["FREE_REPORT_VERIFY_HOLD_MS", "config", ALL, false, "S03-01"],
   ["FREE_REPORT_DRAIN_AT", "config", ALL, false, "S03-01"],
   ["FREE_REPORT_TEST_DELAY_MS", "config", PREVIEW, false, "S03-01"],
-  ["CRON_SECRET", "secret", PROD_PREV, false, "07"],
+  ["CRON_SECRET", "secret", PROD_PREV, false, "07", true],
   ["SPEND_CAP_DAILY_*_USD", "config", ALL, false, "07"],
   ["QUOTA_RESEND_EMAILS_DAILY", "config", ALL, false, "07"],
   ["QUOTA_RESEND_EMAILS_SPLIT", "config", ALL, false, "07"],
