@@ -1,3 +1,4 @@
+import { resetAppEnv } from "@reranker/env";
 import { AppError } from "@reranker/schema";
 import { redirect } from "next/navigation";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
@@ -24,12 +25,16 @@ let warn: ReturnType<typeof vi.spyOn>;
 let error: ReturnType<typeof vi.spyOn>;
 
 beforeEach(() => {
+  vi.stubEnv("APP_ENV", "development");
+  resetAppEnv();
   warn = vi.spyOn(console, "warn").mockImplementation(() => {});
   error = vi.spyOn(console, "error").mockImplementation(() => {});
   mocks.headers.mockResolvedValue(new Headers({ "x-vercel-id": "iad1::act" }));
 });
 
 afterEach(() => {
+  vi.unstubAllEnvs();
+  resetAppEnv();
   vi.restoreAllMocks();
   vi.clearAllMocks();
   mocks.captureServerEvent.mockReset();
