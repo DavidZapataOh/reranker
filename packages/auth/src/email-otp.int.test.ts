@@ -147,33 +147,6 @@ describe("sending a sign-in code", () => {
     expect(Number(fourth.headers.get("X-Retry-After"))).toBeGreaterThan(0);
     expect(await pendingCodes("ana@gmail.com")).toBe(0);
   });
-
-  test("critical quota exhausted → reason quota and nothing is sent", async () => {
-    // A second instance whose critical class allows exactly what is already used today. Other
-    // files only add to `used`, so the class stays full. The first instance keeps the config it
-    // has already read.
-    const { quotaStatus } = await import("@reranker/jobs");
-    const { used } = (await quotaStatus("resend.emails")).critical;
-    vi.resetModules();
-    vi.stubEnv("QUOTA_RESEND_EMAILS_DAILY", String(used + 70));
-    vi.stubEnv("QUOTA_RESEND_EMAILS_SPLIT", `${used}/16/50/4`);
-    const [{ auth: exhausted }, db] = await Promise.all([
-      import("./server"),
-      import("@reranker/db"),
-    ]);
-    const email = "delivered+quota@resend.dev";
-    let response: Response;
-    try {
-      response = await sendCode(email, { ip: nextIp(), instance: exhausted });
-    } finally {
-      await db.endPools();
-    }
-    expect(response.status).toBe(503);
-    expect(await response.json()).toMatchObject({ reason: "quota" });
-    expect(Number(response.headers.get("X-Retry-After"))).toBeGreaterThan(0);
-    expect(await pendingCodes(email)).toBe(0);
-    expect(sentTo(email)).toEqual([]);
-  });
 });
 
 describe("signing in with a code", () => {
@@ -261,5 +234,35 @@ describe("signing in with a code", () => {
       expect(response.status).toBe(400);
     }
     expect((await signIn("delivered+signin-rl5@resend.dev", "000000", ip)).status).toBe(429);
+  });
+});
+
+// Last in the file: the instance it builds leaves the exhausted allocation in the module registry,
+// where the hook's lazy import of the guard would pick it up.
+describe("the daily email quota", () => {
+  test("critical quota exhausted → reason quota and nothing is sent", async () => {
+    // A second instance whose critical class allows exactly what is already used today. Other
+    // files only add to `used`, so the class stays full.
+    const { quotaStatus } = await import("@reranker/jobs");
+    const { used } = (await quotaStatus("resend.emails")).critical;
+    vi.resetModules();
+    vi.stubEnv("QUOTA_RESEND_EMAILS_DAILY", String(used + 70));
+    vi.stubEnv("QUOTA_RESEND_EMAILS_SPLIT", `${used}/16/50/4`);
+    const [{ auth: exhausted }, db] = await Promise.all([
+      import("./server"),
+      import("@reranker/db"),
+    ]);
+    const email = "delivered+quota@resend.dev";
+    let response: Response;
+    try {
+      response = await sendCode(email, { ip: nextIp(), instance: exhausted });
+    } finally {
+      await db.endPools();
+    }
+    expect(response.status).toBe(503);
+    expect(await response.json()).toMatchObject({ reason: "quota" });
+    expect(Number(response.headers.get("X-Retry-After"))).toBeGreaterThan(0);
+    expect(await pendingCodes(email)).toBe(0);
+    expect(sentTo(email)).toEqual([]);
   });
 });
