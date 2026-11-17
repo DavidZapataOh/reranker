@@ -18,6 +18,7 @@ import {
   settleSpend,
   spendStatus,
 } from "../src/spend";
+import { registerJobsTelemetry } from "../src/telemetry";
 
 // Caps come from the environment once per process; each test swaps in its own.
 const state = vi.hoisted(() => ({ config: undefined as JobsConfig | undefined }));
@@ -375,9 +376,10 @@ describe("settleSpend and releaseSpend", () => {
   test("settle and release are idempotent under step retries and say whether they applied", async () => {
     const r = await reserveSpend(req(4000));
     const events: unknown[] = [];
-    const onEvent = (event: unknown) => events.push(event);
-    expect(await settleSpend(r, usd(3100), { onEvent })).toEqual({ applied: true });
-    expect(await settleSpend(r, usd(3100), { onEvent })).toEqual({ applied: false });
+    registerJobsTelemetry({ capture: (event) => void events.push(event), alert: async () => {} });
+    expect(await settleSpend(r, usd(3100))).toEqual({ applied: true });
+    expect(await settleSpend(r, usd(3100))).toEqual({ applied: false });
+    registerJobsTelemetry(null);
     expect(await releaseSpend(r)).toEqual({ applied: false });
     expect(events).toEqual([
       {

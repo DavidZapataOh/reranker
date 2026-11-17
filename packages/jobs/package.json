@@ -15,6 +15,7 @@
     "test:contract": "vitest run --project contract"
   },
   "dependencies": {
+    "@reranker/analytics": "workspace:*",
     "@reranker/db": "workspace:*",
     "@reranker/env": "workspace:*",
     "@reranker/flags": "workspace:*",
@@ -24,6 +25,7 @@
     "workflow": "catalog:"
   },
   "devDependencies": {
+    "@reranker/telemetry": "workspace:*",
     "@reranker/typescript-config": "workspace:*",
     "@types/node": "catalog:",
     "@types/pg": "catalog:",

@@ -36,7 +36,6 @@ export { assertOpaqueKey } from "./keys";
 export {
   type AcquireOptions,
   acquireProviderSlot,
-  type LeaseEvent,
   type ProviderSlot,
 } from "./leases";
 export {
@@ -79,6 +78,14 @@ export {
   spendStatus,
 } from "./spend";
 export { type StartOnceResult, startOnce } from "./start-once";
+export {
+  type JobsAlertKind,
+  type JobsAlertPayload,
+  type JobsEvent,
+  type JobsTelemetry,
+  registerJobsTelemetry,
+  reportStepError,
+} from "./telemetry";
 export {
   recordVelocity,
   refreshVelocityBaselines,

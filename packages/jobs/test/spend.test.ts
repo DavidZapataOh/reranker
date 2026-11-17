@@ -19,6 +19,9 @@ afterAll(() => {
 const { InvalidInputError, SpendCapExceededError } = await import("../src/errors");
 const { costOf, releaseSpend, releaseStaleSpend, reserveSpend, settleSpend, spendStatus } =
   await import("../src/spend");
+const { registerJobsTelemetry } = await import("../src/telemetry");
+const events: unknown[] = [];
+registerJobsTelemetry({ capture: (event) => void events.push(event), alert: async () => {} });
 type SpendRequest = import("../src/spend").SpendRequest;
 
 const usd = (micros: number) => cost(micros, "USD");
@@ -56,6 +59,7 @@ const denied = (scope: string | null, scopes = ["global"]) => ({
 beforeEach(() => {
   execute.mockReset();
   withSystem.mockClear();
+  events.length = 0;
   process.env.APP_ENV = "production";
   resetAppEnv();
 });
@@ -224,28 +228,28 @@ describe("settleSpend and releaseSpend", () => {
   } as const;
 
   test("each is one statement on the reservation id and reports whether it applied", async () => {
-    const onEvent = vi.fn();
     execute.mockResolvedValue({ rows: [{ applied: true }] });
-    await expect(settleSpend(r, usd(5000), { onEvent })).resolves.toEqual({ applied: true });
+    await expect(settleSpend(r, usd(5000))).resolves.toEqual({ applied: true });
     expect(params(0)).toEqual([ID, 5000]);
-    expect(onEvent).toHaveBeenCalledExactlyOnceWith({
-      name: "jobs.spend.settled",
-      props: { provider: "openai", purpose: "quality-canary", micro_usd: 5000 },
-    });
+    expect(events).toEqual([
+      {
+        name: "jobs.spend.settled",
+        props: { provider: "openai", purpose: "quality-canary", micro_usd: 5000 },
+      },
+    ]);
     await expect(releaseSpend(r)).resolves.toEqual({ applied: true });
     expect(params(1)).toEqual([ID]);
     expect(withSystem).toHaveBeenCalledTimes(2);
   });
 
   test("a settle or release that changed nothing says so and emits nothing", async () => {
-    const onEvent = vi.fn();
     execute.mockResolvedValue({ rows: [{ applied: false }] });
-    await expect(settleSpend(r, usd(5000), { onEvent })).resolves.toEqual({ applied: false });
+    await expect(settleSpend(r, usd(5000))).resolves.toEqual({ applied: false });
     await expect(releaseSpend(r)).resolves.toEqual({ applied: false });
     execute.mockResolvedValue({ rows: [] });
     await expect(settleSpend(r, usd(5000))).rejects.toThrow("no row");
     await expect(releaseSpend(r)).rejects.toThrow("no row");
-    expect(onEvent).not.toHaveBeenCalled();
+    expect(events).toEqual([]);
   });
 
   test("reject a malformed id or another currency before touching the database", async () => {

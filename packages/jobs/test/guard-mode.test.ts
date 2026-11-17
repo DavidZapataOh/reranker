@@ -6,7 +6,7 @@ const withSystem = vi.fn(async (_reason: string, fn: (tx: unknown) => unknown) =
 vi.mock("@reranker/db", () => ({ withSystem }));
 
 const { InvalidInputError } = await import("../src/errors");
-const { guardModeStatus, tripGuardMode } = await import("../src/guard-mode");
+const { guardModeSince, guardModeStatus, tripGuardMode } = await import("../src/guard-mode");
 
 const until = new Date("2026-11-16T12:00:00Z");
 
@@ -89,5 +89,16 @@ describe("guardModeStatus", () => {
     execute.mockResolvedValue({ rows: [] });
     await expect(guardModeStatus("x")).rejects.toThrow("no row");
     await expect(guardModeStatus("bad name!")).rejects.toBeInstanceOf(InvalidInputError);
+  });
+});
+
+describe("guardModeSince", () => {
+  test("is one system statement: the trip time of an active mode, null when off", async () => {
+    execute.mockResolvedValue({ rows: [{ tripped_at: until.toISOString() }] });
+    await expect(guardModeSince("jobs-saturated:dataforseo")).resolves.toEqual(until);
+    expect(execute).toHaveBeenCalledTimes(1);
+    execute.mockResolvedValue({ rows: [] });
+    await expect(guardModeSince("jobs-saturated:dataforseo")).resolves.toBeNull();
+    await expect(guardModeSince("bad name!")).rejects.toBeInstanceOf(InvalidInputError);
   });
 });

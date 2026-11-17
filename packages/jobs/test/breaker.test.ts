@@ -6,15 +6,23 @@ vi.mock("@reranker/db", () => ({ withSystem }));
 
 vi.stubEnv("APP_ENV", "development");
 const { breakerCheck, breakerRecord } = await import("../src/breaker");
+const { registerJobsTelemetry, resetJobsTelemetryForTest } = await import("../src/telemetry");
+
+const events: unknown[] = [];
 
 beforeEach(() => {
   execute.mockReset();
   withSystem.mockClear();
+  events.length = 0;
+  resetJobsTelemetryForTest();
+  registerJobsTelemetry({ capture: (event) => void events.push(event), alert: async () => {} });
 });
 
 describe("breakerCheck", () => {
   test("is one system statement and maps the row", async () => {
-    execute.mockResolvedValue({ rows: [{ state: "open", retry_after_ms: 28_000 }] });
+    execute.mockResolvedValue({
+      rows: [{ state: "open", retry_after_ms: 28_000, opened_at: new Date() }],
+    });
     await expect(breakerCheck("dataforseo")).resolves.toEqual({
       state: "open",
       retryAfterMs: 28_000,
@@ -32,9 +40,32 @@ describe("breakerCheck", () => {
 
 describe("breakerRecord", () => {
   test.each(["success", "failure"] as const)("is one system statement for %s", async (outcome) => {
-    execute.mockResolvedValue({ rows: [] });
+    execute.mockResolvedValue({ rows: [{ state: "closed", previous: "closed" }] });
     await breakerRecord("openai", outcome);
     expect(withSystem).toHaveBeenCalledTimes(1);
     expect(execute).toHaveBeenCalledTimes(1);
+  });
+
+  test.each([
+    ["closed", "open"],
+    ["half_open", "open"],
+    ["half_open", "closed"],
+  ])("a move from %s to %s is a state event", async (previous, state) => {
+    execute.mockResolvedValue({ rows: [{ state, previous }] });
+    await breakerRecord("dataforseo", "failure");
+    expect(events).toEqual([
+      { name: "jobs.breaker.state", props: { provider: "dataforseo", state } },
+    ]);
+  });
+
+  test.each(["closed", "open"])("staying %s emits nothing", async (state) => {
+    execute.mockResolvedValue({ rows: [{ state, previous: state }] });
+    await breakerRecord("dataforseo", "success");
+    expect(events).toEqual([]);
+  });
+
+  test("fails loudly when the function returns nothing", async () => {
+    execute.mockResolvedValue({ rows: [] });
+    await expect(breakerRecord("openai", "success")).rejects.toThrow("no row");
   });
 });
