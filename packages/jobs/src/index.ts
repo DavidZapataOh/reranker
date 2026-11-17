@@ -1,5 +1,12 @@
 export { type BatchOptions, type BatchResult, runBatch } from "./batch";
 export { type BreakerState, breakerCheck, breakerRecord } from "./breaker";
+export {
+  type CapacitySource,
+  type ProviderCapacity,
+  predictedWaitMs,
+  providerCapacity,
+  registerCapacitySource,
+} from "./capacity";
 export { type JobsConfig, jobsEnv, loadJobsConfig } from "./config";
 export { nextResetAt, spendDay } from "./day";
 export {
