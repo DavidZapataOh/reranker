@@ -1,13 +1,10 @@
 import { createHmac } from "node:crypto";
 import { isIPv4 } from "node:net";
 import { defineEnv } from "@reranker/env";
-import {
-  type BucketLimits,
-  consumeQuota,
-  QuotaExceededError,
-  refundTokens,
-  takeTokens,
-} from "@reranker/jobs";
+// The subpaths keep the rest of the jobs runtime out of every auth request's module graph.
+import { QuotaExceededError } from "@reranker/jobs/errors";
+import { consumeQuota } from "@reranker/jobs/quota";
+import { type BucketLimits, refundTokens, takeTokens } from "@reranker/jobs/rate";
 import type { GenericEndpointContext } from "better-auth";
 import { APIError, getIP } from "better-auth/api";
 import { checkEmailDomain } from "./email-domain";

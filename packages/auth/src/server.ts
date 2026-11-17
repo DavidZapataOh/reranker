@@ -12,7 +12,6 @@ import { COOKIE_PREFIX } from "./cookies";
 import { resolveEmailLocale } from "./email-locale";
 import type { RequestedFrom } from "./emails/sign-in-code";
 import { authEnv } from "./env";
-import { guardOtpSend } from "./guard-otp-send";
 import { MEMBER_FIELDS, ORG_FIELDS } from "./organizations";
 import { ac, roles } from "./permissions";
 import { AUTH_RATE_RULES, EMAIL_SENDING_PATHS } from "./rate-limits";
@@ -158,8 +157,11 @@ export const auth = betterAuth({
     },
   },
   hooks: {
+    // Loaded on the first send: session reads, most of the traffic, never need the quota code.
     before: createAuthMiddleware(async (ctx) => {
-      if (ctx.path === "/email-otp/send-verification-otp") await guardOtpSend(ctx);
+      if (ctx.path !== "/email-otp/send-verification-otp") return;
+      const { guardOtpSend } = await import("./guard-otp-send");
+      await guardOtpSend(ctx);
     }),
   },
   rateLimit: {

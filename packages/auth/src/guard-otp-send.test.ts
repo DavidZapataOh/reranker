@@ -1,4 +1,6 @@
-import type { BucketLimits } from "@reranker/jobs";
+import { assertOpaqueKey } from "@reranker/jobs";
+import { QuotaExceededError } from "@reranker/jobs/errors";
+import type { BucketLimits } from "@reranker/jobs/rate";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 const calls = vi.hoisted(() => [] as string[]);
@@ -9,15 +11,15 @@ const jobs = vi.hoisted(() => ({
   consumeQuota: vi.fn(),
 }));
 
-vi.mock("@reranker/jobs", async (importOriginal) => ({
-  ...(await importOriginal<typeof import("@reranker/jobs")>()),
-  ...jobs,
+vi.mock("@reranker/jobs/rate", () => ({
+  takeTokens: jobs.takeTokens,
+  refundTokens: jobs.refundTokens,
 }));
+vi.mock("@reranker/jobs/quota", () => ({ consumeQuota: jobs.consumeQuota }));
 
 const domain = vi.hoisted(() => ({ checkEmailDomain: vi.fn() }));
 vi.mock("./email-domain", () => domain);
 
-const { assertOpaqueKey, QuotaExceededError } = await import("@reranker/jobs");
 const { guardOtpSend, normalizeEmailForLimits } = await import("./guard-otp-send");
 
 const HMAC_KEY = "k".repeat(32);
