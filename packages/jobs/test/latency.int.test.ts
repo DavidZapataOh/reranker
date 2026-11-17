@@ -54,8 +54,9 @@ describe("CI latency guard", () => {
 
 describe("10x load", () => {
   // Ten reports at once ask for 1,200 slots over their run. Here ten times their concurrency (50
-  // lanes in 10 processes) asks 300 times for DataForSEO's 28 slots, while 600 reservations race
-  // for a contract-test cap that admits 250 of them.
+  // lanes in 5 processes) asks 300 times for DataForSEO's 28 slots, while 600 reservations race
+  // for a contract-test cap that admits 250 of them. Few processes, many lanes each: booting a
+  // process costs a CPU-second that the suites running beside this one on the runner need.
   const SLOT_LIMIT = 28;
   const RESERVATIONS = 600;
   const AMOUNT = 2_000;
@@ -90,8 +91,8 @@ describe("10x load", () => {
       }
     })();
 
-    const fleet = Array.from({ length: 10 }, () =>
-      runWorker({ account, maxInFlight: SLOT_LIMIT, lanes: 5, acquisitions: 30, holdMs: 1000 }),
+    const fleet = Array.from({ length: 5 }, () =>
+      runWorker({ account, maxInFlight: SLOT_LIMIT, lanes: 10, acquisitions: 60, holdMs: 1000 }),
     );
     await Promise.all(fleet.map((w) => w.ready));
     for (const w of fleet) w.go();
