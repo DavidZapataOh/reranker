@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@reranker/telemetry": "workspace:*",
+    "@reranker/testing": "workspace:*",
     "@reranker/typescript-config": "workspace:*",
     "@types/node": "catalog:",
     "@types/pg": "catalog:",

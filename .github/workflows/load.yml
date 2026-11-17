@@ -81,6 +81,9 @@ jobs:
           SCENARIO: ${{ inputs.scenario }}
           P95_MS: ${{ inputs.p95_ms }}
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+          # The preview's own value; internal routes answer only to it, and the target guard above
+          # already limits where it can be sent.
+          CRON_SECRET: ${{ secrets.PREVIEW_CRON_SECRET }}
         run: |
           mkdir -p load-results
           failed=0

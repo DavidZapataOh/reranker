@@ -1,6 +1,4 @@
-import { type ChildProcess, fork } from "node:child_process";
 import { randomUUID } from "node:crypto";
-import { fileURLToPath } from "node:url";
 import { endPools, withSystem } from "@reranker/db";
 import { sql } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
@@ -10,9 +8,8 @@ import { ProviderUnavailableError, RateLimitedError } from "../src/errors";
 import { acquireProviderSlot } from "../src/leases";
 import { toStepError } from "../src/step-errors";
 import { registerJobsTelemetry } from "../src/telemetry";
-import type { WorkerJob, WorkerResult } from "./support/lease-worker";
+import { runWorker, startWorker } from "./support/lease-fleet";
 
-const WORKER = fileURLToPath(new URL("./support/lease-worker.ts", import.meta.url));
 const LANES = 5;
 
 // The pool checkout times out after 2 s, so no process asks for more connections than it has.
@@ -24,28 +21,6 @@ afterAll(() => endPools());
 
 const account = () => `test:${randomUUID()}`;
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-function startWorker(job: WorkerJob): ChildProcess {
-  return fork(WORKER, [JSON.stringify(job)], {
-    execArgv: ["--import", "tsx"],
-    env: { ...process.env, DB_POOL_MAX: String(LANES + 1) },
-  });
-}
-
-function runWorker(job: WorkerJob): {
-  ready: Promise<void>;
-  go(): void;
-  results: Promise<WorkerResult[]>;
-} {
-  const child = startWorker(job);
-  const ready = new Promise<void>((resolve) => child.once("message", () => resolve()));
-  const results = new Promise<WorkerResult[]>((resolve, reject) => {
-    child.on("message", (m: { results?: WorkerResult[] }) => m.results && resolve(m.results));
-    child.once("error", reject);
-    child.once("exit", (code) => reject(new Error(`worker exited with ${code}`)));
-  });
-  return { ready, go: () => child.send("go"), results };
-}
 
 const liveLeases = async (key: string): Promise<number> => {
   const { rows } = await withSystem("test.leases", (tx) =>

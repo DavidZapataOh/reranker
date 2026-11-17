@@ -9,8 +9,9 @@ export type PlanNode = {
   Plans?: PlanNode[];
 };
 
-export type ExplainPlan = {
-  Plan: PlanNode;
+export type GenericPlan = { Plan: PlanNode };
+
+export type ExplainPlan = GenericPlan & {
   "Planning Time": number;
   "Execution Time": number;
 };
@@ -26,12 +27,22 @@ export async function explain(
   return rows[0]["QUERY PLAN"][0];
 }
 
+/**
+ * The generic plan of a statement with `$n` placeholders: the plan a server-side prepared statement
+ * (a PL/pgSQL statement included) settles on after its first executions. Each placeholder needs a
+ * cast so its type is known without values.
+ */
+export async function explainGeneric(db: Queryable, sql: string): Promise<GenericPlan> {
+  const { rows } = await db.query(`EXPLAIN (GENERIC_PLAN, VERBOSE, FORMAT JSON) ${sql}`);
+  return rows[0]["QUERY PLAN"][0];
+}
+
 function* walk(node: PlanNode): Generator<PlanNode> {
   yield node;
   for (const child of node.Plans ?? []) yield* walk(child);
 }
 
-export function expectNoSeqScanOn(plan: ExplainPlan, table: string): void {
+export function expectNoSeqScanOn(plan: GenericPlan, table: string): void {
   const dot = table.lastIndexOf(".");
   const schema = dot === -1 ? undefined : table.slice(0, dot);
   const name = table.slice(dot + 1);
