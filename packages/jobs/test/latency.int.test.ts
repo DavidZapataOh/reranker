@@ -27,7 +27,8 @@ describe("CI latency guard", () => {
   // measured in the same run: a few of them plus headroom, which only a gross regression (a
   // lock wait, a scan, an extra round trip) breaks. The strict p95 < 25 ms is measured from
   // iad1 on the preview through /api/internal/jobs-latency.
-  const CALLS = 200;
+  // About 20 round trips per call: 100 calls take ~50 s from a runner ~20 ms from Neon.
+  const CALLS = 100;
   // Transactions each primitive makes: the slot checks the breaker, then takes the lease.
   const TRANSACTIONS = { acquireProviderSlot: 2, reserveSpend: 1, settleSpend: 1 } as const;
   const ceiling = (base: LatencyStats, transactions: number) => transactions * 2 * base.p50 + 15;
@@ -48,7 +49,7 @@ describe("CI latency guard", () => {
       expect(stats.n).toBe(CALLS);
       expect(stats.p50, name).toBeLessThanOrEqual(ceiling(base, transactions));
     }
-  }, 120_000);
+  }, 180_000);
 });
 
 describe("10x load", () => {
