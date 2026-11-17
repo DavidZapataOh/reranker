@@ -7,7 +7,7 @@ import {
   users,
   verifications,
 } from "@reranker/db/schema/auth";
-import { createTenant } from "@reranker/testing/factories";
+import { DEFAULT_COUNTRY_CODE } from "@reranker/i18n/countries";
 import { inArray } from "drizzle-orm";
 import { afterAll, beforeAll, expect, test } from "vitest";
 import { purgeExpiredAuthRecords } from "./purge";
@@ -25,6 +25,22 @@ async function createUser(): Promise<string> {
     tx.insert(users).values({ id, name: "Purge", email: `purge+${id}@resend.dev` }),
   );
   userIds.push(id);
+  return id;
+}
+
+async function createOrganization(): Promise<string> {
+  const id = crypto.randomUUID();
+  await withSystem("test.seed", (tx) =>
+    tx.insert(organizations).values({
+      id,
+      name: "Purge",
+      slug: `purge-${id}`,
+      kind: "client",
+      countryCode: DEFAULT_COUNTRY_CODE,
+      createdAt: new Date(),
+    }),
+  );
+  organizationIds.push(id);
   return id;
 }
 
@@ -100,8 +116,7 @@ afterAll(async () => {
 
 test("removes only records past their retention and is idempotent", async () => {
   const userId = await createUser();
-  const organizationId = await withSystem("test.seed", (tx) => createTenant(tx));
-  organizationIds.push(organizationId);
+  const organizationId = await createOrganization();
 
   const oldSession = await seedSession(userId, ago(31 * DAY));
   const recentSession = await seedSession(userId, ago(29 * DAY));
