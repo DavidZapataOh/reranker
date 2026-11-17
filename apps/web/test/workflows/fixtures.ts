@@ -1,6 +1,7 @@
-import { RateLimitedError, runBatch, SpendCapExceededError } from "@reranker/jobs";
+import { enqueue, RateLimitedError, runBatch, SpendCapExceededError } from "@reranker/jobs";
 import { toStepError } from "@reranker/jobs/step-errors";
 import { getStepMetadata } from "workflow";
+import { recordingJob } from "./jobs";
 import { entriesOf, record } from "./ledger";
 
 const ITEMS = Array.from({ length: 12 }, (_, i) => String(i));
@@ -58,4 +59,17 @@ async function failOnce(runKey: string, mode: "rate" | "cap"): Promise<{ gapMs: 
   }
   const [first] = await entriesOf(runKey, "attempt");
   return { gapMs: Date.now() - (first?.at ?? Date.now()) };
+}
+
+/** Enqueues from inside a run, as domain workflows do, where only the process-wide starter exists. */
+export async function enqueueFromRunWorkflow(id: string): Promise<string> {
+  "use workflow";
+
+  return enqueueRecording(id);
+}
+
+async function enqueueRecording(id: string): Promise<string> {
+  "use step";
+  const { jobId } = await enqueue(recordingJob, { id }, { dedupeKey: id });
+  return jobId;
 }

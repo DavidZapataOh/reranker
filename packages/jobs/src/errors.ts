@@ -68,6 +68,25 @@ export class QuotaExceededError extends Error {
   }
 }
 
+/** A job failed on its last allowed attempt; `cause` is the failure of that attempt. */
+export class JobAttemptsExhaustedError extends Error {
+  override readonly name = "JobAttemptsExhausted";
+  readonly job: string;
+  readonly attempts: number;
+
+  constructor(job: string, attempts: number, cause?: unknown) {
+    const reason = cause instanceof Error ? `${cause.name}: ${cause.message}` : String(cause);
+    super(
+      cause === undefined
+        ? `Job ${job} has no attempts left after ${attempts}`
+        : `Job ${job} failed on its last attempt (${attempts}): ${reason}`,
+      cause === undefined ? undefined : { cause },
+    );
+    this.job = job;
+    this.attempts = attempts;
+  }
+}
+
 export class InvalidInputError extends Error {
   override readonly name = "InvalidInput";
 }

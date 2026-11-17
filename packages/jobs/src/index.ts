@@ -11,6 +11,7 @@ export { type JobsConfig, jobsEnv, loadJobsConfig } from "./config";
 export { nextResetAt, spendDay } from "./day";
 export {
   InvalidInputError,
+  JobAttemptsExhaustedError,
   NON_RETRYABLE,
   NotFoundError,
   ProviderRejectedError,
@@ -20,6 +21,17 @@ export {
   SpendCapExceededError,
 } from "./errors";
 export { guardModeStatus, tripGuardMode } from "./guard-mode";
+export {
+  defineJob,
+  enqueue,
+  type JobContext,
+  type JobDefinition,
+  type JobStarter,
+  registerJobStarter,
+  registerOpportunistic,
+  runJob,
+  runOpportunistic,
+} from "./jobs";
 export { assertOpaqueKey } from "./keys";
 export {
   type AcquireOptions,
@@ -43,6 +55,7 @@ export type {
   SpendPurpose,
   SpendRegionPool,
 } from "./providers";
+export { consumeQuota, quotaStatus } from "./quota";
 export { type BucketLimits, peekTokens, refundTokens, takeTokens } from "./rate";
 export {
   costOf,

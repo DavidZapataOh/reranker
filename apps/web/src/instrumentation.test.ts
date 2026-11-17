@@ -10,12 +10,16 @@ vi.mock("@posthog/next", () => posthogNext);
 const db = vi.hoisted(() => ({ setDbEventSink: vi.fn() }));
 vi.mock("@reranker/db", () => db);
 vi.mock("./lib/db-alerts", () => ({ routeDbEvent: "route-db-event" }));
+const jobs = vi.hoisted(() => ({ registerJobStarter: vi.fn() }));
+vi.mock("@reranker/jobs", () => jobs);
+vi.mock("./workflows/jobs/registry", () => ({ startJob: "start-job" }));
 
 beforeEach(() => {
   vi.resetModules();
   telemetry.registerLogger.mockClear();
   telemetry.getPostHogServer.mockClear();
   db.setDbEventSink.mockClear();
+  jobs.registerJobStarter.mockClear();
   posthogNext.createOnRequestError.mockReset().mockReturnValue(posthogNext.handler);
   globalThis.__envError = undefined;
 });
@@ -37,6 +41,7 @@ test("validates on the node runtime and passes with a complete environment", asy
   expect(telemetry.registerLogger).toHaveBeenCalledOnce();
   expect(telemetry.getPostHogServer).toHaveBeenCalledOnce();
   expect(db.setDbEventSink).toHaveBeenCalledWith("route-db-event");
+  expect(jobs.registerJobStarter).toHaveBeenCalledWith("start-job");
 });
 
 test("keeps the error for the health check and rethrows it", async () => {
@@ -55,6 +60,7 @@ test("does nothing outside the node runtime", async () => {
   await expect(register()).resolves.toBeUndefined();
   expect(telemetry.registerLogger).not.toHaveBeenCalled();
   expect(db.setDbEventSink).not.toHaveBeenCalled();
+  expect(jobs.registerJobStarter).not.toHaveBeenCalled();
 });
 
 test("reports request errors to PostHog with the server token, scrubbed", async () => {

@@ -19,11 +19,15 @@ export async function register() {
   registerLogger();
   // Started with the server so uncaught exceptions and unhandled rejections are captured from the first request.
   getPostHogServer();
-  const [{ setDbEventSink }, { routeDbEvent }] = await Promise.all([
-    import("@reranker/db"),
-    import("./lib/db-alerts"),
-  ]);
+  const [{ setDbEventSink }, { routeDbEvent }, { registerJobStarter }, { startJob }] =
+    await Promise.all([
+      import("@reranker/db"),
+      import("./lib/db-alerts"),
+      import("@reranker/jobs"),
+      import("./workflows/jobs/registry"),
+    ]);
   setDbEventSink(routeDbEvent);
+  registerJobStarter(startJob);
 }
 
 export const onRequestError = createOnRequestError(requestErrorOptions());
