@@ -35,7 +35,9 @@ on:
 permissions: {}
 run-name: "quality · ${{ github.event.client_payload.environment || inputs.environment }} · ${{ github.event.client_payload.git.shortSha || inputs.sha }}"
 concurrency:
-  group: quality-${{ github.event.client_payload.git.sha || inputs.sha }}-${{ github.event.client_payload.environment || inputs.environment }}
+  # The trigger is part of the key: Vercel's dispatch for a preview the preview workflow already
+  # tests is ignored, and sharing a group would let it cancel the real run.
+  group: quality-${{ github.event_name }}-${{ github.event.client_payload.git.sha || inputs.sha }}-${{ github.event.client_payload.environment || inputs.environment }}
   cancel-in-progress: true
 jobs:
   quality:
