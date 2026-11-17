@@ -25,7 +25,7 @@ export class PostHogApiError extends Error {
 export function createPostHogRest(apiKey: string) {
   const base = `${APP_HOST}/api/projects/${PROJECT_ID}/`;
 
-  async function request(url: string, init?: RequestInit): Promise<unknown> {
+  async function request(url: string, init?: RequestInit, signal?: AbortSignal): Promise<unknown> {
     // Whatever a paginated `next` link says, the key is not sent elsewhere.
     if (new URL(url).origin !== APP_HOST) throw new Error(`Refusing to call ${url}`);
     const res = await fetch(url, {
@@ -34,7 +34,9 @@ export function createPostHogRest(apiKey: string) {
         Authorization: `Bearer ${apiKey}`,
         ...(init?.body ? { "Content-Type": "application/json" } : {}),
       },
-      signal: AbortSignal.timeout(TIMEOUT_MS),
+      signal: signal
+        ? AbortSignal.any([signal, AbortSignal.timeout(TIMEOUT_MS)])
+        : AbortSignal.timeout(TIMEOUT_MS),
     });
     if (!res.ok) {
       const body = (await res.json().catch(() => null)) as { detail?: string } | null;
@@ -44,8 +46,13 @@ export function createPostHogRest(apiKey: string) {
   }
 
   return {
-    send(path: string, method: "POST" | "PATCH", body: unknown): Promise<unknown> {
-      return request(`${base}${path}`, { method, body: JSON.stringify(body) });
+    send(
+      path: string,
+      method: "POST" | "PATCH",
+      body: unknown,
+      signal?: AbortSignal,
+    ): Promise<unknown> {
+      return request(`${base}${path}`, { method, body: JSON.stringify(body) }, signal);
     },
     /** Every row of a paginated list endpoint, following the `next` links. */
     async list<S extends z.ZodType>(path: string, row: S): Promise<z.output<S>[]> {

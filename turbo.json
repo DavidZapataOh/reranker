@@ -29,6 +29,11 @@
         "LOG_LEVEL",
         "BETTERSTACK_HEARTBEAT_DAILY_URL",
         "GITHUB_BILLING_READ_TOKEN",
+        "DATAFORSEO_LOGIN",
+        "DATAFORSEO_PASSWORD",
+        "NEON_API_KEY",
+        "NEON_PROJECT_ID",
+        "NEON_NONPROD_PROJECT_ID",
         "CRON_SECRET"
       ],
       "passThroughEnv": ["ENABLE_EXPERIMENTAL_COREPACK"]

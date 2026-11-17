@@ -6,6 +6,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./env": "./src/env.ts",
+    "./digest": "./src/digest.ts",
     "./scrub": "./src/scrub.ts",
     "./posthog-rest": "./src/posthog-rest.ts"
   },
@@ -24,6 +25,7 @@
     "@reranker/analytics": "workspace:*",
     "@reranker/db": "workspace:*",
     "@reranker/env": "workspace:*",
+    "@reranker/i18n": "workspace:*",
     "@reranker/schema": "workspace:*",
     "drizzle-orm": "catalog:",
     "next": "catalog:",
