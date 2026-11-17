@@ -203,3 +203,51 @@ describe("sendOpsAlert", () => {
     expect(sent).not.toContain("ana@example.co");
   });
 });
+
+describe("opsAlerts", () => {
+  test("the background jobs alerts are registered from the jobs source, each with its runbook", () => {
+    expect(
+      Object.fromEntries(Object.entries(opsAlerts).filter(([, alert]) => alert.source === "jobs")),
+    ).toEqual({
+      "jobs-spend-cap-reached": {
+        severity: "warning",
+        runbook: "jobs-spend-cap-reached.md",
+        source: "jobs",
+      },
+      "jobs-provider-saturated": {
+        severity: "warning",
+        runbook: "jobs-provider-saturated.md",
+        source: "jobs",
+      },
+      "jobs-breaker-open": {
+        severity: "critical",
+        runbook: "jobs-breaker-open.md",
+        source: "jobs",
+      },
+      "jobs-workflow-failures": {
+        severity: "critical",
+        runbook: "jobs-workflow-failures.md",
+        source: "jobs",
+      },
+      "jobs-hobby-quota": { severity: "warning", runbook: "jobs-hobby-quota.md", source: "jobs" },
+      "network-ranges-stale": {
+        severity: "warning",
+        runbook: "network-ranges-stale.md",
+        source: "jobs",
+      },
+    });
+  });
+
+  test("a spend cap at 100% reaches the inbox although the kind is a warning", async () => {
+    await sendOpsAlert("jobs-spend-cap-reached", {
+      scope: "global",
+      threshold: 100,
+      severity: "critical",
+    });
+    await flush();
+    expect(mocks.send).toHaveBeenCalledWith(
+      expect.objectContaining({ subject: "[critical] jobs-spend-cap-reached" }),
+      expect.anything(),
+    );
+  });
+});

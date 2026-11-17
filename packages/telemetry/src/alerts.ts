@@ -38,6 +38,23 @@ export const opsAlerts = {
     runbook: "heartbeat-missed.md",
     source: "betterstack",
   },
+  // At 100% the payload raises it to critical; 80% only warns.
+  "jobs-spend-cap-reached": {
+    severity: "warning",
+    runbook: "jobs-spend-cap-reached.md",
+    source: "jobs",
+  },
+  "jobs-provider-saturated": {
+    severity: "warning",
+    runbook: "jobs-provider-saturated.md",
+    source: "jobs",
+  },
+  "jobs-breaker-open": { severity: "critical", runbook: "jobs-breaker-open.md", source: "jobs" },
+  "jobs-workflow-failures": {
+    severity: "critical",
+    runbook: "jobs-workflow-failures.md",
+    source: "jobs",
+  },
   "jobs-hobby-quota": { severity: "warning", runbook: "jobs-hobby-quota.md", source: "jobs" },
   "network-ranges-stale": {
     severity: "warning",
