@@ -79,3 +79,16 @@ export async function guardModeStatus(name: string): Promise<{
     releasedNow: row.released_now,
   };
 }
+
+/** When the guard mode now active was tripped, kept while it is extended; null while it is off. */
+export async function guardModeSince(name: string): Promise<Date | null> {
+  assertName(name);
+  const { rows } = await system((tx) =>
+    tx.execute<{ tripped_at: Date | string }>(
+      sql`select tripped_at from ops.guard_modes
+           where name = ${name} and released_at is null and active_until > clock_timestamp()`,
+    ),
+  );
+  const row = rows[0];
+  return row ? asDate(row.tripped_at) : null;
+}

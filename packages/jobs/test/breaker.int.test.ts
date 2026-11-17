@@ -4,6 +4,7 @@ import { sql } from "drizzle-orm";
 import pg from "pg";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { breakerCheck, breakerRecord } from "../src/breaker";
+import { registerJobsTelemetry } from "../src/telemetry";
 
 // Concurrency is real only with more connections than the default three of the system pool.
 beforeAll(() => {
@@ -125,5 +126,30 @@ describe("breaker", () => {
         ),
       );
     }
+  });
+
+  test("every move of the state is one event, staying put is none", async () => {
+    const acct = account();
+    const states: string[] = [];
+    registerJobsTelemetry({
+      capture: (event) => {
+        if (event.name === "jobs.breaker.state") states.push(event.props.state);
+      },
+      alert: async () => {},
+    });
+    try {
+      await openBreaker(acct);
+      await breakerRecord("dataforseo", "failure", acct);
+      await expireOpen("dataforseo", acct);
+      await Promise.all(Array.from({ length: 5 }, () => breakerCheck("dataforseo", acct)));
+      await breakerRecord("dataforseo", "failure", acct);
+      await expireOpen("dataforseo", acct);
+      await breakerCheck("dataforseo", acct);
+      await breakerRecord("dataforseo", "success", acct);
+      await breakerRecord("dataforseo", "success", acct);
+    } finally {
+      registerJobsTelemetry(null);
+    }
+    expect(states).toEqual(["open", "half_open", "open", "half_open", "closed"]);
   });
 });

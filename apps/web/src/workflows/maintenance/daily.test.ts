@@ -10,6 +10,7 @@ const jobs = vi.hoisted(() => ({
   refreshVelocityBaselines: vi.fn(),
   reconcileSpend: vi.fn(),
   checkWorkflowQuota: vi.fn(),
+  reportStepError: vi.fn(async () => {}),
 }));
 vi.mock("@reranker/jobs", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@reranker/jobs")>()),
@@ -114,6 +115,21 @@ test("the workflow quota is checked for the run's month and its alert is sent", 
 });
 
 test("a failure that retrying cannot fix ends the step without retries", async () => {
-  jobs.reconcileSpend.mockRejectedValue(new InvalidInputError("bad currency"));
+  const error = new InvalidInputError("bad currency");
+  jobs.reconcileSpend.mockRejectedValue(error);
   await expect(step("reconcileSpend")("2026-11-17")).rejects.toBeInstanceOf(FatalError);
+  expect(jobs.reportStepError).toHaveBeenCalledExactlyOnceWith("daily", "reconcileSpend", error);
+});
+
+test("every failed step is reported under its own name before it is rethrown", async () => {
+  const error = new Error("socket hang up");
+  jobs.cleanupLeases.mockRejectedValue(error);
+  await expect(step("cleanupLeases")("2026-11-17")).rejects.toBe(error);
+  expect(jobs.reportStepError).toHaveBeenCalledExactlyOnceWith("daily", "cleanupLeases", error);
+});
+
+test("a step that succeeds reports nothing", async () => {
+  jobs.refreshVelocityBaselines.mockResolvedValue(1);
+  await step("velocityBaseline")("2026-11-17");
+  expect(jobs.reportStepError).not.toHaveBeenCalled();
 });

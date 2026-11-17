@@ -75,12 +75,14 @@ const noAttributes = {
   rolreplication: false,
 };
 
+// Creating a database and running every migration on it shares the compute with the rest of
+// the integration suite, so it gets the setup budget of the other scratch databases.
 beforeAll(async () => {
   scratch = await createScratchDatabase("roles_probe");
   await runMigrations({ url: scratch.url, migrationsFolder, concurrentFolder });
   owner = new pg.Client({ connectionString: scratch.url });
   await owner.connect();
-});
+}, 180_000);
 
 afterAll(async () => {
   for (const { login, group } of throwaways) {

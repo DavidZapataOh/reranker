@@ -6,6 +6,7 @@ import { tripGuardMode } from "./guard-mode";
 import { leasePoolKey } from "./leases";
 import type { PaidProvider } from "./providers";
 import { createRegistry } from "./registry";
+import { providerSaturated } from "./telemetry";
 
 /** What only the capture side knows: planned slots not started yet and how long a call takes. */
 export interface CapacitySource {
@@ -79,6 +80,7 @@ export async function providerCapacity(provider: PaidProvider): Promise<Provider
         });
       },
     );
+    await providerSaturated(provider, wait);
   }
   return { inFlight, limit, queuedSlots, p50LatencyMs, predictedWaitMs: wait };
 }

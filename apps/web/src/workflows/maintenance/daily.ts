@@ -6,6 +6,7 @@ import {
   reconcileSpend,
   refreshNetworkRanges,
   refreshVelocityBaselines,
+  reportStepError,
   type WorkflowQuotaAlert,
 } from "@reranker/jobs";
 import { toStepError } from "@reranker/jobs/step-errors";
@@ -19,11 +20,12 @@ const DAY_MS = 86_400_000;
 
 // Every step maps its failure to the retry the cause asks for, and sends the alerts it collected
 // even when it fails: an alert about a failure is the point of collecting it.
-async function asStep<T>(work: (alerts: Alert[]) => Promise<T>): Promise<T> {
+async function asStep<T>(step: string, work: (alerts: Alert[]) => Promise<T>): Promise<T> {
   const alerts: Alert[] = [];
   try {
     return await work(alerts);
   } catch (error) {
+    await reportStepError("daily", step, error);
     throw toStepError(error);
   } finally {
     await Promise.all(alerts.map((alert) => sendOpsAlert(alert.kind, alert.payload)));
@@ -32,12 +34,12 @@ async function asStep<T>(work: (alerts: Alert[]) => Promise<T>): Promise<T> {
 
 async function cleanupLeasesStep(_date: string): Promise<void> {
   "use step";
-  await asStep(async () => log.info("jobs.daily.cleanup", await cleanupLeases()));
+  await asStep("cleanupLeases", async () => log.info("jobs.daily.cleanup", await cleanupLeases()));
 }
 
 async function refreshNetworkRangesStep(_date: string): Promise<void> {
   "use step";
-  await asStep(async (alerts) => {
+  await asStep("refreshNetworkRanges", async (alerts) => {
     const { applied, rows, added, removed, changed, commit } = await refreshNetworkRanges(fetch, {
       onAlert: (alert) => alerts.push(alert),
     });
@@ -47,7 +49,7 @@ async function refreshNetworkRangesStep(_date: string): Promise<void> {
 
 async function velocityBaselineStep(_date: string): Promise<void> {
   "use step";
-  await asStep(async () =>
+  await asStep("velocityBaseline", async () =>
     log.info("jobs.daily.velocity_baselines", { keys: await refreshVelocityBaselines() }),
   );
 }
@@ -55,7 +57,7 @@ async function velocityBaselineStep(_date: string): Promise<void> {
 // The run starts early in the morning, so the day to close is the one that just ended.
 async function reconcileSpendStep(date: string): Promise<void> {
   "use step";
-  await asStep(async () => {
+  await asStep("reconcileSpend", async () => {
     const day = new Date(Date.parse(`${date}T00:00:00Z`) - DAY_MS).toISOString().slice(0, 10);
     const { released, mismatches } = await reconcileSpend(day);
     log.info("jobs.daily.spend_reconciled", { day, released, mismatches: mismatches.length });
@@ -74,7 +76,7 @@ async function reconcileSpendStep(date: string): Promise<void> {
 
 async function checkWorkflowQuotaStep(date: string): Promise<void> {
   "use step";
-  await asStep(async (alerts) => {
+  await asStep("checkWorkflowQuota", async (alerts) => {
     const month = date.slice(0, 7);
     const { estimatedEvents, ratio } = await checkWorkflowQuota(month, {
       onAlert: (alert) => alerts.push(alert),

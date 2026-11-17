@@ -9,6 +9,7 @@ import { breakerRecord } from "../src/breaker";
 import { ProviderUnavailableError, RateLimitedError } from "../src/errors";
 import { acquireProviderSlot } from "../src/leases";
 import { toStepError } from "../src/step-errors";
+import { registerJobsTelemetry } from "../src/telemetry";
 import type { WorkerJob, WorkerResult } from "./support/lease-worker";
 
 const WORKER = fileURLToPath(new URL("./support/lease-worker.ts", import.meta.url));
@@ -206,12 +207,11 @@ describe("acquireProviderSlot", () => {
     const limits = { maxInFlight: 1, account: acct };
     const held = await acquireProviderSlot("dataforseo", limits);
     const events: unknown[] = [];
+    registerJobsTelemetry({ capture: (event) => void events.push(event), alert: async () => {} });
     setTimeout(() => void held.release(), 500);
-    const slot = await acquireProviderSlot("dataforseo", limits, {
-      maxWaitMs: 5000,
-      onEvent: (e) => events.push(e),
-    });
+    const slot = await acquireProviderSlot("dataforseo", limits, { maxWaitMs: 5000 });
     await slot.release();
+    registerJobsTelemetry(null);
     expect(events).toEqual([
       {
         name: "jobs.lease.wait_ms",

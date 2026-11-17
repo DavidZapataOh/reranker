@@ -5,21 +5,17 @@ import { loadJobsConfig } from "./config";
 import { InvalidInputError, ProviderUnavailableError, RateLimitedError } from "./errors";
 import { assertOpaqueKey } from "./keys";
 import type { PaidProvider, ProviderLimits } from "./providers";
+import { emit } from "./telemetry";
 
 /** Held until `release`; a function that dies holding one frees it when the ttl lapses. */
 export interface ProviderSlot {
   release(): Promise<void>;
 }
 
-export type LeaseEvent =
-  | { name: "jobs.lease.wait_ms"; props: { provider: PaidProvider; wait_ms: number } }
-  | { name: "jobs.lease.denied"; props: { provider: PaidProvider } };
-
 export interface AcquireOptions {
   cost?: { requests?: number; tokens?: number };
   /** Defaults to the inline wait of the jobs config; the free report passes the time it has left. */
   maxWaitMs?: number;
-  onEvent?: (event: LeaseEvent) => void;
 }
 
 // A call is cut at 115 s and a step ends within 150 s; the extra 15 s covers the release.
@@ -108,17 +104,14 @@ export async function acquireProviderSlot(
     const row = rows[0];
     if (!row) throw new Error("acquire_slot returned no row");
     if (row.lease_id) {
-      opts.onEvent?.({
-        name: "jobs.lease.wait_ms",
-        props: { provider, wait_ms: Date.now() - startedAt },
-      });
+      emit({ name: "jobs.lease.wait_ms", props: { provider, wait_ms: Date.now() - startedAt } });
       return slotFor(row.lease_id);
     }
     // A full pool reports when its earliest lease would expire, an upper bound that a release
     // beats by far, so the wait polls until the deadline instead of trusting the hint.
     const remaining = maxWaitMs - (Date.now() - startedAt);
     if (remaining <= 0) {
-      opts.onEvent?.({ name: "jobs.lease.denied", props: { provider } });
+      emit({ name: "jobs.lease.denied", props: { provider } });
       throw new RateLimitedError(row.retry_after_ms);
     }
     await sleep(Math.min(backoff(attempt), remaining));

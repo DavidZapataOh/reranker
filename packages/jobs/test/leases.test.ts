@@ -11,6 +11,9 @@ const { InvalidInputError, ProviderUnavailableError, RateLimitedError } = await 
   "../src/errors"
 );
 const { acquireProviderSlot } = await import("../src/leases");
+const { registerJobsTelemetry } = await import("../src/telemetry");
+const events: unknown[] = [];
+registerJobsTelemetry({ capture: (event) => void events.push(event), alert: async () => {} });
 
 const LEASE = "0194f5c0-0000-7000-8000-000000000001";
 const granted = { rows: [{ lease_id: LEASE, retry_after_ms: 0 }] };
@@ -18,6 +21,7 @@ const denied = (ms: number) => ({ rows: [{ lease_id: null, retry_after_ms: ms }]
 
 beforeEach(() => {
   vi.useFakeTimers();
+  events.length = 0;
   execute.mockReset();
   withSystem.mockClear();
   breakerCheck.mockReset().mockResolvedValue({ state: "closed", retryAfterMs: 0 });
@@ -48,11 +52,10 @@ describe("acquireProviderSlot", () => {
 
   test("polls until the deadline, then reports the last retry hint", async () => {
     execute.mockResolvedValue(denied(90_000));
-    const events: unknown[] = [];
     const result = acquireProviderSlot(
       "dataforseo",
       { maxInFlight: 28 },
-      { maxWaitMs: 3000, onEvent: (e) => events.push(e) },
+      { maxWaitMs: 3000 },
     ).catch((e) => e);
     await vi.advanceTimersByTimeAsync(3000);
     const error = await result;
@@ -81,12 +84,7 @@ describe("acquireProviderSlot", () => {
 
   test("takes the slot the moment it frees and reports the wait", async () => {
     execute.mockResolvedValueOnce(denied(60_000)).mockResolvedValue(granted);
-    const events: unknown[] = [];
-    const result = acquireProviderSlot(
-      "dataforseo",
-      { maxInFlight: 1 },
-      { maxWaitMs: 5000, onEvent: (e) => events.push(e) },
-    );
+    const result = acquireProviderSlot("dataforseo", { maxInFlight: 1 }, { maxWaitMs: 5000 });
     await vi.advanceTimersByTimeAsync(1000);
     await result;
     expect(events).toEqual([

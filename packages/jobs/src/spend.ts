@@ -16,6 +16,7 @@ import { type JobsConfig, loadJobsConfig } from "./config";
 import { nextResetAt, spendDay } from "./day";
 import { InvalidInputError, SpendCapExceededError } from "./errors";
 import type { PaidProvider, SpendPool, SpendPurpose } from "./providers";
+import { emit, spendDenied, spendReserved } from "./telemetry";
 
 export interface SpendRequest {
   provider: PaidProvider;
@@ -47,12 +48,6 @@ export interface SpendReservation {
   /** Every scope charged, global first, with its used amount and cap right after reserving. */
   scopes: readonly SpendScopeStatus[];
 }
-
-/** Catalog events of settling, for the caller to send; this package has no telemetry of its own. */
-export type SpendEvent = {
-  name: "jobs.spend.settled";
-  props: { provider: PaidProvider; purpose: SpendPurpose; micro_usd: number };
-};
 
 const INVALID_PARAMETER = "22023";
 const POOLS: readonly (string | undefined)[] = [
@@ -185,9 +180,10 @@ export async function reserveSpend(req: SpendRequest): Promise<SpendReservation>
     // The fallback is tried only after the reservation's own pool came up short, so a denial that
     // names the fallback means the own pool is full as well; callers decide on the own pool.
     const scope = row.denied_scope === fallback && ownPool ? ownPool : row.denied_scope;
+    await spendDenied(scope);
     throw new SpendCapExceededError(scope, nextResetAt(now));
   }
-  return {
+  const reservation: SpendReservation = {
     id: row.ledger_id,
     reserved: cost(req.estimate.amount_micros, currency),
     provider: req.provider,
@@ -198,6 +194,8 @@ export async function reserveSpend(req: SpendRequest): Promise<SpendReservation>
       cap: cost(Number(row.caps[i]), currency),
     })),
   };
+  await spendReserved(reservation);
+  return reservation;
 }
 
 async function applied(query: SQL, fn: string): Promise<{ applied: boolean }> {
@@ -220,7 +218,6 @@ async function applied(query: SQL, fn: string): Promise<{ applied: boolean }> {
 export async function settleSpend(
   r: SpendReservation,
   actual: ProviderCost,
-  opts: { onEvent?: (event: SpendEvent) => void } = {},
 ): Promise<{ applied: boolean }> {
   assertReservation(r);
   assertAmount(actual, currencyOf());
@@ -229,7 +226,7 @@ export async function settleSpend(
     "settle_spend",
   );
   if (result.applied) {
-    opts.onEvent?.({
+    emit({
       name: "jobs.spend.settled",
       props: { provider: r.provider, purpose: r.purpose, micro_usd: actual.amount_micros },
     });

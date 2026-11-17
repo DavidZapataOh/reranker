@@ -20,7 +20,9 @@ async function adminClient(): Promise<pg.Client> {
 }
 
 // The group roles are cluster-wide and shared with other databases, so the database is
-// disposable but the roles are never dropped.
+// disposable but the roles are never dropped. Creating it and running every migration shares the
+// compute with the rest of the integration suite, so it gets the setup budget of the other
+// scratch databases.
 beforeAll(async () => {
   databaseName = `core_probe_${randomBytes(6).toString("hex")}`;
   const admin = await adminClient();
@@ -34,7 +36,7 @@ beforeAll(async () => {
   await runMigrations({ url: url.toString(), migrationsFolder, concurrentFolder });
   client = new pg.Client({ connectionString: url.toString() });
   await client.connect();
-});
+}, 180_000);
 
 afterAll(async () => {
   await client?.end();

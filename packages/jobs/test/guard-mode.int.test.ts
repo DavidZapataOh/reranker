@@ -3,7 +3,7 @@ import { endPools, withSystem } from "@reranker/db";
 import { sql } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { InvalidInputError } from "../src/errors";
-import { guardModeStatus, tripGuardMode } from "../src/guard-mode";
+import { guardModeSince, guardModeStatus, tripGuardMode } from "../src/guard-mode";
 
 beforeAll(() => {
   process.env.DB_POOL_MAX = "20";
@@ -67,6 +67,18 @@ describe("guard modes", () => {
     const long = await tripGuardMode(n, "spike", HALF_HOUR);
     const short = await tripGuardMode(n, "spike", 1_000);
     expect(short.activeUntil.getTime()).toBe(long.activeUntil.getTime());
+  });
+
+  test("since is when an active mode was tripped, kept while it is extended", async () => {
+    const n = name("since");
+    expect(await guardModeSince(n)).toBeNull();
+    await tripGuardMode(n, "saturated", HALF_HOUR);
+    await shiftGuardMode(n, 10 * 60_000);
+    await tripGuardMode(n, "saturated", HALF_HOUR);
+    const since = await guardModeSince(n);
+    expect(Date.now() - (since?.getTime() ?? 0)).toBeGreaterThanOrEqual(10 * 60_000 - 1000);
+    await shiftGuardMode(n, 2 * HALF_HOUR);
+    expect(await guardModeSince(n)).toBeNull();
   });
 
   test("a name never tripped is off", async () => {

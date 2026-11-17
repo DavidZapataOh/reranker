@@ -80,6 +80,7 @@ const FUNCTIONS = [
   "release_stale_reservations",
   "breaker_check",
   "breaker_record",
+  "breaker_record_transition",
   "record_velocity",
   "trip_guard_mode",
   "guard_mode_status",
