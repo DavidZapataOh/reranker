@@ -11,19 +11,19 @@ const fakeFetch = (...pages: number[]) =>
 
 it("counts only ci/ branches", () => expect(countLiveCiBranches(branches(3).branches)).toBe(3));
 
-it("returns immediately when fewer than 8 are live", async () => {
+it("returns immediately when fewer than 20 are live", async () => {
   const sleep = vi.fn(async () => {});
   expect(
-    await waitForCiBranchSlot({ apiKey: "k", projectId: "p", fetch: fakeFetch(7), sleep }),
-  ).toEqual({ live: 7, attempt: 1 });
+    await waitForCiBranchSlot({ apiKey: "k", projectId: "p", fetch: fakeFetch(19), sleep }),
+  ).toEqual({ live: 19, attempt: 1 });
   expect(sleep).not.toHaveBeenCalled();
 });
 
 it("waits 60 s between attempts until a slot frees", async () => {
   const sleep = vi.fn(async () => {});
   expect(
-    await waitForCiBranchSlot({ apiKey: "k", projectId: "p", fetch: fakeFetch(8, 8, 7), sleep }),
-  ).toEqual({ live: 7, attempt: 3 });
+    await waitForCiBranchSlot({ apiKey: "k", projectId: "p", fetch: fakeFetch(20, 20, 19), sleep }),
+  ).toEqual({ live: 19, attempt: 3 });
   expect(sleep).toHaveBeenCalledTimes(2);
   expect(sleep).toHaveBeenCalledWith(60_000);
 });
@@ -33,10 +33,10 @@ it("gives up after 15 attempts", async () => {
     waitForCiBranchSlot({
       apiKey: "k",
       projectId: "p",
-      fetch: fakeFetch(...Array.from({ length: 15 }, () => 8)),
+      fetch: fakeFetch(...Array.from({ length: 15 }, () => 20)),
       sleep: async () => {},
     }),
-  ).rejects.toThrow("No free Neon CI branch slot after 15 attempts (8 live)");
+  ).rejects.toThrow("No free Neon CI branch slot after 15 attempts (20 live)");
 });
 
 it("calls the Neon API with the bearer key", async () => {

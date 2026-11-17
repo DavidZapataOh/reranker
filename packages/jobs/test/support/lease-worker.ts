@@ -15,7 +15,7 @@ export interface WorkerJob {
 
 export interface WorkerResult {
   waitedMs: number;
-  error?: { name: string; retryAfterMs?: number };
+  error?: { name: string; code?: string; retryAfterMs?: number };
 }
 
 const job = JSON.parse(process.argv[2] ?? "{}") as WorkerJob;
@@ -30,11 +30,12 @@ async function once(): Promise<WorkerResult> {
     await slot.release();
     return { waitedMs: Date.now() - startedAt };
   } catch (error) {
-    const e = error as { name: string; retryAfterMs?: number };
+    const e = error as { name: string; code?: string; retryAfterMs?: number };
     return {
       waitedMs: Date.now() - startedAt,
       error: {
         name: e.name,
+        ...(e.code === undefined ? {} : { code: e.code }),
         ...(e.retryAfterMs === undefined ? {} : { retryAfterMs: e.retryAfterMs }),
       },
     };

@@ -1,7 +1,10 @@
+import { AppError } from "@reranker/schema";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 const execute = vi.fn();
-const withSystem = vi.fn(async (_reason: string, fn: (tx: unknown) => unknown) => fn({ execute }));
+const withSystem = vi.fn(async (_reason: string, fn: (tx: unknown) => unknown, _opts?: unknown) =>
+  fn({ execute }),
+);
 vi.mock("@reranker/db", () => ({ withSystem }));
 const breakerCheck = vi.fn();
 vi.mock("../src/breaker", () => ({ breakerCheck }));
@@ -63,6 +66,48 @@ describe("acquireProviderSlot", () => {
     expect(error.retryAfterMs).toBe(90_000);
     expect(execute.mock.calls.length).toBeGreaterThan(3);
     expect(events).toEqual([{ name: "jobs.lease.denied", props: { provider: "dataforseo" } }]);
+  });
+
+  test("each attempt waits for the pool row no longer than the caller has left", async () => {
+    execute.mockResolvedValue(denied(1000));
+    const result = acquireProviderSlot(
+      "dataforseo",
+      { maxInFlight: 28 },
+      { maxWaitMs: 3000 },
+    ).catch((e) => e);
+    await vi.advanceTimersByTimeAsync(3000);
+    await result;
+    const waits = withSystem.mock.calls.map(
+      (call) => (call[2] as { lockTimeoutMs: number }).lockTimeoutMs,
+    );
+    expect(waits[0]).toBe(2000);
+    expect(waits.at(-1)).toBeLessThanOrEqual(1000);
+    expect(waits.every((ms) => ms >= 1)).toBe(true);
+  });
+
+  test("a pool row still locked when the wait runs out is a full pool", async () => {
+    const lockTimeout = new AppError("timeout", {
+      cause: Object.assign(new Error(), { code: "55P03" }),
+    });
+    execute.mockRejectedValue(lockTimeout);
+    const error = await acquireProviderSlot(
+      "dataforseo",
+      { maxInFlight: 1 },
+      { maxWaitMs: 0 },
+    ).catch((e) => e);
+    expect(error).toBeInstanceOf(RateLimitedError);
+    expect(error.retryAfterMs).toBe(1000);
+    expect(withSystem.mock.calls[0]?.[2]).toEqual({ lockTimeoutMs: 1 });
+  });
+
+  test("a statement timeout is not taken for a full pool", async () => {
+    const statementTimeout = new AppError("timeout", {
+      cause: Object.assign(new Error(), { code: "57014" }),
+    });
+    execute.mockRejectedValue(statementTimeout);
+    await expect(
+      acquireProviderSlot("dataforseo", { maxInFlight: 1 }, { maxWaitMs: 0 }),
+    ).rejects.toBe(statementTimeout);
   });
 
   test("a zero wait tries once", async () => {

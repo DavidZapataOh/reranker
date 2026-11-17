@@ -107,6 +107,30 @@ test("statementTimeoutMs: 200 with pg_sleep(1) → AppError timeout", async () =
   expect(performance.now() - started).toBeLessThan(1000);
 });
 
+test("lockTimeoutMs: 200 behind a held lock → AppError timeout (55P03), for that transaction only", async () => {
+  const key = Math.floor(Math.random() * 2 ** 31);
+  const wait = (opts: { lockTimeoutMs?: number }) =>
+    withSystem("test.lock", (tx) => tx.execute(sql`select pg_advisory_xact_lock(${key}, 1)`), opts);
+  let error: unknown;
+  let elapsed = 0;
+  await withSystem("test.lock", async (tx) => {
+    await tx.execute(sql`select pg_advisory_xact_lock(${key}, 1)`);
+    const started = performance.now();
+    error = await wait({ lockTimeoutMs: 200 }).catch((e: unknown) => e);
+    elapsed = performance.now() - started;
+  });
+  expect(error).toMatchObject({ code: "timeout" });
+  expect(causeCode(error)).toBe("55P03");
+  expect(elapsed).toBeLessThan(1000);
+  const lockTimeout = await withSystem("test.lock", async (tx) => {
+    const { rows } = await tx.execute<{ timeout: string }>(
+      sql`select current_setting('lock_timeout') as timeout`,
+    );
+    return rows[0]?.timeout;
+  });
+  expect(lockTimeout).toBe("0");
+});
+
 test("readOnly: insert → 25006 error, tx rolled back", async () => {
   const error = await withTenant(
     A,

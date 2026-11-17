@@ -39,15 +39,15 @@ async function times<T>(n: number, fn: (i: number) => Promise<T>): Promise<T[]> 
 const list = (values: unknown[]) => sql.param(values);
 const pgCode = (code: string) => ({ cause: expect.objectContaining({ code }) });
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-// Polls until some backend waits on a lock held by `pid`, so a test can order two transactions.
-async function waitUntilBlockedBy(pid: number) {
+// Polls until `count` backends wait on a lock held by `pid`, so a test can order transactions.
+async function waitUntilBlockedBy(pid: number, count = 1) {
   for (let attempt = 0; attempt < 400; attempt++) {
-    const { blocked } = await one<{ blocked: boolean }>(sql`select exists (
-      select from pg_stat_activity a where ${pid}::int = any (pg_blocking_pids(a.pid))) as blocked`);
-    if (blocked) return;
+    const { blocked } = await one<{ blocked: number }>(sql`select count(*)::int as blocked
+      from pg_stat_activity a where ${pid}::int = any (pg_blocking_pids(a.pid))`);
+    if (blocked >= count) return;
     await delay(25);
   }
-  throw new Error(`no backend waited on ${pid}`);
+  throw new Error(`fewer than ${count} backends waited on ${pid}`);
 }
 
 const PRIMARY_KEYS: Record<string, string[]> = {
@@ -74,6 +74,7 @@ const FUNCTIONS = [
   "take_tokens",
   "peek_tokens",
   "refund_tokens",
+  "lock_spend_day",
   "reserve_spend",
   "settle_spend",
   "release_spend",
@@ -524,6 +525,51 @@ describe("spend caps", () => {
       scopes: ["global", purpose, verified],
     });
     expect(results.find((result) => !result.ledger_id)?.denied_scope).toBe(purpose);
+  });
+
+  test("reservations waiting on a day are admitted in arrival order", async () => {
+    const [scope, day] = [unique("purpose"), uniqueDay()];
+    const arrivals: Promise<Reservation>[] = [];
+    await withSystem("test.ops", async (tx) => {
+      const { rows } = await tx.execute<{ pid: number }>(
+        sql`select pg_backend_pid() as pid, ops.lock_spend_day(${day}::date)`,
+      );
+      for (let i = 1; i <= 6; i++) {
+        arrivals.push(reserve({ scopes: [scope], caps: [3], amount: 1, day }));
+        await waitUntilBlockedBy(Number(rows[0]?.pid), i);
+      }
+    });
+    const results = await Promise.all(arrivals);
+    expect(results.map((result) => result.ledger_id !== null)).toEqual([
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+    ]);
+  });
+
+  test.each([
+    ["settle", (id: string) => settle(id, 1)],
+    ["release", (id: string) => release(id)],
+  ] as const)("%s queues behind the holder of its day's lock", async (_name, run) => {
+    const day = uniqueDay();
+    const { ledger_id } = await reserve({
+      scopes: [unique("purpose")],
+      caps: [10],
+      amount: 1,
+      day,
+    });
+    let pending: Promise<boolean> | undefined;
+    await withSystem("test.ops", async (tx) => {
+      const { rows } = await tx.execute<{ pid: number }>(
+        sql`select pg_backend_pid() as pid, ops.lock_spend_day(${day}::date)`,
+      );
+      pending = run(ledger_id as string);
+      await waitUntilBlockedBy(Number(rows[0]?.pid));
+    });
+    expect(await pending).toBe(true);
   });
 
   test("reserve then settle leaves the actual amount and the ledger settled, once", async () => {

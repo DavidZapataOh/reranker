@@ -264,7 +264,7 @@ jobs:
           DATABASE_URL_MIGRATIONS: ${{ secrets.DATABASE_URL_MIGRATIONS }}
         run: pnpm --filter @reranker/db db:migrate
   security:
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions: { contents: read, pull-requests: read }
     steps:

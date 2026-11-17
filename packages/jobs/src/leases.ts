@@ -1,4 +1,5 @@
 import { withSystem } from "@reranker/db";
+import { isAppError } from "@reranker/schema";
 import { sql } from "drizzle-orm";
 import { breakerCheck } from "./breaker";
 import { loadJobsConfig } from "./config";
@@ -28,6 +29,9 @@ export const leasePoolKey = (provider: PaidProvider, account?: string): string =
 
 const FIRST_BACKOFF_MS = 200;
 const MAX_BACKOFF_MS = 1000;
+// Below the 5 s statement timeout, so a longer caller wait is spent over several attempts.
+const MAX_LOCK_WAIT_MS = 2000;
+const LOCK_NOT_AVAILABLE = "55P03";
 
 type SlotRow = { lease_id: string | null; retry_after_ms: number };
 
@@ -96,13 +100,8 @@ export async function acquireProviderSlot(
   if (breaker.state === "open") throw new ProviderUnavailableError(provider, breaker.retryAfterMs);
 
   for (let attempt = 0; ; attempt++) {
-    const { rows } = await withSystem("jobs.lease", (tx) =>
-      tx.execute<SlotRow>(
-        sql`select * from ops.acquire_slot(${poolKey}, ${limits.maxInFlight}::int, ${LEASE_TTL_MS}::int, ${array(taken.map((b) => b.key))}::text[], ${array(taken.map((b) => b.capacity))}::float8[], ${array(taken.map((b) => b.refillPerSecond))}::float8[], ${array(taken.map((b) => b.cost))}::float8[])`,
-      ),
-    );
-    const row = rows[0];
-    if (!row) throw new Error("acquire_slot returned no row");
+    const waitLeft = maxWaitMs - (Date.now() - startedAt);
+    const row = await takeSlot(poolKey, limits.maxInFlight, taken, waitLeft);
     if (row.lease_id) {
       emit({ name: "jobs.lease.wait_ms", props: { provider, wait_ms: Date.now() - startedAt } });
       return slotFor(row.lease_id);
@@ -115,6 +114,36 @@ export async function acquireProviderSlot(
       throw new RateLimitedError(row.retry_after_ms);
     }
     await sleep(Math.min(backoff(attempt), remaining));
+  }
+}
+
+// Every acquirer of a pool queues on its row, each holding it for a round trip to the database.
+// When more arrive than that queue serves, the wait for the row is the wait for a slot: it is
+// bounded by the caller's own wait and answered as a full pool, never left to the statement
+// timeout.
+async function takeSlot(
+  poolKey: string,
+  maxInFlight: number,
+  taken: Bucket[],
+  waitLeftMs: number,
+): Promise<SlotRow> {
+  const lockTimeoutMs = Math.min(Math.max(1, Math.ceil(waitLeftMs)), MAX_LOCK_WAIT_MS);
+  try {
+    const { rows } = await withSystem(
+      "jobs.lease",
+      (tx) =>
+        tx.execute<SlotRow>(
+          sql`select * from ops.acquire_slot(${poolKey}, ${maxInFlight}::int, ${LEASE_TTL_MS}::int, ${array(taken.map((b) => b.key))}::text[], ${array(taken.map((b) => b.capacity))}::float8[], ${array(taken.map((b) => b.refillPerSecond))}::float8[], ${array(taken.map((b) => b.cost))}::float8[])`,
+        ),
+      { lockTimeoutMs },
+    );
+    const row = rows[0];
+    if (!row) throw new Error("acquire_slot returned no row");
+    return row;
+  } catch (error) {
+    const cause = isAppError(error) ? (error.cause as { code?: string } | undefined) : undefined;
+    if (cause?.code !== LOCK_NOT_AVAILABLE) throw error;
+    return { lease_id: null, retry_after_ms: MAX_BACKOFF_MS };
   }
 }
 
