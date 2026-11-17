@@ -1,6 +1,6 @@
-import { asTenantId, type SystemTx, type TenantId } from "@reranker/db";
-import { organizations } from "@reranker/db/schema";
 import { DEFAULT_COUNTRY_CODE } from "@reranker/i18n/countries";
+import { organizations } from "../src/schema";
+import { asTenantId, type SystemTx, type TenantId } from "../src/tenancy";
 
 export type TenantSeed = { id: string; name: string; slug: string };
 

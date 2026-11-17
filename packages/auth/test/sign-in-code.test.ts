@@ -1,6 +1,6 @@
 import { symmetricEncrypt } from "better-auth/crypto";
 import { expect, test } from "vitest";
-import { decryptStoredCode } from "./auth";
+import { decryptStoredCode } from "./sign-in-code";
 
 const key = "k".repeat(32);
 

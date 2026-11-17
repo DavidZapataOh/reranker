@@ -1,8 +1,8 @@
 import { endPools, withSystem } from "@reranker/db";
 import { users } from "@reranker/db/schema/auth";
-import { readSignInCode } from "@reranker/testing/auth";
 import { inArray } from "drizzle-orm";
 import { afterAll, describe, expect, test, vi } from "vitest";
+import { readSignInCode } from "../test/sign-in-code";
 
 // Nothing has to reach an inbox: the code is read from the database.
 vi.mock("./send-auth-email", () => ({ sendAuthEmail: vi.fn() }));

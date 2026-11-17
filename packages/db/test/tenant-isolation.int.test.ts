@@ -2,7 +2,6 @@
 import { randomBytes } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { AppError } from "@reranker/schema";
-import { createTenant } from "@reranker/testing/factories";
 import { getTestDatabaseUrl } from "@reranker/testing/neon";
 import { eq, inArray, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
@@ -15,6 +14,7 @@ import { appSchema, organizations } from "../src/schema";
 import { type TenantId, withSystem, withTenant, withTenants } from "../src/tenancy";
 import { defineTenantFixture, type TenantFixture } from "../src/testing";
 import { runCatalogGate } from "./catalog-gate";
+import { createTenant } from "./factories";
 import { createScratchDatabase, type ScratchDatabase } from "./helpers";
 import { onDatabase, probeStatements } from "./probe/database";
 import * as probe from "./probe/isolation-probe.schema";

@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { newTenantSeed } from "./factories.ts";
+import { newTenantSeed } from "./factories";
 
 it("creates distinct v4 UUIDs and applies overrides", () => {
   const a = newTenantSeed();

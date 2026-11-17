@@ -1,8 +1,9 @@
-import { endPools, type SystemTx, withSystem } from "@reranker/db";
-import { organizations } from "@reranker/db/schema";
 import { eq } from "drizzle-orm";
 import { afterAll, expect, test } from "vitest";
-import { createTenant } from "./factories.ts";
+import { endPools } from "../src/client";
+import { organizations } from "../src/schema";
+import { type SystemTx, withSystem } from "../src/tenancy";
+import { createTenant } from "./factories";
 
 // Integration files share one database where only one house may exist, so house rows never commit.
 class Rollback extends Error {}
