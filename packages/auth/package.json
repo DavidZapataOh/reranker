@@ -48,6 +48,7 @@
     "@vitest/coverage-v8": "catalog:",
     "auth": "catalog:",
     "drizzle-orm": "catalog:",
+    "msw": "catalog:",
     "pg": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"

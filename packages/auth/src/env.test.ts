@@ -5,7 +5,7 @@ import { authEnv } from "./env";
 const valid = {
   BETTER_AUTH_SECRET: "s".repeat(32),
   BETTER_AUTH_URL: "https://reranker.co",
-  GOOGLE_CLIENT_ID: "client-id.apps.googleusercontent.com",
+  NEXT_PUBLIC_GOOGLE_CLIENT_ID: "client-id.apps.googleusercontent.com",
   GOOGLE_CLIENT_SECRET: "google-secret",
   RESEND_API_KEY: "re_test",
   TURNSTILE_SECRET_KEY: "turnstile-secret",
@@ -35,6 +35,15 @@ describe("auth environment", () => {
     expect(message(() => parse("production", { GOOGLE_CLIENT_SECRET: undefined }))).toContain(
       "GOOGLE_CLIENT_SECRET (missing)",
     );
+  });
+
+  test("the Google client id is a web client id, readable by the browser for One Tap", () => {
+    for (const NEXT_PUBLIC_GOOGLE_CLIENT_ID of ["google-secret", "GOCSPX-abc", ""]) {
+      expect(message(() => parse("production", { NEXT_PUBLIC_GOOGLE_CLIENT_ID }))).toMatch(
+        /NEXT_PUBLIC_GOOGLE_CLIENT_ID \((invalid|missing)\)/,
+      );
+    }
+    expect(authEnv.shape).not.toHaveProperty("GOOGLE_CLIENT_ID");
   });
 
   test("the signing secret needs at least 32 characters", () => {
@@ -84,6 +93,43 @@ describe("auth environment", () => {
       expect(message(() => parse("preview", { BETTER_AUTH_URL: undefined, VERCEL_URL }))).toContain(
         "VERCEL_URL (invalid)",
       );
+    }
+  });
+
+  // Cloudflare's published testing keys answer the same way for every visitor, so a deployment with
+  // one has no bot protection.
+  const preview = { BETTER_AUTH_URL: undefined, VERCEL_URL: "reranker-x.vercel.app" };
+  const outsideProduction = (APP_ENV: string) => (APP_ENV === "preview" ? preview : {});
+
+  test.each([
+    "1x0000000000000000000000000000000AA",
+    "2x0000000000000000000000000000000AA",
+    "3x0000000000000000000000000000000AA",
+  ])("production refuses the Turnstile testing secret %s", (TURNSTILE_SECRET_KEY) => {
+    expect(message(() => parse("production", { TURNSTILE_SECRET_KEY }))).toContain(
+      "TURNSTILE_SECRET_KEY (invalid)",
+    );
+    for (const APP_ENV of ["development", "preview"]) {
+      expect(parse(APP_ENV, { ...outsideProduction(APP_ENV), TURNSTILE_SECRET_KEY })).toMatchObject(
+        { TURNSTILE_SECRET_KEY },
+      );
+    }
+  });
+
+  test.each([
+    "1x00000000000000000000AA",
+    "2x00000000000000000000AB",
+    "1x00000000000000000000BB",
+    "2x00000000000000000000BB",
+    "3x00000000000000000000FF",
+  ])("production refuses the Turnstile testing site key %s", (NEXT_PUBLIC_TURNSTILE_SITE_KEY) => {
+    expect(message(() => parse("production", { NEXT_PUBLIC_TURNSTILE_SITE_KEY }))).toContain(
+      "NEXT_PUBLIC_TURNSTILE_SITE_KEY (invalid)",
+    );
+    for (const APP_ENV of ["development", "preview"]) {
+      expect(
+        parse(APP_ENV, { ...outsideProduction(APP_ENV), NEXT_PUBLIC_TURNSTILE_SITE_KEY }),
+      ).toMatchObject({ NEXT_PUBLIC_TURNSTILE_SITE_KEY });
     }
   });
 
