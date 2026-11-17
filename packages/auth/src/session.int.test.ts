@@ -28,9 +28,18 @@ afterAll(async () => {
   await endPools();
 });
 
+// The send guard limits codes per address and network, so each sign-in comes from its own /24.
+const nextIp = () => {
+  const octet = () => Math.floor(Math.random() * 256);
+  return `10.${octet()}.${octet()}.${1 + Math.floor(Math.random() * 254)}`;
+};
+
 async function signIn(instance: Auth, email: string): Promise<string[]> {
   emails.push(email);
-  await instance.api.sendVerificationOTP({ body: { email, type: "sign-in" } });
+  await instance.api.sendVerificationOTP({
+    body: { email, type: "sign-in" },
+    headers: new Headers({ "x-real-ip": nextIp() }),
+  });
   const otp = await readSignInCode(email);
   const { headers } = await instance.api.signInEmailOTP({
     body: { email, otp },

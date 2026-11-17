@@ -7,11 +7,14 @@
     "./client": "./src/client.ts",
     "./cookies": "./src/cookies.ts",
     "./env": "./src/env.ts",
+    "./email-domain": "./src/email-domain.ts",
     "./email-locale": "./src/email-locale.ts",
+    "./guard-otp-send": "./src/guard-otp-send.ts",
     "./permissions": "./src/permissions.ts",
     "./send-auth-email": "./src/send-auth-email.ts",
     "./sign-in-code": "./src/sign-in-code.ts",
-    "./server": "./src/server.ts"
+    "./server": "./src/server.ts",
+    "./turnstile": "./src/turnstile.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -26,6 +29,7 @@
     "@reranker/db": "workspace:*",
     "@reranker/env": "workspace:*",
     "@reranker/i18n": "workspace:*",
+    "@reranker/jobs": "workspace:*",
     "@reranker/schema": "workspace:*",
     "@reranker/telemetry": "workspace:*",
     "@reranker/ui": "workspace:*",

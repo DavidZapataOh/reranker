@@ -6,6 +6,9 @@
   "exports": {
     ".": "./src/index.ts",
     "./env": "./src/env.ts",
+    "./errors": "./src/errors.ts",
+    "./quota": "./src/quota.ts",
+    "./rate": "./src/rate.ts",
     "./step-errors": "./src/step-errors.ts"
   },
   "scripts": {

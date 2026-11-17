@@ -5,6 +5,7 @@ import { defineEnv } from "@reranker/env";
 import { DEFAULT_LOCALE, type Locale } from "@reranker/i18n";
 import { waitUntil } from "@vercel/functions";
 import { type BaseURLConfig, betterAuth, type GenericEndpointContext } from "better-auth";
+import { createAuthMiddleware } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
 import { captcha, emailOTP, organization } from "better-auth/plugins";
 import { COOKIE_PREFIX } from "./cookies";
@@ -154,6 +155,14 @@ export const auth = betterAuth({
       dataPolicyVersion: { type: "string", required: false, input: false },
       dataPolicyAcceptedAt: { type: "date", required: false, input: false },
     },
+  },
+  hooks: {
+    // Loaded on the first send: session reads, most of the traffic, never need the quota code.
+    before: createAuthMiddleware(async (ctx) => {
+      if (ctx.path !== "/email-otp/send-verification-otp") return;
+      const { guardOtpSend } = await import("./guard-otp-send");
+      await guardOtpSend(ctx);
+    }),
   },
   rateLimit: {
     enabled: true,
