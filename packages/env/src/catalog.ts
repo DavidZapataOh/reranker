@@ -92,6 +92,8 @@ const rows: Row[] = [
   ["FREE_REPORT_DRAIN_AT", "config", ALL, false, "S03-01"],
   ["FREE_REPORT_TEST_DELAY_MS", "config", PREVIEW, false, "S03-01"],
   ["CRON_SECRET", "secret", PROD_PREV, false, "07", true],
+  // The load workflow calls the preview with the same value Vercel Preview holds.
+  ["PREVIEW_CRON_SECRET", "secret", NONE, true, "07", true],
   ["SPEND_CAP_DAILY_*_USD", "config", ALL, false, "07", true],
   ["QUOTA_RESEND_EMAILS_DAILY", "config", ALL, false, "07", true],
   ["QUOTA_RESEND_EMAILS_SPLIT", "config", ALL, false, "07", true],
