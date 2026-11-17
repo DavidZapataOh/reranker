@@ -91,6 +91,13 @@ async function pendingCodes(email: string): Promise<number> {
   return rows.length;
 }
 
+// Codes emailed to one address. Sends run in the background and can land after the test that
+// made them, so assertions look at their own address only.
+const sentTo = (email: string) =>
+  mail.sendAuthEmail.mock.calls
+    .filter(([, to]) => to === email)
+    .map(([, , data]) => (data as { otp: string }).otp);
+
 const wrongCode = (otp: string) => String((Number(otp) + 1) % 1_000_000).padStart(6, "0");
 
 describe("sending a sign-in code", () => {
@@ -127,7 +134,7 @@ describe("sending a sign-in code", () => {
     expect(response.status).toBe(400);
     expect(await response.json()).toMatchObject({ reason: "disposable" });
     expect(await pendingCodes(email)).toBe(0);
-    expect(mail.sendAuthEmail).not.toHaveBeenCalled();
+    expect(sentTo(email)).toEqual([]);
   });
 
   test("fourth code for the same normalized email within an hour is rejected with rate_limited", async () => {
@@ -165,7 +172,7 @@ describe("sending a sign-in code", () => {
     expect(await response.json()).toMatchObject({ reason: "quota" });
     expect(Number(response.headers.get("X-Retry-After"))).toBeGreaterThan(0);
     expect(await pendingCodes(email)).toBe(0);
-    expect(mail.sendAuthEmail).not.toHaveBeenCalled();
+    expect(sentTo(email)).toEqual([]);
   });
 });
 
@@ -243,11 +250,7 @@ describe("signing in with a code", () => {
     expect((await sendCode(email, { ip: nextIp() })).status).toBe(200);
     expect(await readSignInCode(email)).toBe(first);
     // The email goes out in the background, after the response.
-    await vi.waitFor(() => expect(mail.sendAuthEmail).toHaveBeenCalledTimes(2));
-    const sentCodes = mail.sendAuthEmail.mock.calls.map(
-      ([, , data]) => (data as { otp: string }).otp,
-    );
-    expect(sentCodes).toEqual([first, first]);
+    await vi.waitFor(() => expect(sentTo(email)).toEqual([first, first]));
     expect((await signIn(email, first, nextIp())).status).toBe(200);
   });
 
