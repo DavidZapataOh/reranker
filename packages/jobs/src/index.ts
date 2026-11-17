@@ -13,6 +13,12 @@ export {
   SpendCapExceededError,
 } from "./errors";
 export { assertOpaqueKey } from "./keys";
+export {
+  type AcquireOptions,
+  acquireProviderSlot,
+  type LeaseEvent,
+  type ProviderSlot,
+} from "./leases";
 export type {
   JobPriority,
   PaidProvider,
