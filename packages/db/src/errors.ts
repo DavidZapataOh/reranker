@@ -17,7 +17,9 @@ function fromPg(err: pg.DatabaseError, ctx: Ctx): AppError {
   const code = err.code ?? "";
   const cause = err;
   switch (code) {
+    // 55P03: a lock wait ran past lock_timeout, the caller's own bound on a contended row.
     case "57014":
+    case "55P03":
       return new AppError("timeout", { cause });
     case "23505":
       return new AppError("conflict", { cause });

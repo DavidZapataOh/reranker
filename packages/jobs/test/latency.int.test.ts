@@ -57,17 +57,21 @@ describe("10x load", () => {
   // lanes in 5 processes) asks 300 times for DataForSEO's 28 slots, while 600 reservations race
   // for a contract-test cap that admits 250 of them. Few processes, many lanes each: booting a
   // process costs a CPU-second that the suites running beside this one on the runner need.
+  // A pool admits one lease per round trip to the database, about 16 a second from a runner 60 ms
+  // away; slots held for 2 s fill all 28 at that rate too, so the ceiling is always reached.
   const SLOT_LIMIT = 28;
+  const HOLD_MS = 2000;
   const RESERVATIONS = 600;
   const AMOUNT = 2_000;
 
   test("600 reservations and 300 slot requests neither over-grant nor fail untyped", async () => {
-    // A spend day no other test uses, so the cap starts empty.
+    // A spend day no other test or earlier run on the same database uses, so the cap starts empty.
     vi.useFakeTimers({ toFake: ["Date"] });
     onTestFinished(() => {
       vi.useRealTimers();
     });
-    vi.setSystemTime(new Date(Date.UTC(2900 + Math.floor(Math.random() * 99), 5, 15, 17)));
+    const [year, dayOfYear] = [Math.floor(Math.random() * 100), Math.floor(Math.random() * 365)];
+    vi.setSystemTime(new Date(Date.UTC(2900 + year, 0, 1 + dayOfYear, 17)));
     const cap = loadJobsConfig().caps["purpose:contract-test"].amount_micros;
     const admitted = Math.floor(cap / AMOUNT);
     expect(admitted).toBeLessThan(RESERVATIONS);
@@ -92,7 +96,7 @@ describe("10x load", () => {
     })();
 
     const fleet = Array.from({ length: 5 }, () =>
-      runWorker({ account, maxInFlight: SLOT_LIMIT, lanes: 10, acquisitions: 60, holdMs: 1000 }),
+      runWorker({ account, maxInFlight: SLOT_LIMIT, lanes: 10, acquisitions: 60, holdMs: HOLD_MS }),
     );
     await Promise.all(fleet.map((w) => w.ready));
     for (const w of fleet) w.go();
@@ -132,12 +136,11 @@ describe("10x load", () => {
     expect(spendDay()).toMatch(/^29\d\d-/);
 
     expect(slots).toHaveLength(300);
-    expect(Math.max(...peaks)).toBeLessThanOrEqual(SLOT_LIMIT);
-    // The pool really filled up, otherwise the ceiling was never tested.
-    expect(Math.max(...peaks)).toBeGreaterThanOrEqual(20);
+    // The pool filled up to its ceiling, otherwise the ceiling was never tested, and never past it.
+    expect(Math.max(...peaks)).toBe(SLOT_LIMIT);
     for (const slot of slots) {
       if (!slot.error) continue;
-      expect(slot.error.name).toBe("RateLimited");
+      expect(slot.error).toMatchObject({ name: "RateLimited" });
       expect(slot.error.retryAfterMs).toBeGreaterThan(0);
     }
     expect(await liveLeases()).toBe(0);
