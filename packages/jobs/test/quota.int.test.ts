@@ -4,6 +4,9 @@ import { nextResetAt } from "../src/day";
 import { InvalidInputError, QuotaExceededError } from "../src/errors";
 import { consumeQuota, quotaStatus } from "../src/quota";
 
+// Quotas read the job config, which needs to know the environment.
+vi.stubEnv("APP_ENV", "development");
+
 // Concurrency is real only with more connections than the default three of the system pool.
 beforeAll(() => {
   process.env.DB_POOL_MAX = "20";
