@@ -149,13 +149,14 @@ async function sendDigest(date: string, text: string): Promise<boolean> {
   return sendDailyDigest(date, text);
 }
 
+// Runs after the email went out, so it never throws: a retried step would only repeat the rest.
 async function ping(): Promise<void> {
-  const url = defineEnv([heartbeatEnv]).BETTERSTACK_HEARTBEAT_DAILY_URL;
-  if (!url) {
-    log.warn("ops.digest.heartbeat_unconfigured");
-    return;
-  }
   try {
+    const url = defineEnv([heartbeatEnv]).BETTERSTACK_HEARTBEAT_DAILY_URL;
+    if (!url) {
+      log.warn("ops.digest.heartbeat_unconfigured");
+      return;
+    }
     await pingHeartbeat(url);
   } catch (error) {
     log.error("ops.digest.heartbeat_failed", {

@@ -211,6 +211,15 @@ test("without a heartbeat URL the email still goes out", async () => {
   expect(telemetry.log.warn).toHaveBeenCalledWith("ops.digest.heartbeat_unconfigured");
 });
 
+test("an invalid heartbeat URL is logged after the email and never fails the run", async () => {
+  vi.stubEnv("BETTERSTACK_HEARTBEAT_DAILY_URL", "not a url");
+  expect(await runDailyDigest("2026-11-17")).toMatchObject({ sent: true });
+  expect(sources.pingHeartbeat).not.toHaveBeenCalled();
+  expect(telemetry.log.error).toHaveBeenCalledWith("ops.digest.heartbeat_failed", {
+    error: "EnvValidationError",
+  });
+});
+
 test("a failed ping is logged and the run still counts as sent", async () => {
   sources.pingHeartbeat.mockRejectedValueOnce(new Error("503"));
   expect(await runDailyDigest("2026-11-17")).toMatchObject({ sent: true });
