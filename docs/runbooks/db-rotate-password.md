@@ -32,11 +32,11 @@ export DATABASE_URL_MIGRATIONS=<direct owner URL of the project>
 ```
 
 3. Apply them: `pnpm --filter @reranker/db db:provision-roles`. It updates the existing roles and prints which ones it created or updated.
-4. Build the new pooled URLs (host `ep-*-pooler`, same database, the new password) and set them in Vercel for the matching environment: `DATABASE_URL` for `reranker_app` and `DATABASE_URL_SYSTEM` for `reranker_system`, type Secret (Settings, Environment Variables). Production gets the `reranker-prod` URLs and Preview the `reranker-nonprod` ones.
+4. Build the new pooled URLs (host `ep-*-pooler`, same database, the new password) and set them in Vercel for the matching environment: `DATABASE_URL` for `reranker_app` and `DATABASE_URL_SYSTEM` for `reranker_system`, type Secret (Settings, Environment Variables). Only Production holds them: each preview gets fresh logins on its own branch when it deploys.
 5. Redeploy: `vercel deploy --prod`, or redeploy the latest production deployment from the dashboard.
 6. Clear the shell: `unset DB_LOGIN_PASSWORDS DATABASE_URL_MIGRATIONS`.
 
-For the owner `reranker_owner`: reset its password in the Neon console (project, Roles and databases, the role menu, Reset password; https://neon.com/docs/manage/roles), then update `DATABASE_URL_MIGRATIONS` in Vercel. The next build migrates with it, so nothing else needs a redeploy.
+For the owner `reranker_owner`: reset its password in the Neon console (project, Roles and databases, the role menu, Reset password; https://neon.com/docs/manage/roles), then update the production value from stdin with `gh secret set DATABASE_URL_MIGRATIONS --env production`. The next `ci / migrate` run uses it, so nothing needs a redeploy. Nothing is stored for `reranker-nonprod`: the workflows get each branch's owner URL from the Neon API.
 
 ## Verify
 

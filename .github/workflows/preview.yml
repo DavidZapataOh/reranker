@@ -1,0 +1,154 @@
+name: preview
+# Each pull request gets its own Neon branch, migrated before the preview that uses it is deployed,
+# so one pull request's migration never reaches another preview. Git previews are off in
+# apps/web/vercel.json because a Git deployment cannot receive per-deployment database URLs.
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, closed]
+permissions: {}
+concurrency:
+  group: preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+env:
+  NEON_BRANCH: preview/pr-${{ github.event.pull_request.number }}
+  NEON_API_HOST: https://console.neon.tech/api/v2
+jobs:
+  deploy:
+    # Fork pull requests get no secrets, so they get no preview either.
+    if: github.event.action != 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    # Branch reset, migration, a Vercel build and the deployment.
+    timeout-minutes: 25
+    permissions: { contents: read }
+    environment:
+      name: preview
+      url: ${{ steps.deploy.outputs.url }}
+    outputs:
+      url: ${{ steps.deploy.outputs.url }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
+        with: { cache: true, require-lockfile: true }
+      # Its own prefix, exact version and no install scripts; it is called by path below.
+      - name: Install the Vercel CLI
+        env:
+          NPM_CONFIG_PREFIX: ${{ runner.temp }}/vercel-cli
+          NPM_CONFIG_IGNORE_SCRIPTS: "true"
+        run: npm install --global vercel@65.15.0
+      # delete-branch-action runs `npm i -g neonctl@v2`: pnpm's Node runtime keeps no global bin on PATH, and an
+      # unlocked global install would otherwise resolve to whatever was published last and run its install scripts.
+      - name: Prepare npm for the branch reset
+        env:
+          PREFIX: ${{ runner.temp }}/npm-global
+        run: |
+          {
+            echo "NPM_CONFIG_PREFIX=$PREFIX"
+            echo "NPM_CONFIG_BEFORE=2026-11-01T00:00:00Z"
+            echo "NPM_CONFIG_IGNORE_SCRIPTS=true"
+          } >> "$GITHUB_ENV"
+          echo "$PREFIX/bin" >> "$GITHUB_PATH"
+      - id: previous
+        name: Find the branch of an earlier push
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_NONPROD_API_KEY }}
+          NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
+        run: |
+          id=$(curl -fsS --get --data-urlencode "search=$NEON_BRANCH" \
+            -H "Authorization: Bearer $NEON_API_KEY" "$NEON_API_HOST/projects/$NEON_PROJECT_ID/branches" \
+            | jq -r --arg name "$NEON_BRANCH" '.branches[] | select(.name == $name) | .id')
+          echo "id=$id" >> "$GITHUB_OUTPUT"
+      # Drizzle skips migrations older than the last one applied, so a reused branch would miss
+      # migrations main gained since, and keep any this push rewrote. Every push starts from main.
+      - if: steps.previous.outputs.id != ''
+        uses: neondatabase/delete-branch-action@4468d825d5a88ef4012f1705a82f02ec3072f776 # v3.2.1
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          branch: ${{ steps.previous.outputs.id }}
+          api_key: ${{ secrets.NEON_NONPROD_API_KEY }}
+      # A safety net in case the cleanup job never runs.
+      - id: expires
+        run: echo "at=$(date -u -d '+14 days' +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
+      - id: branch
+        uses: neondatabase/create-branch-action@fb620d43d4c565abaf088b848a4e28e5c4ea4d9c # 6.3.1
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          api_key: ${{ secrets.NEON_NONPROD_API_KEY }}
+          parent_branch: main
+          branch_name: ${{ env.NEON_BRANCH }}
+          expires_at: ${{ steps.expires.outputs.at }}
+          suspend_timeout: 300
+          role: reranker_owner
+          ssl: verify-full
+      - uses: ./.github/actions/ci-database
+        with:
+          db-url: ${{ steps.branch.outputs.db_url }}
+          db-host-pooled: ${{ steps.branch.outputs.db_host_pooled }}
+      # Vercel builds the source with the project's Preview variables; only the database URLs,
+      # which exist for this deployment alone, are passed in. The migration credentials never are.
+      - id: deploy
+        name: Deploy the preview
+        env:
+          VERCEL: ${{ runner.temp }}/vercel-cli/bin/vercel
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          url=$("$VERCEL" deploy --yes \
+            --env "DATABASE_URL=$DATABASE_URL" \
+            --env "DATABASE_URL_SYSTEM=$DATABASE_URL_SYSTEM" \
+            --meta githubDeployment=1 \
+            --meta "githubCommitRef=$HEAD_REF")
+          if [[ ! "$url" =~ ^https://[a-z0-9-]+\.vercel\.app$ ]]; then
+            echo "::error::vercel deploy did not print a deployment URL"
+            exit 1
+          fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+  quality:
+    needs: deploy
+    permissions: { contents: read, statuses: write }
+    uses: ./.github/workflows/quality.yml
+    with:
+      url: ${{ needs.deploy.outputs.url }}
+      environment: preview
+      sha: ${{ github.event.pull_request.head.sha }}
+    secrets:
+      VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+  cleanup:
+    if: github.event.action == 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions: {}
+    steps:
+      - id: branch
+        name: Find this pull request's branch
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_NONPROD_API_KEY }}
+          NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
+        run: |
+          id=$(curl -fsS --get --data-urlencode "search=$NEON_BRANCH" \
+            -H "Authorization: Bearer $NEON_API_KEY" "$NEON_API_HOST/projects/$NEON_PROJECT_ID/branches" \
+            | jq -r --arg name "$NEON_BRANCH" '.branches[] | select(.name == $name) | .id')
+          if [ -z "$id" ]; then echo "No branch $NEON_BRANCH: nothing to clean up"; fi
+          echo "id=$id" >> "$GITHUB_OUTPUT"
+      - if: steps.branch.outputs.id != ''
+        name: Prepare npm for the branch cleanup
+        env:
+          PREFIX: ${{ runner.temp }}/npm-global
+        run: |
+          {
+            echo "NPM_CONFIG_PREFIX=$PREFIX"
+            echo "NPM_CONFIG_BEFORE=2026-11-01T00:00:00Z"
+            echo "NPM_CONFIG_IGNORE_SCRIPTS=true"
+          } >> "$GITHUB_ENV"
+          echo "$PREFIX/bin" >> "$GITHUB_PATH"
+      - if: steps.branch.outputs.id != ''
+        uses: neondatabase/delete-branch-action@4468d825d5a88ef4012f1705a82f02ec3072f776 # v3.2.1
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          branch: ${{ steps.branch.outputs.id }}
+          api_key: ${{ secrets.NEON_NONPROD_API_KEY }}

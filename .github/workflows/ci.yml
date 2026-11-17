@@ -237,6 +237,32 @@ jobs:
           project_id: ${{ vars.NEON_PROJECT_ID }}
           branch: ${{ steps.branch.outputs.branch-id }}
           api_key: ${{ secrets.NEON_NONPROD_API_KEY }}
+  # Production migrates only once every gate is green on the main commit, and Vercel holds the
+  # deployment until this check passes, so a red merge never reaches the production schema.
+  # Migrations are expand-only, so the deployment still serving keeps working meanwhile.
+  migrate:
+    needs: [ci, integration, security]
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions: { contents: read }
+    environment:
+      name: production
+      deployment: false
+    # Never cancels a running migration. A pending one is only replaced by a newer green commit,
+    # which carries the same migrations and whose deployment supersedes it.
+    concurrency:
+      group: migrate-production
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
+        with: { cache: false, require-lockfile: true }
+      - name: Migrate the production database
+        env:
+          DATABASE_URL_MIGRATIONS: ${{ secrets.DATABASE_URL_MIGRATIONS }}
+        run: pnpm --filter @reranker/db db:migrate
   security:
     runs-on: ubuntu-slim
     timeout-minutes: 10
