@@ -11,6 +11,7 @@
     "./email-locale": "./src/email-locale.ts",
     "./guard-otp-send": "./src/guard-otp-send.ts",
     "./permissions": "./src/permissions.ts",
+    "./purge": "./src/purge.ts",
     "./send-auth-email": "./src/send-auth-email.ts",
     "./sign-in-code": "./src/sign-in-code.ts",
     "./server": "./src/server.ts",
@@ -22,7 +23,7 @@
     "test:contract": "vitest run --project contract --passWithNoTests",
     "auth:generate": "auth generate --config src/server.ts --output ../db/src/schema/auth.ts --yes && node scripts/annotate-self-references.ts ../db/src/schema/auth.ts",
     "auth:check": "auth check schema --config src/server.ts",
-    "test:integration": "vitest run --project integration --passWithNoTests"
+    "test:integration": "vitest run --project 'integration*' --passWithNoTests"
   },
   "dependencies": {
     "@better-auth/drizzle-adapter": "catalog:",

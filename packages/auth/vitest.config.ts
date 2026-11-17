@@ -9,6 +9,17 @@ const TEST_EMAIL_QUOTA = {
   QUOTA_RESEND_EMAILS_SPLIT: "100000/16/50/4",
 };
 
+const PURGE_TEST = "src/purge.int.test.ts";
+
+const integration = {
+  pool: "forks" as const,
+  globalSetup: [
+    fileURLToPath(new URL("../testing/src/vitest/integration-setup.ts", import.meta.url)),
+  ],
+  testTimeout: 30_000,
+  env: TEST_EMAIL_QUOTA,
+};
+
 // The shared config only picks up .ts tests, and the email tests render JSX.
 export default defineConfig({
   test: {
@@ -31,14 +42,20 @@ export default defineConfig({
       },
       {
         test: {
+          ...integration,
           name: "integration",
           include: ["src/**/*.int.test.ts"],
-          pool: "forks",
-          globalSetup: [
-            fileURLToPath(new URL("../testing/src/vitest/integration-setup.ts", import.meta.url)),
-          ],
-          testTimeout: 30_000,
-          env: TEST_EMAIL_QUOTA,
+          exclude: [PURGE_TEST],
+        },
+      },
+      // Better Auth deletes every expired verification and idle rate-limit row on the requests it
+      // serves, so the purge test runs alone, after the files that sign in.
+      {
+        test: {
+          ...integration,
+          name: "integration-purge",
+          include: [PURGE_TEST],
+          sequence: { groupOrder: 1 },
         },
       },
       {
