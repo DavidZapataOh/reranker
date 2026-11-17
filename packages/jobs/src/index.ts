@@ -1,3 +1,4 @@
+export { type BatchOptions, type BatchResult, runBatch } from "./batch";
 export { type BreakerState, breakerCheck, breakerRecord } from "./breaker";
 export { type JobsConfig, jobsEnv, loadJobsConfig } from "./config";
 export { nextResetAt, spendDay } from "./day";
@@ -21,3 +22,4 @@ export type {
   SpendRegionPool,
 } from "./providers";
 export { type BucketLimits, peekTokens, refundTokens, takeTokens } from "./rate";
+export { type StartOnceResult, startOnce } from "./start-once";

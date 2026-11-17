@@ -33,7 +33,16 @@ describe("takeTokens", () => {
 
   test("50 concurrent takes never over-grant", async () => {
     const k = key("race");
-    const results = await Promise.all(Array.from({ length: 50 }, () => takeTokens(k, perHour)));
+    // 50 calls race through 20 workers, one per pooled connection: the row lock serializes them,
+    // and more callers than connections would only wait out the pool's 2 s checkout timeout.
+    const queue = Array.from({ length: 50 }, () => () => takeTokens(k, perHour));
+    const results: Awaited<ReturnType<typeof takeTokens>>[] = [];
+    await Promise.all(
+      Array.from({ length: 20 }, async () => {
+        for (let next = queue.shift(); next; next = queue.shift()) results.push(await next());
+      }),
+    );
+    expect(results).toHaveLength(50);
     expect(results.filter((r) => r.ok)).toHaveLength(3);
   });
 
