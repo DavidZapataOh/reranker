@@ -83,67 +83,119 @@ export async function velocityBaseline(key: string): Promise<VelocityBaseline | 
   };
 }
 
+// Keys per statement: each batch stays far from the statement timeout however many keys are active.
+const BASELINE_BATCH_KEYS = 100;
+
 /**
  * Recomputes every key's baseline from the last 7 days of buckets: the p95 of the rolling 10 and
  * 60 minute sums over each minute, quiet ones included, from the key's first bucket on. Returns
  * how many keys were computed; a key with no bucket in the week keeps its last baseline.
+ *
+ * The rolling sums only change where a bucket enters a window or leaves it, so each bucket yields
+ * three deltas (now, 10 and 60 minutes later) and a running sum over them gives every constant
+ * stretch of the series, weighted by the minutes it lasts. Zero stretches are only counted: when
+ * the p95 rank falls among them the answer is 0, otherwise it is found by ranking the positive
+ * stretches after the zeros. That is the p95 of the per-minute series without expanding it. Keys
+ * go through in batches by key order, each batch in its own statement.
  */
 export async function refreshVelocityBaselines(): Promise<number> {
+  let computed = 0;
+  let after: string | null = null;
+  for (;;) {
+    const batch: { computed: number; last: string | null } = await refreshBatch(after);
+    computed += batch.computed;
+    if (!batch.last || batch.computed < BASELINE_BATCH_KEYS) return computed;
+    after = batch.last;
+  }
+}
+
+async function refreshBatch(
+  cursor: string | null,
+): Promise<{ computed: number; last: string | null }> {
   const { rows } = await system((tx) =>
-    tx.execute<{ computed: number }>(
+    tx.execute<{ computed: number; last: string | null }>(
       sql`with bounds as (
-            select now_minute, now_minute - interval '7 days' as since
-              from (select date_trunc('minute', clock_timestamp()) as now_minute) b
-          ),
-          firsts as (
-            select v.key, min(v.bucket_start) as first_bucket
-              from ops.velocity_buckets v, bounds b
-             where v.bucket_start >= b.since
-             group by v.key
-          ),
-          minutes as (
-            select f.key, m.minute
-              from firsts f, bounds b,
-                   generate_series(f.first_bucket, b.now_minute, interval '1 minute') as m (minute)
-          ),
-          per_minute as (
-            select m.key, m.minute,
-                   coalesce(v.count, 0) as count,
-                   coalesce(v.spend_amount_micros, 0)::bigint as spend
-              from minutes m
-              left join ops.velocity_buckets v on v.key = m.key and v.bucket_start = m.minute
-          ),
-          rolling as (
-            select key,
-                   sum(count) over w10 as count10m,
-                   sum(spend) over w10 as spend10m,
-                   sum(spend) over w60 as spend60m
-              from per_minute
-            window w10 as (partition by key order by minute rows between 9 preceding and current row),
-                   w60 as (partition by key order by minute rows between 59 preceding and current row)
-          ),
-          p95 as (
-            select key,
-                   percentile_disc(0.95) within group (order by count10m) as count10m,
-                   percentile_disc(0.95) within group (order by spend10m) as spend10m,
-                   percentile_disc(0.95) within group (order by spend60m) as spend60m
-              from rolling
-             group by key
-          ),
-          upserted as (
-            insert into ops.velocity_baselines as b
-                   (key, computed_on, p95_count_10m, p95_spend_10m_amount_micros, p95_spend_10m_currency,
-                    p95_spend_60m_amount_micros, p95_spend_60m_currency)
-            select key, current_date, count10m, spend10m::bigint, 'USD', spend60m::bigint, 'USD' from p95
-            on conflict (key) do update
-               set computed_on = excluded.computed_on,
-                   p95_count_10m = excluded.p95_count_10m,
-                   p95_spend_10m_amount_micros = excluded.p95_spend_10m_amount_micros,
-                   p95_spend_60m_amount_micros = excluded.p95_spend_60m_amount_micros
-            returning 1
-          )
-          select count(*)::int as computed from upserted`,
+              select now_minute, now_minute - interval '7 days' as since
+                from (select date_trunc('minute', clock_timestamp()) as now_minute) b
+            ),
+            keys as (
+              select v.key,
+                     (date_part('epoch', b.now_minute - min(v.bucket_start)) / 60)::int + 1 as total
+                from ops.velocity_buckets v, bounds b
+               where v.bucket_start >= b.since and v.bucket_start <= b.now_minute
+                 and (${cursor}::text is null or v.key > ${cursor}::text)
+               group by v.key, b.now_minute
+               order by v.key
+               limit ${BASELINE_BATCH_KEYS}
+            ),
+            p95 as (
+              select k.key, q.*
+                from keys k
+               cross join lateral (
+                 with deltas as (
+                   select e.at, e.count, e.spend10, e.spend60
+                     from ops.velocity_buckets v
+                    cross join bounds b
+                    cross join lateral (select (date_part('epoch', v.bucket_start - b.since) / 60)::int as minute) o
+                    cross join lateral (values
+                      (o.minute, v.count, v.spend_amount_micros, v.spend_amount_micros),
+                      (o.minute + 10, -v.count, -v.spend_amount_micros, 0::bigint),
+                      (o.minute + 60, 0, 0::bigint, -v.spend_amount_micros)
+                    ) as e (at, count, spend10, spend60)
+                    where v.key = k.key and v.bucket_start >= b.since and v.bucket_start <= b.now_minute
+                      and e.at <= 10080
+                 ),
+                 rolling as (
+                   select sum(count) over w as count10m,
+                          sum(spend10) over w as spend10m,
+                          sum(spend60) over w as spend60m,
+                          lead(at, 1, 10081) over w - at as minutes
+                     from deltas
+                   window w as (order by at)
+                 ),
+                 zeros as (
+                   select coalesce(sum(minutes) filter (where count10m = 0), 0) as count10m,
+                          coalesce(sum(minutes) filter (where spend10m = 0), 0) as spend10m,
+                          coalesce(sum(minutes) filter (where spend60m = 0), 0) as spend60m
+                     from rolling
+                 ),
+                 target as (select ceil(0.95::float8 * k.total::float8) as rank)
+                 select
+                   coalesce((select case when t.rank <= z.count10m then 0
+                                         else min(p.v) filter (where p.cum >= t.rank - z.count10m) end
+                               from target t, zeros z,
+                                    (select count10m as v, sum(minutes) over (order by count10m) as cum
+                                       from rolling where count10m > 0) p
+                              group by t.rank, z.count10m), 0) as count10m,
+                   coalesce((select case when t.rank <= z.spend10m then 0
+                                         else min(p.v) filter (where p.cum >= t.rank - z.spend10m) end
+                               from target t, zeros z,
+                                    (select spend10m as v, sum(minutes) over (order by spend10m) as cum
+                                       from rolling where spend10m > 0) p
+                              group by t.rank, z.spend10m), 0) as spend10m,
+                   coalesce((select case when t.rank <= z.spend60m then 0
+                                         else min(p.v) filter (where p.cum >= t.rank - z.spend60m) end
+                               from target t, zeros z,
+                                    (select spend60m as v, sum(minutes) over (order by spend60m) as cum
+                                       from rolling where spend60m > 0) p
+                              group by t.rank, z.spend60m), 0) as spend60m
+               ) q
+            ),
+            upserted as (
+              insert into ops.velocity_baselines as b
+                     (key, computed_on, p95_count_10m, p95_spend_10m_amount_micros, p95_spend_10m_currency,
+                      p95_spend_60m_amount_micros, p95_spend_60m_currency)
+              select key, current_date, count10m, spend10m, 'USD', spend60m, 'USD' from p95
+              on conflict (key) do update
+                 set computed_on = excluded.computed_on,
+                     p95_count_10m = excluded.p95_count_10m,
+                     p95_spend_10m_amount_micros = excluded.p95_spend_10m_amount_micros,
+                     p95_spend_60m_amount_micros = excluded.p95_spend_60m_amount_micros
+              returning 1
+            )
+            select (select count(*) from upserted)::int as computed,
+                   (select max(key) from keys) as last`,
     ),
   );
-  return rows[0]?.computed ?? 0;
+  return { computed: rows[0]?.computed ?? 0, last: rows[0]?.last ?? null };
 }

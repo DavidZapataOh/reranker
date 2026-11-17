@@ -86,9 +86,20 @@ describe("velocityBaseline", () => {
 
 describe("refreshVelocityBaselines", () => {
   test("returns the number of keys computed", async () => {
-    execute.mockResolvedValue({ rows: [{ computed: 4 }] });
+    execute.mockResolvedValue({ rows: [{ computed: 4, last: "test:velocity:k4" }] });
     await expect(refreshVelocityBaselines()).resolves.toBe(4);
+    execute.mockResolvedValue({ rows: [{ computed: 0, last: null }] });
+    await expect(refreshVelocityBaselines()).resolves.toBe(0);
     execute.mockResolvedValue({ rows: [] });
     await expect(refreshVelocityBaselines()).resolves.toBe(0);
+  });
+
+  test("walks the keys in batches until one comes back short", async () => {
+    execute
+      .mockResolvedValueOnce({ rows: [{ computed: 100, last: "test:velocity:k099" }] })
+      .mockResolvedValueOnce({ rows: [{ computed: 100, last: "test:velocity:k199" }] })
+      .mockResolvedValueOnce({ rows: [{ computed: 37, last: "test:velocity:k236" }] });
+    await expect(refreshVelocityBaselines()).resolves.toBe(237);
+    expect(withSystem).toHaveBeenCalledTimes(3);
   });
 });
