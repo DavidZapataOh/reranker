@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@posthog/next": "catalog:",
+    "@reranker/auth": "workspace:*",
     "@reranker/db": "workspace:*",
     "@reranker/env": "workspace:*",
     "@reranker/flags": "workspace:*",
@@ -27,6 +28,7 @@
     "@reranker/schema": "workspace:*",
     "@reranker/telemetry": "workspace:*",
     "@reranker/ui": "workspace:*",
+    "better-auth": "catalog:",
     "drizzle-orm": "catalog:",
     "lucide-react": "1.68.0",
     "next": "catalog:",

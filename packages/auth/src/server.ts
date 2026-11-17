@@ -7,6 +7,7 @@ import { waitUntil } from "@vercel/functions";
 import { betterAuth, type GenericEndpointContext } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
 import { captcha, emailOTP, organization } from "better-auth/plugins";
+import { COOKIE_PREFIX } from "./cookies";
 import { resolveEmailLocale } from "./email-locale";
 import type { RequestedFrom } from "./emails/sign-in-code";
 import { authEnv } from "./env";
@@ -17,6 +18,18 @@ import { sendAuthEmail } from "./send-auth-email";
 import { SIGN_IN_CODE_TTL_SECONDS } from "./sign-in-code";
 
 const env = defineEnv([authEnv]);
+
+const PASSWORD_PATHS = [
+  "/sign-in/email",
+  "/sign-up/email",
+  "/change-password",
+  "/request-password-reset",
+  "/reset-password",
+  "/verify-password",
+  "/email-otp/request-password-reset",
+  "/forget-password/email-otp",
+  "/email-otp/reset-password",
+];
 
 // White-label domains join this list in a later version.
 export const trustedOrigins: string[] = [env.BETTER_AUTH_URL];
@@ -85,6 +98,9 @@ export const auth = betterAuth({
   // Better Auth reads the rotation list from BETTER_AUTH_SECRETS itself; authEnv validates it.
   secret: env.BETTER_AUTH_SECRET,
   trustedOrigins,
+  // Better Auth mounts the password routes whatever the config says; with no password sign-in
+  // they only widen the surface.
+  disabledPaths: PASSWORD_PATHS,
   database: drizzleAdapter(authDb, {
     provider: "pg",
     schema: authTables,
@@ -93,7 +109,7 @@ export const auth = betterAuth({
   }),
   advanced: {
     database: { generateId: "uuid", joins: true },
-    cookiePrefix: "rr",
+    cookiePrefix: COOKIE_PREFIX,
     ipAddress: { ipAddressHeaders: ["x-real-ip", "x-forwarded-for"] },
     backgroundTasks: { handler: waitUntil },
   },
@@ -121,7 +137,6 @@ export const auth = betterAuth({
       dataPolicyVersion: { type: "string", required: false, input: false },
       dataPolicyAcceptedAt: { type: "date", required: false, input: false },
     },
-    deleteUser: { enabled: true },
   },
   rateLimit: {
     enabled: true,

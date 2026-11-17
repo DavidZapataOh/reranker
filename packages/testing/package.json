@@ -10,7 +10,8 @@
     "./factories": "./src/factories.ts",
     "./neon": "./src/neon.ts",
     "./db": "./src/db.ts",
-    "./msw": "./src/msw.ts"
+    "./msw": "./src/msw.ts",
+    "./auth": "./src/auth.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.bin.json",
@@ -22,6 +23,7 @@
     "@axe-core/playwright": "catalog:",
     "@playwright/test": "catalog:",
     "@reranker/i18n": "workspace:*",
+    "better-auth": "catalog:",
     "msw": "catalog:",
     "pg": "catalog:"
   },

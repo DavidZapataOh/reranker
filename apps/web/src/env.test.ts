@@ -2,20 +2,43 @@ import { defineEnv } from "@reranker/env";
 import { describe, expect, test } from "vitest";
 import { fragments } from "./env";
 
+const authVars = {
+  BETTER_AUTH_SECRET: "s".repeat(32),
+  BETTER_AUTH_URL: "https://reranker.co",
+  GOOGLE_CLIENT_ID: "google-client-id",
+  GOOGLE_CLIENT_SECRET: "google-client-secret",
+  RESEND_API_KEY: "re_test",
+  TURNSTILE_SECRET_KEY: "turnstile-secret",
+  NEXT_PUBLIC_TURNSTILE_SITE_KEY: "turnstile-site",
+  CAPACITY_HMAC_KEY: "h".repeat(32),
+};
+
 const key = {
+  ...authVars,
   NEXT_PUBLIC_POSTHOG_KEY: "phc_test",
   POSTHOG_PROJECT_TOKEN: "phc_test",
   POSTHOG_HOST: "https://us.i.posthog.com",
 };
 
 describe("web environment", () => {
-  test("development needs nothing beyond APP_ENV", () => {
-    expect(defineEnv(fragments, { APP_ENV: "development" })).toEqual({
+  test("development needs nothing beyond APP_ENV and the auth variables", () => {
+    expect(defineEnv(fragments, { APP_ENV: "development", ...authVars })).toEqual({
       APP_ENV: "development",
       NEXT_PUBLIC_POSTHOG_REGION: "us",
       LOG_LEVEL: "info",
+      ...authVars,
     });
   });
+
+  // /api/auth serves every environment, so a deployment without its variables must not start.
+  test.each(["development", "preview", "production"])(
+    "%s requires the auth variables",
+    (APP_ENV) => {
+      expect(() => defineEnv(fragments, { APP_ENV })).toThrowError(
+        /BETTER_AUTH_SECRET \(missing\).*GOOGLE_CLIENT_ID \(missing\)/,
+      );
+    },
+  );
 
   test("preview and production require the PostHog key", () => {
     for (const APP_ENV of ["preview", "production"]) {

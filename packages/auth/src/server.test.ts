@@ -77,6 +77,32 @@ describe("auth configuration", () => {
     expect((auth.options as BetterAuthOptions).emailAndPassword?.enabled).not.toBe(true);
   });
 
+  // Better Auth mounts these whatever the config says; without password sign-in none has a use.
+  test.each([
+    "/sign-in/email",
+    "/sign-up/email",
+    "/change-password",
+    "/request-password-reset",
+    "/reset-password",
+    "/verify-password",
+    "/email-otp/request-password-reset",
+    "/forget-password/email-otp",
+    "/email-otp/reset-password",
+  ])("the password route %s answers 404", async (path) => {
+    const response = await auth.handler(
+      new Request(`http://localhost:3000/api/auth${path}`, {
+        method: "POST",
+        headers: { "content-type": "application/json", origin: "http://localhost:3000" },
+        body: "{}",
+      }),
+    );
+    expect(response.status).toBe(404);
+  });
+
+  test("account deletion stays off until it can refuse the last owner of the house", () => {
+    expect((auth.options as BetterAuthOptions).user?.deleteUser?.enabled).not.toBe(true);
+  });
+
   test("nextCookies is the last plugin", () => {
     expect(auth.options.plugins.at(-1)?.id).toBe("next-cookies");
   });
