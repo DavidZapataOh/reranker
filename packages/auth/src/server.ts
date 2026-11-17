@@ -4,9 +4,10 @@ import * as authTables from "@reranker/db/schema/auth";
 import { defineEnv } from "@reranker/env";
 import { DEFAULT_LOCALE, type Locale } from "@reranker/i18n";
 import { waitUntil } from "@vercel/functions";
-import { betterAuth, type GenericEndpointContext } from "better-auth";
+import { type BaseURLConfig, betterAuth, type GenericEndpointContext } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
 import { captcha, emailOTP, organization } from "better-auth/plugins";
+import { COOKIE_PREFIX } from "./cookies";
 import { resolveEmailLocale } from "./email-locale";
 import type { RequestedFrom } from "./emails/sign-in-code";
 import { authEnv } from "./env";
@@ -18,8 +19,37 @@ import { SIGN_IN_CODE_TTL_SECONDS } from "./sign-in-code";
 
 const env = defineEnv([authEnv]);
 
+const PASSWORD_PATHS = [
+  "/sign-in/email",
+  "/sign-up/email",
+  "/change-password",
+  "/request-password-reset",
+  "/reset-password",
+  "/verify-password",
+  "/email-otp/request-password-reset",
+  "/forget-password/email-otp",
+  "/email-otp/reset-password",
+];
+
+// A preview answers only on its own deployment and branch hosts: a *.vercel.app pattern would also
+// trust any look-alike project someone else deploys on Vercel.
+function origin(): { baseURL: BaseURLConfig; origins: string[] } {
+  if (env.APP_ENV === "preview") {
+    const hosts = [env.VERCEL_URL, env.VERCEL_BRANCH_URL].filter((host) => host !== undefined);
+    return {
+      baseURL: { allowedHosts: hosts, protocol: "https" },
+      origins: hosts.map((host) => `https://${host}`),
+    };
+  }
+  // authEnv requires it outside preview; the check only narrows the type.
+  if (!env.BETTER_AUTH_URL) throw new Error("BETTER_AUTH_URL is required outside preview");
+  return { baseURL: env.BETTER_AUTH_URL, origins: [env.BETTER_AUTH_URL] };
+}
+
+const { baseURL, origins } = origin();
+
 // White-label domains join this list in a later version.
-export const trustedOrigins: string[] = [env.BETTER_AUTH_URL];
+export const trustedOrigins: string[] = origins;
 
 // Vercel URL-encodes the city header ("Bogot%C3%A1"); a value that does not decode is dropped
 // rather than shown garbled.
@@ -81,10 +111,13 @@ async function sendSignInCode(
 
 export const auth = betterAuth({
   appName: "Reranker",
-  baseURL: env.BETTER_AUTH_URL,
+  baseURL,
   // Better Auth reads the rotation list from BETTER_AUTH_SECRETS itself; authEnv validates it.
   secret: env.BETTER_AUTH_SECRET,
   trustedOrigins,
+  // Better Auth mounts the password routes whatever the config says; with no password sign-in
+  // they only widen the surface.
+  disabledPaths: PASSWORD_PATHS,
   database: drizzleAdapter(authDb, {
     provider: "pg",
     schema: authTables,
@@ -93,7 +126,7 @@ export const auth = betterAuth({
   }),
   advanced: {
     database: { generateId: "uuid", joins: true },
-    cookiePrefix: "rr",
+    cookiePrefix: COOKIE_PREFIX,
     ipAddress: { ipAddressHeaders: ["x-real-ip", "x-forwarded-for"] },
     backgroundTasks: { handler: waitUntil },
   },
@@ -121,7 +154,6 @@ export const auth = betterAuth({
       dataPolicyVersion: { type: "string", required: false, input: false },
       dataPolicyAcceptedAt: { type: "date", required: false, input: false },
     },
-    deleteUser: { enabled: true },
   },
   rateLimit: {
     enabled: true,
@@ -145,6 +177,9 @@ export const auth = betterAuth({
       roles,
       creatorRole: "owner",
       allowUserToCreateOrganization: false,
+      // Deleting the house would take every anonymous report and lead with it; off until a guard
+      // can refuse that.
+      disableOrganizationDeletion: true,
       teams: {
         enabled: true,
         maximumTeams: 1,

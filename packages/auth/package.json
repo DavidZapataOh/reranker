@@ -4,11 +4,14 @@
   "type": "module",
   "sideEffects": false,
   "exports": {
+    "./client": "./src/client.ts",
+    "./cookies": "./src/cookies.ts",
     "./env": "./src/env.ts",
     "./email-locale": "./src/email-locale.ts",
     "./permissions": "./src/permissions.ts",
     "./send-auth-email": "./src/send-auth-email.ts",
-    "./sign-in-code": "./src/sign-in-code.ts"
+    "./sign-in-code": "./src/sign-in-code.ts",
+    "./server": "./src/server.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

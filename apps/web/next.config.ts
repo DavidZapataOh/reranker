@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   env: { APP_ENV: appEnv() },
   devIndicators: false,
-  transpilePackages: ["@reranker/ui"],
+  transpilePackages: ["@reranker/auth", "@reranker/ui"],
   // Short tracked links for each channel, e.g. reranker.co/ig (bio) or reranker.co/ig/reel-01.
   // They land on the home page with UTM tags so the dashboard can tell channels apart.
   async redirects() {

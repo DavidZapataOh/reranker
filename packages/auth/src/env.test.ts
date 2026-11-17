@@ -46,12 +46,45 @@ describe("auth environment", () => {
   test("the app URL is https, with http://localhost only in development", () => {
     const local = { BETTER_AUTH_URL: "http://localhost:3000" };
     expect(parse("development", local)).toMatchObject(local);
-    for (const APP_ENV of ["preview", "production"]) {
-      expect(message(() => parse(APP_ENV, local))).toContain("BETTER_AUTH_URL (invalid)");
-    }
+    expect(message(() => parse("production", local))).toContain("BETTER_AUTH_URL (invalid)");
     expect(
       message(() => parse("development", { BETTER_AUTH_URL: "http://example.com" })),
     ).toContain("BETTER_AUTH_URL (invalid)");
+  });
+
+  test("development and production pin the app URL; preview derives it from Vercel", () => {
+    for (const APP_ENV of ["development", "production"]) {
+      expect(message(() => parse(APP_ENV, { BETTER_AUTH_URL: undefined }))).toContain(
+        "BETTER_AUTH_URL (missing)",
+      );
+    }
+    const preview = {
+      BETTER_AUTH_URL: undefined,
+      VERCEL_URL: "reranker-a1b2c3d4e-davidzapataohs-projects.vercel.app",
+      VERCEL_BRANCH_URL: "reranker-git-main-davidzapataohs-projects.vercel.app",
+    };
+    expect(parse("preview", preview)).toMatchObject({
+      VERCEL_URL: preview.VERCEL_URL,
+      VERCEL_BRANCH_URL: preview.VERCEL_BRANCH_URL,
+    });
+    expect(parse("preview", { ...preview, VERCEL_BRANCH_URL: undefined }).VERCEL_BRANCH_URL).toBe(
+      undefined,
+    );
+    expect(message(() => parse("preview", { ...preview, VERCEL_URL: undefined }))).toContain(
+      "VERCEL_URL (missing)",
+    );
+    // A fixed URL would serve one preview and break every other.
+    expect(
+      message(() => parse("preview", { ...preview, BETTER_AUTH_URL: "https://reranker.co" })),
+    ).toContain("BETTER_AUTH_URL (forbidden)");
+  });
+
+  test("Vercel hosts are bare vercel.app hostnames", () => {
+    for (const VERCEL_URL of ["https://x.vercel.app", "reranker.co", "x.vercel.app/path"]) {
+      expect(message(() => parse("preview", { BETTER_AUTH_URL: undefined, VERCEL_URL }))).toContain(
+        "VERCEL_URL (invalid)",
+      );
+    }
   });
 
   test("rotation secrets are optional and must be versioned", () => {
