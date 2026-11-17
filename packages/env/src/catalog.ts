@@ -17,6 +17,7 @@ export type CatalogEntry = {
 const ALL: readonly AppEnv[] = ["production", "preview", "development"];
 const PROD: readonly AppEnv[] = ["production"];
 const PROD_PREV: readonly AppEnv[] = ["production", "preview"];
+const PROD_DEV: readonly AppEnv[] = ["production", "development"];
 const PREVIEW: readonly AppEnv[] = ["preview"];
 const NONE: readonly AppEnv[] = [];
 
@@ -62,9 +63,12 @@ const rows: Row[] = [
   // GitHub holds the reranker-nonprod id; Vercel Production holds the reranker-prod id.
   ["NEON_PROJECT_ID", "config", PROD, true, "03 / 08", true],
   ["NEON_NONPROD_PROJECT_ID", "config", PROD, false, "03 / 08"],
-  ["BETTER_AUTH_SECRET", "secret", ALL, false, "04"],
+  ["BETTER_AUTH_SECRET", "secret", ALL, false, "04", true],
   ["BETTER_AUTH_SECRETS", "secret", ALL, false, "04"],
-  ["BETTER_AUTH_URL", "config", ALL, false, "04"],
+  // Preview derives its auth origin from the Vercel system variables below.
+  ["BETTER_AUTH_URL", "config", PROD_DEV, false, "04", true],
+  ["VERCEL_URL", "config", PROD_PREV, false, "04", true],
+  ["VERCEL_BRANCH_URL", "config", PROD_PREV, false, "04", true],
   ["GOOGLE_CLIENT_ID", "config", ALL, false, "04"],
   ["GOOGLE_CLIENT_SECRET", "secret", ALL, false, "04"],
   ["RESEND_API_KEY", "secret", ALL, false, "04 / S03-03", true],
@@ -76,7 +80,7 @@ const rows: Row[] = [
   ["EMAIL_REPLY_TO", "config", ALL, false, "S03-03"],
   ["TURNSTILE_SECRET_KEY", "secret", ALL, false, "04"],
   ["NEXT_PUBLIC_TURNSTILE_SITE_KEY", "config", ALL, false, "04"],
-  ["CAPACITY_HMAC_KEY", "secret", ALL, false, "04"],
+  ["CAPACITY_HMAC_KEY", "secret", ALL, false, "04", true],
   ["FREE_REPORT_CHOICE_KEY", "secret", ALL, false, "S03-01"],
   ["QUALITY_CANARY_TOKEN", "secret", ALL, true, "S03-01"],
   ["FREE_REPORT_CAPTURE_CUTOFF_MS", "config", ALL, false, "S03-01"],

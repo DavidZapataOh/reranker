@@ -4,7 +4,6 @@ import { fragments } from "./env";
 
 const authVars = {
   BETTER_AUTH_SECRET: "s".repeat(32),
-  BETTER_AUTH_URL: "https://reranker.co",
   GOOGLE_CLIENT_ID: "google-client-id",
   GOOGLE_CLIENT_SECRET: "google-client-secret",
   RESEND_API_KEY: "re_test",
@@ -13,20 +12,29 @@ const authVars = {
   CAPACITY_HMAC_KEY: "h".repeat(32),
 };
 
-const key = {
-  ...authVars,
+// Preview takes its auth origin from Vercel; the other environments pin it.
+const origin = (APP_ENV: string) =>
+  APP_ENV === "preview"
+    ? { VERCEL_URL: "reranker-a1b2c3d4e-davidzapataohs-projects.vercel.app" }
+    : { BETTER_AUTH_URL: "https://reranker.co" };
+
+const posthog = {
   NEXT_PUBLIC_POSTHOG_KEY: "phc_test",
   POSTHOG_PROJECT_TOKEN: "phc_test",
   POSTHOG_HOST: "https://us.i.posthog.com",
 };
 
+const withKey = (APP_ENV: string, extra: Record<string, string> = {}) =>
+  defineEnv(fragments, { APP_ENV, ...authVars, ...origin(APP_ENV), ...posthog, ...extra });
+
 describe("web environment", () => {
   test("development needs nothing beyond APP_ENV and the auth variables", () => {
-    expect(defineEnv(fragments, { APP_ENV: "development", ...authVars })).toEqual({
+    const local = { ...authVars, BETTER_AUTH_URL: "http://localhost:3000" };
+    expect(defineEnv(fragments, { APP_ENV: "development", ...local })).toEqual({
       APP_ENV: "development",
       NEXT_PUBLIC_POSTHOG_REGION: "us",
       LOG_LEVEL: "info",
-      ...authVars,
+      ...local,
     });
   });
 
@@ -61,14 +69,12 @@ describe("web environment", () => {
 
   test("the flags key is required in production only and must be a project secret key", () => {
     for (const APP_ENV of ["development", "preview"]) {
-      expect(defineEnv(fragments, { APP_ENV, ...key }).POSTHOG_FEATURE_FLAGS_KEY).toBeUndefined();
+      expect(withKey(APP_ENV).POSTHOG_FEATURE_FLAGS_KEY).toBeUndefined();
     }
-    expect(() => defineEnv(fragments, { APP_ENV: "production", ...key })).toThrowError(
-      /POSTHOG_FEATURE_FLAGS_KEY \(missing\)/,
+    expect(() => withKey("production")).toThrowError(/POSTHOG_FEATURE_FLAGS_KEY \(missing\)/);
+    expect(() => withKey("production", { POSTHOG_FEATURE_FLAGS_KEY: "phc_1" })).toThrowError(
+      /POSTHOG_FEATURE_FLAGS_KEY \(invalid\)/,
     );
-    expect(() =>
-      defineEnv(fragments, { APP_ENV: "production", ...key, POSTHOG_FEATURE_FLAGS_KEY: "phc_1" }),
-    ).toThrowError(/POSTHOG_FEATURE_FLAGS_KEY \(invalid\)/);
   });
 
   test("GA and Clarity ids are accepted only in production", () => {
@@ -77,35 +83,31 @@ describe("web environment", () => {
       POSTHOG_FEATURE_FLAGS_KEY: "phs_test",
       CRON_SECRET: "cron-secret-with-enough-length",
     };
-    expect(defineEnv(fragments, { APP_ENV: "production", ...key, ...flags, ...ids })).toMatchObject(
-      ids,
-    );
+    expect(withKey("production", { ...flags, ...ids })).toMatchObject(ids);
     for (const APP_ENV of ["preview", "development"]) {
-      expect(() => defineEnv(fragments, { APP_ENV, ...key, ...ids })).toThrowError(
+      expect(() => withKey(APP_ENV, ids)).toThrowError(
         /NEXT_PUBLIC_GA_ID \(forbidden\), NEXT_PUBLIC_CLARITY_ID \(forbidden\)/,
       );
     }
   });
 
   test("the cron secret is required in production only and too short a value is rejected", () => {
-    expect(defineEnv(fragments, { APP_ENV: "preview", ...key }).CRON_SECRET).toBeUndefined();
-    expect(() =>
-      defineEnv(fragments, { APP_ENV: "production", ...key, POSTHOG_FEATURE_FLAGS_KEY: "phs_1" }),
-    ).toThrowError(/CRON_SECRET \(missing\)/);
-    expect(() =>
-      defineEnv(fragments, { APP_ENV: "preview", ...key, CRON_SECRET: "short" }),
-    ).toThrowError(/CRON_SECRET \(invalid\)/);
+    expect(withKey("preview").CRON_SECRET).toBeUndefined();
+    expect(() => withKey("production", { POSTHOG_FEATURE_FLAGS_KEY: "phs_1" })).toThrowError(
+      /CRON_SECRET \(missing\)/,
+    );
+    expect(() => withKey("preview", { CRON_SECRET: "short" })).toThrowError(
+      /CRON_SECRET \(invalid\)/,
+    );
   });
 
   test("the PostHog region defaults to us and rejects unknown values", () => {
-    expect(defineEnv(fragments, { APP_ENV: "preview", ...key })).toMatchObject({
-      NEXT_PUBLIC_POSTHOG_REGION: "us",
+    expect(withKey("preview")).toMatchObject({ NEXT_PUBLIC_POSTHOG_REGION: "us" });
+    expect(withKey("preview", { NEXT_PUBLIC_POSTHOG_REGION: "eu" })).toMatchObject({
+      NEXT_PUBLIC_POSTHOG_REGION: "eu",
     });
-    expect(
-      defineEnv(fragments, { APP_ENV: "preview", ...key, NEXT_PUBLIC_POSTHOG_REGION: "eu" }),
-    ).toMatchObject({ NEXT_PUBLIC_POSTHOG_REGION: "eu" });
-    expect(() =>
-      defineEnv(fragments, { APP_ENV: "preview", ...key, NEXT_PUBLIC_POSTHOG_REGION: "asia" }),
-    ).toThrowError(/NEXT_PUBLIC_POSTHOG_REGION \(invalid\)/);
+    expect(() => withKey("preview", { NEXT_PUBLIC_POSTHOG_REGION: "asia" })).toThrowError(
+      /NEXT_PUBLIC_POSTHOG_REGION \(invalid\)/,
+    );
   });
 });

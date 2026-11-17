@@ -77,18 +77,21 @@ describe("session over http://localhost", () => {
     expect(cookie).not.toMatch(/; Secure/i);
   });
 
-  // Off until it can refuse to delete the last owner of the house.
-  test("delete-user is not reachable", async () => {
-    const setCookies = await signIn(auth, "delivered+session-delete@resend.dev");
+  // Off until they can refuse to delete the house or its last owner.
+  test.each([
+    ["/delete-user", {}],
+    ["/organization/delete", { organizationId: crypto.randomUUID() }],
+  ])("%s is not reachable with a session", async (path, body) => {
+    const setCookies = await signIn(auth, `delivered+session-delete-${path.length}@resend.dev`);
     const response = await auth.handler(
-      new Request("http://localhost:3000/api/auth/delete-user", {
+      new Request(`http://localhost:3000/api/auth${path}`, {
         method: "POST",
         headers: {
           cookie: cookieHeader(setCookies),
           origin: "http://localhost:3000",
           "content-type": "application/json",
         },
-        body: "{}",
+        body: JSON.stringify(body),
       }),
     );
     expect(response.status).toBe(404);

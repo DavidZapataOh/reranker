@@ -44,7 +44,7 @@
         "TURNSTILE_SECRET_KEY",
         "CAPACITY_HMAC_KEY"
       ],
-      "passThroughEnv": ["ENABLE_EXPERIMENTAL_COREPACK"]
+      "passThroughEnv": ["ENABLE_EXPERIMENTAL_COREPACK", "VERCEL_URL", "VERCEL_BRANCH_URL"]
     },
     "typecheck": { "dependsOn": ["^typecheck"] },
     "web#typecheck": { "dependsOn": ["^typecheck"], "env": ["APP_ENV"] },

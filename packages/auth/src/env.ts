@@ -1,8 +1,9 @@
-import { config, onlyIn, secret } from "@reranker/env";
+import { config, forbiddenIn, onlyIn, requiredIn, secret } from "@reranker/env";
 import { z } from "@reranker/schema";
 
 const httpsUrl = z.url({ protocol: /^https$/ });
 const localhostUrl = z.string().regex(/^http:\/\/localhost(:\d+)?$/);
+const vercelHost = z.string().regex(/^[a-z0-9-]+\.vercel\.app$/);
 
 // "2:new,1:old": Better Auth encrypts with the first version and decrypts with every listed one.
 const rotationSecrets = z
@@ -18,9 +19,24 @@ export const authEnv = z.object({
     rotationSecrets.optional(),
     "Versioned secrets for rotation, newest first, as 2:new,1:old",
   ),
-  BETTER_AUTH_URL: config(
-    z.union([httpsUrl, onlyIn(["development"], localhostUrl)]),
-    "Public origin of the app; http://localhost is accepted in development only",
+  // Each preview deployment has its own URLs, so preview reads them from Vercel instead.
+  BETTER_AUTH_URL: requiredIn(
+    ["development", "production"],
+    forbiddenIn(
+      ["preview"],
+      config(
+        z.union([httpsUrl, onlyIn(["development"], localhostUrl)]),
+        "Public origin of the app in development and production; http://localhost is accepted in development only",
+      ),
+    ),
+  ),
+  VERCEL_URL: requiredIn(
+    ["preview"],
+    config(vercelHost, "Deployment hostname, set by Vercel; the auth origin of a preview"),
+  ),
+  VERCEL_BRANCH_URL: config(
+    vercelHost.optional(),
+    "Branch hostname, set by Vercel on Git deployments; also served by a preview",
   ),
   GOOGLE_CLIENT_ID: config(z.string().min(1), "Google OAuth client id"),
   GOOGLE_CLIENT_SECRET: secret(z.string().min(1), "Google OAuth client secret"),

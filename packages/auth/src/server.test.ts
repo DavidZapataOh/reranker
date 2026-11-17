@@ -103,6 +103,15 @@ describe("auth configuration", () => {
     expect((auth.options as BetterAuthOptions).user?.deleteUser?.enabled).not.toBe(true);
   });
 
+  test("organization deletion is rejected until it can protect the house", async () => {
+    await expect(
+      auth.api.deleteOrganization({
+        body: { organizationId: crypto.randomUUID() },
+        headers: new Headers(),
+      }),
+    ).rejects.toMatchObject({ statusCode: 404, body: { code: "ORGANIZATION_DELETION_DISABLED" } });
+  });
+
   test("nextCookies is the last plugin", () => {
     expect(auth.options.plugins.at(-1)?.id).toBe("next-cookies");
   });
