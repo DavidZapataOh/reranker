@@ -8,7 +8,7 @@ vi.mock("@reranker/db", () => ({ withSystem }));
 vi.stubEnv("APP_ENV", "development");
 
 const { InvalidInputError } = await import("../src/errors");
-const { checkWorkflowQuota, cleanupLeases, reconcileSpend, registerSpendSource } = await import(
+const { checkWorkflowBudget, cleanupLeases, reconcileSpend, registerSpendSource } = await import(
   "../src/maintenance"
 );
 
@@ -111,8 +111,8 @@ describe("reconcileSpend", () => {
   });
 });
 
-describe("checkWorkflowQuota", () => {
-  test("estimates the month's events from the runs started, by the event budget of each kind", async () => {
+describe("checkWorkflowBudget", () => {
+  test("estimates the month's events from the runs started and prices them at the Pro rate", async () => {
     execute.mockResolvedValue({
       rows: [
         { kind: "daily", runs: 30 },
@@ -121,41 +121,54 @@ describe("checkWorkflowQuota", () => {
       ],
     });
     const onAlert = vi.fn();
-    // 30 × 45 + 100 × 85 + 500 × 9 = 14,350 of 50,000.
-    await expect(checkWorkflowQuota("2026-11", { onAlert })).resolves.toEqual({
+    // 30 × 45 + 100 × 85 + 500 × 9 = 14,350 events at US$0.02 per 1,000, against US$10.
+    await expect(checkWorkflowBudget("2026-11", { onAlert })).resolves.toEqual({
       estimatedEvents: 14_350,
-      ratio: 0.287,
+      spendUsd: 0.287,
+      budgetUsd: 10,
+      ratio: 0.0287,
     });
     expect(onAlert).not.toHaveBeenCalled();
   });
 
   test("a kind without its own budget counts as the most expensive one", async () => {
     execute.mockResolvedValue({ rows: [{ kind: "new-workflow", runs: 10 }] });
-    await expect(checkWorkflowQuota("2026-11")).resolves.toMatchObject({ estimatedEvents: 850 });
+    await expect(checkWorkflowBudget("2026-11")).resolves.toMatchObject({ estimatedEvents: 850 });
   });
 
-  test("alerts jobs-hobby-quota above 70% of 50,000 events, and not at 70%", async () => {
+  test("warns from 70% of the monthly budget and is critical from 100%", async () => {
     const onAlert = vi.fn();
-    // 35,000 events is exactly 70%.
-    execute.mockResolvedValueOnce({
-      rows: [
-        { kind: "free-report", runs: 407 },
-        { kind: "job", runs: 45 },
-      ],
-    });
-    await checkWorkflowQuota("2026-11", { onAlert });
+    const budgetUsd = 1;
+    // 8,000 events cost US$0.16; 35,020 cost US$0.70; 51,000 cost US$1.02.
+    execute.mockResolvedValueOnce({ rows: [{ kind: "job", runs: 888 }] });
+    await checkWorkflowBudget("2026-11", { onAlert, budgetUsd });
     expect(onAlert).not.toHaveBeenCalled();
     execute.mockResolvedValueOnce({ rows: [{ kind: "free-report", runs: 412 }] });
-    await checkWorkflowQuota("2026-11", { onAlert });
-    expect(onAlert).toHaveBeenCalledExactlyOnceWith({
-      kind: "jobs-hobby-quota",
-      payload: { month: "2026-11", estimated_events: 35_020, limit: 50_000, percent: 70 },
+    await checkWorkflowBudget("2026-11", { onAlert, budgetUsd });
+    expect(onAlert).toHaveBeenLastCalledWith({
+      kind: "jobs-workflow-budget",
+      payload: {
+        month: "2026-11",
+        estimated_events: 35_020,
+        spend_usd: 0.7,
+        budget_usd: 1,
+        percent: 70,
+        threshold: 70,
+        severity: "warning",
+      },
     });
+    execute.mockResolvedValueOnce({ rows: [{ kind: "free-report", runs: 600 }] });
+    await checkWorkflowBudget("2026-11", { onAlert, budgetUsd });
+    expect(onAlert).toHaveBeenLastCalledWith({
+      kind: "jobs-workflow-budget",
+      payload: expect.objectContaining({ percent: 102, threshold: 100, severity: "critical" }),
+    });
+    expect(onAlert).toHaveBeenCalledTimes(2);
   });
 
   test("needs a calendar month", async () => {
     for (const month of ["2026-13", "2026-1", "noviembre", "2026-11-01"]) {
-      await expect(checkWorkflowQuota(month)).rejects.toBeInstanceOf(InvalidInputError);
+      await expect(checkWorkflowBudget(month)).rejects.toBeInstanceOf(InvalidInputError);
     }
     expect(execute).not.toHaveBeenCalled();
   });

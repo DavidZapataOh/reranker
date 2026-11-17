@@ -10,7 +10,8 @@
     "./schema/auth": "./src/schema/auth.ts",
     "./auth-adapter": "./src/auth-adapter.ts",
     "./testing": "./src/testing.ts",
-    "./neon-usage": "./src/neon-usage.ts"
+    "./neon-usage": "./src/neon-usage.ts",
+    "./neon-production": "./src/neon-production.ts"
   },
   "scripts": {
     "db:generate": "drizzle-kit generate",

@@ -2,6 +2,7 @@ import { EnvValidationError, resetAppEnv } from "@reranker/env";
 import { cost } from "@reranker/schema";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import type { DigestInput } from "./digest";
+import { LAUNCH_CHECK_IDS } from "./launch/types";
 
 const mocks = vi.hoisted(() => ({
   send: vi.fn(),
@@ -17,18 +18,23 @@ vi.mock("resend", () => ({
 }));
 vi.mock("./logger", () => ({ log: { info: mocks.info, warn: mocks.warn, error: mocks.error } }));
 
-const {
-  buildDailyDigest,
-  DIGEST_THRESHOLDS,
-  digestEmailConfigured,
-  fetchWithin,
-  sendDailyDigest,
-  SourceError,
-} = await import("./digest");
+const { buildDailyDigest, digestEmailConfigured, fetchWithin, sendDailyDigest, SourceError } =
+  await import("./digest");
 
 const usd = (major: number) => cost(Math.round(major * 1_000_000), "USD");
 const ok = <T>(value: T) => ({ ok: true as const, value });
-const GIB = 1_073_741_824;
+const NEON_BUDGET = 60;
+
+const allPass = LAUNCH_CHECK_IDS.map((id) => ({ id, status: "pass" as const, reason: "" }));
+const stages: DigestInput["stages"] = {
+  checks: allPass,
+  flagsOn: ok({ "free-report-live": false, accounts: false }),
+  triggers: {
+    spendCapPressure: ok(false),
+    primitiveLatency: ok(false),
+    providerVolume: ok(false),
+  },
+};
 
 const fullInput: DigestInput = {
   date: "2026-11-17",
@@ -40,21 +46,29 @@ const fullInput: DigestInput = {
     { scope: "purpose:benchmark", day: usd(20), cap: usd(20), month: usd(20) },
   ]),
   dataforseo: ok({ balanceUsd: 42.1 }),
-  neon: ok([
-    { name: "reranker-prod", computeHours: 10, storageBytes: GIB / 2 },
-    { name: "reranker-nonprod", computeHours: 5, storageBytes: GIB / 4 },
-  ]),
+  neon: ok({
+    budgetUsd: NEON_BUDGET,
+    projects: [
+      { name: "reranker-prod", computeHours: 10, storageGbMonths: 0.5, spendUsd: 1.235 },
+      { name: "reranker-nonprod", computeHours: 5, storageGbMonths: 0.25, spendUsd: 0.6175 },
+    ],
+  }),
   github: ok({ minutesUsed: 1234, includedUsedUsd: 1.2, includedUsd: 12, billedUsd: 0 }),
   posthog: ok({ events: 120_000, exceptions: 300 }),
+  posthogPlan: "free",
   resend: ok({ sent: 12, limit: 100 }),
-  workflows: ok({ estimatedEvents: 4_500, ratio: 0.09 }),
+  workflows: ok({ estimatedEvents: 4_500, spendUsd: 0.09, budgetUsd: 10, ratio: 0.009 }),
   switches: ok({ "capture-provider-dataforseo": true, "capture-channel-api": false }),
+  stages,
 };
 
-// Neon spend at the published Launch rates for a given share of the monthly budget.
+// Neon at a given share of its monthly budget.
 function neonAt(percent: number): DigestInput["neon"] {
-  const hours = (DIGEST_THRESHOLDS.neonMonthlyUsd * percent) / 100 / 0.106;
-  return ok([{ name: "reranker-prod", computeHours: hours, storageBytes: 0 }]);
+  const spendUsd = (NEON_BUDGET * percent) / 100;
+  return ok({
+    budgetUsd: NEON_BUDGET,
+    projects: [{ name: "reranker-prod", computeHours: 1, storageGbMonths: 1, spendUsd }],
+  });
 }
 
 describe("buildDailyDigest", () => {
@@ -98,36 +112,100 @@ describe("buildDailyDigest", () => {
   });
 
   test.each([
-    [49, null],
-    [50, "warning"],
-    [80, "warning"],
-    [95, "critical"],
-  ])("neon spend at %i%% of the monthly budget → %s", (percent, severity) => {
+    [69, null, null],
+    [70, "warning", 70],
+    [99, "warning", 70],
+    [100, "critical", 100],
+  ])("neon spend at %i%% of the monthly budget → %s", (percent, severity, threshold) => {
     const { alerts } = buildDailyDigest({ ...fullInput, neon: neonAt(percent) });
     const neon = alerts.filter((a) => a.kind === "neon-quota");
     if (severity === null) {
       expect(neon).toEqual([]);
     } else {
       expect(neon).toHaveLength(1);
-      expect(neon[0]?.payload).toMatchObject({ severity, percent, threshold: percent });
+      expect(neon[0]?.payload).toMatchObject({
+        severity,
+        percent,
+        threshold,
+        budget_usd: NEON_BUDGET,
+      });
     }
   });
 
-  test("neon spend counts storage at the Launch rate per GiB-month", () => {
-    const { text } = buildDailyDigest({
-      ...fullInput,
-      neon: ok([{ name: "reranker-prod", computeHours: 0, storageBytes: 10 * GIB }]),
-    });
-    expect(text).toMatch(/gasto estimado del mes USD\s3,50 de USD\s20,00 \(18\s%\)/);
+  test("neon lists each project's usage and the month's spend against the budget", () => {
+    const { text } = buildDailyDigest(fullInput);
+    expect(text).toMatch(/reranker-prod: 10 CU-h · 0,5 GB-mes · USD\s1,24/);
+    expect(text).toMatch(/gasto del mes USD\s1,85 de USD\s60,00 \(3\s%\)/);
   });
 
-  test("workflows usage appears in the text and never as an alert", () => {
+  test("workflows spend appears in the text and never as an alert", () => {
     const { text, alerts } = buildDailyDigest({
       ...fullInput,
-      workflows: ok({ estimatedEvents: 45_000, ratio: 0.9 }),
+      workflows: ok({ estimatedEvents: 450_000, spendUsd: 9, budgetUsd: 10, ratio: 0.9 }),
     });
-    expect(text).toMatch(/Workflows \(estimado\): 45\.000 eventos \(90\s%/);
+    expect(text).toMatch(
+      /Workflows \(estimado\): 450\.000 eventos · USD\s9,00 de USD\s10,00 \(90\s%\)/,
+    );
     expect(alerts).toEqual([]);
+  });
+
+  test("on pay-as-you-go PostHog shows its usage without allowances or alerts", () => {
+    const { text, alerts } = buildDailyDigest({
+      ...fullInput,
+      posthogPlan: "pay-as-you-go",
+      posthog: ok({ events: 5_000_000, exceptions: 900_000 }),
+    });
+    expect(text).toContain("PostHog (pago por uso): 5.000.000 eventos · 900.000 excepciones");
+    expect(alerts).toEqual([]);
+  });
+
+  describe("Escalones pendientes", () => {
+    test("lists only the stages still pending, with their cost and trigger", () => {
+      const checks = allPass.map((c) =>
+        c.id === "neon-production"
+          ? { ...c, status: "fail" as const, reason: "escala a cero encendida" }
+          : c.id === "github-private-org"
+            ? { ...c, status: "unknown" as const, reason: "respuesta HTTP 404" }
+            : c,
+      );
+      const { text, alerts } = buildDailyDigest({ ...fullInput, stages: { ...stages, checks } });
+      const section = text.slice(text.indexOf("Escalones pendientes"));
+      expect(section).toMatch(
+        /Neon de producción siempre encendido.*≈ US\$40\/mes.*antes de free-report-live o accounts.*sin cumplir.*falta: escala a cero encendida/,
+      );
+      expect(section).toMatch(/organización privada de GLEMO.*sin verificar: respuesta HTTP 404/);
+      expect(section).not.toContain("Resend Pro");
+      expect(section).toMatch(/Valkey.*p95 de las primitivas > 25 ms una semana.*sin cumplir/);
+      expect(alerts).toEqual([]);
+    });
+
+    test("a gated flag on in production marks its pending stages as triggered", () => {
+      const checks = allPass.map((c) =>
+        c.id === "traces" ? { ...c, status: "fail" as const, reason: "sin trazas" } : c,
+      );
+      const { text } = buildDailyDigest({
+        ...fullInput,
+        stages: { ...stages, checks, flagsOn: ok({ "free-report-live": true, accounts: false }) },
+      });
+      expect(text).toMatch(/Trazas con @vercel\/otel.*disparador cumplido/);
+    });
+
+    test("a fired volume trigger and an unreadable one say so", () => {
+      const { text } = buildDailyDigest({
+        ...fullInput,
+        stages: {
+          ...stages,
+          triggers: {
+            spendCapPressure: ok(true),
+            primitiveLatency: { ok: false, reason: "sin dato", detail: "falta X" },
+            providerVolume: ok(false),
+          },
+        },
+      });
+      expect(text).toMatch(/Tope del reporte gratis por demanda.*disparador cumplido/);
+      expect(text).toMatch(/Valkey.*disparador sin dato/);
+      expect(text).toMatch(/Temporal.*disparador sin cumplir/);
+    });
   });
 
   test("resend above 70% daily → free-tier-quota warning", () => {
@@ -187,11 +265,11 @@ describe("buildDailyDigest", () => {
     expect(text.match(/sin dato \(falta X\)/g)).toHaveLength(8);
   });
 
-  test("threshold 0% in preview fires neon-quota", () => {
+  test("a budget line of 0% in preview fires neon-quota", () => {
     const { alerts } = buildDailyDigest({
       ...fullInput,
       neon: neonAt(1),
-      thresholds: { warning: [0] },
+      thresholds: { budget: { warning: 0, critical: 100 } },
     });
     expect(alerts.some((a) => a.kind === "neon-quota")).toBe(true);
   });
@@ -319,5 +397,25 @@ describe("sendDailyDigest", () => {
     vi.stubEnv("RESEND_API_KEY", "");
     expect(await sendDailyDigest("2026-11-17", "hola")).toBe(false);
     expect(mocks.send).not.toHaveBeenCalled();
+  });
+});
+
+describe("configuration", () => {
+  afterEach(() => vi.unstubAllEnvs());
+
+  test("the Neon budget is US$60 unless configured", async () => {
+    const { neonBudgetUsd } = await import("./digest");
+    vi.stubEnv("APP_ENV", "production");
+    expect(neonBudgetUsd()).toBe(60);
+    vi.stubEnv("NEON_MONTHLY_BUDGET_USD", "85.5");
+    expect(neonBudgetUsd()).toBe(85.5);
+  });
+
+  test("the PostHog plan is free unless configured", async () => {
+    const { postHogPlan } = await import("./posthog-plan");
+    vi.stubEnv("APP_ENV", "production");
+    expect(postHogPlan()).toBe("free");
+    vi.stubEnv("POSTHOG_PLAN", "pay-as-you-go");
+    expect(postHogPlan()).toBe("pay-as-you-go");
   });
 });

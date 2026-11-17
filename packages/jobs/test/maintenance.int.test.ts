@@ -4,7 +4,7 @@ import { cost } from "@reranker/schema";
 import { type SQL, sql } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import {
-  checkWorkflowQuota,
+  checkWorkflowBudget,
   cleanupLeases,
   reconcileSpend,
   registerSpendSource,
@@ -185,7 +185,7 @@ describe("reconcileSpend", () => {
   });
 });
 
-describe("checkWorkflowQuota", () => {
+describe("checkWorkflowBudget", () => {
   // Bogota midnight is 05:00Z, so the first and last instants of the local month sit around it.
   async function started(kind: string, runs: number, at: string) {
     await system(sql`insert into ops.workflow_starts (kind, key, run_id, status, created_at)
@@ -195,7 +195,7 @@ describe("checkWorkflowQuota", () => {
 
   afterAll(() => system(sql`delete from ops.workflow_starts where key like ${`${month}:%`}`));
 
-  test("counts the started runs of the local month and alerts above 70% of 50,000 events", async () => {
+  test("counts the started runs of the local month and alerts from 70% of the budget", async () => {
     await started("free-report", 407, `${year}-03-01T05:00:00Z`);
     await started("job", 45, `${year}-04-01T04:59:59Z`);
     // Outside the month in Bogota, and a claim that never started.
@@ -205,17 +205,24 @@ describe("checkWorkflowQuota", () => {
       values ('free-report', ${`${month}:${randomUUID()}`}, 'pending', ${`${year}-03-15T12:00:00Z`}::timestamptz)`);
 
     const onAlert = vi.fn();
-    await expect(checkWorkflowQuota(month, { onAlert })).resolves.toEqual({
+    // 35,000 events at US$0.02 per 1,000 are US$0.70: 70% of a US$1 budget.
+    await expect(checkWorkflowBudget(month, { onAlert, budgetUsd: 1 })).resolves.toEqual({
       estimatedEvents: 35_000,
+      spendUsd: 0.7,
+      budgetUsd: 1,
       ratio: 0.7,
     });
-    expect(onAlert).not.toHaveBeenCalled();
-
-    await started("daily", 1, `${year}-03-20T10:00:00Z`);
-    await checkWorkflowQuota(month, { onAlert });
     expect(onAlert).toHaveBeenCalledExactlyOnceWith({
-      kind: "jobs-hobby-quota",
-      payload: { month, estimated_events: 35_045, limit: 50_000, percent: 70 },
+      kind: "jobs-workflow-budget",
+      payload: {
+        month,
+        estimated_events: 35_000,
+        spend_usd: 0.7,
+        budget_usd: 1,
+        percent: 70,
+        threshold: 70,
+        severity: "warning",
+      },
     });
   });
 });

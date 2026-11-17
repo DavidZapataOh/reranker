@@ -6,7 +6,7 @@ import { type RegistryEntry, registry } from "./registry";
 import { checkFlags, expiredReleases, flagPayload, planSync, runCheck, runSync } from "./sync";
 
 const genFile = readFileSync(new URL("./flag-keys.gen.ts", import.meta.url), "utf8");
-const remoteAll: RemoteFlag[] = registry.map((r) => ({ key: r.key, active: false }));
+const remoteAll: RemoteFlag[] = registry.map((r, id) => ({ id, key: r.key, active: false }));
 const entry = (key: string) => {
   const found = registry.find((r) => r.key === key);
   if (!found) throw new Error(`no registry entry ${key}`);
@@ -20,7 +20,7 @@ test("creates missing flags disabled", () => {
 });
 
 test("never touches existing flags", () => {
-  const remote = registry.map((r) => ({ key: r.key, active: true }));
+  const remote = registry.map((r, id) => ({ id, key: r.key, active: true }));
   expect(planSync(registry, remote).create).toEqual([]);
 });
 
@@ -74,7 +74,11 @@ test("an expired release flag is a warning, a live one is not", () => {
 });
 
 function fakeApi(remote: RemoteFlag[]): PostHogApi {
-  return { listFlags: vi.fn(async () => remote), createFlag: vi.fn(async () => {}) };
+  return {
+    listFlags: vi.fn(async () => remote),
+    createFlag: vi.fn(async () => {}),
+    setActive: vi.fn(async () => {}),
+  };
 }
 
 test("sync creates every missing flag and a second run creates none", async () => {

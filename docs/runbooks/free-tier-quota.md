@@ -6,7 +6,7 @@
 - a provider email from one of the native alerts below, or
 - a provider rejecting requests with a quota or spend error.
 
-Neon compute is covered by `neon-quota` and Vercel Workflows usage by `jobs-hobby-quota`; both runbooks belong to other plans and are not repeated here.
+Neon spend is covered by `neon-quota` and Vercel Workflows spend by `jobs-workflow-budget`; both runbooks are not repeated here. PostHog's allowances apply only while `POSTHOG_PLAN` is `free`: on `pay-as-you-go` the digest shows usage without them and PostHog's billing limits cap the spend.
 
 Limits and menu paths below were read from each provider's official documentation on 2026-11-16. Provider limits change; re-read the linked page before relying on a number.
 

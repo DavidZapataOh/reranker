@@ -88,6 +88,7 @@ test("reports nothing to do when PostHog already matches", async () => {
   const lines: string[] = [];
   await applyAlerts(createPostHogRest("phx_test"), desired, {
     dryRun: false,
+    maxAlerts: 5,
     log: (l) => lines.push(l),
   });
   expect(lines).toEqual(["nothing to do"]);
@@ -98,6 +99,7 @@ test("dry run prints the plan and writes nothing", async () => {
   const lines: string[] = [];
   await applyAlerts(createPostHogRest("phx_test"), desired, {
     dryRun: true,
+    maxAlerts: 5,
     log: (l) => lines.push(l),
   });
   expect(calls).toEqual([]);
@@ -107,7 +109,11 @@ test("dry run prints the plan and writes nothing", async () => {
 
 test("creates insights first, then alerts pointing at the new insight ids", async () => {
   const calls = stubRemote();
-  await applyAlerts(createPostHogRest("phx_test"), desired, { dryRun: false, log: () => {} });
+  await applyAlerts(createPostHogRest("phx_test"), desired, {
+    dryRun: false,
+    maxAlerts: 5,
+    log: () => {},
+  });
   expect(calls.map((c) => `${c.method} ${c.path}`)).toEqual([
     "POST /insights/",
     "POST /insights/",

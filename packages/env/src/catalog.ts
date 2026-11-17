@@ -54,6 +54,14 @@ const rows: Row[] = [
   ["BETTERSTACK_HEARTBEAT_DAILY_URL", "secret", PROD, false, "08"],
   ["BETTERSTACK_HEARTBEAT_NIGHTLY_URL", "secret", NONE, true, "02 / 08"],
   ["GITHUB_BILLING_READ_TOKEN", "secret", PROD, false, "08"],
+  ["POSTHOG_PLAN", "config", ALL, false, "launch"],
+  ["NEON_MONTHLY_BUDGET_USD", "config", PROD, false, "launch"],
+  ["WORKFLOWS_MONTHLY_BUDGET_USD", "config", PROD, false, "launch"],
+  // Read-only keys the launch gate verifies the provider tiers with, in the daily run and in
+  // `launch:check` / `flags:sync --enable` run with the production environment.
+  ["BETTERSTACK_API_TOKEN", "secret", PROD, false, "launch"],
+  ["POSTHOG_LAUNCH_READ_KEY", "secret", PROD, false, "launch"],
+  ["GITHUB_REPO_READ_TOKEN", "secret", PROD, false, "launch"],
   // Previews receive both URLs per deployment, for their own Neon branch, from the preview workflow.
   ["DATABASE_URL", "secret", PROD, false, "03", true],
   ["DATABASE_URL_SYSTEM", "secret", PROD, false, "03", true],

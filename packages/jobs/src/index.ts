@@ -46,14 +46,15 @@ export {
   type ProviderSlot,
 } from "./leases";
 export {
-  checkWorkflowQuota,
+  checkWorkflowBudget,
   cleanupLeases,
   type DailyStep,
   reconcileSpend,
   registerSpendSource,
   type SpendMismatch,
   type SpendSource,
-  type WorkflowQuotaAlert,
+  type WorkflowBudget,
+  type WorkflowBudgetAlert,
 } from "./maintenance";
 export {
   classifyNetwork,
@@ -93,6 +94,18 @@ export {
   registerJobsTelemetry,
   reportStepError,
 } from "./telemetry";
+export {
+  checkPrimitiveLatency,
+  checkProviderVolume,
+  checkSpendCapPressure,
+  type PrimitiveLatency,
+  type ProviderVolume,
+  primitiveLatency,
+  providerVolume,
+  type ScaleTriggerAlert,
+  type SpendCapPressure,
+  spendCapPressure,
+} from "./triggers";
 export {
   recordVelocity,
   refreshVelocityBaselines,

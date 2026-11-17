@@ -109,3 +109,14 @@ test("the process configuration is read once", () => {
     else process.env.APP_ENV = previous;
   }
 });
+
+test("the monthly Vercel Workflows budget is US$10 unless configured", () => {
+  expect(loadJobsConfig({ APP_ENV: "production" }).budgets.workflowsMonthlyUsd).toBe(10);
+  expect(
+    loadJobsConfig({ APP_ENV: "production", WORKFLOWS_MONTHLY_BUDGET_USD: "25.5" }).budgets
+      .workflowsMonthlyUsd,
+  ).toBe(25.5);
+  expect(() =>
+    loadJobsConfig({ APP_ENV: "production", WORKFLOWS_MONTHLY_BUDGET_USD: "diez" }),
+  ).toThrow(EnvValidationError);
+});

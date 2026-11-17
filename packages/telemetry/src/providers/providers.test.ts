@@ -5,7 +5,8 @@ import { SourceError } from "./source-error";
 
 const { dataforseoBalance } = await import("./dataforseo-balance");
 const { githubActionsUsage } = await import("./github-actions-usage");
-const { posthogUsage, POSTHOG_FREE_LIMITS } = await import("./posthog-usage");
+const { posthogUsage } = await import("./posthog-usage");
+const { postHogLimits } = await import("../posthog-plan");
 const { pingHeartbeat } = await import("./betterstack");
 
 const USER_DATA = "https://api.dataforseo.com/v3/appendix/user_data";
@@ -165,7 +166,7 @@ describe("posthogUsage", () => {
     expect(await posthogUsage()).toEqual({ events: 120_000, exceptions: 300 });
     expect(body.query?.kind).toBe("HogQLQuery");
     expect(body.query?.query).toContain("toStartOfMonth(now())");
-    expect(POSTHOG_FREE_LIMITS).toEqual({ events: 1_000_000, exceptions: 100_000 });
+    expect(postHogLimits("free")).toMatchObject({ events: 1_000_000, exceptions: 100_000 });
   });
 
   test("an answer of an unexpected shape fails the source", async () => {

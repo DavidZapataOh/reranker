@@ -46,6 +46,11 @@ export function createPostHogRest(apiKey: string) {
   }
 
   return {
+    /** A GET outside the project scope, `path` relative to `/api/` or a `next` link. */
+    get(path: string, signal?: AbortSignal): Promise<unknown> {
+      const url = path.startsWith("https://") ? path : `${APP_HOST}/api/${path}`;
+      return request(url, undefined, signal);
+    },
     send(
       path: string,
       method: "POST" | "PATCH",

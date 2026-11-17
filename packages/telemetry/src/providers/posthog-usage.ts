@@ -4,9 +4,6 @@ import { telemetryEnv } from "../env";
 import { createPostHogRest, PostHogApiError } from "../posthog-rest";
 import { SourceError } from "./source-error";
 
-/** Monthly allowances of the PostHog Free plan (https://posthog.com/pricing). */
-export const POSTHOG_FREE_LIMITS = { events: 1_000_000, exceptions: 100_000 } as const;
-
 // https://posthog.com/docs/api/queries
 const USAGE = `SELECT countIf(event != '$exception'), countIf(event = '$exception')
 FROM events

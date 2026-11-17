@@ -21,7 +21,10 @@ const telemetry = vi.hoisted(() => ({
 }));
 vi.mock("@reranker/telemetry", () => telemetry);
 const jobs = vi.hoisted(() => ({
-  checkWorkflowQuota: vi.fn(),
+  checkWorkflowBudget: vi.fn(),
+  spendCapPressure: vi.fn(async () => ({ days: [], fired: false })),
+  primitiveLatency: vi.fn(async () => ({ since: null, fired: false })),
+  providerVolume: vi.fn(async () => ({ calls: 0, fired: true })),
   consumeQuota: vi.fn(async () => {}),
   reportStepError: vi.fn(async () => {}),
 }));
@@ -38,8 +41,19 @@ vi.mock("@reranker/flags", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@reranker/flags")>()),
   ...flags,
 }));
+const state = vi.hoisted(() => ({
+  deploymentInputs: vi.fn(() => ({ crons: [], tracing: false, resendDailyQuota: 100 })),
+  readGatedFlags: vi.fn(async () => ({ "free-report-live": false, accounts: false })),
+}));
+vi.mock("../../lib/launch-state", () => state);
+const launch = vi.hoisted(() => ({ runLaunchCheck: vi.fn() }));
+vi.mock("@reranker/telemetry/launch", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@reranker/telemetry/launch")>()),
+  ...launch,
+}));
 
 const { QuotaExceededError } = await import("@reranker/jobs");
+const { LAUNCH_CHECK_IDS } = await import("@reranker/telemetry/launch");
 const { opsDigest, runDailyDigest } = await import("./daily-digest");
 
 const SPEND_ROWS = [
@@ -69,17 +83,7 @@ function serveDatabase() {
 }
 
 function project(projectId: string, computeHours: number) {
-  return {
-    projectId,
-    periodStart: "2026-11-01T00:00:00.000Z",
-    periodEnd: "2026-12-01T00:00:00.000Z",
-    computeHours,
-    computeHoursLimit: 100,
-    storageBytes: 1024 ** 3,
-    storageBytesLimit: 1_073_741_824,
-    computePct: computeHours,
-    storagePct: 100,
-  };
+  return { projectId, computeHours, storageGbMonths: 0.5, spendUsd: computeHours * 0.106 };
 }
 
 const text = () => (sources.sendDailyDigest.mock.calls[0] as unknown as [string, string])[1];
@@ -105,7 +109,19 @@ beforeEach(() => {
   neon.readNeonUsage.mockResolvedValue({
     projects: [project("prod-id", 10), project("nonprod-id", 4)],
   });
-  jobs.checkWorkflowQuota.mockResolvedValue({ estimatedEvents: 900, ratio: 0.018 });
+  jobs.checkWorkflowBudget.mockResolvedValue({
+    estimatedEvents: 900,
+    spendUsd: 0.018,
+    budgetUsd: 10,
+    ratio: 0.0018,
+  });
+  launch.runLaunchCheck.mockResolvedValue(
+    LAUNCH_CHECK_IDS.map((id) =>
+      id === "smoke-cron"
+        ? { id, status: "fail", reason: "no hay cron de /api/cron/smoke" }
+        : { id, status: "pass", reason: "" },
+    ),
+  );
   flags.captureSwitchSnapshot.mockResolvedValue({
     switches: { "capture-provider-dataforseo": true },
     evaluatedAt: "2026-11-17T10:00:00.000Z",
@@ -134,13 +150,31 @@ test("gathers every source, emails the digest and then pings the heartbeat", asy
   expect(text()).toContain("Topes alcanzados el 2026-11-16: provider:dataforseo");
   expect(text()).toContain("capture-provider-dataforseo: encendido");
   expect(sources.githubActionsUsage).toHaveBeenCalledWith("2026-11", expect.any(AbortSignal));
-  expect(jobs.checkWorkflowQuota).toHaveBeenCalledExactlyOnceWith("2026-11");
+  expect(jobs.checkWorkflowBudget).toHaveBeenCalledExactlyOnceWith("2026-11");
+  expect(neon.readNeonUsage).toHaveBeenCalledWith(
+    expect.objectContaining({ from: "2026-11-01T00:00:00Z", to: "2026-11-17T00:00:00Z" }),
+  );
+  expect(text()).toMatch(/gasto del mes USD\s1,48 de USD\s60,00/);
+});
+
+test("the pending stages come from this deployment's launch checks and the triggers", async () => {
+  await runDailyDigest("2026-11-17");
+  expect(launch.runLaunchCheck).toHaveBeenCalledExactlyOnceWith(state.deploymentInputs());
+  expect(jobs.spendCapPressure).toHaveBeenCalledExactlyOnceWith("2026-11-16");
+  expect(jobs.providerVolume).toHaveBeenCalledExactlyOnceWith("2026-11");
+  const section = text().slice(text().indexOf("Escalones pendientes"));
+  expect(section).toMatch(/Pruebas de humo por motor cada 15 min.*disparador sin cumplir/);
+  expect(section).not.toContain("Neon de producción");
+  expect(section).toMatch(/Temporal.*disparador cumplido/);
 });
 
 test("the closed day of a month's first run is the previous month's last day", async () => {
   await runDailyDigest("2026-12-01");
   expect(text()).toContain("Gasto del 2026-11-30");
-  expect(jobs.checkWorkflowQuota).toHaveBeenCalledExactlyOnceWith("2026-11");
+  expect(jobs.checkWorkflowBudget).toHaveBeenCalledExactlyOnceWith("2026-11");
+  expect(neon.readNeonUsage).toHaveBeenCalledWith(
+    expect.objectContaining({ from: "2026-11-01T00:00:00Z", to: "2026-12-01T00:00:00Z" }),
+  );
 });
 
 test("a source that never answers is 'sin dato' after 10 s and the email still goes out", async () => {
