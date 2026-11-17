@@ -14,12 +14,12 @@ export function countLiveCiBranches(branches: { name: string }[]): number {
   return branches.filter((b) => b.name.startsWith("ci/")).length;
 }
 
-// Neon caps branches per project (10 on our plan, main included); queueing here keeps parallel
-// runs from failing on that limit.
+// Launch bills branches past the tenth by the hour, so this only bounds a runaway fan-out of
+// parallel runs; past it they queue instead of piling up branches.
 export async function waitForCiBranchSlot({
   apiKey,
   projectId,
-  max = 8,
+  max = 20,
   attempts = 15,
   delayMs = 60_000,
   fetch: request = fetch,
