@@ -45,6 +45,8 @@ select kind, count(*) from ops.network_ranges group by kind;
 
    Every daily step is safe to run twice.
 
+   `vercel crons run` needs a recent Vercel CLI (`vercel crons --help` lists it); otherwise use Vercel, the project, Settings, Cron Jobs, Run. A `401` means the run presented a bearer that does not match `CRON_SECRET`: restore or rotate it as in [Rotate a secret](rotate-secret.md) and redeploy.
+
 ## Verify
 
 Within a few minutes of the rerun (or after the next 05:00 run), `jobs.daily.network_ranges` appears in PostHog Logs with `applied: true`, and `ops.network_ranges_meta` has a row with today's `refreshed_at` and `rows` at or above 40,000. No new `network-ranges-stale` follows the next daily run.
