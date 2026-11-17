@@ -81,7 +81,9 @@ describe("acquireProviderSlot", () => {
         maxInFlight: 28,
         lanes: LANES,
         acquisitions: 20,
-        holdMs: 600,
+        // Long enough that 50 lanes fill 28 slots even when other suites load the database and
+        // each acquisition takes over a second; a short hold made the peak measure throughput.
+        holdMs: 2000,
       }),
     );
     // Process start-up is slow and uneven; the clock starts when all ten are loaded.
