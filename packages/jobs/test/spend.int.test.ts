@@ -184,16 +184,16 @@ describe("reserveSpend", () => {
     await expect(reserveSpend(req(40_000, { provider: "gemini" }))).resolves.toBeDefined();
   });
 
-  test("a zero estimate passes even on a zero cap", async () => {
+  test("a zero estimate is invalid: it would pass every cap, even a full one", async () => {
     withCaps({ "provider:dataforseo": 0 });
-    await expect(reserveSpend(req(0))).resolves.toMatchObject({ reserved: usd(0) });
+    await expect(reserveSpend(req(0))).rejects.toBeInstanceOf(InvalidInputError);
     await expect(reserveSpend(req(1))).rejects.toMatchObject({ scope: "provider:dataforseo" });
   });
 });
 
 describe("pools", () => {
   const freeReport = (pool: "free-report-anonymous" | "free-report-verified") =>
-    ({ purpose: "free-report", pool }) as const;
+    ({ purpose: "free-report", pool, country: "CO" }) as const;
 
   beforeEach(() =>
     withCaps({
@@ -314,10 +314,11 @@ describe("pools", () => {
     expect(await usedOf("pool:free-report-elsewhere")).toBe(80_000);
   });
 
-  test("a free report with no pool and no country is charged to its purpose only", async () => {
-    const r = await reserveSpend(req(4000, { purpose: "free-report" }));
+  test("a free report from Colombia is charged to its pool and purpose, not elsewhere", async () => {
+    const r = await reserveSpend(req(4000, freeReport("free-report-verified")));
     expect(r.scopes.map((s) => s.scope)).toEqual([
       "global",
+      "pool:free-report-verified",
       "purpose:free-report",
       "provider:dataforseo",
     ]);
@@ -371,11 +372,19 @@ describe("settleSpend and releaseSpend", () => {
     expect(await costOf("free_report", randomUUID())).toEqual(usd(0));
   });
 
-  test("settle and release are idempotent under step retries", async () => {
+  test("settle and release are idempotent under step retries and say whether they applied", async () => {
     const r = await reserveSpend(req(4000));
-    await settleSpend(r, usd(3100));
-    await settleSpend(r, usd(3100));
-    await releaseSpend(r);
+    const events: unknown[] = [];
+    const onEvent = (event: unknown) => events.push(event);
+    expect(await settleSpend(r, usd(3100), { onEvent })).toEqual({ applied: true });
+    expect(await settleSpend(r, usd(3100), { onEvent })).toEqual({ applied: false });
+    expect(await releaseSpend(r)).toEqual({ applied: false });
+    expect(events).toEqual([
+      {
+        name: "jobs.spend.settled",
+        props: { provider: "dataforseo", purpose: "benchmark", micro_usd: 3100 },
+      },
+    ]);
     expect(await usedOf("global")).toBe(3100);
     expect(await ledgerStatus(r.id)).toBe("settled");
   });
@@ -383,7 +392,10 @@ describe("settleSpend and releaseSpend", () => {
   test("concurrent retries of one settle or release apply exactly once", async () => {
     const settled = await reserveSpend(req(4000));
     const released = await reserveSpend(req(4000));
-    await race(20, (i) => (i % 2 ? settleSpend(settled, usd(3100)) : releaseSpend(released)));
+    const outcomes = granted(
+      await race(20, (i) => (i % 2 ? settleSpend(settled, usd(3100)) : releaseSpend(released))),
+    );
+    expect(outcomes.filter((o) => o.applied)).toHaveLength(2);
     expect(await usedOf("global")).toBe(3100);
     expect(await ledgerStatus(settled.id)).toBe("settled");
     expect(await ledgerStatus(released.id)).toBe("released");
@@ -453,8 +465,8 @@ describe("stale reservations", () => {
     expect(await ledgerStatus(stale.id)).toBe("released");
     expect(await ledgerStatus(fresh.id)).toBe("reserved");
     expect(await usedOf("global")).toBe(7000);
-    // The step that held the stale reservation is gone; a late settle counts nothing twice.
-    await settleSpend(stale, usd(4000));
+    // A settle that arrives after the stale release is not applied, and says so.
+    expect(await settleSpend(stale, usd(4000))).toEqual({ applied: false });
     expect(await usedOf("global")).toBe(7000);
     expect(await releaseStaleSpend(today)).toBe(0);
   });
@@ -488,22 +500,26 @@ describe("invalid input", () => {
       { purpose: "benchmark", pool: "free-report-verified" },
     ],
     ["a country without the free-report purpose", { purpose: "benchmark", country: "MX" }],
-    ["a fallback without a pool", { purpose: "free-report", fallbackPool: "free-report-verified" }],
+    ["a free report without a pool", { purpose: "free-report", country: "CO" }],
+    ["a free report without a country", { purpose: "free-report", pool: "free-report-verified" }],
+    ["a fallback without a pool", { purpose: "benchmark", fallbackPool: "free-report-verified" }],
     [
       "a fallback equal to the pool",
       {
         purpose: "free-report",
         pool: "free-report-verified",
         fallbackPool: "free-report-verified",
+        country: "CO",
       },
     ],
     ["an unknown provider", { provider: "nobody" as PaidProvider }],
     ["an unknown purpose", { purpose: "fun" as SpendPurpose }],
-    ["an unknown pool", { purpose: "free-report", pool: "elsewhere" as SpendPool }],
+    ["an unknown pool", { purpose: "free-report", pool: "elsewhere" as SpendPool, country: "CO" }],
     ["an estimate in another currency", { estimate: cost(1000, "COP") }],
     ["a negative estimate", { estimate: { amount_micros: -1, currency: "USD" } }],
     ["a fractional estimate", { estimate: { amount_micros: 1.5, currency: "USD" } }],
     ["an empty reference", { refId: "" }],
+    ["a zero estimate", { estimate: usd(0) }],
   ])("rejects %s", async (_, overrides) => {
     await expect(reserveSpend(req(1000, overrides))).rejects.toBeInstanceOf(InvalidInputError);
   });

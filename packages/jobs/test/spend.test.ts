@@ -25,12 +25,15 @@ const usd = (micros: number) => cost(micros, "USD");
 const ID = "0190a6c4-2f1b-7c3e-8a5d-9e8f7a6b5c4d";
 const req = (overrides: Partial<SpendRequest> = {}): SpendRequest => ({
   provider: "dataforseo",
-  purpose: "free-report",
+  purpose: "benchmark",
   refType: "free_report",
   refId: "r1",
   estimate: usd(40_000),
   ...overrides,
 });
+
+const freeReport = (overrides: Partial<SpendRequest> = {}) =>
+  req({ purpose: "free-report", pool: "free-report-anonymous", country: "CO", ...overrides });
 
 const dialect = new PgDialect();
 const params = (call = 0) => dialect.sqlToQuery(execute.mock.calls[call]?.[0] as SQL).params;
@@ -61,7 +64,7 @@ describe("reserveSpend", () => {
   test("is one system statement with global first, the configured caps and the ledger", async () => {
     execute.mockResolvedValue(granted(["global", "pool:free-report-anonymous"]));
     const r = await reserveSpend(
-      req({
+      freeReport({
         channel: "ui-vendor",
         engine: "chatgpt",
         pool: "free-report-anonymous",
@@ -100,6 +103,8 @@ describe("reserveSpend", () => {
     expect(r).toEqual({
       id: ID,
       reserved: usd(40_000),
+      provider: "dataforseo",
+      purpose: "free-report",
       scopes: [
         { scope: "global", used: usd(40_000), cap: usd(75_000_000) },
         { scope: "pool:free-report-anonymous", used: usd(40_000), cap: usd(75_000_000) },
@@ -109,11 +114,16 @@ describe("reserveSpend", () => {
 
   test("sends no fallback, channel or engine when none is given, and Colombia skips elsewhere", async () => {
     execute.mockResolvedValue(granted(["global"]));
-    await reserveSpend(req({ country: "CO" }));
+    await reserveSpend(freeReport());
     const [, scopes, , fallback, fallbackCap, , ledger] = params();
-    expect(scopes).toEqual(["global", "purpose:free-report", "provider:dataforseo"]);
+    expect(scopes).toEqual([
+      "global",
+      "pool:free-report-anonymous",
+      "purpose:free-report",
+      "provider:dataforseo",
+    ]);
     expect([fallback, fallbackCap]).toEqual([null, null]);
-    expect(JSON.parse(ledger as string)).toMatchObject({ channel: null, engine: null, pool: null });
+    expect(JSON.parse(ledger as string)).toMatchObject({ channel: null, engine: null });
   });
 
   test("contract tests skip the provider scope outside production only", async () => {
@@ -127,10 +137,10 @@ describe("reserveSpend", () => {
   });
 
   test("a denial names its scope and the next local midnight", async () => {
-    execute.mockResolvedValue(denied("purpose:free-report"));
+    execute.mockResolvedValue(denied("purpose:benchmark"));
     const error = await reserveSpend(req()).catch((e: unknown) => e);
     expect(error).toBeInstanceOf(SpendCapExceededError);
-    expect(error).toMatchObject({ scope: "purpose:free-report" });
+    expect(error).toMatchObject({ scope: "purpose:benchmark" });
     expect(
       (error as InstanceType<typeof SpendCapExceededError>).resetsAt.getTime(),
     ).toBeGreaterThan(Date.now());
@@ -138,7 +148,10 @@ describe("reserveSpend", () => {
 
   test("a denial on the fallback pool is reported on the reservation's own pool", async () => {
     execute.mockResolvedValue(denied("pool:free-report-anonymous"));
-    const verified = req({ pool: "free-report-verified", fallbackPool: "free-report-anonymous" });
+    const verified = freeReport({
+      pool: "free-report-verified",
+      fallbackPool: "free-report-anonymous",
+    });
     await expect(reserveSpend(verified)).rejects.toMatchObject({
       scope: "pool:free-report-verified",
     });
@@ -155,21 +168,24 @@ describe("reserveSpend", () => {
     await expect(reserveSpend(req())).rejects.toThrow("without a scope");
   });
 
+  const fr = { purpose: "free-report", country: "CO" } as const;
   test.each<[string, Partial<SpendRequest>]>([
     ["a pool off the free report", { purpose: "benchmark", pool: "free-report-verified" }],
     ["a country off the free report", { purpose: "quality-canary", country: "MX" }],
+    ["a free report without a pool", { purpose: "free-report", country: "CO" }],
+    ["a free report without a country", { purpose: "free-report", pool: "free-report-verified" }],
     [
       "the elsewhere pool picked by hand",
-      { pool: "free-report-elsewhere" as "free-report-verified" },
+      { ...fr, pool: "free-report-elsewhere" as "free-report-verified" },
     ],
     [
       "an unknown fallback",
-      { pool: "free-report-verified", fallbackPool: "x" as "free-report-verified" },
+      { ...fr, pool: "free-report-verified", fallbackPool: "x" as "free-report-verified" },
     ],
     ["a fallback with no pool", { fallbackPool: "free-report-verified" }],
     [
       "a fallback equal to its pool",
-      { pool: "free-report-verified", fallbackPool: "free-report-verified" },
+      { ...fr, pool: "free-report-verified", fallbackPool: "free-report-verified" },
     ],
     ["an unknown provider", { provider: "acme" as "openai" }],
     [
@@ -179,6 +195,7 @@ describe("reserveSpend", () => {
     ["an unknown purpose", { purpose: "fun" as "benchmark" }],
     ["a COP estimate", { estimate: cost(1, "COP") }],
     ["a negative estimate", { estimate: { amount_micros: -1, currency: "USD" } }],
+    ["a zero estimate", { estimate: usd(0) }],
     ["an empty ref type", { refType: "" }],
     ["an empty ref id", { refId: "" }],
   ])("rejects %s before touching the database", async (_, overrides) => {
@@ -198,15 +215,37 @@ describe("reserveSpend", () => {
 });
 
 describe("settleSpend and releaseSpend", () => {
-  const r = { id: ID, reserved: usd(4000), scopes: [] };
+  const r = {
+    id: ID,
+    reserved: usd(4000),
+    provider: "openai",
+    purpose: "quality-canary",
+    scopes: [],
+  } as const;
 
-  test("each is one statement on the reservation id", async () => {
-    execute.mockResolvedValue({ rows: [{ settle_spend: false }] });
-    await settleSpend(r, usd(5000));
+  test("each is one statement on the reservation id and reports whether it applied", async () => {
+    const onEvent = vi.fn();
+    execute.mockResolvedValue({ rows: [{ applied: true }] });
+    await expect(settleSpend(r, usd(5000), { onEvent })).resolves.toEqual({ applied: true });
     expect(params(0)).toEqual([ID, 5000]);
-    await releaseSpend(r);
+    expect(onEvent).toHaveBeenCalledExactlyOnceWith({
+      name: "jobs.spend.settled",
+      props: { provider: "openai", purpose: "quality-canary", micro_usd: 5000 },
+    });
+    await expect(releaseSpend(r)).resolves.toEqual({ applied: true });
     expect(params(1)).toEqual([ID]);
     expect(withSystem).toHaveBeenCalledTimes(2);
+  });
+
+  test("a settle or release that changed nothing says so and emits nothing", async () => {
+    const onEvent = vi.fn();
+    execute.mockResolvedValue({ rows: [{ applied: false }] });
+    await expect(settleSpend(r, usd(5000), { onEvent })).resolves.toEqual({ applied: false });
+    await expect(releaseSpend(r)).resolves.toEqual({ applied: false });
+    execute.mockResolvedValue({ rows: [] });
+    await expect(settleSpend(r, usd(5000))).rejects.toThrow("no row");
+    await expect(releaseSpend(r)).rejects.toThrow("no row");
+    expect(onEvent).not.toHaveBeenCalled();
   });
 
   test("reject a malformed id or another currency before touching the database", async () => {

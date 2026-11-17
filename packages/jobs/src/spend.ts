@@ -11,7 +11,7 @@ import {
   ProviderCostSchema,
   Uuid,
 } from "@reranker/schema";
-import { sql } from "drizzle-orm";
+import { type SQL, sql } from "drizzle-orm";
 import { type JobsConfig, loadJobsConfig } from "./config";
 import { nextResetAt, spendDay } from "./day";
 import { InvalidInputError, SpendCapExceededError } from "./errors";
@@ -22,11 +22,11 @@ export interface SpendRequest {
   channel?: CaptureChannel;
   engine?: EngineId;
   purpose: SpendPurpose;
-  /** Only for the free report: the pool it draws on first. */
+  /** Required for the free report and only there: the pool it draws on first. */
   pool?: SpendPool;
   /** Only beside `pool`: the pool that covers the reservation when its own pool is short. */
   fallbackPool?: SpendPool;
-  /** Only for the free report: outside the priority country it also draws on the elsewhere pool. */
+  /** Required for the free report and only there: outside the priority country it also draws on the elsewhere pool. */
   country?: CountryCode;
   refType: string;
   refId: string;
@@ -42,9 +42,17 @@ export interface SpendScopeStatus {
 export interface SpendReservation {
   id: string;
   reserved: ProviderCost;
+  provider: PaidProvider;
+  purpose: SpendPurpose;
   /** Every scope charged, global first, with its used amount and cap right after reserving. */
   scopes: readonly SpendScopeStatus[];
 }
+
+/** Catalog events of settling, for the caller to send; this package has no telemetry of its own. */
+export type SpendEvent = {
+  name: "jobs.spend.settled";
+  props: { provider: PaidProvider; purpose: SpendPurpose; micro_usd: number };
+};
 
 const INVALID_PARAMETER = "22023";
 const POOLS: readonly (string | undefined)[] = [
@@ -78,6 +86,10 @@ function assertAmount(amount: ProviderCost, currency: string): void {
   }
 }
 
+function currencyOf(config: JobsConfig = loadJobsConfig()): ProviderCost["currency"] {
+  return config.caps.global.currency;
+}
+
 function assertReservation(r: SpendReservation): void {
   if (!Uuid.safeParse(r.id).success) throw new InvalidInputError("Unknown spend reservation");
 }
@@ -86,8 +98,11 @@ function assertReservation(r: SpendReservation): void {
 // counter before any other and none can deadlock. The rest go from the narrowest scope to the
 // widest, so a denial names the most specific cap that is full.
 function scopesFor(req: SpendRequest): string[] {
-  if (req.purpose !== "free-report" && (req.pool !== undefined || req.country !== undefined)) {
-    throw new InvalidInputError("Pools and countries apply only to the free report");
+  const freeReport = req.purpose === "free-report";
+  // Every free report is admitted into a pool and has a country; without them it would spend
+  // outside the pool caps and the priority country's share.
+  if (freeReport !== (req.pool !== undefined) || freeReport !== (req.country !== undefined)) {
+    throw new InvalidInputError("The free report, and only it, needs a pool and a country");
   }
   // The elsewhere pool follows the country; no caller picks it.
   if (!POOLS.includes(req.pool) || !POOLS.includes(req.fallbackPool)) {
@@ -122,12 +137,20 @@ type ReserveRow = {
 
 /**
  * Charges the estimate to every scope of the request (global, provider, purpose and pools) or to
- * none, in one transaction. Settle or release the reservation once the provider call ends.
+ * none, in one transaction. Reserve, call the provider and settle or release in the same durable
+ * step: a reservation older than 15 minutes counts as abandoned and is released.
+ *
+ * A denial's scope is the first cap found full, enough for logs and alerts. Admission decisions
+ * (live, reduced, verify or defer) read `spendStatus` of the scopes they care about instead.
  */
 export async function reserveSpend(req: SpendRequest): Promise<SpendReservation> {
   const config = loadJobsConfig();
-  const currency = config.caps.global.currency;
+  const currency = currencyOf(config);
   assertAmount(req.estimate, currency);
+  // A zero amount passes every cap, a full one too, so it would spend without any limit.
+  if (req.estimate.amount_micros === 0) {
+    throw new InvalidInputError("Spend estimate must be positive");
+  }
   if (!req.refType || !req.refId) throw new InvalidInputError("Spend needs a reference");
   // Checked even for contract tests outside production, whose provider cap does not apply.
   capOf(config, `provider:${req.provider}`);
@@ -167,6 +190,8 @@ export async function reserveSpend(req: SpendRequest): Promise<SpendReservation>
   return {
     id: row.ledger_id,
     reserved: cost(req.estimate.amount_micros, currency),
+    provider: req.provider,
+    purpose: req.purpose,
     scopes: row.scopes.map((scope, i) => ({
       scope,
       used: cost(Number(row.used[i]), currency),
@@ -175,23 +200,47 @@ export async function reserveSpend(req: SpendRequest): Promise<SpendReservation>
   };
 }
 
+async function applied(query: SQL, fn: string): Promise<{ applied: boolean }> {
+  const { rows } = await system((tx) => tx.execute<{ applied: boolean }>(query));
+  const row = rows[0];
+  if (!row) throw new Error(`${fn} returned no row`);
+  return { applied: row.applied };
+}
+
 /**
  * Replaces the reservation with what the provider actually charged, on the reservation's day and
- * even past the cap. A reservation already settled or released is left as it is, so a retried
- * step never counts twice.
+ * even past the cap. Settle in the same durable step as the provider call that charges (with
+ * DataForSEO Standard, on the cost `task_post` reports), never in a later step that may start
+ * more than 15 minutes after reserving: by then the reservation counts as abandoned, has been
+ * released, and the settle is not applied.
+ *
+ * `applied` is false when the reservation was already settled or released: a retried step changes
+ * nothing, and a false on the first settle means the actual cost went unrecorded.
  */
-export async function settleSpend(r: SpendReservation, actual: ProviderCost): Promise<void> {
+export async function settleSpend(
+  r: SpendReservation,
+  actual: ProviderCost,
+  opts: { onEvent?: (event: SpendEvent) => void } = {},
+): Promise<{ applied: boolean }> {
   assertReservation(r);
-  assertAmount(actual, r.reserved.currency);
-  await system((tx) =>
-    tx.execute(sql`select ops.settle_spend(${r.id}::uuid, ${actual.amount_micros}::bigint)`),
+  assertAmount(actual, currencyOf());
+  const result = await applied(
+    sql`select ops.settle_spend(${r.id}::uuid, ${actual.amount_micros}::bigint) as applied`,
+    "settle_spend",
   );
+  if (result.applied) {
+    opts.onEvent?.({
+      name: "jobs.spend.settled",
+      props: { provider: r.provider, purpose: r.purpose, micro_usd: actual.amount_micros },
+    });
+  }
+  return result;
 }
 
 /** Gives the whole reservation back when the provider charged nothing; idempotent like settle. */
-export async function releaseSpend(r: SpendReservation): Promise<void> {
+export async function releaseSpend(r: SpendReservation): Promise<{ applied: boolean }> {
   assertReservation(r);
-  await system((tx) => tx.execute(sql`select ops.release_spend(${r.id}::uuid)`));
+  return applied(sql`select ops.release_spend(${r.id}::uuid) as applied`, "release_spend");
 }
 
 /**
@@ -232,7 +281,7 @@ export async function spendStatus(
 
 /** What a piece of work cost: the sum of its settled actuals. */
 export async function costOf(refType: string, refId: string): Promise<ProviderCost> {
-  const currency = loadJobsConfig().caps.global.currency;
+  const currency = currencyOf();
   const { rows } = await system((tx) =>
     tx.execute<{ total: string }>(
       sql`select coalesce(sum(actual_amount_micros), 0)::bigint as total from ops.spend_ledger
