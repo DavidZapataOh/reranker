@@ -133,3 +133,7 @@ test("a step that succeeds reports nothing", async () => {
   await step("velocityBaseline")("2026-11-17");
   expect(jobs.reportStepError).not.toHaveBeenCalled();
 });
+
+test("the ops digest runs last, so it reports on every step before it", () => {
+  expect(DAILY_STEPS.at(-1)?.name).toBe("opsDigest");
+});

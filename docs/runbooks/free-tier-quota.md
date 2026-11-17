@@ -26,10 +26,12 @@ Each source fails differently, which decides how urgent the response is.
 ## Diagnose
 
 ```bash
-gh api /users/DavidZapataOh/settings/billing/usage
+gh api "/users/DavidZapataOh/settings/billing/usage?year=$(date +%Y)&month=$(date +%-m)" -H "X-GitHub-Api-Version: 2026-03-10"
 ```
 
-For the other sources read the daily digest first; it lists Actions minutes, PostHog usage, the DataForSEO balance and per-provider spend. Then open the provider dashboard named in each section.
+The billing endpoints accept only a classic token with the `user` scope (`gh auth refresh -h github.com -s user`); fine-grained tokens are rejected (https://docs.github.com/en/billing/tutorials/automate-usage-reporting). The digest reads the same report with `GITHUB_BILLING_READ_TOKEN`. Standard runners in public repositories are free and show up fully discounted, so the digest counts against the US$12 included compute only the runner cost of repositories that are not public (the product repository is public).
+
+For the other sources read the daily digest first; it lists Actions minutes, PostHog usage, the DataForSEO balance and per-provider spend. A source the digest could not read shows "sin dato" with the reason: a missing variable, an HTTP status or no answer within 10 s. Then open the provider dashboard named in each section.
 
 ## Mitigate
 

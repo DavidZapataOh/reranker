@@ -24,7 +24,7 @@ vercel logs <production deployment url> --since 26h
 
 - No invocation in the logs: the cron is not registered on the current deployment or Vercel skipped it; check the Crons tab of the project.
 - Invocation with an error: the summary threw before pinging; the log line names the step.
-- Invocation succeeded but no ping: `BETTERSTACK_HEARTBEAT_DAILY_URL` is missing, wrong or rotated.
+- Invocation succeeded but no ping: the ping follows the digest email, so look for `ops.digest.email_unconfigured`, `ops.digest.quota_exceeded` or `ops.digest.email_failed` in the logs; `ops.digest.heartbeat_unconfigured` or `ops.digest.heartbeat_failed` means `BETTERSTACK_HEARTBEAT_DAILY_URL` is missing, wrong or rotated.
 
 `nightly`:
 

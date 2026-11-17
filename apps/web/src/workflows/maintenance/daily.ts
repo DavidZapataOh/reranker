@@ -11,6 +11,7 @@ import {
 } from "@reranker/jobs";
 import { toStepError } from "@reranker/jobs/step-errors";
 import { log, sendOpsAlert } from "@reranker/telemetry";
+import { opsDigest } from "../ops/daily-digest";
 
 export type DailyRunSummary = { failed: string[] };
 
@@ -99,6 +100,7 @@ export const DAILY_STEPS: readonly DailyStep[] = [
   { name: "velocityBaseline", run: velocityBaselineStep },
   { name: "reconcileSpend", run: reconcileSpendStep },
   { name: "checkWorkflowQuota", run: checkWorkflowQuotaStep },
+  opsDigest,
 ];
 
 async function reportDailyStepFailure(name: string, date: string, error: string): Promise<void> {

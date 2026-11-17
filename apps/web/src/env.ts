@@ -2,7 +2,7 @@ import { config, defineEnv, forbiddenIn, requiredIn, secret } from "@reranker/en
 import { flagsEnv } from "@reranker/flags/env";
 import { jobsEnv } from "@reranker/jobs/env";
 import { z } from "@reranker/schema";
-import { telemetryEnv } from "@reranker/telemetry/env";
+import { digestEnv, telemetryEnv } from "@reranker/telemetry/env";
 
 // The landing reads these through NEXT_PUBLIC_* at build time; they are declared here so a
 // deployment missing one fails before it serves traffic.
@@ -33,7 +33,7 @@ export const opsEnv = z.object({
   ),
 });
 
-export const fragments = [webEnv, telemetryEnv, flagsEnv, opsEnv, jobsEnv] as const;
+export const fragments = [webEnv, telemetryEnv, digestEnv, flagsEnv, opsEnv, jobsEnv] as const;
 
 let validated: ReturnType<typeof compose> | undefined;
 
