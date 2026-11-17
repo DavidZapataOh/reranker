@@ -155,6 +155,14 @@ describe("auth configuration", () => {
     });
   });
 
+  // The domain check fails before any database work, so this runs without one.
+  test("the send guard runs before a sign-in code is created", async () => {
+    await expect(
+      auth.api.sendVerificationOTP({ body: { email: "ana@mailinator.com", type: "sign-in" } }),
+    ).rejects.toMatchObject({ statusCode: 400, body: { reason: "disposable" } });
+    expect(email.sendAuthEmail).not.toHaveBeenCalled();
+  });
+
   test("Google needs a verified email and links to the existing user", () => {
     expect(auth.options.socialProviders?.google).toMatchObject({
       clientId: "google-client-id",

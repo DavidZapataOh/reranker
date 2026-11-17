@@ -543,6 +543,9 @@ importers:
       '@reranker/i18n':
         specifier: workspace:*
         version: link:../i18n
+      '@reranker/jobs':
+        specifier: workspace:*
+        version: link:../jobs
       '@reranker/schema':
         specifier: workspace:*
         version: link:../schema

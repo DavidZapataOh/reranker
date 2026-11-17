@@ -5,12 +5,14 @@ import { defineEnv } from "@reranker/env";
 import { DEFAULT_LOCALE, type Locale } from "@reranker/i18n";
 import { waitUntil } from "@vercel/functions";
 import { type BaseURLConfig, betterAuth, type GenericEndpointContext } from "better-auth";
+import { createAuthMiddleware } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
 import { captcha, emailOTP, organization } from "better-auth/plugins";
 import { COOKIE_PREFIX } from "./cookies";
 import { resolveEmailLocale } from "./email-locale";
 import type { RequestedFrom } from "./emails/sign-in-code";
 import { authEnv } from "./env";
+import { guardOtpSend } from "./guard-otp-send";
 import { MEMBER_FIELDS, ORG_FIELDS } from "./organizations";
 import { ac, roles } from "./permissions";
 import { AUTH_RATE_RULES, EMAIL_SENDING_PATHS } from "./rate-limits";
@@ -154,6 +156,11 @@ export const auth = betterAuth({
       dataPolicyVersion: { type: "string", required: false, input: false },
       dataPolicyAcceptedAt: { type: "date", required: false, input: false },
     },
+  },
+  hooks: {
+    before: createAuthMiddleware(async (ctx) => {
+      if (ctx.path === "/email-otp/send-verification-otp") await guardOtpSend(ctx);
+    }),
   },
   rateLimit: {
     enabled: true,
