@@ -11,6 +11,7 @@
     "./email-locale": "./src/email-locale.ts",
     "./guard-otp-send": "./src/guard-otp-send.ts",
     "./permissions": "./src/permissions.ts",
+    "./purge": "./src/purge.ts",
     "./send-auth-email": "./src/send-auth-email.ts",
     "./sign-in-code": "./src/sign-in-code.ts",
     "./server": "./src/server.ts",

@@ -24,6 +24,8 @@ const telemetry = vi.hoisted(() => ({
   sendOpsAlert: vi.fn(async () => {}),
 }));
 vi.mock("@reranker/telemetry", () => telemetry);
+const authPurge = vi.hoisted(() => ({ purgeExpiredAuthRecords: vi.fn() }));
+vi.mock("@reranker/auth/purge", () => authPurge);
 
 const { InvalidInputError } = await import("@reranker/jobs");
 const { DAILY_STEPS } = await import("./daily");
@@ -83,6 +85,33 @@ test("velocity baselines log how many keys were computed", async () => {
   jobs.refreshVelocityBaselines.mockResolvedValue(12);
   await step("velocityBaseline")("2026-11-17");
   expect(telemetry.log.info).toHaveBeenCalledWith("jobs.daily.velocity_baselines", { keys: 12 });
+});
+
+test("the auth purge runs after the velocity baselines and logs what it removed", async () => {
+  const names = DAILY_STEPS.map((s) => s.name);
+  expect(names.indexOf("purgeExpiredAuthRecords")).toBe(names.indexOf("velocityBaseline") + 1);
+  authPurge.purgeExpiredAuthRecords.mockResolvedValue({
+    sessions: 1,
+    verifications: 2,
+    rateLimits: 3,
+  });
+  await step("purgeExpiredAuthRecords")("2026-11-17");
+  expect(telemetry.log.info).toHaveBeenCalledWith("jobs.daily.auth_purge", {
+    sessions: 1,
+    verifications: 2,
+    rate_limits: 3,
+  });
+});
+
+test("a failed auth purge is reported under its own name and retried", async () => {
+  const error = new Error("canceling statement due to statement timeout");
+  authPurge.purgeExpiredAuthRecords.mockRejectedValue(error);
+  await expect(step("purgeExpiredAuthRecords")("2026-11-17")).rejects.toBe(error);
+  expect(jobs.reportStepError).toHaveBeenCalledExactlyOnceWith(
+    "daily",
+    "purgeExpiredAuthRecords",
+    error,
+  );
 });
 
 test("reconciliation closes the day that just ended and logs each mismatch as an error", async () => {
