@@ -89,10 +89,11 @@ export const procedures = [
   "db-rotate-password.md",
 ] as const satisfies readonly string[];
 
-const FROM = "Reranker alertas <alertas@reranker.co>";
+/** Sender of every operations email: alerts and the daily digest. */
+export const OPS_FROM = "Reranker alertas <alertas@reranker.co>";
 const RUNBOOKS = "https://github.com/DavidZapataOh/reranker/blob/main/docs/runbooks";
 
-const alertEnv = z.object({
+export const alertEnv = z.object({
   OPS_ALERT_EMAIL: telemetryEnv.shape.OPS_ALERT_EMAIL,
   RESEND_API_KEY: secret(
     z.string().startsWith("re_").optional(),
@@ -141,7 +142,7 @@ async function email(
   if (!(await claimDelivery(kind))) return;
   const { error } = await resend(env.RESEND_API_KEY).emails.send(
     {
-      from: FROM,
+      from: OPS_FROM,
       to: env.OPS_ALERT_EMAIL,
       subject: `[${severity}] ${kind}`,
       text: body(kind, payload),

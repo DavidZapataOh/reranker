@@ -865,6 +865,9 @@ importers:
       '@reranker/env':
         specifier: workspace:*
         version: link:../env
+      '@reranker/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@reranker/schema':
         specifier: workspace:*
         version: link:../schema

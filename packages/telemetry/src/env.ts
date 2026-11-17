@@ -35,3 +35,19 @@ export const telemetryEnv = z.object({
     "PostHog key with query read scope for the daily digest",
   ),
 });
+
+// Credentials the daily digest reads usage with. Each one is optional: a source without its
+// credential shows "sin dato" in the digest instead of failing the run.
+export const digestEnv = z.object({
+  DATAFORSEO_LOGIN: secret(z.string().min(1).optional(), "DataForSEO API login"),
+  DATAFORSEO_PASSWORD: secret(z.string().min(1).optional(), "DataForSEO API password"),
+  NEON_API_KEY: secret(
+    z.string().min(1).optional(),
+    "Neon API key that reads usage of both projects",
+  ),
+  NEON_PROJECT_ID: config(z.string().min(1).optional(), "Neon project id of reranker-prod"),
+  NEON_NONPROD_PROJECT_ID: config(
+    z.string().min(1).optional(),
+    "Neon project id of reranker-nonprod",
+  ),
+});
