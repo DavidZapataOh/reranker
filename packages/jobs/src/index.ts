@@ -12,6 +12,7 @@ export {
   RateLimitedError,
   SpendCapExceededError,
 } from "./errors";
+export { guardModeStatus, tripGuardMode } from "./guard-mode";
 export { assertOpaqueKey } from "./keys";
 export {
   type AcquireOptions,
@@ -40,3 +41,10 @@ export {
   spendStatus,
 } from "./spend";
 export { type StartOnceResult, startOnce } from "./start-once";
+export {
+  recordVelocity,
+  refreshVelocityBaselines,
+  type VelocityBaseline,
+  type VelocityWindows,
+  velocityBaseline,
+} from "./velocity";
