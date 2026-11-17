@@ -2,7 +2,7 @@ import { resetAppEnv } from "@reranker/env";
 import { AppError, cost } from "@reranker/schema";
 import type { SQL } from "drizzle-orm";
 import { PgDialect } from "drizzle-orm/pg-core";
-import { afterAll, beforeEach, describe, expect, test, vi } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
 
 const execute = vi.fn();
 const withSystem = vi.fn(async (_reason: string, fn: (tx: unknown) => unknown) => fn({ execute }));
@@ -21,7 +21,6 @@ const { costOf, releaseSpend, releaseStaleSpend, reserveSpend, settleSpend, spen
   await import("../src/spend");
 const { registerJobsTelemetry } = await import("../src/telemetry");
 const events: unknown[] = [];
-registerJobsTelemetry({ capture: (event) => void events.push(event), alert: async () => {} });
 type SpendRequest = import("../src/spend").SpendRequest;
 
 const usd = (micros: number) => cost(micros, "USD");
@@ -219,6 +218,11 @@ describe("reserveSpend", () => {
 });
 
 describe("settleSpend and releaseSpend", () => {
+  // Only settling is observed here; reservations alert through the database, covered elsewhere.
+  beforeAll(() =>
+    registerJobsTelemetry({ capture: (event) => void events.push(event), alert: async () => {} }),
+  );
+  afterAll(() => registerJobsTelemetry(null));
   const r = {
     id: ID,
     reserved: usd(4000),
