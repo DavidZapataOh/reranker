@@ -4,7 +4,7 @@ import * as authTables from "@reranker/db/schema/auth";
 import { defineEnv } from "@reranker/env";
 import { DEFAULT_LOCALE, type Locale } from "@reranker/i18n";
 import { waitUntil } from "@vercel/functions";
-import { type BaseURLConfig, betterAuth, type GenericEndpointContext } from "better-auth";
+import { betterAuth, type GenericEndpointContext } from "better-auth";
 import { createAuthMiddleware } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
 import { captcha, emailOTP, organization } from "better-auth/plugins";
@@ -13,6 +13,7 @@ import { resolveEmailLocale } from "./email-locale";
 import type { RequestedFrom } from "./emails/sign-in-code";
 import { authEnv } from "./env";
 import { MEMBER_FIELDS, ORG_FIELDS } from "./organizations";
+import { authOrigins } from "./origins";
 import { ac, roles } from "./permissions";
 import { AUTH_RATE_RULES, EMAIL_SENDING_PATHS } from "./rate-limits";
 import { sendAuthEmail } from "./send-auth-email";
@@ -32,22 +33,7 @@ const PASSWORD_PATHS = [
   "/email-otp/reset-password",
 ];
 
-// A preview answers only on its own deployment and branch hosts: a *.vercel.app pattern would also
-// trust any look-alike project someone else deploys on Vercel.
-function origin(): { baseURL: BaseURLConfig; origins: string[] } {
-  if (env.APP_ENV === "preview") {
-    const hosts = [env.VERCEL_URL, env.VERCEL_BRANCH_URL].filter((host) => host !== undefined);
-    return {
-      baseURL: { allowedHosts: hosts, protocol: "https" },
-      origins: hosts.map((host) => `https://${host}`),
-    };
-  }
-  // authEnv requires it outside preview; the check only narrows the type.
-  if (!env.BETTER_AUTH_URL) throw new Error("BETTER_AUTH_URL is required outside preview");
-  return { baseURL: env.BETTER_AUTH_URL, origins: [env.BETTER_AUTH_URL] };
-}
-
-const { baseURL, origins } = origin();
+const { baseURL, trustedOrigins: origins } = authOrigins(env);
 
 // White-label domains join this list in a later version.
 export const trustedOrigins: string[] = origins;

@@ -78,6 +78,20 @@ test.each([0, -1, 1.5, Number.NaN, Number.POSITIVE_INFINITY, 60_001])(
   },
 );
 
+test.each([0, -1, 1.5, Number.NaN, Number.POSITIVE_INFINITY, 60_001])(
+  "rejects lockTimeoutMs %s, outside 1..60000 ms",
+  async (lockTimeoutMs) => {
+    await expect(withTenant(A, async () => 1, { lockTimeoutMs })).rejects.toMatchObject({
+      code: "internal",
+      message: "invalid lockTimeoutMs",
+    });
+    await expect(withSystem("jobs.lease", async () => 1, { lockTimeoutMs })).rejects.toMatchObject({
+      code: "internal",
+      message: "invalid lockTimeoutMs",
+    });
+  },
+);
+
 test("tenant and system transactions are distinct nominal types", () => {
   expectTypeOf<TenantTx>().not.toExtend<SystemTx>();
   expectTypeOf<SystemTx>().not.toExtend<TenantTx>();

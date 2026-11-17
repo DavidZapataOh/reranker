@@ -11,6 +11,8 @@ export type TenantId = string & { readonly __brand: "TenantId" };
 export type TxOptions = {
   readOnly?: boolean;
   statementTimeoutMs?: number;
+  /** Bounds every lock wait; one that runs out fails as AppError timeout (55P03). */
+  lockTimeoutMs?: number;
   isolation?: "read committed" | "repeatable read" | "serializable";
 };
 
@@ -42,14 +44,24 @@ export function toPgUuidArray(ids: readonly TenantId[]): string {
   return `{${ids.join(",")}}`;
 }
 
-function statementTimeout(opts: TxOptions): string {
-  const ms = opts.statementTimeoutMs ?? DEFAULT_STATEMENT_TIMEOUT_MS;
-  // Zero would disable the timeout; the cap keeps one transaction from holding a pooled
-  // connection far past the login's own safety net.
+// Zero would disable a timeout; the cap keeps one transaction from holding a pooled connection
+// far past the login's own safety net.
+function timeoutMs(ms: number, option: "statementTimeoutMs" | "lockTimeoutMs"): string {
   if (!Number.isSafeInteger(ms) || ms < 1 || ms > MAX_STATEMENT_TIMEOUT_MS) {
-    throw invalid("invalid statementTimeoutMs");
+    throw invalid(`invalid ${option}`);
   }
   return String(ms);
+}
+
+function timeouts(opts: TxOptions): SQL {
+  const ms = timeoutMs(
+    opts.statementTimeoutMs ?? DEFAULT_STATEMENT_TIMEOUT_MS,
+    "statementTimeoutMs",
+  );
+  const statement = sql`set_config('statement_timeout', ${ms}, true)`;
+  if (opts.lockTimeoutMs === undefined) return statement;
+  const lock = timeoutMs(opts.lockTimeoutMs, "lockTimeoutMs");
+  return sql`${statement}, set_config('lock_timeout', ${lock}, true)`;
 }
 
 function txConfig(opts: TxOptions): PgTransactionConfig {
@@ -142,7 +154,7 @@ export async function withTenants<T>(
   // Ids can reach here through a cast, so they are normalized again before the set literal.
   const ids = tenantIds.map(asTenantId);
   if (new Set(ids).size !== ids.length) throw invalid("duplicate tenant id");
-  const setup = sql`select set_config('app.tenant_ids', ${toPgUuidArray(ids)}, true), set_config('statement_timeout', ${statementTimeout(opts)}, true)`;
+  const setup = sql`select set_config('app.tenant_ids', ${toPgUuidArray(ids)}, true), ${timeouts(opts)}`;
   return run(appPool(), { pool: "app" }, setup, fn, opts);
 }
 
@@ -161,6 +173,6 @@ export async function withSystem<T>(
 ): Promise<T> {
   if (!SYSTEM_REASON.test(reason)) throw invalid("invalid system reason");
   // The reason travels with the transaction so pg_stat_activity and audit queries can see it.
-  const setup = sql`select set_config('app.system_reason', ${reason}, true), set_config('statement_timeout', ${statementTimeout(opts)}, true)`;
+  const setup = sql`select set_config('app.system_reason', ${reason}, true), ${timeouts(opts)}`;
   return run(systemPool(), { pool: "system", reason }, setup, fn, opts);
 }

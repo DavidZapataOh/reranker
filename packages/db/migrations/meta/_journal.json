@@ -71,6 +71,13 @@
       "when": 1794886581829,
       "tag": "0009_breaker_record_transition",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1794944379368,
+      "tag": "0010_spend_day_lock",
+      "breakpoints": true
     }
   ]
 }

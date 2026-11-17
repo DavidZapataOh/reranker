@@ -16,6 +16,7 @@ afterEach(resetDbEventsForTest);
 describe("toDbError", () => {
   test.each([
     [pgError("57014"), "timeout", undefined],
+    [pgError("55P03"), "timeout", undefined],
     [pgError("23505"), "conflict", undefined],
     [pgError("42501"), "internal", undefined],
     [pgError("23503"), "internal", undefined],
