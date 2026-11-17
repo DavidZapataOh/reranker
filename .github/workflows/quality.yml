@@ -2,6 +2,21 @@ name: quality
 on:
   repository_dispatch:
     types: [vercel.deployment.ready]
+  # Previews are deployed by the preview workflow, which calls this once its deployment is live.
+  workflow_call:
+    inputs:
+      url:
+        required: true
+        type: string
+      environment:
+        required: true
+        type: string
+      sha:
+        required: true
+        type: string
+    secrets:
+      VERCEL_AUTOMATION_BYPASS_SECRET:
+        required: true
   workflow_dispatch:
     inputs:
       url:
@@ -24,7 +39,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   quality:
-    if: github.event_name == 'workflow_dispatch' || github.event.client_payload.project.name == 'reranker'
+    if: github.event_name != 'repository_dispatch' || (github.event.client_payload.project.name == 'reranker' && github.event.client_payload.environment == 'production')
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions: { contents: read, statuses: write }

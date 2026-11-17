@@ -7,11 +7,9 @@
     "./env": "./src/env.ts",
     "./target": "./src/target.ts",
     "./playwright": "./src/playwright.ts",
-    "./factories": "./src/factories.ts",
     "./neon": "./src/neon.ts",
     "./db": "./src/db.ts",
-    "./msw": "./src/msw.ts",
-    "./auth": "./src/auth.ts"
+    "./msw": "./src/msw.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.bin.json",
@@ -22,8 +20,6 @@
   "dependencies": {
     "@axe-core/playwright": "catalog:",
     "@playwright/test": "catalog:",
-    "@reranker/i18n": "workspace:*",
-    "better-auth": "catalog:",
     "msw": "catalog:",
     "pg": "catalog:"
   },
@@ -32,11 +28,7 @@
     "@types/node": "catalog:",
     "@types/pg": "catalog:",
     "@vitest/coverage-v8": "catalog:",
-    "drizzle-orm": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
-  },
-  "peerDependencies": {
-    "@reranker/db": "workspace:*"
   }
 }

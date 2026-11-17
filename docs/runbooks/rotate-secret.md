@@ -42,7 +42,7 @@ Required. Update the "Last rotation" cell of the row in this file in the same pu
 
 ## Inventory
 
-`Where it lives`: Prod, Prev and Dev are Vercel environments; GH is a GitHub repository secret (a CI value, never a production credential). Rows marked "not active yet" belong to a plan that has not shipped; they are rotated from the day they exist.
+`Where it lives`: Prod, Prev and Dev are Vercel environments; GH is a GitHub repository secret (a CI value, never a production credential); GH env `<name>` is a secret of that GitHub Environment, readable only by the jobs that reference it. Rows marked "not active yet" belong to a plan that has not shipped; they are rotated from the day they exist.
 
 | Secret | Where it lives | Last rotation | Cadence |
 |---|---|---|---|
@@ -54,9 +54,10 @@ Required. Update the "Last rotation" cell of the row in this file in the same pu
 | `BETTERSTACK_HEARTBEAT_DAILY_URL` | Prod | not active yet | 180 days |
 | `BETTERSTACK_HEARTBEAT_NIGHTLY_URL` | GH | not active yet | 180 days |
 | `GITHUB_BILLING_READ_TOKEN` | Prod | not active yet | 180 days |
-| `DATABASE_URL` | Prod, Prev, Dev | not rotated yet | 180 days |
-| `DATABASE_URL_SYSTEM` | Prod, Prev, Dev | not rotated yet | 180 days |
-| `DATABASE_URL_MIGRATIONS` | Prod, Prev, Dev | not rotated yet | 180 days |
+| `DATABASE_URL` | Prod | not rotated yet | 180 days |
+| `DATABASE_URL_SYSTEM` | Prod | not rotated yet | 180 days |
+| `DATABASE_URL_MIGRATIONS` | GH env `production` | not rotated yet | 180 days |
+| `VERCEL_TOKEN` | GH env `preview` | not rotated yet | 180 days |
 | `DB_LOGIN_PASSWORDS` | GH | not active yet | 180 days |
 | `NEON_API_KEY` | Prod | not active yet | 180 days |
 | `BETTER_AUTH_SECRET` | Prod, Prev, Dev | not active yet | 180 days |

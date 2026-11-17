@@ -1,8 +1,8 @@
 import { withSystem } from "@reranker/db";
 import { verifications } from "@reranker/db/schema/auth";
+import { requireEnv } from "@reranker/testing/env";
 import { symmetricDecrypt } from "better-auth/crypto";
 import { eq } from "drizzle-orm";
-import { requireEnv } from "./env.ts";
 
 /** Better Auth stores an encrypted code as `<ciphertext>:<attempts>`. */
 export async function decryptStoredCode(stored: string, key: string): Promise<string> {

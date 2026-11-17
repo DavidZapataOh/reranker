@@ -2,39 +2,28 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { buildSteps, defaultRun, runSteps, runtimeBanner } from "./vercel-build.mjs";
 
-const MIGRATE = { command: "pnpm", args: ["--filter", "@reranker/db", "db:migrate"] };
 const BUILD = { command: "pnpm", args: ["exec", "turbo", "run", "build"] };
 
-test("migrates before building in production and preview", () => {
-  for (const appEnv of ["production", "preview"])
-    assert.deepEqual(buildSteps({ appEnv, hasDatabasePackage: true }), [MIGRATE, BUILD]);
+test("never migrates, in any environment", () => {
+  for (const appEnv of ["production", "preview", "development"])
+    for (const isVercel of [true, false])
+      assert.deepEqual(buildSteps({ appEnv, isVercel }), [BUILD]);
 });
 
-test("only builds in development, without APP_ENV, or without a database package", () => {
-  assert.deepEqual(buildSteps({ appEnv: "development", hasDatabasePackage: true }), [BUILD]);
-  assert.deepEqual(buildSteps({ appEnv: undefined, hasDatabasePackage: true }), [BUILD]);
-  assert.deepEqual(buildSteps({ appEnv: "production", hasDatabasePackage: false }), [BUILD]);
-});
-
-test("rejects an unknown APP_ENV instead of skipping the migration", () => {
+test("rejects an unknown APP_ENV", () => {
   for (const appEnv of ["prod", "staging", "Production", ""])
-    assert.throws(() => buildSteps({ appEnv, hasDatabasePackage: true }), /Unknown APP_ENV/);
+    assert.throws(() => buildSteps({ appEnv, isVercel: true }), /Unknown APP_ENV/);
 });
 
-test("fails the Vercel build when APP_ENV is unset and a database package exists", () => {
+test("fails the Vercel build when APP_ENV is unset", () => {
   assert.throws(
-    () => buildSteps({ appEnv: undefined, hasDatabasePackage: true, isVercel: true }),
+    () => buildSteps({ appEnv: undefined, isVercel: true }),
     /APP_ENV must be set on Vercel/,
   );
 });
 
-test("allows a local build without APP_ENV, and any Vercel build without a database package", () => {
-  assert.deepEqual(buildSteps({ appEnv: undefined, hasDatabasePackage: true, isVercel: false }), [
-    BUILD,
-  ]);
-  assert.deepEqual(buildSteps({ appEnv: undefined, hasDatabasePackage: false, isVercel: true }), [
-    BUILD,
-  ]);
+test("allows a local build without APP_ENV", () => {
+  assert.deepEqual(buildSteps({ appEnv: undefined, isVercel: false }), [BUILD]);
 });
 
 test("reports why a step could not start", () => {
@@ -52,14 +41,14 @@ test("reports why a step could not start", () => {
   );
 });
 
-test("a failed migration stops the build and returns its exit code", () => {
+test("a failed step stops the build and returns its exit code", () => {
   const calls = [];
-  const code = runSteps([MIGRATE, BUILD], (_command, args) => {
+  const code = runSteps([BUILD, BUILD], (_command, args) => {
     calls.push(args.at(-1));
-    return args.includes("db:migrate") ? 3 : 0;
+    return 3;
   });
   assert.equal(code, 3);
-  assert.deepEqual(calls, ["db:migrate"]);
+  assert.deepEqual(calls, ["build"]);
 });
 
 test("the banner names the node and pnpm versions the build runs on", () => {

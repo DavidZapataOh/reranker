@@ -54,9 +54,11 @@ const rows: Row[] = [
   ["BETTERSTACK_HEARTBEAT_DAILY_URL", "secret", PROD, false, "08"],
   ["BETTERSTACK_HEARTBEAT_NIGHTLY_URL", "secret", NONE, true, "02 / 08"],
   ["GITHUB_BILLING_READ_TOKEN", "secret", PROD, false, "08"],
-  ["DATABASE_URL", "secret", ALL, false, "03", true],
-  ["DATABASE_URL_SYSTEM", "secret", ALL, false, "03", true],
-  ["DATABASE_URL_MIGRATIONS", "secret", ALL, false, "03", true],
+  // Previews receive both URLs per deployment, for their own Neon branch, from the preview workflow.
+  ["DATABASE_URL", "secret", PROD, false, "03", true],
+  ["DATABASE_URL_SYSTEM", "secret", PROD, false, "03", true],
+  // Only the production GitHub Environment holds it; no Vercel build or function ever does.
+  ["DATABASE_URL_MIGRATIONS", "secret", NONE, false, "03", true],
   ["DB_POOL_MAX", "config", ALL, false, "03"],
   ["DB_LOGIN_PASSWORDS", "secret", NONE, true, "03"],
   ["NEON_API_KEY", "secret", PROD, false, "03 / 08"],
@@ -145,6 +147,10 @@ const rows: Row[] = [
   ["TURBO_REMOTE_CACHE_SIGNATURE_KEY", "secret", ALL, true, "01", true],
   ["ENABLE_EXPERIMENTAL_COREPACK", "config", ALL, false, "01", true],
   ["VERCEL_AUTOMATION_BYPASS_SECRET", "secret", NONE, true, "02", true],
+  // The preview GitHub Environment holds these, so only the preview deploy job can read them.
+  ["VERCEL_TOKEN", "secret", NONE, false, "02", true],
+  ["VERCEL_ORG_ID", "config", NONE, false, "02", true],
+  ["VERCEL_PROJECT_ID", "config", NONE, false, "02", true],
   ["NEON_NONPROD_API_KEY", "secret", NONE, true, "02 / 03", true],
 ];
 

@@ -1,5 +1,5 @@
 name: CI database
-description: Migrates a Neon CI branch, provisions the app and system logins with fresh passwords and exports the test connection strings to the job.
+description: Migrates a Neon CI or preview branch, provisions the app and system logins with fresh passwords and exports the test connection strings to the job.
 inputs:
   db-url:
     description: Direct connection string for the owner role.
@@ -15,7 +15,7 @@ runs:
       env:
         DB_URL: ${{ inputs.db-url }}
         DB_HOST_POOLED: ${{ inputs.db-host-pooled }}
-      # Only ci and nightly call this, never from a pull_request_target or workflow_run trigger, and every
+      # Only ci, nightly and preview call this, never from a pull_request_target or workflow_run trigger, and every
       # value written comes from Neon or openssl, never from the event.
       # The passwords go to the job so suites that provision the logins again reuse them.
       run: | # zizmor: ignore[github-env]

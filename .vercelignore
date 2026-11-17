@@ -1,0 +1,4 @@
+# Vercel CLI leaves .gitignore out of uploads by default. Turbo reads it to skip node_modules when
+# it walks the workspace, so a CLI deployment needs it uploaded just as a Git deployment has it.
+!/.gitignore
+!/apps/web/.gitignore

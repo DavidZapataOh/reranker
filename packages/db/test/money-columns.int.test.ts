@@ -1,5 +1,4 @@
 import { fileURLToPath } from "node:url";
-import { createTenant } from "@reranker/testing/factories";
 import { getTestDatabaseUrl } from "@reranker/testing/neon";
 import { eq } from "drizzle-orm";
 import pg from "pg";
@@ -7,6 +6,7 @@ import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { runMigrations } from "../scripts/migrate";
 import { endPools } from "../src/client";
 import { type TenantId, withSystem, withTenant } from "../src/tenancy";
+import { createTenant } from "./factories";
 import { createScratchDatabase, type ScratchDatabase } from "./helpers";
 import { onDatabase, probeStatements } from "./probe/database";
 import * as probe from "./probe/money-probe.schema";
