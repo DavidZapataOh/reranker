@@ -20,9 +20,11 @@ const TENANTS = 100;
 const ROWS_PER_TENANT = 1000;
 const WARMUP = 50;
 const ITERATIONS = 1000;
-// Headroom for jitter on a shared runner; the absolute 5 ms budget is measured next to the
-// database in production, never here.
-const RUNNER_HEADROOM_MS = 10;
+// A shared runner far from Neon jitters by tens of ms run to run, so this gate only catches gross
+// regressions (half a round trip more per call on top of slack). The strict 5 ms overhead budget is
+// measured next to the database in production, where it means something.
+const RUNNER_HEADROOM_MS = 25;
+const ROUND_TRIP_FACTOR = 3.5;
 const IDLE_TIMEOUT_MS = 120_000;
 const REPORT = fileURLToPath(new URL("../../bench-report.json", import.meta.url));
 
@@ -250,10 +252,9 @@ async function main(): Promise<string[]> {
     const report: Report = {
       overheadP95Ms: round(tenantP95Ms - pkP95Ms),
       overheadP50Ms: round(tenantP50Ms - pkP50Ms),
-      // withTenant adds three round trips (BEGIN, set_config, COMMIT), so the budget scales with
-      // the runner's distance from the database and still catches extra work or round trips. The
-      // gate uses medians: a CI runner's tail latency to Neon swings run to run and made p95 flaky.
-      rttBudgetMs: round(3 * pkP50Ms + RUNNER_HEADROOM_MS),
+      // withTenant adds three round trips (BEGIN, set_config, COMMIT); the budget scales with the
+      // runner's distance from the database. Medians, because a runner's tail latency swings.
+      rttBudgetMs: round(ROUND_TRIP_FACTOR * pkP50Ms + RUNNER_HEADROOM_MS),
       pkP95Ms: round(pkP95Ms),
       tenantP95Ms: round(tenantP95Ms),
       explain,
@@ -265,7 +266,7 @@ async function main(): Promise<string[]> {
     const failures: string[] = [];
     if (!(report.overheadP50Ms <= report.rttBudgetMs)) {
       failures.push(
-        `withTenant overhead p50 ${report.overheadP50Ms} ms > ${report.rttBudgetMs} ms (3 round trips + ${RUNNER_HEADROOM_MS} ms)`,
+        `withTenant overhead p50 ${report.overheadP50Ms} ms > ${report.rttBudgetMs} ms (${ROUND_TRIP_FACTOR} round trips + ${RUNNER_HEADROOM_MS} ms)`,
       );
     }
     if (explain.nodeType !== "Index Scan" || explain.indexName !== "isolation_probe_pkey") {
