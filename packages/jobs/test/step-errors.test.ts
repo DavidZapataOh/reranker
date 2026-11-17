@@ -4,6 +4,7 @@ import { describe, expect, test } from "vitest";
 import { FatalError, RetryableError } from "workflow";
 import {
   InvalidInputError,
+  JobAttemptsExhaustedError,
   NON_RETRYABLE,
   NotFoundError,
   ProviderRejectedError,
@@ -39,6 +40,7 @@ test.each([
   new ProviderRejectedError("dataforseo", "40501"),
   new InvalidInputError("x"),
   new NotFoundError("x"),
+  new JobAttemptsExhaustedError("report.email", 4, new Error("down")),
   new CaptureChannelDisabledError(["capture-provider-openai"]),
   new AppError("not_found"),
 ])("%s is fatal", (err) => expect(FatalError.is(toStepError(err))).toBe(true));

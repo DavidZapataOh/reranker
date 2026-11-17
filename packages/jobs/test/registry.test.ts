@@ -9,6 +9,7 @@ describe("createRegistry", () => {
     expect(registry.get("a")).toBe(1);
     expect(registry.get("b")).toBeUndefined();
     expect([...registry.keys()]).toEqual(["a"]);
+    expect([...registry.entries()]).toEqual([["a", 1]]);
   });
 
   test("registering the same value again is a no-op and a different one is rejected", () => {

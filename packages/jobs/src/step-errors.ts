@@ -3,6 +3,7 @@ import { isAppError } from "@reranker/schema";
 import { FatalError, RetryableError } from "workflow";
 import {
   InvalidInputError,
+  JobAttemptsExhaustedError,
   NotFoundError,
   ProviderRejectedError,
   ProviderUnavailableError,
@@ -38,6 +39,7 @@ export function toStepError(err: unknown): Error {
     err instanceof ProviderRejectedError ||
     err instanceof InvalidInputError ||
     err instanceof NotFoundError ||
+    err instanceof JobAttemptsExhaustedError ||
     err instanceof CaptureChannelDisabledError
   ) {
     return fatal(err);

@@ -5,6 +5,7 @@ export interface Registry<V> {
   register(key: string, value: V): void;
   get(key: string): V | undefined;
   keys(): IterableIterator<string>;
+  entries(): IterableIterator<[string, V]>;
 }
 
 /**
@@ -23,5 +24,6 @@ export function createRegistry<V>(kind: string): Registry<V> {
     },
     get: (key) => entries.get(key),
     keys: () => entries.keys(),
+    entries: () => entries.entries(),
   };
 }
