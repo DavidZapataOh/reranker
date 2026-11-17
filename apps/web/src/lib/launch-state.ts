@@ -5,7 +5,7 @@ import { loadJobsConfig } from "@reranker/jobs";
 import { SourceError } from "@reranker/telemetry/digest";
 import { launchEnv } from "@reranker/telemetry/env";
 import { type GatedFlag, type LaunchInputs, tracerRegistered } from "@reranker/telemetry/launch";
-import vercel from "../../vercel.json" with { type: "json" };
+import { CRONS } from "./crons";
 
 /**
  * What only this deployment can say about itself: the crons it was built with, whether its
@@ -13,7 +13,7 @@ import vercel from "../../vercel.json" with { type: "json" };
  */
 export function deploymentInputs(): LaunchInputs {
   return {
-    crons: vercel.crons,
+    crons: CRONS,
     tracing: tracerRegistered(),
     resendDailyQuota: loadJobsConfig().quotas["resend.emails"].daily,
   };

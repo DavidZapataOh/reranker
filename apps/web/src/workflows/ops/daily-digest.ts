@@ -33,8 +33,10 @@ import {
   sendDailyDigest,
 } from "@reranker/telemetry/digest";
 import { digestEnv, telemetryEnv } from "@reranker/telemetry/env";
+import { runLaunchCheck } from "@reranker/telemetry/launch";
 import { postHogPlan } from "@reranker/telemetry/posthog-plan";
 import { sql } from "drizzle-orm";
+import { deploymentInputs, readGatedFlags } from "../../lib/launch-state";
 
 export type DigestResult = { sent: boolean; alerts: number; missing: string[] };
 
@@ -151,11 +153,6 @@ async function readNeon(
 
 /** The launch checks, the gated flags and the volume triggers, for "Escalones pendientes". */
 async function readStages(day: string): Promise<StagesInput> {
-  // Loaded here so the other steps of the bundle never pay for the provider clients.
-  const [{ runLaunchCheck }, { deploymentInputs, readGatedFlags }] = await Promise.all([
-    import("@reranker/telemetry/launch"),
-    import("../../lib/launch-state"),
-  ]);
   const [checks, flagsOn, pressure, latency, volume] = await Promise.all([
     runLaunchCheck(deploymentInputs()),
     fetchWithin(() => readGatedFlags()),
