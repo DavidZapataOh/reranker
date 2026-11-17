@@ -20,6 +20,14 @@ export {
   type LeaseEvent,
   type ProviderSlot,
 } from "./leases";
+export {
+  classifyNetwork,
+  type NetworkKind,
+  type NetworkRangesAlert,
+  type NetworkRangesRefresh,
+  parseRangeList,
+  refreshNetworkRanges,
+} from "./network";
 export type {
   JobPriority,
   PaidProvider,

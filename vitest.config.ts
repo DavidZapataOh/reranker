@@ -63,7 +63,7 @@ export default defineConfig({
       {
         test: {
           name: "contract",
-          include: ["**/src/**/*.contract.test.ts"],
+          include: ["**/{src,test}/**/*.contract.test.ts"],
           exclude: ignored,
           retry: 1,
           testTimeout: 60_000,

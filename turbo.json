@@ -62,6 +62,8 @@
       "dependsOn": ["^typecheck"],
       "cache": false,
       "env": [
+        "DATABASE_URL",
+        "DATABASE_URL_SYSTEM",
         "DATAFORSEO_LOGIN",
         "DATAFORSEO_PASSWORD",
         "BRIGHTDATA_API_KEY_CI",
