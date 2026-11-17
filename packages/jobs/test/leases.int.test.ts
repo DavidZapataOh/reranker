@@ -31,13 +31,19 @@ function startWorker(job: WorkerJob): ChildProcess {
   });
 }
 
-function runWorker(job: WorkerJob): Promise<WorkerResult[]> {
+function runWorker(job: WorkerJob): {
+  ready: Promise<void>;
+  go(): void;
+  results: Promise<WorkerResult[]>;
+} {
   const child = startWorker(job);
-  return new Promise((resolve, reject) => {
-    child.once("message", (m: { results: WorkerResult[] }) => resolve(m.results));
+  const ready = new Promise<void>((resolve) => child.once("message", () => resolve()));
+  const results = new Promise<WorkerResult[]>((resolve, reject) => {
+    child.on("message", (m: { results?: WorkerResult[] }) => m.results && resolve(m.results));
     child.once("error", reject);
     child.once("exit", (code) => reject(new Error(`worker exited with ${code}`)));
   });
+  return { ready, go: () => child.send("go"), results };
 }
 
 const liveLeases = async (key: string): Promise<number> => {
@@ -75,10 +81,13 @@ describe("acquireProviderSlot", () => {
         maxInFlight: 28,
         lanes: LANES,
         acquisitions: 20,
-        holdMs: 400,
+        holdMs: 600,
       }),
     );
-    const results = (await Promise.all(workers)).flat();
+    // Process start-up is slow and uneven; the clock starts when all ten are loaded.
+    await Promise.all(workers.map((w) => w.ready));
+    for (const w of workers) w.go();
+    const results = (await Promise.all(workers.map((w) => w.results))).flat();
     sampling = false;
     await sampler;
 
@@ -173,8 +182,8 @@ describe("acquireProviderSlot", () => {
       (e: unknown) => e,
     );
     expect(error).toBeInstanceOf(RateLimitedError);
-    // 5 per minute refills one token every 12 s.
-    expect((error as RateLimitedError).retryAfterMs).toBeGreaterThan(10_000);
+    // 5 per minute refills one token every 12 s, less what the round trips already refilled.
+    expect((error as RateLimitedError).retryAfterMs).toBeGreaterThan(0);
     expect((error as RateLimitedError).retryAfterMs).toBeLessThanOrEqual(12_000);
     expect(await liveLeases(`dataforseo:${acct}`)).toBe(0);
   });

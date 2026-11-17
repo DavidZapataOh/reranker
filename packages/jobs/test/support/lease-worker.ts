@@ -47,11 +47,16 @@ async function lane(count: number): Promise<WorkerResult[]> {
   return results;
 }
 
+// The parent starts every process together once all of them are loaded.
+const started = new Promise<void>((resolve) => process.once("message", () => resolve()));
+
 if (job.hold) {
   await acquireProviderSlot("dataforseo", limits, { maxWaitMs: 0 });
   process.send?.({ held: true });
   await new Promise(() => undefined);
 } else {
+  process.send?.({ ready: true });
+  await started;
   const perLane = Math.ceil(job.acquisitions / job.lanes);
   const results = (
     await Promise.all(Array.from({ length: job.lanes }, () => lane(perLane)))
