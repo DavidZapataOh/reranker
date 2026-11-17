@@ -22,4 +22,15 @@ export type {
   SpendRegionPool,
 } from "./providers";
 export { type BucketLimits, peekTokens, refundTokens, takeTokens } from "./rate";
+export {
+  costOf,
+  releaseSpend,
+  releaseStaleSpend,
+  reserveSpend,
+  type SpendRequest,
+  type SpendReservation,
+  type SpendScopeStatus,
+  settleSpend,
+  spendStatus,
+} from "./spend";
 export { type StartOnceResult, startOnce } from "./start-once";
