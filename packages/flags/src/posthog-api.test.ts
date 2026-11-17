@@ -24,8 +24,8 @@ test("lists every page and sends the key as a bearer token", async () => {
     }),
   );
   expect(await createPostHogApi("phx_test").listFlags()).toEqual([
-    { key: "a", active: false },
-    { key: "b", active: true },
+    { id: 1, key: "a", active: false },
+    { id: 2, key: "b", active: true },
   ]);
   expect(auth).toEqual(["Bearer phx_test", "Bearer phx_test"]);
 });
@@ -79,4 +79,16 @@ test("falls back to the status text when the body is not JSON", async () => {
   await expect(createPostHogApi("phx_test").listFlags()).rejects.toThrow(
     "PostHog API 502: Bad Gateway",
   );
+});
+
+test("enables a flag with a partial update of its definition", async () => {
+  let body: unknown;
+  server.use(
+    http.patch(`${LIST}42/`, async ({ request }) => {
+      body = await request.json();
+      return HttpResponse.json({ id: 42, key: "accounts", active: true });
+    }),
+  );
+  await createPostHogApi("phx_test").setActive(42, true);
+  expect(body).toEqual({ active: true });
 });

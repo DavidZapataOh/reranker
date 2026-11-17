@@ -34,6 +34,30 @@ export const telemetryEnv = z.object({
     z.string().min(1).optional(),
     "PostHog key with query read scope for the daily digest",
   ),
+  // Flips the Free allowances and the cap on insight alerts once a card is on file.
+  POSTHOG_PLAN: config(
+    z.enum(["free", "pay-as-you-go"]).default("free"),
+    "PostHog organization plan: free or pay-as-you-go",
+  ),
+});
+
+const usd = (description: string) =>
+  config(z.coerce.number().nonnegative().optional(), description);
+
+// Read-only credentials that verify the provider tiers before a gated flag goes on.
+export const launchEnv = z.object({
+  BETTERSTACK_API_TOKEN: secret(
+    z.string().min(1).optional(),
+    "Better Stack API token that reads monitors and incoming webhooks",
+  ),
+  POSTHOG_LAUNCH_READ_KEY: secret(
+    z.string().min(1).optional(),
+    "PostHog personal API key with billing:read, project:read, user:read and feature_flag:read",
+  ),
+  GITHUB_REPO_READ_TOKEN: secret(
+    z.string().min(1).optional(),
+    "GitHub token that reads the repository's visibility and owner",
+  ),
 });
 
 // Credentials the daily digest reads usage with. Each one is optional: a source without its
@@ -50,4 +74,5 @@ export const digestEnv = z.object({
     z.string().min(1).optional(),
     "Neon project id of reranker-nonprod",
   ),
+  NEON_MONTHLY_BUDGET_USD: usd("Monthly Neon budget for both projects, in USD"),
 });

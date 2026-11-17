@@ -23,6 +23,8 @@ export interface JobsConfig {
   quotas: Record<"resend.emails", { daily: number; split: Record<JobPriority, number> }>;
   limits: Record<PaidProvider, ProviderLimits>;
   maxInlineWaitMs: number;
+  /** Monthly provider budgets the daily run measures spend against. */
+  budgets: { workflowsMonthlyUsd: number };
   breaker: { minCalls: number; failureRatio: number; openMs: number };
 }
 
@@ -141,6 +143,7 @@ function build(source: EnvSource): JobsConfig {
       xai: { maxInFlight: 5 },
     },
     maxInlineWaitMs: num("JOBS_MAX_INLINE_WAIT_MS", 5000),
+    budgets: { workflowsMonthlyUsd: num("WORKFLOWS_MONTHLY_BUDGET_USD", 10) },
     breaker: {
       minCalls: num("BREAKER_MIN_CALLS", 20),
       failureRatio: num("BREAKER_FAILURE_RATIO", 0.5),

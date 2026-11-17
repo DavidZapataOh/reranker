@@ -10,6 +10,17 @@ if (!apiKey || projectIds.some((id) => !id)) {
   process.exit(1);
 }
 
+// The month so far, through the end of today (UTC), as the consumption endpoint counts it.
+const now = new Date();
+const from = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)).toISOString();
+const to = new Date(
+  Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1),
+).toISOString();
+
 console.log(
-  JSON.stringify(await readNeonUsage({ apiKey, projectIds: projectIds as string[] }), null, 2),
+  JSON.stringify(
+    await readNeonUsage({ apiKey, projectIds: projectIds as string[], from, to }),
+    null,
+    2,
+  ),
 );

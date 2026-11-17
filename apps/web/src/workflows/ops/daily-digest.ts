@@ -4,12 +4,15 @@ import { defineEnv } from "@reranker/env";
 import { captureSwitchSnapshot } from "@reranker/flags";
 import { DEFAULT_COUNTRY_CODE, getCountry } from "@reranker/i18n/countries";
 import {
-  checkWorkflowQuota,
+  checkWorkflowBudget,
   consumeQuota,
   type DailyStep,
   loadJobsConfig,
+  primitiveLatency,
+  providerVolume,
   QuotaExceededError,
   reportStepError,
+  spendCapPressure,
 } from "@reranker/jobs";
 import { toStepError } from "@reranker/jobs/step-errors";
 import { type CurrencyCode, cost, type ProviderCost } from "@reranker/schema";
@@ -21,14 +24,19 @@ import {
   fetchWithin,
   githubActionsUsage,
   type NeonProject,
+  neonBudgetUsd,
   pingHeartbeat,
   posthogUsage,
   SourceError,
   type SpendScope,
+  type StagesInput,
   sendDailyDigest,
 } from "@reranker/telemetry/digest";
 import { digestEnv, telemetryEnv } from "@reranker/telemetry/env";
+import { runLaunchCheck } from "@reranker/telemetry/launch";
+import { postHogPlan } from "@reranker/telemetry/posthog-plan";
 import { sql } from "drizzle-orm";
+import { deploymentInputs, readGatedFlags } from "../../lib/launch-state";
 
 export type DigestResult = { sent: boolean; alerts: number; missing: string[] };
 
@@ -44,6 +52,10 @@ const heartbeatEnv = telemetryEnv.pick({ BETTERSTACK_HEARTBEAT_DAILY_URL: true }
 
 function previousDay(date: string): string {
   return new Date(Date.parse(`${date}T00:00:00Z`) - DAY_MS).toISOString().slice(0, 10);
+}
+
+function nextDay(date: string): string {
+  return new Date(Date.parse(`${date}T00:00:00Z`) + DAY_MS).toISOString().slice(0, 10);
 }
 
 type SpendRow = {
@@ -112,7 +124,11 @@ async function readResend(day: string): Promise<{ sent: number; limit: number }>
   };
 }
 
-async function readNeon(signal: AbortSignal): Promise<NeonProject[]> {
+/** Both projects' month so far, through the closed day (UTC days, as Neon counts them). */
+async function readNeon(
+  day: string,
+  signal: AbortSignal,
+): Promise<{ budgetUsd: number; projects: NeonProject[] }> {
   const env = defineEnv([neonEnv]);
   const { NEON_API_KEY: apiKey, NEON_PROJECT_ID: prod, NEON_NONPROD_PROJECT_ID: nonprod } = env;
   if (!apiKey || !prod || !nonprod) {
@@ -125,13 +141,30 @@ async function readNeon(signal: AbortSignal): Promise<NeonProject[]> {
   const { projects } = await readNeonUsage({
     apiKey,
     projectIds: [prod, nonprod],
+    from: `${day.slice(0, 7)}-01T00:00:00Z`,
+    to: `${nextDay(day)}T00:00:00Z`,
     fetch: (input, init) => fetch(input, { ...init, signal }),
   });
-  return projects.map((p) => ({
-    name: names.get(p.projectId) ?? p.projectId,
-    computeHours: p.computeHours,
-    storageBytes: p.storageBytes,
-  }));
+  return {
+    budgetUsd: neonBudgetUsd(),
+    projects: projects.map((p) => ({ ...p, name: names.get(p.projectId) ?? p.projectId })),
+  };
+}
+
+/** The launch checks, the gated flags and the volume triggers, for "Escalones pendientes". */
+async function readStages(day: string): Promise<StagesInput> {
+  const [checks, flagsOn, pressure, latency, volume] = await Promise.all([
+    runLaunchCheck(deploymentInputs()),
+    fetchWithin(() => readGatedFlags()),
+    fetchWithin(async () => (await spendCapPressure(day)).fired),
+    fetchWithin(async () => (await primitiveLatency()).fired),
+    fetchWithin(async () => (await providerVolume(day.slice(0, 7))).fired),
+  ]);
+  return {
+    checks,
+    flagsOn,
+    triggers: { spendCapPressure: pressure, primitiveLatency: latency, providerVolume: volume },
+  };
 }
 
 async function sendDigest(date: string, text: string): Promise<boolean> {
@@ -173,19 +206,20 @@ async function ping(): Promise<void> {
 export async function runDailyDigest(date: string): Promise<DigestResult> {
   const day = previousDay(date);
   const month = day.slice(0, 7);
-  const [spend, dataforseo, neon, github, posthog, resend, workflows, switches] = await Promise.all(
-    [
+  const [spend, dataforseo, neon, github, posthog, resend, workflows, switches, stages] =
+    await Promise.all([
       fetchWithin(() => readSpend(day)),
       fetchWithin((signal) => dataforseoBalance(signal)),
-      fetchWithin((signal) => readNeon(signal)),
+      fetchWithin((signal) => readNeon(day, signal)),
       fetchWithin((signal) => githubActionsUsage(month, signal)),
       fetchWithin((signal) => posthogUsage(signal)),
       fetchWithin(() => readResend(day)),
-      // The estimate only goes in the text: its alert is raised by the checkWorkflowQuota step.
-      fetchWithin(() => checkWorkflowQuota(month)),
+      // The spend only goes in the text: its alert is raised by the checkWorkflowBudget step.
+      fetchWithin(() => checkWorkflowBudget(month)),
       fetchWithin(async () => (await captureSwitchSnapshot()).switches),
-    ] as const,
-  );
+      // Every part is bounded on its own; launch checks never reject.
+      readStages(day),
+    ] as const);
   const sources = { spend, dataforseo, neon, github, posthog, resend, workflows, switches };
   const missing = Object.entries(sources)
     .filter(([, result]) => !result.ok)
@@ -194,7 +228,13 @@ export async function runDailyDigest(date: string): Promise<DigestResult> {
     log.warn("ops.digest.sources_missing", { date, sources: missing.join(",") });
   }
 
-  const { text, alerts } = buildDailyDigest({ date, day, ...sources });
+  const { text, alerts } = buildDailyDigest({
+    date,
+    day,
+    ...sources,
+    posthogPlan: postHogPlan(),
+    stages,
+  });
   for (const alert of alerts) await sendOpsAlert(alert.kind, alert.payload);
 
   const sent = await sendDigest(date, text);

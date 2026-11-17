@@ -55,12 +55,26 @@ export const opsAlerts = {
     runbook: "jobs-workflow-failures.md",
     source: "jobs",
   },
-  "jobs-hobby-quota": { severity: "warning", runbook: "jobs-hobby-quota.md", source: "jobs" },
+  // At 100% of the budget the payload raises it to critical; 70% only warns.
+  "jobs-workflow-budget": {
+    severity: "warning",
+    runbook: "jobs-workflow-budget.md",
+    source: "jobs",
+  },
   "network-ranges-stale": {
     severity: "warning",
     runbook: "network-ranges-stale.md",
     source: "jobs",
   },
+  // A gated flag on in production while a stage it needs is failing; only unverified checks warn.
+  "launch-gate-violated": {
+    severity: "critical",
+    runbook: "launch-gate-violated.md",
+    source: "launch",
+  },
+  "spend-cap-pressure": { severity: "warning", runbook: "spend-cap-pressure.md", source: "jobs" },
+  "primitive-latency": { severity: "warning", runbook: "primitive-latency.md", source: "jobs" },
+  "provider-volume": { severity: "warning", runbook: "provider-volume.md", source: "jobs" },
 } as const satisfies Record<string, OpsAlert>;
 
 export type OpsAlertKind = keyof typeof opsAlerts;

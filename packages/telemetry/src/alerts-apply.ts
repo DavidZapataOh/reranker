@@ -17,13 +17,13 @@ const Created = z.object({ id: z.number() });
 export async function applyAlerts(
   rest: ReturnType<typeof createPostHogRest>,
   desired: DesiredAlert[],
-  options: { dryRun: boolean; log: (line: string) => void },
+  options: { dryRun: boolean; maxAlerts: number; log: (line: string) => void },
 ): Promise<void> {
   const [alerts, insights] = await Promise.all([
     rest.list("alerts/", RemoteAlertSchema),
     rest.list("insights/?saved=true", RemoteInsightSchema),
   ]);
-  const plan = planAlerts(desired, alerts, insights);
+  const plan = planAlerts(desired, alerts, insights, options.maxAlerts);
   const { log } = options;
 
   for (const i of plan.createInsights) log(`create insight "${i.name}"`);

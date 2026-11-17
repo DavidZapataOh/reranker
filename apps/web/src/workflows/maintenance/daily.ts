@@ -1,5 +1,8 @@
 import {
-  checkWorkflowQuota,
+  checkPrimitiveLatency,
+  checkProviderVolume,
+  checkSpendCapPressure,
+  checkWorkflowBudget,
   cleanupLeases,
   type DailyStep,
   type NetworkRangesAlert,
@@ -7,17 +10,22 @@ import {
   refreshNetworkRanges,
   refreshVelocityBaselines,
   reportStepError,
-  type WorkflowQuotaAlert,
+  type ScaleTriggerAlert,
+  type WorkflowBudgetAlert,
 } from "@reranker/jobs";
 import { toStepError } from "@reranker/jobs/step-errors";
 import { log, sendOpsAlert } from "@reranker/telemetry";
 import { opsDigest } from "../ops/daily-digest";
+import { launchGate } from "../ops/launch-gate";
 
 export type DailyRunSummary = { failed: string[] };
 
-type Alert = NetworkRangesAlert | WorkflowQuotaAlert;
+type Alert = NetworkRangesAlert | WorkflowBudgetAlert | ScaleTriggerAlert;
 
 const DAY_MS = 86_400_000;
+
+const previousDay = (date: string) =>
+  new Date(Date.parse(`${date}T00:00:00Z`) - DAY_MS).toISOString().slice(0, 10);
 
 // Every step maps its failure to the retry the cause asks for, and sends the alerts it collected
 // even when it fails: an alert about a failure is the point of collecting it.
@@ -59,7 +67,7 @@ async function velocityBaselineStep(_date: string): Promise<void> {
 async function reconcileSpendStep(date: string): Promise<void> {
   "use step";
   await asStep("reconcileSpend", async () => {
-    const day = new Date(Date.parse(`${date}T00:00:00Z`) - DAY_MS).toISOString().slice(0, 10);
+    const day = previousDay(date);
     const { released, mismatches } = await reconcileSpend(day);
     log.info("jobs.daily.spend_reconciled", { day, released, mismatches: mismatches.length });
     // As errors they reach PostHog as exceptions, where the exceptions alert already watches.
@@ -75,14 +83,51 @@ async function reconcileSpendStep(date: string): Promise<void> {
   });
 }
 
-async function checkWorkflowQuotaStep(date: string): Promise<void> {
+async function checkWorkflowBudgetStep(date: string): Promise<void> {
   "use step";
-  await asStep("checkWorkflowQuota", async (alerts) => {
+  await asStep("checkWorkflowBudget", async (alerts) => {
     const month = date.slice(0, 7);
-    const { estimatedEvents, ratio } = await checkWorkflowQuota(month, {
+    const { estimatedEvents, spendUsd, budgetUsd, ratio } = await checkWorkflowBudget(month, {
       onAlert: (alert) => alerts.push(alert),
     });
-    log.info("jobs.daily.workflow_quota", { month, estimated_events: estimatedEvents, ratio });
+    log.info("jobs.daily.workflow_budget", {
+      month,
+      estimated_events: estimatedEvents,
+      spend_usd: spendUsd,
+      budget_usd: budgetUsd,
+      ratio,
+    });
+  });
+}
+
+// The latency probe takes provider slots like any call, so an open breaker can refuse it; a
+// missing reading only lets the trigger lapse, and the other two triggers still run.
+async function checkScaleTriggersStep(date: string): Promise<void> {
+  "use step";
+  await asStep("checkScaleTriggers", async (alerts) => {
+    const day = previousDay(date);
+    const onAlert = (alert: ScaleTriggerAlert) => alerts.push(alert);
+    const pressure = await checkSpendCapPressure(day, { onAlert });
+    log.info("jobs.daily.spend_cap_pressure", {
+      day,
+      percents: pressure.days.map((d) => Math.round(d.ratio * 100)).join(","),
+      fired: pressure.fired,
+    });
+    try {
+      const latency = await checkPrimitiveLatency({ onAlert });
+      log.info("jobs.daily.primitive_latency", {
+        p95_ms: latency.p95Ms,
+        since: latency.since?.toISOString() ?? "",
+        fired: latency.fired,
+      });
+    } catch (error) {
+      log.warn("jobs.daily.primitive_latency_skipped", {
+        error: error instanceof Error ? error.name : "unknown",
+      });
+    }
+    const month = day.slice(0, 7);
+    const volume = await checkProviderVolume(month, { onAlert });
+    log.info("jobs.daily.provider_volume", { month, calls: volume.calls, fired: volume.fired });
   });
 }
 
@@ -92,14 +137,17 @@ async function checkWorkflowQuotaStep(date: string): Promise<void> {
  * function and rethrowing `toStepError(error)`): `purgeExpiredAuthRecords` after
  * `velocityBaseline`; `otsUpgrade`, `controlCanary`, `prewarmIntentSets`, `qualityCanary`,
  * `drainDeferredFreeReports`, `enqueueDueRemeasures` and `leadRetentionSweep` after
- * `checkWorkflowQuota`; `opsDigest` last, so it reports on everything above.
+ * `checkScaleTriggers`; `launchGate` and `opsDigest` last, so the digest reports on everything
+ * above.
  */
 export const DAILY_STEPS: readonly DailyStep[] = [
   { name: "cleanupLeases", run: cleanupLeasesStep },
   { name: "refreshNetworkRanges", run: refreshNetworkRangesStep },
   { name: "velocityBaseline", run: velocityBaselineStep },
   { name: "reconcileSpend", run: reconcileSpendStep },
-  { name: "checkWorkflowQuota", run: checkWorkflowQuotaStep },
+  { name: "checkWorkflowBudget", run: checkWorkflowBudgetStep },
+  { name: "checkScaleTriggers", run: checkScaleTriggersStep },
+  launchGate,
   opsDigest,
 ];
 

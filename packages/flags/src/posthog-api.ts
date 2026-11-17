@@ -3,7 +3,32 @@ import { createPostHogRest, PostHogApiError } from "@reranker/telemetry/posthog-
 
 export { PostHogApiError };
 
-export type RemoteFlag = { key: string; active: boolean };
+const Property = z
+  .object({ key: z.string(), operator: z.string().nullish(), value: z.unknown() })
+  .loose();
+
+const Flag = z.object({
+  id: z.number(),
+  key: z.string(),
+  active: z.boolean(),
+  filters: z
+    .object({
+      groups: z
+        .array(
+          z
+            .object({
+              properties: z.array(Property).nullish(),
+              rollout_percentage: z.number().nullish(),
+            })
+            .loose(),
+        )
+        .nullish(),
+    })
+    .loose()
+    .nullish(),
+});
+
+export type RemoteFlag = z.output<typeof Flag>;
 
 export type CreateFlagPayload = {
   key: string;
@@ -18,11 +43,9 @@ export type CreateFlagPayload = {
   tags: string[];
 };
 
-const Flag = z.object({ key: z.string(), active: z.boolean() });
-
 /**
  * Feature flag definitions API. Listing needs a personal API key with `feature_flag:read`, creating
- * one with `feature_flag:write`; project secret keys do not reach these endpoints.
+ * and enabling with `feature_flag:write`; project secret keys do not reach these endpoints.
  */
 export function createPostHogApi(apiKey: string) {
   const rest = createPostHogRest(apiKey);
@@ -33,6 +56,10 @@ export function createPostHogApi(apiKey: string) {
     },
     async createFlag(payload: CreateFlagPayload): Promise<void> {
       await rest.send("feature_flags/", "POST", payload);
+    },
+    // https://posthog.com/docs/api/feature-flags (partial update)
+    async setActive(id: number, active: boolean): Promise<void> {
+      await rest.send(`feature_flags/${id}/`, "PATCH", { active });
     },
   };
 }

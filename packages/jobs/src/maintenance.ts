@@ -31,10 +31,17 @@ export interface SpendMismatch {
   provider_reported: ProviderCost;
 }
 
-/** Raised when the month's workflow events pass the alert line; the payload has no personal data. */
-export interface WorkflowQuotaAlert {
-  kind: "jobs-hobby-quota";
+/** Raised when the month's workflow spend reaches a budget line; the payload has no personal data. */
+export interface WorkflowBudgetAlert {
+  kind: "jobs-workflow-budget";
   payload: Record<string, string | number | boolean>;
+}
+
+export interface WorkflowBudget {
+  estimatedEvents: number;
+  spendUsd: number;
+  budgetUsd: number;
+  ratio: number;
 }
 
 const TIME_ZONE = getCountry(DEFAULT_COUNTRY_CODE).timeZone;
@@ -45,10 +52,13 @@ const VELOCITY_RETENTION_DAYS = 8;
 const MISMATCH_SHARE = 0.05;
 const MISMATCH_MIN_MICROS = 500_000;
 
-// Hobby's monthly allowance of workflow events. On Pro the events are billed instead of capped,
-// and the same line is the monthly budget the free report was sized for.
-const MONTHLY_WORKFLOW_EVENTS = 50_000;
-const WORKFLOW_ALERT_RATIO = 0.7;
+// Pro bills every workflow event on demand, https://vercel.com/docs/workflows/pricing (read
+// 2026-11-17).
+const USD_PER_WORKFLOW_EVENT = 0.02 / 1000;
+const BUDGET_LINES = [
+  { percent: 100, severity: "critical" },
+  { percent: 70, severity: "warning" },
+] as const;
 // Events a run of each kind writes at most: 3 for the run and 3 per step, plus retries.
 const EVENTS_PER_RUN: Readonly<Record<string, number>> = {
   daily: 45,
@@ -167,15 +177,19 @@ export async function reconcileSpend(day: string): Promise<{
   return { released, mismatches };
 }
 
+const round = (n: number, digits: number) => Math.round(n * 10 ** digits) / 10 ** digits;
+
 /**
  * Estimates the month's workflow events from the runs started in the country's month (Vercel
- * exposes no usage endpoint for them) and alerts above 70% of the monthly allowance.
+ * exposes no usage endpoint for them), prices them, and alerts from 70% of the monthly budget,
+ * critically from 100%.
  */
-export async function checkWorkflowQuota(
+export async function checkWorkflowBudget(
   month: string,
-  opts: { onAlert?: (alert: WorkflowQuotaAlert) => void } = {},
-): Promise<{ estimatedEvents: number; ratio: number }> {
+  opts: { onAlert?: (alert: WorkflowBudgetAlert) => void; budgetUsd?: number } = {},
+): Promise<WorkflowBudget> {
   if (!MONTH.test(month)) throw new InvalidInputError("Month must be YYYY-MM");
+  const budgetUsd = opts.budgetUsd ?? loadJobsConfig().budgets.workflowsMonthlyUsd;
   const { rows } = await system((tx) =>
     tx.execute<{ kind: string; runs: number }>(
       sql`select kind, count(*)::int as runs from ops.workflow_starts
@@ -189,17 +203,22 @@ export async function checkWorkflowQuota(
     (sum, row) => sum + row.runs * (EVENTS_PER_RUN[row.kind] ?? UNBUDGETED_EVENTS_PER_RUN),
     0,
   );
-  const ratio = estimatedEvents / MONTHLY_WORKFLOW_EVENTS;
-  if (ratio > WORKFLOW_ALERT_RATIO) {
+  const spendUsd = round(estimatedEvents * USD_PER_WORKFLOW_EVENT, 6);
+  const ratio = budgetUsd > 0 ? round(spendUsd / budgetUsd, 6) : spendUsd > 0 ? 1 : 0;
+  const line = BUDGET_LINES.find((l) => ratio * 100 >= l.percent);
+  if (line) {
     opts.onAlert?.({
-      kind: "jobs-hobby-quota",
+      kind: "jobs-workflow-budget",
       payload: {
         month,
         estimated_events: estimatedEvents,
-        limit: MONTHLY_WORKFLOW_EVENTS,
+        spend_usd: round(spendUsd, 2),
+        budget_usd: budgetUsd,
         percent: Math.round(ratio * 100),
+        threshold: line.percent,
+        severity: line.severity,
       },
     });
   }
-  return { estimatedEvents, ratio };
+  return { estimatedEvents, spendUsd, budgetUsd, ratio };
 }

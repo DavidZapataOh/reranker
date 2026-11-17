@@ -26,6 +26,7 @@
     "flags:sync": "pnpm --filter @reranker/flags flags:sync",
     "flags:check": "pnpm --filter @reranker/flags flags:check",
     "runbooks:check": "pnpm --filter @reranker/telemetry runbooks:check",
+    "launch:check": "pnpm --filter @reranker/telemetry launch:check",
     "env:example": "pnpm --filter @reranker/env exec tsx src/example.ts",
     "licenses:check": "node tools/licenses-check/src/main.ts"
   },

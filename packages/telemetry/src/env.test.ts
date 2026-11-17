@@ -9,6 +9,7 @@ describe("telemetry environment", () => {
     expect(defineEnv([telemetryEnv], { APP_ENV: "development" })).toEqual({
       APP_ENV: "development",
       LOG_LEVEL: "info",
+      POSTHOG_PLAN: "free",
     });
   });
 
@@ -34,6 +35,7 @@ describe("telemetry environment", () => {
     expect(defineEnv([telemetryEnv], { APP_ENV: "production", ...posthog })).toEqual({
       APP_ENV: "production",
       LOG_LEVEL: "info",
+      POSTHOG_PLAN: "free",
       ...posthog,
     });
   });

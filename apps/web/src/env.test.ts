@@ -34,6 +34,7 @@ describe("web environment", () => {
       APP_ENV: "development",
       NEXT_PUBLIC_POSTHOG_REGION: "us",
       LOG_LEVEL: "info",
+      POSTHOG_PLAN: "free",
       ...local,
     });
   });

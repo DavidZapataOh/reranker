@@ -1,8 +1,5 @@
 import { z } from "@reranker/schema";
 
-// PostHog's free plan allows 5 insight alerts for the whole organization.
-export const MAX_ALERTS = 5;
-
 const Threshold = z.object({
   type: z.enum(["absolute", "percentage"]),
   bounds: z.object({ lower: z.number().nullish(), upper: z.number().nullish() }),
@@ -173,11 +170,13 @@ function alertBody(d: DesiredAlert["alert"]): AlertBody {
 /**
  * Diffs the desired alerts against what PostHog holds. An existing alert on a desired insight is
  * adopted rather than duplicated, and the plan is empty once everything has been applied.
+ * `maxAlerts` is the organization's limit on its PostHog plan.
  */
 export function planAlerts(
   desired: DesiredAlert[],
   remoteAlerts: RemoteAlert[],
   remoteInsights: RemoteInsight[],
+  maxAlerts: number,
 ): Plan {
   const plan: Plan = { createInsights: [], patchInsights: [], createAlerts: [], patchAlerts: [] };
   const matches = desired.map((d) => {
@@ -215,9 +214,9 @@ export function planAlerts(
   }
 
   const total = remoteAlerts.length + plan.createAlerts.length;
-  if (total > MAX_ALERTS) {
+  if (total > maxAlerts) {
     throw new Error(
-      `Applying would leave ${total} insight alerts; the PostHog free plan allows ${MAX_ALERTS} in total`,
+      `Applying would leave ${total} insight alerts; the PostHog plan allows ${maxAlerts} in total`,
     );
   }
   return plan;

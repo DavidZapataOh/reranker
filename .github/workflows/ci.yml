@@ -24,6 +24,12 @@ jobs:
       - run: pnpm exec biome ci .
       - run: pnpm env:example --check
       - run: pnpm runbooks:check
+      # Report only: the provider stages are legitimately pending before launch. The daily run and
+      # `flags:sync --enable` enforce them against production.
+      - name: Report the launch stages
+        env:
+          GITHUB_REPO_READ_TOKEN: ${{ github.token }}
+        run: pnpm launch:check
       - run: pnpm audit --prod --audit-level high && pnpm licenses:check
       - id: scope
         env:

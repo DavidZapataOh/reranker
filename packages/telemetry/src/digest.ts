@@ -10,15 +10,18 @@ import {
 import type { ProviderCost } from "@reranker/schema";
 import { Resend } from "resend";
 import { alertEnv, OPS_FROM } from "./alerts";
+import { digestEnv } from "./env";
+import type { CheckResult, GatedFlag } from "./launch/types";
 import { log } from "./logger";
+import { type PostHogPlan, postHogLimits } from "./posthog-plan";
 import type { ActionsUsage } from "./providers/github-actions-usage";
-import { POSTHOG_FREE_LIMITS } from "./providers/posthog-usage";
 import { SourceError } from "./providers/source-error";
+import { PENDING_STAGES } from "./stages";
 
 export { pingHeartbeat } from "./providers/betterstack";
 export { dataforseoBalance } from "./providers/dataforseo-balance";
 export { type ActionsUsage, githubActionsUsage } from "./providers/github-actions-usage";
-export { POSTHOG_FREE_LIMITS, posthogUsage } from "./providers/posthog-usage";
+export { posthogUsage } from "./providers/posthog-usage";
 export { SourceError } from "./providers/source-error";
 
 export type SourceResult<T> =
@@ -26,30 +29,34 @@ export type SourceResult<T> =
   | { ok: false; reason: "sin dato"; detail?: string };
 
 export type DigestThresholds = {
-  /** Percentages of an allowance that warn. */
+  /** Percentages of a free allowance that warn. */
   warning: readonly number[];
-  /** Percentage of an allowance that is critical. */
+  /** Percentage of a free allowance that is critical. */
   critical: number;
   /** Percentage of Resend's daily quota above which it warns. */
   resendDaily: number;
-  /** Monthly Neon budget the estimated spend is measured against. */
-  neonMonthlyUsd: number;
+  /** Lines of a monthly budget: it warns from the first and is critical from the second. */
+  budget: { warning: number; critical: number };
 };
 
-// Neon's organization is on Launch: no allowance runs out and nothing is suspended, so the
-// percentages measure the month's estimated spend against this budget. US$20 is the low end of
-// the specification's estimate for the first months.
 export const DIGEST_THRESHOLDS = {
   warning: [50, 80],
   critical: 95,
   resendDaily: 70,
-  neonMonthlyUsd: 20,
+  budget: { warning: 70, critical: 100 },
 } as const satisfies DigestThresholds;
 
-/** Launch plan rates, https://neon.com/docs/introduction/plans (read 2026-11-16). */
-const NEON_USD_PER_CU_HOUR = 0.106;
-const NEON_USD_PER_GIB_MONTH = 0.35;
-const GIB = 1024 ** 3;
+// Production always on at 0.5 CU is about US$39 a month (0.5 × 730 h × US$0.106), plus its peaks,
+// storage and the nonprod project.
+const NEON_DEFAULT_BUDGET_USD = 60;
+
+/** The monthly Neon budget, `NEON_MONTHLY_BUDGET_USD` or its default. */
+export function neonBudgetUsd(): number {
+  return (
+    defineEnv([digestEnv.pick({ NEON_MONTHLY_BUDGET_USD: true })]).NEON_MONTHLY_BUDGET_USD ??
+    NEON_DEFAULT_BUDGET_USD
+  );
+}
 
 export const SOURCE_TIMEOUT_MS = 10_000;
 
@@ -60,7 +67,29 @@ export type SpendScope = {
   month: ProviderCost;
 };
 
-export type NeonProject = { name: string; computeHours: number; storageBytes: number };
+export type NeonProject = {
+  name: string;
+  computeHours: number;
+  storageGbMonths: number;
+  spendUsd: number;
+};
+
+export type WorkflowSpend = {
+  estimatedEvents: number;
+  spendUsd: number;
+  budgetUsd: number;
+  ratio: number;
+};
+
+/** What the "Escalones pendientes" section reads: the launch checks and the volume triggers. */
+export type StagesInput = {
+  checks: readonly CheckResult[];
+  /** Whether each gated flag is on in production. */
+  flagsOn: SourceResult<Readonly<Record<GatedFlag, boolean>>>;
+  triggers: Readonly<
+    Record<"spendCapPressure" | "primitiveLatency" | "providerVolume", SourceResult<boolean>>
+  >;
+};
 
 export type DigestInput = {
   /** The run's date, `YYYY-MM-DD`. */
@@ -69,12 +98,14 @@ export type DigestInput = {
   day: string;
   spend: SourceResult<readonly SpendScope[]>;
   dataforseo: SourceResult<{ balanceUsd: number }>;
-  neon: SourceResult<readonly NeonProject[]>;
+  neon: SourceResult<{ budgetUsd: number; projects: readonly NeonProject[] }>;
   github: SourceResult<ActionsUsage>;
   posthog: SourceResult<{ events: number; exceptions: number }>;
+  posthogPlan: PostHogPlan;
   resend: SourceResult<{ sent: number; limit: number }>;
-  workflows: SourceResult<{ estimatedEvents: number; ratio: number }>;
+  workflows: SourceResult<WorkflowSpend>;
   switches: SourceResult<Readonly<Record<string, boolean>>>;
+  stages: StagesInput;
   thresholds?: Partial<DigestThresholds>;
 };
 
@@ -173,10 +204,59 @@ function spendLines(day: string, scopes: readonly SpendScope[]): string[] {
   ];
 }
 
+function budgetCrossing(percent: number, t: DigestThresholds): Crossing | null {
+  const p = Math.round(percent * 100) / 100;
+  if (p >= t.budget.critical) return { severity: "critical", threshold: t.budget.critical };
+  if (p >= t.budget.warning) return { severity: "warning", threshold: t.budget.warning };
+  return null;
+}
+
+const triggerState = (fired: SourceResult<boolean>) =>
+  !fired.ok
+    ? "disparador sin dato"
+    : fired.value
+      ? "disparador cumplido"
+      : "disparador sin cumplir";
+
+/**
+ * Every provider tier still pending, with its cost, its trigger and whether the trigger fired. A
+ * launch stage is pending while one of its checks does not pass, and its trigger fires once its
+ * gated flag is on in production.
+ */
+function stageLines(stages: StagesInput): string[] {
+  const checks = new Map(stages.checks.map((c) => [c.id, c]));
+  const lines: string[] = [];
+  for (const stage of PENDING_STAGES) {
+    const head = `- ${stage.name} · ${stage.cost} · ${stage.trigger}`;
+    if ("checks" in stage) {
+      const open = stage.checks
+        .map((id): CheckResult => checks.get(id) ?? { id, status: "unknown", reason: "sin dato" })
+        .filter((c) => c.status !== "pass");
+      if (open.length === 0) continue;
+      const { flagsOn } = stages;
+      const fired: SourceResult<boolean> = flagsOn.ok
+        ? { ok: true, value: stage.gates.some((flag) => flagsOn.value[flag]) }
+        : flagsOn;
+      const failing = open.filter((c) => c.status === "fail").map((c) => c.reason);
+      const unverified = open.filter((c) => c.status === "unknown").map((c) => c.reason);
+      const detail = [
+        ...(failing.length > 0 ? [`falta: ${failing.join("; ")}`] : []),
+        ...(unverified.length > 0 ? [`sin verificar: ${unverified.join("; ")}`] : []),
+      ];
+      lines.push(`${head} · ${triggerState(fired)} · ${detail.join(" · ")}`);
+    } else if ("volume" in stage) {
+      lines.push(`${head} · ${triggerState(stages.triggers[stage.volume])}`);
+    } else {
+      lines.push(`${head} · ${stage.verifiedBy}`);
+    }
+  }
+  return ["Escalones pendientes", ...(lines.length > 0 ? lines : ["- ninguno"])];
+}
+
 /**
  * The digest's text and the alerts its thresholds cross. Pure: every reading arrives in `input`.
- * Workflow usage and spend caps appear only in the text; their alerts are raised where they are
- * measured, so the digest never duplicates them.
+ * Workflow spend, spend caps, pending stages and their triggers appear only in the text; their
+ * alerts are raised where they are measured, so the digest never duplicates them.
  */
 export function buildDailyDigest(input: DigestInput): { text: string; alerts: DigestAlert[] } {
   const t: DigestThresholds = { ...DIGEST_THRESHOLDS, ...input.thresholds };
@@ -191,21 +271,17 @@ export function buildDailyDigest(input: DigestInput): { text: string; alerts: Di
     }
   };
 
-  const neon = section("Neon", input.neon, (projects) => {
-    const compute = projects.reduce((sum, p) => sum + p.computeHours, 0) * NEON_USD_PER_CU_HOUR;
-    const storage =
-      (projects.reduce((sum, p) => sum + p.storageBytes, 0) / GIB) * NEON_USD_PER_GIB_MONTH;
-    // Storage is billed per GiB-month, so the current size counts for the whole month.
-    const spend = compute + storage;
-    const percent = t.neonMonthlyUsd > 0 ? (spend / t.neonMonthlyUsd) * 100 : 100;
-    const hit = crossing(percent, t);
+  const neon = section("Neon", input.neon, ({ budgetUsd, projects }) => {
+    const spend = projects.reduce((sum, p) => sum + p.spendUsd, 0);
+    const percent = budgetUsd > 0 ? (spend / budgetUsd) * 100 : 100;
+    const hit = budgetCrossing(percent, t);
     if (hit) {
       alerts.push({
         kind: "neon-quota",
         payload: {
           source: "neon",
           spend_usd: Math.round(spend * 100) / 100,
-          budget_usd: t.neonMonthlyUsd,
+          budget_usd: budgetUsd,
           percent: Math.round(percent),
           ...hit,
         },
@@ -214,9 +290,10 @@ export function buildDailyDigest(input: DigestInput): { text: string; alerts: Di
     return [
       "Neon (plan Launch, mes en curso)",
       ...projects.map(
-        (p) => `- ${p.name}: ${num(p.computeHours)} CU-h · ${num(p.storageBytes / GIB)} GB`,
+        (p) =>
+          `- ${p.name}: ${num(p.computeHours)} CU-h · ${num(p.storageGbMonths)} GB-mes · ${usd(p.spendUsd)}`,
       ),
-      `- gasto estimado del mes ${usd(spend)} de ${usd(t.neonMonthlyUsd)} (${pct(percent)})`,
+      `- gasto del mes ${usd(spend)} de ${usd(budgetUsd)} (${pct(percent)})`,
     ];
   });
 
@@ -231,13 +308,20 @@ export function buildDailyDigest(input: DigestInput): { text: string; alerts: Di
     ];
   });
 
+  const limits = postHogLimits(input.posthogPlan);
   const posthog = section("PostHog", input.posthog, (u) => {
-    const events = (u.events / POSTHOG_FREE_LIMITS.events) * 100;
-    const exceptions = (u.exceptions / POSTHOG_FREE_LIMITS.exceptions) * 100;
+    // On pay-as-you-go nothing is dropped past the allowances; PostHog's billing limits cap spend.
+    if (limits.events === null || limits.exceptions === null) {
+      return [
+        `PostHog (pago por uso): ${num(u.events)} eventos · ${num(u.exceptions)} excepciones este mes`,
+      ];
+    }
+    const events = (u.events / limits.events) * 100;
+    const exceptions = (u.exceptions / limits.exceptions) * 100;
     quota("posthog-events", events);
     quota("posthog-exceptions", exceptions);
     return [
-      `PostHog: ${num(u.events)} eventos de ${num(POSTHOG_FREE_LIMITS.events)} (${pct(events)}) · ${num(u.exceptions)} excepciones de ${num(POSTHOG_FREE_LIMITS.exceptions)} (${pct(exceptions)})`,
+      `PostHog: ${num(u.events)} eventos de ${num(limits.events)} (${pct(events)}) · ${num(u.exceptions)} excepciones de ${num(limits.exceptions)} (${pct(exceptions)})`,
     ];
   });
 
@@ -275,14 +359,16 @@ export function buildDailyDigest(input: DigestInput): { text: string; alerts: Di
     ...github,
     ...posthog,
     ...resend,
-    ...section("Workflows (estimado)", input.workflows, ({ estimatedEvents, ratio }) => [
-      `Workflows (estimado): ${num(estimatedEvents)} eventos (${pct(ratio * 100)} del presupuesto mensual)`,
+    ...section("Workflows (estimado)", input.workflows, (w) => [
+      `Workflows (estimado): ${num(w.estimatedEvents)} eventos · ${usd(w.spendUsd)} de ${usd(w.budgetUsd)} (${pct(w.ratio * 100)})`,
     ]),
     "",
     ...section("Kill switches", input.switches, (switches) => [
       "Kill switches",
       ...Object.entries(switches).map(([key, on]) => `- ${key}: ${on ? "encendido" : "apagado"}`),
     ]),
+    "",
+    ...stageLines(input.stages),
   ].join("\n");
 
   return { text, alerts };

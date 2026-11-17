@@ -38,6 +38,16 @@ vi.mock("@reranker/flags", async (importOriginal) => ({
   })),
 }));
 
+// The launch checks call providers; their own tests cover them.
+vi.mock("@reranker/telemetry/launch", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@reranker/telemetry/launch")>()),
+  runLaunchCheck: vi.fn(async () => []),
+}));
+vi.mock("../src/lib/launch-state", () => ({
+  deploymentInputs: vi.fn(() => ({ crons: [], tracing: false, resendDailyQuota: 100 })),
+  readGatedFlags: vi.fn(async () => ({ "free-report-live": false, accounts: false })),
+}));
+
 const { runDailyDigest } = await import("../src/workflows/ops/daily-digest");
 
 // A spend day of its own, far from real ones and from the jobs tests' range, so its counters
@@ -89,4 +99,7 @@ test("reports the closed day's spend per provider and its Resend sends", async (
   expect(text).toMatch(/- openai: USD\s0,00 de USD\s14,00/);
   expect(text).toContain(`Topes alcanzados el ${day}: ninguno`);
   expect(text).toContain(`Resend: 4 correos el ${day} de 100`);
+  // The volume triggers read the real ops tables: nothing on this far-away day fires them.
+  expect(text).toMatch(/Tope del reporte gratis por demanda.*disparador sin cumplir/);
+  expect(text).toMatch(/Temporal.*disparador sin cumplir/);
 });

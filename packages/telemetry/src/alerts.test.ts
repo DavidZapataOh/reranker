@@ -229,12 +229,35 @@ describe("opsAlerts", () => {
         runbook: "jobs-workflow-failures.md",
         source: "jobs",
       },
-      "jobs-hobby-quota": { severity: "warning", runbook: "jobs-hobby-quota.md", source: "jobs" },
+      "jobs-workflow-budget": {
+        severity: "warning",
+        runbook: "jobs-workflow-budget.md",
+        source: "jobs",
+      },
       "network-ranges-stale": {
         severity: "warning",
         runbook: "network-ranges-stale.md",
         source: "jobs",
       },
+      "spend-cap-pressure": {
+        severity: "warning",
+        runbook: "spend-cap-pressure.md",
+        source: "jobs",
+      },
+      "primitive-latency": {
+        severity: "warning",
+        runbook: "primitive-latency.md",
+        source: "jobs",
+      },
+      "provider-volume": { severity: "warning", runbook: "provider-volume.md", source: "jobs" },
+    });
+  });
+
+  test("a gated flag on with a failing launch stage is critical", () => {
+    expect(opsAlerts["launch-gate-violated"]).toEqual({
+      severity: "critical",
+      runbook: "launch-gate-violated.md",
+      source: "launch",
     });
   });
 

@@ -1,5 +1,5 @@
 import { cost } from "@reranker/schema";
-import { beforeEach, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import { FatalError } from "workflow";
 
 // Without the workflow compiler a step is a plain function, so each one runs here directly
@@ -9,7 +9,10 @@ const jobs = vi.hoisted(() => ({
   refreshNetworkRanges: vi.fn(),
   refreshVelocityBaselines: vi.fn(),
   reconcileSpend: vi.fn(),
-  checkWorkflowQuota: vi.fn(),
+  checkWorkflowBudget: vi.fn(),
+  checkSpendCapPressure: vi.fn(),
+  checkPrimitiveLatency: vi.fn(),
+  checkProviderVolume: vi.fn(),
   reportStepError: vi.fn(async () => {}),
 }));
 vi.mock("@reranker/jobs", async (importOriginal) => ({
@@ -100,18 +103,56 @@ test("reconciliation closes the day that just ended and logs each mismatch as an
   });
 });
 
-test("the workflow quota is checked for the run's month and its alert is sent", async () => {
+test("the workflow budget is checked for the run's month and its alert is sent", async () => {
   const alert = {
-    kind: "jobs-hobby-quota",
-    payload: { month: "2026-11", estimated_events: 36_000, limit: 50_000, percent: 72 },
+    kind: "jobs-workflow-budget",
+    payload: { month: "2026-11", estimated_events: 360_000, spend_usd: 7.2, percent: 72 },
   };
-  jobs.checkWorkflowQuota.mockImplementation(async (_month, { onAlert }) => {
+  jobs.checkWorkflowBudget.mockImplementation(async (_month, { onAlert }) => {
     onAlert(alert);
-    return { estimatedEvents: 36_000, ratio: 0.72 };
+    return { estimatedEvents: 360_000, spendUsd: 7.2, budgetUsd: 10, ratio: 0.72 };
   });
-  await step("checkWorkflowQuota")("2026-11-17");
-  expect(jobs.checkWorkflowQuota).toHaveBeenCalledWith("2026-11", expect.anything());
-  expect(telemetry.sendOpsAlert).toHaveBeenCalledExactlyOnceWith("jobs-hobby-quota", alert.payload);
+  await step("checkWorkflowBudget")("2026-11-17");
+  expect(jobs.checkWorkflowBudget).toHaveBeenCalledWith("2026-11", expect.anything());
+  expect(telemetry.sendOpsAlert).toHaveBeenCalledExactlyOnceWith(
+    "jobs-workflow-budget",
+    alert.payload,
+  );
+});
+
+describe("checkScaleTriggers", () => {
+  beforeEach(() => {
+    jobs.checkSpendCapPressure.mockResolvedValue({ days: [], fired: false });
+    jobs.checkPrimitiveLatency.mockResolvedValue({ p95Ms: 12, since: null, fired: false });
+    jobs.checkProviderVolume.mockResolvedValue({ calls: 10, fired: false });
+  });
+
+  test("reads the closed day and its month, and sends every alert raised", async () => {
+    const pressure = { kind: "spend-cap-pressure", payload: { percents: "70,80,90" } };
+    const volume = { kind: "provider-volume", payload: { calls: 2_000_001 } };
+    jobs.checkSpendCapPressure.mockImplementation(async (_day, { onAlert }) => {
+      onAlert(pressure);
+      return { days: [], fired: true };
+    });
+    jobs.checkProviderVolume.mockImplementation(async (_month, { onAlert }) => {
+      onAlert(volume);
+      return { calls: 2_000_001, fired: true };
+    });
+    await step("checkScaleTriggers")("2026-12-01");
+    expect(jobs.checkSpendCapPressure).toHaveBeenCalledWith("2026-11-30", expect.anything());
+    expect(jobs.checkProviderVolume).toHaveBeenCalledWith("2026-11", expect.anything());
+    expect(telemetry.sendOpsAlert).toHaveBeenCalledWith("spend-cap-pressure", pressure.payload);
+    expect(telemetry.sendOpsAlert).toHaveBeenCalledWith("provider-volume", volume.payload);
+  });
+
+  test("a latency probe the breaker refuses is skipped and the other triggers still run", async () => {
+    jobs.checkPrimitiveLatency.mockRejectedValue(new Error("breaker open"));
+    await step("checkScaleTriggers")("2026-11-17");
+    expect(telemetry.log.warn).toHaveBeenCalledWith("jobs.daily.primitive_latency_skipped", {
+      error: "Error",
+    });
+    expect(jobs.checkProviderVolume).toHaveBeenCalledOnce();
+  });
 });
 
 test("a failure that retrying cannot fix ends the step without retries", async () => {

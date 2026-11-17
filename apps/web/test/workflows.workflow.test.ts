@@ -55,7 +55,8 @@ test("DAILY_STEPS keep the spec order", () => {
     "velocityBaseline",
     "purgeExpiredAuthRecords",
     "reconcileSpend",
-    "checkWorkflowQuota",
+    "checkWorkflowBudget",
+    "checkScaleTriggers",
     "otsUpgrade",
     "controlCanary",
     "prewarmIntentSets",
@@ -63,6 +64,7 @@ test("DAILY_STEPS keep the spec order", () => {
     "drainDeferredFreeReports",
     "enqueueDueRemeasures",
     "leadRetentionSweep",
+    "launchGate",
     "opsDigest",
   ];
   const names = DAILY_STEPS.map((s) => s.name);
@@ -73,7 +75,9 @@ test("DAILY_STEPS keep the spec order", () => {
       "refreshNetworkRanges",
       "velocityBaseline",
       "reconcileSpend",
-      "checkWorkflowQuota",
+      "checkWorkflowBudget",
+      "checkScaleTriggers",
+      "launchGate",
     ]),
   );
 });

@@ -8,10 +8,13 @@
     "./env": "./src/env.ts",
     "./digest": "./src/digest.ts",
     "./scrub": "./src/scrub.ts",
-    "./posthog-rest": "./src/posthog-rest.ts"
+    "./posthog-rest": "./src/posthog-rest.ts",
+    "./posthog-plan": "./src/posthog-plan.ts",
+    "./launch": "./src/launch/index.ts"
   },
   "scripts": {
     "alerts:apply": "tsx scripts/apply-alerts.ts",
+    "launch:check": "tsx scripts/launch-check.ts",
     "runbooks:check": "tsx scripts/runbooks-check.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --project unit --coverage --passWithNoTests",
