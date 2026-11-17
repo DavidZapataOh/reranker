@@ -86,20 +86,35 @@ describe("velocityBaseline", () => {
 
 describe("refreshVelocityBaselines", () => {
   test("returns the number of keys computed", async () => {
-    execute.mockResolvedValue({ rows: [{ computed: 4, last: "test:velocity:k4" }] });
+    execute.mockResolvedValue({ rows: [{ computed: 4, last: "test:velocity:k4", more: false }] });
     await expect(refreshVelocityBaselines()).resolves.toBe(4);
-    execute.mockResolvedValue({ rows: [{ computed: 0, last: null }] });
+    execute.mockResolvedValue({ rows: [{ computed: 0, last: null, more: false }] });
     await expect(refreshVelocityBaselines()).resolves.toBe(0);
     execute.mockResolvedValue({ rows: [] });
     await expect(refreshVelocityBaselines()).resolves.toBe(0);
   });
 
-  test("walks the keys in batches until one comes back short", async () => {
+  test("walks the keys in batches from each one's last key until the budget is not reached", async () => {
     execute
-      .mockResolvedValueOnce({ rows: [{ computed: 100, last: "test:velocity:k099" }] })
-      .mockResolvedValueOnce({ rows: [{ computed: 100, last: "test:velocity:k199" }] })
-      .mockResolvedValueOnce({ rows: [{ computed: 37, last: "test:velocity:k236" }] });
-    await expect(refreshVelocityBaselines()).resolves.toBe(237);
+      .mockResolvedValueOnce({ rows: [{ computed: 3, last: "test:velocity:k002", more: true }] })
+      .mockResolvedValueOnce({ rows: [{ computed: 1, last: "test:velocity:k003", more: true }] })
+      .mockResolvedValueOnce({ rows: [{ computed: 37, last: "test:velocity:k040", more: false }] });
+    await expect(refreshVelocityBaselines()).resolves.toBe(41);
     expect(withSystem).toHaveBeenCalledTimes(3);
+    const cursors = execute.mock.calls.map(([query]) =>
+      (query as { queryChunks: unknown[] }).queryChunks.filter(
+        (chunk) => typeof chunk === "string",
+      ),
+    );
+    expect(cursors[1]).toContain("test:velocity:k002");
+    expect(cursors[2]).toContain("test:velocity:k003");
+  });
+
+  test("a batch with keys only older than the week still moves the cursor on", async () => {
+    execute
+      .mockResolvedValueOnce({ rows: [{ computed: 0, last: "test:velocity:stale", more: true }] })
+      .mockResolvedValueOnce({ rows: [{ computed: 2, last: "test:velocity:z", more: false }] });
+    await expect(refreshVelocityBaselines()).resolves.toBe(2);
+    expect(withSystem).toHaveBeenCalledTimes(2);
   });
 });

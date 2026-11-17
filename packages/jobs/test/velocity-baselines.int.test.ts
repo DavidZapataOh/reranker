@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { endPools, withSystem } from "@reranker/db";
+import { endPools, type SystemTx, withSystem } from "@reranker/db";
 import { sql } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { refreshVelocityBaselines, velocityBaseline } from "../src/velocity";
@@ -60,9 +60,15 @@ function randomBuckets(rand: () => number, shape: Shape): Bucket[] {
 const pgArray = (values: (string | number)[]) =>
   `{${values.map((v) => `"${String(v).replace(/(["\\])/g, "\\$1")}"`).join(",")}}`;
 
+// Seeding, cleanup and the oracle write and read whole weeks of buckets on a database other suites
+// load at the same time. They are not what is under test, so they get the longest statement timeout
+// a transaction may ask for; the refresh keeps the default one.
+const fixture = <T>(fn: (tx: SystemTx) => Promise<T>) =>
+  withSystem("test.velocity-baselines", fn, { statementTimeoutMs: 60_000 });
+
 // Inserted in one statement; duplicate minutes collapse on the primary key like real traffic.
 async function insertBuckets(rows: { key: string; b: Bucket }[]) {
-  await withSystem("test.velocity-baselines", (tx) =>
+  await fixture((tx) =>
     tx.execute(
       sql`insert into ops.velocity_buckets (key, bucket_start, count, flagged, spend_amount_micros, spend_currency)
           select k, date_trunc('minute', clock_timestamp()) - m * interval '1 minute', c, 0, s, 'USD'
@@ -75,7 +81,7 @@ async function insertBuckets(rows: { key: string; b: Bucket }[]) {
 }
 
 async function clear(keys: string[]) {
-  await withSystem("test.velocity-baselines", async (tx) => {
+  await fixture(async (tx) => {
     await tx.execute(
       sql`delete from ops.velocity_buckets where key = any(${pgArray(keys)}::text[])`,
     );
@@ -86,7 +92,7 @@ async function clear(keys: string[]) {
 }
 
 const currentMinute = () =>
-  withSystem("test.velocity-baselines", async (tx) => {
+  fixture(async (tx) => {
     const { rows } = await tx.execute<{ m: string }>(
       sql`select extract(epoch from date_trunc('minute', clock_timestamp()))::text as m`,
     );
@@ -103,7 +109,7 @@ type Reference = {
 // The original algorithm, kept as the oracle: one row per minute from the key's first bucket, with
 // 10 and 60 row windows over them.
 async function oracle(keys: string[]): Promise<Map<string, Reference>> {
-  const { rows } = await withSystem("test.velocity-baselines", (tx) =>
+  const { rows } = await fixture((tx) =>
     tx.execute<Reference>(
       sql`with bounds as (
             select now_minute, now_minute - interval '7 days' as since
@@ -192,36 +198,52 @@ describe("refreshVelocityBaselines", () => {
     }
   }, 120_000);
 
-  test("refreshes 300 keys of a sparse week inside one statement timeout", async () => {
+  test("refreshes busy and sparse keys of a week, each batch inside the statement timeout", async () => {
     const rand = prng(7);
-    const keys = Array.from({ length: 300 }, () => `test:velocity-baselines:scale:${randomUUID()}`);
+    const traffic = () => ({
+      count: 1 + Math.floor(rand() * 20),
+      spend: Math.floor(rand() * 2_000_000),
+    });
+    const sparse = Array.from(
+      { length: 300 },
+      () => `test:velocity-baselines:sparse:${randomUUID()}`,
+    );
+    // A bucket in every minute of the week: the most one key can hold.
+    const busy = Array.from({ length: 4 }, () => `test:velocity-baselines:busy:${randomUUID()}`);
+    const keys = [...sparse, ...busy];
     const rows: { key: string; b: Bucket }[] = [];
-    for (const key of keys) {
+    for (const key of sparse) {
       for (let i = 0; i < 400; i++) {
         rows.push({
           key,
-          b: {
-            minutesAgo: Math.floor(rand() * (WEEK_MINUTES + 1)),
-            count: 1 + Math.floor(rand() * 20),
-            spend: Math.floor(rand() * 2_000_000),
-          },
+          b: { minutesAgo: Math.floor(rand() * (WEEK_MINUTES + 1)), ...traffic() },
         });
       }
     }
+    for (const key of busy) {
+      for (let m = 0; m <= WEEK_MINUTES; m++)
+        rows.push({ key, b: { minutesAgo: m, ...traffic() } });
+    }
     try {
       await insertBuckets(rows);
-      const minute = await currentMinute();
-      const started = performance.now();
-      const computed = await refreshVelocityBaselines();
-      const elapsed = performance.now() - started;
-      console.info(`velocity refresh: ${computed} keys in ${Math.round(elapsed)} ms`);
-      expect(computed).toBeGreaterThanOrEqual(300);
-      // The whole refresh, not just a batch, fits inside the 5 s statement timeout.
-      expect(elapsed).toBeLessThan(5000);
-      // Keys from every batch, checked against the reference unless the clock crossed a minute.
-      const sample = [...keys].sort().filter((_, i) => i % 40 === 0);
-      const expected = await oracle(sample);
-      if ((await currentMinute()) === minute) await expectBaselines(sample, expected);
+      // Keys from every batch. Each batch is one statement under the default 5 s timeout, so a
+      // batch that outgrew it fails the refresh here.
+      const checked = [...busy, ...[...sparse].sort().filter((_, i) => i % 40 === 0)];
+      for (let attempt = 0; ; attempt++) {
+        const before = await currentMinute();
+        const started = performance.now();
+        const computed = await refreshVelocityBaselines();
+        console.info(
+          `velocity refresh: ${computed} keys in ${Math.round(performance.now() - started)} ms`,
+        );
+        expect(computed).toBeGreaterThanOrEqual(keys.length);
+        const expected = await oracle(checked);
+        if ((await currentMinute()) === before) {
+          await expectBaselines(checked, expected);
+          break;
+        }
+        expect(attempt).toBeLessThan(3);
+      }
     } finally {
       await clear(keys);
     }

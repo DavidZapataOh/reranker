@@ -83,8 +83,11 @@ export async function velocityBaseline(key: string): Promise<VelocityBaseline | 
   };
 }
 
-// Keys per statement: each batch stays far from the statement timeout however many keys are active.
-const BASELINE_BATCH_KEYS = 100;
+// A statement's cost grows with the buckets it reads, and a busy key holds a bucket for each of the
+// week's 10,081 minutes, so batches are cut by buckets, not keys. Each key also counts KEY_COST,
+// its own fixed overhead, which bounds a batch of keys seen only once too.
+const BASELINE_BATCH_COST = 20_000;
+const KEY_COST = 5;
 
 /**
  * Recomputes every key's baseline from the last 7 days of buckets: the p95 of the rolling 10 and
@@ -95,38 +98,64 @@ const BASELINE_BATCH_KEYS = 100;
  * three deltas (now, 10 and 60 minutes later) and a running sum over them gives every constant
  * stretch of the series, weighted by the minutes it lasts. Zero stretches are only counted: when
  * the p95 rank falls among them the answer is 0, otherwise it is found by ranking the positive
- * stretches after the zeros. That is the p95 of the per-minute series without expanding it. Keys
- * go through in batches by key order, each batch in its own statement.
+ * stretches after the zeros. That is the p95 of the per-minute series without expanding it.
+ *
+ * Keys go through in key order, in batches of about BASELINE_BATCH_COST, each in its own
+ * statement. A batch walks the primary key index from its cursor one key at a time, so it reads
+ * only its own keys' buckets however large the table is, and stops at the first key past the
+ * budget, which starts the next batch. A key over the budget on its own is a batch by itself.
  */
 export async function refreshVelocityBaselines(): Promise<number> {
   let computed = 0;
   let after: string | null = null;
   for (;;) {
-    const batch: { computed: number; last: string | null } = await refreshBatch(after);
+    const batch: { computed: number; last: string | null; more: boolean } =
+      await refreshBatch(after);
     computed += batch.computed;
-    if (!batch.last || batch.computed < BASELINE_BATCH_KEYS) return computed;
+    if (!batch.more || !batch.last) return computed;
     after = batch.last;
   }
 }
 
 async function refreshBatch(
   cursor: string | null,
-): Promise<{ computed: number; last: string | null }> {
+): Promise<{ computed: number; last: string | null; more: boolean }> {
   const { rows } = await system((tx) =>
-    tx.execute<{ computed: number; last: string | null }>(
-      sql`with bounds as (
+    tx.execute<{ computed: number; last: string | null; more: boolean }>(
+      sql`with recursive bounds as (
               select now_minute, now_minute - interval '7 days' as since
                 from (select date_trunc('minute', clock_timestamp()) as now_minute) b
             ),
+            walk as (
+              select k.key, s.first_bucket, s.cost as spent, 1 as n
+                from (select v.key from ops.velocity_buckets v
+                       where ${cursor}::text is null or v.key > ${cursor}::text
+                       order by v.key limit 1) k
+               cross join lateral (
+                 select min(v.bucket_start) as first_bucket, count(*)::int + ${KEY_COST} as cost
+                   from ops.velocity_buckets v, bounds b
+                  where v.key = k.key and v.bucket_start >= b.since and v.bucket_start <= b.now_minute
+               ) s
+              union all
+              select k.key, s.first_bucket, w.spent + s.cost, w.n + 1
+                from walk w
+               cross join lateral (
+                 select v.key from ops.velocity_buckets v where v.key > w.key order by v.key limit 1
+               ) k
+               cross join lateral (
+                 select min(v.bucket_start) as first_bucket, count(*)::int + ${KEY_COST} as cost
+                   from ops.velocity_buckets v, bounds b
+                  where v.key = k.key and v.bucket_start >= b.since and v.bucket_start <= b.now_minute
+               ) s
+               where w.spent <= ${BASELINE_BATCH_COST}
+            ),
+            batch as (
+              select key, first_bucket from walk where n = 1 or spent <= ${BASELINE_BATCH_COST}
+            ),
             keys as (
-              select v.key,
-                     (date_part('epoch', b.now_minute - min(v.bucket_start)) / 60)::int + 1 as total
-                from ops.velocity_buckets v, bounds b
-               where v.bucket_start >= b.since and v.bucket_start <= b.now_minute
-                 and (${cursor}::text is null or v.key > ${cursor}::text)
-               group by v.key, b.now_minute
-               order by v.key
-               limit ${BASELINE_BATCH_KEYS}
+              select w.key, (date_part('epoch', b.now_minute - w.first_bucket) / 60)::int + 1 as total
+                from batch w, bounds b
+               where w.first_bucket is not null
             ),
             p95 as (
               select k.key, q.*
@@ -194,8 +223,10 @@ async function refreshBatch(
               returning 1
             )
             select (select count(*) from upserted)::int as computed,
-                   (select max(key) from keys) as last`,
+                   (select max(key) from batch) as last,
+                   exists (select 1 from walk where spent > ${BASELINE_BATCH_COST}) as more`,
     ),
   );
-  return { computed: rows[0]?.computed ?? 0, last: rows[0]?.last ?? null };
+  const row = rows[0];
+  return { computed: row?.computed ?? 0, last: row?.last ?? null, more: row?.more ?? false };
 }
