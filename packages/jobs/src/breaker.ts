@@ -9,17 +9,18 @@ type CheckRow = { state: BreakerState; retry_after_ms: number };
 
 /**
  * Whether calls to the provider may go out. `half_open` goes to a single caller fleet-wide: that
- * caller is the probe and reports its outcome with `breakerRecord`.
+ * caller is the probe and reports its outcome with `breakerRecord`. The probe is held for
+ * `probeMs`, which must outlast the call it makes; one that never reports back is handed out
+ * again after that, one open window by default.
  */
 export async function breakerCheck(
   provider: PaidProvider,
   account = "default",
+  probeMs = loadJobsConfig().breaker.openMs,
 ): Promise<{ state: BreakerState; retryAfterMs: number }> {
-  // A probe that never reports back is handed out again after one open window.
-  const { openMs } = loadJobsConfig().breaker;
   const { rows } = await withSystem("jobs.breaker", (tx) =>
     tx.execute<CheckRow>(
-      sql`select * from ops.breaker_check(${provider}, ${account}, ${openMs}::int)`,
+      sql`select * from ops.breaker_check(${provider}, ${account}, ${probeMs}::int)`,
     ),
   );
   const row = rows[0];
