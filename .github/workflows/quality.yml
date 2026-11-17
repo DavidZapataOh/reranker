@@ -73,11 +73,7 @@ jobs:
         name: Resolve Playwright browsers
         run: |
           echo "version=$(pnpm --filter web exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
-          if [ "$APP_TARGET" = production ]; then
-            echo "list=chromium webkit" >> "$GITHUB_OUTPUT"
-          else
-            echo "list=chromium" >> "$GITHUB_OUTPUT"
-          fi
+          echo "list=chromium webkit" >> "$GITHUB_OUTPUT"
       - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/ms-playwright
@@ -88,14 +84,10 @@ jobs:
         run: |
           # shellcheck disable=SC2086
           pnpm --filter web exec playwright install --with-deps $BROWSERS
-      # WebKit runs only in production to stay inside the free Actions minutes.
       - name: End-to-end and accessibility tests
         env:
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
-        run: |
-          projects=(--project=desktop-chromium --project=mobile-chromium)
-          if [ "$APP_TARGET" = production ]; then projects+=(--project=mobile-webkit); fi
-          pnpm --filter web exec playwright test "${projects[@]}"
+        run: pnpm --filter web exec playwright test --project=desktop-chromium --project=mobile-chromium --project=mobile-webkit
       # Runs even when end-to-end failed, so one deployment reports every broken gate.
       # Never without the validated target: LHCI would fall back to a local server.
       - name: Lighthouse budgets

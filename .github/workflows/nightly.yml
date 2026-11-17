@@ -139,7 +139,7 @@ jobs:
     needs: [contract, full]
     # Also after a cancellation or a timeout: a night that did not pass must never look green.
     if: always()
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions: { issues: write }
     env:
