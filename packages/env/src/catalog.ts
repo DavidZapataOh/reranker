@@ -79,7 +79,7 @@ const rows: Row[] = [
   ["BETTER_AUTH_URL", "config", PROD_DEV, false, "04", true],
   ["VERCEL_URL", "config", PROD_PREV, false, "04", true],
   ["VERCEL_BRANCH_URL", "config", PROD_PREV, false, "04", true],
-  ["GOOGLE_CLIENT_ID", "config", ALL, false, "04"],
+  ["NEXT_PUBLIC_GOOGLE_CLIENT_ID", "config", ALL, false, "04"],
   ["GOOGLE_CLIENT_SECRET", "secret", ALL, false, "04"],
   ["RESEND_API_KEY", "secret", ALL, false, "04 / S03-03", true],
   ["RESEND_API_KEY_CI", "secret", NONE, true, "04 / S03-03", true],

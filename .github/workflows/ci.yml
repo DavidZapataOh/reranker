@@ -92,7 +92,7 @@ jobs:
         env:
           APP_ENV: development
           BETTER_AUTH_URL: http://localhost:3000
-          GOOGLE_CLIENT_ID: schema-generation
+          NEXT_PUBLIC_GOOGLE_CLIENT_ID: schema-generation.apps.googleusercontent.com
           GOOGLE_CLIENT_SECRET: schema-generation
           RESEND_API_KEY: re_schema_generation
           TURNSTILE_SECRET_KEY: schema-generation

@@ -4,7 +4,7 @@ import { fragments } from "./env";
 
 const authVars = {
   BETTER_AUTH_SECRET: "s".repeat(32),
-  GOOGLE_CLIENT_ID: "google-client-id",
+  NEXT_PUBLIC_GOOGLE_CLIENT_ID: "google-client-id.apps.googleusercontent.com",
   GOOGLE_CLIENT_SECRET: "google-client-secret",
   RESEND_API_KEY: "re_test",
   TURNSTILE_SECRET_KEY: "turnstile-secret",
@@ -44,7 +44,7 @@ describe("web environment", () => {
     "%s requires the auth variables",
     (APP_ENV) => {
       expect(() => defineEnv(fragments, { APP_ENV })).toThrowError(
-        /BETTER_AUTH_SECRET \(missing\).*GOOGLE_CLIENT_ID \(missing\)/,
+        /BETTER_AUTH_SECRET \(missing\).*NEXT_PUBLIC_GOOGLE_CLIENT_ID \(missing\)/,
       );
     },
   );
