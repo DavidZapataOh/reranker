@@ -1,4 +1,4 @@
-import { registerJobStarter, runJob, runOpportunistic } from "@reranker/jobs";
+import { registerJobStarter, reportStepError, runJob, runOpportunistic } from "@reranker/jobs";
 import { toStepError } from "@reranker/jobs/step-errors";
 import { getStepMetadata, sleep } from "workflow";
 import { startJob } from "./registry";
@@ -27,6 +27,7 @@ async function runJobStep(name: string, payload: unknown, jobId: string): Promis
   try {
     await runJob(name, payload, getStepMetadata().attempt, jobId);
   } catch (error) {
+    await reportStepError("job", name, error);
     throw toStepError(error);
   }
 }
