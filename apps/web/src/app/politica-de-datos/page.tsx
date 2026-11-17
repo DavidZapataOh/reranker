@@ -283,9 +283,11 @@ const sections: LegalSection[] = [
           Para detectar conexiones desde centros de datos y VPN usamos las listas públicas de rangos
           de red de X4BNet (licencia MIT), hechas con datos de IPLocate: IP address data powered by{" "}
           <a href="https://www.iplocate.io">IPLocate.io</a> (licencia{" "}
-          <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>). Las
-          descargamos y las consultamos en nuestros sistemas: tu dirección IP no se envía a X4BNet
-          ni a IPLocate.
+          <a href="https://creativecommons.org/licenses/by-sa/4.0/" className="whitespace-nowrap">
+            CC BY-SA 4.0
+          </a>
+          ). Las descargamos y las consultamos en nuestros sistemas: tu dirección IP no se envía a
+          X4BNet ni a IPLocate.
         </p>
         <p>
           Si cambiamos esta lista, actualizamos la fecha de esta política. Si tu empresa necesita un
