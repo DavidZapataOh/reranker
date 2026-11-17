@@ -34,6 +34,13 @@ export {
 } from "./jobs";
 export { assertOpaqueKey } from "./keys";
 export {
+  type LatencyStats,
+  MAX_PROBE_CALLS,
+  type ProbeOptions,
+  probeSpendPath,
+  type SpendPathLatency,
+} from "./latency";
+export {
   type AcquireOptions,
   acquireProviderSlot,
   type ProviderSlot,

@@ -780,6 +780,9 @@ importers:
       '@reranker/telemetry':
         specifier: workspace:*
         version: link:../telemetry
+      '@reranker/testing':
+        specifier: workspace:*
+        version: link:../testing
       '@reranker/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
