@@ -11,6 +11,12 @@ export interface BucketLimits {
 
 const INVALID_PARAMETER = "22023";
 
+/**
+ * The daily cleanup deletes buckets untouched for this long, and a missing bucket starts full, so
+ * every bucket must refill completely within it.
+ */
+export const BUCKET_IDLE_SECONDS = 2 * 86_400;
+
 function validate(key: string, limits: BucketLimits): void {
   assertOpaqueKey(key);
   const { capacity, refillPerSecond } = limits;
@@ -23,6 +29,9 @@ function validate(key: string, limits: BucketLimits): void {
     )
   ) {
     throw new InvalidInputError("Bucket capacity and refill must be positive numbers");
+  }
+  if (capacity / refillPerSecond > BUCKET_IDLE_SECONDS) {
+    throw new InvalidInputError("A bucket must refill completely within 2 days");
   }
 }
 
