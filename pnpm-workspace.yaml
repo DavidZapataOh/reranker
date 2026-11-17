@@ -132,3 +132,10 @@ allowBuilds:
   # dependencies; the install script only locates them.
   cbor-extract: false
 verifyDepsBeforeRun: error
+
+auditConfig:
+  ignoreGhsas:
+    # picomatch ReDoS on attacker-controlled extglobs, no patched release yet. Its only path is
+    # @workflow/builders globbing our own source files at build time; no request input reaches it.
+    # Remove once picomatch ships a fix.
+    - GHSA-fc5q-39xc-vjpf
