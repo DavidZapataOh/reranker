@@ -2,8 +2,7 @@ import { type DailyStep, reportStepError } from "@reranker/jobs";
 import { toStepError } from "@reranker/jobs/step-errors";
 import { log, sendOpsAlert } from "@reranker/telemetry";
 import { fetchWithin } from "@reranker/telemetry/digest";
-import { type GatedFlag, gateBlockers, runLaunchCheck } from "@reranker/telemetry/launch";
-import { deploymentInputs, readGatedFlags } from "../../lib/launch-state";
+import type { GatedFlag } from "@reranker/telemetry/launch";
 
 const ids = (results: { id: string }[]) => results.map((r) => r.id).join(",");
 
@@ -13,6 +12,10 @@ const ids = (results: { id: string }[]) => results.map((r) => r.id).join(",");
  * turn such a flag on; this catches one turned on in PostHog directly, or a stage that regressed.
  */
 export async function runLaunchGate(): Promise<void> {
+  // Loaded here, not at the top: every step of the bundle would otherwise pay for the provider
+  // clients on its cold start.
+  const [{ gateBlockers, runLaunchCheck }, { deploymentInputs, readGatedFlags }] =
+    await Promise.all([import("@reranker/telemetry/launch"), import("../../lib/launch-state")]);
   const [checks, flags] = await Promise.all([
     runLaunchCheck(deploymentInputs()),
     fetchWithin(() => readGatedFlags()),

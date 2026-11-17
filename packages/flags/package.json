@@ -5,7 +5,9 @@
   "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
-    "./env": "./src/env.ts"
+    "./env": "./src/env.ts",
+    "./launch-gate": "./src/launch-gate.ts",
+    "./posthog-api": "./src/posthog-api.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

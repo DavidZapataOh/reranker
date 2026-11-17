@@ -1,5 +1,6 @@
 import { defineEnv } from "@reranker/env";
-import { createPostHogApi, gatedFlagsOn } from "@reranker/flags";
+import { gatedFlagsOn } from "@reranker/flags/launch-gate";
+import { createPostHogApi } from "@reranker/flags/posthog-api";
 import { loadJobsConfig } from "@reranker/jobs";
 import { SourceError } from "@reranker/telemetry/digest";
 import { launchEnv } from "@reranker/telemetry/env";
