@@ -13,7 +13,7 @@
     "typecheck": "next typegen && tsc --noEmit",
     "indexnow": "node scripts/indexnow.mjs",
     "test": "vitest run --project unit --project component --coverage --passWithNoTests && node --test scripts/*.test.mjs",
-    "test:integration": "pnpm run test:workflow",
+    "test:integration": "vitest run --project integration && pnpm run test:workflow",
     "test:workflow": "vitest run --config vitest.workflow.config.ts",
     "test:smoke": "playwright test --grep @smoke"
   },

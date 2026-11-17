@@ -38,6 +38,12 @@ export const opsAlerts = {
     runbook: "heartbeat-missed.md",
     source: "betterstack",
   },
+  "jobs-hobby-quota": { severity: "warning", runbook: "jobs-hobby-quota.md", source: "jobs" },
+  "network-ranges-stale": {
+    severity: "warning",
+    runbook: "network-ranges-stale.md",
+    source: "jobs",
+  },
 } as const satisfies Record<string, OpsAlert>;
 
 export type OpsAlertKind = keyof typeof opsAlerts;

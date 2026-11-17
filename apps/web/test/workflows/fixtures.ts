@@ -1,6 +1,13 @@
-import { enqueue, RateLimitedError, runBatch, SpendCapExceededError } from "@reranker/jobs";
+import {
+  type DailyStep,
+  enqueue,
+  RateLimitedError,
+  runBatch,
+  SpendCapExceededError,
+} from "@reranker/jobs";
 import { toStepError } from "@reranker/jobs/step-errors";
-import { getStepMetadata } from "workflow";
+import { FatalError, getStepMetadata } from "workflow";
+import { type DailyRunSummary, runDailySteps } from "@/workflows/maintenance/daily";
 import { recordingJob } from "./jobs";
 import { entriesOf, record } from "./ledger";
 
@@ -72,4 +79,38 @@ async function enqueueRecording(id: string): Promise<string> {
   "use step";
   const { jobId } = await enqueue(recordingJob, { id }, { dedupeKey: id });
   return jobId;
+}
+
+// The daily steps receive the date; here it carries the run key, so each step writes to the ledger.
+
+async function firstDailyStep(runKey: string): Promise<void> {
+  "use step";
+  await record(runKey, { event: "ran", item: "first" });
+}
+
+async function brokenDailyStep(runKey: string): Promise<void> {
+  "use step";
+  await record(runKey, { event: "ran", item: "broken" });
+  throw new FatalError("broken on purpose");
+}
+
+async function lastDailyStep(runKey: string): Promise<void> {
+  "use step";
+  await record(runKey, { event: "ran", item: "last" });
+}
+
+const stepsWith = (critical: boolean): readonly DailyStep[] => [
+  { name: "first", run: firstDailyStep },
+  { name: "broken", run: brokenDailyStep, critical },
+  { name: "last", run: lastDailyStep },
+];
+
+/** The daily loop over a step list whose middle step fails, critical or not. */
+export async function dailyStepsWorkflow(
+  runKey: string,
+  critical: boolean,
+): Promise<DailyRunSummary> {
+  "use workflow";
+
+  return runDailySteps(stepsWith(critical), runKey);
 }

@@ -3,8 +3,9 @@ import { listWorkflowRefs } from "@workflow/vitest";
 import { expect, test } from "vitest";
 import { start } from "workflow/api";
 import { pingWorkflow } from "@/workflows/diagnostics/ping";
-import { batchResumeWorkflow, retryTimingWorkflow } from "./workflows/fixtures";
-import { attemptsOf, callCount } from "./workflows/ledger";
+import { DAILY_STEPS } from "@/workflows/maintenance/daily";
+import { batchResumeWorkflow, dailyStepsWorkflow, retryTimingWorkflow } from "./workflows/fixtures";
+import { attemptsOf, callCount, entriesOf } from "./workflows/ledger";
 
 const unique = () => `run-${randomUUID()}`;
 
@@ -17,7 +18,12 @@ test("pingWorkflow runs three steps on the local world", async () => {
 
 test("fixtures are compiled by the test build", () =>
   expect(listWorkflowRefs().map((ref) => ref.name)).toEqual(
-    expect.arrayContaining(["retryTimingWorkflow", "batchResumeWorkflow"]),
+    expect.arrayContaining([
+      "retryTimingWorkflow",
+      "batchResumeWorkflow",
+      "dailyStepsWorkflow",
+      "dailyMaintenanceWorkflow",
+    ]),
   ));
 
 test("a batch retry calls only the pending items", async () => {
@@ -40,4 +46,51 @@ test("SpendCapExceeded is not retried", async () => {
   const run = await start(retryTimingWorkflow, [runKey, "cap"]);
   await expect(run.returnValue).rejects.toThrow(/SpendCapExceeded/);
   expect(await attemptsOf(runKey)).toBe(1);
+});
+
+test("DAILY_STEPS keep the spec order", () => {
+  const order = [
+    "cleanupLeases",
+    "refreshNetworkRanges",
+    "velocityBaseline",
+    "purgeExpiredAuthRecords",
+    "reconcileSpend",
+    "checkWorkflowQuota",
+    "otsUpgrade",
+    "controlCanary",
+    "prewarmIntentSets",
+    "qualityCanary",
+    "drainDeferredFreeReports",
+    "enqueueDueRemeasures",
+    "leadRetentionSweep",
+    "opsDigest",
+  ];
+  const names = DAILY_STEPS.map((s) => s.name);
+  expect(names).toEqual(order.filter((n) => names.includes(n)));
+  expect(names).toEqual(
+    expect.arrayContaining([
+      "cleanupLeases",
+      "refreshNetworkRanges",
+      "velocityBaseline",
+      "reconcileSpend",
+      "checkWorkflowQuota",
+    ]),
+  );
+});
+
+const ranSteps = async (runKey: string) =>
+  (await entriesOf(runKey, "ran")).map((entry) => entry.item);
+
+test("a failing step does not stop the next ones", async () => {
+  const runKey = unique();
+  const run = await start(dailyStepsWorkflow, [runKey, false]);
+  await expect(run.returnValue).resolves.toEqual({ failed: ["broken"] });
+  expect(await ranSteps(runKey)).toEqual(["first", "broken", "last"]);
+});
+
+test("a failing critical step stops the run", async () => {
+  const runKey = unique();
+  const run = await start(dailyStepsWorkflow, [runKey, true]);
+  await expect(run.returnValue).rejects.toThrow(/broken on purpose/);
+  expect(await ranSteps(runKey)).toEqual(["first", "broken"]);
 });

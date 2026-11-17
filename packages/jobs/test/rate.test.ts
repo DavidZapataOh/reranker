@@ -78,6 +78,24 @@ describe("peekTokens", () => {
     await expect(peekTokens(key, bad)).rejects.toBeInstanceOf(InvalidInputError);
     expect(execute).not.toHaveBeenCalled();
   });
+
+  // The daily cleanup deletes buckets idle for 2 days, which only equals a full bucket when it
+  // refills completely within that time.
+  test("rejects a bucket that takes longer than 2 days to refill, and takes up to 2 days", async () => {
+    const twoDays = 2 * 86_400;
+    await expect(
+      peekTokens(key, { capacity: 3, refillPerSecond: 3 / (twoDays + 1) }),
+    ).rejects.toBeInstanceOf(InvalidInputError);
+    await expect(
+      takeTokens(key, { capacity: 3, refillPerSecond: 3 / (twoDays + 1) }),
+    ).rejects.toBeInstanceOf(InvalidInputError);
+    expect(execute).not.toHaveBeenCalled();
+    execute.mockResolvedValue({ rows: [{ remaining: 3, retry_after_ms: 0 }] });
+    await expect(peekTokens(key, { capacity: 3, refillPerSecond: 3 / twoDays })).resolves.toEqual({
+      remaining: 3,
+      retryAfterMs: 0,
+    });
+  });
 });
 
 describe("refundTokens", () => {

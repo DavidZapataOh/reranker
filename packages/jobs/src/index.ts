@@ -40,6 +40,16 @@ export {
   type ProviderSlot,
 } from "./leases";
 export {
+  checkWorkflowQuota,
+  cleanupLeases,
+  type DailyStep,
+  reconcileSpend,
+  registerSpendSource,
+  type SpendMismatch,
+  type SpendSource,
+  type WorkflowQuotaAlert,
+} from "./maintenance";
+export {
   classifyNetwork,
   type NetworkKind,
   type NetworkRangesAlert,
