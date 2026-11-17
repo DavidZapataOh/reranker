@@ -26,6 +26,10 @@ export interface AcquireOptions {
 const CALL_TIMEOUT_MS = 115_000;
 const LEASE_TTL_MS = CALL_TIMEOUT_MS + 15_000;
 
+/** The key of a provider account's lease pool and rate buckets. */
+export const leasePoolKey = (provider: PaidProvider, account?: string): string =>
+  `${provider}:${account ?? "default"}`;
+
 const FIRST_BACKOFF_MS = 200;
 const MAX_BACKOFF_MS = 1000;
 
@@ -85,7 +89,7 @@ export async function acquireProviderSlot(
   limits: ProviderLimits,
   opts: AcquireOptions = {},
 ): Promise<ProviderSlot> {
-  const poolKey = `${provider}:${limits.account ?? "default"}`;
+  const poolKey = leasePoolKey(provider, limits.account);
   assertOpaqueKey(poolKey);
   const maxWaitMs = opts.maxWaitMs ?? loadJobsConfig().maxInlineWaitMs;
   const taken = buckets(poolKey, limits, opts.cost);

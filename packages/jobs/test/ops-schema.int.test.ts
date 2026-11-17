@@ -755,9 +755,9 @@ const breakerRecord = async (provider: string, account: string, failure: boolean
       sql`select ops.breaker_record(${provider}, ${account}, ${failure}, ${minCalls}, 0.5, 30000) as state`,
     )
   ).state;
-const breakerCheck = (provider: string, account: string) =>
+const breakerCheck = (provider: string, account: string, probeMs = 5000) =>
   one<{ state: string; retry_after_ms: number; opened_at: string | null }>(
-    sql`select * from ops.breaker_check(${provider}, ${account}, 5000)`,
+    sql`select * from ops.breaker_check(${provider}, ${account}, ${probeMs}::int)`,
   );
 const expireOpen = (provider: string, account: string) =>
   system(sql`update ops.breaker_state set open_until = clock_timestamp() - interval '1 millisecond'
@@ -786,11 +786,14 @@ describe("breaker", () => {
     const provider = unique("provider");
     await times(20, () => breakerRecord(provider, "default", true));
     await expireOpen(provider, "default");
-    const checks = await times(10, () => breakerCheck(provider, "default"));
+    // The hold is far longer than any stall a loaded runner can add, so the remaining wait seen by
+    // the callers that lose never depends on how fast the round trips are.
+    const holdMs = 3_600_000;
+    const checks = await times(10, () => breakerCheck(provider, "default", holdMs));
     expect(checks.filter((check) => check.state === "half_open")).toHaveLength(1);
     for (const check of checks.filter((c) => c.state === "open")) {
-      expect(check.retry_after_ms).toBeGreaterThan(4000);
-      expect(check.retry_after_ms).toBeLessThanOrEqual(5000);
+      expect(check.retry_after_ms).toBeGreaterThan(holdMs - 60_000);
+      expect(check.retry_after_ms).toBeLessThanOrEqual(holdMs);
     }
   });
 
