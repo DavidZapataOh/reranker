@@ -18,7 +18,16 @@ export class SigningKeyMismatchError extends Error {
   readonly keyid: string;
 
   constructor(keyid: string, reason: string, options?: ErrorOptions) {
-    super(`Signing key ${keyid}: ${reason}`, options);
+    super(`Signing key ${keyid || "(none)"}: ${reason}`, options);
     this.keyid = keyid;
+  }
+}
+
+/** KMS is throttling, failing or unreachable; the same call succeeds later. */
+export class SigningUnavailableError extends Error {
+  override readonly name = "SigningUnavailable";
+
+  constructor(message: string, options?: ErrorOptions) {
+    super(message, options);
   }
 }

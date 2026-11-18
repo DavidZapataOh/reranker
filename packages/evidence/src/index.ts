@@ -1,5 +1,5 @@
 import "server-only";
 
 export { signEnvelope } from "./dsse";
-export { SigningKeyMismatchError, StatementTooLargeError } from "./errors";
-export type { Signer } from "./signer";
+export { SigningKeyMismatchError, SigningUnavailableError, StatementTooLargeError } from "./errors";
+export { kmsSigner, loadSigner, type Signer } from "./signer";
