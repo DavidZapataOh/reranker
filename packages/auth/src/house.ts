@@ -20,11 +20,11 @@ async function findHouse(): Promise<TenantId | undefined> {
 
 /**
  * Creates the house organization, which owns every report and lead made before sign-up, with the
- * given user as its owner. Idempotent: an existing house is returned as is.
+ * given user as its owner. Idempotent: an existing house is returned as is, with `created: false`.
  */
 export async function provisionHouseOrganization(input: {
   ownerEmail: string;
-}): Promise<{ id: TenantId }> {
+}): Promise<{ id: TenantId; created: boolean }> {
   const email = input.ownerEmail.trim().toLowerCase();
   const [owner] = await withSystem("auth.house", (tx) =>
     tx.select({ id: users.id }).from(users).where(eq(users.email, email)).limit(1),
@@ -32,7 +32,7 @@ export async function provisionHouseOrganization(input: {
   if (!owner) throw new AppError("not_found", { detail: "the house owner has never signed in" });
 
   const existing = await findHouse();
-  if (existing) return { id: existing };
+  if (existing) return { id: existing, created: false };
 
   // Loaded here so readers of the house id never pull in the server and its environment.
   const { auth } = await import("./server");
@@ -46,7 +46,7 @@ export async function provisionHouseOrganization(input: {
       keepCurrentActiveOrganization: true,
     },
   });
-  return { id: asTenantId(created.id) };
+  return { id: asTenantId(created.id), created: true };
 }
 
 let house: Promise<TenantId> | undefined;
