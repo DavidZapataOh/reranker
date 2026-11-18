@@ -62,6 +62,19 @@ jobs:
         run: |
           pnpm --filter @reranker/evidence exec tsx test/py/emit-envelope.ts |
             uv run --no-project --with cryptography==50.0.2 python packages/evidence/test/py/verify_envelope.py
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: "1.27"
+          cache-dependency-path: packages/evidence/test/go/go.sum
+      # The log's hashes, proofs and tile paths are pinned to golang.org/x/mod/sumdb/tlog.
+      - name: Check the transparency log fixtures match the Go reference
+        working-directory: packages/evidence/test/go
+        run: go run . --check
+      # golang.org/x/mod/sumdb/note must open the checkpoints the log signs.
+      - name: Cross-verify a signed checkpoint with Go
+        run: |
+          pnpm --filter @reranker/evidence exec tsx test/go/emit-checkpoint.ts |
+            (cd packages/evidence/test/go && go run . note-verify)
       # --affected never selects this package when only the root Biome config changes.
       - name: Test Biome plugins against the current configuration
         run: pnpm --filter @reranker/biome-plugins test

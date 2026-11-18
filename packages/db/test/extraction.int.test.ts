@@ -254,12 +254,6 @@ test("a cached place decision has a place id exactly when the outcome is a place
 // Sizes as Postgres stores them: each heap row plus its line pointer, and one entry per row in
 // every index (8-byte tuple header and key, aligned to 8, plus its line pointer).
 async function bytesPerRow(table: string, scope: string, values: unknown[]): Promise<number> {
-  const { rows: count } = await owner.query<{ n: number; b: number }>(
-    `select count(*)::int as n, coalesce(sum(pg_column_size(t.*) + 4), 0)::int as b
-     from public_panel.${table} t where ${scope}`,
-    values,
-  );
-  let bytes = count[0]?.b ?? 0;
   const { rows: indexes } = await owner.query<{ columns: string[]; pred: string }>(
     `select array(select a.attname::text from unnest(i.indkey) k
              join pg_attribute a on a.attrelid = i.indrelid and a.attnum = k) as columns,
@@ -267,26 +261,72 @@ async function bytesPerRow(table: string, scope: string, values: unknown[]): Pro
      from pg_index i where i.indrelid = $1::regclass`,
     [`public_panel.${table}`],
   );
-  for (const index of indexes) {
+  const entries = indexes.map((index) => {
     const key = index.columns.map((column) => `pg_column_size(${column})`).join(" + ");
-    const { rows } = await owner.query<{ b: number }>(
-      `select coalesce(sum(4 + ((8 + ${key} + 7) / 8) * 8), 0)::int as b
-       from public_panel.${table} where ${scope} and (${index.pred})`,
-      values,
-    );
-    bytes += rows[0]?.b ?? 0;
-  }
-  return bytes / (count[0]?.n ?? 1);
+    return ` + case when ${index.pred} then 4 + ((8 + ${key} + 7) / 8) * 8 else 0 end`;
+  });
+  const { rows } = await owner.query<{ n: number; b: number }>(
+    `select count(*)::int as n, coalesce(sum(pg_column_size(t.*) + 4${entries.join("")}), 0)::int as b
+     from public_panel.${table} t where ${scope}`,
+    values,
+  );
+  return (rows[0]?.b ?? 0) / (rows[0]?.n || 1);
 }
 
 test("an extraction and each mention the report keeps stay within their row budgets", async () => {
-  const ids: string[] = [];
-  for (let answer = 0; answer < 200; answer++) {
-    const extraction = await insertExtraction(await insertCapture(), answer % 10 === 0 ? 1 : 0);
-    ids.push(extraction);
-    await insertMention(extraction, { start: 120, ordinal: 1 });
-    await insertMention(extraction, { start: 480, ordinal: 2 });
-  }
+  // The rows insertCapture, insertExtraction and insertMention write, in one statement: a round
+  // trip per row, 800 of them, outlasts the test timeout on a slow link to the database.
+  const captures = Array.from(
+    { length: 200 },
+    () => `cap_${randomBytes(13).toString("hex").toUpperCase()}`,
+  );
+  const placeIds = Array.from(
+    { length: 400 },
+    () => `ChIJ${randomBytes(18).toString("base64url").slice(0, 23)}`,
+  );
+  const firstSlot = slot;
+  slot += captures.length;
+  const { rows } = await sys(
+    `with answer as (
+       select id, n, (n - 1) % 10 = 0 as disputed
+       from unnest($1::text[]) with ordinality as u(id, n)
+     ), capture as (
+       insert into public_panel.captures (id, measurement_id, slot_index, attempt, intent_set_id,
+         intent_id, engine, channel, provider, mode, status, response_bytes, latency_ms,
+         cost_amount_micros, cost_currency, envelope_sha256)
+       select id, $2, $3 + n - 1, 1, 'is_0123456789abcdef', 'odontologia.blanqueamiento-dental',
+         'gemini', 'ui-vendor', 'dataforseo', 'live', 'succeeded', 48213, 11834, 4000, 'USD',
+         sha256(convert_to(id, 'UTF8'))
+       from answer
+     ), extraction as (
+       insert into public_panel.extractions (capture_id, config_hash, answer_kind, agreement,
+         judge_used, input_tokens, output_tokens, cost_amount_micros, cost_currency, latency_ms,
+         outputs_sha256, disputed_count)
+       select id, $4, 'names_entities',
+         (case when disputed then 'adjudicated' else 'agreed' end)::public_panel.agreement,
+         disputed, 1830, 412, 1712, 'USD', 4210, sha256(convert_to(id, 'UTF8')), disputed::int
+       from answer
+       returning id, capture_id
+     ), mention as (
+       insert into public_panel.mentions (extraction_id, entity_key, entity_kind, stance, ordinal,
+         start_offset, end_offset, sentiment, name_norm, name_hmac, place_id, resolution_status,
+         resolution_method, resolution_score, is_target, cited_url_hashes)
+       select e.id, 'place:' || p.place_id, 'business', 'recommendation', k.ordinal, k.start,
+         k.start + 24, 'positive', 'clinica dental sonrisa',
+         sha256(convert_to('name:' || k.start, 'UTF8')), p.place_id, 'resolved', 'rules', 0.94,
+         false, sha256(convert_to('url:' || k.start, 'UTF8'))
+       from extraction e
+       join answer a on a.id = e.capture_id
+       cross join (values (1, 120), (2, 480)) as k(ordinal, start)
+       join unnest($5::text[]) with ordinality as p(place_id, i) on p.i = (a.n - 1) * 2 + k.ordinal
+       returning 1
+     )
+     select array(select id from extraction) as ids, (select count(*)::int from mention) as kept`,
+    [captures, measurementId, firstSlot, CONFIG, placeIds],
+  );
+  const ids = rows[0]?.ids as string[];
+  expect(ids).toHaveLength(200);
+  expect(rows[0]?.kept).toBe(400);
   const extraction = await bytesPerRow("extractions", "id = any($1)", [ids]);
   const mention = await bytesPerRow("mentions", "extraction_id = any($1)", [ids]);
   console.info(
