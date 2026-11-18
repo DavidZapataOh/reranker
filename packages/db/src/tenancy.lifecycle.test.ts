@@ -218,6 +218,30 @@ test("a failed setup statement wins over the error it causes downstream", async 
   expect(pool.released).toEqual([undefined]);
 });
 
+// A dead backend fails every query already on the wire; each of those promises must be handled
+// even when it settles after the run has.
+test.each([
+  ["a lone query", (tx: TenantTx) => tx.execute(sql`select 1`)],
+  ["an async callback", async (tx: TenantTx) => tx.execute(sql`select 1`)],
+])("a backend that dies mid-pipeline under %s leaves no rejection unhandled", async (_, fn) => {
+  const unhandled: unknown[] = [];
+  const record = (reason: unknown) => unhandled.push(reason);
+  process.on("unhandledRejection", record);
+  try {
+    let died = false;
+    const pool = use((text) => {
+      if (text.startsWith("select 1")) died = true;
+      return died ? reject(pgError("57P01")) : undefined;
+    });
+    await expect(withTenant(A, fn)).rejects.toMatchObject({ code: "service_unavailable" });
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    expect(unhandled).toEqual([]);
+    expect(pool.released[0]).toBeTruthy();
+  } finally {
+    process.off("unhandledRejection", record);
+  }
+});
+
 test("a client the server still reports inside a transaction is never reused", async () => {
   const pool = use(() => undefined);
   pool.stuckInTransaction = true;
