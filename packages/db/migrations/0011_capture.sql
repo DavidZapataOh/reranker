@@ -1,4 +1,4 @@
--- Narrow integers keep a capture row near 230 bytes: slots, attempts, HTTP statuses and parser
+-- Narrow integers keep a capture row near 280 bytes: slots, attempts, HTTP statuses and parser
 -- versions stay far below 2^15, and provider codes, byte counts and latencies far below 2^31.
 -- squawk-ignore-file prefer-bigint-over-smallint, prefer-bigint-over-int
 CREATE TYPE "public_panel"."capture_channel" AS ENUM('ui-vendor', 'ui-own', 'api');--> statement-breakpoint

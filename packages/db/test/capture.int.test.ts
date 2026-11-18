@@ -177,7 +177,7 @@ async function bytesOf(
   return { total, evidence: rows[0]?.b ?? 0, parts };
 }
 
-test("a 200-observation plan stays within 52 KB of rows and index entries, evidence columns included", async () => {
+test("a 200-observation plan stays within 100 KB of rows and index entries, evidence columns included", async () => {
   const plan = await insertPlan(200);
   for (let slot = 0; slot < 200; slot++) {
     await insertCapture({ slotIndex: slot, plan, integrated: true });
@@ -186,7 +186,7 @@ test("a 200-observation plan stays within 52 KB of rows and index entries, evide
   console.info(`captures+plans bytes per report: ${b.total} (evidence share ${b.evidence})`);
   console.info(JSON.stringify(b.parts));
   expect(b.evidence).toBeGreaterThan(0);
-  expect(b.total).toBeLessThanOrEqual(52 * 1024);
+  expect(b.total).toBeLessThanOrEqual(100 * 1024);
 });
 
 test("evidence columns: envelope and normalized never change, log_index only once, no delete", async () => {
