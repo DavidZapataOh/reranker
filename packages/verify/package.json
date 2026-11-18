@@ -11,7 +11,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --project unit --coverage --passWithNoTests"
+    "test": "vitest run --project unit --coverage --passWithNoTests && vitest run --project exhaustive"
   },
   "dependencies": {
     "@noble/hashes": "catalog:",

@@ -28,7 +28,17 @@ export default defineConfig({
           name: "unit",
           environment: "node",
           include: ["**/{src,test}/**/*.test.ts"],
-          exclude: [...ignored, "**/*.{int,contract,browser,workflow,perf}.test.*"],
+          exclude: [...ignored, "**/*.{int,contract,browser,workflow,perf,exhaustive}.test.*"],
+        },
+      },
+      // Exhaustive checks run without coverage: V8 block coverage slows pure-JS hot loops about
+      // tenfold, and the unit project already covers every line with a smaller sample.
+      {
+        test: {
+          name: "exhaustive",
+          environment: "node",
+          include: ["**/{src,test}/**/*.exhaustive.test.ts"],
+          exclude: ignored,
         },
       },
       // Timing budgets run on their own: coverage instrumentation and sibling workers would
