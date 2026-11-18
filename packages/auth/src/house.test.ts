@@ -49,6 +49,7 @@ describe("provisionHouseOrganization", () => {
     db.rows = [[{ id: OWNER }], [{ id: HOUSE }]];
     expect(await house.provisionHouseOrganization({ ownerEmail: "f@example.com" })).toEqual({
       id: HOUSE,
+      created: false,
     });
     expect(server.auth.api.createOrganization).not.toHaveBeenCalled();
   });
@@ -58,6 +59,7 @@ describe("provisionHouseOrganization", () => {
     server.auth.api.createOrganization.mockResolvedValue({ id: HOUSE });
     expect(await house.provisionHouseOrganization({ ownerEmail: " F@Example.com " })).toEqual({
       id: HOUSE,
+      created: true,
     });
     expect(server.auth.api.createOrganization).toHaveBeenCalledExactlyOnceWith({
       body: {

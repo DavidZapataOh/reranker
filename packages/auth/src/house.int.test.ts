@@ -83,7 +83,8 @@ test("provisioning creates the house owned by that user, once", async () => {
   const first = await provisionHouseOrganization({ ownerEmail: ownerEmail.toUpperCase() });
   houseId = first.id;
   const second = await provisionHouseOrganization({ ownerEmail });
-  expect(second.id).toBe(first.id);
+  expect(first.created).toBe(true);
+  expect(second).toEqual({ id: first.id, created: false });
 
   const rows = await withSystem("test.read", async (tx) => ({
     houses: await tx.select().from(organizations).where(eq(organizations.kind, "house")),
