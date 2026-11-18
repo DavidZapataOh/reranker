@@ -6,6 +6,7 @@ export const copy = {
     chatgpt: "ChatGPT",
     gemini: "Gemini",
     "google-ai-overview": "Google (respuestas de IA)",
+    "google-ai-mode": "Google (modo IA)",
     perplexity: "Perplexity",
   } satisfies Record<EngineId, string>,
   bubble: { expand: "Ver respuesta completa", collapse: "Ver menos" },

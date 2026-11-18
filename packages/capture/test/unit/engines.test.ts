@@ -8,12 +8,17 @@ test("every engine has a spec keyed by its own id", () => {
 });
 
 test("the DataForSEO engines reserve the Live and Standard list prices", () => {
+  expect(ENGINES["google-ai-mode"]).toMatchObject({
+    provider: "dataforseo",
+    geoSupport: "city",
+    channel: "ui-vendor",
+  });
   expect(ENGINES["google-ai-overview"]).toMatchObject({
     provider: "dataforseo",
     geoSupport: "city",
     channel: "ui-vendor",
   });
-  for (const engine of ["gemini", "google-ai-overview", "chatgpt"] as const) {
+  for (const engine of ["gemini", "google-ai-overview", "google-ai-mode", "chatgpt"] as const) {
     expect(ENGINES[engine].estimate.live).toEqual({ amount_micros: 4000, currency: "USD" });
     expect(ENGINES[engine].estimate.task).toEqual({ amount_micros: 1200, currency: "USD" });
   }
@@ -31,5 +36,5 @@ test("the DataForSEO engines dispatch slowest first by p50 latency", () => {
     .filter((spec) => spec.provider === "dataforseo" && spec.engine !== "chatgpt")
     .sort((a, b) => b.p50LatencyMs - a.p50LatencyMs)
     .map((spec) => spec.engine);
-  expect(order).toEqual(["gemini", "google-ai-overview"]);
+  expect(order).toEqual(["gemini", "google-ai-overview", "google-ai-mode"]);
 });

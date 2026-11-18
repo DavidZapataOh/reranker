@@ -53,6 +53,7 @@ export function geoForEngine(
     // Google is targeted by DataForSEO location code, which stops at the region for
     // municipalities without one of their own.
     case "google-ai-overview":
+    case "google-ai-mode":
       return { level: target.dataforseo.level, label: target.dataforseo.label };
     // Gemini is asked from a coordinate, so it can name the municipality itself.
     case "gemini":

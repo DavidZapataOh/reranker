@@ -57,6 +57,12 @@
     "description": "Capture of Google AI Overviews"
   },
   {
+    "key": "capture-engine-google-ai-mode",
+    "kind": "kill-switch",
+    "owner": "S02-02",
+    "description": "Capture of Google AI Mode"
+  },
+  {
     "key": "capture-engine-perplexity",
     "kind": "kill-switch",
     "owner": "S02-08",

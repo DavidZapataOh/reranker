@@ -6,6 +6,7 @@ const icons: Record<EngineId, string> = {
   chatgpt: "/engines/openai.svg",
   gemini: "/engines/gemini.svg",
   "google-ai-overview": "/engines/google.svg",
+  "google-ai-mode": "/engines/google.svg",
   perplexity: "/engines/perplexity.svg",
 };
 

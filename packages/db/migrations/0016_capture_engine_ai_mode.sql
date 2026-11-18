@@ -1,0 +1,1 @@
+ALTER TYPE "public_panel"."capture_engine" ADD VALUE 'google-ai-mode' BEFORE 'perplexity';
