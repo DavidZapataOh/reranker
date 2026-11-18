@@ -28,16 +28,17 @@ export default defineConfig({
           name: "unit",
           environment: "node",
           include: ["**/{src,test}/**/*.test.ts"],
-          exclude: [...ignored, "**/*.{int,contract,browser,workflow,perf,exhaustive}.test.*"],
+          exclude: [...ignored, "**/*.{int,contract,browser,workflow,perf,heavy}.test.*"],
         },
       },
-      // Exhaustive checks run without coverage: V8 block coverage slows pure-JS hot loops about
-      // tenfold, and the unit project already covers every line with a smaller sample.
+      // CPU-heavy checks, such as sampler validation or every Merkle tree size, run without
+      // coverage: instrumentation slows their hot loops 5-10× and adds nothing, since the unit
+      // project already covers those lines.
       {
         test: {
-          name: "exhaustive",
+          name: "heavy",
           environment: "node",
-          include: ["**/{src,test}/**/*.exhaustive.test.ts"],
+          include: ["**/{src,test}/**/*.heavy.test.ts"],
           exclude: ignored,
         },
       },

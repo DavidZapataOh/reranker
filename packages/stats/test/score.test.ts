@@ -176,6 +176,24 @@ describe("estimateScore", () => {
     };
     expect(pairedCompare(column("a", 0, 8), column("b", 8, 15), frame, seed).pAAhead).toBe(1);
   });
+
+  // With every capture ranked G cannot move, yet each draw sums the same terms in another order:
+  // here every draw lands a few ulp above (or below) Ĝ, and the range must still contain Ĝ.
+  test.each([
+    ["above", 7, "lower"],
+    ["below", 5, "upper"],
+  ] as const)("Ĝ bounds the G range when rounding puts every draw %s it", (_, nb, bound) => {
+    const a = recs(1, [1]).map((o) => ({ ...o, stratum: "a", weight: 0.1 }));
+    const b = recs(nb, Array(nb).fill(2)).map((o) => ({
+      ...o,
+      stratum: "b",
+      weight: 0.1,
+      captureIndex: o.captureIndex + 1,
+    }));
+    const { prominence } = estimateScore([...a, ...b], seed).components;
+    expect(prominence.estimate).toBeCloseTo(0.95, 12);
+    expect(prominence[bound]).toBe(prominence.estimate);
+  });
 });
 
 describe("estimateScore on the report's shared bootstrap", () => {

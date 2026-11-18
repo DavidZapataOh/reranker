@@ -70,6 +70,11 @@ jobs:
       - name: Check the transparency log fixtures match the Go reference
         working-directory: packages/evidence/test/go
         run: go run . --check
+      # golang.org/x/mod/sumdb/note must open the checkpoints the log signs.
+      - name: Cross-verify a signed checkpoint with Go
+        run: |
+          pnpm --filter @reranker/evidence exec tsx test/go/emit-checkpoint.ts |
+            (cd packages/evidence/test/go && go run . note-verify)
       # --affected never selects this package when only the root Biome config changes.
       - name: Test Biome plugins against the current configuration
         run: pnpm --filter @reranker/biome-plugins test

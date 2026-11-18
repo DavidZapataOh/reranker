@@ -14,6 +14,13 @@ export {
 } from "./merge";
 export { jaroWinkler, nameHmac, normalizeName, tokenContainment } from "./normalize";
 export {
+  type CachedDecision,
+  type DecisionKey,
+  readDecisions,
+  refreshStalePlaceIds,
+  writeDecisions,
+} from "./places/cache";
+export {
   FIELD_MASKS,
   type PlaceDetails,
   type PlaceHit,

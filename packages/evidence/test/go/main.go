@@ -1,6 +1,9 @@
 // Command go writes the transparency log fixtures that pin @reranker/evidence to the reference
 // implementation, golang.org/x/mod/sumdb/tlog. With --check it regenerates them in memory and
 // fails when the committed files differ.
+//
+// The note-verify subcommand reads {"vkey", "note"} as JSON from stdin and opens the signed note
+// with golang.org/x/mod/sumdb/note, so checkpoints are checked by an independent implementation.
 package main
 
 import (
@@ -14,6 +17,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"golang.org/x/mod/sumdb/note"
 	"golang.org/x/mod/sumdb/tlog"
 )
 
@@ -189,7 +193,45 @@ func encode(v any) ([]byte, error) {
 	return b.Bytes(), nil
 }
 
+func noteVerify() error {
+	var input struct {
+		Vkey string `json:"vkey"`
+		Note string `json:"note"`
+	}
+	if err := json.NewDecoder(os.Stdin).Decode(&input); err != nil {
+		return err
+	}
+	verifier, err := note.NewVerifier(input.Vkey)
+	if err != nil {
+		return err
+	}
+	known := note.VerifierList(verifier)
+	n, err := note.Open([]byte(input.Note), known)
+	if err != nil {
+		return err
+	}
+	if len(n.Sigs) != 1 || n.Sigs[0].Name != verifier.Name() {
+		return fmt.Errorf("want one signature from %s, got %d", verifier.Name(), len(n.Sigs))
+	}
+	// A note whose text changed after signing must not open.
+	tampered := strings.Replace(input.Note, n.Text, n.Text+"x\n", 1)
+	if _, err := note.Open([]byte(tampered), known); err == nil {
+		return fmt.Errorf("a tampered note verified")
+	}
+	return nil
+}
+
 func main() {
+	// Checked before flag.Parse, which stops at the first non-flag argument.
+	if len(os.Args) > 1 && os.Args[1] == "note-verify" {
+		if err := noteVerify(); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		fmt.Println("OK")
+		return
+	}
+
 	check := flag.Bool("check", false, "fail when the committed fixtures differ from freshly generated ones")
 	dir := flag.String("dir", "../fixtures/tlog", "fixture directory")
 	flag.Parse()

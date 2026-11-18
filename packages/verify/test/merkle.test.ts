@@ -44,7 +44,7 @@ test("the reference definition reproduces transparency-dev/merkle", () =>
     vectors.roots.filter(({ n }) => n > 0).map((r) => r.root),
   ));
 
-// Every size up to 130 runs in merkle.exhaustive.test.ts, outside coverage; this sample keeps a
+// Every size up to 130 runs in merkle.heavy.test.ts, outside coverage; this sample keeps a
 // fast check of every stack of up to five pending subtrees in the covered run.
 test("matches the recursive RFC 6962 definition for trees up to 33 leaves", () => {
   const entries = sampleEntries(33);
