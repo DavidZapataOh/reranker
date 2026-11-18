@@ -9,14 +9,21 @@ const mocks = vi.hoisted(() => ({
   acquireProviderSlot: vi.fn(),
   reserveSpend: vi.fn(),
   settleSpend: vi.fn(),
+  classifyNetwork: vi.fn(),
+  execute: vi.fn(),
 }));
 vi.mock("../src/leases", () => ({ acquireProviderSlot: mocks.acquireProviderSlot }));
 vi.mock("../src/spend", () => ({
   reserveSpend: mocks.reserveSpend,
   settleSpend: mocks.settleSpend,
 }));
+vi.mock("../src/network", () => ({ classifyNetwork: mocks.classifyNetwork }));
+vi.mock("@reranker/db", () => ({
+  withSystem: async (_reason: string, fn: (tx: unknown) => unknown) =>
+    fn({ execute: mocks.execute }),
+}));
 
-const { probeSpendPath, summarize } = await import("../src/latency");
+const { probeNetworkLookup, probeSpendPath, summarize } = await import("../src/latency");
 
 const reservation = { id: "0190e8c4-0000-7000-8000-000000000000" };
 
@@ -112,5 +119,32 @@ describe("probeSpendPath", () => {
 
   test.each([-1, 2001, 0.5])("refuses a hold of %s ms", async (holdMs) => {
     await expect(probeSpendPath(1, { holdMs })).rejects.toBeInstanceOf(InvalidInputError);
+  });
+});
+
+describe("probeNetworkLookup", () => {
+  beforeEach(() => {
+    mocks.classifyNetwork.mockReset().mockResolvedValue(null);
+    mocks.execute.mockReset().mockResolvedValue({ rows: [{ ranges: 42_000 }] });
+  });
+
+  test("times n classifications over IPv4 and IPv6 and reports the loaded prefixes", async () => {
+    const report = await probeNetworkLookup(8);
+    expect(report.classifyNetwork.n).toBe(8);
+    expect(report.ranges).toBe(42_000);
+    const addresses = mocks.classifyNetwork.mock.calls.map(([ip]) => ip as string);
+    expect(addresses).toHaveLength(8);
+    expect(new Set(addresses).size).toBe(4);
+    expect(addresses.some((ip) => ip.includes(":"))).toBe(true);
+  });
+
+  test("reports no prefixes when the table is empty", async () => {
+    mocks.execute.mockResolvedValue({ rows: [] });
+    expect((await probeNetworkLookup(1)).ranges).toBe(0);
+  });
+
+  test.each([0, 1001, 2.5])("refuses %s calls", async (n) => {
+    await expect(probeNetworkLookup(n)).rejects.toBeInstanceOf(InvalidInputError);
+    expect(mocks.classifyNetwork).not.toHaveBeenCalled();
   });
 });
