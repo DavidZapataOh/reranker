@@ -22,6 +22,10 @@ jobs:
       # The runner's uid owns the mounted workspace and HOME; --ipc=host keeps Chromium from
       # exhausting the container's 64 MB /dev/shm.
       options: --user 1001 --ipc=host --init
+    # Container steps default to sh; the scripts below rely on bash and pipefail.
+    defaults:
+      run:
+        shell: bash
     timeout-minutes: 15
     permissions: { contents: read, id-token: write }
     steps:
