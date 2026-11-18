@@ -9,12 +9,16 @@ export {
   type RemovalReason,
 } from "./bundle";
 export {
+  DSSE_PAYLOAD_TYPE,
   type DsseEnvelope,
   DsseEnvelopeSchema,
   type DsseSignature,
-  IN_TOTO_PAYLOAD_TYPE,
+  envelopeBytes,
+  MAX_PAE_BYTES,
+  pae,
 } from "./dsse";
 export { CAPTURE_ID_PATTERN, type CaptureId, isCaptureId } from "./ids";
+export { leafHash, merkleRoot, nodeHash } from "./merkle";
 export {
   type CapturePredicateV1,
   type CaptureStatementV1,
