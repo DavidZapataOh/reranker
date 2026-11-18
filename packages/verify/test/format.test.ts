@@ -141,6 +141,17 @@ describe("evidence bundle", () => {
     ).toBe(false);
   });
 
+  test("an error capture without a normalized artifact still makes a valid bundle", () => {
+    const { normalized: _, ...rawOnly } = bundle.artifacts;
+    expect(parse({ ...bundle, artifacts: rawOnly })).toBe(true);
+  });
+
+  test("the raw artifact is mandatory", () => {
+    const { raw: _, ...normalizedOnly } = bundle.artifacts;
+    expect(parse({ ...bundle, artifacts: normalizedOnly })).toBe(false);
+    expect(parse({ ...bundle, artifacts: {} })).toBe(false);
+  });
+
   test("a removed artifact needs its date and reason", () => {
     const raw = bundle.artifacts.raw;
     const removed = {

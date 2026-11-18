@@ -22,7 +22,8 @@ export interface EvidenceBundleV1 {
   version: 1;
   capture_id: CaptureId;
   envelope: DsseEnvelope;
-  artifacts: Record<"raw" | "normalized", BundleArtifact>;
+  /** `normalized` is absent for captures that never parsed, such as provider error bodies. */
+  artifacts: { raw: BundleArtifact; normalized?: BundleArtifact };
   inclusion: { log: string; index: number; tree_size: number; hashes: string[] };
   checkpoint: string;
   latest: { checkpoint: string; consistency: string[] };
@@ -52,7 +53,7 @@ export const EvidenceBundleV1Schema: z.ZodMiniType<EvidenceBundleV1> = z.strictO
   version: z.literal(1),
   capture_id: captureIdSchema,
   envelope: DsseEnvelopeSchema,
-  artifacts: z.strictObject({ raw: artifact, normalized: artifact }),
+  artifacts: z.strictObject({ raw: artifact, normalized: z.exactOptional(artifact) }),
   inclusion: z
     .strictObject({ log: note, index: count, tree_size: count, hashes: z.array(z.base64()) })
     .check(
