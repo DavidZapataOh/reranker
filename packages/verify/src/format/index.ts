@@ -20,6 +20,19 @@ export {
 export { CAPTURE_ID_PATTERN, type CaptureId, isCaptureId } from "./ids";
 export { leafHash, merkleRoot, nodeHash } from "./merkle";
 export {
+  bitcoinAttestations,
+  mergeOtsTimestamps,
+  type OtsAttestation,
+  OtsFormatError,
+  type OtsOp,
+  type OtsTimestamp,
+  parseDetachedOts,
+  parseOtsTimestamp,
+  replay,
+  serializeDetachedOts,
+  serializeOtsTimestamp,
+} from "./ots";
+export {
   type CapturePredicateV1,
   type CaptureStatementV1,
   CaptureStatementV1Schema,
