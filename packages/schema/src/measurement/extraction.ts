@@ -1,22 +1,46 @@
 import type { ProviderCost } from "../cost";
+import { z } from "../z";
 
-export type Stance = "recommendation" | "incidental" | "negative";
-export type EntityKind =
-  | "business"
-  | "professional"
-  | "chain"
-  | "platform"
-  | "directory_or_media"
-  | "other";
-export type Sentiment = "positive" | "neutral" | "negative";
-export type AnswerKind = "names_entities" | "no_entities" | "refusal" | "capture_failed";
+export const Stance = z.enum(["recommendation", "incidental", "negative"]);
+export type Stance = z.infer<typeof Stance>;
+
+export const EntityKind = z.enum([
+  "business",
+  "professional",
+  "chain",
+  "platform",
+  "directory_or_media",
+  "other",
+]);
+export type EntityKind = z.infer<typeof EntityKind>;
+
+export const Sentiment = z.enum(["positive", "neutral", "negative"]);
+export type Sentiment = z.infer<typeof Sentiment>;
+
+export const AnswerKind = z.enum(["names_entities", "no_entities", "refusal", "capture_failed"]);
+export type AnswerKind = z.infer<typeof AnswerKind>;
+
+export const Agreement = z.enum(["agreed", "adjudicated", "single"]);
+export type Agreement = z.infer<typeof Agreement>;
+
 export type EntityKey =
   | `place:${string}`
   | `chain:${string}`
   | `name:${string}`
   | `platform:${string}`
   | `web:${string}`;
-export type ResolutionStatus = "resolved" | "chain" | "unresolvable" | "not_attempted" | "platform";
+
+export const ResolutionStatus = z.enum([
+  "resolved",
+  "chain",
+  "unresolvable",
+  "not_attempted",
+  "platform",
+]);
+export type ResolutionStatus = z.infer<typeof ResolutionStatus>;
+
+export const ResolutionMethod = z.enum(["cache", "rules", "judge", "none"]);
+export type ResolutionMethod = z.infer<typeof ResolutionMethod>;
 
 export interface ExtractedMention {
   /** Surface form as written in the response. */
@@ -41,7 +65,7 @@ export interface ResolvedMention extends ExtractedMention {
   placeId: string | null;
   resolution: {
     status: ResolutionStatus;
-    method: "cache" | "rules" | "judge" | "none";
+    method: ResolutionMethod;
     score: number | null;
   };
   isTarget: boolean;
@@ -51,7 +75,7 @@ export interface ResponseExtraction {
   captureId: string;
   configHash: string;
   answerKind: AnswerKind;
-  agreement: "agreed" | "adjudicated" | "single";
+  agreement: Agreement;
   mentions: ResolvedMention[];
   /** Model ids as the provider APIs report them. */
   models: { primary: string; secondary: string | null; judge: string | null };
