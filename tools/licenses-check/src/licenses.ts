@@ -7,6 +7,7 @@ export const ALLOWED_LICENSES: ReadonlySet<string> = new Set([
   "Apache-2.0",
   "BSD-2-Clause",
   "BSD-3-Clause",
+  "BSL-1.0",
   "BlueOak-1.0.0",
   "CC-BY-4.0",
   "CC0-1.0",
