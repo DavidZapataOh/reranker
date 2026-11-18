@@ -42,7 +42,7 @@ const jobContext: JobContext = {
 };
 
 type Integrated = { treeSize: number; firstIndex: number };
-type Stored = { body: Uint8Array; headers: Record<string, string> };
+type Stored = { body: Uint8Array<ArrayBuffer>; headers: Record<string, string> };
 
 /** The log bucket behind the S3 API, recording the order of the objects it stores. */
 const bucket = {

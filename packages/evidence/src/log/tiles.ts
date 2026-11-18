@@ -147,7 +147,7 @@ async function entriesBetween(tx: SystemTx, from: number, to: number): Promise<U
 }
 
 /** Writes an immutable object once; an earlier write must hold the very same bytes. */
-async function putOnce(key: string, bytes: Uint8Array): Promise<void> {
+async function putOnce(key: string, bytes: Uint8Array<ArrayBuffer>): Promise<void> {
   if ((await putLogObject(key, bytes, { immutable: true, contentType: OCTETS })).created) return;
   // A retry after a publication that died midway finds its own bytes.
   const existing = await getLogObject(key);
@@ -157,7 +157,7 @@ async function putOnce(key: string, bytes: Uint8Array): Promise<void> {
 }
 
 // c2sp.org/tlog-tiles: big-endian uint16 length-prefixed entries.
-function entryBundle(entries: Uint8Array[]): Uint8Array {
+function entryBundle(entries: Uint8Array[]): Uint8Array<ArrayBuffer> {
   const bundle = Buffer.alloc(entries.reduce((size, entry) => size + 2 + entry.length, 0));
   let at = 0;
   for (const entry of entries) {
