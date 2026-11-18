@@ -63,28 +63,53 @@ test.each(COLOMBIAN_RESIDENTIAL_SAMPLES)("%s (%s, LACNIC) is not flagged", async
   expect(await classifyNetwork(ip)).toBeNull(),
 );
 
-async function timed(n: number, fn: (i: number) => Promise<unknown>): Promise<number[]> {
-  for (let i = 0; i < 10; i++) await fn(i);
-  const samples: number[] = [];
-  for (let i = 0; i < n; i++) {
-    const startedAt = performance.now();
-    await fn(i);
-    samples.push(performance.now() - startedAt);
-  }
-  return samples;
-}
+// The statement classifyNetwork runs, sent through EXECUTE so it is parsed and planned on every
+// call, as the driver's unnamed statements are.
+const TIME_LOOKUPS = sql.raw(`
+  create or replace function pg_temp.time_network_lookups(addresses inet[])
+  returns table (kind text, ms double precision) language plpgsql as $$
+  declare
+    address inet;
+    started timestamptz;
+  begin
+    foreach address in array addresses loop
+      started := clock_timestamp();
+      execute 'select kind from ops.network_ranges where prefix >>= $1 order by masklen(prefix) desc limit 1'
+        into kind using address;
+      ms := extract(epoch from clock_timestamp() - started) * 1000;
+      return next;
+    end loop;
+  end $$`);
 
-// The runner is far from the database, so the bare system transaction around the query (four
-// round trips) is measured too and the budget applies to what the lookup adds on top of it.
-// Next to the database (production, preview) the transaction itself costs about a millisecond.
-test("p95 under 10 ms over 1,000 lookups", async () => {
+// Each lookup is timed inside Postgres, so the runner's distance to Neon stays out of the number.
+// The transaction around it is timed from iad1, next to the database, by the preview probe
+// (load/jobs/network.js), where the same budget holds end to end.
+test("p95 under 10 ms over 1,000 lookups, timed in the database", async () => {
   const addresses = ["52.95.110.1", "181.62.29.10", "2600:1f00::1", "185.159.157.9"];
-  const lookups = p95(await timed(1000, (i) => classifyNetwork(addresses[i % 4] as string)));
-  const transaction = p95(
-    await timed(1000, () => withSystem("jobs.network", (tx) => tx.execute(sql`select 1`))),
+  const expected: (string | null)[] = [];
+  for (const address of addresses) expected.push(await classifyNetwork(address));
+  const lookups = Array.from({ length: 1000 }, (_, i) => addresses[i % addresses.length]);
+
+  const { rows } = await withSystem(
+    "jobs.network",
+    async (tx) => {
+      await tx.execute(TIME_LOOKUPS);
+      const timed = await tx.execute<{ kind: string | null; ms: number }>(
+        sql`select kind, ms from pg_temp.time_network_lookups(${sql.param(lookups)}::inet[])`,
+      );
+      // Pooled sessions outlive the transaction, and so would a temporary function.
+      await tx.execute(sql`drop function pg_temp.time_network_lookups(inet[])`);
+      return timed;
+    },
+    { statementTimeoutMs: 30_000 },
   );
+
+  expect(rows).toHaveLength(1000);
+  expect(rows.map((row) => row.kind)).toEqual(lookups.map((_, i) => expected[i % 4] ?? null));
+  const samples = rows.map((row) => row.ms);
+  const sorted = [...samples].sort((a, b) => a - b);
   console.info(
-    `classifyNetwork p95 ${lookups.toFixed(2)} ms, bare system transaction p95 ${transaction.toFixed(2)} ms`,
+    `network lookup in the database: p50 ${sorted[499]?.toFixed(3)} ms, p95 ${p95(samples).toFixed(3)} ms`,
   );
-  expect(lookups - transaction).toBeLessThan(10);
+  expect(p95(samples)).toBeLessThan(10);
 });
