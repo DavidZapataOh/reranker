@@ -257,6 +257,9 @@ catalogs:
     better-auth:
       specifier: 1.7.18
       version: 1.7.18
+    canonicalize:
+      specifier: 5.1.0
+      version: 5.1.0
     drizzle-kit:
       specifier: ^0.31.11
       version: 0.31.11
@@ -311,6 +314,9 @@ catalogs:
     resend:
       specifier: 6.37.0
       version: 6.37.0
+    server-only:
+      specifier: 0.0.1
+      version: 0.0.1
     squawk-cli:
       specifier: ^2.70.0
       version: 2.72.0
@@ -607,6 +613,31 @@ importers:
       tsx:
         specifier: 'catalog:'
         version: 4.23.15
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vitest:
+        specifier: 'catalog:'
+        version: 5.1.0(@opentelemetry/api@1.10.0)(@types/node@26.6.6)(@vitest/browser-playwright@5.1.0)(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(msw@3.0.3(@types/node@26.6.6)(supports-color@10.2.2)(typescript@7.0.2)(vite@8.3.5(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)))(vite@8.3.5(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15))
+
+  packages/catalog:
+    dependencies:
+      canonicalize:
+        specifier: 'catalog:'
+        version: 5.1.0
+      server-only:
+        specifier: 'catalog:'
+        version: 0.0.1
+    devDependencies:
+      '@reranker/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 26.6.6
+      '@vitest/coverage-v8':
+        specifier: 'catalog:'
+        version: 5.1.0(@vitest/browser@5.1.0)(vitest@5.1.0)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -4223,6 +4254,11 @@ packages:
 
   caniuse-lite@1.0.30001826:
     resolution: {integrity: sha512-wTB+9tIbLro/BCXwLuNV1meHE4L9dS6dArMDwgYfNBPMYScqClHyGunhkCSDtHhe/69Xl0sHlKgBVZ+fNsYtWA==}
+
+  canonicalize@5.1.0:
+    resolution: {integrity: sha512-bab9+WefZljqQ8jT0qRwVmTyzAUU63K97QIQD3agynIBrb6sa5M2eAy8Hv8K3p4V9+ONVYZKtGYl4Dg+/5Gumw==}
+    engines: {node: '>=22'}
+    hasBin: true
 
   cbor-extract@2.2.3:
     resolution: {integrity: sha512-zTOCEYwiQDChj5DV/sUqccv3jhdZqbhymztwcrW2LncIG2fPPkb1ceK5rmr0bdtxzJCXoWzZ95shA+uaSH8cKw==}
@@ -10744,6 +10780,8 @@ snapshots:
   camelcase@8.0.0: {}
 
   caniuse-lite@1.0.30001826: {}
+
+  canonicalize@5.1.0: {}
 
   cbor-extract@2.2.3:
     dependencies:
