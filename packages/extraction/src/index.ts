@@ -21,6 +21,7 @@ export {
   type SearchTextRequest,
   searchText,
 } from "./places/client";
+export { type Decision, decide, type ScoredCandidate, scoreCandidates } from "./places/score";
 export { PLATFORMS, type PlatformEntry, platformFor, tagPlatforms } from "./platforms";
 export { costOfUsage, estimateOf, PLACES_SKU_PRICES } from "./prices";
 export { callAnthropic } from "./providers/anthropic";
