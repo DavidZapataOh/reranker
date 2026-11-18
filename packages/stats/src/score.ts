@@ -1,8 +1,9 @@
 import type { RateEstimate, ScoreEstimate } from "@reranker/schema/measurement";
+import { type DirichletStratum, dirichletStratum, drawStratifiedDirichlet } from "./dirichlet";
 import { levelDisplay, levelOf, sufficiency } from "./levels";
 import { methodology } from "./methodology";
 import { estimateRate, type StratumCounts } from "./rate";
-import { beta, exponential, rngFromSeed } from "./rng";
+import { beta, rngFromSeed } from "./rng";
 
 export interface EntityObservation {
   captureIndex: number;
@@ -14,9 +15,9 @@ export interface EntityObservation {
 }
 
 interface Prominence {
-  /** W_h / n_h of each ranked recommendation: its Dirichlet weight before the Exp(1) draw. */
-  coefficients: Float64Array;
   discounts: Float64Array;
+  /** Bootstrap strata whose members index `discounts`; the rest of each stratum is `rest`. */
+  strata: DirichletStratum[];
   estimate: number;
   min: number;
   max: number;
@@ -49,26 +50,32 @@ function prominenceOf(
   obs: readonly EntityObservation[],
   strata: Map<string, StratumCounts>,
 ): Prominence | null {
-  const coefficients: number[] = [];
   const discounts: number[] = [];
+  const ranked = new Map<string, { stratum: StratumCounts; members: number[] }>();
+  let num = 0;
+  let den = 0;
   for (const o of obs) {
     // An unranked recommendation still counts in p̂; it just says nothing about position.
     if (o.y !== 1 || o.ordinal === null || o.weight === 0) continue;
-    const s = strata.get(o.stratum) as StratumCounts;
-    coefficients.push(o.weight / s.trials);
-    discounts.push(methodology.positionDiscount ** (o.ordinal - 1));
+    let r = ranked.get(o.stratum);
+    if (r === undefined) {
+      r = { stratum: strata.get(o.stratum) as StratumCounts, members: [] };
+      ranked.set(o.stratum, r);
+    }
+    const discount = methodology.positionDiscount ** (o.ordinal - 1);
+    const coefficient = o.weight / r.stratum.trials;
+    r.members.push(discounts.length);
+    discounts.push(discount);
+    num += coefficient * discount;
+    den += coefficient;
   }
-  if (coefficients.length === 0) return null;
+  if (discounts.length === 0) return null;
 
-  let num = 0;
-  let den = 0;
-  for (let i = 0; i < coefficients.length; i++) {
-    num += (coefficients[i] as number) * (discounts[i] as number);
-    den += coefficients[i] as number;
-  }
   return {
-    coefficients: Float64Array.from(coefficients),
     discounts: Float64Array.from(discounts),
+    strata: [...ranked.values()].map(({ stratum, members }) =>
+      dirichletStratum(stratum.weight, members, stratum.trials - members.length),
+    ),
     estimate: num / den,
     min: Math.min(...discounts),
     max: Math.max(...discounts),
@@ -126,22 +133,25 @@ export function estimateScore(
     const gs = new Float64Array(draws);
     const nEff = rate.effectiveTrials;
     const ySt = Math.min(rate.estimate * nEff, nEff);
-    const ranked = prominence !== null && prominence.coefficients.length > 1 ? prominence : null;
+    // With a single discount value G is that constant, so only mixed ranks need the bootstrap.
+    const ranked = prominence !== null && prominence.min < prominence.max ? prominence : null;
+    const buffer = new Float64Array(ranked?.discounts.length ?? 0);
 
     for (let s = 0; s < draws; s++) {
       const p = beta(rng, ySt + 0.5, nEff - ySt + 0.5);
       let g = prominence?.estimate ?? 1;
       if (ranked !== null) {
-        // Bayesian bootstrap: Exp(1) draws normalized are Dirichlet(1,…,1), scaled by stratum.
+        drawStratifiedDirichlet(rng, ranked.strata, buffer);
         let num = 0;
         let den = 0;
-        for (let i = 0; i < ranked.coefficients.length; i++) {
-          const w = (ranked.coefficients[i] as number) * exponential(rng);
+        for (let i = 0; i < buffer.length; i++) {
+          const w = buffer[i] as number;
           num += w * (ranked.discounts[i] as number);
           den += w;
         }
-        // A convex combination of the discounts; the clamp only removes rounding past them.
-        g = Math.min(ranked.max, Math.max(ranked.min, num / den));
+        // A convex combination of the discounts; the clamp only removes rounding past them. Every
+        // weight is 0 only if the uniforms collide at 2^-32 resolution; Ĝ then stands in.
+        if (den > 0) g = Math.min(ranked.max, Math.max(ranked.min, num / den));
       }
       gs[s] = g;
       scores[s] = 100 * p * g;

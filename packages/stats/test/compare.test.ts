@@ -5,6 +5,9 @@ import { seedFor } from "../src/methodology";
 
 const seed = seedFor("report", "methodology");
 
+// Hundreds of seeded 4,000-draw runs: CPU-bound by design, so they get more than the default 5 s.
+const PROPERTY_TIMEOUT_MS = 30_000;
+
 const hexSeed = fc.stringMatching(/^[0-9a-f]{64}$/).filter((s) => !/^0{32}/.test(s));
 
 // V0 shape: 5 engines × 5 intents, 8 captures each, equal weights.
@@ -125,31 +128,46 @@ describe("pairedCompare", () => {
     expect(pairedCompare(a, b, frame40, seed)).toEqual(pairedCompare(a, b, frame40, seed));
   });
 
-  test("property: p is a probability, complements on swap and matches the verdict", () =>
-    fc.assert(
-      fc.property(
-        fc.integer({ min: 0, max: 40 }),
-        fc.integer({ min: 0, max: 40 }),
-        fc.integer({ min: 0, max: 39 }),
-        fc.integer({ min: 0, max: 12 }),
-        hexSeed,
-        (ra, rb, offset, ordinal, s) => {
-          const a = col("a", ra, { ordinal });
-          const b = col("b", rb, { offset, ordinal: 12 - ordinal });
-          const ab = pairedCompare(a, b, frame40, s);
-          const ba = pairedCompare(b, a, frame40, s);
-          const expected =
-            ab.pAAhead >= 0.8 ? "ahead" : ab.pAAhead <= 0.2 ? "behind" : ("tied" as const);
-          return (
-            ab.pAAhead >= 0 &&
-            ab.pAAhead <= 1 &&
-            Math.abs(ab.pAAhead + ba.pAAhead - 1) <= 1e-9 &&
-            ab.verdict === expected
-          );
-        },
+  test(
+    "property: p is a probability, complements on swap and matches the verdict",
+    () =>
+      fc.assert(
+        fc.property(
+          fc.integer({ min: 0, max: 40 }),
+          fc.integer({ min: 0, max: 40 }),
+          fc.integer({ min: 0, max: 39 }),
+          fc.integer({ min: 0, max: 12 }),
+          hexSeed,
+          (ra, rb, offset, ordinal, s) => {
+            const a = col("a", ra, { ordinal });
+            const b = col("b", rb, { offset, ordinal: 12 - ordinal });
+            const ab = pairedCompare(a, b, frame40, s);
+            const ba = pairedCompare(b, a, frame40, s);
+            const expected =
+              ab.pAAhead >= 0.8 ? "ahead" : ab.pAAhead <= 0.2 ? "behind" : ("tied" as const);
+            return (
+              ab.pAAhead >= 0 &&
+              ab.pAAhead <= 1 &&
+              Math.abs(ab.pAAhead + ba.pAAhead - 1) <= 1e-9 &&
+              ab.verdict === expected
+            );
+          },
+        ),
+        { numRuns: 60 },
       ),
-      { numRuns: 60 },
-    ));
+    PROPERTY_TIMEOUT_MS,
+  );
+});
+
+test("a frame is frozen once compared, so its cached draws can never go stale", () => {
+  const frame = frameOf(5, 8);
+  const first = pairedCompare(col("a", 6), col("b", 3, { offset: 1 }), frame, seed);
+  expect(Object.isFrozen(frame) && Object.isFrozen(frame.captures)).toBe(true);
+  expect(() => {
+    (frame.captures[0] as { weight: number }).weight = 1;
+  }).toThrow(TypeError);
+  expect(() => frame.captures.push({ stratum: "s0", weight: 0.2 })).toThrow(TypeError);
+  expect(pairedCompare(col("a", 6), col("b", 3, { offset: 1 }), frame, seed)).toEqual(first);
 });
 
 describe("rankWithTies", () => {
