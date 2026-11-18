@@ -49,6 +49,14 @@ export const ENGINES: Record<EngineId, EngineSpec> = {
     geoSupport: "city",
     p50LatencyMs: 12_000,
   },
+  "google-ai-mode": {
+    engine: "google-ai-mode",
+    provider: "dataforseo",
+    channel: "ui-vendor",
+    estimate: DATAFORSEO_ESTIMATE,
+    geoSupport: "city",
+    p50LatencyMs: 6_000,
+  },
   perplexity: {
     engine: "perplexity",
     provider: "brightdata",

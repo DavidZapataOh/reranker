@@ -2,7 +2,12 @@
 // Usage: pnpm --filter @reranker/i18n generate:countries
 import { writeFileSync } from "node:fs";
 import { inflateRawSync } from "node:zlib";
-import { NOT_MEASURED, TIME_ZONES, UNINHABITED_TERRITORIES } from "../src/countries/policy.ts";
+import {
+  AI_MODE_UNAVAILABLE,
+  NOT_MEASURED,
+  TIME_ZONES,
+  UNINHABITED_TERRITORIES,
+} from "../src/countries/policy.ts";
 import type { EngineId } from "../src/engines.ts";
 import { DEFAULT_LOCALE } from "../src/locales.ts";
 
@@ -217,8 +222,10 @@ for (const country of [...serp.byCountry.keys()].sort()) {
   const engines: EngineId[] = [];
   if (chatgpt.byCountry.has(country) || inBrightdata("chatgpt")) engines.push("chatgpt");
   if (inBrightdata("gemini")) engines.push("gemini");
-  // Every row comes from DataForSEO's Google SERP list, which captures AI Overviews.
+  // Every row comes from DataForSEO's Google SERP list, which captures AI Overviews and,
+  // where Google offers it, AI Mode.
   engines.push("google-ai-overview");
+  if (!(AI_MODE_UNAVAILABLE as readonly string[]).includes(country)) engines.push("google-ai-mode");
   if (inBrightdata("perplexity")) engines.push("perplexity");
   codes.push(country);
   entries.push(

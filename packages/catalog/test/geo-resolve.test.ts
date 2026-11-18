@@ -192,6 +192,7 @@ describe("geoForEngine", () => {
   test.each([
     ["gemini", "local", {}, { level: "city", label: "Pereira" }],
     ["google-ai-overview", "local", {}, { level: "city", label: "Pereira" }],
+    ["google-ai-mode", "local", {}, { level: "city", label: "Pereira" }],
     ["perplexity", "local", {}, { level: "country", label: "Colombia" }],
     [
       "chatgpt",
@@ -214,6 +215,7 @@ describe("geoForEngine", () => {
     ["chatgpt", "local", { provider: "brightdata" }, { level: "country", label: "Colombia" }],
     ["gemini", "national", {}, { level: "country", label: "Colombia" }],
     ["google-ai-overview", "national", {}, { level: "country", label: "Colombia" }],
+    ["google-ai-mode", "national", {}, { level: "country", label: "Colombia" }],
   ] as const)("%s %s %o → %o", (engine, scope, opts, expected) =>
     expect(geoForEngine(engine, resolveFixture("CO", "pereira"), scope, opts)).toEqual(expected),
   );
@@ -221,6 +223,10 @@ describe("geoForEngine", () => {
   test("Salento: Google engines say Quindío, Gemini keeps the municipality", () => {
     const salento = resolveFixture("CO", "salento");
     expect(geoForEngine("google-ai-overview", salento, "local")).toEqual({
+      level: "region",
+      label: "Quindío",
+    });
+    expect(geoForEngine("google-ai-mode", salento, "local")).toEqual({
       level: "region",
       label: "Quindío",
     });

@@ -22,6 +22,11 @@ export const TIME_ZONES: Readonly<Record<string, string>> = {
   XK: "Europe/Belgrade",
 };
 
+// Google SERP locations without AI Mode: every other one is on Google's closed list of
+// supported countries and territories (https://support.google.com/websearch/answer/16011537,
+// read 2026-11-18).
+export const AI_MODE_UNAVAILABLE = ["CN"] as const;
+
 // OpenAI does not offer ChatGPT in Venezuela, so a proxied answer measures nothing local:
 // https://help.openai.com/en/articles/7947663-chatgpt-supported-countries
 export const ENGINE_EXCLUSIONS: Readonly<Partial<Record<CoverageCode, readonly EngineId[]>>> = {

@@ -30,7 +30,7 @@ export const co = {
   },
   // Every municipality (DIVIPOLA × DataForSEO locations).
   geoData: "co-2026.11",
-  engines: ["chatgpt", "gemini", "google-ai-overview", "perplexity"],
+  engines: ["chatgpt", "gemini", "google-ai-overview", "google-ai-mode", "perplexity"],
   billing: {
     provider: "wompi",
     currency: "COP",
