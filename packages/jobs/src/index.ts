@@ -7,7 +7,7 @@ export {
   providerCapacity,
   registerCapacitySource,
 } from "./capacity";
-export { type JobsConfig, jobsEnv, loadJobsConfig } from "./config";
+export { type JobsConfig, jobsEnv, loadJobsConfig, providerCapFloor } from "./config";
 export { nextResetAt, spendDay } from "./day";
 export {
   InvalidInputError,
@@ -79,6 +79,7 @@ export {
   releaseSpend,
   releaseStaleSpend,
   reserveSpend,
+  type SpendContext,
   type SpendRequest,
   type SpendReservation,
   type SpendScopeStatus,

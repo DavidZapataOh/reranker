@@ -33,8 +33,8 @@ export type DigestThresholds = {
   warning: readonly number[];
   /** Percentage of a free allowance that is critical. */
   critical: number;
-  /** Percentage of Resend's daily quota above which it warns. */
-  resendDaily: number;
+  /** Percentage of Resend's monthly emails above which it warns. */
+  resendMonthly: number;
   /** Lines of a monthly budget: it warns from the first and is critical from the second. */
   budget: { warning: number; critical: number };
 };
@@ -42,7 +42,7 @@ export type DigestThresholds = {
 export const DIGEST_THRESHOLDS = {
   warning: [50, 80],
   critical: 95,
-  resendDaily: 70,
+  resendMonthly: 70,
   budget: { warning: 70, critical: 100 },
 } as const satisfies DigestThresholds;
 
@@ -59,6 +59,9 @@ export function neonBudgetUsd(): number {
 }
 
 export const SOURCE_TIMEOUT_MS = 10_000;
+
+/** Emails a month on Resend Pro (https://resend.com/pricing). */
+export const RESEND_PRO_MONTHLY_EMAILS = 50_000;
 
 export type SpendScope = {
   scope: string;
@@ -94,7 +97,7 @@ export type StagesInput = {
 export type DigestInput = {
   /** The run's date, `YYYY-MM-DD`. */
   date: string;
-  /** The day that just closed, which the spend and email counts describe. */
+  /** The day that just closed, which the spend describes and the email count runs through. */
   day: string;
   spend: SourceResult<readonly SpendScope[]>;
   dataforseo: SourceResult<{ balanceUsd: number }>;
@@ -187,7 +190,7 @@ function section<T>(
 
 function spendLines(day: string, scopes: readonly SpendScope[]): string[] {
   const shown = scopes
-    .filter((s) => s.scope === "global" || s.scope.startsWith("provider:"))
+    .filter((s) => s.scope === "global" || /^(provider|purpose):/.test(s.scope))
     .sort((a, b) =>
       a.scope === "global" ? -1 : b.scope === "global" ? 1 : a.scope.localeCompare(b.scope),
     );
@@ -197,7 +200,7 @@ function spendLines(day: string, scopes: readonly SpendScope[]): string[] {
   return [
     `Gasto del ${day}`,
     ...shown.map((s) => {
-      const name = s.scope === "global" ? "Total" : s.scope.slice("provider:".length);
+      const name = s.scope === "global" ? "Total" : s.scope.replace(/^provider:/, "");
       return `- ${name}: ${money(s.day)} de ${money(s.cap)} · mes: ${money(s.month)}`;
     }),
     `Topes alcanzados el ${day}: ${reached.length > 0 ? reached.join(", ") : "ninguno"}`,
@@ -327,7 +330,7 @@ export function buildDailyDigest(input: DigestInput): { text: string; alerts: Di
 
   const resend = section("Resend", input.resend, ({ sent, limit }) => {
     const percent = (sent / limit) * 100;
-    if (percent > t.resendDaily) {
+    if (percent > t.resendMonthly) {
       const severity = percent >= t.critical ? "critical" : "warning";
       alerts.push({
         kind: "free-tier-quota",
@@ -338,11 +341,13 @@ export function buildDailyDigest(input: DigestInput): { text: string; alerts: Di
           limit,
           percent: Math.round(percent),
           severity,
-          threshold: severity === "critical" ? t.critical : t.resendDaily,
+          threshold: severity === "critical" ? t.critical : t.resendMonthly,
         },
       });
     }
-    return [`Resend: ${num(sent)} correos el ${input.day} de ${num(limit)} (${pct(percent)})`];
+    return [
+      `Resend: ${num(sent)} correos en el mes hasta el ${input.day} de ${num(limit)} (${pct(percent)})`,
+    ];
   });
 
   const text = [

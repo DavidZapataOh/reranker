@@ -95,10 +95,10 @@ describe("resend", () => {
       { status: 401 },
     );
 
-  test("a sending-only key and a quota above Resend Free pass both checks", async () => {
+  test("a sending-only key and the default email brake pass both checks", async () => {
     vi.stubEnv("RESEND_API_KEY", "re_production");
     server.use(http.get(RESEND_DOMAINS, restricted));
-    const [plan, key] = await checkResend(1_600);
+    const [plan, key] = await checkResend(undefined);
     expect(plan).toMatchObject({ id: "resend-plan", status: "pass" });
     expect(key).toMatchObject({ id: "resend-sending-key", status: "pass" });
   });
@@ -110,18 +110,18 @@ describe("resend", () => {
         HttpResponse.json({ data: [] }, { headers: { "x-resend-daily-quota": "12" } }),
       ),
     );
-    const [plan, key] = await checkResend(1_600);
+    const [plan, key] = await checkResend(500);
     expect(plan.status).toBe("fail");
     expect(plan.reason).toContain("Free");
     expect(key.status).toBe("fail");
   });
 
-  test("a quota still sized for Resend Free fails the plan", async () => {
+  test("an hourly brake below a peak hour of report emails fails the plan", async () => {
     vi.stubEnv("RESEND_API_KEY", "re_production");
     server.use(http.get(RESEND_DOMAINS, restricted));
     const [plan] = await checkResend(100);
     expect(plan).toMatchObject({ status: "fail" });
-    expect(plan.reason).toContain("QUOTA_RESEND_EMAILS_DAILY");
+    expect(plan.reason).toContain("QUOTA_RESEND_EMAILS_HOURLY_FLOOR en 100");
   });
 
   test("an inactive key is no answer about its permission", async () => {
@@ -447,7 +447,12 @@ describe("runLaunchCheck", () => {
       http.get(HEALTH, healthy),
       http.get(REPO, () => HttpResponse.json({ private: false, owner: { type: "User" } })),
     );
-    const results = await runLaunchCheck({ crons: [], tracing: false, resendDailyQuota: 100 });
+    const results = await runLaunchCheck({
+      crons: [],
+      tracing: false,
+      resendHourlyFloor: undefined,
+      spendCaps: undefined,
+    });
     expect(results.map((r) => r.id)).toEqual([...LAUNCH_CHECK_IDS]);
     const byId = Object.fromEntries(results.map((r) => [r.id, r]));
     expect(byId["neon-production"]).toMatchObject({
@@ -460,6 +465,10 @@ describe("runLaunchCheck", () => {
       status: "unknown",
       reason: "falta VERCEL_BILLING_READ_TOKEN",
     });
+    expect(byId["spend-caps"]).toMatchObject({
+      status: "unknown",
+      reason: "solo lo verifica el despliegue",
+    });
   });
 
   test("a gate lists the checks of its flag that did not pass", () => {
@@ -471,13 +480,14 @@ describe("runLaunchCheck", () => {
     expect(gateBlockers(results, "accounts")).toEqual([]);
     expect(gateBlockers(results, "free-report-live").map((r) => r.id)).toEqual(["traces"]);
     expect(LAUNCH_GATES.accounts).toEqual(["vercel-billing", "neon-production", "resend-plan"]);
+    expect(LAUNCH_GATES["free-report-live"]).not.toContain("spend-caps");
     const unknown = results.map((r) => ({ ...r, status: "unknown" as const }));
     expect(gateBlockers(unknown, "accounts")).toHaveLength(3);
   });
 });
 
 describe("repositoryInputs", () => {
-  test("reads the crons, the instrumentation and the quota of a repository", async () => {
+  test("reads the crons, the instrumentation and the email brake of a repository", async () => {
     const { mkdtempSync, mkdirSync, writeFileSync } = await import("node:fs");
     const { join } = await import("node:path");
     const { tmpdir } = await import("node:os");
@@ -489,16 +499,18 @@ describe("repositoryInputs", () => {
     expect(repositoryInputs(root, {})).toEqual({
       crons,
       tracing: false,
-      resendDailyQuota: undefined,
+      resendHourlyFloor: undefined,
+      spendCaps: undefined,
     });
     writeFileSync(
       join(root, "apps/web/src/instrumentation.ts"),
       'import { registerOTel } from "@vercel/otel";\nregisterOTel({ serviceName: "web" });\n',
     );
-    expect(repositoryInputs(root, { QUOTA_RESEND_EMAILS_DAILY: "1600" })).toEqual({
+    expect(repositoryInputs(root, { QUOTA_RESEND_EMAILS_HOURLY_FLOOR: "800" })).toEqual({
       crons,
       tracing: true,
-      resendDailyQuota: 1600,
+      resendHourlyFloor: 800,
+      spendCaps: undefined,
     });
   });
 });
@@ -541,12 +553,17 @@ describe("edges", () => {
       http.get(HEALTH, healthy),
       http.get(REPO, () => HttpResponse.json({ private: true, owner: { type: "Organization" } })),
     );
-    const results = await runLaunchCheck({ crons: [], tracing: true, resendDailyQuota: 1_600 });
+    const results = await runLaunchCheck({
+      crons: [],
+      tracing: true,
+      resendHourlyFloor: undefined,
+      spendCaps: undefined,
+    });
     const resend = results.filter((r) => r.id.startsWith("resend-"));
     expect(resend.map((r) => r.status)).toEqual(["unknown", "unknown"]);
   });
 
-  test("an unset quota is Resend Free's, and an error without a status is unknown", async () => {
+  test("an error without a status leaves both unknown, unless the brake already fails", async () => {
     vi.stubEnv("RESEND_API_KEY", "re_production");
     server.use(
       http.get(RESEND_DOMAINS, () =>
@@ -554,8 +571,13 @@ describe("edges", () => {
       ),
     );
     const [plan, key] = await checkResend(undefined);
-    expect(plan.reason).toContain("QUOTA_RESEND_EMAILS_DAILY en 100");
+    expect(plan).toMatchObject({
+      status: "unknown",
+      reason: expect.stringContaining("sin respuesta"),
+    });
     expect(key.status).toBe("unknown");
+    const [low] = await checkResend(0);
+    expect(low).toMatchObject({ status: "fail", reason: expect.stringContaining("en 0") });
   });
 
   test("a paused monitor, a slowed one and a malformed URL are told apart", async () => {

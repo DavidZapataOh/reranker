@@ -2,7 +2,12 @@ import { LAUNCH_CHECK_IDS } from "@reranker/telemetry/launch";
 import { beforeEach, expect, test, vi } from "vitest";
 
 const state = vi.hoisted(() => ({
-  deploymentInputs: vi.fn(() => ({ crons: [], tracing: true, resendDailyQuota: 1_600 })),
+  deploymentInputs: vi.fn(() => ({
+    crons: [],
+    tracing: true,
+    resendHourlyFloor: undefined,
+    spendCaps: undefined,
+  })),
   readGatedFlags: vi.fn(),
 }));
 vi.mock("../../lib/launch-state", () => state);
