@@ -1,0 +1,117 @@
+AR.14	Misiones	Misiones	3430657
+AR.09	Formosa	Formosa	3433896
+AR.07	Buenos Aires F.D.	Buenos Aires F.D.	3433955
+AR.08	Entre Rios	Entre Rios	3434137
+AR.06	Corrientes	Corrientes	3435214
+AR.01	Buenos Aires	Buenos Aires	3435907
+AR.24	Tucuman	Tucuman	3833578
+AR.23	Tierra del Fuego	Tierra del Fuego	3834450
+AR.22	Santiago del Estero	Santiago del Estero	3835868
+AR.21	Santa Fe	Santa Fe	3836276
+AR.20	Santa Cruz	Santa Cruz	3836350
+AR.19	San Luis	San Luis	3837029
+AR.18	San Juan	San Juan	3837152
+AR.17	Salta	Salta	3838231
+AR.16	Rio Negro	Rio Negro	3838830
+AR.15	Neuquen	Neuquen	3843122
+AR.13	Mendoza	Mendoza	3844419
+AR.12	La Rioja	La Rioja	3848949
+AR.11	La Pampa	La Pampa	3849574
+AR.10	Jujuy	Jujuy	3853404
+AR.05	Cordoba	Cordoba	3860255
+AR.04	Chubut	Chubut	3861244
+AR.03	Chaco	Chaco	3861887
+AR.02	Catamarca	Catamarca	3862286
+CL.01	Valparaiso	Valparaiso	3868621
+CL.15	Tarapacá	Tarapaca	3870116
+CL.12	Santiago Metropolitan	Santiago Metropolitan	3873544
+CL.11	Maule Region	Maule Region	3880306
+CL.14	Los Lagos Region	Los Lagos Region	3881974
+CL.08	O'Higgins Region	O'Higgins Region	3883281
+CL.07	Coquimbo Region	Coquimbo Region	3893623
+CL.06	Biobio	Biobio	3898380
+CL.05	Atacama	Atacama	3899191
+CL.04	Araucania	Araucania	3899463
+CL.03	Antofagasta	Antofagasta	3899537
+CL.02	Aysén	Aysen	3900333
+CL.10	Region of Magallanes	Region of Magallanes	4036650
+CL.16	Arica y Parinacota Region	Arica y Parinacota Region	6693562
+CL.17	Los Ríos Region	Los Rios Region	6693563
+CL.18	Ñuble	Nuble	11979367
+ES.31	Murcia	Murcia	2513413
+ES.CE	Ceuta	Ceuta	2519582
+ES.07	Balearic Islands	Balearic Islands	2521383
+ES.51	Andalusia	Andalusia	2593109
+ES.53	Canary Islands	Canary Islands	2593110
+ES.54	Castille-La Mancha	Castille-La Mancha	2593111
+ES.57	Extremadura	Extremadura	2593112
+ES.60	Valencia	Valencia	2593113
+ES.34	Asturias	Asturias	3114710
+ES.32	Navarre	Navarre	3115609
+ES.29	Madrid	Madrid	3117732
+ES.27	La Rioja	La Rioja	3336897
+ES.39	Cantabria	Cantabria	3336898
+ES.52	Aragon	Aragon	3336899
+ES.55	Castille and León	Castille and Leon	3336900
+ES.56	Catalonia	Catalonia	3336901
+ES.58	Galicia	Galicia	3336902
+ES.59	Basque Country	Basque Country	3336903
+ES.ML	Melilla	Melilla	6362988
+MX.31	Yucatán	Yucatan	3514211
+MX.30	Veracruz	Veracruz	3514780
+MX.29	Tlaxcala	Tlaxcala	3515359
+MX.28	Tamaulipas	Tamaulipas	3516391
+MX.27	Tabasco	Tabasco	3516458
+MX.23	Quintana Roo	Quintana Roo	3520887
+MX.22	Querétaro	Queretaro	3520914
+MX.21	Puebla	Puebla	3521082
+MX.20	Oaxaca	Oaxaca	3522509
+MX.19	Nuevo León	Nuevo Leon	3522542
+MX.17	Morelos	Morelos	3522961
+MX.15	México	Mexico	3523272
+MX.13	Hidalgo	Hidalgo	3527115
+MX.12	Guerrero	Guerrero	3527213
+MX.09	Mexico City	Mexico City	3527646
+MX.05	Chiapas	Chiapas	3531011
+MX.04	Campeche	Campeche	3531730
+MX.32	Zacatecas	Zacatecas	3979840
+MX.26	Sonora	Sonora	3982846
+MX.25	Sinaloa	Sinaloa	3983035
+MX.24	San Luis Potosí	San Luis Potosi	3985605
+MX.18	Nayarit	Nayarit	3995012
+MX.16	Michoacán	Michoacan	3995955
+MX.14	Jalisco	Jalisco	4004156
+MX.11	Guanajuato	Guanajuato	4005267
+MX.10	Durango	Durango	4011741
+MX.08	Colima	Colima	4013513
+MX.07	Coahuila	Coahuila	4013674
+MX.06	Chihuahua	Chihuahua	4014336
+MX.03	Baja California Sur	Baja California Sur	4017698
+MX.02	Baja California	Baja California	4017700
+MX.01	Aguascalientes	Aguascalientes	4019231
+PE.25	Ucayali	Ucayali	3691099
+PE.24	Tumbes	Tumbes	3691146
+PE.22	San Martín Department	San Martin Department	3692385
+PE.20	Piura	Piura	3693525
+PE.16	Loreto	Loreto	3695238
+PE.14	Lambayeque	Lambayeque	3695753
+PE.13	La Libertad	La Libertad	3695781
+PE.10	Huánuco Department	Huanuco Department	3696416
+PE.06	Cajamarca Department	Cajamarca Department	3699087
+PE.02	Ancash	Ancash	3699674
+PE.01	Amazonas	Amazonas	3699699
+PE.23	Tacna	Tacna	3928127
+PE.21	Puno	Puno	3931275
+PE.19	Pasco	Pasco	3932834
+PE.18	Moquegua Department	Moquegua Department	3934607
+PE.17	Madre de Dios	Madre de Dios	3935619
+PE.LMA	Lima Province	Lima Province	3936451
+PE.15	Lima region	Lima region	3936452
+PE.12	Junin	Junin	3937485
+PE.11	Ica	Ica	3938526
+PE.09	Huancavelica	Huancavelica	3939467
+PE.08	Cuzco Department	Cuzco Department	3941583
+PE.07	Callao	Callao	3946080
+PE.05	Ayacucho	Ayacucho	3947018
+PE.04	Arequipa	Arequipa	3947319
+PE.03	Apurímac Department	Apurimac Department	3947421
