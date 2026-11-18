@@ -179,9 +179,23 @@ async function bytesOf(
 
 test("a 200-observation plan stays within 100 KB of rows and index entries, evidence columns included", async () => {
   const plan = await insertPlan(200);
-  for (let slot = 0; slot < 200; slot++) {
-    await insertCapture({ slotIndex: slot, plan, integrated: true });
-  }
+  // The rows insertCapture writes, in one statement: a round trip per row outlasts the test
+  // timeout on a slow link to the database.
+  const ids = Array.from(
+    { length: 200 },
+    () => `cap_${randomBytes(13).toString("hex").toUpperCase()}`,
+  );
+  const firstLogIndex = logIndex + 1;
+  logIndex += ids.length;
+  await sys(
+    `insert into public_panel.captures (id, ${CAPTURE_COLUMNS})
+     select id, $2, n - 1, 1, 'is_0123456789abcdef', 'odontologia.blanqueamiento-dental', 'gemini',
+       'ui-vendor', 'dataforseo', 'live', 'succeeded', 20000, 200, 'gemini-3-flash', 48213, 1,
+       11834, 4000, 'USD', sha256(convert_to(id, 'UTF8')),
+       sha256(convert_to('normalized:' || id, 'UTF8')), $3 + n - 1
+     from unnest($1::text[]) with ordinality as u(id, n)`,
+    [ids, plan, firstLogIndex],
+  );
   const b = await bytesOf(plan);
   console.info(`captures+plans bytes per report: ${b.total} (evidence share ${b.evidence})`);
   console.info(JSON.stringify(b.parts));
