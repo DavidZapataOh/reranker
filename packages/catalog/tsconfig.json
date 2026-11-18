@@ -1,4 +1,6 @@
 {
   "extends": "@reranker/typescript-config/library.json",
-  "include": ["src", "test"]
+  // Tests import the build script, which runs under tsx with explicit .ts imports.
+  "compilerOptions": { "allowImportingTsExtensions": true },
+  "include": ["src", "test", "scripts"]
 }

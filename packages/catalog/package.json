@@ -18,6 +18,7 @@
     "@reranker/typescript-config": "workspace:*",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
+    "csv-parse": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }
