@@ -451,6 +451,9 @@ importers:
       '@reranker/env':
         specifier: workspace:*
         version: link:../../packages/env
+      '@reranker/evidence':
+        specifier: workspace:*
+        version: link:../../packages/evidence
       '@reranker/extraction':
         specifier: workspace:*
         version: link:../../packages/extraction
