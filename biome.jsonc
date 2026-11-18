@@ -43,7 +43,7 @@
     // An override's noRestrictedImports options replace those of earlier matching overrides
     // instead of merging, so every block that restricts other imports repeats the zod rule.
     {
-      "includes": ["**", "!packages/schema/**"],
+      "includes": ["**", "!packages/schema/**", "!packages/verify/**"],
       "linter": {
         "rules": {
           "style": {
@@ -72,6 +72,7 @@
         "packages/*/src/**",
         "!packages/testing/**",
         "!packages/schema/**",
+        "!packages/verify/**",
         "!**/*.test.ts",
         "!**/*.test.tsx"
       ],
@@ -102,8 +103,15 @@
         }
       }
     },
+    // packages/verify ships to third parties without internal dependencies, so it imports zod
+    // directly instead of the configured z of @reranker/schema.
     {
-      "includes": ["packages/schema/src/**", "!**/*.test.ts", "!**/*.test.tsx"],
+      "includes": [
+        "packages/schema/src/**",
+        "packages/verify/src/**",
+        "!**/*.test.ts",
+        "!**/*.test.tsx"
+      ],
       "linter": {
         "rules": {
           "style": {
@@ -127,7 +135,11 @@
       }
     },
     {
-      "includes": ["packages/schema/**/*.test.ts", "packages/schema/**/*.test.tsx"],
+      "includes": [
+        "packages/schema/**/*.test.ts",
+        "packages/schema/**/*.test.tsx",
+        "packages/verify/**/*.test.ts"
+      ],
       "linter": {
         "rules": {
           "style": {

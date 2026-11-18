@@ -1,0 +1,66 @@
+{
+  "_type": "https://in-toto.io/Statement/v1",
+  "subject": [
+    {
+      "name": "raw",
+      "digest": { "sha256": "9f2c4b1e7a3d5f60818293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8" }
+    },
+    {
+      "name": "request",
+      "digest": { "sha256": "0b1c2d3e4f5061728394a5b6c7d8e9f00112233445566778899aabbccddeeff0" }
+    },
+    {
+      "name": "normalized",
+      "digest": { "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" }
+    }
+  ],
+  "predicateType": "https://reranker.co/attestations/ai-answer-capture/v1",
+  "predicate": {
+    "capture_id": "cap_01JBX8Q2M4ZK7P6Y3V9W1T0S5R",
+    "plan": {
+      "digest": { "sha256": "5d41402abc4b2a76b9719d911017c5925d41402abc4b2a76b9719d911017c592" },
+      "slot": 1842,
+      "attempt": 1
+    },
+    "prompt": {
+      "set_version": "odontologia-co@2026.11.1",
+      "set_root": "2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae",
+      "intent_id": "odo-mde-desc-01",
+      "paraphrase_id": "p17",
+      "persona_id": "h03",
+      "lang": "es-CO",
+      "text": "¿Cuál es el mejor ortodoncista en Medellín que reciba Sura?"
+    },
+    "engine": {
+      "name": "chatgpt",
+      "surface": "consumer_ui",
+      "channel": "ui-vendor",
+      "vendor": "dataforseo",
+      "vendor_task_id": "11031902-1234-0066-0000-5f1c3a2b9e7d",
+      "endpoint": "https://api.dataforseo.com/v3/ai_optimization/chat_gpt/llm_scraper/live/advanced",
+      "model_reported": "gpt-4o",
+      "mode": "search",
+      "tool_version": null,
+      "fan_out_queries": ["ortodoncista medellín sura", "mejor ortodoncista medellín"]
+    },
+    "params": { "force_web_search": true, "temperature": null },
+    "geo": {
+      "declared": {
+        "country": "CO",
+        "region": "Antioquia",
+        "city": "Medellín",
+        "vendor_location_code": 2170
+      },
+      "egress": null
+    },
+    "session": { "state": "anonymous", "fresh": true },
+    "time": { "worker_utc": "2026-11-03T19:02:11.482Z", "roughtime": null, "not_before": null },
+    "provider_signature": null,
+    "tlsn": null,
+    "c2pa": null,
+    "worker": {
+      "id": "cap-use1-07",
+      "image_digest": "sha256:a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"
+    }
+  }
+}
