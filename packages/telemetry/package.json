@@ -18,7 +18,8 @@
     "runbooks:check": "tsx scripts/runbooks-check.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --project unit --coverage --passWithNoTests",
-    "test:integration": "vitest run --project integration --passWithNoTests"
+    "test:integration": "vitest run --project integration --passWithNoTests",
+    "test:contract": "vitest run --project contract"
   },
   "dependencies": {
     "@opentelemetry/api": "catalog:",

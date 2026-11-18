@@ -97,7 +97,12 @@
         "XAI_API_KEY_CI",
         "RESEND_API_KEY",
         "NEON_API_KEY",
-        "NEON_PROJECT_ID"
+        "NEON_PROJECT_ID",
+        "POSTHOG_READONLY_API_KEY",
+        "POSTHOG_FEATURE_FLAGS_KEY",
+        "POSTHOG_PROJECT_TOKEN",
+        "POSTHOG_QUERY_READ_KEY",
+        "GITHUB_BILLING_READ_TOKEN"
       ]
     },
     "dev": { "cache": false, "persistent": true }
