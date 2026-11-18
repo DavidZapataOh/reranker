@@ -12,7 +12,7 @@ export interface MergeInput {
   /** Names the engine itself listed (brandEntities, localBusinesses) that neither extractor found. */
   recallHints: string[];
   config: ExtractorConfig;
-  /** The caller wraps the paid call; any throw falls back to the primary list. */
+  /** The caller wraps the paid call; whatever it throws rejects `mergeExtractions`. */
   judge: (disputed: DisputeSet) => Promise<MentionsOutput>;
 }
 
@@ -92,19 +92,22 @@ function finalize(mentions: ExtractedMention[]): ExtractedMention[] {
   return assignOrdinals([...byStart.values()].sort((x, y) => x.startOffset - y.startOffset));
 }
 
-function single(primary: ExtractedMention[], disputedCount: number): MergeResult {
-  return {
-    mentions: finalize(primary),
-    agreement: "single",
-    judgeUsed: false,
-    disputedCount,
-    judgeOutput: null,
-  };
-}
-
-/** Merges both extractors; the judge runs at most once per answer and only on disagreement. */
+/**
+ * Merges both extractors; the judge runs at most once per answer and only on disagreement.
+ * Errors thrown by `judge` propagate unchanged: falling back to one extractor would lower
+ * precision exactly where they disagree. The caller owns retries (its workflow step retries
+ * `RateLimitedError` and `ProviderUnavailableError`) and releasing any reserved spend.
+ */
 export async function mergeExtractions(input: MergeInput): Promise<MergeResult> {
-  if (input.secondary === null) return single(input.primary, 0);
+  if (input.secondary === null) {
+    return {
+      mentions: finalize(input.primary),
+      agreement: "single",
+      judgeUsed: false,
+      disputedCount: 0,
+      judgeOutput: null,
+    };
+  }
 
   const disputed = pairMentions(input.primary, input.secondary, input.config.merge.nameJw);
   disputed.recallHints = input.recallHints;
@@ -123,13 +126,7 @@ export async function mergeExtractions(input: MergeInput): Promise<MergeResult> 
     };
   }
 
-  let judgeOutput: MentionsOutput;
-  try {
-    judgeOutput = await input.judge(disputed);
-  } catch {
-    // A judge outage, refusal or timeout must not lose the answer: the primary list stands.
-    return single(input.primary, disputedCount);
-  }
+  const judgeOutput = await input.judge(disputed);
   // Judge quotes are checked against the answer like any extractor's.
   const { mentions: verdict } = toExtractedMentions(input.markdown, judgeOutput);
   return {

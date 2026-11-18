@@ -206,17 +206,17 @@ describe("mergeExtractions", () => {
     expect(r.mentions.map((m) => m.name)).toEqual(["Clínica A", "Clínica D"]);
   });
 
-  test("judge failure keeps the primary list and reports single", async () => {
-    const r = await mergeExtractions({
+  test("a throwing judge rejects with the same error", async () => {
+    const failure = new ProviderUnavailableError("openai", 1000);
+    const merged = mergeExtractions({
       ...base,
       primary: [A_rec],
       secondary: [B_rec],
       judge: async () => {
-        throw new ProviderUnavailableError("openai", 1000);
+        throw failure;
       },
     });
-    expect(r).toMatchObject({ agreement: "single", judgeUsed: false, judgeOutput: null });
-    expect(r.mentions).toEqual([A_rec]);
+    await expect(merged).rejects.toBe(failure);
   });
 
   test("judge quotes are validated like any extractor output", async () => {
