@@ -10,6 +10,8 @@
     "./email-domain": "./src/email-domain.ts",
     "./email-locale": "./src/email-locale.ts",
     "./guard-otp-send": "./src/guard-otp-send.ts",
+    "./house": "./src/house.ts",
+    "./organizations": "./src/organizations.ts",
     "./permissions": "./src/permissions.ts",
     "./purge": "./src/purge.ts",
     "./send-auth-email": "./src/send-auth-email.ts",
@@ -23,7 +25,8 @@
     "test:contract": "vitest run --project contract --passWithNoTests",
     "auth:generate": "auth generate --config src/server.ts --output ../db/src/schema/auth.ts --yes && node scripts/annotate-self-references.ts ../db/src/schema/auth.ts",
     "auth:check": "auth check schema --config src/server.ts",
-    "test:integration": "vitest run --project 'integration*' --passWithNoTests"
+    "test:integration": "vitest run --project 'integration*' --passWithNoTests",
+    "provision:house": "tsx scripts/provision-house.ts"
   },
   "dependencies": {
     "@better-auth/drizzle-adapter": "catalog:",
@@ -51,6 +54,7 @@
     "drizzle-orm": "catalog:",
     "msw": "catalog:",
     "pg": "catalog:",
+    "tsx": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }

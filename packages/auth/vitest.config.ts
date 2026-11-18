@@ -10,6 +10,7 @@ const TEST_EMAIL_QUOTA = {
 };
 
 const PURGE_TEST = "src/purge.int.test.ts";
+const EXPIRY_TEST = "src/email-otp.int.test.ts";
 
 const integration = {
   pool: "forks" as const,
@@ -45,17 +46,25 @@ export default defineConfig({
           ...integration,
           name: "integration",
           include: ["src/**/*.int.test.ts"],
-          exclude: [PURGE_TEST],
+          exclude: [PURGE_TEST, EXPIRY_TEST],
         },
       },
       // Better Auth deletes every expired verification and idle rate-limit row on the requests it
-      // serves, so the purge test runs alone, after the files that sign in.
+      // serves, so the files that expire rows on purpose run alone, after the files that sign in.
+      {
+        test: {
+          ...integration,
+          name: "integration-expiry",
+          include: [EXPIRY_TEST],
+          sequence: { groupOrder: 1 },
+        },
+      },
       {
         test: {
           ...integration,
           name: "integration-purge",
           include: [PURGE_TEST],
-          sequence: { groupOrder: 1 },
+          sequence: { groupOrder: 2 },
         },
       },
       {

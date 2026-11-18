@@ -12,7 +12,7 @@ import { COOKIE_PREFIX } from "./cookies";
 import { resolveEmailLocale } from "./email-locale";
 import type { RequestedFrom } from "./emails/sign-in-code";
 import { authEnv } from "./env";
-import { MEMBER_FIELDS, ORG_FIELDS } from "./organizations";
+import { createPrincipalTeam, hierarchyHooks, MEMBER_FIELDS, ORG_FIELDS } from "./organizations";
 import { authOrigins } from "./origins";
 import { ac, roles } from "./permissions";
 import { AUTH_RATE_RULES, EMAIL_SENDING_PATHS } from "./rate-limits";
@@ -191,8 +191,9 @@ export const auth = betterAuth({
         enabled: true,
         maximumTeams: 1,
         allowRemovingAllTeams: false,
-        defaultTeam: { enabled: true },
+        defaultTeam: { enabled: true, customCreateDefaultTeam: createPrincipalTeam },
       },
+      organizationHooks: hierarchyHooks,
       schema: {
         organization: { additionalFields: ORG_FIELDS },
         member: { additionalFields: MEMBER_FIELDS },
