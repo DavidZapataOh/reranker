@@ -30,6 +30,8 @@ vi.mock("workflow", async (importOriginal) => ({
 }));
 const authPurge = vi.hoisted(() => ({ purgeExpiredAuthRecords: vi.fn() }));
 vi.mock("@reranker/auth/purge", () => authPurge);
+const extraction = vi.hoisted(() => ({ refreshStalePlaceIds: vi.fn() }));
+vi.mock("@reranker/extraction", () => extraction);
 
 const { InvalidInputError, RateLimitedError } = await import("@reranker/jobs");
 const { DAILY_STEPS } = await import("./daily");
@@ -129,6 +131,31 @@ test("a failed auth purge is reported under its own name and retried", async () 
     "purgeExpiredAuthRecords",
     error,
   );
+});
+
+test("the place id refresh runs after the scale triggers on 200 ids and logs its counts", async () => {
+  const names = DAILY_STEPS.map((s) => s.name);
+  expect(names.indexOf("refreshPlaceIds")).toBe(names.indexOf("checkScaleTriggers") + 1);
+  extraction.refreshStalePlaceIds.mockResolvedValue({ checked: 200, moved: 3, gone: 1 });
+  await step("refreshPlaceIds")("2026-11-17");
+  expect(extraction.refreshStalePlaceIds).toHaveBeenCalledExactlyOnceWith(200, {
+    purpose: "quality-canary",
+    refType: "places-refresh",
+    refId: "2026-11-17",
+  });
+  expect(telemetry.log.info).toHaveBeenCalledWith("jobs.daily.place_ids_refreshed", {
+    checked: 200,
+    moved: 3,
+    gone: 1,
+  });
+});
+
+test("a Places outage during the refresh is reported and retried", async () => {
+  const error = new RateLimitedError(1000, "Places");
+  extraction.refreshStalePlaceIds.mockRejectedValue(error);
+  const thrown = await step("refreshPlaceIds")("2026-11-17").catch((e: unknown) => e);
+  expect(RetryableError.is(thrown)).toBe(true);
+  expect(jobs.reportStepError).toHaveBeenCalledExactlyOnceWith("daily", "refreshPlaceIds", error);
 });
 
 test("reconciliation closes the day that just ended and logs each mismatch as an error", async () => {
