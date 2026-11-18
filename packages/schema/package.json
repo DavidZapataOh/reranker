@@ -7,7 +7,7 @@
   ],
   "exports": {
     ".": "./src/index.ts",
-    "./measurement": "./src/measurement/types.ts"
+    "./measurement": "./src/measurement/index.ts"
   },
   "scripts": {
     "build:json-schema": "tsx scripts/export-json-schema.ts",
