@@ -7,7 +7,7 @@ import {
 import { cost } from "@reranker/schema";
 import { afterEach, expect, test, vi } from "vitest";
 import { costOfUsage, estimateOf } from "../../src/prices";
-import { callerFor, paidCall } from "../../src/providers/call";
+import { callerFor, paidCall, settledCostOf } from "../../src/providers/call";
 import { callGemini } from "../../src/providers/gemini";
 import { callOpenAI } from "../../src/providers/openai";
 import {
@@ -203,4 +203,31 @@ test("a full spend cap frees the slot without calling the provider", async () =>
   await expect(paidCall(caller, call, { timeoutMs: 6000, retries: 1, spend })).rejects.toBe(capped);
   expect(caller).not.toHaveBeenCalled();
   expect(jobs.release).toHaveBeenCalledTimes(1);
+});
+
+test("a thrown error carries everything settled before it", async () => {
+  vi.useFakeTimers();
+  const incomplete = new ProviderIncompleteError("openai", "max_output_tokens");
+  const outage = new ProviderUnavailableError("openai", 1000);
+  const rejected = new ProviderRejectedError("openai", "invalid_request");
+  const caller = callerOf(async () => ok());
+
+  caller.mockRejectedValueOnce(incomplete);
+  await expect(paidCall(caller, call, { timeoutMs: 6000, retries: 0, spend })).rejects.toBe(
+    incomplete,
+  );
+  expect(settledCostOf(incomplete)).toEqual(RESERVED);
+
+  caller.mockRejectedValueOnce(outage).mockRejectedValueOnce(rejected);
+  const p = paidCall(caller, call, { timeoutMs: 6000, retries: 1, spend });
+  const settled = expect(p).rejects.toBe(rejected);
+  await vi.advanceTimersByTimeAsync(1000);
+  await settled;
+  expect(settledCostOf(rejected)).toEqual(RESERVED);
+
+  const capped = new Error("cap");
+  jobs.reserveSpend.mockRejectedValueOnce(capped);
+  await expect(paidCall(caller, call, { timeoutMs: 6000, retries: 0, spend })).rejects.toBe(capped);
+  expect(settledCostOf(capped)).toEqual(cost(0, "USD"));
+  expect(settledCostOf(new Error("elsewhere"))).toEqual(cost(0, "USD"));
 });

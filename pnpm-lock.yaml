@@ -915,12 +915,21 @@ importers:
       '@google/genai':
         specifier: 'catalog:'
         version: 3.3.0(supports-color@10.2.2)
+      '@reranker/capture':
+        specifier: workspace:*
+        version: link:../capture
       '@reranker/db':
         specifier: workspace:*
         version: link:../db
       '@reranker/env':
         specifier: workspace:*
         version: link:../env
+      '@reranker/evidence':
+        specifier: workspace:*
+        version: link:../evidence
+      '@reranker/flags':
+        specifier: workspace:*
+        version: link:../flags
       '@reranker/jobs':
         specifier: workspace:*
         version: link:../jobs

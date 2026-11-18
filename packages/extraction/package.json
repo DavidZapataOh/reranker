@@ -5,7 +5,8 @@
   "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
-    "./env": "./src/env.ts"
+    "./env": "./src/env.ts",
+    "./extract": "./src/extract.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -17,8 +18,11 @@
   "dependencies": {
     "@anthropic-ai/sdk": "catalog:",
     "@google/genai": "catalog:",
+    "@reranker/capture": "workspace:*",
     "@reranker/db": "workspace:*",
     "@reranker/env": "workspace:*",
+    "@reranker/evidence": "workspace:*",
+    "@reranker/flags": "workspace:*",
     "@reranker/jobs": "workspace:*",
     "@reranker/schema": "workspace:*",
     "canonicalize": "catalog:",
