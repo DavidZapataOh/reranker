@@ -44,6 +44,7 @@ catalog:
   "@noble/curves": 2.4.0
   server-only: 0.0.1
   csv-parse: 7.0.3
+  fflate: 0.8.3
   next-intl: 4.14.9
   use-intl: 4.14.9
   "@formatjs/intl-localematcher": 0.10.1

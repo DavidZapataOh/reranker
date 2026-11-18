@@ -7,13 +7,17 @@ export type GeoPlace = {
   level: "city" | "region";
   name: string;
   normalized: string;
+  /** Other names the place goes by: matched like its name, never displayed. */
+  aliases?: string[];
   regionKey: string | null;
   locationCode: number;
   center: [lat: number, lng: number] | null;
   divipola?: { municipalityCode: string; departmentCode: string };
 };
 
-export type RegionRow = [locationCode: number, name: string];
+export type RegionRow =
+  | [locationCode: number, name: string]
+  | [locationCode: number, name: string, aliases: string[]];
 
 /**
  * A null location code marks a municipality the engines cannot target on its own: it is
@@ -21,6 +25,7 @@ export type RegionRow = [locationCode: number, name: string];
  */
 export type CityRow =
   | [locationCode: number, name: string, region: number | null]
+  | [locationCode: number, name: string, region: number | null, aliases: string[]]
   | [
       locationCode: number | null,
       name: string,
@@ -41,11 +46,14 @@ export type GeoFile = {
   cities: CityRow[];
 };
 
-/** Display names of every city, for lookups that must not load the full country file. */
+/** A city's display name, alone or followed by its aliases. */
+export type CityName = string | [name: string, ...aliases: string[]];
+
+/** Names of every city, for lookups that must not load the full country file. */
 export type GeoNamesFile = {
   version: typeof GEO_DATA_VERSION;
   country: string;
-  names: string[];
+  names: CityName[];
 };
 
 const DEPARTMENT_CODE_LENGTH = 2;
@@ -55,11 +63,12 @@ export function expandGeoFile(file: Pick<GeoFile, "country" | "regions" | "citie
   const regionKey = (code: number) => `${prefix}-r${code}`;
 
   const regions = file.regions.map(
-    ([locationCode, name]): GeoPlace => ({
+    ([locationCode, name, aliases]): GeoPlace => ({
       key: regionKey(locationCode),
       level: "region",
       name,
       normalized: normalizePlaceName(name),
+      ...(aliases ? { aliases } : {}),
       regionKey: null,
       locationCode,
       center: null,
@@ -67,7 +76,9 @@ export function expandGeoFile(file: Pick<GeoFile, "country" | "regions" | "citie
   );
 
   const cities = file.cities.map((row): GeoPlace => {
-    const [code, name, regionIndex, center = null, municipalityCode] = row;
+    const [code, name, regionIndex] = row;
+    const [center, municipalityCode] = row.length === 5 ? [row[3], row[4]] : [null, undefined];
+    const aliases = row.length === 4 ? row[3] : undefined;
     const region = regionIndex === null ? undefined : file.regions[regionIndex];
     if (regionIndex !== null && region === undefined) {
       throw new RangeError(`${name} points at missing region ${regionIndex}`);
@@ -79,6 +90,7 @@ export function expandGeoFile(file: Pick<GeoFile, "country" | "regions" | "citie
       level: code === null ? "region" : "city",
       name,
       normalized: normalizePlaceName(name),
+      ...(aliases ? { aliases } : {}),
       regionKey: region ? regionKey(region[0]) : null,
       locationCode: ownCode,
       center,

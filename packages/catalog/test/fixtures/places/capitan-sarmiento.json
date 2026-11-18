@@ -1,0 +1,51 @@
+{
+  "formattedAddress": "Mitre 500, B2752 Capitán Sarmiento, Provincia de Buenos Aires, Argentina",
+  "addressComponents": [
+    {
+      "longText": "500",
+      "shortText": "500",
+      "types": ["street_number"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Mitre",
+      "shortText": "Mitre",
+      "types": ["route"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Capitán Sarmiento",
+      "shortText": "Capitán Sarmiento",
+      "types": ["locality", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Partido de Capitán Sarmiento",
+      "shortText": "Partido de Capitán Sarmiento",
+      "types": ["administrative_area_level_2", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Provincia de Buenos Aires",
+      "shortText": "Provincia de Buenos Aires",
+      "types": ["administrative_area_level_1", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Argentina",
+      "shortText": "AR",
+      "types": ["country", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "B2752",
+      "shortText": "B2752",
+      "types": ["postal_code"],
+      "languageCode": "es"
+    }
+  ],
+  "location": {
+    "latitude": -34.1726,
+    "longitude": -59.7909
+  }
+}

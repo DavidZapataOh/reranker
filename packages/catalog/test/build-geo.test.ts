@@ -18,7 +18,7 @@ const rows = (name: string): LocationRow[] => parse(fixture(name), CSV_OPTIONS);
 const csvMx = rows("locations-mx-jalisco.csv");
 const csvCo = rows("locations-co.csv");
 const divipola: DivipolaRecord[] = JSON.parse(fixture("divipola-extract.json"));
-const co = expandGeoFile(buildCountry(csvCo, divipola));
+const co = expandGeoFile(buildCountry(csvCo, { divipola }));
 
 const findByName = (places: readonly GeoPlace[], normalized: string) =>
   places.find((p) => p.level === "city" && p.normalized === normalized);
@@ -88,8 +88,8 @@ describe("buildCountry with DIVIPOLA", () => {
     }));
 
   test("the output is deterministic", () =>
-    expect(buildCountry([...csvCo].reverse(), [...divipola].reverse())).toEqual(
-      buildCountry(csvCo, divipola),
+    expect(buildCountry([...csvCo].reverse(), { divipola: [...divipola].reverse() })).toEqual(
+      buildCountry(csvCo, { divipola }),
     ));
 });
 

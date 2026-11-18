@@ -27,10 +27,19 @@ export function loadCountryGeo(country: CountryCode): CountryGeo {
   if (cached) return cached;
   const file = readJson<GeoFile>(`${country.toLowerCase()}-${GEO_DATA_VERSION}.json`);
   const places = expandGeoFile(file);
+  const byName = new Map<string, GeoPlace[]>();
+  for (const place of places) {
+    const names = new Set([place.normalized, ...(place.aliases ?? []).map(normalizePlaceName)]);
+    for (const name of names) {
+      const named = byName.get(name);
+      if (named) named.push(place);
+      else byName.set(name, [place]);
+    }
+  }
   const geo: CountryGeo = {
     geoDataHash: file.geoDataHash,
     byKey: new Map(places.map((place) => [place.key, place])),
-    byName: Map.groupBy(places, (place) => place.normalized),
+    byName,
   };
   countries.set(country, geo);
   return geo;
@@ -41,11 +50,17 @@ export function loadCityNames(country: CountryCode): ReadonlyMap<string, string>
   const cached = cityNames.get(country);
   if (cached) return cached;
   const { names } = readJson<GeoNamesFile>(`${country.toLowerCase()}-names.json`);
+  const entries = names.map((entry): [string, ...string[]] =>
+    typeof entry === "string" ? [entry] : entry,
+  );
   const index = new Map<string, string>();
-  for (const name of names) {
-    const normalized = normalizePlaceName(name);
+  const add = (written: string, name: string) => {
+    const normalized = normalizePlaceName(written);
     if (!index.has(normalized)) index.set(normalized, name);
-  }
+  };
+  // Display names first, so an alias never hides another city's own name.
+  for (const [name] of entries) add(name, name);
+  for (const [name, ...aliases] of entries) for (const alias of aliases) add(alias, name);
   cityNames.set(country, index);
   return index;
 }

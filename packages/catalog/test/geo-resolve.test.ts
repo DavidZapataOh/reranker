@@ -150,6 +150,44 @@ describe("resolveGeo", () => {
   });
 });
 
+describe("resolveGeo in Spanish outside Colombia", () => {
+  test.each([
+    ["ES", "madrid", "es-c1005493", "Madrid", "Comunidad de Madrid"],
+    ["MX", "cdmx", "mx-c1010043", "Ciudad de México", "Ciudad de México"],
+    ["MX", "guadalajara", "mx-c9047210", "Guadalajara", "Jalisco"],
+    ["AR", "buenos-aires-caba", "ar-c1000073", "Buenos Aires", "Ciudad Autónoma de Buenos Aires"],
+    ["CL", "santiago", "cl-c1003325", "Santiago", "Región Metropolitana de Santiago de Chile"],
+    ["PE", "lima", "pe-c9073192", "Lima", "Provincia de Lima"],
+  ])("%s %s resolves to its city, named in Spanish", (country, name, key, city, region) =>
+    expect(resolveFixture(country, name)).toMatchObject({
+      key,
+      level: "city",
+      name: city,
+      regionName: region,
+      dataforseo: { level: "city", label: city },
+    }),
+  );
+
+  test.each([
+    ["ES", "chinchon", "es-r20282", 20282, "Comunidad de Madrid"],
+    ["AR", "capitan-sarmiento", "ar-r20009", 20009, "Provincia de Buenos Aires"],
+  ])(
+    "%s %s, a town without its own code, falls back to its region by its Spanish name",
+    (country, name, key, locationCode, region) =>
+      expect(resolveFixture(country, name)).toMatchObject({
+        key,
+        level: "region",
+        name: region,
+        dataforseo: { locationCode, level: "region", label: region },
+      }),
+  );
+
+  test("the province and the autonomous city of Buenos Aires stay apart", () => {
+    expect(getGeo("ar-r20010").name).toBe("Ciudad Autónoma de Buenos Aires");
+    expect(getGeo("ar-r20009").name).toBe("Provincia de Buenos Aires");
+  });
+});
+
 describe("geoForEngine", () => {
   test.each([
     ["gemini", "local", {}, { level: "city", label: "Pereira" }],
@@ -231,6 +269,8 @@ describe("cityDisplayName", () => {
     ["CO", "Bogota", "Bogotá"],
     ["CO", "BOGOTÁ, D.C.", "Bogotá"],
     ["MX", "guadalajara", "Guadalajara"],
+    ["MX", "Mexico City", "Ciudad de México"],
+    ["ES", "A Coruna", "A Coruña"],
     ["CO", "Gotham", null],
     ["CU", "La Habana", null],
   ])("cityDisplayName(%s, %s) → %s", (country, name, expected) =>
