@@ -66,6 +66,13 @@ jobs:
           api_key: ${{ secrets.NEON_NONPROD_API_KEY }}
   full:
     runs-on: ubuntu-24.04
+    # Browsers and their system libraries ship in the image, so no step waits on an apt mirror.
+    # The tag must match @playwright/test (apps/web/test/playwright-image.test.ts).
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
+      # The runner's uid owns the mounted workspace and HOME; --ipc=host keeps Chromium from
+      # exhausting the container's 64 MB /dev/shm.
+      options: --user 1001 --ipc=host --init
     timeout-minutes: 30
     permissions: { contents: read }
     steps:
@@ -73,15 +80,6 @@ jobs:
         with: { persist-credentials: false }
       - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
         with: { cache: true, require-lockfile: true }
-      - id: playwright
-        name: Resolve Playwright version
-        run: echo "version=$(pnpm --filter web exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
-      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}-chromium webkit
-      - name: Install browsers
-        run: pnpm --filter web exec playwright install --with-deps chromium webkit
       - id: branch
         uses: ./.github/actions/neon-ci-branch
         with:
