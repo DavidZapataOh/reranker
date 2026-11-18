@@ -23,6 +23,7 @@ export {
 } from "./places/client";
 export { PLATFORMS, type PlatformEntry, platformFor, tagPlatforms } from "./platforms";
 export { costOfUsage, estimateOf, PLACES_SKU_PRICES } from "./prices";
+export { callAnthropic } from "./providers/anthropic";
 export { callGemini } from "./providers/gemini";
 export { callOpenAI } from "./providers/openai";
 export {
