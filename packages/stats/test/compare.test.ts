@@ -1,44 +1,11 @@
-import fc from "fast-check";
 import { describe, expect, test } from "vitest";
-import { type CaptureFrame, type EntityColumn, pairedCompare, rankWithTies } from "../src/compare";
+import { type CaptureFrame, pairedCompare, rankWithTies } from "../src/compare";
 import { seedFor } from "../src/methodology";
+import { col, frameOf } from "./fixtures";
 
 const seed = seedFor("report", "methodology");
-
-// Hundreds of seeded 4,000-draw runs: CPU-bound by design, so they get more than the default 5 s.
-const PROPERTY_TIMEOUT_MS = 30_000;
-
-const hexSeed = fc.stringMatching(/^[0-9a-f]{64}$/).filter((s) => !/^0{32}/.test(s));
-
-// V0 shape: 5 engines × 5 intents, 8 captures each, equal weights.
-function frameOf(strata: number, perStratum: number): CaptureFrame {
-  return {
-    captures: Array.from({ length: strata * perStratum }, (_, i) => ({
-      stratum: `s${Math.floor(i / perStratum)}`,
-      weight: 1 / strata,
-    })),
-  };
-}
-
 const frame40 = frameOf(5, 8);
 const frame200 = frameOf(25, 8);
-
-// Recommendations spread over the frame (every `step`-th capture) so they fall in many strata.
-function col(
-  key: string,
-  recs: number,
-  { size = 40, ordinal = 1, offset = 0 }: { size?: number; ordinal?: number; offset?: number } = {},
-): EntityColumn {
-  const y = new Uint8Array(size);
-  const ord = new Int16Array(size);
-  const step = Math.max(1, Math.floor(size / Math.max(recs, 1)));
-  for (let r = 0; r < recs; r++) {
-    const i = (offset + r * step) % size;
-    y[i] = 1;
-    ord[i] = ordinal;
-  }
-  return { key, y, ordinal: ord };
-}
 
 // Each key starts at its own offset, so different entities are not recommended in nested captures.
 const ent = (key: string, recs: number) => {
@@ -127,36 +94,6 @@ describe("pairedCompare", () => {
     const b = col("b", 4, { offset: 2, ordinal: 3 });
     expect(pairedCompare(a, b, frame40, seed)).toEqual(pairedCompare(a, b, frame40, seed));
   });
-
-  test(
-    "property: p is a probability, complements on swap and matches the verdict",
-    () =>
-      fc.assert(
-        fc.property(
-          fc.integer({ min: 0, max: 40 }),
-          fc.integer({ min: 0, max: 40 }),
-          fc.integer({ min: 0, max: 39 }),
-          fc.integer({ min: 0, max: 12 }),
-          hexSeed,
-          (ra, rb, offset, ordinal, s) => {
-            const a = col("a", ra, { ordinal });
-            const b = col("b", rb, { offset, ordinal: 12 - ordinal });
-            const ab = pairedCompare(a, b, frame40, s);
-            const ba = pairedCompare(b, a, frame40, s);
-            const expected =
-              ab.pAAhead >= 0.8 ? "ahead" : ab.pAAhead <= 0.2 ? "behind" : ("tied" as const);
-            return (
-              ab.pAAhead >= 0 &&
-              ab.pAAhead <= 1 &&
-              Math.abs(ab.pAAhead + ba.pAAhead - 1) <= 1e-9 &&
-              ab.verdict === expected
-            );
-          },
-        ),
-        { numRuns: 60 },
-      ),
-    PROPERTY_TIMEOUT_MS,
-  );
 });
 
 test("a frame is frozen once compared, so its cached draws can never go stale", () => {
