@@ -32,6 +32,12 @@ export { type Decision, decide, type ScoredCandidate, scoreCandidates } from "./
 export { PLATFORMS, type PlatformEntry, platformFor, tagPlatforms } from "./platforms";
 export { costOfUsage, estimateOf, PLACES_SKU_PRICES } from "./prices";
 export { callAnthropic } from "./providers/anthropic";
+export {
+  callerFor,
+  type PaidCallOptions,
+  type PaidResult,
+  paidCall,
+} from "./providers/call";
 export { callGemini } from "./providers/gemini";
 export { callOpenAI } from "./providers/openai";
 export {
