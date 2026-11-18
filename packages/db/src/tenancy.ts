@@ -1,7 +1,7 @@
 import { AppError, isAppError, Uuid } from "@reranker/schema";
-import { type SQL, sql } from "drizzle-orm";
-import { drizzle, type NodePgTransaction } from "drizzle-orm/node-postgres";
-import type { PgTransactionConfig } from "drizzle-orm/pg-core";
+import { is, QueryPromise, type SQL, sql } from "drizzle-orm";
+import { NodePgSession, NodePgTransaction } from "drizzle-orm/node-postgres";
+import { PgDialect, PgSelectBase } from "drizzle-orm/pg-core";
 import type { Pool, PoolClient } from "pg";
 import { appPool, systemPool } from "./client";
 import { toDbError } from "./errors";
@@ -64,25 +64,36 @@ function timeouts(opts: TxOptions): SQL {
   return sql`${statement}, set_config('lock_timeout', ${lock}, true)`;
 }
 
-function txConfig(opts: TxOptions): PgTransactionConfig {
-  return {
-    ...(opts.isolation && { isolationLevel: opts.isolation }),
-    ...(opts.readOnly && { accessMode: "read only" as const }),
-  };
+const ISOLATION_LEVELS: ReadonlySet<string> = new Set<NonNullable<TxOptions["isolation"]>>([
+  "read committed",
+  "repeatable read",
+  "serializable",
+]);
+
+// The options can arrive through a cast, and this text goes to the server as is.
+function beginStatement(opts: TxOptions): string {
+  const { isolation, readOnly } = opts;
+  if (isolation !== undefined && !ISOLATION_LEVELS.has(isolation))
+    throw invalid("invalid isolation");
+  return `begin${isolation ? ` isolation level ${isolation}` : ""}${readOnly ? " read only" : ""}`;
 }
 
 type Ctx = { pool: "app" | "system"; reason?: SystemReason };
+
+const dialect = new PgDialect({ casing: "snake_case" });
 
 function closedHandle(): AppError {
   return invalid("transaction handle used after its callback settled");
 }
 
 // Once the callback settles the connection belongs to the pool again, so a handle or a lazy
-// query kept by the caller must never reach it.
-function guard(client: PoolClient, isOpen: () => boolean): PoolClient {
+// query kept by the caller must never reach it. `sent` runs right after a statement is written.
+function guard(client: PoolClient, isOpen: () => boolean, sent: () => void): PoolClient {
   const query = (...args: Parameters<PoolClient["query"]>) => {
     if (!isOpen()) return Promise.reject(closedHandle());
-    return (client.query as (...a: unknown[]) => unknown)(...args);
+    const result = (client.query as (...a: unknown[]) => unknown)(...args);
+    sent();
+    return result;
   };
   return { query } as unknown as PoolClient;
 }
@@ -96,10 +107,14 @@ function seal<T extends object>(tx: T, isOpen: () => boolean): T {
   });
 }
 
-// The checkout is owned here rather than by drizzle's pool path, which skips release() when
-// BEGIN itself fails and leaks the slot. set_config(..., true) is transaction-local: COMMIT or
-// ROLLBACK clears it before the pooler hands the server connection to anyone else. Both settings
-// go in one round trip.
+type Outcome = { error: unknown } | undefined;
+
+// The pools pipeline, so BEGIN and the settings are written without waiting and travel with the
+// callback's first statement; a callback that returns a single unawaited query also has COMMIT
+// written right behind it, and the whole transaction is one round trip. The server still runs
+// them in order inside one transaction, so the settings are in place before any statement.
+// set_config(..., true) is transaction-local: COMMIT or ROLLBACK clears it before the pooler
+// hands the server connection to anyone else, and a client is only returned to the pool idle.
 async function run<T, K extends "tenant" | "system">(
   pool: Pool,
   ctx: Ctx,
@@ -107,6 +122,8 @@ async function run<T, K extends "tenant" | "system">(
   fn: (tx: Tx & { readonly __kind: K }) => Promise<T>,
   opts: TxOptions,
 ): Promise<T> {
+  const begin = beginStatement(opts);
+  const settings = dialect.sqlToQuery(setup);
   let client: PoolClient;
   try {
     client = await pool.connect();
@@ -115,32 +132,69 @@ async function run<T, K extends "tenant" | "system">(
   }
   let open = true;
   const isOpen = () => open;
-  const db = drizzle({ client: guard(client, isOpen), casing: "snake_case" });
-  let failed: { error: unknown } | undefined;
-  // A truthy value makes pg-pool destroy the client instead of reusing it.
-  let discard: unknown;
+  let afterStatement: (() => void) | undefined;
+  const send = (text: string, values?: unknown[]): Promise<Outcome> =>
+    client.query(text, values).then(
+      () => undefined,
+      (error: unknown) => ({ error }),
+    );
+  const session = new NodePgSession(
+    guard(client, isOpen, () => {
+      const next = afterStatement;
+      afterStatement = undefined;
+      next?.();
+    }),
+    dialect,
+    undefined,
+  );
+  const tx = seal(
+    new NodePgTransaction(dialect, session, undefined) as Tx & { readonly __kind: K },
+    isOpen,
+  );
+
+  const began = send(begin);
+  const configured = send(settings.sql, settings.params);
+  let ended: Promise<Outcome> | undefined;
+  let result: { value: T } | { error: unknown };
   try {
-    return await db.transaction(async (tx) => {
-      try {
-        await tx.execute(setup);
-        return await fn(seal(tx as Tx & { readonly __kind: K }, isOpen));
-      } catch (error) {
-        failed = { error };
-        throw error;
-      }
-    }, txConfig(opts));
+    const pending = fn(tx);
+    // A query returned unawaited has not run yet and is exactly one statement, so nothing of the
+    // callback can follow COMMIT. Selects get QueryPromise as a mixin, outside their class chain.
+    if (is(pending, QueryPromise) || is(pending, PgSelectBase)) {
+      afterStatement = () => {
+        ended = send("commit");
+        open = false;
+      };
+    }
+    result = { value: await pending };
   } catch (error) {
-    // Drizzle rethrows the callback's own error after a clean ROLLBACK; anything else means
-    // BEGIN, COMMIT or ROLLBACK failed and the session state is unknown.
-    const rolledBack = failed !== undefined && error === failed.error;
-    const translated = toDbError(failed ? failed.error : error, ctx);
-    const broken = isAppError(translated) && translated.code === "service_unavailable";
-    if (!rolledBack || broken) discard = error instanceof Error ? error : true;
-    throw translated;
+    result = { error };
+  }
+  ended ??= send("error" in result ? "rollback" : "commit");
+
+  const [beginFailed, setupFailed, endFailed] = await Promise.all([began, configured, ended]);
+  // A failed BEGIN, COMMIT or ROLLBACK leaves the session state unknown.
+  let discard: unknown = beginFailed ?? endFailed;
+  try {
+    const failure =
+      beginFailed ?? setupFailed ?? ("error" in result ? result : undefined) ?? endFailed;
+    if (failure) {
+      const translated = toDbError(failure.error, ctx);
+      if (isAppError(translated) && translated.code === "service_unavailable") discard = failure;
+      throw translated;
+    }
+    return (result as { value: T }).value;
   } finally {
     open = false;
-    client.release(discard as Error | boolean | undefined);
+    if (client.getTransactionStatus() !== "I") discard = true;
+    // A truthy value makes pg-pool destroy the client instead of reusing it.
+    client.release(discard === undefined ? undefined : toReleaseError(discard));
   }
+}
+
+function toReleaseError(discard: unknown): Error | true {
+  const error = (discard as { error?: unknown }).error;
+  return error instanceof Error ? error : true;
 }
 
 export async function withTenants<T>(

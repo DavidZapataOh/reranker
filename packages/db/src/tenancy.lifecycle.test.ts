@@ -8,12 +8,18 @@ import { asTenantId, type TenantTx, withSystem, withTenant } from "./tenancy";
 
 type Script = (text: string) => Promise<unknown> | undefined;
 
-// Stands in for pg.Pool: hands out clients whose statements follow a per-test script and
-// records how each checkout ends.
+// Stands in for a pipelining pg.Pool: hands out clients whose statements follow a per-test
+// script, answer on a later macrotask like a network would, and records how each checkout ends.
+// A round trip is a run of statements written before any of them is answered.
 class FakePool {
   checkedOut = 0;
   released: unknown[] = [];
   sent: string[] = [];
+  roundTrips = 0;
+  // What the server would report after the last statement; a test can pin it.
+  status: "I" | "T" | "E" = "I";
+  stuckInTransaction = false;
+  private inFlight = 0;
   private readonly script: Script;
   constructor(script: Script) {
     this.script = script;
@@ -25,8 +31,15 @@ class FakePool {
       query: (query: string | { text: string }) => {
         const text = typeof query === "string" ? query : query.text;
         this.sent.push(text);
-        return this.script(text) ?? Promise.resolve({ rows: [], rowCount: 0, fields: [] });
+        if (this.inFlight++ === 0) this.roundTrips++;
+        if (text.startsWith("begin")) this.status = "T";
+        if (/^(commit|rollback)/.test(text) && !this.stuckInTransaction) this.status = "I";
+        return new Promise((resolve) => setTimeout(resolve, 0)).then(() => {
+          this.inFlight--;
+          return this.script(text) ?? { rows: [], rowCount: 0, fields: [] };
+        });
       },
+      getTransactionStatus: () => this.status,
       release: (error?: unknown) => {
         if (done) throw new Error("released twice");
         done = true;
@@ -82,9 +95,9 @@ test("when ROLLBACK fails the original error wins and the client is discarded", 
     if (text.startsWith("rollback")) return reject(new Error("Connection terminated unexpectedly"));
     return undefined;
   });
-  const error = await withTenant(A, (tx) => tx.execute(sql`insert into app.t values (1)`)).catch(
-    (e: unknown) => e,
-  );
+  const error = await withTenant(A, async (tx) => {
+    await tx.execute(sql`insert into app.t values (1)`);
+  }).catch((e: unknown) => e);
   expect(error).toMatchObject({ code: "internal", cause: { code: "42501" } });
   expect(events).toEqual([{ name: "db_rls_violation", pool: "app", pgCode: "42501" }]);
   expect(pool.checkedOut).toBe(0);
@@ -154,4 +167,79 @@ test("the setup statement is a single round trip on the checked-out client", asy
   expect(pool.sent[1]).toMatch(
     /^select set_config\('app\.tenant_ids', \$1, true\), set_config\('statement_timeout', \$2, true\)$/,
   );
+});
+
+const kinds = (pool: FakePool) => pool.sent.map((t) => t.split(/\s/)[0]);
+
+test("a callback returning one unawaited query is a single round trip, COMMIT included", async () => {
+  const pool = use(() => undefined);
+  await withSystem("jobs.lease", (tx) => tx.execute(sql`select 1`));
+  expect(kinds(pool)).toEqual(["begin", "select", "select", "commit"]);
+  expect(pool.roundTrips).toBe(1);
+  expect(pool.released).toEqual([undefined]);
+});
+
+test("BEGIN and the settings travel with the first statement of an async callback", async () => {
+  const pool = use(() => undefined);
+  await withTenant(A, async (tx) => {
+    await tx.execute(sql`select 1`);
+    await tx.execute(sql`select 2`);
+  });
+  expect(kinds(pool)).toEqual(["begin", "select", "select", "select", "commit"]);
+  // [begin, settings, select 1], [select 2], [commit]
+  expect(pool.roundTrips).toBe(3);
+});
+
+test("a failing lone statement is rolled back by its COMMIT and keeps the client", async () => {
+  const pool = use((text) => (text.startsWith("insert") ? reject(pgError("23505")) : undefined));
+  await expect(
+    withTenant(A, (tx) => tx.execute(sql`insert into app.t values (1)`)),
+  ).rejects.toMatchObject({ code: "conflict", cause: { code: "23505" } });
+  expect(kinds(pool)).toEqual(["begin", "select", "insert", "commit"]);
+  expect(pool.released).toEqual([undefined]);
+});
+
+test("a failed setup statement wins over the error it causes downstream", async () => {
+  const failure = pgError("22023");
+  const pool = use((text) => {
+    if (text.startsWith("select set_config")) return reject(failure);
+    if (text.startsWith("select 1")) return reject(pgError("25P02"));
+    return undefined;
+  });
+  const error = await withTenant(A, (tx) => tx.execute(sql`select 1`)).catch((e: unknown) => e);
+  expect((error as Error).cause).toBe(failure);
+  expect(pool.released).toEqual([undefined]);
+});
+
+test("a client the server still reports inside a transaction is never reused", async () => {
+  const pool = use(() => undefined);
+  pool.stuckInTransaction = true;
+  await withTenant(A, (tx) => tx.execute(sql`select 1`));
+  expect(pool.released[0]).toBe(true);
+});
+
+test("the handle closes as soon as a lone statement's COMMIT is written", async () => {
+  const pool = use(() => undefined);
+  let stored: TenantTx | undefined;
+  await withTenant(A, (tx) => {
+    stored = tx;
+    return tx.execute(sql`select 1`);
+  });
+  expect(() => stored?.execute(sql`select 2`)).toThrow(
+    expect.objectContaining({ code: "internal" }),
+  );
+  expect(kinds(pool)).toEqual(["begin", "select", "select", "commit"]);
+});
+
+test("isolation and access mode reach BEGIN, and an unknown isolation never does", async () => {
+  const pool = use(() => undefined);
+  await withSystem("jobs.network", async () => 1, { isolation: "serializable", readOnly: true });
+  expect(pool.sent[0]).toBe("begin isolation level serializable read only");
+  await expect(
+    withSystem("jobs.network", async () => 1, {
+      isolation: "read uncommitted; drop table x" as "serializable",
+    }),
+  ).rejects.toMatchObject({ code: "internal" });
+  expect(pool.checkedOut).toBe(0);
+  expect(pool.sent).toHaveLength(3);
 });
