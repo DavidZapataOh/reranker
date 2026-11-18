@@ -1,8 +1,18 @@
 import fc from "fast-check";
 import type { CaptureFrame, EntityColumn } from "../src/compare";
+import { type Rng, rngFromSeed } from "../src/rng";
 import type { EntityObservation } from "../src/score";
 
 export const hexSeed = fc.stringMatching(/^[0-9a-f]{64}$/).filter((s) => !/^0{32}/.test(s));
+
+export const SEED = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
+
+export function draw(n: number, sample: (rng: Rng) => number, seed = SEED): Float64Array {
+  const rng = rngFromSeed(seed);
+  const xs = new Float64Array(n);
+  for (let i = 0; i < n; i++) xs[i] = sample(rng);
+  return xs;
+}
 
 export function obs(over: Partial<EntityObservation> = {}): EntityObservation {
   return {
