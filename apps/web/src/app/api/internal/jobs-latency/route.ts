@@ -4,6 +4,7 @@ import {
   MAX_PROBE_CALLS,
   type ProbeOptions,
   ProviderUnavailableError,
+  probeNetworkLookup,
   probeSpendPath,
   RateLimitedError,
   SpendCapExceededError,
@@ -20,7 +21,9 @@ const empty = (status: number, retryAfterMs?: number) =>
     headers: retryAfterMs === undefined ? {} : { "Retry-After": seconds(retryAfterMs) },
   });
 
-async function readBody(req: Request): Promise<{ n?: unknown; holdMs?: unknown } | undefined> {
+type Body = { probe?: unknown; n?: unknown; holdMs?: unknown };
+
+async function readBody(req: Request): Promise<Body | undefined> {
   const text = await req.text();
   if (text === "") return {};
   try {
@@ -31,9 +34,23 @@ async function readBody(req: Request): Promise<{ n?: unknown; holdMs?: unknown }
   }
 }
 
+function run(body: Body) {
+  const n = (body.n ?? MAX_PROBE_CALLS) as number;
+  if (body.probe === "network") {
+    if (body.holdMs !== undefined) throw new InvalidInputError("A network probe holds nothing");
+    return probeNetworkLookup(n);
+  }
+  if (body.probe !== undefined && body.probe !== "spend") {
+    throw new InvalidInputError("Probe is spend or network");
+  }
+  const opts: ProbeOptions = body.holdMs === undefined ? {} : { holdMs: body.holdMs as number };
+  return probeSpendPath(n, opts);
+}
+
 /**
- * Measures the admission path of a provider call from where the functions run (iad1, next to
- * Neon us-east-1): `{ n?, holdMs? }` in, p50 and p95 per primitive out, nothing spent. It exists
+ * Measures primitives from where the functions run (iad1, next to Neon us-east-1): `{ probe?,
+ * n?, holdMs? }` in, p50 and p95 per primitive out, nothing spent. The default `spend` probe times
+ * the admission path of a provider call; `network` times the datacenter and VPN lookup. It exists
  * only on previews, answers only to the cron bearer, and with `n: 1` and a hold it is the request
  * the capacity load test sends, so a denial answers the way a step would be told to retry.
  */
@@ -43,9 +60,8 @@ export async function POST(req: Request): Promise<Response> {
   const body = await readBody(req);
   if (body === undefined) return empty(400);
 
-  const opts: ProbeOptions = body.holdMs === undefined ? {} : { holdMs: body.holdMs as number };
   try {
-    const report = await probeSpendPath((body.n ?? MAX_PROBE_CALLS) as number, opts);
+    const report = await run(body);
     return Response.json(report, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     if (error instanceof InvalidInputError) return empty(400);

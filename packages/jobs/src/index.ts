@@ -36,7 +36,9 @@ export { assertOpaqueKey } from "./keys";
 export {
   type LatencyStats,
   MAX_PROBE_CALLS,
+  type NetworkLookupLatency,
   type ProbeOptions,
+  probeNetworkLookup,
   probeSpendPath,
   type SpendPathLatency,
 } from "./latency";

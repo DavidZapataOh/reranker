@@ -1,8 +1,11 @@
 import { randomUUID } from "node:crypto";
+import { withSystem } from "@reranker/db";
 import { cost } from "@reranker/schema";
+import { sql } from "drizzle-orm";
 import { loadJobsConfig } from "./config";
 import { InvalidInputError } from "./errors";
 import { acquireProviderSlot } from "./leases";
+import { classifyNetwork } from "./network";
 import { reserveSpend, settleSpend } from "./spend";
 
 /** Percentiles in milliseconds over `n` calls. */
@@ -23,6 +26,12 @@ export interface ProbeOptions {
   holdMs?: number;
 }
 
+export interface NetworkLookupLatency {
+  classifyNetwork: LatencyStats;
+  /** Prefixes loaded when the probe ran; a timing over an empty table means nothing. */
+  ranges: number;
+}
+
 export const MAX_PROBE_CALLS = 1000;
 const MAX_HOLD_MS = 2000;
 // A lease pool and rate bucket of their own, so probing never takes a slot from real calls.
@@ -40,6 +49,12 @@ export function summarize(samples: readonly number[]): LatencyStats {
     p95: round(percentile(sorted, 95)),
     n: sorted.length,
   };
+}
+
+function assertCalls(n: number): void {
+  if (!Number.isInteger(n) || n < 1 || n > MAX_PROBE_CALLS) {
+    throw new InvalidInputError(`A probe makes 1 to ${MAX_PROBE_CALLS} calls`);
+  }
 }
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -62,9 +77,7 @@ export async function probeSpendPath(
   opts: ProbeOptions = {},
 ): Promise<SpendPathLatency> {
   const holdMs = opts.holdMs ?? 0;
-  if (!Number.isInteger(n) || n < 1 || n > MAX_PROBE_CALLS) {
-    throw new InvalidInputError(`A probe makes 1 to ${MAX_PROBE_CALLS} calls`);
-  }
+  assertCalls(n);
   if (!Number.isInteger(holdMs) || holdMs < 0 || holdMs > MAX_HOLD_MS) {
     throw new InvalidInputError(`A probe holds its slot 0 to ${MAX_HOLD_MS} ms`);
   }
@@ -95,4 +108,24 @@ export async function probeSpendPath(
     reserveSpend: summarize(samples.reserve),
     settleSpend: summarize(samples.settle),
   };
+}
+
+// A datacenter, a residential, a VPN and an IPv6 address, so hits and misses both count.
+const PROBE_ADDRESSES = ["52.95.110.1", "181.62.29.10", "185.159.157.9", "2600:1f00::1"];
+
+/** Times `n` network classifications in a row, transaction included, as a request runs one. */
+export async function probeNetworkLookup(n: number): Promise<NetworkLookupLatency> {
+  assertCalls(n);
+  const samples: number[] = [];
+  for (let i = 0; i < n; i++) {
+    const address = PROBE_ADDRESSES[i % PROBE_ADDRESSES.length] as string;
+    await timed(samples, () => classifyNetwork(address));
+  }
+  const { rows } = await withSystem(
+    "jobs.network",
+    (tx) =>
+      tx.execute<{ ranges: number }>(sql`select count(*)::int as ranges from ops.network_ranges`),
+    { readOnly: true },
+  );
+  return { classifyNetwork: summarize(samples), ranges: rows[0]?.ranges ?? 0 };
 }

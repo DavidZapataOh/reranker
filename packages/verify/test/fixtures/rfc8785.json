@@ -1,0 +1,56 @@
+{
+  "source": "Expected bytes produced by canonicalize@5.1.0, the RFC 8785 reference implementation for JavaScript (github.com/erdtman/canonicalize)",
+  "vectors": [
+    {
+      "envelope": {
+        "payloadType": "application/vnd.in-toto+json",
+        "payload": "eyJhIjoxfQ==",
+        "signatures": [
+          {
+            "keyid": "rr-capture-2026-1-ed25519",
+            "sig": "c2lnbmF0dXJl"
+          }
+        ]
+      },
+      "jcs": "{\"payload\":\"eyJhIjoxfQ==\",\"payloadType\":\"application/vnd.in-toto+json\",\"signatures\":[{\"keyid\":\"rr-capture-2026-1-ed25519\",\"sig\":\"c2lnbmF0dXJl\"}]}"
+    },
+    {
+      "envelope": {
+        "signatures": [
+          {
+            "sig": "QUJD",
+            "keyid": "b"
+          },
+          {
+            "keyid": "a",
+            "sig": "REVG"
+          }
+        ],
+        "payload": "",
+        "payloadType": "application/vnd.in-toto+json"
+      },
+      "jcs": "{\"payload\":\"\",\"payloadType\":\"application/vnd.in-toto+json\",\"signatures\":[{\"keyid\":\"b\",\"sig\":\"QUJD\"},{\"keyid\":\"a\",\"sig\":\"REVG\"}]}"
+    },
+    {
+      "envelope": {
+        "payload": "cGF5",
+        "signatures": [],
+        "payloadType": "application/vnd.in-toto+json"
+      },
+      "jcs": "{\"payload\":\"cGF5\",\"payloadType\":\"application/vnd.in-toto+json\",\"signatures\":[]}"
+    },
+    {
+      "envelope": {
+        "payloadType": "application/vnd.in-toto+json",
+        "payload": "cGF5",
+        "signatures": [
+          {
+            "keyid": "k\\\"q",
+            "sig": "c2ln"
+          }
+        ]
+      },
+      "jcs": "{\"payload\":\"cGF5\",\"payloadType\":\"application/vnd.in-toto+json\",\"signatures\":[{\"keyid\":\"k\\\\\\\"q\",\"sig\":\"c2ln\"}]}"
+    }
+  ]
+}
