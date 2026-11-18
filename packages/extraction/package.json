@@ -5,7 +5,8 @@
   "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
-    "./env": "./src/env.ts"
+    "./env": "./src/env.ts",
+    "./extract": "./src/extract.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -27,7 +28,6 @@
     "canonicalize": "catalog:",
     "drizzle-orm": "catalog:",
     "openai": "catalog:",
-    "server-only": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

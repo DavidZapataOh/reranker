@@ -1,5 +1,3 @@
-import "server-only";
-
 export {
   assertDistinctProviders,
   configHashOf,
@@ -7,7 +5,6 @@ export {
   type ExtractorConfig,
 } from "./config";
 export { extractionEnv } from "./env";
-export { extractResponse, type RawCapture } from "./extract";
 export {
   type DisputeSet,
   type MergeInput,

@@ -1,5 +1,5 @@
 import { z } from "@reranker/schema";
-import { describe, expect, test, vi } from "vitest";
+import { describe, expect, test } from "vitest";
 import {
   ClassifierSchema,
   JudgeSchema,
@@ -8,9 +8,6 @@ import {
   ProviderRefusalError,
   ResolveJudgeSchema,
 } from "../src/index";
-
-// The package is marked server-only; tests run outside a React Server Components bundler.
-vi.mock("server-only", () => ({}));
 
 type JsonSchema = {
   type?: string | string[];

@@ -1,3 +1,5 @@
+// Exported as `@reranker/extraction/extract`, not from the package root: it reaches the
+// server-only evidence store, which the root's other consumers must not load.
 import type { EngineAnswer } from "@reranker/capture";
 import { getArtifact, putArtifact } from "@reranker/evidence";
 import { isEnabled } from "@reranker/flags";
