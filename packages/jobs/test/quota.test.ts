@@ -27,6 +27,73 @@ describe("consumeQuota", () => {
     expect(execute).toHaveBeenCalledTimes(1);
   });
 
+  test("sends issued together share one transaction and each gets its own decision", async () => {
+    execute.mockResolvedValue({ rows: [{ ok: true }, { ok: false }, { ok: true }] });
+    const results = await Promise.allSettled([
+      consumeQuota("resend.emails", { priority: "critical" }),
+      consumeQuota("resend.emails", { priority: "low" }),
+      consumeQuota("resend.emails", { priority: "normal", amount: 3 }),
+    ]);
+    expect(withSystem).toHaveBeenCalledTimes(1);
+    expect(results.map((r) => r.status)).toEqual(["fulfilled", "rejected", "fulfilled"]);
+    expect((results[1] as PromiseRejectedResult).reason).toMatchObject({
+      name: "QuotaExceeded",
+      priority: "low",
+    });
+  });
+
+  test("a send that arrives while a batch runs is decided in the next one", async () => {
+    let commit = () => {};
+    execute.mockImplementationOnce(
+      () => new Promise((resolve) => (commit = () => resolve({ rows: [{ ok: true }] }))),
+    );
+    execute.mockResolvedValueOnce({ rows: [{ ok: true }, { ok: true }] });
+    const first = consumeQuota("resend.emails", { priority: "high" });
+    await vi.waitFor(() => expect(execute).toHaveBeenCalledTimes(1));
+    const later = [
+      consumeQuota("resend.emails", { priority: "high" }),
+      consumeQuota("resend.emails", { priority: "high" }),
+    ];
+    commit();
+    await Promise.all([first, ...later]);
+    expect(withSystem).toHaveBeenCalledTimes(2);
+  });
+
+  test("a batch past 1,000 sends is split", async () => {
+    execute.mockImplementation(async () => ({
+      rows: Array.from({ length: 1_000 }, () => ({ ok: true })),
+    }));
+    await Promise.all(
+      Array.from({ length: 1_001 }, () => consumeQuota("resend.emails", { priority: "high" })),
+    );
+    expect(withSystem).toHaveBeenCalledTimes(2);
+  });
+
+  test("sends in different hours never share a batch", async () => {
+    execute.mockResolvedValue({ rows: [{ ok: true }] });
+    vi.setSystemTime(new Date("2026-11-16T17:59:59.999Z"));
+    const before = consumeQuota("resend.emails", { priority: "high" });
+    vi.setSystemTime(new Date("2026-11-16T18:00:00Z"));
+    await Promise.all([before, consumeQuota("resend.emails", { priority: "high" })]);
+    expect(withSystem).toHaveBeenCalledTimes(2);
+  });
+
+  test("a failed batch rejects each of its sends with the failure, and the next send starts over", async () => {
+    const failure = new Error("connection reset");
+    execute.mockRejectedValueOnce(failure);
+    const results = await Promise.allSettled([
+      consumeQuota("resend.emails", { priority: "high" }),
+      consumeQuota("resend.emails", { priority: "high" }),
+    ]);
+    expect(results).toEqual([
+      { status: "rejected", reason: failure },
+      { status: "rejected", reason: failure },
+    ]);
+    execute.mockResolvedValueOnce({ rows: [{ ok: true }] });
+    await consumeQuota("resend.emails", { priority: "high" });
+    expect(withSystem).toHaveBeenCalledTimes(2);
+  });
+
   test("a refusal is QuotaExceeded until the next hour starts", async () => {
     execute.mockResolvedValue({ rows: [{ ok: false }] });
     const error = await consumeQuota("resend.emails", { priority: "low" }).catch((e) => e);
