@@ -5,6 +5,13 @@ export {
   type ExtractorConfig,
 } from "./config";
 export { extractionEnv } from "./env";
+export {
+  type DisputeSet,
+  type MergeInput,
+  type MergeResult,
+  mergeExtractions,
+  pairMentions,
+} from "./merge";
 export { jaroWinkler, nameHmac, normalizeName, tokenContainment } from "./normalize";
 export {
   FIELD_MASKS,
