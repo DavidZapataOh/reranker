@@ -188,20 +188,38 @@ test("23505 inside withSystem → AppError conflict", async () => {
   expect(causeCode(error)).toBe("23505");
 });
 
-test("one round trip to fix the tenant: queries are [begin, set_config, select, commit]", async () => {
-  const [row] = await withSystem("test.seed", (tx) =>
-    tx.insert(probe()).values({ tenantId: A, label: "trace" }).returning(),
-  );
+// Records each statement the driver writes and counts round trips: runs of statements written
+// before any of them was answered.
+function traceWire() {
   const seen: string[] = [];
+  const wire = { seen, roundTrips: 0 };
+  let inFlight = 0;
+  const done = () => {
+    inFlight--;
+  };
   const original = pg.Client.prototype.query;
   vi.spyOn(pg.Client.prototype, "query").mockImplementation(function (
     this: pg.Client,
     ...args: unknown[]
   ) {
     const [query] = args;
-    seen.push(typeof query === "string" ? query : (query as { text: string }).text);
-    return (original as (...a: unknown[]) => unknown).apply(this, args);
+    const text = typeof query === "string" ? query : (query as { text: string }).text;
+    seen.push(
+      text.startsWith("select set_config") ? "select set_config" : (text.split(" ", 1)[0] ?? text),
+    );
+    if (inFlight++ === 0) wire.roundTrips++;
+    const answer = (original as (...a: unknown[]) => Promise<unknown>).apply(this, args);
+    answer.then(done, done);
+    return answer;
   } as typeof original);
+  return wire;
+}
+
+test("a lone query is one round trip: [begin, set_config, select, commit] written together", async () => {
+  const [row] = await withSystem("test.seed", (tx) =>
+    tx.insert(probe()).values({ tenantId: A, label: "trace" }).returning(),
+  );
+  const wire = traceWire();
   const found = await withTenant(A, (tx) =>
     tx
       .select()
@@ -210,12 +228,36 @@ test("one round trip to fix the tenant: queries are [begin, set_config, select, 
   );
   vi.restoreAllMocks();
   expect(found).toHaveLength(1);
-  const kind = (text: string) =>
-    text.startsWith("select set_config") ? "select set_config" : text.split(/\s/)[0];
-  expect(seen.map(kind)).toEqual(["begin", "select set_config", "select", "commit"]);
+  expect(wire.seen).toEqual(["begin", "select set_config", "select", "commit"]);
+  expect(wire.roundTrips).toBe(1);
   await withSystem("test.cleanup", (tx) =>
     tx.delete(probe()).where(inArray(probe().label, ["trace"])),
   );
+});
+
+test("an async callback pays one round trip per awaited statement plus COMMIT", async () => {
+  const wire = traceWire();
+  const counts = await withTenant(A, async (tx) => {
+    const mine = await tx.select().from(probe());
+    const again = await tx.select().from(probe());
+    return [mine.length, again.length];
+  });
+  vi.restoreAllMocks();
+  expect(counts).toEqual([2, 2]);
+  expect(wire.seen).toEqual(["begin", "select set_config", "select", "select", "commit"]);
+  expect(wire.roundTrips).toBe(3);
+});
+
+test("settings written in the same flight are in place before the statement runs", async () => {
+  const { rows } = await withTenant(
+    A,
+    (tx) =>
+      tx.execute<{ tenants: string; timeout: string; level: string }>(
+        sql`select current_setting('app.tenant_ids') as tenants, current_setting('statement_timeout') as timeout, current_setting('transaction_isolation') as level`,
+      ),
+    { statementTimeoutMs: 1234, isolation: "repeatable read" },
+  );
+  expect(rows[0]).toEqual({ tenants: `{${A}}`, timeout: "1234ms", level: "repeatable read" });
 });
 
 test("withSystem tx carries app.system_reason and statement_timeout locally", async () => {
