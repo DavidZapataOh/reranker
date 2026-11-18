@@ -7,4 +7,8 @@ export {
   wilson,
   wilsonDivergence,
 } from "./interval";
+export { engineStatus, levelDisplay, levelOf, sufficiency } from "./levels";
 export { type Methodology, MethodologySchema, methodology, seedFor } from "./methodology";
+export { estimateRate, type StratumCounts } from "./rate";
+export { beta, exponential, gamma, type Rng, rngFromSeed, standardNormal } from "./rng";
+export { type EntityObservation, estimateScore, pointScore } from "./score";

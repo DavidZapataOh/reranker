@@ -1,7 +1,7 @@
 import { check } from "k6";
 import http from "k6/http";
 import { Trend } from "k6/metrics";
-import { baseUrl, params } from "../lib/target.js";
+import { baseUrl, functionRegion, params } from "../lib/target.js";
 import { latency } from "../lib/thresholds.js";
 
 // One probe of 1,000 datacenter and VPN lookups in a row, timed inside the deployment (iad1, next
@@ -66,10 +66,13 @@ export default function () {
   const report = res.status === 200 ? res.json() : undefined;
   if (report) {
     lookupMs.add(report.classifyNetwork.p95);
-    console.log(`classifyNetwork ${JSON.stringify(report)}`);
+    console.log(
+      `classifyNetwork ${JSON.stringify(report)} x-vercel-id=${res.headers["X-Vercel-Id"]}`,
+    );
   }
   check(res, {
     measured: () => report !== undefined,
+    "ran in iad1": (r) => functionRegion(r) === "iad1",
     "lists loaded": () => report !== undefined && report.ranges >= MIN_RANGES,
   });
 }

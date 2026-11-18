@@ -18,3 +18,12 @@ export function params() {
     redirects: 0,
   };
 }
+
+/**
+ * The region of the function that answered: `x-vercel-id` reads `<edge>::<function>::<id>`, with
+ * one edge hop per proxy in front.
+ */
+export function functionRegion(res) {
+  const hops = String(res.headers["X-Vercel-Id"] ?? "").split("::");
+  return hops.length >= 3 ? hops[hops.length - 2] : undefined;
+}

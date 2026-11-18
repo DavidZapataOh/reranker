@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@reranker/typescript-config": "workspace:*",
+    "@stdlib/stats-base-dists-beta-cdf": "catalog:",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "fast-check": "catalog:",

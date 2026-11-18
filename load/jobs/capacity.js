@@ -1,7 +1,7 @@
 import { check } from "k6";
 import http from "k6/http";
 import { Trend } from "k6/metrics";
-import { baseUrl, params } from "../lib/target.js";
+import { baseUrl, functionRegion, params } from "../lib/target.js";
 import { latency } from "../lib/thresholds.js";
 
 // Ten free reports at once, each admitting 120 provider calls: 1,200 DataForSEO slots taken,
@@ -99,5 +99,9 @@ export default function () {
     });
     return;
   }
-  check(res, { admitted: (r) => r.status === 200 });
+  check(res, {
+    admitted: (r) => r.status === 200,
+    // The budgets hold only next to the database.
+    "ran in iad1": (r) => functionRegion(r) === "iad1",
+  });
 }
