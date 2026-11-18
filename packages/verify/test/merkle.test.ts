@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { bytesToHex, hexToBytes } from "@noble/hashes/utils.js";
 import { expect, test } from "vitest";
 import { leafHash, merkleRoot, nodeHash } from "../src/format/index";
+import { referenceRoots, sampleEntries } from "./rfc6962-reference";
 
 const vectors: {
   leafInputs: string[];
@@ -38,19 +39,17 @@ test("does not mutate its input", () => {
   expect(leaves.map(bytesToHex)).toEqual(before);
 });
 
-// The recursive MTH definition of RFC 6962 §2.1, as written there.
-function referenceRoot(entries: readonly Uint8Array[]): Uint8Array {
-  if (entries.length === 1) return leafHash(entries[0] as Uint8Array);
-  let k = 1;
-  while (k * 2 < entries.length) k *= 2;
-  return nodeHash(referenceRoot(entries.slice(0, k)), referenceRoot(entries.slice(k)));
-}
+test("the reference definition reproduces transparency-dev/merkle", () =>
+  expect(referenceRoots(inputs)).toEqual(
+    vectors.roots.filter(({ n }) => n > 0).map((r) => r.root),
+  ));
 
-test("matches the recursive RFC 6962 definition for trees up to 130 leaves", () => {
-  const entries = Array.from({ length: 130 }, (_, i) => Uint8Array.of(i, i >> 8, 7));
+// Every size up to 130 runs in merkle.heavy.test.ts, outside coverage; this sample keeps a
+// fast check of every stack of up to five pending subtrees in the covered run.
+test("matches the recursive RFC 6962 definition for trees up to 33 leaves", () => {
+  const entries = sampleEntries(33);
+  const expected = referenceRoots(entries);
   for (let n = 1; n <= entries.length; n++) {
-    expect(bytesToHex(merkleRoot(entries.slice(0, n)))).toBe(
-      bytesToHex(referenceRoot(entries.slice(0, n))),
-    );
+    expect(bytesToHex(merkleRoot(entries.slice(0, n))), `${n} leaves`).toBe(expected[n - 1]);
   }
 });
