@@ -1,6 +1,6 @@
 import { cost } from "@reranker/schema";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { FatalError } from "workflow";
+import { FatalError, RetryableError } from "workflow";
 
 // Without the workflow compiler a step is a plain function, so each one runs here directly
 // against doubles of the package functions it wraps.
@@ -24,10 +24,14 @@ const telemetry = vi.hoisted(() => ({
   sendOpsAlert: vi.fn(async () => {}),
 }));
 vi.mock("@reranker/telemetry", () => telemetry);
+vi.mock("workflow", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("workflow")>()),
+  getStepMetadata: () => ({ attempt: 3 }),
+}));
 const authPurge = vi.hoisted(() => ({ purgeExpiredAuthRecords: vi.fn() }));
 vi.mock("@reranker/auth/purge", () => authPurge);
 
-const { InvalidInputError } = await import("@reranker/jobs");
+const { InvalidInputError, RateLimitedError } = await import("@reranker/jobs");
 const { DAILY_STEPS } = await import("./daily");
 
 const step = (name: string) => {
@@ -64,6 +68,19 @@ test("a stale network list alerts even when the refresh then fails, and the step
     "network-ranges-stale",
     stale.payload,
   );
+});
+
+test("a throttled refresh knows its attempt and retries after the wait GitHub asked for", async () => {
+  jobs.refreshNetworkRanges.mockRejectedValue(new RateLimitedError(240_000, "github.com"));
+  const now = Date.now();
+  const error = await step("refreshNetworkRanges")("2026-11-17").catch((e: unknown) => e);
+  expect(jobs.refreshNetworkRanges).toHaveBeenCalledWith(
+    fetch,
+    expect.objectContaining({ attempt: 3 }),
+  );
+  expect(RetryableError.is(error)).toBe(true);
+  expect((error as RetryableError).retryAfter.getTime() - now).toBeGreaterThanOrEqual(239_000);
+  expect((error as Error).message).toMatch(/^RateLimited: Rate limited by github.com/);
 });
 
 test("a refused list alerts and the step completes with the old list in place", async () => {

@@ -16,6 +16,7 @@ import {
 } from "@reranker/jobs";
 import { toStepError } from "@reranker/jobs/step-errors";
 import { log, sendOpsAlert } from "@reranker/telemetry";
+import { getStepMetadata } from "workflow";
 import { opsDigest } from "../ops/daily-digest";
 import { launchGate } from "../ops/launch-gate";
 import { vercelBilling } from "../ops/vercel-billing";
@@ -53,6 +54,7 @@ async function refreshNetworkRangesStep(_date: string): Promise<void> {
   await asStep("refreshNetworkRanges", async (alerts) => {
     const { applied, rows, added, removed, changed, commit } = await refreshNetworkRanges(fetch, {
       onAlert: (alert) => alerts.push(alert),
+      attempt: getStepMetadata().attempt,
     });
     log.info("jobs.daily.network_ranges", { applied, rows, added, removed, changed, commit });
   });
