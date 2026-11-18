@@ -1,0 +1,26 @@
+{
+  "name": "@reranker/evidence",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --coverage --passWithNoTests"
+  },
+  "dependencies": {
+    "@reranker/verify": "workspace:*",
+    "server-only": "catalog:"
+  },
+  "devDependencies": {
+    "@noble/curves": "catalog:",
+    "@reranker/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
