@@ -136,7 +136,8 @@ const capturePredicate = z.strictObject({
   c2pa: z.null(),
   worker: z.strictObject({
     id: text,
-    image_digest: z.string().check(z.regex(/^sha256:[0-9a-f]{64}$/)),
+    // A container image digest, or the git commit a serverless deployment was built from.
+    image_digest: z.string().check(z.regex(/^(sha256:[0-9a-f]{64}|git:[0-9a-f]{40})$/)),
   }),
 });
 

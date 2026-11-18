@@ -842,6 +842,9 @@ importers:
       '@aws-sdk/client-kms':
         specifier: 'catalog:'
         version: 3.1169.0
+      '@reranker/db':
+        specifier: workspace:*
+        version: link:../db
       '@reranker/env':
         specifier: workspace:*
         version: link:../env
@@ -863,6 +866,9 @@ importers:
       aws4fetch:
         specifier: 'catalog:'
         version: 1.0.20
+      drizzle-orm:
+        specifier: 'catalog:'
+        version: 0.45.4(@opentelemetry/api@1.10.0)(@types/pg@8.23.1)(kysely@0.29.9)(pg@8.23.1)
       server-only:
         specifier: 'catalog:'
         version: 0.0.1
@@ -870,6 +876,9 @@ importers:
       '@noble/curves':
         specifier: 'catalog:'
         version: 2.4.0
+      '@reranker/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@reranker/testing':
         specifier: workspace:*
         version: link:../testing
