@@ -294,6 +294,17 @@ const sections: LegalSection[] = [
           La plataforma, la marca Reranker, el método de medición y el software son de GLEMO S.A.S.
         </li>
         <li>
+          Los nombres de ciudades y regiones fuera de Colombia se basan en{" "}
+          <a href="https://www.geonames.org">GeoNames</a> (licencia{" "}
+          <a
+            href="https://creativecommons.org/licenses/by/4.0/deed.es"
+            className="whitespace-nowrap"
+          >
+            CC BY 4.0
+          </a>
+          ), con cambios nuestros.
+        </li>
+        <li>
           Podemos usar datos agregados y anónimos, que no identifican a tu negocio ni a ninguna
           persona, para mejorar el servicio y publicar estadísticas e índices.
         </li>
@@ -378,7 +389,7 @@ export default function Page() {
   return (
     <LegalPage
       title="Términos y condiciones"
-      updated="8 de noviembre de 2026"
+      updated="18 de noviembre de 2026"
       intro={
         <p>
           Estas son las reglas para usar Reranker, escritas para que se entiendan. Si algo no queda

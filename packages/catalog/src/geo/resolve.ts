@@ -19,6 +19,14 @@ const CAPITAL_DISTRICT_SUFFIX = /,?\s+D\.\s*C\.$/;
 
 const isRegionPlace = (place: GeoPlace) => place.key.includes("-r");
 
+/** Places found under their own name outrank those found under an alias. */
+function named(geo: CountryGeo, name: string, keep: (place: GeoPlace) => boolean): GeoPlace[] {
+  const normalized = normalizePlaceName(name);
+  const found = (geo.byName.get(normalized) ?? []).filter(keep);
+  const own = found.filter((place) => place.normalized === normalized);
+  return own.length ? own : found;
+}
+
 /** Where the business is, as precisely as the engines can be targeted; the country if unknown. */
 export function resolveGeo(input: ResolveGeoInput): GeoTarget {
   getCountry(input.country);
@@ -43,7 +51,7 @@ export function resolveGeo(input: ResolveGeoInput): GeoTarget {
 function matchRegions(geo: CountryGeo, names: readonly (string | undefined)[]): GeoPlace[] {
   for (const name of names) {
     if (!name) continue;
-    const found = (geo.byName.get(normalizePlaceName(name)) ?? []).filter(isRegionPlace);
+    const found = named(geo, name, isRegionPlace);
     if (found.length) return found;
   }
   return [];
@@ -58,7 +66,9 @@ function findCity(
   location: LatLng | undefined,
 ): GeoPlace | undefined {
   const regionKeys = new Set(regions.map((region) => region.key));
-  const candidates = (geo.byName.get(normalizePlaceName(name)) ?? []).filter(
+  const candidates = named(
+    geo,
+    name,
     (place) =>
       !isRegionPlace(place) &&
       (regionKeys.size === 0 || (place.regionKey !== null && regionKeys.has(place.regionKey))),

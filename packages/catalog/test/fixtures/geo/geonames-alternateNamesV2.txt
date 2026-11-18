@@ -1,0 +1,1373 @@
+3075963	3427833	es	Tandil	1	1				
+4391320	3427833		Tandil						
+20609304	3427833	en	Tandil						
+20609344	3427833	fr	Tandil						
+3075593	3430657	es	Misiones		1				
+5650422	3430657	es	Provincia de Misiones	1					
+7717890	3430657		Misiones		1				
+11286105	3430657	en	Misiones Province						
+11990056	3430657	en	Misiones		1				
+17933726	3430657	fr	Misiones						
+1408653	3430863		Mar de Plata						
+1601674	3430863	en	Mar del Plata	1					
+1601675	3430863	es	Mar del Plata						
+1601677	3430863	fr	Mar del Plata						
+4393069	3430863		Mar del Plata						
+7324861	3431350		Lima						
+1408788	3432043		Eva Perón						
+1600202	3432043	en	La Plata	1					
+1600203	3432043	es	La Plata						
+1600208	3432043	fr	La Plata						
+4393652	3432043		La Plata						
+1409140	3433896		Gobernación de Formosa						
+1409141	3433896		Territorio Nacional de Formosa						
+1409142	3433896		Territorio de Formosa						
+2184640	3433896		Formosa	1	1				
+5650427	3433896		Provincia de Formosa						
+7717190	3433896	es	Provincia de Formosa	1					
+7717191	3433896	es	Formosa		1				
+9408272	3433896	en	Formosa Province						
+11990051	3433896	en	Formosa		1				
+17933804	3433896	fr	Formosa						
+1409152	3433955	es	Capital Federal						
+1409153	3433955	en	Federal District						
+3075172	3433955	en	Buenos Aires F.D.	1					
+3075971	3433955	es	Ciudad de Buenos Aires						
+3075972	3433955	es	Ciudad Autónoma de Buenos Aires	1					
+3075975	3433955	es	Buenos Aires C.F.		1				
+11712565	3433955	fr	Buenos Aires						
+13654713	3433955	en	Autonomous City of Buenos Aires						
+2184642	3434137		Entre Ríos	1	1				
+5650428	3434137		Provincia de Entre Ríos						
+7717188	3434137	es	Provincia de Entre Ríos	1					
+7717189	3434137	es	Entre Ríos		1				
+9408274	3434137	en	Entre Ríos Province						
+11990050	3434137	en	Entre Rios		1				
+17933883	3434137	fr	Entre Ríos						
+2184644	3435214		Corrientes	1	1				
+5650429	3435214		Provincia de Corrientes						
+7717186	3435214	es	Provincia de Corrientes	1					
+7717187	3435214	es	Corrientes		1				
+9408273	3435214	en	Corrientes Province						
+11990049	3435214	en	Corrientes		1				
+17933962	3435214	fr	Corrientes						
+2089476	3435907	es	Buenos Aires		1				
+2184638	3435907		Buenos Aires	1	1				
+9408267	3435907	en	Buenos Aires						
+17934050	3435907	fr	Buenos Aires						
+1649372	3435910	en	Buenos Aires						
+1649403	3435910	fr	Buenos Aires						
+1649727	3435910	es	Ciudad Autónoma de Buenos Aires						
+3075623	3435910	es	Buenos Aires	1					
+6910496	3435910	es	Baires		1	1	1		
+6910497	3435910	es	Ciudad de La Santísima Trinidad y Puerto de Santa María del Buen Ayre				1		
+6910498	3435910	es	Santa María del Buen Ayre				1		
+2184758	3833578		Tucumán	1	1				
+5650414	3833578		Provincia de Tucumán						
+7717218	3833578	es	Provincia de Tucumán	1					
+7717219	3833578	es	Tucumán		1				
+11286109	3833578	en	Tucumán Province						
+11990065	3833578	en	Tucuman		1				
+17949493	3833578	fr	Tucumán						
+1508181	3834450		Territorio Nacional de la Tierra del Fuego						
+1508182	3834450		Territorio de Tierra del Fuego						
+1508183	3834450		Gobernación de la Tierra del Fuego						
+2080676	3834450	es	Tierra del Fuego		1				
+2184756	3834450	es	Provincia de Tierra del Fuego, Antártida e Islas del Atlántico Sur	1					
+5463216	3834450		Tierra del Fuego	1	1				
+7717222	3834450	es	El Fin del Mundo			1			
+9408281	3834450	en	Tierra del Fuego Province						
+11989956	3834450	en	Tierra del Fuego		1				
+17949570	3834450	fr	Terre de Feu						
+2184761	3835868		Santiago del Estero	1	1				
+5650415	3835868		Provincia de Santiago del Estero						
+7717216	3835868	es	Provincia de Santiago del Estero	1					
+7717217	3835868	es	Santiago del Estero		1				
+9408270	3835868	en	Santiago del Estero Province						
+11990064	3835868	en	Santiago del Estero		1				
+17949646	3835868	fr	Santiago del Estero						
+3075931	3836276	es	Santa Fe		1				
+5650416	3836276	es	Provincia de Santa Fe	1					
+7717220	3836276		Provincia de Santa Fe						
+7717221	3836276		Santa Fe	1	1				
+9408268	3836276	en	Santa Fe Province						
+11990063	3836276	en	Santa Fe		1				
+17949723	3836276	fr	Santa Fe						
+1508553	3836350		Gobernación de Santa Cruz						
+1508554	3836350		Territorio Nacional de Santa Cruz						
+2184752	3836350		Santa Cruz	1	1				
+5650417	3836350		Provincia de Santa Cruz						
+7717214	3836350	es	Provincia de Santa Cruz	1					
+7717215	3836350	es	Santa Cruz		1				
+9408280	3836350	en	Santa Cruz Province						
+11990062	3836350	en	Santa Cruz		1				
+17949800	3836350	fr	Santa Cruz						
+2184780	3837029		San Luis	1	1				
+5650418	3837029		Provincia de San Luis						
+7717212	3837029	es	Provincia de San Luis	1					
+7717213	3837029	es	San Luis		1				
+11286088	3837029	en	San Luis Province						
+11990061	3837029	en	San Luis		1				
+17949877	3837029	fr	San Luis						
+2184782	3837152		San Juan	1	1				
+5650419	3837152		Provincia de San Juan						
+7717210	3837152	es	Provincia de San Juan	1					
+7717211	3837152	es	San Juan		1				
+11286086	3837152	en	San Juan Province						
+11990060	3837152	en	San Juan		1				
+17949954	3837152	fr	San Juan						
+2184773	3838231	en	Salta Province						
+7717206	3838231		Provincia de Salta						
+7717207	3838231	es	Provincia de Salta	1					
+7717208	3838231		Salta	1	1				
+7717209	3838231	es	Salta		1				
+11990059	3838231	en	Salta		1				
+17950030	3838231	fr	Salta						
+1508833	3838830		Gobernación del Río Negro						
+1508834	3838830		Territorio Nacional del Río Negro						
+1508835	3838830		Territorio de Río Negro						
+2184774	3838830		Río Negro	1	1				
+5650420	3838830		Provincia de Río Negro						
+7717204	3838830	es	Provincia de Río Negro	1					
+7717205	3838830	es	Río Negro		1				
+9408278	3838830	en	Río Negro Province						
+11990058	3838830	en	Rio Negro		1				
+17950108	3838830	fr	Río Negro						
+1509703	3843122		Territorio Nacional del Neuquén						
+1509704	3843122		Gobernación del Neuquén						
+1509705	3843122		Provincia de Neuquén						
+2184775	3843122		Neuquén	1	1				
+5650421	3843122		Provincia del Neuquén						
+7717200	3843122	es	Provincia del Neuquén	1					
+7717201	3843122	es	Neuquén		1				
+9408277	3843122	en	Neuquén Province						
+11990057	3843122	en	Neuquen		1				
+17950186	3843122	fr	Neuquén						
+2184648	3844419		Mendoza	1	1				
+5650423	3844419		Provincia de Mendoza						
+7717202	3844419	es	Provincia de Mendoza	1					
+7717203	3844419	es	Mendoza		1				
+9408275	3844419	en	Mendoza Province						
+11990055	3844419	en	Mendoza		1				
+17950266	3844419	fr	Mendoza						
+2184650	3848949		La Rioja	1	1				
+5650424	3848949		Provincia de La Rioja						
+7717196	3848949	es	Provincia de La Rioja	1					
+7717197	3848949	es	La Rioja		1				
+11286096	3848949	en	La Rioja Province						
+11990054	3848949	en	La Rioja		1				
+17950345	3848949	fr	La Rioja						
+1510559	3849574		Eva Perón						
+1510560	3849574		Gobernación de la Pampa						
+2184652	3849574		La Pampa	1	1				
+5650425	3849574		Provincia de La Pampa						
+7717194	3849574	es	Provincia de La Pampa	1					
+7717195	3849574	es	La Pampa		1				
+9408276	3849574	en	La Pampa Province						
+11990053	3849574	en	La Pampa		1				
+17950419	3849574	fr	La Pampa						
+2184653	3853404		Jujuy	1	1				
+5650426	3853404		Provincia de Jujuy						
+7717192	3853404	es	Provincia de Jujuy	1					
+7717193	3853404	es	Jujuy		1				
+11286103	3853404	en	Jujuy Province						
+11990052	3853404	en	Jujuy		1				
+17950498	3853404	fr	Jujuy						
+2184643	3860255		Córdoba	1	1				
+5650430	3860255		Provincia de Córdoba						
+7717184	3860255	es	Provincia de Córdoba	1					
+7717185	3860255	es	Córdoba		1				
+9408269	3860255	en	Cordoba Province						
+11990048	3860255	en	Cordoba		1				
+17950583	3860255	fr	Córdoba						
+1512382	3861244		Provincia de Chubut						
+1512383	3861244		Territorio del Chubut						
+1512384	3861244		Territorio Nacional del Chubut						
+1512385	3861244		Gobernación del Chubut						
+2184646	3861244	es	Chubut		1				
+5463215	3861244		Chubut		1				
+5650431	3861244		Provincia del Chubut						
+7717181	3861244	es	Provincia del Chubut	1					
+9408279	3861244	en	Chubut Province						
+11990047	3861244	en	Chubut		1				
+17950666	3861244	fr	Chubut						
+1512501	3861887		Presidente Perón						
+1512502	3861887		Territorio Nacional del Chaco						
+1512503	3861887		Provincia de Chaco						
+1512504	3861887		Gobernación del Chaco						
+1512505	3861887		Territorio del Chaco						
+2184645	3861887		Chaco	1	1				
+5650432	3861887		Provincia del Chaco						
+7717198	3861887	es	Provincia del Chaco	1					
+7717199	3861887	es	Chaco		1				
+9408271	3861887	en	Chaco Province						
+11990046	3861887	en	Chaco		1				
+17950749	3861887	fr	Chaco						
+2184637	3862286		Catamarca	1	1				
+5650433	3862286		Provincia de Catamarca						
+7717182	3862286	es	Provincia de Catamarca	1					
+7717183	3862286	es	Catamarca		1				
+11286083	3862286	en	Catamarca Province						
+11990045	3862286	en	Catamarca		1				
+17950832	3862286	fr	Catamarca						
+1906808	3865086	es	Bahía Blanca						
+1906811	3865086	en	Bahía Blanca						
+1906812	3865086	fr	Bahía Blanca						
+4396099	3865086		Bahía Blanca						
+1513688	3868621		Región de Aconcagua						
+1513689	3868621		Quinta Región						
+2185362	3868621		Valparaíso	1	1				
+5650540	3868621		Región de Valparaíso						
+7717275	3868621	es	Región de Valparaíso	1					
+7717276	3868621	es	Valparaíso		1				
+20560091	3868621	en	Valparaiso						
+20560115	3868621	fr	Valparaiso						
+1513792	3870116		Primera Región						
+3222630	3870116		Región de Tarapacá						
+7717273	3870116	es	Región de Tarapacá						
+7717274	3870116	es	Tarapacá		1				
+8305954	3870116	en	Tarapacá	1	1				
+8305955	3870116	fr	Tarapacá						
+8489304	3870116		Tarapacá						
+1513903	3871336		CiudadSantiago						
+1591569	3871336	en	Santiago	1					
+1591570	3871336	es	Santiago de Chile						
+1591579	3871336	fr	Santiago du Chili						
+17657725	3871336	en	Santiago de Chile						
+17657727	3871336	fr	Santiago	1					
+1514074	3873544		Región Metropolitana						
+5650541	3873544		Región Metropolitana de Santiago						
+5650542	3873544		Área Metropolitana						
+7717277	3873544	es	Región Metropolitana de Santiago de Chile	1					
+7717278	3873544	es	Metropolitana		1				
+7717279	3873544		Metropolitana						
+7756385	3873544	en	Santiago			1			
+8218283	3873544	en	Santiago Metropolitan	1	1				
+8218284	3873544	fr	Santiago						
+1515428	3880306		Septima Región						
+2185383	3880306		Maule	1	1				
+5650543	3880306		Región del Maule						
+7717263	3880306	es	Región del Maule	1					
+7717264	3880306	es	Maule		1				
+13574576	3880306	en	Maule Region						
+13574577	3880306	es	VII Región del Maule						
+20560167	3880306	fr	région du Maule						
+1515808	3881974		Décima Región						
+2185370	3881974		Los Lagos	1	1				
+3222631	3881974		Región de Los Lagos						
+7717265	3881974	es	Región de Los Lagos	1					
+7717266	3881974	es	Los Lagos		1				
+13574575	3881974	en	Los Lagos Region						
+17951000	3881974	fr	Région des Lacs						
+1516202	3883281		Sexta Región						
+2185369	3883281		Libertador General Bernardo OʼHiggins						
+5650545	3883281		Región del Libertador General Bernardo O’Higgins						
+7717260	3883281		O'Higgins	1	1				
+7717261	3883281	es	Región del Libertador General Bernardo O'Higgins	1					
+7717262	3883281	es	O'Higgins		1				
+8041818	3883281		Libertador General Bernardo O’Higgins						
+13498251	3883281	en	O'Higgins Region		1				
+17951078	3883281	fr	O'Higgins						
+1518995	3893623		Cuarta Región						
+2185368	3893623		Coquimbo	1	1				
+5650546	3893623		Región de Coquimbo						
+7717254	3893623	es	Región de Coquimbo	1					
+7717255	3893623	es	Coquimbo		1				
+13574578	3893623	en	Coquimbo Region						
+17951154	3893623	fr	Coquimbo						
+1520367	3898380		Octava Región						
+2185367	3898380		Biobío	1	1				
+5650547	3898380		Región del Biobío						
+7717258	3898380	es	Región del Biobío	1					
+7717259	3898380	es	Biobío		1				
+8460072	3898380		Región del Bío-Bío						
+20560200	3898380	en	Biobio						
+20560226	3898380	fr	Biobio						
+1520628	3899191		Tercera Región						
+2185366	3899191		Atacama	1	1				
+5650548	3899191		Región de Atacama						
+7717252	3899191	es	Región de Atacama	1					
+7717253	3899191	es	Atacama		1				
+13574131	3899191	en	Atacama		1				
+20560247	3899191	fr	Atacama						
+1520715	3899463		Novena Región						
+2185365	3899463		Araucanía	1	1				
+5650549	3899463		Región de la Araucanía						
+7717256	3899463	es	Región de la Araucanía	1					
+7717257	3899463	es	Araucanía		1				
+20560233	3899463	en	Araucania						
+20560259	3899463	fr	Araucania						
+1520739	3899537		Segunda Región						
+2185364	3899537		Antofagasta	1	1				
+5650550	3899537		Región de Antofagasta						
+7717246	3899537	es	Región de Antofagasta	1					
+7717247	3899537	es	Antofagasta		1				
+13574129	3899537	en	Antofagasta		1				
+20560275	3899537	fr	Antofagasta						
+2185363	3900333		Aisén del General Carlos Ibáñez del Campo						
+5650551	3900333		Región Aisén del General Carlos Ibáñez del Campo						
+5650552	3900333		Decimoprimera Región						
+5650553	3900333		Región Aisén						
+7717243	3900333		Aisén	1	1				
+7717244	3900333	es	Región Aysén del General Carlos Ibáñez del Campo	1					
+7717245	3900333	es	Aysén		1				
+8460073	3900333		Aysén						
+8460074	3900333		Región Aysén del General Carlos Ibáñez del Campo						
+13574130	3900333	en	Aysén		1				
+20560289	3900333	fr	Aysen						
+1550803	4036650		Duodécima Región						
+2185381	4036650		Magallanes y Antártica Chilena						
+5650544	4036650		Región de Magallanes y de la Antártica Chilena						
+7717270	4036650	es	Región de Magallanes y de la Antártica Chilena	1					
+7717271	4036650	es	Magallanes		1				
+7717272	4036650		Magallanes	1	1				
+8041817	4036650		Magallanes y de la Antártica Chilena						
+13574574	4036650	en	Region of Magallanes		1				
+20560330	4036650	fr	région de Magallanes						
+7717249	6693562		Arica y Parinacota	1	1				
+7717250	6693562	es	Región de Arica y Parinacota	1					
+7717251	6693562	es	Arica y Parinacota		1				
+17960663	6693562	en	Arica y Parinacota Region						
+17960686	6693562	fr	Arica et Parinacota						
+7717267	6693563		Los Ríos	1	1				
+7717268	6693563	es	Región de Los Ríos	1					
+7717269	6693563	es	Los Ríos		1				
+11213868	6693563		XIV Región de Los Ríos						
+13574579	6693563	en	Los Ríos Region						
+17960754	6693563	fr	Région des Fleuves						
+15911053	11979367	en	Ñuble Region						
+15911054	11979367	en	Ñuble		1				
+15911306	11979367	es	Región de Ñuble						
+15911307	11979367	es	Ñuble		1				
+17967058	11979367	fr	Ñuble						
+2080233	2509951	es	Provincia de Valencia	1					
+2186771	2509951	fr	Province de Valence	1					
+2186774	2509951	en	Valencia	1	1				
+2697963	2509951	es	Valencia		1				
+5424286	2509951	fr	Valence		1				
+7717490	2509951		València	1	1				
+17681922	2509951	en	València Province						
+2080191	2510407	es	Provincia de Toledo	1					
+2186791	2510407	fr	Province de Tolède	1	1				
+7636605	2510407		Toledo	1	1				
+7636606	2510407	en	Province of Toledo						
+7636835	2510407	es	Toledo		1				
+17681958	2510407	en	Toledo Province						
+2080192	2510910	es	Provincia de Sevilla	1					
+2186909	2510910	fr	Séville	1	1				
+2186910	2510910	en	Province of Seville						
+2728193	2510910	es	Sevilla		1				
+4564949	2510910		Provincia de Sevilla						
+4564950	2510910		Siviglia						
+4564951	2510910		Seville						
+4564952	2510910		Sevilla	1	1				
+7717459	2510910	en	Seville	1	1				
+17681931	2510910	en	Seville Province						
+1177636	2511173		Provincia de Tenerife						
+2186980	2511173	en	Province of Santa Cruz de Tenerife						
+2186981	2511173	fr	Province de Santa Cruz de Ténérife	1					
+2186983	2511173	es	Santa Cruz de Tenerife		1				
+4565453	2511173		Provincia de Santa Cruz de Tenerife						
+4565454	2511173		Santa Cruz de Tenerife	1	1				
+7717468	2511173	en	Santa Cruz de Tenerife	1	1				
+9861293	2511173	es	Provincia de Santa Cruz de Tenerife	1					
+2186028	2513413	es	Murcia		1				
+2186930	2513413	en	Region of Murcia						
+2186932	2513413	es	Región de Murcia	1					
+2186934	2513413	fr	Région de Murcie	1					
+2189046	2513413	en	Murcia	1	1				
+2256663	2513413	fr	Murcie		1				
+7717503	2513413		Murcia	1	1				
+11213479	2513413	es	Comunidad Autónoma de la Región de Murcia						
+2080193	2514254	es	Provincia de Málaga	1					
+2186853	2514254	en	Malaga	1	1				
+2186855	2514254	fr	Malaga	1	1				
+2728194	2514254	es	Málaga		1				
+4570429	2514254		Provincia de Málaga						
+4570430	2514254		Málaga	1	1				
+17681915	2514254	en	Málaga Province						
+1179282	2515271		Las Palmas	1	1				
+2186964	2515271	en	Province of Las Palmas						
+2186965	2515271	es	Las Palmas		1				
+2186967	2515271	fr	Province de Las Palmas	1					
+4571663	2515271		Provincia de Las Palmas						
+7717467	2515271	en	Las Palmas	1	1				
+9861292	2515271	es	Provincia de Las Palmas	1					
+17681903	2515271	en	Las Palmas Province						
+2080194	2516394	es	Provincia de Jaén	1					
+2186712	2516394	en	Jaen	1	1				
+2186715	2516394	fr	Jaen	1	1				
+2728195	2516394	es	Jaén		1				
+4572958	2516394		Provincia de Jaén						
+4572959	2516394		Jaén	1	1				
+17681918	2516394	en	Jaén Province						
+2080195	2516547	es	Huelva		1				
+2186833	2516547	fr	Huelva		1				
+6594786	2516547	es	Provincia de Huelva	1					
+6594787	2516547		Huelva		1				
+6755136	2516547	en	Province of Huelva	1					
+7658317	2516547	en	Huelva		1				
+8512866	2516547	fr	Province d'Huelva	1					
+17681920	2516547	en	Huelva Province						
+2080196	2517115	es	Provincia de Granada	1					
+2186739	2517115	en	Province of Granada						
+2186742	2517115	fr	Grenade	1	1				
+2728213	2517115	es	Granada		1				
+4573692	2517115		Provincia de Granada						
+4573693	2517115		Grenade						
+4573694	2517115		Granata						
+4573695	2517115		Granada	1	1				
+7658315	2517115	en	Granada	1	1				
+17681921	2517115	en	Granada Province						
+2080197	2519034	es	Provincia de Cuenca	1					
+2186955	2519034	fr	Province de Cuenca	1	1				
+2186956	2519034	en	Province of Cuenca	1	1				
+2698055	2519034	es	Cuenca		1				
+4576024	2519034		Provincia de Cuenca						
+4576025	2519034		Cuenca	1	1				
+2186730	2519239	es	Provincia de Córdoba	1					
+2186732	2519239	fr	Cordoue	1	1				
+2703227	2519239	es	Córdoba		1				
+4576343	2519239		Córdoba	1	1				
+7352223	2519239	en	Province of Córdoba						
+7717458	2519239	en	Cordoba	1	1				
+17681923	2519239	en	Córdoba Province						
+2186861	2519401	en	Ciudad Real	1	1				
+2186862	2519401	es	Provincia de Ciudad Real	1					
+2186864	2519401	fr	Ciudad Real	1	1				
+2698054	2519401	es	Ciudad Real		1				
+4576578	2519401		Provincia de Ciudad Real						
+4576579	2519401		Ciudad Real	1	1				
+17681941	2519401	en	Ciudad Real Province						
+1181298	2519582		Septem Fratres						
+1181300	2519582		Sebta						
+1181301	2519582	es	Ciudad de Ceuta						
+1181302	2519582		Septa						
+1181303	2519582		Cueta						
+1619717	2519582	es	Ceuta		1				
+1619718	2519582	en	Ceuta	1	1				
+1619731	2519582	fr	Ceuta						
+2256657	2519582	es	Ciudad Autónoma de Ceuta	1					
+7717476	2519582		Ceuta	1	1				
+2080198	2520597	es	Provincia de Cádiz	1					
+2186875	2520597	en	Cadiz	1	1				
+2186878	2520597	fr	Cadix	1	1				
+2703229	2520597	es	Cádiz		1				
+4578195	2520597		Provincia de Cádiz						
+4578196	2520597		Cádiz	1	1				
+17681925	2520597	en	Cádiz Province						
+2080199	2520610	es	Provincia de Cáceres	1					
+2186844	2520610	fr	Caceres	1	1				
+2186845	2520610	en	Caceres	1	1				
+2698065	2520610	es	Cáceres		1				
+4578215	2520610		Provincia de Cáceres						
+4578216	2520610		Cáceres	1	1				
+17681927	2520610	en	Cáceres Province						
+2188160	2521383	en	Balearic Islands	1	1				
+2188470	2521383	es	Baleares		1				
+2188471	2521383	es	Islas Baleares		1				
+2188473	2521383	es	Comunidad Autónoma de las Islas Baleares	1					
+2256659	2521383	fr	Îles Baléares	1					
+2256660	2521383	fr	Baléares		1				
+7717493	2521383		Islas Baleares	1	1				
+2080200	2521419	es	Provincia de Badajoz	1					
+2186804	2521419	en	Badajoz	1	1				
+2186807	2521419	fr	Badajoz	1	1				
+2698064	2521419	es	Badajoz		1				
+4579507	2521419		Provincia de Badajoz						
+4579508	2521419		Badajoz	1	1				
+17681930	2521419	en	Badajoz Province						
+2080201	2521883	es	Provincia de Almería	1					
+2186749	2521883	en	Almeria	1	1				
+2186752	2521883	fr	Alméria	1	1				
+2703232	2521883	es	Almería		1				
+4580324	2521883		Provincia de Almería						
+4580325	2521883		Almería	1	1				
+11324969	2521883	en	Province of Almería						
+11324970	2521883	fr	Province dAlmería						
+1182133	2521976		Alacant	1	1				
+1182134	2521976		Alicante						
+1566291	2521976	es	Alicante		1				
+2080234	2521976	es	Provincia de Alicante	1					
+2186858	2521976	fr	Province d’Alicante	1	1				
+3075170	2521976	en	Province of Alicante						
+3075171	2521976	en	Alicante	1	1				
+4580416	2521976		Provincia de Alicante						
+17681932	2521976	en	Alicante Province						
+2080202	2522257	es	Provincia de Albacete	1					
+2186754	2522257	en	Albacete	1	1				
+2698053	2522257	es	Albacete		1				
+4580759	2522257		Provincia de Albacete						
+4580760	2522257		Albacete	1	1				
+5424282	2522257	fr	Province d'Albacete						
+5424283	2522257	fr	Albacete	1	1				
+17681957	2522257	en	Albacete Province						
+1212326	2593109	es	Andalucía		1				
+1566878	2593109	en	Andalusia						
+2186919	2593109	fr	Andalousie	1					
+8041958	2593109	es	Comunidad Autónoma de Andalucía						
+1212327	2593110	es	Canarias		1				
+1626781	2593110	es	Islas Canarias						
+1626782	2593110	es	Islas Afortunadas			1			
+1626783	2593110	en	Canary Islands	1	1				
+1881041	2593110	es	Comunidad Autónoma de Canarias	1					
+1881042	2593110	es	Comunidad Canaria						
+2187045	2593110	fr	Îles Canaries						
+2256661	2593110	fr	Canaries	1	1				
+5651405	2593110		Comunidad Autónoma de Canarias						
+9066212	2593110		Canary Islands						
+2186925	2593111	en	Castille-La Mancha	1	1				
+2186926	2593111	es	Castilla-La Mancha		1				
+2186928	2593111	fr	Castille-La-Manche						
+2422706	2593111	es	Comunidad Autónoma de Castilla-La Mancha	1					
+8041959	2593111		Castilla-La Mancha						
+8041960	2593111		Comunidad Autónoma de Castilla-La Mancha						
+8194405	2593111	en	Castile-La Mancha						
+8194406	2593111	fr	Castille-La Manche						
+1212329	2593112	es	Extremadura		1				
+2187022	2593112	fr	Estrémadure						
+2187024	2593112	en	Extremadura	1	1				
+2422708	2593112	es	Comunidad Autónoma de Extremadura	1					
+7717499	2593112		Extremadura	1	1				
+8041962	2593112		Comunidad Autónoma de Extremadura						
+1212330	2593113	en	Valencian Community						
+1626631	2593113	es	Comunidad Valenciana	1					
+1626632	2593113	es	Valencia		1				
+2187037	2593113	fr	Communauté de Valence						
+2187038	2593113	en	Region of Valencia						
+2254783	2593113	es	Reino de Valencia						
+2256664	2593113	fr	Communauté Valencienne	1					
+2728520	2593113	en	Valencia	1	1				
+7717504	2593113		Valencia	1	1				
+1319024	3104323		Saragossa						
+1319025	3104323	es	Zaragoza		1				
+1319026	3104323		Saragosse						
+2080187	3104323	es	Provincia de Zaragoza	1					
+2186796	3104323	en	Province of Saragossa						
+2186797	3104323	fr	Saragosse						
+4561740	3104323		Provincia de Zaragoza						
+6145079	3104323		Zaragoza	1	1				
+7658316	3104323	en	Saragossa	1	1				
+17681893	3104323	en	Zaragoza Province						
+1319037	3104341	es	Zamora		1				
+2080188	3104341	es	Provincia de Zamora	1					
+2186838	3104341	en	Zamora	1	1				
+2186840	3104341	fr	Zamora	1	1				
+4561758	3104341		Provincia de Zamora						
+6145080	3104341		Zamora	1	1				
+17681947	3104341	en	Zamora Province						
+1319055	3104469		Provincia de Bizkaia						
+1319056	3104469	es	Vizcaya		1				
+1565389	3104469	en	Biscay	1	1				
+1565825	3104469	es	Señorío de Vizcaya				1		
+2080189	3104469	es	Bizkaia	1	1				
+2186766	3104469	fr	Biscaye	1	1				
+6145081	3104469		Vizcaya						
+17681939	3104469	en	Biscay Province						
+2080203	3106671	es	Provincia de Valladolid	1					
+2186872	3106671	fr	Valladolid	1	1				
+2186873	3106671	en	Valladolid	1	1				
+2698063	3106671	es	Valladolid		1				
+4563310	3106671		Provincia de Valladolid						
+4563311	3106671		Valladolid	1	1				
+17681956	3106671	en	Valladolid Province						
+2080204	3108125	es	Provincia de Teruel	1					
+2186985	3108125	en	Province of Teruel						
+2186988	3108125	fr	Province de Teruel	1					
+4564339	3108125		Provincia de Teruel						
+4564340	3108125		Teruel	1	1				
+7663169	3108125	es	Teruel		1				
+17681908	3108125	en	Teruel Province						
+2080205	3108287	es	Provincia de Tarragona	1					
+2186761	3108287	fr	Province de Tarragone	1					
+2186762	3108287	es	Tarragona		1				
+2186764	3108287	en	Province of Tarragona						
+2487833	3108287	en	Tarragona	1	1				
+7717475	3108287		Tarragona	1	1				
+17681909	3108287	en	Tarragona Province						
+2080206	3108680	es	Provincia de Soria	1					
+2186757	3108680	en	Soria	1	1				
+2186912	3108680	fr	Soria	1	1				
+2698062	3108680	es	Soria		1				
+4564729	3108680		Provincia de Soria						
+4564730	3108680		Soria	1	1				
+17681955	3108680	en	Soria Province						
+2080207	3109254	es	Provincia de Segovia	1					
+2186882	3109254	fr	Ségovie	1	1				
+2186883	3109254	en	Segovia	1	1				
+2698061	3109254	es	Segovia		1				
+4565091	3109254		Provincia de Segovia						
+4565092	3109254		Segovia	1	1				
+17681954	3109254	en	Segovia Province						
+2186949	3109716	en	Province of Cantabria						
+2186950	3109716	es	Provincia de Cantabria	1					
+2186951	3109716	fr	Province de Cantabrie	1					
+2703224	3109716	es	Cantabria		1				
+7717469	3109716	en	Cantabria	1	1				
+7717470	3109716		Cantabria	1	1				
+17681892	3109716	en	Cantabria Province						
+2080208	3111107	es	Provincia de Salamanca	1					
+2186977	3111107	fr	Salamanque	1	1				
+2186978	3111107	en	Salamanca	1	1				
+2698060	3111107	es	Salamanca		1				
+4566095	3111107		Provincia de Salamanca						
+4566096	3111107		Salamanca	1	1				
+17681943	3111107	en	Salamanca Province						
+2080209	3113208	es	Provincia de Pontevedra	1					
+2186786	3113208	fr	Pontevedra	1	1				
+2186787	3113208	en	Pontevedra	1	1				
+2698069	3113208	es	Pontevedra		1				
+4567475	3113208		Provincia de Pontevedra						
+4567476	3113208		Puntevedra						
+4567477	3113208		Pontevedra	1	1				
+17681936	3113208	en	Pontevedra Province						
+2080210	3114530	es	Provincia de Palencia	1					
+2186745	3114530	fr	Palence	1	1				
+2186746	3114530	en	Palencia	1	1				
+2698059	3114530	es	Palencia		1				
+4568335	3114530		Provincia de Palencia						
+4568336	3114530		Palencia	1	1				
+17681953	3114530	en	Palencia Province						
+1321818	3114710	es	Asturias		1				
+2186936	3114710	en	Principality of Asturias	1					
+2186937	3114710	es	Principado de Asturias	1					
+2186939	3114710	fr	Principauté des Asturies	1					
+2256658	3114710	fr	Asturies		1				
+2422712	3114710	es	Comunidad Autónoma del Principado de Asturias						
+2728521	3114710	en	Asturias		1				
+7717492	3114710		Asturias	1	1				
+2080212	3114964	es	Provincia de Orense						
+2186970	3114964	fr	Ourense	1	1				
+2186973	3114964	en	Ourense	1	1				
+2698068	3114964	es	Orense		1				
+7717479	3114964		Ourense	1	1				
+8344378	3114964	es	Provincia de Ourense	1					
+8344379	3114964		Provincia de Orense						
+8344380	3114964		Orense						
+17681910	3114964	en	Ourense Province						
+1322050	3115609	es	Navarra		1				
+1626621	3115609	es	Reino de Navarra				1		
+1626624	3115609	es	el Viejo Reino						
+1626626	3115609	es	Alta Navarra						
+1626627	3115609	en	Navarre	1	1				
+1626628	3115609	fr	Navarre		1				
+2186029	3115609		Navarra	1	1				
+2186914	3115609	es	Comunidad Foral de Navarra	1					
+2186916	3115609	fr	Communauté Forale de Navarre						
+2186917	3115609	en	Autonomous Region of Navarre						
+8041852	3115609		Comunidad Foral de Navarra						
+8041853	3115609		Provincia de Navarra						
+1621434	3117732	es	Comunidad Autónoma de Madrid	1					
+1621435	3117732	es	Región de Madrid						
+2186940	3117732	en	Autonomous Region of Madrid						
+2186942	3117732	es	Comunidad de Madrid						
+2186944	3117732	fr	Communauté de Madrid	1					
+5463348	3117732	en	Community of Madrid						
+7717496	3117732	es	Madrid		1				
+7717497	3117732	en	Madrid	1	1				
+7717498	3117732		Madrid	1	1				
+1554272	3117735	es	Madrid	1	1				
+1590841	3117735	en	Madrid						
+1590856	3117735	fr	Madrid						
+1591634	3117735		Magerit						
+2322223	3117735	es	Los Madriles			1			
+2322224	3117735	es	La Villa y Corte de Madrid				1		
+2080213	3117813	es	Provincia de Lugo	1					
+2186945	3117813	en	Lugo	1	1				
+2698066	3117813	es	Lugo		1				
+4570569	3117813		Provincia de Lugo						
+4570570	3117813		Lugo	1	1				
+5424284	3117813	fr	Lugo		1				
+5424285	3117813	fr	Province de Lugo						
+17681911	3117813	en	Lugo Province						
+2080235	3118528	es	Provincia de León	1					
+2186719	3118528	en	Leon	1	1				
+2186720	3118528	fr	Léon	1	1				
+2698058	3118528	es	León		1				
+4571370	3118528		Provincia de León						
+4571371	3118528		León	1	1				
+17681960	3118528	en	León Province						
+1565501	3118532	es	León						
+1614650	3118532	en	León						
+1614656	3118532	fr	León						
+4571376	3118532		León						
+2080236	3119840	es	Provincia de La Coruña	1					
+2698067	3119840	es	La Coruña		1				
+7717481	3119840	en	A Coruña	1	1				
+7717482	3119840		A Coruña	1	1				
+17681959	3119840	en	A Coruña Province						
+20673233	3119840	fr	Province de Coruña	1					
+1323401	3119841	fr	La Corogne						
+1323402	3119841		The Groyne						
+1323403	3119841	es	La Coruña	1					
+1323404	3119841		Caronium						
+1649313	3119841	es	Coruña						
+1987249	3119841	en	A Coruña	1					
+7717702	3119841		La Coruna						
+20365904	3119841	en	The Groyne				1		
+2080214	3120513	es	Provincia de Huesca	1					
+2186897	3120513	es	Huesca		1				
+2186899	3120513	fr	Province de Huesca	1					
+2186900	3120513	en	Province of Huesca						
+4573139	3120513		Provincia de Huesca						
+4573140	3120513		Huesca	1	1				
+7717460	3120513	en	Huesca	1	1				
+17681912	3120513	en	Huesca Province						
+1323726	3120935		Provincia de Gipuzkoa	1					
+1323727	3120935	es	Guipúzcoa	1					
+2186827	3120935	fr	Guipúzcoa	1	1				
+2186828	3120935	en	Gipuzkoa	1	1				
+7717466	3120935		Gipuzkoa	1	1				
+11328874	3120935	fr	Guipuscoa						
+17681937	3120935	en	Gipuzkoa Province						
+20679295	3120935	es	Provincia de Guipúzcoa						
+2080215	3121069	es	Provincia de Guadalajara	1					
+2186958	3121069	en	Guadalajara	1	1				
+2186961	3121069	fr	Guadalajara	1	1				
+2698056	3121069	es	Guadalajara		1				
+4573609	3121069		Provincia de Guadalajara						
+4573610	3121069		Guadalajara	1	1				
+17681938	3121069	en	Guadalajara Province						
+1325170	3125881		Castelló	1	1				
+1325171	3125881	es	Castellón		1				
+1325172	3125881	es	Provincia de Castellón de la Plana						
+2080190	3125881	es	Provincia de Castellón	1					
+2186848	3125881	en	Castellon	1	1				
+2186850	3125881	fr	Castellon	1	1				
+17681913	3125881	en	Castellón Province						
+2080216	3127460	es	Provincia de Burgos	1					
+2186778	3127460	fr	Province de Burgos	1	1				
+2186779	3127460	en	Province of Burgos	1	1				
+2698057	3127460	es	Burgos		1				
+7717471	3127460		Burgos	1	1				
+17681946	3127460	en	Burgos Province						
+2080217	3128759	es	Provincia de Barcelona	1					
+2186892	3128759	en	Province of Barcelona						
+2186893	3128759	es	Barcelona		1				
+2186895	3128759	fr	Province de Barcelone	1					
+2487836	3128759	en	Barcelona	1	1				
+7717472	3128759		Barcelona	1	1				
+17681914	3128759	en	Barcelona Province						
+1326084	3129138	es	Ávila		1				
+2080218	3129138	es	Provincia de Ávila	1					
+2186735	3129138	en	Avila	1	1				
+2186737	3129138	fr	Avila	1	1				
+4579582	3129138		Provincia de Ávila						
+6145115	3129138		Ávila	1	1				
+17681952	3129138	en	Ávila Province						
+2080219	3130717	es	Provincia de Álava	1					
+2186802	3130717	en	Araba / Álava	1	1				
+2186803	3130717	fr	Alava	1	1				
+2698071	3130717	es	Álava		1				
+4580763	3130717		Álava	1	1				
+7486969	3130717		Araba / Álava	1					
+17681961	3130717	en	Álava Province						
+1381172	3336897	es	La Rioja		1				
+1632244	3336897	es	Rioja						
+1632245	3336897	es	Logroño						
+2186021	3336897		La Rioja	1	1				
+2187017	3336897	fr	La Rioja						
+2187018	3336897	en	La Rioja	1	1				
+2422710	3336897	es	Comunidad Autónoma de La Rioja	1					
+2728214	3336897	es	Provincia de La Rioja						
+8041956	3336897		Comunidad Autónoma de La Rioja						
+1381173	3336898	es	Cantabria		1				
+1632240	3336898	es	La Montaña						
+2089438	3336898	es	La Montaña de Castilla			1			
+2089439	3336898	es	Comunidad Autónoma de Cantabria	1					
+2089440	3336898	es	Provincia de Santander						
+2089441	3336898	es	Santander						
+2186017	3336898		Cantabria	1	1				
+2187031	3336898	fr	Cantabrie	1	1				
+2187033	3336898	en	Cantabria	1	1				
+8041957	3336898		Comunidad Autónoma de Cantabria						
+1381174	3336899		Aragón	1	1				
+1565153	3336899	es	Aragón		1				
+1632247	3336899	es	Reino de Aragón				1		
+2186921	3336899	en	Aragon	1	1				
+2186923	3336899	fr	Aragon	1	1				
+5651404	3336899		Comunidad Autónoma de Aragón						
+7717491	3336899	es	Comunidad Autónoma de Aragón	1					
+1565499	3336900	es	Castilla y León		1				
+2187048	3336900	fr	Castille-et-León						
+2187049	3336900	en	Castille and León	1	1				
+2422699	3336900	es	Comunidad Autónoma de Castilla y León	1					
+5883331	3336900	en	Castile and León						
+7717494	3336900		Castilla y León	1	1				
+8041961	3336900		Comunidad Autónoma de Castilla y León						
+1381176	3336901	es	Cataluña		1				
+1566908	3336901	fr	Catalogne						
+1609468	3336901	en	Catalonia	1	1				
+1626847	3336901		Catalunya	1	1				
+7717495	3336901	es	Comunidad Autónoma de Cataluña	1					
+1970357	3336902	es	Galicia		1				
+2187039	3336902	en	Galicia	1	1				
+2187042	3336902	fr	Galice						
+7717500	3336902	es	Comunidad Autónoma de Galicia	1					
+7717501	3336902		Galicia	1	1				
+1381179	3336903	es	País Vasco		1				
+1554255	3336903	es	Comunidad Autónoma del País Vasco	1					
+1565821	3336903	es	Provincias Vascongadas						
+2080716	3336903	es	Vascongadas						
+2186030	3336903		Pais Vasco						
+2187025	3336903	en	Basque Country	1	1				
+2187027	3336903	fr	Pays Basque	1	1				
+2187028	3336903		Euskadi	1	1				
+7481088	3336903	es	Comunidad Autónoma Vasca						
+2080230	6355230	es	Provincia de Gerona	1					
+2080232	6355230	es	Gerona		1				
+2186782	6355230	fr	Province de Gérone	1					
+2186783	6355230	en	Province of Girona						
+2487835	6355230	en	Girona	1	1				
+7717473	6355230		Girona	1	1				
+17681887	6355230	en	Girona Province						
+2186819	6355231	fr	Province de Lleida						
+2186821	6355231	en	Province of Lleida						
+2487834	6355231	en	Lleida	1	1				
+6990473	6355231	es	Lérida		1				
+7717474	6355231		Lleida	1	1				
+9861294	6355231	es	Província de Lérida	1					
+17681888	6355231	en	Lleida Province						
+2080340	6355232	es	Provincia de La Rioja	1					
+2186810	6355232	en	Province of La Rioja						
+2186811	6355232	fr	Province de La Rioja	1					
+2703225	6355232	es	La Rioja		1				
+7717483	6355232	en	La Rioja	1	1				
+7717484	6355232		La Rioja	1	1				
+17681933	6355232	en	La Rioja Province						
+2080222	6355233	es	Provincia de Madrid	1					
+2186816	6355233	en	Province of Madrid						
+2186817	6355233	fr	Province de Madrid	1					
+7636906	6355233	es	Madrid		1				
+7717477	6355233	en	Madrid	1	1				
+7717478	6355233		Madrid	1	1				
+8542515	6355233		Community of Madrid						
+8542516	6355233	es	Comunidad de Madrid						
+17681890	6355233	en	Madrid Province						
+2080223	6355234	es	Provincia de Murcia	1					
+2080224	6355234	es	Murcia		1				
+2186903	6355234	fr	Province de Murcie	1					
+2186904	6355234	en	Province of Murcia						
+6910519	6355234	en	Murcia	1	1				
+7717487	6355234		Murcia	1	1				
+17681904	6355234	en	Murcia Province						
+2080225	6355235	es	Provincia de Navarra	1					
+2080226	6355235	es	Navarra		1				
+2186835	6355235	en	Province of Navarre						
+2186836	6355235	fr	Province de Navarre	1					
+7717488	6355235	en	Navarre	1	1				
+7717489	6355235		Navarra	1	1				
+8542518	6355235		Chartered Community of Navarre						
+17681906	6355235	en	Navarra Province						
+2080227	6355236	es	Provincia de Asturias	1					
+2080228	6355236	es	Asturias		1				
+2186867	6355236	fr	Asturies	1					
+2186868	6355236	en	Province of Asturias						
+7717462	6355236	en	Asturias	1	1				
+7717463	6355236		Asturias	1	1				
+11990569	6355236	es	Principado de Asturias						
+17681891	6355236	en	Asturias Province						
+2487820	6362988	es	Melilla		1				
+7717485	6362988	en	Melilla	1	1				
+7717486	6362988		Melilla	1	1				
+7717502	6362988	es	Ciudad Autónoma de Melilla	1					
+17095847	6362988	es	Ciudad de Melilla						
+20565193	6362988	fr	Melilla						
+2186722	6424360	es	Islas Baleares						
+2186724	6424360	fr	Province des Îles Baléares	1					
+2186726	6424360	en	Province of Balearic Islands						
+2188450	6424360	es	Provincia de las Islas Baleares	1					
+2188477	6424360	es	Las Baleares			1			
+7663154	6424360	es	Baleares		1				
+7717464	6424360	en	Balearic Islands	1	1				
+7717465	6424360		Baleares	1	1				
+9861295	8335119	es	Ciudad Autónoma de Ceuta	1					
+9861296	8335119	es	Ceuta		1				
+9861297	8335120	es	Ciudad Autónoma de Melilla	1					
+9861298	8335120	es	Melilla		1				
+1435789	3514211		Yucatan						
+1990768	3514211	fr	Yucatán						
+1990769	3514211	es	Yucatán		1				
+1990770	3514211	en	Yucatán						
+2185622	3514211		Yucatán	1	1				
+5649877	3514211		Estado de Yucatán						
+7666126	3514211	es	Estado de Yucatán	1					
+1436046	3514780		Veracruz-Llave		1				
+1436047	3514780		Estado de Veracruz						
+5649878	3514780		Estado de Veracruz-Llave						
+5649879	3514780		Veracruz		1				
+7666120	3514780	es	Estado de Veracruz-Llave	1					
+7666121	3514780	es	Veracruz-Llave		1				
+9710261	3514780		Veracruz de Ignacio de la Llave						
+9710262	3514780	es	Estado Libre y Soberano de Veracruz de Ignacio de la Llave						
+9710263	3514780	en	Veracruz						
+17938324	3514780	fr	Veracruz						
+1436278	3515359		Tlaxcala		1				
+1631061	3515359	es	Tlaxcala		1				
+1631063	3515359	en	Tlaxcala						
+1631069	3515359	fr	Tlaxcala						
+5649880	3515359		Estado de Tlaxcala						
+7666125	3515359	es	Estado de Tlaxcala	1					
+1436779	3516391		Tamaulipas		1				
+1990828	3516391	fr	Tamaulipas						
+1990829	3516391	es	Tamaulipas		1				
+1990831	3516391	en	Tamaulipas						
+5649881	3516391		Estado de Tamaulipas						
+7666124	3516391	es	Estado de Tamaulipas	1					
+1436815	3516458		Tabasco		1				
+1989515	3516458	fr	Tabasco						
+1989516	3516458	es	Estado de Tabasco	1					
+1989518	3516458	en	Tabasco						
+5649882	3516458		Estado de Tabasco						
+7666119	3516458	es	Tabasco		1				
+9070250	3516983	es	Santiago						
+1439314	3520887		Quintana						
+1439315	3520887		Quintana Roo		1				
+1439316	3520887		Territorio de Quintana Roo						
+1990362	3520887	fr	Quintana Roo						
+1990363	3520887	es	Estado de Quintana Roo	1					
+1990366	3520887	en	Quintana Roo						
+5649886	3520887		Estado de Quintana Roo						
+7666103	3520887	es	Quintana Roo		1				
+1439329	3520914	es	Querétaro						
+1439330	3520914		Estado de Querétaro						
+1985515	3520914	fr	Querétaro						
+1985517	3520914	en	Querétaro						
+1985519	3520914	es	Estado de Querétaro de Arteaga	1					
+2185596	3520914		Querétaro de Arteaga	1	1				
+5649887	3520914		Estado de Querétaro de Arteaga						
+7666102	3520914	es	Querétaro de Arteaga		1				
+1439387	3521082		Puebla		1				
+1989535	3521082	es	Estado de Puebla	1					
+1989537	3521082	fr	Puebla						
+1989539	3521082	en	Puebla						
+5649888	3521082		Estado de Puebla						
+7666021	3521082	es	Puebla		1				
+1439791	3522509		Oaxaca		1				
+1439792	3522509		Oxaca						
+1989324	3522509	es	Estado de Oaxaca	1					
+1989326	3522509	fr	Oaxaca						
+1989327	3522509	en	Oaxaca						
+5649889	3522509		Estado de Oaxaca						
+7665901	3522509	es	Oaxaca		1				
+1439799	3522542		Nuevo Leon						
+1989290	3522542	fr	Nuevo León						
+1989291	3522542	es	Estado de Nuevo León	1					
+1989293	3522542	en	Nuevo León						
+2185606	3522542		Nuevo León	1	1				
+5649890	3522542		Estado de Nuevo León						
+7665646	3522542	es	Nuevo León		1				
+1439959	3522961		Morelos		1				
+1990580	3522961	es	Estado de Morelos	1					
+1990581	3522961	fr	Morelos						
+1990583	3522961	en	Morelos						
+5649892	3522961		Estado de Morelos						
+7665429	3522961	es	Morelos		1				
+1440058	3523272		Mexico						
+2185607	3523272		México	1	1				
+5649894	3523272		Estado de México						
+7665173	3523272	es	Estado de México	1					
+7665261	3523272	es	México		1				
+16392262	3523272	en	State of Mexico	1					
+16453910	3523272	en	México	1	1				
+17939044	3523272	fr	État de Mexico						
+19468902	3523272	en	Edomex		1	1			
+19468935	3523272		Edomex						
+1441411	3526709		Santiago Ixmatlahuacan						
+4233736	3526709		Ixmatlahuacán						
+9194612	3526709	es	Santiago						
+9194613	3526709	es	Ixmatlahuacan						
+1441619	3527115		Hidalgo		1				
+1989805	3527115	es	Estado de Hidalgo	1					
+1989806	3527115	fr	Hidalgo						
+1989808	3527115	en	Hidalgo						
+5649896	3527115		Estado de Hidalgo						
+7664890	3527115	es	Hidalgo		1				
+1441647	3527213		Guerrero		1				
+1635812	3527213	es	Estado de Guerrero	1					
+1635814	3527213	en	Guerrero						
+1635821	3527213	fr	Guerrero						
+5649897	3527213		Estado de Guerrero						
+7664686	3527213	es	Guerrero		1				
+1441780	3527646	es	Ciudad de México	1					
+1603380	3527646	es	El DF			1			
+2187918	3527646	es	Mexico D.F.				1		
+7666123	3527646	es	Distrito Federal				1		
+7948229	3527646	es	DF			1	1		
+9710264	3527646	en	Mexico City						
+13699201	3527646		The Federal District						
+13699202	3527646		Distrito Federal						
+17939318	3527646	fr	Mexico						
+1443040	3530597	es	Ciudad de México	1					
+1443041	3530597	es	México Distrito Federal						
+1596717	3530597	en	Mexico City	1	1				
+1596728	3530597	fr	Mexico						
+1603378	3530597	es	Ciudad de Méjico						
+1981131	3530597	es	México						
+2170735	3530597	es	Mexico D.F.						
+2430964	3530597		Mexico DF						
+3074616	3530597	es	Valle de México						
+1443227	3531011		Chiapas		1				
+1986753	3531011	fr	Chiapas						
+1986754	3531011	es	Estado de Chiapas	1					
+1986755	3531011	en	Chiapas						
+5649903	3531011		Estado de Chiapas						
+7663197	3531011	es	Chiapas		1				
+1443484	3531730		Campeche		1				
+1988324	3531730	es	Estado de Campeche	1					
+1988325	3531730	fr	Campeche						
+1988328	3531730	en	Campeche						
+5649904	3531730		Estado de Campeche						
+7663196	3531730	es	Campeche		1				
+9944864	3762695	es	San Isidro Buenos Aires						
+9944865	3762695	es	Buenos Aires						
+4837367	3801243	es	Buenos Aires						
+9755665	3816626	es	Santiago						
+9781472	3816892	es	Buenos Aires						
+9948730	3816950	es	Buenos Aires						
+13198495	3823799	es	Buenos Aires						
+9208521	3825056	es	Buenos Aires						
+9208522	3825056		Buenos Aires Texalpan						
+9208523	3825056	es	Texalpan						
+11853152	3827185	es	Buenos Aires						
+1534542	3979840		Zacatecas		1				
+1990428	3979840	es	Estado de Zacatecas	1					
+1990429	3979840	fr	Zacatecas						
+1990431	3979840	en	Zacatecas						
+5649876	3979840		Estado de Zacatecas						
+7666122	3979840	es	Zacatecas		1				
+1535487	3982846		Sonora		1				
+1893677	3982846		altar, sonora						
+1988469	3982846	fr	Sonora						
+1988470	3982846	es	Estado de Sonora	1					
+1988472	3982846	en	Sonora						
+5649883	3982846		Estado de Sonora						
+7666118	3982846	es	Sonora		1				
+1535555	3983035		Sinaloa		1				
+1991053	3983035	fr	Sinaloa						
+1991054	3983035	es	Estado de Sinaloa	1					
+1991056	3983035	en	Sinaloa						
+5649884	3983035		Estado de Sinaloa						
+7666115	3983035	es	Sinaloa		1				
+1535736	3983671	es	Santiago						
+4226318	3983671	es	Villa de Santiago						
+4226320	3983676		Santiago						
+11952682	3983679	es	Santiago						
+9535913	3983681	es	Santiago						
+1536178	3985605		San Luis Potosí		1				
+1987074	3985605	es	Estado de San Luis Potosí	1					
+1987075	3985605	fr	San Luis Potosí						
+1987079	3985605	en	San Luis Potosí						
+5649885	3985605		Estado de San Luis Potosí						
+7666106	3985605	es	San Luis Potosí		1				
+1538172	3995012		Nayarit		1				
+1989763	3995012	fr	Nayarit						
+1989764	3995012	es	Estado de Nayarit	1					
+1989766	3995012	en	Nayarit						
+5649891	3995012		Estado de Nayarit						
+7665443	3995012	es	Nayarit		1				
+8546604	3995012		Tepic						
+1538419	3995955		Michoacan						
+1538420	3995955		Michoacán de Ocampo		1				
+1538421	3995955		Estado de Michoacan						
+1991415	3995955	es	Estado de Michoacán de Ocampo	1					
+1991416	3995955	fr	Michoacán						
+1991418	3995955	en	Michoacán						
+5649893	3995955		Estado de Michoacán de Ocampo						
+7665428	3995955	es	Michoacán de Ocampo		1				
+13139514	3995955	es	Michoacán						
+9757077	3996933	es	Madrid						
+1539294	3998655		Ciudad de León						
+1539295	3998655		León de los Aldamas						
+1609568	3998655	en	León						
+1609569	3998655	es	León	1	1	1			
+1609572	3998655	fr	Leon Guanajuato						
+1655905	3998655	fr	León	1					
+4231400	3998655		León						
+11766606	3998655	es	León de los Aldama						
+1541241	4004156		Jalisco		1				
+1990675	4004156	es	Estado de Jalisco	1					
+1990676	4004156	fr	Jalisco						
+1990678	4004156	en	Jalisco						
+5649895	4004156		Estado de Jalisco						
+7665060	4004156	es	Jalisco		1				
+1541563	4005267		Guanajuato		1				
+1988901	4005267	es	Estado de Guanajuato	1					
+1988902	4005267	fr	État de Guanajuato						
+1988905	4005267	en	Guanajuato						
+5649898	4005267		Estado de Guanajuato						
+7664611	4005267	es	Guanajuato		1				
+1543788	4011741		Durango		1				
+1990745	4011741	fr	Durango						
+1990747	4011741	es	Estado de Durango	1					
+1990748	4011741	en	Durango						
+5649899	4011741		Estado de Durango						
+7663411	4011741	es	Durango		1				
+1544232	4013513		Colima		1				
+1989877	4013513	es	Estado de Colima	1					
+1989879	4013513	fr	Colima						
+1989880	4013513	en	Colima						
+5649900	4013513		Estado de Colima						
+7663206	4013513	es	Colima		1				
+1544276	4013674		Coahuila						
+1544277	4013674		Coahuila de Zaragoza		1				
+1544278	4013674		Estado de Coahuila						
+1631582	4013674	es	Coahuila de Zaragoza		1				
+1631584	4013674	en	Coahuila						
+1631589	4013674	fr	Coahuila						
+5649901	4013674		Estado de Coahuila de Zaragoza						
+7664346	4013674	es	Estado de Coahuila de Zaragoza	1					
+1544477	4014336		Chihuahua		1				
+1986837	4014336	fr	Chihuahua						
+1986838	4014336	es	Chihuahua		1				
+1986839	4014336	en	Chihuahua						
+5649902	4014336		Estado de Chihuahua						
+7663908	4014336	es	Estado de Chihuahua	1					
+9759422	4016585	es	Buenos Aires						
+11717045	4016586	es	Buenos Aires						
+9759423	4016589	es	Buenos Aires						
+1545260	4017698		Baja California Sur		1				
+1545261	4017698		Territorio Sur Baja California						
+1545262	4017698		Distrito Sur Baja California						
+1988162	4017698	fr	Basse-Californie du Sud						
+1988163	4017698	es	Estado de Baja California Sur	1					
+1988165	4017698	en	Baja California Sur						
+5649905	4017698		Estado de Baja California Sur						
+7663195	4017698	es	Baja California Sur		1				
+1545263	4017700		Territorio Norte Baja California						
+1545264	4017700		Estado de Baja California Norte						
+1545265	4017700		Distrito Norte Baja California						
+2185578	4017700		Baja California	1	1				
+2296747	4017700	fr	Basse-Californie du Nord	1	1				
+5649906	4017700		Estado de Baja California						
+7663193	4017700	es	Estado de Baja California	1					
+7663194	4017700	es	Baja California		1				
+16085549	4017700	en	Baja California		1				
+16085551	4017700	en	Free and Sovereign State of Baja California						
+16085552	4017700	es	Estado Libre y Soberano de Baja California						
+1545753	4019231		Aguascalientes		1				
+1987471	4019231	es	Estado de Aguascalientes	1					
+1987473	4019231	fr	Aguascalientes						
+1987475	4019231	en	Aguascalientes						
+5649907	4019231		Estado de Aguascalientes						
+7663170	4019231	es	Aguascalientes		1				
+8933540	8858162		Buenos Aires						
+8934233	8858858		Buenos Aires						
+8934274	8858899		Buenos Aires						
+8934489	8859110		Santiago						
+8935918	8860542		Buenos Aires						
+8936925	8861546		Buenos Aires						
+2186466	3691099		Ucayali						
+5650793	3691099		Departamento de Ucayali						
+7352780	3691099		Región de Ucayali						
+8298005	3691099	en	Ucayali	1	1				
+8298006	3691099	fr	Région dUcayali						
+17684151	3691099	en	Ucayali Department						
+20584586	3691099	es	Ucayali						
+1494810	3691146	en	Tumbes		1				
+1494811	3691146		Provincia Litoral de Tumbes						
+1494812	3691146		Provincia Litoral Tumbes						
+5650794	3691146		Departamento de Tumbes						
+7352783	3691146		Región de Tumbes						
+9350985	3691146	en	Tumbes Region						
+9350986	3691146	fr	Tumbes						
+17684198	3691146	en	Tumbes Department						
+17948123	3691146	es	Departamento de Tumbes						
+1495222	3692385		San Martin						
+1495223	3692385		Departamento San Martín						
+2186457	3692385		San Martín	1	1				
+5650796	3692385		Departamento de San Martín						
+7352789	3692385		Región de San Martín						
+17684154	3692385	en	San Martín Department						
+17948167	3692385	es	Departamento de San Martín						
+17948184	3692385	fr	San Martín						
+1495660	3693525		Departamento Piura						
+1495661	3693525		Piura						
+5650798	3693525		Departamento de Piura						
+7352795	3693525		Región de Piura						
+8190614	3693525	en	Piura	1	1				
+8190615	3693525	fr	Piura						
+17684175	3693525	en	Piura Department						
+17948216	3693525	es	Departamento de Piura						
+1496260	3695238		Departamento Loreto						
+1496261	3695238		Loreto						
+5650801	3695238		Departamento de Loreto						
+7352804	3695238		Región de Loreto						
+8302133	3695238	en	Loreto	1	1				
+8302134	3695238	fr	Loreto						
+17684152	3695238	en	Loreto Department						
+17948253	3695238	es	Departamento de Loreto						
+1496380	3695753		Lambayeque						
+1496381	3695753		Departamento Lambayeque						
+5650803	3695753		Departamento de Lambayeque						
+7352810	3695753		Región de Lambayeque						
+8211805	3695753	en	Lambayeque	1	1				
+8211806	3695753	fr	Lambayeque						
+17684201	3695753	en	Lambayeque Department						
+17948291	3695753	es	Departamento de Lambayeque						
+1496386	3695781		La Libertad						
+1496387	3695781		Departamento La Libertad						
+1496388	3695781		Libertad						
+5650804	3695781		Departamento de La Libertad						
+7352813	3695781		Región de La Libertad						
+8190931	3695781	en	La Libertad	1	1				
+8190932	3695781	fr	La Libertad						
+17684195	3695781	en	La Libertad Department						
+17948325	3695781	es	Departamento de La Libertad						
+1496590	3696416		Departamento Huánuco						
+1496591	3696416		Huanuco		1				
+5650807	3696416		Departamento de Huánuco						
+7352822	3696416		Región de Huánuco						
+8041854	3696416		Huánuco						
+17684159	3696416	en	Huánuco Department						
+17948368	3696416	es	Departamento de Huánuco						
+17948383	3696416	fr	Huánuco						
+1497486	3699087		Departamento Cajamarca						
+1497487	3699087		Cajamarca		1				
+5650811	3699087		Departamento de Cajamarca						
+7352834	3699087		Región de Cajamarca						
+17684153	3699087	en	Cajamarca Department						
+17948425	3699087	es	Departamento de Cajamarca						
+17948441	3699087	fr	Cajamarca						
+1497530	3699223		Buenos Aires Hacienda						
+4587230	3699223		Buenos Aires						
+1497673	3699674		Departamento Ancash						
+1497674	3699674		Ancachs						
+1497675	3699674	es	Ancash		1				
+5650815	3699674		Departamento de Ancash						
+5906634	3699674	en	Ancash	1	1				
+7352846	3699674		Región de Ancash						
+8189457	3699674		Ancash	1	1				
+8189458	3699674	es	Departamento de Áncash						
+8189459	3699674	fr	Ancash						
+19978364	3699674	es	Áncash						
+1497691	3699699	en	Amazonas	1	1				
+1497692	3699699		Departamento Amazonas						
+5650816	3699699		Departamento de Amazonas						
+7352849	3699699		Región de Amazonas						
+8197348	3699699	en	Amazonas Region						
+17684193	3699699	en	Amazonas Department						
+17948517	3699699	es	Departamento de Amazonas						
+17948525	3699699	fr	Amazonas						
+1530025	3928127		Tacna						
+1530026	3928127		Departamento Tacna						
+5650795	3928127		Departamento de Tacna						
+7352786	3928127		Región de Tacna						
+8293985	3928127	en	Tacna	1	1				
+8293986	3928127	fr	Tacna						
+17684203	3928127	en	Tacna Department						
+17951757	3928127	es	Departamento de Tacna						
+11223450	3929051	es	Santiago						
+1530207	3929053		Santiago de Anchucaya						
+4582118	3929053		Santiago						
+1530740	3931275		Puno						
+1530741	3931275		Departamento Puno						
+5650797	3931275		Departamento de Puno						
+7352792	3931275		Región de Puno						
+8229197	3931275	en	Puno	1	1				
+8229198	3931275	fr	Région de Puno						
+17684160	3931275	en	Puno Department						
+20584757	3931275	es	Puno						
+1531032	3932834		Pasco		1				
+5650799	3932834		Departamento de Pasco						
+7352798	3932834		Región de Pasco						
+11366085	3932834	en	Pasco Region						
+11366086	3932834	fr	Pasco						
+11990101	3932834	en	Pasco		1				
+17684161	3932834	en	Pasco Department						
+17951793	3932834	es	Departamento de Pasco						
+1531400	3934607		Departamento Moquehua						
+1531401	3934607		Departamento Moquegua						
+1531402	3934607		Moquegua		1				
+1531403	3934607		Provincia Litoral de Moquegua						
+17684196	3934607	en	Moquegua Department						
+17951837	3934607	es	Departamento de Moquegua						
+17951854	3934607	fr	Moquegua						
+1531636	3935619		Del Madre de Dios						
+1531637	3935619	en	Madre de Dios		1				
+1531638	3935619		Departamento Madre de Dios						
+5650800	3935619		Departamento de Madre de Dios						
+7352801	3935619		Región de Madre de Dios						
+8736662	3935619	en	Madre de Dios Region						
+8736663	3935619	fr	Madre de Dios						
+17684194	3935619	en	Madre de Dios Department						
+17951890	3935619	es	Departamento de Madre de Dios						
+1531799	3936451		Lima Capital						
+8489159	3936451	en	Lima Province	1	1				
+11990102	3936451	en	Lima		1				
+17831882	3936451	es	Provincia de Lima						
+17831896	3936451	fr	province de Lima						
+1531800	3936452		Lima						
+1531801	3936452		Departamento Lima						
+5650802	3936452		Departamento de Lima						
+7352807	3936452		Región de Lima						
+8306388	3936452	en	Lima region	1	1				
+8306389	3936452	fr	Lima						
+17684173	3936452	en	Lima Department						
+17951929	3936452	es	Departamento de Lima						
+1981060	3936456	es	Lima						
+1981062	3936456	fr	Lima						
+1981064	3936456	en	Lima						
+1532083	3937485		Departamento Junín						
+1532084	3937485		Junín		1				
+5650805	3937485		Departamento de Junín						
+7352816	3937485		Región de Junín						
+11336960	3937485	en	Junín Region						
+11336961	3937485	fr	Junín						
+11990100	3937485	en	Junin		1				
+17684174	3937485	en	Junín Department						
+17951969	3937485	es	Departamento de Junín						
+1532284	3938526		Ica						
+1532285	3938526		Departamento Ica						
+5650806	3938526		Departamento de Ica						
+7352819	3938526		Región de Ica						
+8317867	3938526	en	Ica	1	1				
+8317868	3938526	fr	Ica						
+17684169	3938526	en	Ica Department						
+17952003	3938526	es	Departamento de Ica						
+1532472	3939467		Departamento Huancavelica						
+1532473	3939467		Huancavelica						
+5650808	3939467		Departamento de Huancavelica						
+7352825	3939467		Región de Huancavelica						
+8223823	3939467	en	Huancavelica	1	1				
+8223824	3939467	fr	Huancavelica						
+17684202	3939467	en	Huancavelica Department						
+17952039	3939467	es	Departamento de Huancavelica						
+1532907	3941583		Departamento de Cuzco						
+1532908	3941583		Departamento del Cusco						
+1532909	3941583		Departamento del Cuzco						
+1532910	3941583		Cusco		1				
+1532911	3941583		Cuzco						
+1532912	3941583		Departamento Cusco						
+5650809	3941583		Departamento de Cusco						
+7352828	3941583		Región de Cusco						
+17684150	3941583	en	Cuzco Department						
+17952082	3941583	es	Departamento de Cusco						
+17952101	3941583	fr	Cuzco						
+1533723	3946080		Callao		1				
+1533724	3946080		Provincia Constitucional Callao						
+5650810	3946080		Provincia Constitucional del Callao						
+7352831	3946080		Región de Callao						
+1533935	3947018		Ayacucho						
+1533936	3947018		Departamento Ayacucho						
+5650812	3947018		Departamento de Ayacucho						
+7352837	3947018		Región de Ayacucho						
+8311902	3947018	en	Ayacucho	1	1				
+8311903	3947018	fr	Ayacucho						
+17684171	3947018	en	Ayacucho Department						
+17952135	3947018	es	Departamento de Ayacucho						
+1534015	3947319		Arequipa						
+1534016	3947319		Departamento Arequipa						
+5650813	3947319		Departamento de Arequipa						
+7352840	3947319		Región de Arequipa						
+8230024	3947319	en	Arequipa	1	1				
+8230025	3947319	fr	Arequipa						
+17952175	3947319	es	Departamento de Arequipa						
+1534040	3947421		Departmento Apurímac						
+1534041	3947421		Apurimac						
+2186500	3947421		Apurímac	1	1				
+5650814	3947421		Departamento de Apurímac						
+7352843	3947421		Región de Apurímac						
+16609630	3947421	es	Apurímac						
+17684204	3947421	en	Apurímac Department						
+17952237	3947421	fr	Apurímac						

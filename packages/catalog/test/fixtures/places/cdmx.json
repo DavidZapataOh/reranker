@@ -1,0 +1,51 @@
+{
+  "formattedAddress": "Av. Paseo de la Reforma 222, Juárez, 06600 Ciudad de México, CDMX, México",
+  "addressComponents": [
+    {
+      "longText": "222",
+      "shortText": "222",
+      "types": ["street_number"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Avenida Paseo de la Reforma",
+      "shortText": "Av. Paseo de la Reforma",
+      "types": ["route"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Juárez",
+      "shortText": "Juárez",
+      "types": ["sublocality_level_1", "sublocality", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Ciudad de México",
+      "shortText": "CDMX",
+      "types": ["locality", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Ciudad de México",
+      "shortText": "CDMX",
+      "types": ["administrative_area_level_1", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "México",
+      "shortText": "MX",
+      "types": ["country", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "06600",
+      "shortText": "06600",
+      "types": ["postal_code"],
+      "languageCode": "es"
+    }
+  ],
+  "location": {
+    "latitude": 19.4295,
+    "longitude": -99.1627
+  }
+}

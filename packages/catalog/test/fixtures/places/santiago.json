@@ -1,0 +1,51 @@
+{
+  "formattedAddress": "Paseo Ahumada 100, 8320000 Santiago, Región Metropolitana, Chile",
+  "addressComponents": [
+    {
+      "longText": "100",
+      "shortText": "100",
+      "types": ["street_number"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Paseo Ahumada",
+      "shortText": "Paseo Ahumada",
+      "types": ["route"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Santiago",
+      "shortText": "Santiago",
+      "types": ["locality", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Santiago",
+      "shortText": "Santiago",
+      "types": ["administrative_area_level_2", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Región Metropolitana",
+      "shortText": "RM",
+      "types": ["administrative_area_level_1", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Chile",
+      "shortText": "CL",
+      "types": ["country", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "8320000",
+      "shortText": "8320000",
+      "types": ["postal_code"],
+      "languageCode": "es"
+    }
+  ],
+  "location": {
+    "latitude": -33.4378,
+    "longitude": -70.6505
+  }
+}

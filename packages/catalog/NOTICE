@@ -1,0 +1,13 @@
+@reranker/catalog
+
+The place names in data/geo (Spanish names, local names and aliases of regions and cities
+outside Colombia) are derived from the GeoNames geographical database, https://www.geonames.org,
+a project of Unxos GmbH, licensed under the Creative Commons Attribution 4.0 International
+License (https://creativecommons.org/licenses/by/4.0/).
+
+Changes: scripts/build-geo.ts pairs GeoNames entries with DataForSEO's Google locations and
+keeps, per place, one display name and a few aliases taken from admin1CodesASCII.txt,
+admin2Codes.txt, cities500.txt, alternateNamesV2.txt and countryInfo.txt. The files used, with
+their date and SHA-256, are listed under sourceGeoNames in data/geo/manifest.json.
+
+The data is provided by GeoNames "as is", without warranty of any kind.

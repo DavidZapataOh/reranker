@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { measurableCountries } from "@reranker/i18n/countries";
 import { describe, expect, test } from "vitest";
+import { cityNames } from "../scripts/build-geo.ts";
 import {
   expandGeoFile,
   GEO_DATA_VERSION,
@@ -39,10 +40,10 @@ describe("generated location data", () => {
 
   test.each(codes)("%s names index lists exactly its cities", (code) => {
     const names = read<GeoNamesFile>(`${code}-names.json`);
-    const cities = read<GeoFile>(geoFile(code)).cities.map((row) => row[1]);
+    const { cities } = read<GeoFile>(geoFile(code));
     expect(names.country).toBe(code.toUpperCase());
-    expect(new Set(names.names)).toEqual(new Set(cities));
-    expect(names.names).toHaveLength(new Set(cities).size);
+    expect(names.names).toEqual(cityNames(cities));
+    expect(names.names).toHaveLength(new Set(cities.map((row) => row[1])).size);
     expect(statSync(path(`${code}-names.json`)).size).toBeLessThanOrEqual(MAX_NAMES_BYTES);
   });
 

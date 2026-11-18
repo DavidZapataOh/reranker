@@ -1,0 +1,53 @@
+ES.60.V	Província de València	Provincia de Valencia	2509951
+ES.54.TO	Province of Toledo	Province of Toledo	2510407
+ES.51.SE	Provincia de Sevilla	Provincia de Sevilla	2510910
+ES.53.TF	Provincia de Santa Cruz de Tenerife	Provincia de Santa Cruz de Tenerife	2511173
+ES.51.MA	Provincia de Málaga	Provincia de Malaga	2514254
+ES.53.GC	Provincia de Las Palmas	Provincia de Las Palmas	2515271
+ES.51.J	Provincia de Jaén	Provincia de Jaen	2516394
+ES.51.H	Provincia de Huelva	Provincia de Huelva	2516547
+ES.51.GR	Provincia de Granada	Provincia de Granada	2517115
+ES.54.CU	Provincia de Cuenca	Provincia de Cuenca	2519034
+ES.51.CO	Province of Córdoba	Province of Cordoba	2519239
+ES.54.CR	Provincia de Ciudad Real	Provincia de Ciudad Real	2519401
+ES.51.CA	Provincia de Cádiz	Provincia de Cadiz	2520597
+ES.57.CC	Provincia de Cáceres	Provincia de Caceres	2520610
+ES.57.BA	Provincia de Badajoz	Provincia de Badajoz	2521419
+ES.51.AL	Almería	Almeria	2521883
+ES.60.A	Provincia de Alicante	Provincia de Alicante	2521976
+ES.54.AB	Provincia de Albacete	Provincia de Albacete	2522257
+ES.52.Z	Provincia de Zaragoza	Provincia de Zaragoza	3104323
+ES.55.ZA	Provincia de Zamora	Provincia de Zamora	3104341
+ES.59.BI	Bizkaia	Bizkaia	3104469
+ES.55.VA	Provincia de Valladolid	Provincia de Valladolid	3106671
+ES.52.TE	Provincia de Teruel	Provincia de Teruel	3108125
+ES.56.T	Província de Tarragona	Provincia de Tarragona	3108287
+ES.55.SO	Provincia de Soria	Provincia de Soria	3108680
+ES.55.SG	Provincia de Segovia	Provincia de Segovia	3109254
+ES.39.S	Provincia de Cantabria	Provincia de Cantabria	3109716
+ES.55.SA	Provincia de Salamanca	Provincia de Salamanca	3111107
+ES.58.PO	Provincia de Pontevedra	Provincia de Pontevedra	3113208
+ES.55.P	Provincia de Palencia	Provincia de Palencia	3114530
+ES.58.OR	Provincia de Ourense	Provincia de Ourense	3114964
+ES.58.LU	Provincia de Lugo	Provincia de Lugo	3117813
+ES.55.LE	Provincia de León	Provincia de Leon	3118528
+ES.58.C	Provincia da Coruña	Provincia da Coruna	3119840
+ES.52.HU	Provincia de Huesca	Provincia de Huesca	3120513
+ES.59.SS	Gipuzkoa	Gipuzkoa	3120935
+ES.54.GU	Provincia de Guadalajara	Provincia de Guadalajara	3121069
+ES.60.CS	Província de Castelló	Provincia de Castello	3125881
+ES.55.BU	Provincia de Burgos	Provincia de Burgos	3127460
+ES.56.B	Província de Barcelona	Provincia de Barcelona	3128759
+ES.55.AV	Provincia de Ávila	Provincia de Avila	3129138
+ES.59.VI	Araba / Álava	Araba / Alava	3130717
+ES.56.GI	Província de Girona	Provincia de Girona	6355230
+ES.56.L	Província de Lleida	Provincia de Lleida	6355231
+ES.27.LO	Provincia de La Rioja	Provincia de La Rioja	6355232
+ES.29.M	Provincia de Madrid	Provincia de Madrid	6355233
+ES.31.MU	Murcia	Murcia	6355234
+ES.32.NA	Provincia de Navarra	Provincia de Navarra	6355235
+ES.34.O	Province of Asturias	Province of Asturias	6355236
+ES.07.PM	Illes Balears	Illes Balears	6424360
+ES.CE.CE	Ceuta	Ceuta	8335119
+ES.ML.ME	Melilla	Melilla	8335120
+PE.15.1501	Lima	Lima	8349601

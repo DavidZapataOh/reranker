@@ -1,10 +1,12 @@
-// Rebuilds data/geo from DataForSEO's Google locations list and, for the municipalities of
-// Colombia, the official DIVIPOLA register. Usage: pnpm --filter @reranker/catalog geo:build
+// Rebuilds data/geo from DataForSEO's Google locations list, named in Spanish from GeoNames
+// and, for the municipalities of Colombia, from the official DIVIPOLA register.
+// Usage: pnpm --filter @reranker/catalog geo:build
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { Readable } from "node:stream";
 import { measurableCountries } from "@reranker/i18n/countries";
 import { parse } from "csv-parse";
 import {
+  type CityName,
   type CityRow,
   compareKeys,
   expandGeoFile,
@@ -15,6 +17,7 @@ import {
 } from "../src/geo/format.ts";
 import { normalizePlaceName } from "../src/geo/normalize.ts";
 import { contentHash } from "../src/hash.ts";
+import { type CountryGeoNames, type Naming, readGeoNames, spanishNames } from "./geonames.ts";
 
 const LOCATIONS_CSV =
   "https://cdn.dataforseo.com/v3/locations/locations_serp_google_2026_11_02.csv";
@@ -132,17 +135,19 @@ function countryOf(rows: readonly LocationRow[]): string {
   return country;
 }
 
+export type Coverage = { regions: number; cities: number };
+
 export function buildCountry(
   rows: readonly LocationRow[],
-  divipola?: readonly DivipolaRecord[],
-): CountryTables {
+  sources: { divipola?: readonly DivipolaRecord[]; geonames?: CountryGeoNames } = {},
+): CountryTables & { spanish?: Coverage } {
   const country = countryOf(rows);
   const byCode = new Map(rows.map((row) => [row.location_code, row]));
   const regionOf = regionResolver(byCode);
   const cities = rows.filter((row) => CITY_TYPES.has(row.location_type));
-  return divipola
-    ? buildFromDivipola(country, rows, cities, regionOf, divipola)
-    : buildFromLocations(country, rows, cities, regionOf);
+  return sources.divipola
+    ? buildFromDivipola(country, rows, cities, regionOf, sources.divipola)
+    : buildFromLocations(country, rows, cities, regionOf, sources.geonames);
 }
 
 function buildFromLocations(
@@ -150,7 +155,8 @@ function buildFromLocations(
   rows: readonly LocationRow[],
   cities: readonly LocationRow[],
   regionOf: (row: LocationRow) => LocationRow | null,
-): CountryTables {
+  geonames: CountryGeoNames | undefined,
+): CountryTables & { spanish?: Coverage } {
   const kept = new Map<string, { row: LocationRow; region: LocationRow | null }>();
   for (const row of cities) {
     const region = regionOf(row);
@@ -166,8 +172,31 @@ function buildFromLocations(
   );
   for (const { region } of kept.values()) if (region) regionRows.set(region.location_code, region);
 
+  const listed = (row: LocationRow) => ({ code: Number(row.location_code), name: placeName(row) });
+  const named =
+    geonames &&
+    spanishNames(
+      {
+        regions: [...regionRows.values()].map((row) => ({
+          ...listed(row),
+          level: regionOf(row) ? 2 : 1,
+        })),
+        cities: [...kept.values()].map(({ row, region }) => ({
+          ...listed(row),
+          region: region ? Number(region.location_code) : null,
+        })),
+      },
+      geonames,
+    );
+  const naming = (row: LocationRow, names?: ReadonlyMap<number, Naming>) =>
+    names?.get(Number(row.location_code)) ?? { name: placeName(row), aliases: [] };
+
   const regions = [...regionRows.values()]
-    .map((row): RegionRow => [Number(row.location_code), placeName(row)])
+    .map((row): RegionRow => {
+      const { name, aliases } = naming(row, named?.regions);
+      const code = Number(row.location_code);
+      return aliases.length ? [code, name, aliases] : [code, name];
+    })
     .sort((a, b) => a[0] - b[0]);
   const regionIndex = new Map(regions.map(([code], index) => [String(code), index]));
 
@@ -175,14 +204,19 @@ function buildFromLocations(
     country,
     regions,
     cities: [...kept.values()]
-      .map(
-        ({ row, region }): CityRow => [
-          Number(row.location_code),
-          placeName(row),
-          region ? (regionIndex.get(region.location_code) ?? null) : null,
-        ],
-      )
+      .map(({ row, region }): CityRow => {
+        const { name, aliases } = naming(row, named?.cities);
+        const at = region ? (regionIndex.get(region.location_code) ?? null) : null;
+        const code = Number(row.location_code);
+        return aliases.length ? [code, name, at, aliases] : [code, name, at];
+      })
       .sort((a, b) => compareKeys(String(a[0]), String(b[0]))),
+    ...(named && {
+      spanish: {
+        regions: [...named.regions.values()].filter((n) => n.spanish).length,
+        cities: [...named.cities.values()].filter((n) => n.spanish).length,
+      },
+    }),
   };
 }
 
@@ -348,8 +382,29 @@ function writeJson(name: string, value: unknown): void {
   writeFileSync(new URL(name, OUTPUT), `${JSON.stringify(value)}\n`);
 }
 
+/** Each display name once, with every alias of the cities shown under it. */
+export function cityNames(cities: readonly CityRow[]): CityName[] {
+  const aliases = new Map<string, Map<string, string>>();
+  for (const row of cities) {
+    const own = aliases.get(row[1]) ?? new Map<string, string>();
+    for (const alias of row.length === 4 ? row[3] : []) {
+      const key = normalizePlaceName(alias);
+      if (!own.has(key)) own.set(key, alias);
+    }
+    aliases.set(row[1], own);
+  }
+  return [...aliases]
+    .sort(([a], [b]) => compareKeys(a, b))
+    .map(([name, own]) => (own.size ? [name, ...own.values()] : name));
+}
+
 async function main(): Promise<void> {
-  const [locations, divipola] = await Promise.all([readLocations(), readDivipola()]);
+  const countries = measurableCountries().map(({ code }) => code);
+  const [locations, divipola, geonames] = await Promise.all([
+    readLocations(),
+    readDivipola(),
+    readGeoNames(new Set(countries)),
+  ]);
   const divipolaCountry = locations.find(
     (row) => row.location_type === "Country" && row.location_name === DIVIPOLA_COUNTRY_NAME,
   )?.country_iso_code;
@@ -358,29 +413,35 @@ async function main(): Promise<void> {
   rmSync(OUTPUT, { recursive: true, force: true });
   mkdirSync(OUTPUT, { recursive: true });
   const files: Record<string, string> = {};
-  for (const { code } of measurableCountries()) {
+  for (const code of countries) {
     const rows = byCountry.get(code) ?? [];
-    const tables: CountryTables = rows.length
-      ? buildCountry(rows, code === divipolaCountry ? divipola : undefined)
+    const { spanish, ...tables } = rows.length
+      ? buildCountry(
+          rows,
+          code === divipolaCountry ? { divipola } : { geonames: geonames.forCountry(code) },
+        )
       : { country: code, regions: [], cities: [] };
     const geoDataHash = contentHash(expandGeoFile(tables));
     const prefix = code.toLowerCase();
     const file = `${prefix}-${GEO_DATA_VERSION}.json`;
     writeJson(file, { version: GEO_DATA_VERSION, geoDataHash, ...tables } satisfies GeoFile);
-    const names = [...new Set(tables.cities.map((row) => row[1]))].sort(compareKeys);
     writeJson(`${prefix}-names.json`, {
       version: GEO_DATA_VERSION,
       country: code,
-      names,
+      names: cityNames(tables.cities),
     } satisfies GeoNamesFile);
     files[file] = geoDataHash;
     if (code === divipolaCountry) reportDivipola(tables, rows, divipola);
-    console.log(`${code}: ${tables.cities.length} cities, ${tables.regions.length} regions`);
+    const named = spanish ? ` (${spanish.cities} and ${spanish.regions} in Spanish)` : "";
+    console.log(
+      `${code}: ${tables.cities.length} cities, ${tables.regions.length} regions${named}`,
+    );
   }
   writeJson("manifest.json", {
     version: GEO_DATA_VERSION,
     sourceCsv: LOCATIONS_CSV,
     sourceDivipola: DIVIPOLA_JSON,
+    sourceGeoNames: geonames.sources,
     geoDataHash: files,
   });
 }
