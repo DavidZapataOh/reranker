@@ -134,8 +134,8 @@ const rows: Row[] = [
   ["BREAKER_FAILURE_RATIO", "config", ALL, false, "07", true],
   ["BREAKER_OPEN_MS", "config", ALL, false, "07", true],
   // GitHub holds the sandbox values, used by the contract tests.
-  ["DATAFORSEO_LOGIN", "secret", ALL, true, "S02-02"],
-  ["DATAFORSEO_PASSWORD", "secret", ALL, true, "S02-02"],
+  ["DATAFORSEO_LOGIN", "secret", ALL, true, "S02-02", true],
+  ["DATAFORSEO_PASSWORD", "secret", ALL, true, "S02-02", true],
   ["OPENAI_API_KEY", "secret", ALL, false, "S02-03 / S02-04", true],
   ["OPENAI_API_KEY_CI", "secret", NONE, true, "S02-03 / S02-04"],
   ["OPENAI_CONTROL_MODEL", "config", ALL, false, "S02-03 / S02-04"],

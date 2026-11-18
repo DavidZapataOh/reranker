@@ -269,6 +269,9 @@ catalogs:
     csv-parse:
       specifier: 7.0.3
       version: 7.0.3
+    dataforseo-client:
+      specifier: 2.1.13
+      version: 2.1.13
     drizzle-kit:
       specifier: ^0.31.11
       version: 0.31.11
@@ -341,6 +344,9 @@ catalogs:
     typescript:
       specifier: 7.0.2
       version: 7.0.2
+    ulid:
+      specifier: 3.0.2
+      version: 3.0.2
     use-intl:
       specifier: 4.14.9
       version: 4.14.9
@@ -409,6 +415,9 @@ importers:
       '@reranker/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@reranker/capture':
+        specifier: workspace:*
+        version: link:../../packages/capture
       '@reranker/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -622,6 +631,46 @@ importers:
       tsx:
         specifier: 'catalog:'
         version: 4.23.15
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vitest:
+        specifier: 'catalog:'
+        version: 5.1.0(@opentelemetry/api@1.10.0)(@types/node@26.6.6)(@vitest/browser-playwright@5.1.0)(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(msw@3.0.3(@types/node@26.6.6)(supports-color@10.2.2)(typescript@7.0.2)(vite@8.3.5(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)))(vite@8.3.5(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15))
+
+  packages/capture:
+    dependencies:
+      '@reranker/env':
+        specifier: workspace:*
+        version: link:../env
+      '@reranker/jobs':
+        specifier: workspace:*
+        version: link:../jobs
+      '@reranker/schema':
+        specifier: workspace:*
+        version: link:../schema
+      '@reranker/verify':
+        specifier: workspace:*
+        version: link:../verify
+      dataforseo-client:
+        specifier: 'catalog:'
+        version: 2.1.13
+      server-only:
+        specifier: 'catalog:'
+        version: 0.0.1
+      ulid:
+        specifier: 'catalog:'
+        version: 3.0.2
+    devDependencies:
+      '@reranker/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 26.6.6
+      '@vitest/coverage-v8':
+        specifier: 'catalog:'
+        version: 5.1.0(@vitest/browser@5.1.0)(vitest@5.1.0)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -5697,6 +5746,9 @@ packages:
   data-uri-to-buffer@6.0.2:
     resolution: {integrity: sha512-7hvf7/GW8e86rW0ptuwS3OcBGDjIi6SZva7hCyWC0yYry2cOPmLIjXAUHI6DK2HsnwJd9ifmt57i8eV2n4YNpw==}
     engines: {node: '>= 14'}
+
+  dataforseo-client@2.1.13:
+    resolution: {integrity: sha512-cW3GLCuqbF8wezzLIXKAuoY6MVMmXgTp3/iYd3Xs4rWYSFa827RA9I6PWwQdA+UzE/P0ez2c/4+9vAjj6URdnA==}
 
   date-fns@4.1.0:
     resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
@@ -13796,6 +13848,8 @@ snapshots:
   csv-parse@7.0.3: {}
 
   data-uri-to-buffer@6.0.2: {}
+
+  dataforseo-client@2.1.13: {}
 
   date-fns@4.1.0: {}
 
