@@ -66,6 +66,8 @@ export const opsAlerts = {
     runbook: "network-ranges-stale.md",
     source: "jobs",
   },
+  // A blocked or unpaid team takes every deployment down with 402, reranker.co included.
+  "vercel-billing": { severity: "critical", runbook: "vercel-billing.md", source: "vercel" },
   // A gated flag on in production while a stage it needs is failing; only unverified checks warn.
   "launch-gate-violated": {
     severity: "critical",

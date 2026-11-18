@@ -18,6 +18,13 @@ const FREE_REPORT: readonly GatedFlag[] = ["free-report-live"];
 /** Every provider tier upgrade with its trigger and cost, in Spanish: the founder reads them. */
 export const PENDING_STAGES: readonly (LaunchStage | VolumeStage | ExternalStage)[] = [
   {
+    name: "Vercel Pro activo y al día, sin bloqueo del equipo",
+    cost: "US$20/mes por asiento",
+    trigger: BEFORE_BOTH,
+    checks: ["vercel-billing"],
+    gates: ["free-report-live", "accounts"],
+  },
+  {
     name: "Neon de producción siempre encendido, 0,5–4 CU, 7 días de restauración, rama protegida",
     cost: "≈ US$40/mes",
     trigger: BEFORE_BOTH,

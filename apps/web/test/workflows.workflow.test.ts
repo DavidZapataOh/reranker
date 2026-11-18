@@ -64,6 +64,7 @@ test("DAILY_STEPS keep the spec order", () => {
     "drainDeferredFreeReports",
     "enqueueDueRemeasures",
     "leadRetentionSweep",
+    "vercelBilling",
     "launchGate",
     "opsDigest",
   ];
@@ -77,6 +78,7 @@ test("DAILY_STEPS keep the spec order", () => {
       "reconcileSpend",
       "checkWorkflowBudget",
       "checkScaleTriggers",
+      "vercelBilling",
       "launchGate",
     ]),
   );

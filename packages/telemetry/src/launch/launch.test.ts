@@ -15,6 +15,7 @@ const {
   checkResend,
   checkSmokeCron,
   checkTraces,
+  checkVercelBilling,
   gateBlockers,
   LAUNCH_CHECK_IDS,
   LAUNCH_GATES,
@@ -26,6 +27,9 @@ const WEBHOOKS = "https://incidents.betterstack.com/api/v2/incoming-webhooks";
 const RESEND_DOMAINS = "https://api.resend.com/domains";
 const POSTHOG = "https://us.posthog.com/api";
 const REPO = "https://api.github.com/repos/DavidZapataOh/reranker";
+const TEAM = "https://api.vercel.com/v2/teams/team_Z821WJ1qhLyT3ohz19uC3MOm";
+const HEALTH = "https://reranker.co/api/health";
+const healthy = () => HttpResponse.json({ status: "ok" });
 
 beforeAll(() => server.listen());
 beforeEach(() => vi.stubEnv("APP_ENV", "production"));
@@ -327,6 +331,97 @@ describe("github", () => {
   });
 });
 
+describe("vercel-billing", () => {
+  const activePro = { billing: { plan: "pro", status: "active" }, softBlock: null };
+
+  test("passes for an active Pro team that is not blocked and a site that answers", async () => {
+    vi.stubEnv("VERCEL_BILLING_READ_TOKEN", "vercel-read");
+    let auth: string | null = null;
+    server.use(
+      http.get(TEAM, ({ request }) => {
+        auth = request.headers.get("authorization");
+        return HttpResponse.json(activePro);
+      }),
+      http.get(HEALTH, healthy),
+    );
+    await expect(checkVercelBilling()).resolves.toMatchObject({
+      id: "vercel-billing",
+      status: "pass",
+    });
+    expect(auth).toBe("Bearer vercel-read");
+  });
+
+  test("an unpaid invoice names the block, the plan status and the 402", async () => {
+    vi.stubEnv("VERCEL_BILLING_READ_TOKEN", "vercel-read");
+    server.use(
+      http.get(TEAM, () =>
+        HttpResponse.json({
+          billing: { plan: "pro", status: "canceled" },
+          softBlock: { blockedAt: 1_795_000_000_000, reason: "UNPAID_INVOICE" },
+        }),
+      ),
+      http.get(HEALTH, () => new HttpResponse(null, { status: 402 })),
+    );
+    const result = await checkVercelBilling();
+    expect(result.status).toBe("fail");
+    for (const part of ["UNPAID_INVOICE", "canceled", "402"]) {
+      expect(result.reason).toContain(part);
+    }
+  });
+
+  test("a hard block or a team back on Hobby fails", async () => {
+    vi.stubEnv("VERCEL_BILLING_READ_TOKEN", "vercel-read");
+    server.use(
+      http.get(TEAM, () =>
+        HttpResponse.json({ billing: { plan: "hobby", status: "active" }, blocked: 1 }),
+      ),
+      http.get(HEALTH, healthy),
+    );
+    const result = await checkVercelBilling();
+    expect(result.status).toBe("fail");
+    expect(result.reason).toContain("bloqueado");
+    expect(result.reason).toContain("hobby");
+  });
+
+  test("without the token a 402 still fails the check", async () => {
+    vi.stubEnv("VERCEL_BILLING_READ_TOKEN", "");
+    server.use(http.get(HEALTH, () => new HttpResponse(null, { status: 402 })));
+    const result = await checkVercelBilling();
+    expect(result.status).toBe("fail");
+    expect(result.reason).toContain("402");
+  });
+
+  test("without the token and with the site up the plan cannot be told", async () => {
+    vi.stubEnv("VERCEL_BILLING_READ_TOKEN", "");
+    server.use(http.get(HEALTH, healthy));
+    await expect(checkVercelBilling()).resolves.toEqual({
+      id: "vercel-billing",
+      status: "unknown",
+      reason: "falta VERCEL_BILLING_READ_TOKEN",
+    });
+  });
+
+  test("a team without a plan status, an API error or an unreachable site is unknown", async () => {
+    vi.stubEnv("VERCEL_BILLING_READ_TOKEN", "vercel-read");
+    server.use(
+      http.get(TEAM, () => HttpResponse.json({ billing: { plan: "pro" } })),
+      http.get(HEALTH, () => HttpResponse.error()),
+    );
+    const silent = await checkVercelBilling();
+    expect(silent.status).toBe("unknown");
+    expect(silent.reason).toContain("estado del plan");
+    expect(silent.reason).toContain("reranker.co sin respuesta");
+    server.use(
+      http.get(TEAM, () => HttpResponse.json({ error: { code: "forbidden" } }, { status: 403 })),
+      http.get(HEALTH, healthy),
+    );
+    await expect(checkVercelBilling()).resolves.toMatchObject({
+      status: "unknown",
+      reason: "respuesta HTTP 403",
+    });
+  });
+});
+
 describe("deployment", () => {
   test("traces pass only with a tracer provider registered", () => {
     expect(checkTraces(true).status).toBe("pass");
@@ -349,6 +444,7 @@ describe("deployment", () => {
 describe("runLaunchCheck", () => {
   test("returns every check in order, a failing source as unknown with its reason", async () => {
     server.use(
+      http.get(HEALTH, healthy),
       http.get(REPO, () => HttpResponse.json({ private: false, owner: { type: "User" } })),
     );
     const results = await runLaunchCheck({ crons: [], tracing: false, resendDailyQuota: 100 });
@@ -360,6 +456,10 @@ describe("runLaunchCheck", () => {
     });
     expect(byId["github-private-org"]?.status).toBe("fail");
     expect(byId.traces?.status).toBe("fail");
+    expect(byId["vercel-billing"]).toMatchObject({
+      status: "unknown",
+      reason: "falta VERCEL_BILLING_READ_TOKEN",
+    });
   });
 
   test("a gate lists the checks of its flag that did not pass", () => {
@@ -370,9 +470,9 @@ describe("runLaunchCheck", () => {
     }));
     expect(gateBlockers(results, "accounts")).toEqual([]);
     expect(gateBlockers(results, "free-report-live").map((r) => r.id)).toEqual(["traces"]);
-    expect(LAUNCH_GATES.accounts).toEqual(["neon-production", "resend-plan"]);
+    expect(LAUNCH_GATES.accounts).toEqual(["vercel-billing", "neon-production", "resend-plan"]);
     const unknown = results.map((r) => ({ ...r, status: "unknown" as const }));
-    expect(gateBlockers(unknown, "accounts")).toHaveLength(2);
+    expect(gateBlockers(unknown, "accounts")).toHaveLength(3);
   });
 });
 
@@ -438,6 +538,7 @@ describe("edges", () => {
     vi.stubEnv("RESEND_API_KEY", "re_production");
     server.use(
       http.get(RESEND_DOMAINS, () => HttpResponse.error()),
+      http.get(HEALTH, healthy),
       http.get(REPO, () => HttpResponse.json({ private: true, owner: { type: "Organization" } })),
     );
     const results = await runLaunchCheck({ crons: [], tracing: true, resendDailyQuota: 1_600 });

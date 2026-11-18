@@ -278,6 +278,14 @@ describe("opsAlerts", () => {
     });
   });
 
+  test("a Vercel team that is blocked or not paid up is critical", () => {
+    expect(opsAlerts["vercel-billing"]).toEqual({
+      severity: "critical",
+      runbook: "vercel-billing.md",
+      source: "vercel",
+    });
+  });
+
   test("a spend cap at 100% reaches the inbox although the kind is a warning", async () => {
     await sendOpsAlert("jobs-spend-cap-reached", {
       scope: "global",
