@@ -105,6 +105,47 @@
         }
       }
     },
+    // A raw pool query runs outside the transaction-local settings of withTenant/withSystem, and
+    // through the transaction pooler a session setting it leaves behind reaches other clients.
+    // Only the transaction runner and the auth adapter hold the pools; tests may read through them.
+    {
+      "includes": [
+        "packages/db/src/**",
+        "!packages/db/src/tenancy.ts",
+        "!packages/db/src/auth-adapter.ts",
+        "!**/*.test.ts"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "@reranker/testing": "Test-only package.",
+                  "zod": "Import z from @reranker/schema, which configures zod.",
+                  "@reranker/db/auth-adapter": "The connection without tenant or system settings is only for packages/auth.",
+                  "./client": {
+                    "importNames": ["appPool", "systemPool"],
+                    "message": "Query through withTenant or withSystem, whose settings end with the transaction."
+                  }
+                },
+                "patterns": [
+                  {
+                    "group": ["@reranker/testing/*", "**/testing/src/**"],
+                    "message": "Test-only package."
+                  },
+                  {
+                    "group": ["zod/*"],
+                    "message": "Import z from @reranker/schema, which configures zod."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
     // packages/verify ships to third parties without internal dependencies, so it imports zod
     // directly instead of the configured z of @reranker/schema.
     {
