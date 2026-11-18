@@ -728,6 +728,9 @@ importers:
       '@reranker/schema':
         specifier: workspace:*
         version: link:../schema
+      '@reranker/verify':
+        specifier: workspace:*
+        version: link:../verify
       canonicalize:
         specifier: 'catalog:'
         version: 5.1.0
