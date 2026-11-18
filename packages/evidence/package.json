@@ -9,10 +9,12 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run --project unit --coverage --passWithNoTests",
-    "test:contract": "vitest run --project contract"
+    "test:contract": "vitest run --project contract",
+    "test:integration": "vitest run --project integration"
   },
   "dependencies": {
     "@aws-sdk/client-kms": "catalog:",
+    "@reranker/db": "workspace:*",
     "@reranker/env": "workspace:*",
     "@reranker/jobs": "workspace:*",
     "@reranker/schema": "workspace:*",
@@ -20,10 +22,12 @@
     "@reranker/verify": "workspace:*",
     "@vercel/oidc-aws-credentials-provider": "catalog:",
     "aws4fetch": "catalog:",
+    "drizzle-orm": "catalog:",
     "server-only": "catalog:"
   },
   "devDependencies": {
     "@noble/curves": "catalog:",
+    "@reranker/i18n": "workspace:*",
     "@reranker/testing": "workspace:*",
     "@reranker/typescript-config": "workspace:*",
     "@types/node": "catalog:",

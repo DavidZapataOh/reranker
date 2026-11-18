@@ -46,6 +46,17 @@ describe("capture statement", () => {
     expect(parse({ ...statement, predicate: { ...statement.predicate, extra: 1 } })).toBe(false);
   });
 
+  test("the worker is named by an image digest or by the git commit it was built from", () => {
+    const withImage = (image_digest: string) => ({
+      ...statement,
+      predicate: { ...statement.predicate, worker: { id: "vercel:iad1", image_digest } },
+    });
+    expect(parse(withImage(`git:${"a1".repeat(20)}`))).toBe(true);
+    expect(parse(withImage(`git:${"a1".repeat(19)}`))).toBe(false);
+    expect(parse(withImage(`git:${"A1".repeat(20)}`))).toBe(false);
+    expect(parse(withImage("git:dev"))).toBe(false);
+  });
+
   test("uses the in-toto v1 type and the capture predicate", () => {
     expect(statement._type).toBe(IN_TOTO_STATEMENT_V1);
     expect(parse({ ...statement, _type: "https://in-toto.io/Statement/v0.1" })).toBe(false);

@@ -18,4 +18,13 @@ export {
   SigningUnavailableError,
   StatementTooLargeError,
 } from "./errors";
+export {
+  type CapturePredicateInput,
+  readRaw,
+  type SealCaptureInput,
+  type SealedCapture,
+  sealCapture,
+  signStatement,
+} from "./seal";
 export { kmsSigner, loadSigner, type Signer } from "./signer";
+export { workerIdentity } from "./statement";
