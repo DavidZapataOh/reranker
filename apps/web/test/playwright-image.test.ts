@@ -11,10 +11,10 @@ const workflow = readFileSync(
 );
 
 // The image only holds the browsers of its own release; any other Playwright finds no executable
-// and would fall back to downloading them, apt packages included.
+// and every deployment would fail its tests.
 it("runs deployment tests in the digest-pinned image of the installed Playwright", () => {
-  const images = [...workflow.matchAll(/mcr\.microsoft\.com\/playwright:\S+/g)].map(([image]) =>
-    image.replace(/@sha256:[0-9a-f]{64}$/, "@sha256"),
+  const images = [...workflow.matchAll(/^\s*image:\s*(\S+)$/gm)].map(([, image]) =>
+    image?.replace(/@sha256:[0-9a-f]{64}$/, "@sha256"),
   );
 
   expect(images).toEqual([`mcr.microsoft.com/playwright:v${version}-noble@sha256`]);
