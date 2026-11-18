@@ -70,9 +70,10 @@ test("a failed ROLLBACK keeps the original 42501 and its event, and the slot com
   const events: DbEvent[] = [];
   setDbEventSink((event) => events.push(event));
   failOnce("rollback", new Error("Connection terminated unexpectedly"));
-  const error = await withTenant(A, (tx) =>
-    tx.insert(probeTable.table).values({ tenantId: B }),
-  ).catch((e: unknown) => e);
+  // Awaited inside, so the transaction ends with ROLLBACK rather than a pipelined COMMIT.
+  const error = await withTenant(A, async (tx) => {
+    await tx.insert(probeTable.table).values({ tenantId: B });
+  }).catch((e: unknown) => e);
   vi.restoreAllMocks();
   expect(error).toMatchObject({ code: "internal", cause: { code: "42501" } });
   expect(events).toEqual([{ name: "db_rls_violation", pool: "app", pgCode: "42501" }]);
@@ -147,6 +148,11 @@ test("after a 42501 and a 57014 the same connection starts clean (empty app.tena
 
   // A committed transaction must not leave its settings behind either.
   expect(await withTenant(A, async () => "ok", { statementTimeoutMs: 300 })).toBe("ok");
+  expect(await session()).toEqual({ tenants: "", timeout: "15s" });
+
+  // Nor one whose COMMIT went out in the same flight as its settings and its statement.
+  const lone = await withTenant(A, (tx) => tx.select().from(probe), { statementTimeoutMs: 300 });
+  expect(lone).toEqual([]);
   expect(await session()).toEqual({ tenants: "", timeout: "15s" });
 
   vi.restoreAllMocks();
