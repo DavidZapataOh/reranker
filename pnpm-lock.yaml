@@ -290,6 +290,9 @@ catalogs:
     fast-check:
       specifier: 4.10.2
       version: 4.10.2
+    fflate:
+      specifier: 0.8.3
+      version: 0.8.3
     intl-messageformat:
       specifier: 12.1.4
       version: 12.1.4
@@ -711,6 +714,9 @@ importers:
       csv-parse:
         specifier: 'catalog:'
         version: 7.0.3
+      fflate:
+        specifier: 'catalog:'
+        version: 0.8.3
       tsx:
         specifier: 'catalog:'
         version: 4.23.15
@@ -837,6 +843,9 @@ importers:
       '@reranker/env':
         specifier: workspace:*
         version: link:../env
+      '@reranker/jobs':
+        specifier: workspace:*
+        version: link:../jobs
       '@reranker/schema':
         specifier: workspace:*
         version: link:../schema
@@ -847,6 +856,12 @@ importers:
         specifier: 'catalog:'
         version: 4.6.7
     devDependencies:
+      '@reranker/db':
+        specifier: workspace:*
+        version: link:../db
+      '@reranker/testing':
+        specifier: workspace:*
+        version: link:../testing
       '@reranker/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config

@@ -128,7 +128,12 @@ test("a backend killed mid-pipeline fails the run and the pool keeps serving", a
   const owner = new pg.Client({ connectionString: getTestDatabaseUrl("migrations") });
   await owner.connect();
   try {
-    const run = withTenant(tenant, (tx) => tx.execute(sql`select pg_sleep(5), ${tag}::text`));
+    // The run can fail while the loop below still waits on the owner's socket, so its outcome is
+    // taken at once; a handler attached only after the kill would leave that rejection unhandled.
+    const run = withTenant(tenant, (tx) => tx.execute(sql`select pg_sleep(5), ${tag}::text`)).then(
+      () => undefined,
+      (error: unknown) => error,
+    );
     const deadline = Date.now() + 4000;
     let killed = false;
     while (!killed && Date.now() < deadline) {
@@ -140,7 +145,9 @@ test("a backend killed mid-pipeline fails the run and the pool keeps serving", a
       if (!killed) await new Promise((r) => setTimeout(r, 50));
     }
     expect(killed).toBe(true);
-    await expect(run).rejects.toMatchObject({ code: "service_unavailable" });
+    // The run settles only after its client went back to the pool, so the cleanup is done here.
+    expect(await run).toMatchObject({ code: "service_unavailable" });
+    expect(appPool().totalCount).toBe(appPool().idleCount);
   } finally {
     await owner.end();
   }

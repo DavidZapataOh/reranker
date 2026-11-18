@@ -1,0 +1,51 @@
+{
+  "formattedAddress": "Plaza Mayor, 1, 28370 Chinchón, Madrid, España",
+  "addressComponents": [
+    {
+      "longText": "1",
+      "shortText": "1",
+      "types": ["street_number"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Plaza Mayor",
+      "shortText": "Pl. Mayor",
+      "types": ["route"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Chinchón",
+      "shortText": "Chinchón",
+      "types": ["locality", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Madrid",
+      "shortText": "M",
+      "types": ["administrative_area_level_2", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Comunidad de Madrid",
+      "shortText": "MD",
+      "types": ["administrative_area_level_1", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "España",
+      "shortText": "ES",
+      "types": ["country", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "28370",
+      "shortText": "28370",
+      "types": ["postal_code"],
+      "languageCode": "es"
+    }
+  ],
+  "location": {
+    "latitude": 40.1405,
+    "longitude": -3.4224
+  }
+}

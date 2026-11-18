@@ -1,0 +1,185 @@
+location_code,location_name,location_code_parent,country_iso_code,location_type
+2032,Argentina,,AR,Country
+2152,Chile,,CL,Country
+2484,Mexico,,MX,Country
+2604,Peru,,PE,Country
+2724,Spain,,ES,Country
+20008,"Salta Province,Argentina",2032,AR,Province
+20009,"Buenos Aires Province,Argentina",2032,AR,Province
+20010,"Buenos Aires,Argentina",2032,AR,Province
+20011,"Entre Rios Province,Argentina",2032,AR,Province
+20012,"La Rioja Province,Argentina",2032,AR,Province
+20013,"Chaco Province,Argentina",2032,AR,Province
+20014,"San Juan Province,Argentina",2032,AR,Province
+20015,"Catamarca Province,Argentina",2032,AR,Province
+20016,"La Pampa Province,Argentina",2032,AR,Province
+20017,"Mendoza Province,Argentina",2032,AR,Province
+20018,"Misiones Province,Argentina",2032,AR,Province
+20019,"Neuquen Province,Argentina",2032,AR,Province
+20020,"Rio Negro Province,Argentina",2032,AR,Province
+20021,"Santa Fe Province,Argentina",2032,AR,Province
+20022,"Tucuman Province,Argentina",2032,AR,Province
+20023,"Chubut Province,Argentina",2032,AR,Province
+20024,"Tierra del Fuego Province,Argentina",2032,AR,Province
+20025,"Corrientes Province,Argentina",2032,AR,Province
+20026,"Cordoba Province,Argentina",2032,AR,Province
+20027,"Jujuy Province,Argentina",2032,AR,Province
+20028,"Santa Cruz Province,Argentina",2032,AR,Province
+20152,"Antofagasta,Chile",2152,CL,Region
+20153,"Araucania,Chile",2152,CL,Region
+20154,"Bio Bio,Chile",2152,CL,Region
+20155,"Coquimbo,Chile",2152,CL,Region
+20156,"O'Higgins,Chile",2152,CL,Region
+20157,"Los Lagos,Chile",2152,CL,Region
+20158,"Magallanes and Chilean Antarctica,Chile",2152,CL,Region
+20159,"Maule,Chile",2152,CL,Region
+20160,"Santiago Metropolitan Region,Chile",2152,CL,Region
+20161,"Tarapaca,Chile",2152,CL,Region
+20162,"Valparaiso,Chile",2152,CL,Region
+20267,"Province of Alicante,Valencia,Spain",21388,ES,Province
+20268,"Province of Almeria,Andalusia,Spain",20269,ES,Province
+20269,"Andalusia,Spain",2724,ES,Autonomous Community
+20270,"Province of Barcelona,Catalonia,Spain",20278,ES,Province
+20271,"Province of Biscay,Basque Country,Spain",20289,ES,Province
+20272,"Province of A Coruna,Galicia,Spain",20280,ES,Province
+20273,"Province of Cadiz,Andalusia,Spain",20269,ES,Province
+20274,"Ceuta,Spain",2724,ES,Autonomous Community
+20275,"Castile and Leon,Spain",2724,ES,Autonomous Community
+20276,"Castile-La Mancha,Spain",2724,ES,Autonomous Community
+20277,"Canary Islands,Spain",2724,ES,Autonomous Community
+20278,"Catalonia,Spain",2724,ES,Autonomous Community
+20279,"Extremadura,Spain",2724,ES,Autonomous Community
+20280,"Galicia,Spain",2724,ES,Autonomous Community
+20281,"La Rioja,Spain",2724,ES,Autonomous Community
+20282,"Community of Madrid,Spain",2724,ES,Autonomous Community
+20283,"Melilla,Spain",2724,ES,Autonomous Community
+20284,"Region of Murcia,Spain",2724,ES,Autonomous Community
+20285,"Navarre,Spain",2724,ES,Autonomous Community
+20286,"Asturias,Spain",2724,ES,Autonomous Community
+20287,"Province of Balearic Islands,Balearic Islands,Spain",21387,ES,Province
+20288,"Province of Pontevedra,Galicia,Spain",20280,ES,Province
+20289,"Basque Country,Spain",2724,ES,Autonomous Community
+20290,"Cantabria,Spain",2724,ES,Autonomous Community
+20291,"Province of Salamanca,Castile and Leon,Spain",20275,ES,Province
+20292,"Province of Segovia,Castile and Leon,Spain",20275,ES,Province
+20293,"Province of Gipuzkoa,Basque Country,Spain",20289,ES,Province
+20294,"Province of Tarragona,Catalonia,Spain",20278,ES,Province
+20295,"Province of Santa Cruz de Tenerife,Canary Islands,Spain",20277,ES,Province
+20296,"Province of Toledo,Castile-La Mancha,Spain",20276,ES,Province
+20297,"Province of Valencia,Valencia,Spain",21388,ES,Province
+20298,"Province of Valladolid,Castile and Leon,Spain",20275,ES,Province
+20299,"Province of Alava,Basque Country,Spain",20289,ES,Province
+20300,"Province of Zaragoza,Aragon,Spain",21386,ES,Province
+20694,"Aguascalientes,Mexico",2484,MX,State
+20696,"Baja California,Mexico",2484,MX,State
+20697,"Baja California Sur,Mexico",2484,MX,State
+20698,"Campeche,Mexico",2484,MX,State
+20699,"Chihuahua,Mexico",2484,MX,State
+20700,"Chiapas,Mexico",2484,MX,State
+20701,"Coahuila,Mexico",2484,MX,State
+20702,"Colima,Mexico",2484,MX,State
+20703,"Mexico City,Mexico",2484,MX,State
+20704,"Durango,Mexico",2484,MX,State
+20705,"Guerrero,Mexico",2484,MX,State
+20706,"Guanajuato,Mexico",2484,MX,State
+20707,"Hidalgo,Mexico",2484,MX,State
+20708,"Jalisco,Mexico",2484,MX,State
+20709,"State of Mexico,Mexico",2484,MX,State
+20710,"Michoacan,Mexico",2484,MX,State
+20711,"Morelos,Mexico",2484,MX,State
+20712,"Nayarit,Mexico",2484,MX,State
+20713,"Nuevo Leon,Mexico",2484,MX,State
+20714,"Oaxaca,Mexico",2484,MX,State
+20715,"Puebla,Mexico",2484,MX,State
+20716,"Queretaro,Mexico",2484,MX,State
+20717,"Quintana Roo,Mexico",2484,MX,State
+20718,"Sinaloa,Mexico",2484,MX,State
+20719,"San Luis Potosi,Mexico",2484,MX,State
+20720,"Sonora,Mexico",2484,MX,State
+20721,"Tabasco,Mexico",2484,MX,State
+20722,"Tamaulipas,Mexico",2484,MX,State
+20723,"Tlaxcala,Mexico",2484,MX,State
+20724,"Veracruz,Mexico",2484,MX,State
+20725,"Yucatan,Mexico",2484,MX,State
+20726,"Zacatecas,Mexico",2484,MX,State
+20796,"Ancash,Peru",2604,PE,Region
+20797,"Arequipa,Peru",2604,PE,Region
+20798,"Ayacucho,Peru",2604,PE,Region
+20799,"Cajamarca,Peru",2604,PE,Region
+20800,"Callao Region,Peru",2604,PE,Region
+20801,"Cusco,Peru",2604,PE,Region
+20802,"Huanuco,Peru",2604,PE,Region
+20803,"Huancavelica,Peru",2604,PE,Region
+20804,"Ica,Peru",2604,PE,Region
+20805,"Junin,Peru",2604,PE,Region
+20806,"La Libertad,Peru",2604,PE,Region
+20807,"Lambayeque,Peru",2604,PE,Region
+20808,"Lima Region,Peru",2604,PE,Region
+20809,"Loreto,Peru",2604,PE,Region
+20810,"Moquegua,Peru",2604,PE,Region
+20811,"Pasco,Peru",2604,PE,Region
+20812,"Piura,Peru",2604,PE,Region
+20813,"Puno,Peru",2604,PE,Region
+20814,"San Martin,Peru",2604,PE,Region
+20815,"Tacna,Peru",2604,PE,Region
+20816,"Ucayali,Peru",2604,PE,Region
+21297,"San Luis Province,Argentina",2032,AR,Province
+21298,"Santiago del Estero Province,Argentina",2032,AR,Province
+21299,"Formosa Province,Argentina",2032,AR,Province
+21386,"Aragon,Spain",2724,ES,Autonomous Community
+21387,"Balearic Islands,Spain",2724,ES,Autonomous Community
+21388,"Valencian Community,Spain",2724,ES,Autonomous Community
+1000024,"Bahia Blanca,Buenos Aires Province,Argentina",20009,AR,City
+1000037,"La Plata,Buenos Aires Province,Argentina",20009,AR,City
+1000042,"Mar del Plata,Buenos Aires Province,Argentina",20009,AR,City
+1000065,"Tandil,Buenos Aires Province,Argentina",20009,AR,City
+1000073,"Buenos Aires,Buenos Aires,Argentina",20010,AR,City
+1003325,"Santiago,Santiago Metropolitan Region,Chile",20160,CL,City
+1005493,"Madrid,Community of Madrid,Spain",20282,ES,City
+1010043,"Mexico City,Mexico City,Mexico",20703,MX,City
+1010058,"Leon,Guanajuato,Mexico",20706,MX,City
+9047032,"Province of Lleida,Catalonia,Spain",20278,ES,Province
+9047033,"Province of Girona,Catalonia,Spain",20278,ES,Province
+9047034,"Province of Las Palmas,Canary Islands,Spain",20277,ES,Province
+9047035,"Province of Huelva,Andalusia,Spain",20269,ES,Province
+9047036,"Province of Sevilla,Andalusia,Spain",20269,ES,Province
+9047037,"Province of Badajoz,Extremadura,Spain",20279,ES,Province
+9047038,"Province of Caceres,Extremadura,Spain",20279,ES,Province
+9047039,"Province of Lugo,Galicia,Spain",20280,ES,Province
+9047040,"Province of Asturias,Asturias,Spain",20286,ES,Province
+9047041,"Province of Leon,Castile and Leon,Spain",20275,ES,Province
+9047042,"Province of Zamora,Castile and Leon,Spain",20275,ES,Province
+9047043,"Province of Ourense,Galicia,Spain",20280,ES,Province
+9047044,"Province of Avila,Castile and Leon,Spain",20275,ES,Province
+9047045,"Province of Madrid,Madrid,Spain",20282,ES,Province
+9047046,"Province of Guadalajara,Castile-La Mancha,Spain",20276,ES,Province
+9047047,"Province of Soria,Castile and Leon,Spain",20275,ES,Province
+9047048,"Province of Burgos,Castile and Leon,Spain",20275,ES,Province
+9047049,"Province of Palencia,Castile and Leon,Spain",20275,ES,Province
+9047050,"Province of Cantabria,Cantabria,Spain",20290,ES,Province
+9047051,"Province of Navarre,Navarre,Spain",20285,ES,Province
+9047052,"Province of Huesca,Aragon,Spain",21386,ES,Province
+9047053,"Province of La Rioja,La Rioja,Spain",20281,ES,Province
+9047054,"Province of Teruel,Aragon,Spain",21386,ES,Province
+9047055,"Province of Castellon,Valencia,Spain",21388,ES,Province
+9047056,"Province of Murcia,Murcia,Spain",20284,ES,Province
+9047057,"Province of Albacete,Castile-La Mancha,Spain",20276,ES,Province
+9047058,"Province of Cuenca,Castile-La Mancha,Spain",20276,ES,Province
+9047059,"Province of Ciudad Real,Castile-La Mancha,Spain",20276,ES,Province
+9047060,"Province of Cordoba,Andalusia,Spain",20269,ES,Province
+9047061,"Province of Granada,Andalusia,Spain",20269,ES,Province
+9047062,"Province of Jaen,Andalusia,Spain",20269,ES,Province
+9047063,"Province of Malaga,Andalusia,Spain",20269,ES,Province
+9047102,"Aysen,Chile",2152,CL,Region
+9047103,"Arica y Parinacota,Chile",2152,CL,Region
+9047104,"Atacama,Chile",2152,CL,Region
+9047105,"Los Rios,Chile",2152,CL,Region
+9047210,"Guadalajara,Jalisco,Mexico",20708,MX,Municipality
+9061336,"Apurimac,Peru",2604,PE,Region
+9061337,"Madre de Dios,Peru",2604,PE,Region
+9061338,"Amazonas,Peru",2604,PE,Region
+9061339,"Tumbes,Peru",2604,PE,Region
+9073192,"Lima,Lima,Lima Province,Peru",9189140,PE,City
+9099772,"Nuble,Chile",2152,CL,Region
+9189140,"Lima Province,Peru",2604,PE,Region
+9212542,"A Coruna,Galicia,Spain",20280,ES,Municipality

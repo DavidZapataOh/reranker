@@ -1,6 +1,16 @@
 export { extractionEnv } from "./env";
 export { jaroWinkler, nameHmac, normalizeName, tokenContainment } from "./normalize";
 export {
+  FIELD_MASKS,
+  type PlaceDetails,
+  type PlaceHit,
+  placeDetails,
+  type SearchTextRequest,
+  searchText,
+} from "./places/client";
+export { PLATFORMS, type PlatformEntry, platformFor, tagPlatforms } from "./platforms";
+export { PLACES_SKU_PRICES } from "./prices";
+export {
   type LlmProvider,
   type ModelRef,
   ProviderIncompleteError,
@@ -9,7 +19,7 @@ export {
   type StructuredCaller,
   type StructuredResult,
 } from "./providers/types";
-export { locateQuote, toExtractedMentions } from "./quote";
+export { assignOrdinals, locateQuote, toExtractedMentions } from "./quote";
 export {
   type ClassifierOutput,
   ClassifierSchema,
