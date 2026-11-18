@@ -32,6 +32,9 @@ jobs:
         with:
           db-url: ${{ steps.branch.outputs.db-url }}
           db-host-pooled: ${{ steps.branch.outputs.db-host-pooled }}
+      # The OpenTimestamps reference client: the evidence contract tests compare our proofs with its output.
+      - name: Install the OpenTimestamps client
+        run: pipx install opentimestamps-client==0.8.0
       # A missing secret fails the contract tests that need it; they never skip. Every package runs
       # even after one fails, so a night reports each broken adapter instead of the first.
       - id: tests

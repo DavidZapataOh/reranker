@@ -40,3 +40,12 @@ export class EvidenceStorageUnavailableError extends Error {
     super(message, options);
   }
 }
+
+/** Fewer timestamping services answered than a proof needs; the next hourly run tries again. */
+export class TimestampUnavailableError extends Error {
+  override readonly name = "TimestampUnavailable";
+
+  constructor(message: string, options?: ErrorOptions) {
+    super(message, options);
+  }
+}
