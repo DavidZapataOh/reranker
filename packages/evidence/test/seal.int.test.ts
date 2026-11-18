@@ -425,15 +425,25 @@ describe("plans and other entries", () => {
       withSystem("evidence.test", (tx) =>
         requestLogInclusion({ ref, kind: "consent", envelopeSha256: sha }, { tx }),
       );
-    await include(envelopeSha256);
+    const entry = () =>
+      withSystem("evidence.test", async (tx) => {
+        const { rows } = await tx.execute<{ kind: string; revision: number }>(
+          sql`select kind, revision from public_panel.evidence_entries where ref = ${ref}`,
+        );
+        return rows;
+      });
+    // Read in the queuing transaction: once it commits, a concurrent integrator may append it.
+    const queued = await withSystem("evidence.test", async (tx) => {
+      await requestLogInclusion({ ref, kind: "consent", envelopeSha256 }, { tx });
+      const { rows } = await tx.execute<{ log_index: number | null }>(
+        sql`select log_index from public_panel.evidence_entries where ref = ${ref}`,
+      );
+      return rows;
+    });
+    expect(queued).toEqual([{ log_index: null }]);
     await include(envelopeSha256);
     await expect(include(sha256Of(utf8("other")))).rejects.toBeInstanceOf(InvalidInputError);
-    const { rows } = await withSystem("evidence.test", (tx) =>
-      tx.execute<{ kind: string; revision: number; log_index: number | null }>(
-        sql`select kind, revision, log_index from public_panel.evidence_entries where ref = ${ref}`,
-      ),
-    );
-    expect(rows).toEqual([{ kind: "consent", revision: 0, log_index: null }]);
+    expect(await entry()).toEqual([{ kind: "consent", revision: 0 }]);
     expect(enqueue).toHaveBeenCalledTimes(2);
   });
 });
