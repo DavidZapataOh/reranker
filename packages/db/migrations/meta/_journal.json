@@ -78,6 +78,20 @@
       "when": 1794944379368,
       "tag": "0010_spend_day_lock",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1795023813600,
+      "tag": "0011_capture",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1795023816467,
+      "tag": "0012_capture_evidence_guard",
+      "breakpoints": true
     }
   ]
 }
