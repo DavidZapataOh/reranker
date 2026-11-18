@@ -88,6 +88,7 @@ describe("lighthouseConfig", () => {
       APP_TARGET: "preview",
     });
     expect(config.ci.collect.puppeteerScript).toBe("./lighthouse-bypass.cjs");
+    expect(config.ci.collect.puppeteerLaunchOptions).toEqual({ args: ["--no-sandbox"] });
     expect(config.ci.collect.settings).not.toHaveProperty("extraHeaders");
     expect(JSON.stringify(config)).not.toContain("s3cret");
   });
@@ -157,8 +158,8 @@ describe("lighthouseConfig", () => {
     expect(home.test(`${PREVIEW}/?utm=1`)).toBe(false);
   });
 
-  it("caps the landing at 345 KB of script", () => {
-    expect(budgets.landing?.scriptBytes).toBe(345_000);
+  it("caps the landing script at its production baseline plus 3 KB", () => {
+    expect(budgets.landing?.scriptBytes).toBe(316_277 + 3_072);
   });
 
   it("checks SEO only in production and skips is-crawlable elsewhere", () => {

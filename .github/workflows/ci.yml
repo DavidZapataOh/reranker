@@ -69,6 +69,9 @@ jobs:
       # --affected never selects this package when only the root Biome config changes.
       - name: Test Biome plugins against the current configuration
         run: pnpm --filter @reranker/biome-plugins test
+      # After the test run, so the timings come from an otherwise idle runner.
+      - name: Check timing budgets
+        run: pnpm --filter @reranker/schema test:perf
       # Fails when PostHog lacks a registry flag, so a new flag can't ship before it exists.
       - name: Check PostHog holds every registry flag
         env:

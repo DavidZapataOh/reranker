@@ -9,9 +9,12 @@ type Budget = { scriptBytes: number; totalBytes: number };
 type Assertion = ["error", { minScore: number } | { maxNumericValue: number }];
 
 // Transferred bytes, median of 3 mobile runs on reranker.co (2026-11-12) + 5 %.
-// The landing script cap comes from the first measured state of the page.
+// The landing script may grow at most 3 KB over the 316,277 B it shipped in production before
+// next-intl (median of 3 runs, 2026-11-16), so shared code cannot leak into it unnoticed.
+const LANDING_SCRIPT_BASELINE = 316_277;
+
 export const budgets: Record<string, Budget> = {
-  landing: { scriptBytes: 345_000, totalBytes: 581_710 },
+  landing: { scriptBytes: LANDING_SCRIPT_BASELINE + 3_072, totalBytes: 581_710 },
   legal: { scriptBytes: 327_636, totalBytes: 574_113 },
 };
 
@@ -71,7 +74,14 @@ export function lighthouseConfig(env: NodeJS.ProcessEnv = process.env) {
         numberOfRuns: 3,
         ...(deployment ? {} : { startServerCommand: "pnpm start" }),
         // Not settings.extraHeaders: Lighthouse sends those to every origin and copies them into each report.
-        ...(protectedDeployment ? { puppeteerScript: "./lighthouse-bypass.cjs" } : {}),
+        ...(protectedDeployment
+          ? {
+              puppeteerScript: "./lighthouse-bypass.cjs",
+              // Containers deny the user namespaces Chromium's sandbox needs. Like Playwright, which
+              // launches Chromium unsandboxed by default, this only ever loads our own deployment.
+              puppeteerLaunchOptions: { args: ["--no-sandbox"] },
+            }
+          : {}),
         settings: {
           blockedUrlPatterns: BLOCKED_THIRD_PARTIES,
           // Vercel serves every generated deployment URL with X-Robots-Tag: noindex, production

@@ -41,8 +41,19 @@ concurrency:
   cancel-in-progress: true
 jobs:
   quality:
+    # Vercel matches Deployment Checks by name against check runs as well as commit statuses. A
+    # dispatched run's check run lands on the head of main, not on the deployment's commit, and a
+    # skipped preview dispatch counts as met, so only the commit status below may be called quality.
+    name: deployment tests
     if: github.event_name != 'repository_dispatch' || (github.event.client_payload.project.name == 'reranker' && github.event.client_payload.environment == 'production')
     runs-on: ubuntu-24.04
+    # Browsers and their system libraries ship in the image, so no step waits on an apt mirror.
+    # The tag must match @playwright/test (apps/web/test/playwright-image.test.ts holds them together).
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
+      # The runner's uid owns the mounted workspace and HOME; --ipc=host keeps Chromium from
+      # exhausting the container's 64 MB /dev/shm.
+      options: --user 1001 --ipc=host --init
     timeout-minutes: 15
     permissions: { contents: read, statuses: write }
     env:
@@ -86,21 +97,6 @@ jobs:
             exit 1
           fi
           echo "PLAYWRIGHT_BASE_URL=$origin" >> "$GITHUB_ENV"
-      - id: browsers
-        name: Resolve Playwright browsers
-        run: |
-          echo "version=$(pnpm --filter web exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
-          echo "list=chromium webkit" >> "$GITHUB_OUTPUT"
-      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ steps.browsers.outputs.version }}-${{ steps.browsers.outputs.list }}
-      - name: Install browsers
-        env:
-          BROWSERS: ${{ steps.browsers.outputs.list }}
-        run: |
-          # shellcheck disable=SC2086
-          pnpm --filter web exec playwright install --with-deps $BROWSERS
       - name: End-to-end and accessibility tests
         env:
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
@@ -111,7 +107,11 @@ jobs:
         if: ${{ !cancelled() && steps.target.outcome == 'success' }}
         env:
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
-        run: pnpm --filter web exec lhci autorun
+        # The image has no Google Chrome for LHCI to find, so it audits with Playwright's Chromium.
+        run: |
+          CHROME_PATH=$(pnpm --filter web exec node -p 'require("@playwright/test").chromium.executablePath()')
+          export CHROME_PATH
+          pnpm --filter web exec lhci autorun
       # Non-regression gate, once @reranker/quality exists:
       # pnpm --filter @reranker/quality compare --playwright apps/web/results.json --lhci apps/web/.lighthouseci --target "$APP_TARGET"
       - if: always()
