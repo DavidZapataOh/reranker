@@ -1,0 +1,31 @@
+{
+  "name": "@reranker/extraction",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./env": "./src/env.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --coverage --passWithNoTests",
+    "test:integration": "vitest run --project integration --passWithNoTests",
+    "test:contract": "vitest run --project contract --passWithNoTests",
+    "test:perf": "vitest run --project perf --passWithNoTests"
+  },
+  "dependencies": {
+    "@reranker/env": "workspace:*",
+    "@reranker/schema": "workspace:*",
+    "canonicalize": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@reranker/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "msw": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
