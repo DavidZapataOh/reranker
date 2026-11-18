@@ -28,7 +28,16 @@ export default defineConfig({
           name: "unit",
           environment: "node",
           include: ["**/{src,test}/**/*.test.ts"],
-          exclude: [...ignored, "**/*.{int,contract,browser,workflow,perf}.test.*"],
+          exclude: [...ignored, "**/*.{int,contract,browser,workflow,perf,stat}.test.*"],
+        },
+      },
+      // Sampler validation draws hundreds of thousands of variates; coverage instrumentation
+      // makes each ~5× slower and adds nothing, since the unit project already covers those lines.
+      {
+        test: {
+          name: "statistical",
+          include: ["**/{src,test}/**/*.stat.test.ts"],
+          exclude: ignored,
         },
       },
       // Timing budgets run on their own: coverage instrumentation and sibling workers would
