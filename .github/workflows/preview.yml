@@ -72,10 +72,11 @@ jobs:
     outputs:
       url: ${{ steps.deploy.outputs.url }}
     steps:
+      # The pull request's merge commit, not its head: this workflow and quality.yml always come from
+      # the merge commit, and the Neon branch from main's schema, so a head that predates a change on
+      # main would be migrated, deployed and tested by a pipeline written for code it lacks.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          persist-credentials: false
+        with: { persist-credentials: false }
       - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
         with: { cache: true, require-lockfile: true }
       # Its own prefix, exact version and no install scripts; it is called by path below.
@@ -160,7 +161,8 @@ jobs:
     with:
       url: ${{ needs.deploy.outputs.url }}
       environment: preview
-      sha: ${{ github.event.pull_request.head.sha }}
+      sha: ${{ github.sha }}
+      status-sha: ${{ github.event.pull_request.head.sha }}
     secrets:
       VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
   cleanup:

@@ -14,6 +14,10 @@ on:
       sha:
         required: true
         type: string
+      # A preview is built from the pull request's merge commit, but its status belongs on the head.
+      status-sha:
+        required: false
+        type: string
     secrets:
       VERCEL_AUTOMATION_BYPASS_SECRET:
         required: true
@@ -60,19 +64,20 @@ jobs:
       DEPLOY_URL: ${{ github.event.client_payload.url || inputs.url }}
       APP_TARGET: ${{ github.event.client_payload.environment || inputs.environment }}
       TARGET_SHA: ${{ github.event.client_payload.git.sha || inputs.sha }}
+      STATUS_SHA: ${{ github.event.client_payload.git.sha || inputs.status-sha || inputs.sha }}
       # Only production writes `quality`, the name Deployment Checks require, so a green
       # preview of the same commit never satisfies it.
       STATUS_CONTEXT: ${{ (github.event.client_payload.environment || inputs.environment) == 'production' && 'quality' || 'quality (preview)' }}
     steps:
       # Not vercel/repository-dispatch/actions/status: its post step reports a cancelled or
-      # timed-out run as success. The status is bound to the deployment's commit either way.
+      # timed-out run as success. The status is bound to the commit under test either way.
       - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
             await github.rest.repos.createCommitStatus({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              sha: process.env.TARGET_SHA,
+              sha: process.env.STATUS_SHA,
               state: "pending",
               context: process.env.STATUS_CONTEXT,
               target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
@@ -134,12 +139,12 @@ jobs:
           JOB_STATUS: ${{ job.status }}
         with:
           script: |
-            const { JOB_STATUS, STATUS_CONTEXT, TARGET_SHA } = process.env;
+            const { JOB_STATUS, STATUS_CONTEXT, STATUS_SHA } = process.env;
             const state = { success: "success", cancelled: "error" }[JOB_STATUS] ?? "failure";
             await github.rest.repos.createCommitStatus({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              sha: TARGET_SHA,
+              sha: STATUS_SHA,
               state,
               context: STATUS_CONTEXT,
               target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,

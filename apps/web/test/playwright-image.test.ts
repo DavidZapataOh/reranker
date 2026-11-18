@@ -17,8 +17,8 @@ function images(workflow: string): string[] {
 }
 
 // The image only holds the browsers of its own release; any other Playwright finds no executable
-// and every deployment, or every component test run, would fail.
-it.each(["quality.yml", "ci.yml"])(
+// and every deployment, component test run or nightly would fail.
+it.each(["quality.yml", "ci.yml", "nightly.yml"])(
   "%s runs Playwright in the digest-pinned image of the installed version",
   (workflow) => {
     expect(images(workflow)).toEqual([`mcr.microsoft.com/playwright:v${version}-noble@sha256`]);

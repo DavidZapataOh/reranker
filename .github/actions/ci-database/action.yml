@@ -28,8 +28,8 @@ runs:
         app=$(openssl rand -hex 24); system=$(openssl rand -hex 24)
         echo "::add-mask::$app"; echo "::add-mask::$system"
         export DATABASE_URL_MIGRATIONS="$DB_URL"
-        DB_LOGIN_PASSWORDS=$(jq -cn --arg app "$app" --arg system "$system" '{reranker_app: $app, reranker_system: $system}')
-        export DB_LOGIN_PASSWORDS
+        # Hex needs no JSON escaping, and the Playwright image some callers run in ships no jq.
+        export DB_LOGIN_PASSWORDS="{\"reranker_app\":\"$app\",\"reranker_system\":\"$system\"}"
         # Migrations create the role groups the logins join.
         pnpm --filter @reranker/db db:migrate
         pnpm --filter @reranker/db db:provision-roles
