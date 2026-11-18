@@ -1,6 +1,13 @@
 import "server-only";
 
 export {
+  type ChatgptCityEffect,
+  chatgptCityEffect,
+  type GeoForEngineOptions,
+  geoForEngine,
+} from "./geo/effects";
+export { cityDisplayName, getGeo, type ResolveGeoInput, resolveGeo } from "./geo/resolve";
+export {
   contentHash,
   type IntentSetId,
   intentSetId,

@@ -1,0 +1,51 @@
+{
+  "formattedAddress": "Cl. 93 #11A-28, Chapinero, Bogotá, Colombia",
+  "addressComponents": [
+    {
+      "longText": "11A-28",
+      "shortText": "11A-28",
+      "types": ["street_number"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Calle 93",
+      "shortText": "Cl. 93",
+      "types": ["route"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Chapinero",
+      "shortText": "Chapinero",
+      "types": ["sublocality_level_1", "sublocality", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Bogotá",
+      "shortText": "Bogotá",
+      "types": ["locality", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Bogotá, D.C.",
+      "shortText": "Bogotá, D.C.",
+      "types": ["administrative_area_level_1", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Colombia",
+      "shortText": "CO",
+      "types": ["country", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "110221",
+      "shortText": "110221",
+      "types": ["postal_code"],
+      "languageCode": "es"
+    }
+  ],
+  "location": {
+    "latitude": 4.6767,
+    "longitude": -74.0483
+  }
+}

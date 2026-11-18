@@ -628,6 +628,12 @@ importers:
 
   packages/catalog:
     dependencies:
+      '@reranker/i18n':
+        specifier: workspace:*
+        version: link:../i18n
+      '@reranker/schema':
+        specifier: workspace:*
+        version: link:../schema
       canonicalize:
         specifier: 'catalog:'
         version: 5.1.0
@@ -635,9 +641,6 @@ importers:
         specifier: 'catalog:'
         version: 0.0.1
     devDependencies:
-      '@reranker/i18n':
-        specifier: workspace:*
-        version: link:../i18n
       '@reranker/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
