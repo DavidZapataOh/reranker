@@ -50,6 +50,9 @@ const rows: Row[] = [
   ["POSTHOG_PERSONAL_API_KEY", "secret", NONE, true, "S03-04"],
   ["OPS_ALERT_EMAIL", "config", PROD_PREV, false, "08"],
   ["POSTHOG_QUERY_READ_KEY", "secret", PROD, false, "08"],
+  // CI copies of the digest keys, for the nightly contract tests of the digest sources.
+  ["POSTHOG_QUERY_READ_KEY_CI", "secret", NONE, true, "08", true],
+  ["GITHUB_BILLING_READ_TOKEN_CI", "secret", NONE, true, "08", true],
   ["LOG_LEVEL", "config", ALL, false, "08"],
   ["BETTERSTACK_HEARTBEAT_DAILY_URL", "secret", PROD, false, "08"],
   ["BETTERSTACK_HEARTBEAT_NIGHTLY_URL", "secret", NONE, true, "02 / 08"],
@@ -71,6 +74,9 @@ const rows: Row[] = [
   ["DB_POOL_MAX", "config", ALL, false, "03"],
   ["DB_LOGIN_PASSWORDS", "secret", NONE, true, "03"],
   ["NEON_API_KEY", "secret", PROD, false, "03 / 08"],
+  // Organization key for the nightly db:usage contract test: the consumption endpoint is
+  // organization-wide, so the project-scoped NEON_NONPROD_API_KEY cannot read it.
+  ["NEON_API_KEY_CI", "secret", NONE, true, "03 / 08", true],
   // GitHub holds the reranker-nonprod id; Vercel Production holds the reranker-prod id.
   ["NEON_PROJECT_ID", "config", PROD, true, "03 / 08", true],
   ["NEON_NONPROD_PROJECT_ID", "config", PROD, false, "03 / 08"],

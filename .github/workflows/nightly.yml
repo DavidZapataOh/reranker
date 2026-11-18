@@ -14,6 +14,8 @@ jobs:
     # Up to 15 min queueing for a Neon CI branch slot, then the tests.
     timeout-minutes: 25
     permissions: { contents: read }
+    outputs:
+      failed: ${{ steps.tests.outputs.failed }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { persist-credentials: false }
@@ -30,8 +32,11 @@ jobs:
         with:
           db-url: ${{ steps.branch.outputs.db-url }}
           db-host-pooled: ${{ steps.branch.outputs.db-host-pooled }}
-      # A missing secret fails the contract tests that need it; they never skip.
-      - env:
+      # A missing secret fails the contract tests that need it; they never skip. Every package runs
+      # even after one fails, so a night reports each broken adapter instead of the first.
+      - id: tests
+        name: Contract tests
+        env:
           DATAFORSEO_LOGIN: ${{ secrets.DATAFORSEO_LOGIN }}
           DATAFORSEO_PASSWORD: ${{ secrets.DATAFORSEO_PASSWORD }}
           BRIGHTDATA_API_KEY_CI: ${{ secrets.BRIGHTDATA_API_KEY_CI }}
@@ -41,12 +46,21 @@ jobs:
           ANTHROPIC_API_KEY_CI: ${{ secrets.ANTHROPIC_API_KEY_CI }}
           XAI_API_KEY_CI: ${{ secrets.XAI_API_KEY_CI }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY_CI }}
-          NEON_API_KEY: ${{ secrets.NEON_NONPROD_API_KEY }}
+          # db:usage reads the organization-wide consumption endpoint, out of reach of the
+          # project-scoped NEON_NONPROD_API_KEY.
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY_CI }}
           NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
           POSTHOG_READONLY_API_KEY: ${{ secrets.POSTHOG_READONLY_API_KEY }}
           POSTHOG_FEATURE_FLAGS_KEY: ${{ secrets.POSTHOG_READONLY_API_KEY }}
           POSTHOG_PROJECT_TOKEN: ${{ vars.POSTHOG_PROJECT_TOKEN_CI }}
-        run: pnpm exec turbo run test:contract
+          POSTHOG_QUERY_READ_KEY: ${{ secrets.POSTHOG_QUERY_READ_KEY_CI }}
+          GITHUB_BILLING_READ_TOKEN: ${{ secrets.GITHUB_BILLING_READ_TOKEN_CI }}
+        run: |
+          status=0
+          pnpm exec turbo run test:contract --continue=dependencies-successful --summarize || status=$?
+          failed=$(jq -r '[.tasks[] | select((.execution.exitCode // 0) != 0) | .taskId] | join(" ")' .turbo/runs/*.json)
+          echo "failed=$failed" >> "$GITHUB_OUTPUT"
+          exit "$status"
       - if: always() && steps.branch.outputs.branch-id != ''
         name: Prepare npm for the branch cleanup
         env:
@@ -75,6 +89,10 @@ jobs:
       options: --user 1001 --ipc=host --init
     timeout-minutes: 30
     permissions: { contents: read }
+    outputs:
+      tests: ${{ steps.tests.outcome }}
+      smoke: ${{ steps.smoke.outcome }}
+      bench: ${{ steps.bench.outcome }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { persist-credentials: false }
@@ -91,11 +109,13 @@ jobs:
           db-url: ${{ steps.branch.outputs.db-url }}
           db-host-pooled: ${{ steps.branch.outputs.db-host-pooled }}
       # Every package, uncached: the nightly is the run that catches what --affected and the cache let through.
-      - name: Unit, component and integration tests
+      - id: tests
+        name: Unit, component and integration tests
         run: pnpm exec turbo run test test:integration --force
       # Runs even when the tests above failed, so one night reports every broken gate.
       # Retries stay on to tell flaky from broken, and a test that only passes on retry fails the night.
-      - name: Smoke tests against production
+      - id: smoke
+        name: Smoke tests against production
         if: ${{ !cancelled() }}
         env:
           STRICT_FLAKY: "1"
@@ -107,7 +127,8 @@ jobs:
       # On a shared runner the relative gate only catches gross regressions; production measures
       # the strict budgets. Suspending the compute is safe: the branch belongs to this run alone,
       # and the script refuses any branch whose name does not start with ci/.
-      - name: Benchmark tenant transactions and the cold start
+      - id: bench
+        name: Benchmark tenant transactions and the cold start
         if: ${{ !cancelled() && steps.branch.outputs.branch-id != '' }}
         env:
           NEON_API_KEY: ${{ secrets.NEON_NONPROD_API_KEY }}
@@ -151,11 +172,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions: { issues: write }
-    env:
-      CONTRACT: ${{ needs.contract.result }}
-      FULL: ${{ needs.full.result }}
     steps:
-      - if: needs.contract.result == 'success' && needs.full.result == 'success'
+      # Only main reports: a run dispatched on a branch must neither page nor close an issue about main.
+      - if: github.ref == 'refs/heads/main' && needs.contract.result == 'success' && needs.full.result == 'success'
         name: Send the heartbeat
         env:
           HEARTBEAT_URL: ${{ secrets.BETTERSTACK_HEARTBEAT_NIGHTLY_URL }}
@@ -165,20 +184,70 @@ jobs:
             exit 0
           fi
           curl -fsS --retry 3 -o /dev/null "$HEARTBEAT_URL"
-      # Consecutive red nights comment on the open issue instead of opening one each night.
-      - if: needs.contract.result != 'success' || needs.full.result != 'success'
-        name: Open or update the failure issue
+      # One issue per failing contract package or full-suite gate, so each cause is tracked and closed
+      # on its own; a red night comments on the open issue of the same failure instead of opening another.
+      - name: Open, update or close the failure issues
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          TRACK: ${{ github.ref == 'refs/heads/main' }}
+          CONTRACT_RESULT: ${{ needs.contract.result }}
+          CONTRACT_FAILED: ${{ needs.contract.outputs.failed }}
+          FULL_RESULT: ${{ needs.full.result }}
+          FULL_TESTS: ${{ needs.full.outputs.tests }}
+          FULL_SMOKE: ${{ needs.full.outputs.smoke }}
+          FULL_BENCH: ${{ needs.full.outputs.bench }}
         run: |
-          body="$RUN_URL (contract: $CONTRACT, full: $FULL)"
-          gh label create nightly-failure --force --color B60205 --description "The nightly run failed"
-          issue=$(gh issue list --label nightly-failure --state open --limit 1 --json number --jq '.[0].number // empty')
-          if [ -n "$issue" ]; then
-            gh issue comment "$issue" --body "Failed again: $body"
+          declare -A failing=()
+          # Jobs that ran to the end, so an open issue of theirs that did not fail tonight is fixed.
+          finished=()
+
+          if [ "$CONTRACT_RESULT" = success ]; then
+            finished+=(contract)
+          elif [ "$CONTRACT_RESULT" = failure ] && [ -n "$CONTRACT_FAILED" ]; then
+            finished+=(contract)
+            for task in $CONTRACT_FAILED; do failing["Nightly contract: $task"]=1; done
           else
-            gh issue create --label nightly-failure --title "Nightly failed on $(date -u +%F)" \
-              --body "$body. Runbook: docs/runbooks/nightly-failure.md"
+            failing["Nightly contract: job $CONTRACT_RESULT"]=1
           fi
+
+          gates=()
+          if [ "$FULL_TESTS" = failure ]; then gates+=("unit, component and integration tests"); fi
+          if [ "$FULL_SMOKE" = failure ]; then gates+=("smoke tests against production"); fi
+          if [ "$FULL_BENCH" = failure ]; then gates+=("benchmarks"); fi
+          if [ "$FULL_RESULT" = success ]; then
+            finished+=(full)
+          elif [ "$FULL_RESULT" = failure ] && [ "${#gates[@]}" -gt 0 ]; then
+            finished+=(full)
+            for gate in "${gates[@]}"; do failing["Nightly full: $gate"]=1; done
+          else
+            failing["Nightly full: job $FULL_RESULT"]=1
+          fi
+
+          {
+            echo "## Nightly"
+            if [ "${#failing[@]}" -eq 0 ]; then echo "Every gate passed."; fi
+            for title in "${!failing[@]}"; do echo "- $title"; done
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$TRACK" != true ]; then exit 0; fi
+
+          gh label create nightly-failure --force --color B60205 --description "The nightly run failed"
+          open=$(gh issue list --label nightly-failure --state open --limit 200 --json number,title)
+          for title in "${!failing[@]}"; do
+            issue=$(jq -r --arg title "$title" 'first(.[] | select(.title == $title) | .number) // empty' <<< "$open")
+            if [ -n "$issue" ]; then
+              gh issue comment "$issue" --body "Failed again: $RUN_URL"
+            else
+              gh issue create --label nightly-failure --title "$title" \
+                --body "First failed in $RUN_URL. Runbook: docs/runbooks/nightly-failure.md"
+            fi
+          done
+          for job in "${finished[@]}"; do
+            jq -r --arg prefix "Nightly $job: " '.[] | select(.title | startswith($prefix)) | "\(.number)\t\(.title)"' <<< "$open" |
+              while IFS=$'\t' read -r issue title; do
+                if [ -z "${failing[$title]:-}" ]; then
+                  gh issue close "$issue" --comment "Passed in $RUN_URL"
+                fi
+              done
+          done

@@ -1,13 +1,13 @@
 import { execFileSync } from "node:child_process";
+import { requireEnv } from "@reranker/testing/env";
 import { expect, test } from "vitest";
 import { NeonUsageSchema } from "./neon-usage";
 
-// Runs against the reranker-nonprod project with the nightly's restricted key; a missing
-// variable fails the test rather than skipping it.
+// The consumption endpoint is organization-wide, so this needs an organization key like the one
+// production reads with; a project-scoped key gets a 404 there.
 test("db:usage against reranker-nonprod returns JSON valid against NeonUsageSchema", () => {
-  const projectId = process.env.NEON_PROJECT_ID;
-  expect(projectId, "NEON_PROJECT_ID").toBeTruthy();
-  expect(process.env.NEON_API_KEY, "NEON_API_KEY").toBeTruthy();
+  const projectId = requireEnv("NEON_PROJECT_ID");
+  requireEnv("NEON_API_KEY");
   const out = JSON.parse(execFileSync("pnpm", ["--silent", "db:usage"], { encoding: "utf8" }));
   const usage = NeonUsageSchema.parse(out);
   expect(usage.projects[0]?.projectId).toBe(projectId);
