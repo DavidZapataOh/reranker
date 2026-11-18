@@ -9,7 +9,8 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --project unit --coverage --passWithNoTests"
+    "test": "vitest run --project unit --coverage --passWithNoTests",
+    "test:contract": "vitest run --project contract"
   },
   "dependencies": {
     "@reranker/env": "workspace:*",
@@ -21,9 +22,11 @@
     "ulid": "catalog:"
   },
   "devDependencies": {
+    "@reranker/testing": "workspace:*",
     "@reranker/typescript-config": "workspace:*",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
+    "msw": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }
