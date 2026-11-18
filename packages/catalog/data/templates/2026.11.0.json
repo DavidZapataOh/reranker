@@ -1,0 +1,2621 @@
+{
+  "version": "2026.11.0",
+  "archetypes": {
+    "health": {
+      "local": [
+        {
+          "kind": "discovery",
+          "slug": "recommended",
+          "canonical": "¿Qué {sustantivo} me recomienda en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿A qué {sustantivo} de {lugar} me aconseja ir?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Cuál {sustantivo} de {lugar} me recomendaría para una primera consulta?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndeme tres opciones de {sustantivo} en {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "Deme una lista corta de opciones de {sustantivo} en {lugar} que valgan la pena",
+              "format": "list_request"
+            },
+            {
+              "text": "recomendaciones de {sustantivo} en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en {lugar} cuál me recomiendan",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con buena atención a los pacientes",
+              "format": "constraint"
+            },
+            {
+              "text": "Necesito {sustantivo} en {lugar} para una revisión general, ¿cuál me sugiere?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "specialty",
+          "slug": "specialist",
+          "canonical": "¿Qué {sustantivo} en {lugar} tiene especialistas con experiencia en casos complejos?",
+          "paraphrases": [
+            {
+              "text": "¿En qué {sustantivo} de {lugar} atienden especialistas reconocidos?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} se especializa en tratamientos complejos?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndeme opciones de {sustantivo} en {lugar} con especialistas de trayectoria",
+              "format": "list_request"
+            },
+            {
+              "text": "Deme tres opciones de {sustantivo} en {lugar} con tecnología moderna para tratamientos especializados",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} especialista {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en {lugar} tratamientos especializados",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con especialistas certificados para un tratamiento complejo",
+              "format": "constraint"
+            },
+            {
+              "text": "Necesito {sustantivo} en {lugar} que maneje casos difíciles, ¿cuál me recomienda?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "zone",
+          "slug": "nearby",
+          "canonical": "¿Qué {sustantivo} me recomienda cerca de {zona} en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿Qué {sustantivo} queda cerca de {zona} en {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Dónde encuentro {sustantivo} por el sector de {zona} en {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndeme opciones de {sustantivo} cerca de {zona}, en {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "Deme una lista de opciones de {sustantivo} en el sector de {zona}, {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} cerca de {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} que me quede cerca de {zona} en {lugar}",
+              "format": "constraint"
+            },
+            {
+              "text": "Voy a estar por {zona} en {lugar}, ¿qué {sustantivo} me recomienda?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "urgency",
+          "slug": "urgent",
+          "canonical": "¿Qué {sustantivo} en {lugar} me puede atender hoy mismo?",
+          "paraphrases": [
+            {
+              "text": "Tengo una urgencia, ¿qué {sustantivo} en {lugar} me atiende hoy?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} atiende urgencias los fines de semana?",
+              "format": "open_question"
+            },
+            {
+              "text": "Deme opciones de {sustantivo} en {lugar} que atiendan urgencias hoy",
+              "format": "list_request"
+            },
+            {
+              "text": "Recomiéndeme tres opciones de {sustantivo} en {lugar} con atención inmediata",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} urgente {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} 24 horas en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Necesito {sustantivo} en {lugar} que me atienda hoy, sin cita previa",
+              "format": "constraint"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con atención de urgencias a cualquier hora",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "insurance_or_payment",
+          "slug": "insurance",
+          "canonical": "¿Qué {sustantivo} en {lugar} atiende con seguro médico?",
+          "paraphrases": [
+            {
+              "text": "¿Qué {sustantivo} de {lugar} recibe pacientes con seguro médico privado?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿En qué {sustantivo} de {lugar} puedo pagar el tratamiento por cuotas?",
+              "format": "open_question"
+            },
+            {
+              "text": "Deme opciones de {sustantivo} en {lugar} que acepten seguro médico",
+              "format": "list_request"
+            },
+            {
+              "text": "Recomiéndeme opciones de {sustantivo} en {lugar} con planes de financiación",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} {lugar} seguro médico",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en {lugar} pago a cuotas",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} que trabaje con mi seguro médico",
+              "format": "constraint"
+            },
+            {
+              "text": "Necesito {sustantivo} en {lugar} que acepte pago con tarjeta y a cuotas",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "trust",
+          "slug": "trusted",
+          "canonical": "¿Qué {sustantivo} de confianza me recomienda en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿Cuál {sustantivo} de {lugar} es confiable?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿En qué {sustantivo} de {lugar} puedo confiar sin miedo a una mala experiencia?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndeme opciones de {sustantivo} en {lugar} que sean serias y confiables",
+              "format": "list_request"
+            },
+            {
+              "text": "Deme tres opciones de {sustantivo} en {lugar} con buenas referencias",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} confiable {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} de confianza en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con buenas referencias de otros pacientes",
+              "format": "constraint"
+            },
+            {
+              "text": "Necesito {sustantivo} en {lugar} con profesionales certificados, ¿cuál me recomienda?",
+              "format": "constraint"
+            }
+          ]
+        }
+      ]
+    },
+    "beauty_wellness": {
+      "local": [
+        {
+          "kind": "discovery",
+          "slug": "recommended",
+          "canonical": "¿Qué {sustantivo} me recomiendas en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿A qué {sustantivo} de {lugar} me recomiendas ir?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Cuál {sustantivo} de {lugar} vale la pena probar?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame tres opciones de {sustantivo} en {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame una lista corta de opciones de {sustantivo} en {lugar} que valgan la pena",
+              "format": "list_request"
+            },
+            {
+              "text": "recomendaciones de {sustantivo} en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en {lugar} cuál me recomiendan",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con buena atención y buen ambiente",
+              "format": "constraint"
+            },
+            {
+              "text": "Es mi primera vez buscando {sustantivo} en {lugar}, ¿cuál me sugieres?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "specialty",
+          "slug": "specialist",
+          "canonical": "¿Qué {sustantivo} en {lugar} tiene profesionales expertos en lo que necesito?",
+          "paraphrases": [
+            {
+              "text": "¿En qué {sustantivo} de {lugar} trabajan expertos certificados?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} ofrece servicios especializados que no encuentro en otros lados?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} en {lugar} con profesionales certificados",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame tres opciones de {sustantivo} en {lugar} con servicios especializados",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} con expertos en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {lugar} servicios especializados",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con expertos que me asesoren antes de empezar",
+              "format": "constraint"
+            },
+            {
+              "text": "Quiero {sustantivo} en {lugar} con profesionales certificados, ¿cuál me recomiendas?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "zone",
+          "slug": "nearby",
+          "canonical": "¿Qué {sustantivo} me recomiendas cerca de {zona} en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿Qué {sustantivo} queda cerca de {zona} en {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Dónde encuentro {sustantivo} por el sector de {zona} en {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} cerca de {zona}, en {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame una lista de opciones de {sustantivo} en el sector de {zona}, {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} cerca de {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} que me quede cerca de {zona} en {lugar}",
+              "format": "constraint"
+            },
+            {
+              "text": "Voy a estar por {zona} en {lugar}, ¿qué {sustantivo} me recomiendas?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "price",
+          "slug": "price",
+          "canonical": "¿Qué {sustantivo} en {lugar} tiene buenos precios?",
+          "paraphrases": [
+            {
+              "text": "¿Dónde encuentro {sustantivo} a buen precio en {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} tiene la mejor relación calidad-precio?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} en {lugar} con precios económicos",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame una lista de opciones de {sustantivo} en {lugar} que no sean costosas",
+              "format": "list_request"
+            },
+            {
+              "text": "precios de {sustantivo} en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en {lugar} precios",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con buena calidad sin pagar de más",
+              "format": "constraint"
+            },
+            {
+              "text": "Necesito {sustantivo} en {lugar} que se ajuste a un presupuesto limitado",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "trust",
+          "slug": "trusted",
+          "canonical": "¿Qué {sustantivo} de confianza me recomiendas en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿Cuál {sustantivo} de {lugar} es confiable?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿En qué {sustantivo} de {lugar} puedo confiar sin miedo a una mala experiencia?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} en {lugar} que sean serias y confiables",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame tres opciones de {sustantivo} en {lugar} con buenas referencias",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} confiable {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} de confianza en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con buenas referencias de otros clientes",
+              "format": "constraint"
+            },
+            {
+              "text": "Quiero {sustantivo} en {lugar} que cumpla lo que promete, ¿cuál me recomiendas?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "ranking",
+          "slug": "top_rated",
+          "canonical": "¿Qué {sustantivo} tiene las mejores calificaciones en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿Cuál {sustantivo} de {lugar} tiene más estrellas en sus reseñas?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} tiene la mejor calificación de sus clientes?",
+              "format": "open_question"
+            },
+            {
+              "text": "Dame el top 5 de opciones de {sustantivo} en {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "Hazme un ranking de opciones de {sustantivo} en {lugar} según sus calificaciones",
+              "format": "list_request"
+            },
+            {
+              "text": "mejor {sustantivo} en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "top {sustantivo} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Quiero solo opciones de {sustantivo} en {lugar} con calificación de 4,5 estrellas o más",
+              "format": "constraint"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con muchas reseñas y la calificación más alta",
+              "format": "constraint"
+            }
+          ]
+        }
+      ]
+    },
+    "lodging": {
+      "local": [
+        {
+          "kind": "discovery",
+          "slug": "recommended",
+          "canonical": "¿Qué {sustantivo} me recomiendas en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿A qué {sustantivo} de {lugar} me recomiendas ir?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} me recomiendas para unos días de viaje?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame tres opciones de {sustantivo} en {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame una lista corta de opciones de {sustantivo} en {lugar} que valgan la pena",
+              "format": "list_request"
+            },
+            {
+              "text": "recomendaciones de {sustantivo} en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en {lugar} cuál me recomiendan",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} para un viaje de tres noches",
+              "format": "constraint"
+            },
+            {
+              "text": "Voy de viaje a {lugar} y busco {sustantivo} con buenas habitaciones",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "specialty",
+          "slug": "couple",
+          "canonical": "¿Qué {sustantivo} en {lugar} es ideal para ir en pareja?",
+          "paraphrases": [
+            {
+              "text": "¿Qué {sustantivo} de {lugar} me recomiendas para una escapada romántica?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿En qué {sustantivo} de {lugar} puedo celebrar un aniversario?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} en {lugar} para ir en pareja",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame tres opciones de {sustantivo} en {lugar} con ambiente romántico",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} para parejas en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {lugar} plan de pareja",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con habitación privada y ambiente tranquilo para ir en pareja",
+              "format": "constraint"
+            },
+            {
+              "text": "Quiero {sustantivo} en {lugar} para un fin de semana en pareja, con buena vista",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "zone",
+          "slug": "nearby",
+          "canonical": "¿Qué {sustantivo} me recomiendas cerca de {zona} en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿Qué {sustantivo} queda cerca de {zona} en {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Dónde encuentro {sustantivo} por el sector de {zona} en {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} cerca de {zona}, en {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame una lista de opciones de {sustantivo} en el sector de {zona}, {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} cerca de {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} que me quede cerca de {zona} en {lugar}",
+              "format": "constraint"
+            },
+            {
+              "text": "Voy a estar por {zona} en {lugar}, ¿qué {sustantivo} me recomiendas?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "price",
+          "slug": "price",
+          "canonical": "¿Qué {sustantivo} en {lugar} tiene buenas tarifas por noche?",
+          "paraphrases": [
+            {
+              "text": "¿Dónde encuentro {sustantivo} a buen precio en {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} tiene la mejor relación calidad-precio?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} en {lugar} con precios económicos",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame una lista de opciones de {sustantivo} en {lugar} que no sean costosas",
+              "format": "list_request"
+            },
+            {
+              "text": "precios de {sustantivo} en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en {lugar} precios",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con buena calidad sin pagar de más",
+              "format": "constraint"
+            },
+            {
+              "text": "Necesito {sustantivo} en {lugar} con una tarifa por noche que no se pase de mi presupuesto",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "trust",
+          "slug": "trusted",
+          "canonical": "¿Qué {sustantivo} de confianza me recomiendas en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿Cuál {sustantivo} de {lugar} es confiable?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿En qué {sustantivo} de {lugar} puedo confiar sin miedo a una mala experiencia?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} en {lugar} que sean serias y confiables",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame tres opciones de {sustantivo} en {lugar} con buenas referencias",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} confiable {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} de confianza en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con buenas referencias de otros huéspedes",
+              "format": "constraint"
+            },
+            {
+              "text": "Quiero {sustantivo} en {lugar} donde las fotos coincidan con la realidad",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "ranking",
+          "slug": "top_rated",
+          "canonical": "¿Qué {sustantivo} tiene las mejores calificaciones en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿Cuál {sustantivo} de {lugar} tiene más estrellas en sus reseñas?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} tiene la mejor calificación de sus huéspedes?",
+              "format": "open_question"
+            },
+            {
+              "text": "Dame el top 5 de opciones de {sustantivo} en {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "Hazme un ranking de opciones de {sustantivo} en {lugar} según sus calificaciones",
+              "format": "list_request"
+            },
+            {
+              "text": "mejor {sustantivo} en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "top {sustantivo} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Quiero solo opciones de {sustantivo} en {lugar} con calificación de 4,5 estrellas o más",
+              "format": "constraint"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con muchas reseñas y la calificación más alta",
+              "format": "constraint"
+            }
+          ]
+        }
+      ]
+    },
+    "food": {
+      "local": [
+        {
+          "kind": "discovery",
+          "slug": "recommended",
+          "canonical": "¿Qué {sustantivo} me recomiendas en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿A qué {sustantivo} de {lugar} me recomiendas ir?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} vale la pena conocer?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame tres opciones de {sustantivo} en {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame una lista corta de opciones de {sustantivo} en {lugar} que valgan la pena",
+              "format": "list_request"
+            },
+            {
+              "text": "recomendaciones de {sustantivo} en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en {lugar} cuál me recomiendan",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} para ir con la familia",
+              "format": "constraint"
+            },
+            {
+              "text": "Quiero conocer {sustantivo} en {lugar} con buena comida y buen ambiente",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "specialty",
+          "slug": "signature",
+          "canonical": "¿Qué {sustantivo} en {lugar} tiene una especialidad de la casa que valga la pena?",
+          "paraphrases": [
+            {
+              "text": "¿En qué {sustantivo} de {lugar} preparan algo que no encuentro en otro lado?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} se destaca por su producto estrella?",
+              "format": "open_question"
+            },
+            {
+              "text": "Dame tres opciones de {sustantivo} en {lugar} con una especialidad de la casa",
+              "format": "list_request"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} en {lugar} con propuestas diferentes",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} en {lugar} especialidad de la casa",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {lugar} producto estrella",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con ingredientes frescos y recetas propias",
+              "format": "constraint"
+            },
+            {
+              "text": "Quiero {sustantivo} en {lugar} que tenga algo especial para probar, ¿cuál me recomiendas?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "zone",
+          "slug": "nearby",
+          "canonical": "¿Qué {sustantivo} me recomiendas cerca de {zona} en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿Qué {sustantivo} queda cerca de {zona} en {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Dónde encuentro {sustantivo} por el sector de {zona} en {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} cerca de {zona}, en {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame una lista de opciones de {sustantivo} en el sector de {zona}, {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} cerca de {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} que me quede cerca de {zona} en {lugar}",
+              "format": "constraint"
+            },
+            {
+              "text": "Voy a estar por {zona} en {lugar}, ¿qué {sustantivo} me recomiendas?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "price",
+          "slug": "price",
+          "canonical": "¿Qué {sustantivo} en {lugar} tiene buenos precios?",
+          "paraphrases": [
+            {
+              "text": "¿Dónde encuentro {sustantivo} a buen precio en {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} tiene la mejor relación calidad-precio?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} en {lugar} con precios económicos",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame una lista de opciones de {sustantivo} en {lugar} que no sean costosas",
+              "format": "list_request"
+            },
+            {
+              "text": "precios de {sustantivo} en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en {lugar} precios",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con buena calidad sin pagar de más",
+              "format": "constraint"
+            },
+            {
+              "text": "Necesito {sustantivo} en {lugar} donde se coma bien con un presupuesto limitado",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "trust",
+          "slug": "trusted",
+          "canonical": "¿Qué {sustantivo} de confianza me recomiendas en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿Cuál {sustantivo} de {lugar} es confiable?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿En qué {sustantivo} de {lugar} puedo confiar sin miedo a una mala experiencia?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} en {lugar} que sean serias y confiables",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame tres opciones de {sustantivo} en {lugar} con buenas referencias",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} confiable {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} de confianza en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con buenas referencias de otros clientes",
+              "format": "constraint"
+            },
+            {
+              "text": "Quiero {sustantivo} en {lugar} con buena higiene y calidad constante",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "ranking",
+          "slug": "top_rated",
+          "canonical": "¿Qué {sustantivo} tiene las mejores calificaciones en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿Cuál {sustantivo} de {lugar} tiene más estrellas en sus reseñas?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} tiene la mejor calificación de sus clientes?",
+              "format": "open_question"
+            },
+            {
+              "text": "Dame el top 5 de opciones de {sustantivo} en {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "Hazme un ranking de opciones de {sustantivo} en {lugar} según sus calificaciones",
+              "format": "list_request"
+            },
+            {
+              "text": "mejor {sustantivo} en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "top {sustantivo} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Quiero solo opciones de {sustantivo} en {lugar} con calificación de 4,5 estrellas o más",
+              "format": "constraint"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con muchas reseñas y la calificación más alta",
+              "format": "constraint"
+            }
+          ]
+        }
+      ]
+    },
+    "home_auto_services": {
+      "local": [
+        {
+          "kind": "discovery",
+          "slug": "recommended",
+          "canonical": "¿Qué {sustantivo} me recomiendas en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿A qué {sustantivo} de {lugar} me recomiendas ir?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} hace trabajos bien hechos?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame tres opciones de {sustantivo} en {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame una lista corta de opciones de {sustantivo} en {lugar} que valgan la pena",
+              "format": "list_request"
+            },
+            {
+              "text": "recomendaciones de {sustantivo} en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en {lugar} cuál me recomiendan",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} que cumpla con los tiempos de entrega",
+              "format": "constraint"
+            },
+            {
+              "text": "Necesito {sustantivo} en {lugar} para un trabajo bien hecho, ¿cuál me recomiendas?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "specialty",
+          "slug": "specialist",
+          "canonical": "¿Qué {sustantivo} en {lugar} tiene técnicos especializados?",
+          "paraphrases": [
+            {
+              "text": "¿Qué {sustantivo} de {lugar} sabe resolver problemas difíciles?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿En qué {sustantivo} de {lugar} trabajan técnicos certificados?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} en {lugar} con técnicos especializados",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame tres opciones de {sustantivo} en {lugar} con experiencia en trabajos complejos",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} con técnicos certificados en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {lugar} trabajos especializados",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con experiencia en un problema que otros no resolvieron",
+              "format": "constraint"
+            },
+            {
+              "text": "Necesito {sustantivo} en {lugar} con las herramientas para un trabajo especializado",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "zone",
+          "slug": "nearby",
+          "canonical": "¿Qué {sustantivo} me recomiendas cerca de {zona} en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿Qué {sustantivo} queda cerca de {zona} en {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Dónde encuentro {sustantivo} por el sector de {zona} en {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} cerca de {zona}, en {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame una lista de opciones de {sustantivo} en el sector de {zona}, {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} cerca de {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} que me quede cerca de {zona} en {lugar}",
+              "format": "constraint"
+            },
+            {
+              "text": "Voy a estar por {zona} en {lugar}, ¿qué {sustantivo} me recomiendas?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "price",
+          "slug": "price",
+          "canonical": "¿Qué {sustantivo} en {lugar} cobra un precio justo?",
+          "paraphrases": [
+            {
+              "text": "¿Dónde encuentro {sustantivo} a buen precio en {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} tiene la mejor relación calidad-precio?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} en {lugar} con precios económicos",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame una lista de opciones de {sustantivo} en {lugar} que no sean costosas",
+              "format": "list_request"
+            },
+            {
+              "text": "precios de {sustantivo} en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en {lugar} precios",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con buena calidad sin pagar de más",
+              "format": "constraint"
+            },
+            {
+              "text": "Necesito {sustantivo} en {lugar} que me dé una cotización clara antes de empezar",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "urgency",
+          "slug": "urgent",
+          "canonical": "¿Qué {sustantivo} en {lugar} me puede atender hoy mismo?",
+          "paraphrases": [
+            {
+              "text": "Tengo una emergencia, ¿qué {sustantivo} en {lugar} me atiende hoy?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} atiende urgencias los fines de semana?",
+              "format": "open_question"
+            },
+            {
+              "text": "Dame opciones de {sustantivo} en {lugar} que atiendan urgencias hoy",
+              "format": "list_request"
+            },
+            {
+              "text": "Recomiéndame tres opciones de {sustantivo} en {lugar} con atención inmediata",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} urgente {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} 24 horas en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Necesito {sustantivo} en {lugar} que me atienda hoy, sin cita previa",
+              "format": "constraint"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con atención de urgencias a cualquier hora",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "trust",
+          "slug": "trusted",
+          "canonical": "¿Qué {sustantivo} de confianza me recomiendas en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿Cuál {sustantivo} de {lugar} es confiable?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿En qué {sustantivo} de {lugar} puedo confiar sin miedo a una mala experiencia?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} en {lugar} que sean serias y confiables",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame tres opciones de {sustantivo} en {lugar} con buenas referencias",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} confiable {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} de confianza en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con buenas referencias de otros clientes",
+              "format": "constraint"
+            },
+            {
+              "text": "Quiero {sustantivo} en {lugar} que dé garantía por escrito sobre su trabajo",
+              "format": "constraint"
+            }
+          ]
+        }
+      ]
+    },
+    "local_retail": {
+      "local": [
+        {
+          "kind": "discovery",
+          "slug": "recommended",
+          "canonical": "¿Qué {sustantivo} me recomiendas en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿A qué {sustantivo} de {lugar} me recomiendas ir?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Cuál {sustantivo} de {lugar} vale la pena visitar?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame tres opciones de {sustantivo} en {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame una lista corta de opciones de {sustantivo} en {lugar} que valgan la pena",
+              "format": "list_request"
+            },
+            {
+              "text": "recomendaciones de {sustantivo} en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en {lugar} cuál me recomiendan",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con buena atención y asesoría",
+              "format": "constraint"
+            },
+            {
+              "text": "Es mi primera vez buscando {sustantivo} en {lugar}, ¿cuál me sugieres?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "specialty",
+          "slug": "assortment",
+          "canonical": "¿Qué {sustantivo} en {lugar} tiene el mejor surtido?",
+          "paraphrases": [
+            {
+              "text": "¿En qué {sustantivo} de {lugar} encuentro productos difíciles de conseguir?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} tiene variedad de marcas?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} en {lugar} con buen surtido",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame tres opciones de {sustantivo} en {lugar} con productos especializados",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} con buen surtido en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {lugar} variedad de productos",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} que tenga un producto específico que no encuentro",
+              "format": "constraint"
+            },
+            {
+              "text": "Quiero {sustantivo} en {lugar} con asesoría de expertos al comprar",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "price",
+          "slug": "price",
+          "canonical": "¿Qué {sustantivo} en {lugar} tiene buenos precios?",
+          "paraphrases": [
+            {
+              "text": "¿Dónde encuentro {sustantivo} a buen precio en {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} tiene la mejor relación calidad-precio?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} en {lugar} con precios económicos",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame una lista de opciones de {sustantivo} en {lugar} que no sean costosas",
+              "format": "list_request"
+            },
+            {
+              "text": "precios de {sustantivo} en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en {lugar} precios",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con buena calidad sin pagar de más",
+              "format": "constraint"
+            },
+            {
+              "text": "Necesito {sustantivo} en {lugar} que se ajuste a un presupuesto limitado",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "urgency",
+          "slug": "today",
+          "canonical": "¿Qué {sustantivo} en {lugar} tiene disponible hoy lo que necesito?",
+          "paraphrases": [
+            {
+              "text": "¿Qué {sustantivo} de {lugar} atiende hoy hasta tarde?",
+              "format": "open_question"
+            },
+            {
+              "text": "Lo necesito ya, ¿qué {sustantivo} en {lugar} me lo tiene hoy?",
+              "format": "open_question"
+            },
+            {
+              "text": "Dame opciones de {sustantivo} en {lugar} que atiendan hoy",
+              "format": "list_request"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} en {lugar} con entrega el mismo día",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} en {lugar} horario hoy",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {lugar} entrega el mismo día",
+              "format": "keyword"
+            },
+            {
+              "text": "Necesito {sustantivo} en {lugar} que me entregue hoy mismo",
+              "format": "constraint"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} que atienda los fines de semana hasta tarde",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "trust",
+          "slug": "trusted",
+          "canonical": "¿Qué {sustantivo} de confianza me recomiendas en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿Cuál {sustantivo} de {lugar} es confiable?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿En qué {sustantivo} de {lugar} puedo confiar sin miedo a una mala experiencia?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} en {lugar} que sean serias y confiables",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame tres opciones de {sustantivo} en {lugar} con buenas referencias",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} confiable {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} de confianza en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con buenas referencias de otros clientes",
+              "format": "constraint"
+            },
+            {
+              "text": "Quiero {sustantivo} en {lugar} que respete la garantía de lo que vende",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "ranking",
+          "slug": "top_rated",
+          "canonical": "¿Qué {sustantivo} tiene las mejores calificaciones en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿Cuál {sustantivo} de {lugar} tiene más estrellas en sus reseñas?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} tiene la mejor calificación de sus clientes?",
+              "format": "open_question"
+            },
+            {
+              "text": "Dame el top 5 de opciones de {sustantivo} en {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "Hazme un ranking de opciones de {sustantivo} en {lugar} según sus calificaciones",
+              "format": "list_request"
+            },
+            {
+              "text": "mejor {sustantivo} en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "top {sustantivo} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Quiero solo opciones de {sustantivo} en {lugar} con calificación de 4,5 estrellas o más",
+              "format": "constraint"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con muchas reseñas y la calificación más alta",
+              "format": "constraint"
+            }
+          ]
+        }
+      ],
+      "national": [
+        {
+          "kind": "discovery",
+          "slug": "recommended",
+          "canonical": "¿Qué {sustantivo} de {país} con envíos a todo el país me recomiendas?",
+          "paraphrases": [
+            {
+              "text": "¿Qué {sustantivo} de {país} vende por internet con envío a domicilio?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Cuál {sustantivo} me recomiendas para comprar en línea con envío a todo el país?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame tres opciones de {sustantivo} en {país} que vendan en línea",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame una lista de opciones de {sustantivo} con envíos a todo el país",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} en línea {país}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} con envíos a todo el país",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} que venda por internet y haga envíos a todo el país",
+              "format": "constraint"
+            },
+            {
+              "text": "Busco {sustantivo} de {país} para comprar sin salir de casa, ¿cuál me recomiendas?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "specialty",
+          "slug": "assortment",
+          "canonical": "¿Qué {sustantivo} de {país} tiene el mejor surtido para comprar en línea?",
+          "paraphrases": [
+            {
+              "text": "¿En qué {sustantivo} con venta en línea encuentro productos difíciles de conseguir?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {país} tiene variedad de marcas en su tienda virtual?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} en {país} con buen surtido en línea",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame tres opciones de {sustantivo} con productos especializados y envío a todo el país",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} con buen surtido en línea {país}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} variedad de productos envío a todo el país",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} con tienda virtual que tenga un producto específico que no encuentro",
+              "format": "constraint"
+            },
+            {
+              "text": "Quiero {sustantivo} en {país} con asesoría de expertos al comprar por internet",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "price",
+          "slug": "price",
+          "canonical": "¿Qué {sustantivo} de {país} tiene buenos precios con envío incluido?",
+          "paraphrases": [
+            {
+              "text": "¿Dónde encuentro {sustantivo} con buenos precios en línea en {país}?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} con venta por internet tiene la mejor relación calidad-precio?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} en {país} con precios económicos y envío",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame una lista de opciones de {sustantivo} con envío gratis a todo el país",
+              "format": "list_request"
+            },
+            {
+              "text": "precios de {sustantivo} en línea {país}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} envío gratis a todo el país",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} con venta en línea, buena calidad y sin pagar de más",
+              "format": "constraint"
+            },
+            {
+              "text": "Necesito {sustantivo} en {país} que se ajuste a un presupuesto limitado y envíe a domicilio",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "urgency",
+          "slug": "fast_delivery",
+          "canonical": "¿Qué {sustantivo} de {país} hace envíos rápidos a todo el país?",
+          "paraphrases": [
+            {
+              "text": "¿Qué {sustantivo} con venta en línea me entrega al día siguiente?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Cuál {sustantivo} de {país} despacha más rápido sus pedidos por internet?",
+              "format": "open_question"
+            },
+            {
+              "text": "Dame opciones de {sustantivo} en {país} con entrega en 24 horas",
+              "format": "list_request"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} con envío exprés a todo el país",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} envío rápido {país}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en línea entrega al día siguiente",
+              "format": "keyword"
+            },
+            {
+              "text": "Necesito {sustantivo} que me envíe el pedido hoy mismo a cualquier ciudad",
+              "format": "constraint"
+            },
+            {
+              "text": "Busco {sustantivo} con venta por internet y envío exprés a todo el país",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "trust",
+          "slug": "trusted",
+          "canonical": "¿Qué {sustantivo} de {país} es confiable para comprar en línea?",
+          "paraphrases": [
+            {
+              "text": "¿En qué {sustantivo} con venta en línea puedo comprar sin miedo a una estafa?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {país} cumple con lo que promete en sus ventas por internet?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} en {país} que sean serias y confiables en línea",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame tres opciones de {sustantivo} con buenas referencias de compradores en línea",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} confiable en línea {país}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} de confianza con envíos a todo el país",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} con venta en línea, pago seguro y política de devoluciones clara",
+              "format": "constraint"
+            },
+            {
+              "text": "Busco {sustantivo} de {país} que responda si algo sale mal con mi pedido en línea",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "ranking",
+          "slug": "top_rated",
+          "canonical": "¿Qué {sustantivo} de {país} tiene las mejores calificaciones de sus compradores?",
+          "paraphrases": [
+            {
+              "text": "¿Cuál {sustantivo} con venta en línea tiene más estrellas en sus reseñas?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {país} tiene la mejor calificación en sus compras por internet?",
+              "format": "open_question"
+            },
+            {
+              "text": "Dame el top 5 de opciones de {sustantivo} en {país} con venta en línea",
+              "format": "list_request"
+            },
+            {
+              "text": "Hazme un ranking de opciones de {sustantivo} con envío a todo el país según sus calificaciones",
+              "format": "list_request"
+            },
+            {
+              "text": "mejor {sustantivo} en línea {país}",
+              "format": "keyword"
+            },
+            {
+              "text": "top {sustantivo} con envíos a todo el país",
+              "format": "keyword"
+            },
+            {
+              "text": "Quiero solo opciones de {sustantivo} en {país} con calificación de 4,5 estrellas o más",
+              "format": "constraint"
+            },
+            {
+              "text": "Busco {sustantivo} con venta en línea, muchas reseñas y la calificación más alta",
+              "format": "constraint"
+            }
+          ]
+        }
+      ]
+    },
+    "professional_services": {
+      "local": [
+        {
+          "kind": "discovery",
+          "slug": "recommended",
+          "canonical": "¿Qué {sustantivo} me recomienda en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿A qué {sustantivo} de {lugar} me aconseja ir?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} tiene buena reputación en su área?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndeme tres opciones de {sustantivo} en {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "Deme una lista corta de opciones de {sustantivo} en {lugar} que valgan la pena",
+              "format": "list_request"
+            },
+            {
+              "text": "recomendaciones de {sustantivo} en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en {lugar} cuál me recomiendan",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} que explique las cosas con claridad",
+              "format": "constraint"
+            },
+            {
+              "text": "Necesito {sustantivo} en {lugar} para una primera asesoría, ¿cuál me sugiere?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "specialty",
+          "slug": "specialist",
+          "canonical": "¿Qué {sustantivo} en {lugar} tiene experiencia en casos como el mío?",
+          "paraphrases": [
+            {
+              "text": "¿Qué {sustantivo} de {lugar} se especializa en casos complejos?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} tiene más trayectoria en su área?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndeme opciones de {sustantivo} en {lugar} con experiencia en casos complejos",
+              "format": "list_request"
+            },
+            {
+              "text": "Deme tres opciones de {sustantivo} en {lugar} con especialización comprobada",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} especialista {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en {lugar} con experiencia",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con años de experiencia en un caso parecido al mío",
+              "format": "constraint"
+            },
+            {
+              "text": "Necesito {sustantivo} en {lugar} que me asesore en un tema especializado, ¿cuál me sugiere?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "price",
+          "slug": "price",
+          "canonical": "¿Qué {sustantivo} en {lugar} tiene tarifas razonables?",
+          "paraphrases": [
+            {
+              "text": "¿Dónde encuentro {sustantivo} a buen precio en {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} tiene la mejor relación calidad-precio?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndeme opciones de {sustantivo} en {lugar} con precios económicos",
+              "format": "list_request"
+            },
+            {
+              "text": "Deme una lista de opciones de {sustantivo} en {lugar} que no sean costosas",
+              "format": "list_request"
+            },
+            {
+              "text": "precios de {sustantivo} en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en {lugar} precios",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con buena calidad sin pagar de más",
+              "format": "constraint"
+            },
+            {
+              "text": "Necesito {sustantivo} en {lugar} que me dé una cotización clara antes de empezar",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "urgency",
+          "slug": "urgent",
+          "canonical": "¿Qué {sustantivo} en {lugar} me puede atender hoy mismo?",
+          "paraphrases": [
+            {
+              "text": "Tengo una urgencia, ¿qué {sustantivo} en {lugar} me atiende hoy?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} atiende urgencias los fines de semana?",
+              "format": "open_question"
+            },
+            {
+              "text": "Deme opciones de {sustantivo} en {lugar} que atiendan urgencias hoy",
+              "format": "list_request"
+            },
+            {
+              "text": "Recomiéndeme tres opciones de {sustantivo} en {lugar} con atención inmediata",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} urgente {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} 24 horas en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Necesito {sustantivo} en {lugar} que me atienda hoy, sin cita previa",
+              "format": "constraint"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con atención de urgencias a cualquier hora",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "trust",
+          "slug": "trusted",
+          "canonical": "¿Qué {sustantivo} de confianza me recomienda en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿Cuál {sustantivo} de {lugar} es confiable?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿En qué {sustantivo} de {lugar} puedo confiar sin miedo a una mala experiencia?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndeme opciones de {sustantivo} en {lugar} que sean serias y confiables",
+              "format": "list_request"
+            },
+            {
+              "text": "Deme tres opciones de {sustantivo} en {lugar} con buenas referencias",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} confiable {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} de confianza en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con buenas referencias de otros clientes",
+              "format": "constraint"
+            },
+            {
+              "text": "Necesito {sustantivo} en {lugar} que maneje mi información con total reserva",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "ranking",
+          "slug": "top_rated",
+          "canonical": "¿Qué {sustantivo} tiene las mejores calificaciones en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿Cuál {sustantivo} de {lugar} tiene más estrellas en sus reseñas?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} tiene la mejor calificación de sus clientes?",
+              "format": "open_question"
+            },
+            {
+              "text": "Deme el top 5 de opciones de {sustantivo} en {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "Hágame un ranking de opciones de {sustantivo} en {lugar} según sus calificaciones",
+              "format": "list_request"
+            },
+            {
+              "text": "mejor {sustantivo} en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "top {sustantivo} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Quisiera solo opciones de {sustantivo} en {lugar} con calificación de 4,5 estrellas o más",
+              "format": "constraint"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con muchas reseñas y la calificación más alta",
+              "format": "constraint"
+            }
+          ]
+        }
+      ]
+    },
+    "real_estate": {
+      "local": [
+        {
+          "kind": "discovery",
+          "slug": "recommended",
+          "canonical": "¿Qué {sustantivo} me recomiendas en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿A qué {sustantivo} de {lugar} me recomiendas ir?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} tiene buena oferta de inmuebles?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame tres opciones de {sustantivo} en {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame una lista corta de opciones de {sustantivo} en {lugar} que valgan la pena",
+              "format": "list_request"
+            },
+            {
+              "text": "recomendaciones de {sustantivo} en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en {lugar} cuál me recomiendan",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} para encontrar vivienda",
+              "format": "constraint"
+            },
+            {
+              "text": "Quiero vender mi casa en {lugar}, ¿qué {sustantivo} me ayuda?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "specialty",
+          "slug": "rentals",
+          "canonical": "¿Qué {sustantivo} en {lugar} me recomiendas para alquilar vivienda?",
+          "paraphrases": [
+            {
+              "text": "¿Con qué {sustantivo} de {lugar} encuentro casas o apartamentos en alquiler?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} maneja inmuebles en alquiler con requisitos sencillos?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} en {lugar} con inmuebles en alquiler",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame tres opciones de {sustantivo} en {lugar} especializadas en alquiler de vivienda",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} alquiler de vivienda {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en {lugar} inmuebles en alquiler",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} que me ayude a alquilar sin tantos trámites",
+              "format": "constraint"
+            },
+            {
+              "text": "Necesito alquilar vivienda en {lugar}, ¿qué {sustantivo} me sugieres?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "zone",
+          "slug": "nearby",
+          "canonical": "¿Qué {sustantivo} me recomiendas cerca de {zona} en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿Qué {sustantivo} queda cerca de {zona} en {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Dónde encuentro {sustantivo} por el sector de {zona} en {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} cerca de {zona}, en {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame una lista de opciones de {sustantivo} en el sector de {zona}, {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} cerca de {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} que me quede cerca de {zona} en {lugar}",
+              "format": "constraint"
+            },
+            {
+              "text": "Voy a estar por {zona} en {lugar}, ¿qué {sustantivo} me recomiendas?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "price",
+          "slug": "price",
+          "canonical": "¿Qué {sustantivo} en {lugar} cobra una comisión justa?",
+          "paraphrases": [
+            {
+              "text": "¿Dónde encuentro {sustantivo} a buen precio en {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} tiene la mejor relación calidad-precio?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} en {lugar} con precios económicos",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame una lista de opciones de {sustantivo} en {lugar} que no sean costosas",
+              "format": "list_request"
+            },
+            {
+              "text": "precios de {sustantivo} en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en {lugar} precios",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con buena calidad sin pagar de más",
+              "format": "constraint"
+            },
+            {
+              "text": "Necesito {sustantivo} en {lugar} con comisiones claras desde el principio",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "trust",
+          "slug": "trusted",
+          "canonical": "¿Qué {sustantivo} de confianza me recomiendas en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿Cuál {sustantivo} de {lugar} es confiable?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿En qué {sustantivo} de {lugar} puedo confiar sin miedo a una mala experiencia?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame opciones de {sustantivo} en {lugar} que sean serias y confiables",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame tres opciones de {sustantivo} en {lugar} con buenas referencias",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} confiable {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} de confianza en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con buenas referencias de otros clientes",
+              "format": "constraint"
+            },
+            {
+              "text": "Quiero {sustantivo} en {lugar} que tenga todos sus inmuebles con papeles en regla",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "ranking",
+          "slug": "top_rated",
+          "canonical": "¿Qué {sustantivo} tiene las mejores calificaciones en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿Cuál {sustantivo} de {lugar} tiene más estrellas en sus reseñas?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} tiene la mejor calificación de sus clientes?",
+              "format": "open_question"
+            },
+            {
+              "text": "Dame el top 5 de opciones de {sustantivo} en {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "Hazme un ranking de opciones de {sustantivo} en {lugar} según sus calificaciones",
+              "format": "list_request"
+            },
+            {
+              "text": "mejor {sustantivo} en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "top {sustantivo} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Quiero solo opciones de {sustantivo} en {lugar} con calificación de 4,5 estrellas o más",
+              "format": "constraint"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con muchas reseñas y la calificación más alta",
+              "format": "constraint"
+            }
+          ]
+        }
+      ]
+    },
+    "education": {
+      "local": [
+        {
+          "kind": "discovery",
+          "slug": "recommended",
+          "canonical": "¿Qué {sustantivo} me recomienda en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿A qué {sustantivo} de {lugar} me aconseja ir?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} tiene buen nivel académico?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndeme tres opciones de {sustantivo} en {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "Deme una lista corta de opciones de {sustantivo} en {lugar} que valgan la pena",
+              "format": "list_request"
+            },
+            {
+              "text": "recomendaciones de {sustantivo} en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en {lugar} cuál me recomiendan",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con buena formación y buen ambiente",
+              "format": "constraint"
+            },
+            {
+              "text": "Estoy buscando {sustantivo} en {lugar} para el próximo año, ¿cuál me sugiere?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "specialty",
+          "slug": "program",
+          "canonical": "¿Qué {sustantivo} en {lugar} tiene un enfoque bilingüe o internacional?",
+          "paraphrases": [
+            {
+              "text": "¿Qué {sustantivo} de {lugar} enseña con metodologías innovadoras?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} tiene énfasis en idiomas?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndeme opciones de {sustantivo} en {lugar} con enfoque bilingüe",
+              "format": "list_request"
+            },
+            {
+              "text": "Deme tres opciones de {sustantivo} en {lugar} con programas internacionales",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} bilingüe {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en {lugar} con énfasis en idiomas",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con profesores nativos y enfoque internacional",
+              "format": "constraint"
+            },
+            {
+              "text": "Necesito {sustantivo} en {lugar} con una metodología diferente a la tradicional",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "zone",
+          "slug": "nearby",
+          "canonical": "¿Qué {sustantivo} me recomienda cerca de {zona} en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿Qué {sustantivo} queda cerca de {zona} en {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Dónde encuentro {sustantivo} por el sector de {zona} en {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndeme opciones de {sustantivo} cerca de {zona}, en {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "Deme una lista de opciones de {sustantivo} en el sector de {zona}, {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} cerca de {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} que me quede cerca de {zona} en {lugar}",
+              "format": "constraint"
+            },
+            {
+              "text": "Voy a estar por {zona} en {lugar}, ¿qué {sustantivo} me recomienda?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "price",
+          "slug": "price",
+          "canonical": "¿Qué {sustantivo} en {lugar} tiene costos razonables?",
+          "paraphrases": [
+            {
+              "text": "¿Dónde encuentro {sustantivo} a buen precio en {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} tiene la mejor relación calidad-precio?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndeme opciones de {sustantivo} en {lugar} con precios económicos",
+              "format": "list_request"
+            },
+            {
+              "text": "Deme una lista de opciones de {sustantivo} en {lugar} que no sean costosas",
+              "format": "list_request"
+            },
+            {
+              "text": "precios de {sustantivo} en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en {lugar} precios",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con buena calidad sin pagar de más",
+              "format": "constraint"
+            },
+            {
+              "text": "Necesito {sustantivo} en {lugar} con buena calidad y costos que pueda sostener",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "insurance_or_payment",
+          "slug": "scholarships",
+          "canonical": "¿Qué {sustantivo} en {lugar} ofrece becas o financiación?",
+          "paraphrases": [
+            {
+              "text": "¿En qué {sustantivo} de {lugar} puedo pagar la matrícula por cuotas?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué {sustantivo} de {lugar} da becas por rendimiento académico?",
+              "format": "open_question"
+            },
+            {
+              "text": "Deme opciones de {sustantivo} en {lugar} con programas de becas",
+              "format": "list_request"
+            },
+            {
+              "text": "Recomiéndeme opciones de {sustantivo} en {lugar} con planes de financiación",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} {lugar} becas",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en {lugar} matrícula a cuotas",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} que ofrezca descuentos por hermanos o becas",
+              "format": "constraint"
+            },
+            {
+              "text": "Necesito {sustantivo} en {lugar} que acepte pago de la matrícula a cuotas",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "trust",
+          "slug": "trusted",
+          "canonical": "¿Qué {sustantivo} de confianza me recomienda en {lugar}?",
+          "paraphrases": [
+            {
+              "text": "¿Cuál {sustantivo} de {lugar} es confiable?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿En qué {sustantivo} de {lugar} puedo confiar sin miedo a una mala experiencia?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndeme opciones de {sustantivo} en {lugar} que sean serias y confiables",
+              "format": "list_request"
+            },
+            {
+              "text": "Deme tres opciones de {sustantivo} en {lugar} con buenas referencias",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} confiable {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} de confianza en {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} en {lugar} con buenas referencias de otros estudiantes",
+              "format": "constraint"
+            },
+            {
+              "text": "Necesito {sustantivo} en {lugar} con buena reputación entre las familias",
+              "format": "constraint"
+            }
+          ]
+        }
+      ]
+    },
+    "online_national": {
+      "national": [
+        {
+          "kind": "discovery",
+          "slug": "recommended",
+          "canonical": "¿Cuál es la mejor tienda online de {sustantivo} en {país}?",
+          "paraphrases": [
+            {
+              "text": "¿Qué tienda online de {sustantivo} me recomiendas en {país}?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Dónde compro {sustantivo} por internet en {país}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame tres tiendas online de {sustantivo} en {país}",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame una lista de tiendas en línea que vendan {sustantivo} con envío a todo el país",
+              "format": "list_request"
+            },
+            {
+              "text": "tienda online de {sustantivo} {país}",
+              "format": "keyword"
+            },
+            {
+              "text": "comprar {sustantivo} por internet",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco una tienda online de {sustantivo} que haga envíos a todo el país",
+              "format": "constraint"
+            },
+            {
+              "text": "Quiero comprar {sustantivo} por internet en una tienda con buena atención",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "specialty",
+          "slug": "specialty",
+          "canonical": "¿Qué tienda online de {sustantivo} tiene la mayor variedad en {país}?",
+          "paraphrases": [
+            {
+              "text": "¿Qué tienda online de {sustantivo} en {país} tiene productos que no encuentro en otro lado?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿En qué tienda en línea consigo {sustantivo} de marcas especializadas?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame tiendas online de {sustantivo} con mucha variedad",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame tres tiendas en línea de {sustantivo} con productos exclusivos en {país}",
+              "format": "list_request"
+            },
+            {
+              "text": "tienda especializada en {sustantivo}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} variedad tienda online {país}",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco una tienda online especializada en {sustantivo} con asesoría para elegir",
+              "format": "constraint"
+            },
+            {
+              "text": "Quiero comprar {sustantivo} en una tienda en línea con presentaciones o modelos difíciles de conseguir",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "price",
+          "slug": "price",
+          "canonical": "¿Dónde compro {sustantivo} barato por internet con envío a todo el país?",
+          "paraphrases": [
+            {
+              "text": "¿Qué tienda online de {sustantivo} tiene los mejores precios en {país}?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Dónde consigo {sustantivo} a buen precio por internet?",
+              "format": "open_question"
+            },
+            {
+              "text": "Dame tres tiendas online de {sustantivo} con precios económicos",
+              "format": "list_request"
+            },
+            {
+              "text": "Recomiéndame tiendas en línea de {sustantivo} con descuentos y envío gratis en {país}",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} precio tienda online {país}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} en oferta por internet",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco {sustantivo} por internet con buena calidad sin pagar de más",
+              "format": "constraint"
+            },
+            {
+              "text": "Quiero comprar {sustantivo} en línea con envío gratis y buen precio",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "trust",
+          "slug": "trusted",
+          "canonical": "¿Qué tienda online de {sustantivo} es confiable en {país}?",
+          "paraphrases": [
+            {
+              "text": "¿En qué tienda en línea de {sustantivo} puedo comprar sin miedo a una estafa?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué tienda online de {sustantivo} cumple con lo que promete?",
+              "format": "open_question"
+            },
+            {
+              "text": "Recomiéndame tiendas online de {sustantivo} serias y confiables en {país}",
+              "format": "list_request"
+            },
+            {
+              "text": "Dame tres tiendas en línea de {sustantivo} con buenas referencias de compradores",
+              "format": "list_request"
+            },
+            {
+              "text": "tienda online de {sustantivo} confiable",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} tienda en línea opiniones {país}",
+              "format": "keyword"
+            },
+            {
+              "text": "Busco una tienda online de {sustantivo} con pago seguro y política de devoluciones clara",
+              "format": "constraint"
+            },
+            {
+              "text": "Quiero comprar {sustantivo} por internet en una tienda que responda si algo sale mal",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "urgency",
+          "slug": "fast_delivery",
+          "canonical": "¿Qué tienda online de {sustantivo} hace envíos rápidos en {país}?",
+          "paraphrases": [
+            {
+              "text": "¿Dónde compro {sustantivo} por internet que me llegue mañana?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué tienda en línea de {sustantivo} entrega más rápido en {país}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Dame tres tiendas online de {sustantivo} con entrega en 24 horas",
+              "format": "list_request"
+            },
+            {
+              "text": "Recomiéndame tiendas en línea de {sustantivo} con envío exprés",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} envío rápido {país}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} entrega al día siguiente",
+              "format": "keyword"
+            },
+            {
+              "text": "Necesito {sustantivo} con urgencia, ¿qué tienda online me lo envía hoy?",
+              "format": "constraint"
+            },
+            {
+              "text": "Busco {sustantivo} por internet con envío exprés a todo el país",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "ranking",
+          "slug": "top_rated",
+          "canonical": "¿Qué tienda online de {sustantivo} tiene las mejores calificaciones en {país}?",
+          "paraphrases": [
+            {
+              "text": "¿Cuál tienda en línea de {sustantivo} tiene más estrellas en sus reseñas?",
+              "format": "open_question"
+            },
+            {
+              "text": "¿Qué tienda online de {sustantivo} tiene la mejor calificación de sus compradores?",
+              "format": "open_question"
+            },
+            {
+              "text": "Dame el top 5 de tiendas online de {sustantivo} en {país}",
+              "format": "list_request"
+            },
+            {
+              "text": "Hazme un ranking de tiendas en línea de {sustantivo} según sus calificaciones",
+              "format": "list_request"
+            },
+            {
+              "text": "mejores tiendas online de {sustantivo} {país}",
+              "format": "keyword"
+            },
+            {
+              "text": "top tiendas de {sustantivo} en línea",
+              "format": "keyword"
+            },
+            {
+              "text": "Quiero solo tiendas online de {sustantivo} con calificación de 4,5 estrellas o más",
+              "format": "constraint"
+            },
+            {
+              "text": "Busco una tienda en línea de {sustantivo} con muchas reseñas y la calificación más alta",
+              "format": "constraint"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

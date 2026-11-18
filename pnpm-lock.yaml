@@ -625,6 +625,9 @@ importers:
 
   packages/catalog:
     dependencies:
+      '@reranker/schema':
+        specifier: workspace:*
+        version: link:../schema
       canonicalize:
         specifier: 'catalog:'
         version: 5.1.0

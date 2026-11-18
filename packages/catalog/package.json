@@ -11,6 +11,7 @@
     "test": "vitest run --project unit --coverage --passWithNoTests"
   },
   "dependencies": {
+    "@reranker/schema": "workspace:*",
     "canonicalize": "catalog:",
     "server-only": "catalog:"
   },
