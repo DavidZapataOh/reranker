@@ -215,7 +215,7 @@ function traceWire() {
   return wire;
 }
 
-test("a lone query is one round trip: [begin, set_config, select, commit] written together", async () => {
+test("a lone query takes two round trips: [begin, set_config], then [select, commit]", async () => {
   const [row] = await withSystem("test.seed", (tx) =>
     tx.insert(probe()).values({ tenantId: A, label: "trace" }).returning(),
   );
@@ -229,13 +229,13 @@ test("a lone query is one round trip: [begin, set_config, select, commit] writte
   vi.restoreAllMocks();
   expect(found).toHaveLength(1);
   expect(wire.seen).toEqual(["begin", "select set_config", "select", "commit"]);
-  expect(wire.roundTrips).toBe(1);
+  expect(wire.roundTrips).toBe(2);
   await withSystem("test.cleanup", (tx) =>
     tx.delete(probe()).where(inArray(probe().label, ["trace"])),
   );
 });
 
-test("an async callback pays one round trip per awaited statement plus COMMIT", async () => {
+test("an async callback pays the setup, one round trip per awaited statement and COMMIT", async () => {
   const wire = traceWire();
   const counts = await withTenant(A, async (tx) => {
     const mine = await tx.select().from(probe());
@@ -245,10 +245,10 @@ test("an async callback pays one round trip per awaited statement plus COMMIT", 
   vi.restoreAllMocks();
   expect(counts).toEqual([2, 2]);
   expect(wire.seen).toEqual(["begin", "select set_config", "select", "select", "commit"]);
-  expect(wire.roundTrips).toBe(3);
+  expect(wire.roundTrips).toBe(4);
 });
 
-test("settings written in the same flight are in place before the statement runs", async () => {
+test("settings are in place before the statement runs", async () => {
   const { rows } = await withTenant(
     A,
     (tx) =>

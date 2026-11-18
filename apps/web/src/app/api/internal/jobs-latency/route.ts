@@ -9,6 +9,7 @@ import {
   RateLimitedError,
   SpendCapExceededError,
 } from "@reranker/jobs";
+import { isAppError } from "@reranker/schema";
 import { hasCronBearer } from "../../../../lib/ops-guard";
 
 // A thousand calls of three primitives run one after another.
@@ -70,6 +71,10 @@ export async function POST(req: Request): Promise<Response> {
       return empty(429, error.resetsAt.getTime() - Date.now());
     }
     if (error instanceof ProviderUnavailableError) return empty(503, error.retryAfterMs);
+    // A step retries these after the wait they carry, so the probe answers that wait too.
+    if (isAppError(error) && error.retryAfterSeconds !== undefined) {
+      return empty(error.status, error.retryAfterSeconds * 1000);
+    }
     throw error;
   }
 }

@@ -28,7 +28,7 @@ gh workflow run load.yml -f target_url=<preview URL> -f scenario_glob='load/web/
 gh workflow run load.yml -f target_url=<preview URL> -f scenario_glob='load/web/landing.js' -f p95_ms=500
 ```
 
-The job refuses any URL that is not a preview of this project before k6 starts. Each scenario writes `summary-<area>-<scenario>.json` to the `load-results` artifact (kept 3 days). A scenario that misses a threshold fails the run; the others still run.
+The job refuses any URL that is not a preview of this project before k6 starts. A preview's database branch is deleted when its pull request closes, so only the latest preview of an open pull request can answer; `jobs/capacity.js` stops at its first probe otherwise. Its summary counts each status the deployment answered, and every unexpected answer is logged with its `x-vercel-id`, whose last part is the request id that `vercel logs --query 'requestId:"<id>"'` finds. Each scenario writes `summary-<area>-<scenario>.json` to the `load-results` artifact (kept 3 days). A scenario that misses a threshold fails the run; the others still run.
 
 ## Run locally
 

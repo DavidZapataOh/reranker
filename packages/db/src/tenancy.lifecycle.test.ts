@@ -4,7 +4,7 @@ import { type SQL, sql } from "drizzle-orm";
 import pg from "pg";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { type DbEvent, resetDbEventsForTest, setDbEventSink } from "./events";
-import { asTenantId, type TenantTx, withSystem, withTenant } from "./tenancy";
+import { asTenantId, type SystemTx, type TenantTx, withSystem, withTenant } from "./tenancy";
 
 type Script = (text: string) => Promise<unknown> | undefined;
 
@@ -178,23 +178,24 @@ test("the setup statement is a single round trip on the checked-out client", asy
 
 const kinds = (pool: FakePool) => pool.sent.map((t) => t.split(/\s/)[0]);
 
-test("a callback returning one unawaited query is a single round trip, COMMIT included", async () => {
+test("a callback returning one unawaited query takes the setup and one round trip, COMMIT included", async () => {
   const pool = use(() => undefined);
   await withSystem("jobs.lease", (tx) => tx.execute(sql`select 1`));
   expect(kinds(pool)).toEqual(["begin", "select", "select", "commit"]);
-  expect(pool.roundTrips).toBe(1);
+  // [begin, settings], [select 1, commit]
+  expect(pool.roundTrips).toBe(2);
   expect(pool.released).toEqual([undefined]);
 });
 
-test("BEGIN and the settings travel with the first statement of an async callback", async () => {
+test("an async callback pays the setup, one round trip per awaited statement and COMMIT", async () => {
   const pool = use(() => undefined);
   await withTenant(A, async (tx) => {
     await tx.execute(sql`select 1`);
     await tx.execute(sql`select 2`);
   });
   expect(kinds(pool)).toEqual(["begin", "select", "select", "select", "commit"]);
-  // [begin, settings, select 1], [select 2], [commit]
-  expect(pool.roundTrips).toBe(3);
+  // [begin, settings], [select 1], [select 2], [commit]
+  expect(pool.roundTrips).toBe(4);
 });
 
 test("a failing lone statement is rolled back by its COMMIT and keeps the client", async () => {
@@ -206,15 +207,14 @@ test("a failing lone statement is rolled back by its COMMIT and keeps the client
   expect(pool.released).toEqual([undefined]);
 });
 
-test("a failed setup statement wins over the error it causes downstream", async () => {
+test("a failed setup statement fails the transaction before the callback runs", async () => {
   const failure = pgError("22023");
-  const pool = use((text) => {
-    if (text.startsWith("select set_config")) return reject(failure);
-    if (text.startsWith("select 1")) return reject(pgError("25P02"));
-    return undefined;
-  });
-  const error = await withTenant(A, (tx) => tx.execute(sql`select 1`)).catch((e: unknown) => e);
+  const pool = use((text) => (text.startsWith("select set_config") ? reject(failure) : undefined));
+  const callback = vi.fn((tx: TenantTx) => tx.execute(sql`select 1`));
+  const error = await withTenant(A, callback).catch((e: unknown) => e);
   expect((error as Error).cause).toBe(failure);
+  expect(callback).not.toHaveBeenCalled();
+  expect(kinds(pool)).toEqual(["begin", "select", "rollback"]);
   expect(pool.released).toEqual([undefined]);
 });
 
@@ -226,6 +226,19 @@ test("what the callback throws wins over a statement of its own that failed firs
     throw thrown;
   }).catch((e: unknown) => e);
   expect(error).toBe(thrown);
+});
+
+// A BEGIN refused on a live connection leaves it outside any transaction, where a statement
+// written behind it would commit on its own.
+test("a failed BEGIN on a live connection never lets a statement of the callback out", async () => {
+  const failure = pgError("XX000");
+  const pool = use((text) => (text.startsWith("begin") ? reject(failure) : undefined));
+  const callback = vi.fn((tx: SystemTx) => tx.execute(sql`insert into ops.t values (1)`));
+  const error = await withSystem("jobs.spend", callback).catch((e: unknown) => e);
+  expect((error as Error).cause).toBe(failure);
+  expect(callback).not.toHaveBeenCalled();
+  expect(pool.sent.some((t) => t.startsWith("insert"))).toBe(false);
+  expect(pool.released[0]).toBeTruthy();
 });
 
 // A dead backend fails every query already on the wire; each of those promises must be handled
@@ -250,6 +263,18 @@ test.each([
   } finally {
     process.off("unhandledRejection", record);
   }
+});
+
+test("the callback never runs unless the server reports the transaction open", async () => {
+  const pool = use(() => undefined);
+  const connect = pool.connect.bind(pool);
+  vi.spyOn(pool, "connect").mockImplementation(async () => ({
+    ...(await connect()),
+    getTransactionStatus: () => "I" as const,
+  }));
+  const callback = vi.fn(async () => 1);
+  await expect(withSystem("jobs.lease", callback)).rejects.toMatchObject({ code: "internal" });
+  expect(callback).not.toHaveBeenCalled();
 });
 
 test("a client the server still reports inside a transaction is never reused", async () => {
@@ -299,7 +324,7 @@ test("a lone query that writes nothing synchronously gets COMMIT only after it s
     return lazy;
   });
   expect(kinds(pool)).toEqual(["begin", "select", "select", "commit"]);
-  expect(pool.roundTrips).toBe(2);
+  expect(pool.roundTrips).toBe(3);
 });
 
 test("the client listens for connection errors only while it is checked out", async () => {

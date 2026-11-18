@@ -140,6 +140,47 @@ describe("acquireProviderSlot", () => {
     ]);
   });
 
+  test("an instance sends one acquirer of a pool to its row at a time, in arrival order", async () => {
+    let answer = (_: unknown) => {};
+    execute.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          answer = resolve;
+        }),
+    );
+    execute.mockResolvedValue(granted);
+    const first = acquireProviderSlot("dataforseo", { maxInFlight: 28 }, { maxWaitMs: 5000 });
+    const second = acquireProviderSlot("dataforseo", { maxInFlight: 28 }, { maxWaitMs: 5000 });
+    const otherPool = acquireProviderSlot("openai", { maxInFlight: 10 }, { maxWaitMs: 5000 });
+    await vi.advanceTimersByTimeAsync(100);
+    expect(execute).toHaveBeenCalledTimes(2);
+    await otherPool;
+    answer(granted);
+    await Promise.all([first, second]);
+    expect(execute).toHaveBeenCalledTimes(3);
+  });
+
+  test("an acquirer whose wait runs out before its turn is a full pool, without a statement", async () => {
+    let answer = (_: unknown) => {};
+    execute.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          answer = resolve;
+        }),
+    );
+    const first = acquireProviderSlot("dataforseo", { maxInFlight: 28 }, { maxWaitMs: 5000 });
+    const late = acquireProviderSlot("dataforseo", { maxInFlight: 28 }, { maxWaitMs: 300 }).catch(
+      (e) => e,
+    );
+    await vi.advanceTimersByTimeAsync(300);
+    const error = await late;
+    expect(error).toBeInstanceOf(RateLimitedError);
+    expect(error.retryAfterMs).toBe(1000);
+    expect(execute).toHaveBeenCalledTimes(1);
+    answer(granted);
+    await first;
+  });
+
   test("fails loudly when the function returns nothing", async () => {
     execute.mockResolvedValue({ rows: [] });
     await expect(acquireProviderSlot("dataforseo", { maxInFlight: 1 })).rejects.toThrow("no row");
