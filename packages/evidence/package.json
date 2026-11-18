@@ -11,7 +11,10 @@
     "test": "vitest run --project unit --coverage --passWithNoTests"
   },
   "dependencies": {
+    "@aws-sdk/client-kms": "catalog:",
+    "@reranker/env": "workspace:*",
     "@reranker/verify": "workspace:*",
+    "@vercel/oidc-aws-credentials-provider": "catalog:",
     "server-only": "catalog:"
   },
   "devDependencies": {
