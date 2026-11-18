@@ -41,7 +41,7 @@ async function fakeR2(request: Request): Promise<Response> {
     if (r2.has(key) && request.headers.get("if-none-match") === "*") {
       return new Response(null, { status: 412 });
     }
-    r2.set(key, gunzipSync(new Uint8Array(await request.arrayBuffer())));
+    r2.set(key, new Uint8Array(gunzipSync(new Uint8Array(await request.arrayBuffer()))));
     return new Response(null, { status: 200 });
   }
   const body = r2.get(key);
