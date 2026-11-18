@@ -41,6 +41,10 @@ concurrency:
   cancel-in-progress: true
 jobs:
   quality:
+    # Vercel matches Deployment Checks by name against check runs as well as commit statuses. A
+    # dispatched run's check run lands on the head of main, not on the deployment's commit, and a
+    # skipped preview dispatch counts as met, so only the commit status below may be called quality.
+    name: deployment tests
     if: github.event_name != 'repository_dispatch' || (github.event.client_payload.project.name == 'reranker' && github.event.client_payload.environment == 'production')
     runs-on: ubuntu-24.04
     timeout-minutes: 15
