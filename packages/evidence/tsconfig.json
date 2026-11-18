@@ -1,4 +1,8 @@
 {
   "extends": "@reranker/typescript-config/library.json",
+  "compilerOptions": {
+    // The web app compiles this package with DOM's fetch types, which are stricter than Node's.
+    "lib": ["es2024", "dom", "dom.iterable"]
+  },
   "include": ["src", "test"]
 }
