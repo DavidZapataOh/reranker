@@ -912,12 +912,21 @@ importers:
       '@google/genai':
         specifier: 'catalog:'
         version: 3.3.0(supports-color@10.2.2)
+      '@reranker/capture':
+        specifier: workspace:*
+        version: link:../capture
       '@reranker/db':
         specifier: workspace:*
         version: link:../db
       '@reranker/env':
         specifier: workspace:*
         version: link:../env
+      '@reranker/evidence':
+        specifier: workspace:*
+        version: link:../evidence
+      '@reranker/flags':
+        specifier: workspace:*
+        version: link:../flags
       '@reranker/jobs':
         specifier: workspace:*
         version: link:../jobs
@@ -933,6 +942,9 @@ importers:
       openai:
         specifier: 'catalog:'
         version: 7.57.0(@aws-sdk/credential-provider-node@3.972.97)(@smithy/signature-v4@5.7.5)(google-auth-library@10.9.1(supports-color@10.2.2))(undici@7.30.2)(ws@8.23.0)(zod@4.6.7)
+      server-only:
+        specifier: 'catalog:'
+        version: 0.0.1
       zod:
         specifier: 'catalog:'
         version: 4.6.7

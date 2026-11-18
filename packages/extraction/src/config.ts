@@ -67,7 +67,7 @@ export function sha256Hex(text: string): string {
   return createHash("sha256").update(text, "utf8").digest("hex");
 }
 
-function jcs(value: unknown): string {
+export function jcs(value: unknown): string {
   const text = canonicalize(value);
   if (text === undefined) throw new AppError("internal", { detail: "Value has no JSON form" });
   return text;
