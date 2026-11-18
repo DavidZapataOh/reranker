@@ -9,6 +9,13 @@ export {
 } from "./adapters";
 export { EngineAnswer, PARSER_VERSIONS, safeParseAnswer } from "./answer";
 export { createDataForSeo } from "./dataforseo/client";
+export { type DataForSeoGeo, geoFields } from "./dataforseo/geo";
+export {
+  buildRequest,
+  type DataForSeoMode,
+  type DataForSeoRequest,
+  requestBytes,
+} from "./dataforseo/request";
 export { ENGINES, type EngineSpec } from "./engines";
 export { RawSink } from "./raw/raw-sink";
 export { type Fetch, recordingFetch, teeFetch } from "./raw/tee-fetch";
