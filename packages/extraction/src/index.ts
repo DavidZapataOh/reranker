@@ -8,6 +8,7 @@ export {
   type SearchTextRequest,
   searchText,
 } from "./places/client";
+export { PLATFORMS, type PlatformEntry, platformFor, tagPlatforms } from "./platforms";
 export { PLACES_SKU_PRICES } from "./prices";
 export {
   type LlmProvider,
@@ -18,7 +19,7 @@ export {
   type StructuredCaller,
   type StructuredResult,
 } from "./providers/types";
-export { locateQuote, toExtractedMentions } from "./quote";
+export { assignOrdinals, locateQuote, toExtractedMentions } from "./quote";
 export {
   type ClassifierOutput,
   ClassifierSchema,
