@@ -7,7 +7,7 @@ import { waitUntil } from "@vercel/functions";
 import { betterAuth, type GenericEndpointContext } from "better-auth";
 import { createAuthMiddleware } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
-import { captcha, emailOTP, organization } from "better-auth/plugins";
+import { captcha, emailOTP, oneTap, organization } from "better-auth/plugins";
 import { COOKIE_PREFIX } from "./cookies";
 import { resolveEmailLocale } from "./email-locale";
 import type { RequestedFrom } from "./emails/sign-in-code";
@@ -119,9 +119,11 @@ export const auth = betterAuth({
   },
   socialProviders: {
     google: {
-      clientId: env.GOOGLE_CLIENT_ID,
+      clientId: env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
       prompt: "select_account",
+      // Incremental authorization would fold any earlier grant into the token; sign-in needs none.
+      includeGrantedScopes: false,
       requireEmailVerification: true,
     },
   },
@@ -136,6 +138,16 @@ export const auth = betterAuth({
     cookieCache: { enabled: true, maxAge: 300, strategy: "compact" },
   },
   user: {
+    // A trusted provider links to the user with the same address without checking that the
+    // provider verified it, so Google's email_verified claim is enforced here instead.
+    validateUserInfo: ({ user, source }) => {
+      if (source.oauth?.providerId === "google" && user.emailVerified !== true) {
+        return {
+          error: "email_not_verified",
+          errorDescription: "Google no ha verificado este correo",
+        };
+      }
+    },
     additionalFields: {
       locale: { type: "string", required: false, defaultValue: DEFAULT_LOCALE, input: false },
       dataPolicyVersion: { type: "string", required: false, input: false },
@@ -191,6 +203,8 @@ export const auth = betterAuth({
       secretKey: env.TURNSTILE_SECRET_KEY,
       endpoints: EMAIL_SENDING_PATHS,
     }),
+    // Takes the client id from the Google provider, and its sign-ins pass validateUserInfo too.
+    oneTap(),
     nextCookies(),
   ],
 });

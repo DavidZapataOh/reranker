@@ -11,7 +11,7 @@ const secret = () => `${crypto.randomUUID()}${crypto.randomUUID()}`;
 vi.stubEnv("APP_ENV", "development");
 vi.stubEnv("BETTER_AUTH_SECRET", secret());
 vi.stubEnv("BETTER_AUTH_URL", "http://localhost:3000");
-vi.stubEnv("GOOGLE_CLIENT_ID", "google-client-id");
+vi.stubEnv("NEXT_PUBLIC_GOOGLE_CLIENT_ID", "google-client-id.apps.googleusercontent.com");
 vi.stubEnv("GOOGLE_CLIENT_SECRET", "google-client-secret");
 vi.stubEnv("RESEND_API_KEY", "re_test");
 vi.stubEnv("TURNSTILE_SECRET_KEY", "turnstile-secret");

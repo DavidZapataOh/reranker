@@ -1,3 +1,4 @@
+import { purgeExpiredAuthRecords } from "@reranker/auth/purge";
 import {
   checkPrimitiveLatency,
   checkProviderVolume,
@@ -61,6 +62,14 @@ async function velocityBaselineStep(_date: string): Promise<void> {
   await asStep("velocityBaseline", async () =>
     log.info("jobs.daily.velocity_baselines", { keys: await refreshVelocityBaselines() }),
   );
+}
+
+async function purgeExpiredAuthRecordsStep(_date: string): Promise<void> {
+  "use step";
+  await asStep("purgeExpiredAuthRecords", async () => {
+    const { sessions, verifications, rateLimits } = await purgeExpiredAuthRecords();
+    log.info("jobs.daily.auth_purge", { sessions, verifications, rate_limits: rateLimits });
+  });
 }
 
 // The run starts early in the morning, so the day to close is the one that just ended.
@@ -134,16 +143,16 @@ async function checkScaleTriggersStep(date: string): Promise<void> {
 /**
  * The daily maintenance steps, in the order they run. Each owner adds its entry at its place in
  * this list, with `run` a step function of its own module (`"use step"`, wrapping its package
- * function and rethrowing `toStepError(error)`): `purgeExpiredAuthRecords` after
- * `velocityBaseline`; `otsUpgrade`, `controlCanary`, `prewarmIntentSets`, `qualityCanary`,
- * `drainDeferredFreeReports`, `enqueueDueRemeasures` and `leadRetentionSweep` after
- * `checkScaleTriggers`; `launchGate` and `opsDigest` last, so the digest reports on everything
+ * function and rethrowing `toStepError(error)`): `otsUpgrade`, `controlCanary`,
+ * `prewarmIntentSets`, `qualityCanary`, `drainDeferredFreeReports`, `enqueueDueRemeasures` and
+ * `leadRetentionSweep` after `checkScaleTriggers`; `launchGate` and `opsDigest` last, so the digest reports on everything
  * above.
  */
 export const DAILY_STEPS: readonly DailyStep[] = [
   { name: "cleanupLeases", run: cleanupLeasesStep },
   { name: "refreshNetworkRanges", run: refreshNetworkRangesStep },
   { name: "velocityBaseline", run: velocityBaselineStep },
+  { name: "purgeExpiredAuthRecords", run: purgeExpiredAuthRecordsStep },
   { name: "reconcileSpend", run: reconcileSpendStep },
   { name: "checkWorkflowBudget", run: checkWorkflowBudgetStep },
   { name: "checkScaleTriggers", run: checkScaleTriggersStep },
