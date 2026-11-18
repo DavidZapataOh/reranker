@@ -12,8 +12,8 @@ vi.mock("server-only", () => ({}));
 interface BiasCase {
   country: string;
   query: string;
+  /** Name and full address: its top hit is the business, whatever id Google gives it today. */
   anchor: string;
-  placeId?: string;
 }
 
 const spend: SpendContext = {
@@ -63,35 +63,30 @@ test("the test domain of the web project is a website candidate in Colombia", as
   });
 }, 30_000);
 
-// Forty Text Search Pro requests (1.28 USD): each business by its bare name, with and without the
-// region code. GitHub runners, like production, sit in the United States, so without a region
-// code Places biases by a US address.
-test("searching without a region code finds the business as often as with it", async () => {
+// Sixty Text Search Pro requests (1.92 USD): each business by its bare name, with and without its
+// country's region code. GitHub runners, like production, sit in the United States, so without a
+// region code Places biases by a US address. The search omits the region code when the request
+// brings no measurable country; that holds only while doing so costs under 5 points of top-5 hits.
+test("searching without a region code finds the business about as often as with it", async () => {
   const found = { withRegion: 0, withoutRegion: 0 };
-  const rows: string[] = [];
   for (const c of BIAS_CASES) {
-    const expected =
-      c.placeId ??
-      (
-        await searchText(
-          { textQuery: c.anchor, mask: "target", regionCode: c.country.toLowerCase() },
-          spend,
-        )
-      )[0]?.id;
-    const [withRegion, withoutRegion] = await Promise.all([
-      searchText(
-        { textQuery: c.query, mask: "target", regionCode: c.country.toLowerCase() },
-        spend,
-      ),
+    const regionCode = c.country.toLowerCase();
+    const [anchor, withRegion, withoutRegion] = await Promise.all([
+      searchText({ textQuery: c.anchor, mask: "target", regionCode }, spend),
+      searchText({ textQuery: c.query, mask: "target", regionCode }, spend),
       searchText({ textQuery: c.query, mask: "target" }, spend),
     ]);
+    const expected = anchor[0]?.id;
+    expect(expected, c.anchor).toBeDefined();
     const inWith = withRegion.some((hit) => hit.id === expected);
     const inWithout = withoutRegion.some((hit) => hit.id === expected);
     found.withRegion += Number(inWith);
     found.withoutRegion += Number(inWithout);
-    rows.push(JSON.stringify({ ...c, placeId: expected, inWith, inWithout }));
+    console.log(JSON.stringify({ query: c.query, country: c.country, inWith, inWithout }));
   }
-  console.log(`places-country-bias\n${rows.join("\n")}\n${JSON.stringify(found)}`);
-  // One business in twenty is 5 percentage points.
-  expect(found.withoutRegion).toBeGreaterThanOrEqual(found.withRegion);
+  const rate = (hits: number) => hits / BIAS_CASES.length;
+  console.log(
+    `places-country-bias with=${rate(found.withRegion)} without=${rate(found.withoutRegion)}`,
+  );
+  expect(rate(found.withRegion) - rate(found.withoutRegion)).toBeLessThan(0.05);
 }, 180_000);

@@ -195,6 +195,8 @@ export async function findBusinessCandidates(q: {
       textQuery,
       mask: "target",
       includePureServiceAreaBusinesses: true,
+      // Without a measurable country Places falls back to IP bias; the contract test keeps that
+      // within 5 points of hits found with the right region code.
       ...(q.country !== null && { regionCode: q.country.toLowerCase() }),
     },
     q.spend,
