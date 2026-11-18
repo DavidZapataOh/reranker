@@ -1,0 +1,45 @@
+{
+  "formattedAddress": "Matamoros 35, Centro, 49340 Tapalpa, Jal., México",
+  "addressComponents": [
+    {
+      "longText": "35",
+      "shortText": "35",
+      "types": ["street_number"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Matamoros",
+      "shortText": "Matamoros",
+      "types": ["route"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Tapalpa",
+      "shortText": "Tapalpa",
+      "types": ["locality", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Jalisco",
+      "shortText": "Jal.",
+      "types": ["administrative_area_level_1", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "México",
+      "shortText": "MX",
+      "types": ["country", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "49340",
+      "shortText": "49340",
+      "types": ["postal_code"],
+      "languageCode": "es"
+    }
+  ],
+  "location": {
+    "latitude": 19.9446,
+    "longitude": -103.759
+  }
+}

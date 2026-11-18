@@ -1,0 +1,51 @@
+{
+  "formattedAddress": "Av. Chapultepec Sur 120, Americana, 44160 Guadalajara, Jal., México",
+  "addressComponents": [
+    {
+      "longText": "120",
+      "shortText": "120",
+      "types": ["street_number"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Avenida Chapultepec Sur",
+      "shortText": "Av. Chapultepec Sur",
+      "types": ["route"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Americana",
+      "shortText": "Americana",
+      "types": ["sublocality_level_1", "sublocality", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Guadalajara",
+      "shortText": "Guadalajara",
+      "types": ["locality", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Jalisco",
+      "shortText": "Jal.",
+      "types": ["administrative_area_level_1", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "México",
+      "shortText": "MX",
+      "types": ["country", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "44160",
+      "shortText": "44160",
+      "types": ["postal_code"],
+      "languageCode": "es"
+    }
+  ],
+  "location": {
+    "latitude": 20.6707,
+    "longitude": -103.3685
+  }
+}

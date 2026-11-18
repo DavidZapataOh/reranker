@@ -1,0 +1,57 @@
+{
+  "formattedAddress": "C. de Fuencarral, 45, Centro, 28004 Madrid, España",
+  "addressComponents": [
+    {
+      "longText": "45",
+      "shortText": "45",
+      "types": ["street_number"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Calle de Fuencarral",
+      "shortText": "C. de Fuencarral",
+      "types": ["route"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Centro",
+      "shortText": "Centro",
+      "types": ["sublocality_level_1", "sublocality", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Madrid",
+      "shortText": "Madrid",
+      "types": ["locality", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Madrid",
+      "shortText": "M",
+      "types": ["administrative_area_level_2", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Comunidad de Madrid",
+      "shortText": "MD",
+      "types": ["administrative_area_level_1", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "España",
+      "shortText": "ES",
+      "types": ["country", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "28004",
+      "shortText": "28004",
+      "types": ["postal_code"],
+      "languageCode": "es"
+    }
+  ],
+  "location": {
+    "latitude": 40.4234,
+    "longitude": -3.7011
+  }
+}

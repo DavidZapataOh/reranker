@@ -1,0 +1,51 @@
+{
+  "formattedAddress": "Cl. 15 #13-20, Barbosa, Antioquia, Colombia",
+  "addressComponents": [
+    {
+      "longText": "13-20",
+      "shortText": "13-20",
+      "types": ["street_number"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Calle 15",
+      "shortText": "Cl. 15",
+      "types": ["route"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Barbosa",
+      "shortText": "Barbosa",
+      "types": ["locality", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Barbosa",
+      "shortText": "Barbosa",
+      "types": ["administrative_area_level_2", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Antioquia",
+      "shortText": "ANT",
+      "types": ["administrative_area_level_1", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Colombia",
+      "shortText": "CO",
+      "types": ["country", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "051020",
+      "shortText": "051020",
+      "types": ["postal_code"],
+      "languageCode": "es"
+    }
+  ],
+  "location": {
+    "latitude": 6.4386,
+    "longitude": -75.3329
+  }
+}
