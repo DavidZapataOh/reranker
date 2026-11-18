@@ -128,7 +128,8 @@ describe("auth configuration", () => {
     expect(plugin("email-otp").options.disableSignUp).toBeUndefined();
   });
 
-  test("organizations are created by the server only, with one team each", () => {
+  test("organizations are created by the server only, with one Principal team each", async () => {
+    const { createPrincipalTeam, hierarchyHooks } = await import("./organizations");
     expect(plugin("organization").options).toMatchObject({
       creatorRole: "owner",
       allowUserToCreateOrganization: false,
@@ -136,8 +137,9 @@ describe("auth configuration", () => {
         enabled: true,
         maximumTeams: 1,
         allowRemovingAllTeams: false,
-        defaultTeam: { enabled: true },
+        defaultTeam: { enabled: true, customCreateDefaultTeam: createPrincipalTeam },
       },
+      organizationHooks: hierarchyHooks,
     });
   });
 
