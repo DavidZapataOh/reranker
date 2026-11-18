@@ -13,7 +13,9 @@
     "test:contract": "vitest run --project contract"
   },
   "dependencies": {
+    "@reranker/catalog": "workspace:*",
     "@reranker/env": "workspace:*",
+    "@reranker/i18n": "workspace:*",
     "@reranker/jobs": "workspace:*",
     "@reranker/schema": "workspace:*",
     "@reranker/verify": "workspace:*",

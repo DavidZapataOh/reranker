@@ -667,9 +667,15 @@ importers:
 
   packages/capture:
     dependencies:
+      '@reranker/catalog':
+        specifier: workspace:*
+        version: link:../catalog
       '@reranker/env':
         specifier: workspace:*
         version: link:../env
+      '@reranker/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@reranker/jobs':
         specifier: workspace:*
         version: link:../jobs
