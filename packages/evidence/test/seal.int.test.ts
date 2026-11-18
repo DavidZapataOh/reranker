@@ -2,8 +2,14 @@ import { createHash, createPublicKey, randomBytes, randomUUID, verify } from "no
 import { gunzipSync } from "node:zlib";
 import { endPools, type SystemTx, withSystem } from "@reranker/db";
 import { enqueue } from "@reranker/jobs";
-import { NotFoundError } from "@reranker/jobs/errors";
-import { type CaptureId, DSSE_PAYLOAD_TYPE, type DsseEnvelope, pae } from "@reranker/verify/format";
+import { InvalidInputError, NotFoundError } from "@reranker/jobs/errors";
+import {
+  type CaptureId,
+  DSSE_PAYLOAD_TYPE,
+  type DsseEnvelope,
+  PREDICATE,
+  pae,
+} from "@reranker/verify/format";
 import { sql } from "drizzle-orm";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
 import { resetEvidenceEnv } from "../src/env";
@@ -13,7 +19,15 @@ import {
   SigningUnavailableError,
   StatementTooLargeError,
 } from "../src/errors";
-import { readRaw, type SealCaptureInput, sealCapture } from "../src/seal";
+import {
+  latestNormalized,
+  readRaw,
+  requestLogInclusion,
+  type SealCaptureInput,
+  sealCapture,
+  sealPlan,
+  sealReparse,
+} from "../src/seal";
 import { loadSigner } from "../src/signer";
 import { predicateInput } from "./support/capture-input";
 import { previewEnv } from "./support/evidence-env";
@@ -246,12 +260,19 @@ describe("fails closed", () => {
   test.each([
     ["KMS is unavailable", new SigningUnavailableError("KMS is unreachable")],
     ["the key is not the pinned one", new SigningKeyMismatchError("k", "differs from registry")],
-  ])("when %s: no envelope and nothing queued", async (_, failure) => {
+  ])("when %s: no envelope, no entry, nothing queued", async (_, failure) => {
     vi.mocked(loadSigner).mockRejectedValue(failure);
     await expect(
       withSystem("evidence.test", (tx) => sealCapture(captureInput(), { tx })),
     ).rejects.toBe(failure);
+    const measurementId = randomUUID();
+    await expect(
+      withSystem("evidence.test", (tx) =>
+        sealPlan({ measurementId, planBytes: utf8("{}") }, { tx }),
+      ),
+    ).rejects.toBe(failure);
     expect(storedEnvelopes()).toEqual([]);
+    expect(await entriesFor(measurementId)).toBe(0);
     expect(enqueue).not.toHaveBeenCalled();
   });
 
@@ -265,11 +286,19 @@ describe("fails closed", () => {
     expect(enqueue).not.toHaveBeenCalled();
   });
 
-  test("R2 down: EvidenceStorageUnavailableError and nothing queued", async () => {
+  test("R2 down: EvidenceStorageUnavailableError and nothing is inserted", async () => {
     r2Down = true;
+    const input = captureInput();
     await expect(
-      withSystem("evidence.test", (tx) => sealCapture(captureInput(), { tx })),
+      withSystem("evidence.test", (tx) => sealCapture(input, { tx })),
     ).rejects.toBeInstanceOf(EvidenceStorageUnavailableError);
+    const measurementId = randomUUID();
+    await expect(
+      withSystem("evidence.test", (tx) =>
+        sealPlan({ measurementId, planBytes: utf8("{}") }, { tx }),
+      ),
+    ).rejects.toBeInstanceOf(EvidenceStorageUnavailableError);
+    expect(await entriesFor(measurementId)).toBe(0);
     expect(enqueue).not.toHaveBeenCalled();
   });
 
@@ -279,6 +308,133 @@ describe("fails closed", () => {
       withSystem("evidence.test", (tx) => sealCapture(captureInput(), { tx })),
     ).rejects.toThrow("VERCEL_GIT_COMMIT_SHA (missing)");
     expect(r2.size).toBe(0);
+  });
+});
+
+describe("re-derivations", () => {
+  test("sealReparse keeps the raw digest, adds revision = parserVersion and is idempotent", async () => {
+    const input = captureInput();
+    const sealed = await sealAndPersist(input);
+    const json = utf8(`{"answer":"Clínica Sonrisa","v":2,"id":"${input.captureId}"}`);
+    const reparse = () =>
+      withSystem("evidence.test", (tx) =>
+        sealReparse({ captureId: input.captureId, normalized: { json, parserVersion: 2 } }, { tx }),
+      );
+    const first = await reparse();
+    expect(first.normalizedSha256).toBe(sha256Of(json));
+    const stmt = statementOf(envelopeAt(first.envelopeSha256));
+    expect(stmt.predicateType).toBe(PREDICATE.normalization);
+    expect(stmt.subject).toEqual([
+      { name: "raw", digest: { sha256: sealed.rawSha256 } },
+      { name: "normalized", digest: { sha256: sha256Of(json) } },
+    ]);
+    expect(stmt.predicate).toMatchObject({
+      capture_id: input.captureId,
+      capture_envelope: { digest: { sha256: sealed.envelopeSha256 } },
+      parser_version: 2,
+    });
+    expect(await reparse()).toEqual(first);
+    const { rows } = await withSystem("evidence.test", (tx) =>
+      tx.execute<{ kind: string; revision: number }>(
+        sql`select kind, revision from public_panel.evidence_entries where ref = ${input.captureId}`,
+      ),
+    );
+    expect(rows).toEqual([{ kind: "reparse", revision: 2 }]);
+    expect(vi.mocked(enqueue)).toHaveBeenCalledTimes(2);
+  });
+
+  test("the same parser version yielding other bytes is rejected", async () => {
+    const input = captureInput();
+    await sealAndPersist(input);
+    const reparse = (json: string) =>
+      withSystem("evidence.test", (tx) =>
+        sealReparse(
+          { captureId: input.captureId, normalized: { json: utf8(json), parserVersion: 3 } },
+          { tx },
+        ),
+      );
+    await reparse('{"v":3}');
+    await expect(reparse('{"v":"3"}')).rejects.toBeInstanceOf(InvalidInputError);
+  });
+
+  test("a capture that does not exist cannot be re-derived", async () => {
+    await expect(
+      withSystem("evidence.test", (tx) =>
+        sealReparse(
+          { captureId: newCaptureId(), normalized: { json: utf8("{}"), parserVersion: 2 } },
+          { tx },
+        ),
+      ),
+    ).rejects.toBeInstanceOf(NotFoundError);
+  });
+
+  test("latestNormalized prefers the highest reparse revision, else the capture column", async () => {
+    const input = captureInput();
+    const sealed = await sealAndPersist(input);
+    expect(await latestNormalized(input.captureId)).toEqual({
+      sha256: sealed.normalizedSha256,
+      parserVersion: 1,
+    });
+    for (const v of [3, 2]) {
+      await withSystem("evidence.test", (tx) =>
+        sealReparse(
+          {
+            captureId: input.captureId,
+            normalized: { json: utf8(`{"v":${v}}`), parserVersion: v },
+          },
+          { tx },
+        ),
+      );
+    }
+    expect(await latestNormalized(input.captureId)).toEqual({
+      sha256: sha256Of(utf8('{"v":3}')),
+      parserVersion: 3,
+    });
+  });
+
+  test("latestNormalized is null for an unparsed or unknown capture", async () => {
+    const input = captureInput({ normalized: null });
+    await sealAndPersist(input);
+    expect(await latestNormalized(input.captureId)).toBeNull();
+    expect(await latestNormalized(newCaptureId())).toBeNull();
+  });
+});
+
+describe("plans and other entries", () => {
+  test("sealPlan writes plans/<sha> and a plan entry keyed by measurementId, once", async () => {
+    const measurementId = randomUUID();
+    const planBytes = utf8(`{"measurement":"${measurementId}","slots":[{"slot":0}]}`);
+    const seal = (bytes: Uint8Array) =>
+      withSystem("evidence.test", (tx) => sealPlan({ measurementId, planBytes: bytes }, { tx }));
+    const sealed = await seal(planBytes);
+    expect(sealed.planSha256).toBe(sha256Of(planBytes));
+    expect(r2.get(`plans/${sealed.planSha256}`)).toEqual(planBytes);
+    const stmt = statementOf(envelopeAt(sealed.envelopeSha256));
+    expect(stmt.predicateType).toBe(PREDICATE.plan);
+    expect(stmt.subject).toEqual([{ name: "plan", digest: { sha256: sealed.planSha256 } }]);
+    expect(stmt.predicate.measurement_id).toBe(measurementId);
+    expect(await seal(planBytes)).toEqual(sealed);
+    await expect(seal(utf8("{}"))).rejects.toBeInstanceOf(InvalidInputError);
+    expect(await entriesFor(measurementId)).toBe(1);
+  });
+
+  test("requestLogInclusion queues a statement signed elsewhere, once", async () => {
+    const ref = randomUUID();
+    const envelopeSha256 = sha256Of(utf8(ref));
+    const include = (sha: string) =>
+      withSystem("evidence.test", (tx) =>
+        requestLogInclusion({ ref, kind: "consent", envelopeSha256: sha }, { tx }),
+      );
+    await include(envelopeSha256);
+    await include(envelopeSha256);
+    await expect(include(sha256Of(utf8("other")))).rejects.toBeInstanceOf(InvalidInputError);
+    const { rows } = await withSystem("evidence.test", (tx) =>
+      tx.execute<{ kind: string; revision: number; log_index: number | null }>(
+        sql`select kind, revision, log_index from public_panel.evidence_entries where ref = ${ref}`,
+      ),
+    );
+    expect(rows).toEqual([{ kind: "consent", revision: 0, log_index: null }]);
+    expect(enqueue).toHaveBeenCalledTimes(2);
   });
 });
 

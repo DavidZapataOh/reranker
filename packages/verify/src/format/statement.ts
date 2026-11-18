@@ -69,6 +69,37 @@ export interface CapturePredicateV1 {
 
 export type CaptureStatementV1 = InTotoStatement<typeof PREDICATE.capture, CapturePredicateV1>;
 
+/** Who signed and when, as every statement of this package's signers records it. */
+export interface SignerContextV1 {
+  time: { worker_utc: string };
+  worker: { id: string; image_digest: string };
+}
+
+/** A measurement plan frozen before its first capture; the subject is the plan artifact. */
+export interface MeasurementPlanPredicateV1 extends SignerContextV1 {
+  measurement_id: string;
+}
+
+export type MeasurementPlanStatementV1 = InTotoStatement<
+  typeof PREDICATE.plan,
+  MeasurementPlanPredicateV1
+>;
+
+/**
+ * A newer parser's reading of a capture. Subjects are the unchanged raw bytes and the new
+ * normalized artifact; the capture envelope ties it to the original signed capture.
+ */
+export interface NormalizationPredicateV1 extends SignerContextV1 {
+  capture_id: CaptureId;
+  capture_envelope: { digest: { sha256: string } };
+  parser_version: number;
+}
+
+export type NormalizationStatementV1 = InTotoStatement<
+  typeof PREDICATE.normalization,
+  NormalizationPredicateV1
+>;
+
 const CAPTURE_SUBJECTS = ["raw", "request", "normalized"] as const;
 
 const text = z.string().check(z.minLength(1));
