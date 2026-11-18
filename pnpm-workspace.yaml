@@ -39,6 +39,8 @@ catalog:
   pg: ^8.23.1
   "@types/pg": ^8.23.1
   zod: 4.6.7
+  canonicalize: 5.1.0
+  server-only: 0.0.1
   next-intl: 4.14.9
   use-intl: 4.14.9
   "@formatjs/intl-localematcher": 0.10.1
@@ -67,6 +69,7 @@ catalog:
   "@posthog/nextjs-config": 1.12.2
   workflow: 5.4.0
   "@workflow/vitest": 5.0.8
+  "@stdlib/stats-base-dists-beta-quantile": 0.2.3
 overrides:
   # GHSA-mrhx-c7xc-m3w5: @vercel/cli-config pins zod 4.1.11.
   "@vercel/cli-config>zod": 4.6.7
