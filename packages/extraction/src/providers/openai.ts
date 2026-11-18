@@ -5,15 +5,17 @@ import {
   ProviderUnavailableError,
   RateLimitedError,
 } from "@reranker/jobs";
-import { z } from "@reranker/schema";
+import type { z } from "@reranker/schema";
 import OpenAI, { APIError } from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
+import type { Response } from "openai/resources/responses/responses";
 import { extractionEnv } from "../env";
 import {
   ProviderIncompleteError,
   ProviderRefusalError,
   type StructuredCall,
   type StructuredResult,
+  type StructuredUsage,
 } from "./types";
 
 // Without Retry-After a one-second wait spreads the retries of a burst.
@@ -57,14 +59,35 @@ async function failure(error: unknown): Promise<never> {
   throw new ProviderRejectedError("openai", code ?? `http_${error.status}`);
 }
 
+function usageOf(response: Response): StructuredUsage | undefined {
+  const usage = response.usage;
+  if (!usage) return undefined;
+  return {
+    inputTokens: usage.input_tokens,
+    cachedInputTokens: usage.input_tokens_details.cached_tokens,
+    cacheWriteTokens: usage.input_tokens_details.cache_write_tokens,
+    outputTokens: usage.output_tokens,
+  };
+}
+
+function parsed<T>(schema: z.ZodType<T>, text: string): T | undefined {
+  try {
+    const result = schema.safeParse(JSON.parse(text));
+    return result.success ? result.data : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 /**
  * Structured output through the Responses API. The system prompt is the only prompt-cache
  * breakpoint: explicit-only mode never writes the captured answer, which is not reused.
+ * Every answer that comes back was billed, so every error built from one carries its usage.
  */
 export async function callOpenAI<T>(call: StructuredCall<T>): Promise<StructuredResult<T>> {
-  const format = zodTextFormat(call.schema, call.schemaName);
+  // Parsed here rather than by `responses.parse`, whose schema errors drop the billed usage.
   const response = await openai()
-    .responses.parse(
+    .responses.create(
       {
         model: call.model.model,
         input: [
@@ -81,44 +104,34 @@ export async function callOpenAI<T>(call: StructuredCall<T>): Promise<Structured
           { role: "user", content: call.user },
         ],
         prompt_cache_options: { mode: "explicit" },
-        text: { format },
+        text: { format: zodTextFormat(call.schema, call.schemaName) },
         reasoning: { effort: call.model.reasoning },
         max_output_tokens: call.maxOutputTokens,
         store: false,
       },
       { signal: call.signal },
     )
-    .catch(async (error: unknown) => {
-      if (error instanceof APIError) return failure(error);
-      // A completed answer whose text fails the schema throws while the SDK parses it.
-      if (error instanceof SyntaxError || error instanceof z.ZodError) {
-        await breakerRecord("openai", "success");
-        throw new ProviderIncompleteError("openai", "invalid_output");
-      }
-      throw error;
-    });
+    .catch(failure);
   await breakerRecord("openai", "success");
 
+  const usage = usageOf(response);
   if (response.status === "incomplete") {
-    throw new ProviderIncompleteError("openai", response.incomplete_details?.reason ?? "unknown");
+    const reason = response.incomplete_details?.reason ?? "unknown";
+    throw new ProviderIncompleteError("openai", reason, usage);
   }
   const content = response.output.flatMap((item) => (item.type === "message" ? item.content : []));
   const refusal = content.find((part) => part.type === "refusal");
-  if (refusal) throw new ProviderRefusalError("openai", refusal.refusal);
-  if (response.output_parsed === null) {
-    throw new ProviderIncompleteError("openai", "invalid_output");
+  if (refusal) throw new ProviderRefusalError("openai", refusal.refusal, usage);
+  const text = content.find((part) => part.type === "output_text")?.text;
+  const output = text === undefined ? undefined : parsed(call.schema, text);
+  if (output === undefined || !usage) {
+    // Without usage the caller settles the reservation, so a valid output cannot be kept either.
+    throw new ProviderIncompleteError(
+      "openai",
+      output === undefined ? "invalid_output" : "missing_usage",
+      usage,
+    );
   }
 
-  const usage = response.usage;
-  return {
-    output: response.output_parsed,
-    modelReported: response.model,
-    usage: {
-      inputTokens: usage?.input_tokens ?? 0,
-      cachedInputTokens: usage?.input_tokens_details.cached_tokens ?? 0,
-      cacheWriteTokens: usage?.input_tokens_details.cache_write_tokens ?? 0,
-      outputTokens: usage?.output_tokens ?? 0,
-    },
-    raw: response,
-  };
+  return { output, modelReported: response.model, usage, raw: response };
 }

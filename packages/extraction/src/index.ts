@@ -32,6 +32,7 @@ export {
   type StructuredCall,
   type StructuredCaller,
   type StructuredResult,
+  type StructuredUsage,
 } from "./providers/types";
 export { assignOrdinals, locateQuote, toExtractedMentions } from "./quote";
 export {

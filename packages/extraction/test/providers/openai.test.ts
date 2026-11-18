@@ -142,45 +142,73 @@ test("the first call of a prefix reports its cache write", async () => {
   });
 });
 
-test("a refusal item becomes ProviderRefusalError", async () => {
+// Billed answers that fail still report their usage, so the caller settles what OpenAI charged.
+const completedUsage = {
+  inputTokens: 1512,
+  cachedInputTokens: 1024,
+  cacheWriteTokens: 0,
+  outputTokens: 288,
+};
+
+function withText(text: string): Record<string, unknown> {
+  const response = fixture("completed");
+  const [reasoning, message] = response.output as [unknown, { content: { text: string }[] }];
+  message.content = [{ ...message.content[0], text }];
+  response.output = [reasoning, message];
+  return response;
+}
+
+test("a refusal item becomes ProviderRefusalError with the billed usage", async () => {
   respond(() => HttpResponse.json(fixture("refusal")));
   await expect(callOpenAI(call)).rejects.toMatchObject({
     name: "ProviderRefusal",
     provider: "openai",
+    usage: { ...completedUsage, outputTokens: 12 },
   });
   expect(jobs.breakerRecord).toHaveBeenCalledWith("openai", "success");
 });
 
-test("status incomplete becomes ProviderIncompleteError with its reason", async () => {
+test("status incomplete becomes ProviderIncompleteError with its reason and usage", async () => {
   respond(() => HttpResponse.json(fixture("incomplete-max-output-tokens")));
   await expect(callOpenAI(call)).rejects.toMatchObject({
     name: "ProviderIncomplete",
     provider: "openai",
     reason: "max_output_tokens",
+    usage: { ...completedUsage, outputTokens: 2048 },
   });
 });
 
-test("output that does not match the schema is ProviderIncomplete(invalid_output)", async () => {
-  const bad = fixture("completed");
-  const [reasoning, message] = bad.output as [unknown, { content: { text: string }[] }];
-  message.content = [{ ...message.content[0], text: '{"answerKind":"maybe","mentions":[]}' }];
-  bad.output = [reasoning, message];
-  respond(() => HttpResponse.json(bad));
+test.each([
+  ["breaks the schema", '{"answerKind":"maybe","mentions":[]}'],
+  ["is not JSON", '{"answerKind":"names_entities","mentions":['],
+])("output that %s is ProviderIncomplete(invalid_output) with usage", async (_, text) => {
+  respond(() => HttpResponse.json(withText(text)));
   await expect(callOpenAI(call)).rejects.toMatchObject({
     name: "ProviderIncomplete",
     reason: "invalid_output",
+    usage: completedUsage,
   });
   expect(jobs.breakerRecord).toHaveBeenCalledWith("openai", "success");
 });
 
-test("a completed response without a final message is ProviderIncomplete(invalid_output)", async () => {
+test("a completed response without a final message is invalid_output with usage", async () => {
   const empty = fixture("completed");
   empty.output = (empty.output as unknown[]).slice(0, 1);
   respond(() => HttpResponse.json(empty));
   await expect(callOpenAI(call)).rejects.toMatchObject({
     name: "ProviderIncomplete",
     reason: "invalid_output",
+    usage: completedUsage,
   });
+});
+
+test("an answer without usage is ProviderIncomplete(missing_usage) and carries no usage", async () => {
+  const unmetered = fixture("completed");
+  delete unmetered.usage;
+  respond(() => HttpResponse.json(unmetered));
+  const error = await callOpenAI(call).catch((e: unknown) => e);
+  expect(error).toMatchObject({ name: "ProviderIncomplete", reason: "missing_usage" });
+  expect((error as { usage?: unknown }).usage).toBeUndefined();
 });
 
 test("a 429 rate limit becomes RateLimitedError with the advertised delay", async () => {
