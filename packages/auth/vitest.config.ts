@@ -11,6 +11,7 @@ const TEST_EMAIL_QUOTA = {
 
 const PURGE_TEST = "src/purge.int.test.ts";
 const EXPIRY_TEST = "src/email-otp.int.test.ts";
+const TELEMETRY_TEST = "src/telemetry.int.test.ts";
 
 const integration = {
   pool: "forks" as const,
@@ -46,7 +47,7 @@ export default defineConfig({
           ...integration,
           name: "integration",
           include: ["src/**/*.int.test.ts"],
-          exclude: [PURGE_TEST, EXPIRY_TEST],
+          exclude: [PURGE_TEST, EXPIRY_TEST, TELEMETRY_TEST],
         },
       },
       // Better Auth deletes every expired verification and idle rate-limit row on the requests it
@@ -65,6 +66,15 @@ export default defineConfig({
           name: "integration-purge",
           include: [PURGE_TEST],
           sequence: { groupOrder: 2 },
+        },
+      },
+      // The sign-in velocity window is global, so the alert test runs after every file that signs in.
+      {
+        test: {
+          ...integration,
+          name: "integration-telemetry",
+          include: [TELEMETRY_TEST],
+          sequence: { groupOrder: 3 },
         },
       },
       {

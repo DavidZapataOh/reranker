@@ -18,6 +18,9 @@ vi.mock("resend", () => ({
 const telemetry = vi.hoisted(() => ({ captureServerEvent: vi.fn() }));
 vi.mock("@reranker/telemetry", () => telemetry);
 
+const delivery = vi.hoisted(() => ({ recordEmailDelivery: vi.fn() }));
+vi.mock("./telemetry", () => delivery);
+
 const { idempotencyKey, sendAuthEmail } = await import("./send-auth-email");
 
 beforeEach(() => {
@@ -50,6 +53,7 @@ describe("sendAuthEmail", () => {
     expect(options).toEqual({
       idempotencyKey: idempotencyKey("sign-in-code", "ana@example.co", "482913"),
     });
+    expect(delivery.recordEmailDelivery).toHaveBeenCalledExactlyOnceWith(true);
   });
 
   test("passes the requested place to the email and keeps it out of the subject", async () => {
@@ -91,6 +95,7 @@ describe("sendAuthEmail", () => {
       { name: "auth_email_failed", props: {} },
       { subject: { system: true } },
     );
+    expect(delivery.recordEmailDelivery).toHaveBeenCalledExactlyOnceWith(false);
   });
 });
 

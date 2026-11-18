@@ -112,8 +112,11 @@ describe("auth configuration", () => {
     ).rejects.toMatchObject({ statusCode: 404, body: { code: "ORGANIZATION_DELETION_DISABLED" } });
   });
 
-  test("nextCookies is the last plugin", () => {
-    expect(auth.options.plugins.at(-1)?.id).toBe("next-cookies");
+  test("nextCookies is the last plugin, right after the auth telemetry", () => {
+    expect(auth.options.plugins.slice(-2).map((entry) => entry.id)).toEqual([
+      "auth-telemetry",
+      "next-cookies",
+    ]);
   });
 
   test("sign-in codes: six digits, encrypted, reused on resend, valid for the email's TTL", () => {

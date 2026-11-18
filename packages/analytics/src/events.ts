@@ -100,7 +100,7 @@ export interface ServerEventMap {
   lead_unsubscribed: { lead_id: string };
   lead_erased: { lead_id: string };
   auth_code_sent: Record<never, never>;
-  auth_sign_in: { method: "google" | "email_otp"; new_user: boolean };
+  auth_sign_in: { method: "google" | "email_otp" | "one_tap"; new_user: boolean };
   auth_sign_in_failed: {
     reason: "otp_expired" | "invalid_otp" | "too_many_attempts" | "oauth_error";
   };

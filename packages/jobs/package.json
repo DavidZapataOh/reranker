@@ -9,7 +9,8 @@
     "./errors": "./src/errors.ts",
     "./quota": "./src/quota.ts",
     "./rate": "./src/rate.ts",
-    "./step-errors": "./src/step-errors.ts"
+    "./step-errors": "./src/step-errors.ts",
+    "./velocity": "./src/velocity.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
