@@ -49,6 +49,11 @@
     "typecheck": { "dependsOn": ["^typecheck"] },
     "web#typecheck": { "dependsOn": ["^typecheck"], "env": ["APP_ENV"] },
     "test": { "dependsOn": ["^typecheck"], "outputs": ["coverage/**"] },
+    "web#test": {
+      "dependsOn": ["^typecheck"],
+      "outputs": ["coverage/**"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.github/workflows/quality.yml"]
+    },
     "@reranker/ui#test": { "dependsOn": ["^typecheck"], "outputs": [] },
     "@reranker/biome-plugins#test": {
       "dependsOn": ["^typecheck"],

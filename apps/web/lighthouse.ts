@@ -74,7 +74,14 @@ export function lighthouseConfig(env: NodeJS.ProcessEnv = process.env) {
         numberOfRuns: 3,
         ...(deployment ? {} : { startServerCommand: "pnpm start" }),
         // Not settings.extraHeaders: Lighthouse sends those to every origin and copies them into each report.
-        ...(protectedDeployment ? { puppeteerScript: "./lighthouse-bypass.cjs" } : {}),
+        ...(protectedDeployment
+          ? {
+              puppeteerScript: "./lighthouse-bypass.cjs",
+              // Containers deny the user namespaces Chromium's sandbox needs. Like Playwright, which
+              // launches Chromium unsandboxed by default, this only ever loads our own deployment.
+              puppeteerLaunchOptions: { args: ["--no-sandbox"] },
+            }
+          : {}),
         settings: {
           blockedUrlPatterns: BLOCKED_THIRD_PARTIES,
           // Vercel serves every generated deployment URL with X-Robots-Tag: noindex, production
