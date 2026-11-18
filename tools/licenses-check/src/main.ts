@@ -29,3 +29,4 @@ if (violations.length > 0) {
   const total = Object.values(report).reduce((sum, packages) => sum + packages.length, 0);
   console.log(`licenses: ${total} packages OK`);
 }
+// Timing probe for CI, never merged.
