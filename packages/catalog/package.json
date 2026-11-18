@@ -10,11 +10,13 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run --project unit --coverage --passWithNoTests",
-    "geo:build": "tsx scripts/build-geo.ts"
+    "geo:build": "tsx scripts/build-geo.ts",
+    "freeze": "tsx scripts/freeze.ts"
   },
   "dependencies": {
     "@reranker/i18n": "workspace:*",
     "@reranker/schema": "workspace:*",
+    "@reranker/verify": "workspace:*",
     "canonicalize": "catalog:",
     "server-only": "catalog:"
   },
