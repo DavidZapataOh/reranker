@@ -1,9 +1,11 @@
+import { type DirichletStratum, dirichletStratum, drawStratifiedDirichlet } from "./dirichlet";
 import { methodology, seedFor } from "./methodology";
 import { rngFromSeed } from "./rng";
 
 /**
- * One entry per valid capture; strata weights already normalized. Treated as immutable: its
- * bootstrap draws are memoized per frame object and seed.
+ * One entry per valid capture; strata weights already normalized. Its bootstrap draws are
+ * memoized per frame object and seed, so the first comparison deep-freezes it: a later change
+ * throws instead of silently reusing stale draws.
  */
 export interface CaptureFrame {
   captures: Array<{ stratum: string; weight: number }>;
@@ -24,7 +26,7 @@ interface Replicates {
   weights: Float64Array;
 }
 
-function strataOf(frame: CaptureFrame): Array<{ weight: number; members: number[] }> {
+function strataOf(frame: CaptureFrame): DirichletStratum[] {
   const index = new Map<string, { weight: number; members: number[] }>();
   frame.captures.forEach(({ stratum, weight }, i) => {
     if (!(weight >= 0 && Number.isFinite(weight))) {
@@ -36,34 +38,26 @@ function strataOf(frame: CaptureFrame): Array<{ weight: number; members: number[
       throw new RangeError(`stratum ${stratum} has captures with different weights`);
     } else s.members.push(i);
   });
-  return [...index.values()];
+  return [...index.values()]
+    .filter((s) => s.weight > 0)
+    .map((s) => dirichletStratum(s.weight, s.members));
 }
 
 function draw(frame: CaptureFrame, seed: string): Replicates {
   const n = frame.captures.length;
-  const draws = methodology.mcDraws;
-  const strata = strataOf(frame)
-    .filter((s) => s.weight > 0)
-    .map((s) => ({ ...s, cuts: new Float64Array(s.members.length - 1) }));
-  const weights = new Float64Array(draws * n);
+  const strata = strataOf(frame);
+  const weights = new Float64Array(methodology.mcDraws * n);
   const rng = rngFromSeed(seed);
-
-  for (let s = 0; s < draws; s++) {
-    const row = s * n;
-    for (const { weight, members, cuts } of strata) {
-      // Dirichlet(1,…,1) inside the stratum as the spacings of m − 1 sorted uniforms: exact,
-      // and cheaper than normalizing m Exp(1) draws because it needs no logarithms.
-      for (let j = 0; j < cuts.length; j++) cuts[j] = rng.next();
-      cuts.sort();
-      let previous = 0;
-      for (let j = 0; j < members.length; j++) {
-        const cut = j < cuts.length ? (cuts[j] as number) : 1;
-        weights[row + (members[j] as number)] = weight * (cut - previous);
-        previous = cut;
-      }
-    }
+  for (let s = 0; s < methodology.mcDraws; s++) {
+    drawStratifiedDirichlet(rng, strata, weights, s * n);
   }
   return { n, weights };
+}
+
+function deepFreeze(frame: CaptureFrame): void {
+  for (const capture of frame.captures) Object.freeze(capture);
+  Object.freeze(frame.captures);
+  Object.freeze(frame);
 }
 
 // The frame and seed fix the draws, so every comparison against the same frame reuses them:
@@ -74,6 +68,8 @@ function replicates(frame: CaptureFrame, seed: string): Replicates {
   const pairSeed = seedFor(seed, "pair");
   let bySeed = memo.get(frame);
   if (bySeed === undefined) {
+    // Freezing once is O(n) and makes every later hit O(1); a fingerprint would cost O(n) per call.
+    deepFreeze(frame);
     bySeed = new Map();
     memo.set(frame, bySeed);
   }

@@ -1,5 +1,6 @@
 import fc from "fast-check";
 import { describe, expect, test } from "vitest";
+import { pairedCompare } from "../src/compare";
 import { jeffreys } from "../src/interval";
 import { levelDisplay, levelOf, sufficiency } from "../src/levels";
 import { seedFor } from "../src/methodology";
@@ -31,6 +32,9 @@ function recs(n: number, ordinals: readonly number[]): EntityObservation[] {
     i < ordinals.length ? { ...o, y: 1, ordinal: ordinals[i] ?? null } : o,
   );
 }
+
+// Hundreds of seeded 4,000-draw runs: CPU-bound by design, so they get more than the default 5 s.
+const PROPERTY_TIMEOUT_MS = 30_000;
 
 const hexSeed = fc.stringMatching(/^[0-9a-f]{64}$/).filter((s) => !/^0{32}/.test(s));
 
@@ -119,22 +123,26 @@ describe("estimateScore", () => {
     expect(pointScore(noRecs(40))).toBe(0);
   });
 
-  test("property: lower ≤ value ≤ upper, all integers in [0, 100]", () =>
-    fc.assert(
-      fc.property(arbObservations(), hexSeed, (o, sd) => {
-        const s = estimateScore(o, sd);
-        return (
-          [s.lower, s.value, s.upper].every(Number.isInteger) &&
-          0 <= s.lower &&
-          s.lower <= s.value &&
-          s.value <= s.upper &&
-          s.upper <= 100 &&
-          s.components.prominence.lower <= s.components.prominence.estimate &&
-          s.components.prominence.estimate <= s.components.prominence.upper
-        );
-      }),
-      { numRuns: 300 },
-    ));
+  test(
+    "property: lower ≤ value ≤ upper, all integers in [0, 100]",
+    () =>
+      fc.assert(
+        fc.property(arbObservations(), hexSeed, (o, sd) => {
+          const s = estimateScore(o, sd);
+          return (
+            [s.lower, s.value, s.upper].every(Number.isInteger) &&
+            0 <= s.lower &&
+            s.lower <= s.value &&
+            s.value <= s.upper &&
+            s.upper <= 100 &&
+            s.components.prominence.lower <= s.components.prominence.estimate &&
+            s.components.prominence.estimate <= s.components.prominence.upper
+          );
+        }),
+        { numRuns: 300 },
+      ),
+    PROPERTY_TIMEOUT_MS,
+  );
 
   test("property: one more recommendation never lowers the value", () =>
     fc.assert(
@@ -235,5 +243,30 @@ describe("estimateScore", () => {
     const s = estimateScore([...kept, ...dropped], seed);
     expect(s.components.prominence.estimate).toBeCloseTo((1 + 0.9) / 2, 12);
     expect(s.components.recommendationRate.trials).toBe(40);
+  });
+
+  test("the G bootstrap keeps each stratum's mass at its weight, as pairedCompare does", () => {
+    // Every trial of each stratum is ranked, so with weights normalized inside the stratum each
+    // draw gives both strata exactly their weight and G cannot move. In a paired comparison on
+    // the same frame, all of stratum a then beats 7 of the 8 captures of stratum b in every draw.
+    const a = recs(8, Array(8).fill(1)).map((o) => ({ ...o, stratum: "a", weight: 0.5 }));
+    const b = recs(8, Array(8).fill(3)).map((o) => ({
+      ...o,
+      stratum: "b",
+      weight: 0.5,
+      captureIndex: o.captureIndex + 8,
+    }));
+    const g = (1 + 0.81) / 2;
+    const { prominence } = estimateScore([...a, ...b], seed).components;
+    expect(prominence.estimate).toBeCloseTo(g, 12);
+    expect(prominence.lower).toBeCloseTo(g, 12);
+    expect(prominence.upper).toBeCloseTo(g, 12);
+
+    const frame = { captures: [...a, ...b].map(({ stratum, weight }) => ({ stratum, weight })) };
+    const column = (key: string, from: number, to: number) => {
+      const y = new Uint8Array(16).fill(1, from, to);
+      return { key, y, ordinal: Int16Array.from(y) };
+    };
+    expect(pairedCompare(column("a", 0, 8), column("b", 8, 15), frame, seed).pAAhead).toBe(1);
   });
 });
