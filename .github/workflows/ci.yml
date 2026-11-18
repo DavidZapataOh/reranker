@@ -16,7 +16,7 @@ jobs:
   ci:
     runs-on: ubuntu-24.04
     # Component tests need Chromium and its system libraries; the image ships both, so no step
-    # waits on an apt mirror. The tag must match @playwright/test, which refuses other builds.
+    # waits on an apt mirror. The tag must match @playwright/test (apps/web/test/playwright-image.test.ts).
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       # The runner's uid owns the mounted workspace and HOME; --ipc=host keeps Chromium from
