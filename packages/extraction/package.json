@@ -15,6 +15,7 @@
     "test:perf": "vitest run --project perf --passWithNoTests"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "catalog:",
     "@google/genai": "catalog:",
     "@reranker/env": "workspace:*",
     "@reranker/jobs": "workspace:*",
