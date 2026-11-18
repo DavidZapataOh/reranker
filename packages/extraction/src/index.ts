@@ -47,3 +47,11 @@ export {
   type ResolveJudgeOutput,
   ResolveJudgeSchema,
 } from "./schema";
+export {
+  type ExtractionRow,
+  findExtraction,
+  insertExtraction,
+  insertMentions,
+  listDisagreements,
+  type MentionRow,
+} from "./store";
