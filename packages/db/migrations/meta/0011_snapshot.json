@@ -1,5 +1,5 @@
 {
-  "id": "a73de42e-ac01-448b-9db5-d48d64d984cd",
+  "id": "9ae6e99f-77c1-4187-b7f6-bf619338aea4",
   "prevId": "9d84888b-f669-4256-b3f9-3db8eec443ea",
   "version": "7",
   "dialect": "postgresql",
@@ -939,39 +939,28 @@
       "name": "captures",
       "schema": "public_panel",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
+        "captured_at": {
+          "name": "captured_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "cost_amount_micros": {
+          "name": "cost_amount_micros",
+          "type": "app\".\"amount_micros",
+          "primaryKey": false,
           "notNull": true
+        },
+        "log_index": {
+          "name": "log_index",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
         },
         "measurement_id": {
           "name": "measurement_id",
           "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "slot_index": {
-          "name": "slot_index",
-          "type": "smallint",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "attempt": {
-          "name": "attempt",
-          "type": "smallint",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "intent_set_id": {
-          "name": "intent_set_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "intent_id": {
-          "name": "intent_id",
-          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -1016,29 +1005,11 @@
           "primaryKey": false,
           "notNull": false
         },
-        "http_status": {
-          "name": "http_status",
-          "type": "smallint",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "model_reported": {
-          "name": "model_reported",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "response_bytes": {
           "name": "response_bytes",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
-        },
-        "parser_version": {
-          "name": "parser_version",
-          "type": "smallint",
-          "primaryKey": false,
-          "notNull": false
         },
         "latency_ms": {
           "name": "latency_ms",
@@ -1046,17 +1017,29 @@
           "primaryKey": false,
           "notNull": true
         },
-        "cost_amount_micros": {
-          "name": "cost_amount_micros",
-          "type": "app\".\"amount_micros",
+        "slot_index": {
+          "name": "slot_index",
+          "type": "smallint",
           "primaryKey": false,
           "notNull": true
         },
-        "cost_currency": {
-          "name": "cost_currency",
-          "type": "app\".\"currency_code",
+        "attempt": {
+          "name": "attempt",
+          "type": "smallint",
           "primaryKey": false,
           "notNull": true
+        },
+        "http_status": {
+          "name": "http_status",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parser_version": {
+          "name": "parser_version",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
         },
         "late": {
           "name": "late",
@@ -1065,12 +1048,35 @@
           "notNull": true,
           "default": false
         },
-        "captured_at": {
-          "name": "captured_at",
-          "type": "timestamp with time zone",
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "cost_currency": {
+          "name": "cost_currency",
+          "type": "app\".\"currency_code",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": true
+        },
+        "intent_set_id": {
+          "name": "intent_set_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "intent_id": {
+          "name": "intent_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "model_reported": {
+          "name": "model_reported",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "envelope_sha256": {
           "name": "envelope_sha256",
@@ -1081,12 +1087,6 @@
         "normalized_sha256": {
           "name": "normalized_sha256",
           "type": "bytea",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "log_index": {
-          "name": "log_index",
-          "type": "bigint",
           "primaryKey": false,
           "notNull": false
         }

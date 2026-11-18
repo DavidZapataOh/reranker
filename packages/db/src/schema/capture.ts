@@ -20,9 +20,13 @@ import { sharedTable } from "./_tables";
 
 const at = () => timestamp({ withTimezone: true });
 
-export const captureEngine = publicPanelSchema.enum("capture_engine", EngineId.enum);
-export const captureChannel = publicPanelSchema.enum("capture_channel", CaptureChannel.enum);
-export const captureProvider = publicPanelSchema.enum("capture_provider", CaptureProvider.enum);
+// drizzle-kit drops the schema of an enum built from an object, so the values go in as a tuple;
+// a zod enum always has at least one option.
+const values = <T extends string>(zodEnum: { options: T[] }) => zodEnum.options as [T, ...T[]];
+
+export const captureEngine = publicPanelSchema.enum("capture_engine", values(EngineId));
+export const captureChannel = publicPanelSchema.enum("capture_channel", values(CaptureChannel));
+export const captureProvider = publicPanelSchema.enum("capture_provider", values(CaptureProvider));
 export const captureMode = publicPanelSchema.enum("capture_mode", ["live", "task"]);
 export const captureStatus = publicPanelSchema.enum("capture_status", [
   "succeeded",
@@ -58,39 +62,44 @@ export const measurementPlans = sharedTable(
   ],
 );
 
+const cost = costMicrosColumn("cost");
+
 /**
  * One provider call for one slot. The id is cap_ + ULID, the capture_id of its signed statement;
  * the raw bytes live in the evidence artifacts, and the row keeps only their digests.
  */
 export const captures = publicPanelSchema.table(
   "captures",
+  // Postgres stores columns in declaration order and pads each to its alignment, so they go from
+  // widest alignment to narrowest, variable-length last: no padding inside the row.
   {
-    id: text().primaryKey(),
+    capturedAt: at().notNull().defaultNow(),
+    cost_amount_micros: cost.cost_amount_micros,
+    logIndex: bigint({ mode: "number" }),
     measurementId: uuid()
       .notNull()
       .references(() => measurementPlans.id),
-    slotIndex: smallint().notNull(),
-    attempt: smallint().notNull(),
-    intentSetId: text().notNull(),
-    intentId: text().notNull(),
     engine: captureEngine().notNull(),
     channel: captureChannel().notNull(),
     provider: captureProvider().notNull(),
     mode: captureMode().notNull(),
     status: captureStatus().notNull(),
     providerStatusCode: integer(),
-    httpStatus: smallint(),
-    modelReported: text(),
     responseBytes: integer().notNull(),
-    parserVersion: smallint(),
     latencyMs: integer().notNull(),
-    ...costMicrosColumn("cost"),
+    slotIndex: smallint().notNull(),
+    attempt: smallint().notNull(),
+    httpStatus: smallint(),
+    parserVersion: smallint(),
     late: boolean().notNull().default(false),
-    capturedAt: at().notNull().defaultNow(),
+    id: text().primaryKey(),
+    cost_currency: cost.cost_currency,
+    intentSetId: text().notNull(),
+    intentId: text().notNull(),
+    modelReported: text(),
     envelopeSha256: bytea().notNull(),
     // The digest of the original parse; re-derivations are entries of the evidence log.
     normalizedSha256: bytea(),
-    logIndex: bigint({ mode: "number" }),
   },
   (t) => [
     uniqueIndex("captures_one_success")

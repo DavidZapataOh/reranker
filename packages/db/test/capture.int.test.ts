@@ -129,21 +129,28 @@ test("a plan's purpose is one of the spend purposes", async () => {
 
 // Sizes as Postgres stores them: each heap row plus its line pointer, and one entry per row in
 // every index (8-byte tuple header and key, aligned to 8, plus its line pointer).
-async function bytesOf(plan: string): Promise<{ total: number; evidence: number }> {
+async function bytesOf(
+  plan: string,
+): Promise<{ total: number; evidence: number; parts: Record<string, number> }> {
   const scopes: Record<string, string> = {
     "public_panel.captures": "measurement_id = $1",
     "public_panel.measurement_plans": "id = $1",
   };
-  let total = 0;
+  const parts: Record<string, number> = {};
   for (const [table, scope] of Object.entries(scopes)) {
     const { rows } = await owner.query<{ b: number }>(
       `select coalesce(sum(pg_column_size(t.*) + 4), 0)::int as b from ${table} t where ${scope}`,
       [plan],
     );
-    total += rows[0]?.b ?? 0;
+    parts[table] = rows[0]?.b ?? 0;
   }
-  const { rows: indexes } = await owner.query<{ table: string; columns: string[]; pred: string }>(
-    `select i.indrelid::regclass::text as table,
+  const { rows: indexes } = await owner.query<{
+    name: string;
+    table: string;
+    columns: string[];
+    pred: string;
+  }>(
+    `select i.indexrelid::regclass::text as name, i.indrelid::regclass::text as table,
        array(select a.attname::text from unnest(i.indkey) k
              join pg_attribute a on a.attrelid = i.indrelid and a.attnum = k) as columns,
        coalesce(pg_get_expr(i.indpred, i.indrelid), 'true') as pred
@@ -158,15 +165,16 @@ async function bytesOf(plan: string): Promise<{ total: number; evidence: number 
        from ${index.table} where ${scopes[index.table]} and (${index.pred})`,
       [plan],
     );
-    total += rows[0]?.b ?? 0;
+    parts[index.name] = rows[0]?.b ?? 0;
   }
+  const total = Object.values(parts).reduce((sum, bytes) => sum + bytes, 0);
   const { rows } = await owner.query<{ b: number }>(
     `select sum(pg_column_size(envelope_sha256) + pg_column_size(normalized_sha256)
               + pg_column_size(log_index) + 4 + ((8 + pg_column_size(log_index) + 7) / 8) * 8)::int as b
      from public_panel.captures where measurement_id = $1`,
     [plan],
   );
-  return { total, evidence: rows[0]?.b ?? 0 };
+  return { total, evidence: rows[0]?.b ?? 0, parts };
 }
 
 test("a 200-observation plan stays within 52 KB of rows and index entries, evidence columns included", async () => {
@@ -176,6 +184,7 @@ test("a 200-observation plan stays within 52 KB of rows and index entries, evide
   }
   const b = await bytesOf(plan);
   console.info(`captures+plans bytes per report: ${b.total} (evidence share ${b.evidence})`);
+  console.info(JSON.stringify(b.parts));
   expect(b.evidence).toBeGreaterThan(0);
   expect(b.total).toBeLessThanOrEqual(52 * 1024);
 });
@@ -224,7 +233,7 @@ test("the pending log queue uses its partial index with 10,000 rows", async () =
          'odontologia.blanqueamiento-dental', 'gemini', 'ui-vendor', 'dataforseo', 'live',
          case when g % 3 = 0 then 'provider_error' else 'succeeded' end::public_panel.capture_status,
          20000, 200, null, 48213, 1, 11834, 4000, 'USD',
-         sha256(g::text::bytea), null, case when g % 10 = 0 then null else g end
+         sha256(g::text::bytea), null, case when g % 10 = 0 then null else 1000000000 + g end
        from generate_series(1, 10000) g`,
       [plan],
     );
