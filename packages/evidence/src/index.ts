@@ -20,10 +20,14 @@ export {
 } from "./errors";
 export {
   type CapturePredicateInput,
+  latestNormalized,
   readRaw,
+  requestLogInclusion,
   type SealCaptureInput,
   type SealedCapture,
   sealCapture,
+  sealPlan,
+  sealReparse,
   signStatement,
 } from "./seal";
 export { kmsSigner, loadSigner, type Signer } from "./signer";

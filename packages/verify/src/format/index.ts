@@ -25,6 +25,11 @@ export {
   CaptureStatementV1Schema,
   IN_TOTO_STATEMENT_V1,
   type InTotoStatement,
+  type MeasurementPlanPredicateV1,
+  type MeasurementPlanStatementV1,
+  type NormalizationPredicateV1,
+  type NormalizationStatementV1,
   PREDICATE,
   type ResourceDescriptor,
+  type SignerContextV1,
 } from "./statement";

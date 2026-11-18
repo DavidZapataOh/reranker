@@ -1,7 +1,12 @@
 import { EnvValidationError } from "@reranker/env";
-import { CaptureStatementV1Schema } from "@reranker/verify/format";
+import { CaptureStatementV1Schema, PREDICATE } from "@reranker/verify/format";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { buildCaptureStatement, workerIdentity } from "../src/statement";
+import {
+  buildCaptureStatement,
+  buildNormalizationStatement,
+  buildPlanStatement,
+  workerIdentity,
+} from "../src/statement";
 import { predicateInput } from "./support/capture-input";
 
 const COMMIT = "0123456789abcdef0123456789abcdef01234567";
@@ -63,5 +68,41 @@ describe("buildCaptureStatement", () => {
     const statement = build(null);
     expect(statement.subject.map((s) => s.name)).toEqual(["raw", "request"]);
     expect(CaptureStatementV1Schema.safeParse(statement).success).toBe(true);
+  });
+});
+
+test("a plan statement names the plan artifact and the measurement", () => {
+  const statement = buildPlanStatement({
+    measurementId: "0194f0c6-8d2e-7c3a-9f1b-2a4c6e8d0f12",
+    planSha256: sha("f"),
+    signedAt: SIGNED_AT,
+  });
+  expect(statement.predicateType).toBe(PREDICATE.plan);
+  expect(statement.subject).toEqual([{ name: "plan", digest: { sha256: sha("f") } }]);
+  expect(statement.predicate).toEqual({
+    measurement_id: "0194f0c6-8d2e-7c3a-9f1b-2a4c6e8d0f12",
+    time: { worker_utc: SIGNED_AT.toISOString() },
+    worker: { id: "vercel:iad1", image_digest: `git:${COMMIT}` },
+  });
+});
+
+test("a normalization statement keeps the raw digest and points to the capture envelope", () => {
+  const statement = buildNormalizationStatement({
+    captureId: "cap_01JBX8Q2M4ZK7P6Y3V9W1T0S5R",
+    captureEnvelopeSha256: sha("9"),
+    rawSha256: sha("a"),
+    normalizedSha256: sha("8"),
+    parserVersion: 2,
+    signedAt: SIGNED_AT,
+  });
+  expect(statement.predicateType).toBe(PREDICATE.normalization);
+  expect(statement.subject).toEqual([
+    { name: "raw", digest: { sha256: sha("a") } },
+    { name: "normalized", digest: { sha256: sha("8") } },
+  ]);
+  expect(statement.predicate).toMatchObject({
+    capture_id: "cap_01JBX8Q2M4ZK7P6Y3V9W1T0S5R",
+    capture_envelope: { digest: { sha256: sha("9") } },
+    parser_version: 2,
   });
 });
