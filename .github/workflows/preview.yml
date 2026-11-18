@@ -14,9 +14,54 @@ env:
   NEON_BRANCH: preview/pr-${{ github.event.pull_request.number }}
   NEON_API_HOST: https://console.neon.tech/api/v2
 jobs:
-  deploy:
+  # A preview only tests what reaches apps/web: its code, the workspace packages it depends on, the
+  # lockfile, and the workflows that deploy and test it. Production runs the full gate on every deploy.
+  changes:
     # Fork pull requests get no secrets, so they get no preview either.
     if: github.event.action != 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions: { contents: read, statuses: write }
+    outputs:
+      web: ${{ steps.web.outputs.affected }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { fetch-depth: 0, filter: "blob:none", persist-credentials: false }
+      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
+        with: { cache: true, require-lockfile: true }
+      # Turbo's --affected follows the workspace graph, so a change in any package web depends on
+      # selects web, and global inputs (turbo.json, root configuration) select everything.
+      - id: web
+        name: Detect changes that reach the web app
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          web=$(pnpm exec turbo ls --affected --filter=web --output=json | jq '.packages.count')
+          files=$(git diff --name-only "$BASE" HEAD -- pnpm-lock.yaml .github/workflows/preview.yml .github/workflows/quality.yml .github/actions/ci-database)
+          if [ "$web" != 0 ] || [ -n "$files" ]; then
+            echo "affected=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No change reaches the web app: no preview"
+          fi
+      # Same context the preview's tests write, so the pull request shows why there is none.
+      - if: steps.web.outputs.affected != 'true'
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          SHA: ${{ github.event.pull_request.head.sha }}
+        with:
+          script: |
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: process.env.SHA,
+              state: "success",
+              context: "quality (preview)",
+              description: "Not required: no change reaches the web app",
+            });
+  deploy:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
     runs-on: ubuntu-24.04
     # Branch reset, migration, a Vercel build and the deployment.
     timeout-minutes: 25

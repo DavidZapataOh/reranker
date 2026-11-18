@@ -4,6 +4,9 @@ on:
     branches: [main]
   push:
     branches: [main]
+  merge_group:
+    types: [checks_requested]
+    branches: [main]
   workflow_dispatch:
 permissions: {}
 concurrency:
@@ -12,6 +15,13 @@ concurrency:
 jobs:
   ci:
     runs-on: ubuntu-24.04
+    # Component tests need Chromium and its system libraries; the image ships both, so no step
+    # waits on an apt mirror. The tag must match @playwright/test, which refuses other builds.
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
+      # The runner's uid owns the mounted workspace and HOME; --ipc=host keeps Chromium from
+      # exhausting the container's 64 MB /dev/shm.
+      options: --user 1001 --ipc=host --init
     timeout-minutes: 15
     permissions: { contents: read, id-token: write }
     steps:
@@ -24,16 +34,10 @@ jobs:
       - run: pnpm exec biome ci .
       - run: pnpm env:example --check
       - run: pnpm runbooks:check
-      # Report only: the provider stages are legitimately pending before launch. The daily run and
-      # `flags:sync --enable` enforce them against production.
-      - name: Report the launch stages
-        env:
-          GITHUB_REPO_READ_TOKEN: ${{ github.token }}
-        run: pnpm launch:check
       - run: pnpm audit --prod --audit-level high && pnpm licenses:check
       - id: scope
         env:
-          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before }}
         # Without a reachable base (first push, force push, manual run) everything runs.
         run: |
           if [[ "$BASE" =~ ^[0-9a-f]{40}$ && "$BASE" != 0000000000000000000000000000000000000000 ]] && git cat-file -e "$BASE^{commit}"; then
@@ -41,25 +45,6 @@ jobs:
           else
             echo "affected=" >> "$GITHUB_OUTPUT"
           fi
-      - id: browser
-        name: Detect affected component tests
-        env:
-          TURBO_SCM_BASE: ${{ steps.scope.outputs.base }}
-        run: |
-          dirs=$(pnpm exec turbo ls ${{ steps.scope.outputs.affected }} --output=json | jq -r '.packages.items[].path')
-          # shellcheck disable=SC2086
-          if [ -n "$dirs" ] && [ -n "$(git ls-files -- $(printf "%s/**/*.browser.test.tsx " $dirs))" ]; then
-            echo "needed=true" >> "$GITHUB_OUTPUT"
-            echo "version=$(pnpm --filter web exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
-          fi
-      - if: steps.browser.outputs.needed == 'true'
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ steps.browser.outputs.version }}
-      - if: steps.browser.outputs.needed == 'true'
-        name: Install Chromium when component tests are affected
-        run: pnpm --filter web exec playwright install --with-deps chromium
       - env:
           # `next typegen` loads next.config.ts, which reads the environment name.
           APP_ENV: development
@@ -124,9 +109,11 @@ jobs:
           if-no-files-found: ignore
   integration:
     runs-on: ubuntu-24.04
-    # Up to 15 min queueing for a Neon CI branch slot, then the tests and the benchmark.
-    timeout-minutes: 35
+    # Up to 15 min queueing for a Neon CI branch slot, then the tests.
+    timeout-minutes: 30
     permissions: { contents: read, id-token: write }
+    outputs:
+      db: ${{ steps.affected.outputs.db }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { fetch-depth: 0, filter: "blob:none", persist-credentials: false }
@@ -136,7 +123,7 @@ jobs:
         with: { cache: true, require-lockfile: true }
       - id: scope
         env:
-          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before }}
         run: |
           if [[ "$BASE" =~ ^[0-9a-f]{40}$ && "$BASE" != 0000000000000000000000000000000000000000 ]] && git cat-file -e "$BASE^{commit}"; then
             echo "base=$BASE" >> "$GITHUB_OUTPUT"; echo "affected=--affected" >> "$GITHUB_OUTPUT"
@@ -160,9 +147,11 @@ jobs:
           tasks=$(pnpm exec turbo run test:integration $FILTER --dry=json \
             | jq '[.tasks[] | select(.task == "test:integration" and .command != "<NONEXISTENT>")]')
           count=$(jq length <<< "$tasks")
-          echo "count=$count" >> "$GITHUB_OUTPUT"
-          echo "db=$(jq 'any(.package == "@reranker/db")' <<< "$tasks")" >> "$GITHUB_OUTPUT"
-          echo "filter=$FILTER" >> "$GITHUB_OUTPUT"
+          {
+            echo "count=$count"
+            echo "db=$(jq 'any(.package == "@reranker/db")' <<< "$tasks")"
+            echo "filter=$FILTER"
+          } >> "$GITHUB_OUTPUT"
           if [ "$count" = 0 ]; then echo "No integration tests affected"; fi
       - if: steps.affected.outputs.count != '0'
         id: branch
@@ -181,25 +170,11 @@ jobs:
           FILTER: ${{ steps.affected.outputs.filter }}
           TURBO_SCM_BASE: ${{ steps.scope.outputs.base }}
           TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
-        run: pnpm exec turbo run test:integration $FILTER
-      # Budgets fail the job. Suspending the compute is safe: the branch belongs to this run alone,
-      # and the script refuses any branch whose name does not start with ci/.
-      - if: steps.affected.outputs.db == 'true'
-        id: bench
-        name: Benchmark tenant transactions and the cold start
-        env:
-          NEON_API_KEY: ${{ secrets.NEON_NONPROD_API_KEY }}
-          NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
-          NEON_BRANCH_ID: ${{ steps.branch.outputs.branch-id }}
-        run: pnpm --filter @reranker/db db:bench
-      - if: always() && steps.bench.outcome != 'skipped'
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: bench-report
-          path: packages/db/bench-report.json
-          retention-days: 3
-          if-no-files-found: warn
-      - if: steps.affected.outputs.count != '0' && github.event_name == 'pull_request'
+        run: |
+          # shellcheck disable=SC2086
+          pnpm exec turbo run test:integration $FILTER
+      # A queued merge checks again: the deployed app it must keep working with may have moved since the pull request ran.
+      - if: steps.affected.outputs.count != '0' && (github.event_name == 'pull_request' || github.event_name == 'merge_group')
         id: migrations
         name: Detect migration changes
         env:
@@ -227,6 +202,64 @@ jobs:
           pnpm install --frozen-lockfile
           if [ ! -d packages/db ]; then echo "The base branch has no database package yet"; exit 0; fi
           pnpm exec turbo run test:integration --filter=@reranker/db
+      # delete-branch-action runs `npm i -g neonctl@v2`: pnpm's Node runtime keeps no global bin on PATH, and an
+      # unlocked global install would otherwise resolve to whatever was published last and run its install scripts.
+      - if: always() && steps.branch.outputs.branch-id != ''
+        name: Prepare npm for the branch cleanup
+        env:
+          PREFIX: ${{ runner.temp }}/npm-global
+        run: |
+          {
+            echo "NPM_CONFIG_PREFIX=$PREFIX"
+            echo "NPM_CONFIG_BEFORE=2026-11-01T00:00:00Z"
+            echo "NPM_CONFIG_IGNORE_SCRIPTS=true"
+          } >> "$GITHUB_ENV"
+          echo "$PREFIX/bin" >> "$GITHUB_PATH"
+      - if: always() && steps.branch.outputs.branch-id != ''
+        uses: neondatabase/delete-branch-action@4468d825d5a88ef4012f1705a82f02ec3072f776 # v3.2.1
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          branch: ${{ steps.branch.outputs.branch-id }}
+          api_key: ${{ secrets.NEON_NONPROD_API_KEY }}
+  # Advisory and never required: on a shared runner the relative gate only catches gross
+  # regressions, and production measures the strict budgets. The nightly run measures every night.
+  bench:
+    needs: integration
+    if: github.event_name == 'pull_request' && needs.integration.outputs.db == 'true'
+    runs-on: ubuntu-24.04
+    # Up to 15 min queueing for a Neon CI branch slot, then the benchmark.
+    timeout-minutes: 25
+    permissions: { contents: read }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
+        with: { cache: true, require-lockfile: true }
+      - id: branch
+        uses: ./.github/actions/neon-ci-branch
+        with:
+          api-key: ${{ secrets.NEON_NONPROD_API_KEY }}
+          project-id: ${{ vars.NEON_PROJECT_ID }}
+          branch-name: ci/bench-${{ github.run_id }}-${{ github.run_attempt }}
+      - uses: ./.github/actions/ci-database
+        with:
+          db-url: ${{ steps.branch.outputs.db-url }}
+          db-host-pooled: ${{ steps.branch.outputs.db-host-pooled }}
+      # Suspending the compute is safe: the branch belongs to this run alone, and the script
+      # refuses any branch whose name does not start with ci/.
+      - name: Benchmark tenant transactions and the cold start
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_NONPROD_API_KEY }}
+          NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
+          NEON_BRANCH_ID: ${{ steps.branch.outputs.branch-id }}
+        run: pnpm --filter @reranker/db db:bench
+      - if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: bench-report
+          path: packages/db/bench-report.json
+          retention-days: 3
+          if-no-files-found: warn
       # delete-branch-action runs `npm i -g neonctl@v2`: pnpm's Node runtime keeps no global bin on PATH, and an
       # unlocked global install would otherwise resolve to whatever was published last and run its install scripts.
       - if: always() && steps.branch.outputs.branch-id != ''
@@ -279,7 +312,10 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { fetch-depth: 0, persist-credentials: false }
-      - uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
+      # The action rejects merge_group events. A queued merge adds no content of its own: every
+      # commit in it was scanned when its pull request ran.
+      - if: github.event_name != 'merge_group'
+        uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_VERSION: 8.30.1
