@@ -44,7 +44,7 @@ const COMMIT = "fedcba9876543210fedcba9876543210fedcba98";
 
 // R2 as aws4fetch sees it: objects keyed by path, written once, served already gunzipped as
 // fetch would serve them.
-const r2 = new Map<string, Uint8Array>();
+const r2 = new Map<string, Uint8Array<ArrayBuffer>>();
 let r2Down = false;
 const objectKey = (url: string) => new URL(url).pathname.split("/").slice(2).join("/");
 

@@ -72,7 +72,7 @@ async function send(
   method: "GET" | "PUT" | "DELETE",
   bucket: string,
   key: string,
-  init: { headers?: Record<string, string>; body?: Uint8Array } = {},
+  init: { headers?: Record<string, string>; body?: Uint8Array<ArrayBuffer> } = {},
 ): Promise<Response> {
   const { client, endpoint } = r2();
   const target = `${bucket}/${key}`;
@@ -96,7 +96,7 @@ async function send(
 async function put(
   bucket: string,
   key: string,
-  body: Uint8Array,
+  body: Uint8Array<ArrayBuffer>,
   headers: Record<string, string>,
 ): Promise<boolean> {
   const response = await send("PUT", bucket, key, { headers, body });
@@ -187,7 +187,7 @@ export async function deleteArtifact(kind: ArtifactKind, sha256: string): Promis
  */
 export async function putLogObject(
   key: string,
-  bytes: Uint8Array,
+  bytes: Uint8Array<ArrayBuffer>,
   opts: { immutable: boolean; contentType: string },
 ): Promise<void> {
   checkLogKey(key);
