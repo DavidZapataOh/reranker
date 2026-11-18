@@ -209,6 +209,9 @@ catalogs:
     '@react-email/ui':
       specifier: 6.11.7
       version: 6.11.7
+    '@stdlib/stats-base-dists-beta-cdf':
+      specifier: 0.2.3
+      version: 0.2.3
     '@stdlib/stats-base-dists-beta-quantile':
       specifier: 0.2.3
       version: 0.2.3
@@ -964,6 +967,9 @@ importers:
       '@reranker/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      '@stdlib/stats-base-dists-beta-cdf':
+        specifier: 'catalog:'
+        version: 0.2.3(supports-color@10.2.2)
       '@types/node':
         specifier: 'catalog:'
         version: 26.6.6
@@ -4285,6 +4291,11 @@ packages:
 
   '@stdlib/regexp-function-name@0.2.3':
     resolution: {integrity: sha512-ER1C2rUW5Kzu5w4W0gbrJdIj5STNO5RfNy4GeiqycezeiXT99G393QeN4irqcOItYkeZhwbpY2ZzwlLxQvod1A==}
+    engines: {node: '>=0.10.0', npm: '>2.7.0'}
+    os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
+
+  '@stdlib/stats-base-dists-beta-cdf@0.2.3':
+    resolution: {integrity: sha512-k0nS5kEKyi0OYokYb8t1Z6BC0r6kKcXenH3p2PoCyYgHrID8AN+Ms783M/KPhB3E7d4TjzTGXJbVR8E+UIZXfA==}
     engines: {node: '>=0.10.0', npm: '>2.7.0'}
     os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
 
@@ -11757,6 +11768,15 @@ snapshots:
   '@stdlib/regexp-function-name@0.2.3':
     dependencies:
       '@stdlib/utils-define-nonenumerable-read-only-property': 0.2.3
+
+  '@stdlib/stats-base-dists-beta-cdf@0.2.3(supports-color@10.2.2)':
+    dependencies:
+      '@stdlib/math-base-assert-is-nan': 0.2.3(supports-color@10.2.2)
+      '@stdlib/math-base-special-betainc': 0.2.3(supports-color@10.2.2)
+      '@stdlib/utils-constant-function': 0.2.3
+      '@stdlib/utils-define-nonenumerable-read-only-property': 0.2.3
+    transitivePeerDependencies:
+      - supports-color
 
   '@stdlib/stats-base-dists-beta-quantile@0.2.3(supports-color@10.2.2)':
     dependencies:

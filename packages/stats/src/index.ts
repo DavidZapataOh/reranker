@@ -8,3 +8,4 @@ export {
   wilsonDivergence,
 } from "./interval";
 export { type Methodology, MethodologySchema, methodology, seedFor } from "./methodology";
+export { beta, exponential, gamma, type Rng, rngFromSeed, standardNormal } from "./rng";
