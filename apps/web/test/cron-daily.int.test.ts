@@ -8,6 +8,8 @@ import { afterAll, beforeEach, expect, test, vi } from "vitest";
 // claim in ops.workflow_starts is the real one.
 const api = vi.hoisted(() => ({ start: vi.fn() }));
 vi.mock("workflow/api", () => api);
+// Next and the workflow bundler resolve it to an empty module; plain Node does not.
+vi.mock("server-only", () => ({}));
 
 const { GET } = await import("../src/app/api/cron/daily/route");
 

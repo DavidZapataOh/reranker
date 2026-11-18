@@ -554,6 +554,9 @@ importers:
       puppeteer-core:
         specifier: 'catalog:'
         version: 25.16.0(proxy-agent@6.5.0(supports-color@8.1.1))(yauzl@3.4.0)
+      server-only:
+        specifier: 'catalog:'
+        version: 0.0.1
       tailwindcss:
         specifier: 'catalog:'
         version: 4.3.4
