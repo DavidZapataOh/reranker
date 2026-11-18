@@ -20,14 +20,10 @@ const jobs = vi.hoisted(() => ({
   breakerRecord: vi.fn(async (_provider: string, _outcome: "success" | "failure") => {}),
 }));
 
-vi.mock("@reranker/jobs", async (importOriginal) => ({
-  ...(await importOriginal<typeof import("@reranker/jobs")>()),
-  acquireProviderSlot: jobs.acquireProviderSlot,
-  reserveSpend: jobs.reserveSpend,
-  settleSpend: jobs.settleSpend,
-  releaseSpend: jobs.releaseSpend,
-  breakerRecord: jobs.breakerRecord,
-}));
+vi.mock("@reranker/jobs", async (importOriginal) => {
+  const { release: _, ...doubles } = jobs;
+  return { ...(await importOriginal<typeof import("@reranker/jobs")>()), ...doubles };
+});
 
 const SEARCH_URL = "https://places.googleapis.com/v1/places:searchText";
 const DETAILS_URL = "https://places.googleapis.com/v1/places/:placeId";
@@ -39,29 +35,30 @@ const spend: SpendContext = {
   refType: "report",
   refId: "rep_01",
 };
-
-interface Captured {
-  method: string;
-  url: string;
-  headers: Record<string, string>;
-  body: unknown;
-}
+const search = (textQuery = "a") => searchText({ textQuery, mask: "resolve" }, spend);
 
 function capture(url: string, reply: () => Response = () => HttpResponse.json({})) {
-  const seen: Captured[] = [];
+  const seen: { method: string; url: string; headers: Record<string, string>; body: unknown }[] =
+    [];
   server.use(
     http.all(url, async ({ request }) => {
       const text = request.method === "GET" ? "" : await request.text();
+      const headers = Object.fromEntries(request.headers);
       seen.push({
         method: request.method,
         url: request.url,
-        headers: Object.fromEntries(request.headers),
-        body: text ? JSON.parse(text) : undefined,
+        headers,
+        body: text && JSON.parse(text),
       });
       return reply();
     }),
   );
   return seen;
+}
+
+function googleError(status: number, code: string, headers?: Record<string, string>) {
+  const error = { code: status, message: "secret detail from the body", status: code };
+  return () => HttpResponse.json({ error }, { status, ...(headers && { headers }) });
 }
 
 beforeAll(() => {
@@ -91,12 +88,13 @@ test("resolution search sends exactly the Pro mask and the fixed body", async ()
     { textQuery: "Clínica Sonrisas Pereira", mask: "resolve", regionCode: "co" },
     spend,
   );
-  const [req] = seen;
-  expect(req?.method).toBe("POST");
-  expect(req?.headers["x-goog-fieldmask"]).toBe(FIELD_MASKS.resolve);
-  expect(req?.headers["x-goog-api-key"]).toBe(API_KEY);
-  expect(req?.headers["content-type"]).toBe("application/json");
-  expect(req?.body).toEqual({
+  expect(seen[0]?.method).toBe("POST");
+  expect(seen[0]?.headers).toMatchObject({
+    "x-goog-fieldmask": FIELD_MASKS.resolve,
+    "x-goog-api-key": API_KEY,
+    "content-type": "application/json",
+  });
+  expect(seen[0]?.body).toEqual({
     textQuery: "Clínica Sonrisas Pereira",
     languageCode: "es",
     pageSize: 5,
@@ -104,27 +102,20 @@ test("resolution search sends exactly the Pro mask and the fixed body", async ()
   });
 });
 
-test("target search passes its optional filters and never a region it was not given", async () => {
+test("target search passes its optional filters and no region it was not given", async () => {
   const seen = capture(SEARCH_URL);
-  const locationBias = { circle: { center: { latitude: 4.81, longitude: -75.69 }, radius: 5000 } };
-  await searchText(
-    {
-      textQuery: "Odontología Pereira",
-      mask: "target",
-      includedType: "dentist",
-      locationBias,
-      includePureServiceAreaBusinesses: true,
-    },
-    spend,
-  );
+  const filters = {
+    includedType: "dentist",
+    locationBias: { circle: { center: { latitude: 4.81, longitude: -75.69 }, radius: 5000 } },
+    includePureServiceAreaBusinesses: true,
+  };
+  await searchText({ textQuery: "Odontología Pereira", mask: "target", ...filters }, spend);
   expect(seen[0]?.headers["x-goog-fieldmask"]).toBe(FIELD_MASKS.target);
   expect(seen[0]?.body).toEqual({
     textQuery: "Odontología Pereira",
     languageCode: "es",
     pageSize: 5,
-    includedType: "dentist",
-    locationBias,
-    includePureServiceAreaBusinesses: true,
+    ...filters,
   });
 });
 
@@ -135,31 +126,23 @@ test("no search mask ever asks for an Enterprise field", () => {
 });
 
 test("a resolution hit carries only the Pro fields, with absent ones as null", async () => {
+  const full = {
+    id: "ChIJa",
+    formattedAddress: "Cra. 7 #20-30, Pereira, Risaralda",
+    types: ["dentist", "health"],
+    primaryType: "dentist",
+    businessStatus: "OPERATIONAL",
+  };
   capture(SEARCH_URL, () =>
     HttpResponse.json({
       places: [
-        {
-          id: "ChIJa",
-          displayName: { text: "Clínica Sonrisas", languageCode: "es" },
-          formattedAddress: "Cra. 7 #20-30, Pereira, Risaralda",
-          types: ["dentist", "health"],
-          primaryType: "dentist",
-          businessStatus: "OPERATIONAL",
-        },
+        { ...full, displayName: { text: "Clínica Sonrisas", languageCode: "es" } },
         { id: "ChIJb", displayName: { text: "Sonrisas Dental" } },
       ],
     }),
   );
-  const hits = await searchText({ textQuery: "Clínica Sonrisas", mask: "resolve" }, spend);
-  expect(hits).toEqual([
-    {
-      id: "ChIJa",
-      displayName: "Clínica Sonrisas",
-      formattedAddress: "Cra. 7 #20-30, Pereira, Risaralda",
-      types: ["dentist", "health"],
-      primaryType: "dentist",
-      businessStatus: "OPERATIONAL",
-    },
+  expect(await search()).toEqual([
+    { ...full, displayName: "Clínica Sonrisas" },
     {
       id: "ChIJb",
       displayName: "Sonrisas Dental",
@@ -169,12 +152,16 @@ test("a resolution hit carries only the Pro fields, with absent ones as null", a
       businessStatus: null,
     },
   ]);
+  // Text Search answers `{}` when nothing matches.
+  capture(SEARCH_URL);
+  expect(await search("zzzz")).toEqual([]);
 });
 
 test("a target hit adds address components, location and the type labels", async () => {
   const addressComponents = [
     { longText: "Pereira", shortText: "Pereira", types: ["locality", "political"] },
   ];
+  const location = { latitude: 4.81, longitude: -75.69 };
   capture(SEARCH_URL, () =>
     HttpResponse.json({
       places: [
@@ -182,25 +169,22 @@ test("a target hit adds address components, location and the type labels", async
           id: "ChIJa",
           displayName: { text: "Clínica Sonrisas" },
           addressComponents,
-          location: { latitude: 4.81, longitude: -75.69 },
+          location,
           primaryTypeDisplayName: { text: "Dentista", languageCode: "es" },
           googleMapsTypeLabel: { text: "Odontólogo", languageCode: "es" },
-          pureServiceAreaBusiness: false,
+          pureServiceAreaBusiness: true,
         },
-        { id: "ChIJb", displayName: { text: "Sonrisas a domicilio" } },
+        { id: "ChIJb", displayName: { text: "Sonrisas Centro" } },
       ],
     }),
   );
-  const [first, second] = await searchText(
-    { textQuery: "Clínica Sonrisas", mask: "target" },
-    spend,
-  );
+  const [first, second] = await searchText({ textQuery: "a", mask: "target" }, spend);
   expect(first).toMatchObject({
     addressComponents,
-    location: { latitude: 4.81, longitude: -75.69 },
+    location,
     primaryTypeDisplayName: "Dentista",
     googleMapsTypeLabel: "Odontólogo",
-    pureServiceAreaBusiness: false,
+    pureServiceAreaBusiness: true,
   });
   expect(second).toMatchObject({
     addressComponents: [],
@@ -211,51 +195,39 @@ test("a target hit adds address components, location and the type labels", async
   expect(second).not.toHaveProperty("location");
 });
 
-test("a search without matches returns no hits", async () => {
-  capture(SEARCH_URL);
-  await expect(searchText({ textQuery: "zzzz", mask: "resolve" }, spend)).resolves.toEqual([]);
-});
-
 test("details masks are the IDs-only and the two Enterprise ones", async () => {
-  const seen = capture(DETAILS_URL, () =>
-    HttpResponse.json({
-      id: "ChIJa",
-      movedPlaceId: "ChIJmoved",
-      websiteUri: "https://sonrisas.co/",
-      regularOpeningHours: { weekdayDescriptions: ["lunes: 8:00–18:00"] },
+  const hours = { periods: [{ open: { day: 1, hour: 8, minute: 0 } }] };
+  // Enterprise masks do not ask for the id, so those responses carry none.
+  const replies: Record<string, object> = {
+    "id,movedPlaceId": { id: "ChIJa", movedPlaceId: "ChIJmoved" },
+    websiteUri: { websiteUri: "https://sonrisas.co/" },
+    "regularOpeningHours,websiteUri": { regularOpeningHours: hours },
+  };
+  const seen: string[][] = [];
+  server.use(
+    http.get(DETAILS_URL, ({ request }) => {
+      const mask = request.headers.get("x-goog-fieldmask") ?? "";
+      seen.push([new URL(request.url).pathname, mask, request.headers.get("x-goog-api-key") ?? ""]);
+      return HttpResponse.json(replies[mask]);
     }),
   );
-  await placeDetails("ChIJa", "idsOnly", spend);
-  await placeDetails("ChIJa", "website", spend);
-  await placeDetails("ChIJa", "findings", spend);
-  expect(
-    seen.map((r) => [r.method, new URL(r.url).pathname, r.headers["x-goog-fieldmask"]]),
-  ).toEqual([
-    ["GET", "/v1/places/ChIJa", "id,movedPlaceId"],
-    ["GET", "/v1/places/ChIJa", "websiteUri"],
-    ["GET", "/v1/places/ChIJa", "regularOpeningHours,websiteUri"],
-  ]);
-  expect(seen.every((r) => r.headers["x-goog-api-key"] === API_KEY)).toBe(true);
-});
-
-test("details return only the fields of their mask and keep the asked id", async () => {
-  capture(DETAILS_URL, () => HttpResponse.json({ id: "ChIJa", movedPlaceId: "ChIJmoved" }));
-  await expect(placeDetails("ChIJa", "idsOnly", spend)).resolves.toEqual({
+  expect(await placeDetails("ChIJa", "idsOnly", spend)).toEqual({
     id: "ChIJa",
     movedPlaceId: "ChIJmoved",
   });
-  // Enterprise masks do not ask for the id, so the response has none.
-  capture(DETAILS_URL, () => HttpResponse.json({ websiteUri: "https://sonrisas.co/" }));
-  await expect(placeDetails("ChIJa", "website", spend)).resolves.toEqual({
+  expect(await placeDetails("ChIJa", "website", spend)).toEqual({
     id: "ChIJa",
     websiteUri: "https://sonrisas.co/",
   });
-  const hours = { periods: [{ open: { day: 1, hour: 8, minute: 0 } }] };
-  capture(DETAILS_URL, () => HttpResponse.json({ regularOpeningHours: hours }));
-  await expect(placeDetails("ChIJa", "findings", spend)).resolves.toEqual({
+  expect(await placeDetails("ChIJa", "findings", spend)).toEqual({
     id: "ChIJa",
     regularOpeningHours: hours,
   });
+  expect(seen).toEqual([
+    ["/v1/places/ChIJa", "id,movedPlaceId", API_KEY],
+    ["/v1/places/ChIJa", "websiteUri", API_KEY],
+    ["/v1/places/ChIJa", "regularOpeningHours,websiteUri", API_KEY],
+  ]);
 });
 
 test("a place id is sent as one path segment", async () => {
@@ -266,72 +238,52 @@ test("a place id is sent as one path segment", async () => {
   expect(new URL(seen[0]?.url ?? "").pathname).toBe("/v1/places/a%2Fb");
 });
 
-function googleError(status: number, code: string, headers?: Record<string, string>) {
-  return () =>
-    HttpResponse.json(
-      { error: { code: status, message: "secret detail from the body", status: code } },
-      { status, ...(headers && { headers }) },
-    );
-}
-
 test("a 404 detail returns null; 429 → RateLimited; 5xx → ProviderUnavailable", async () => {
   capture(DETAILS_URL, googleError(404, "NOT_FOUND"));
   await expect(placeDetails("ChIJgone", "idsOnly", spend)).resolves.toBeNull();
 
   capture(SEARCH_URL, googleError(429, "RESOURCE_EXHAUSTED", { "Retry-After": "7" }));
-  const limited = searchText({ textQuery: "a", mask: "resolve" }, spend);
+  const limited = search();
   await expect(limited).rejects.toBeInstanceOf(RateLimitedError);
   await expect(limited).rejects.toMatchObject({ retryAfterMs: 7000 });
 
   capture(SEARCH_URL, googleError(503, "UNAVAILABLE"));
-  await expect(searchText({ textQuery: "a", mask: "resolve" }, spend)).rejects.toBeInstanceOf(
-    ProviderUnavailableError,
-  );
-
+  await expect(search()).rejects.toBeInstanceOf(ProviderUnavailableError);
   capture(DETAILS_URL, googleError(500, "INTERNAL"));
   await expect(placeDetails("ChIJa", "website", spend)).rejects.toBeInstanceOf(
     ProviderUnavailableError,
   );
+  capture(SEARCH_URL, () => HttpResponse.error());
+  await expect(search()).rejects.toBeInstanceOf(ProviderUnavailableError);
 });
 
 test("any other refusal is ProviderRejected with Google's status and none of the body", async () => {
   capture(SEARCH_URL, googleError(400, "INVALID_ARGUMENT"));
-  const rejected = searchText({ textQuery: "a", mask: "resolve" }, spend);
+  const rejected = search();
   await expect(rejected).rejects.toBeInstanceOf(ProviderRejectedError);
   await expect(rejected).rejects.toMatchObject({ providerCode: "INVALID_ARGUMENT" });
   await expect(rejected).rejects.not.toThrow(/secret detail/);
 
   capture(SEARCH_URL, () => new HttpResponse("<html>Forbidden</html>", { status: 403 }));
-  await expect(searchText({ textQuery: "a", mask: "resolve" }, spend)).rejects.toMatchObject({
-    providerCode: "http_403",
-  });
-});
+  await expect(search()).rejects.toMatchObject({ providerCode: "http_403" });
 
-test("a request lost in flight is ProviderUnavailable", async () => {
-  capture(SEARCH_URL, () => HttpResponse.error());
-  await expect(searchText({ textQuery: "a", mask: "resolve" }, spend)).rejects.toBeInstanceOf(
-    ProviderUnavailableError,
-  );
-});
-
-test("a success without the asked id is an error that leaves the body out", async () => {
   capture(SEARCH_URL, () => HttpResponse.json({ places: [{ displayName: { text: "Sin id" } }] }));
-  const failed = searchText({ textQuery: "a", mask: "resolve" }, spend);
-  await expect(failed).rejects.toThrow(/Places/);
-  await expect(failed).rejects.not.toThrow(/Sin id/);
+  const malformed = search();
+  await expect(malformed).rejects.toThrow(/Places/);
+  await expect(malformed).rejects.not.toThrow(/Sin id/);
 });
 
 test("each call settles the price of its SKU", async () => {
   capture(SEARCH_URL, () => HttpResponse.json({ places: [{ id: "ChIJa" }] }));
   capture(DETAILS_URL, () => HttpResponse.json({ id: "ChIJa" }));
 
-  await searchText({ textQuery: "a", mask: "resolve" }, spend);
-  expect(jobs.reserveSpend).toHaveBeenLastCalledWith({
+  await search();
+  expect(jobs.reserveSpend).toHaveBeenCalledWith({
     provider: "google_places",
     estimate: cost(32_000, "USD"),
     ...spend,
   });
-  expect(jobs.settleSpend).toHaveBeenLastCalledWith(
+  expect(jobs.settleSpend).toHaveBeenCalledWith(
     expect.objectContaining({ id: "res-1" }),
     cost(32_000, "USD"),
   );
@@ -346,26 +298,17 @@ test("each call settles the price of its SKU", async () => {
   for (const mask of ["website", "findings"] as const) {
     vi.clearAllMocks();
     await placeDetails("ChIJa", mask, spend);
+    const enterprise = cost(20_000, "USD");
     expect(jobs.reserveSpend).toHaveBeenCalledWith(
-      expect.objectContaining({ estimate: cost(20_000, "USD") }),
+      expect.objectContaining({ estimate: enterprise }),
     );
-    expect(jobs.settleSpend).toHaveBeenCalledWith(expect.anything(), cost(20_000, "USD"));
+    expect(jobs.settleSpend).toHaveBeenCalledWith(expect.anything(), enterprise);
   }
-});
-
-test("every call takes a Places slot and gives it back, even when it fails", async () => {
-  capture(SEARCH_URL, googleError(503, "UNAVAILABLE"));
-  await expect(searchText({ textQuery: "a", mask: "resolve" }, spend)).rejects.toThrow();
-  expect(jobs.acquireProviderSlot).toHaveBeenCalledWith(
-    "google_places",
-    expect.objectContaining({ maxInFlight: expect.any(Number) }),
-  );
-  expect(jobs.release).toHaveBeenCalledOnce();
 });
 
 test("a refused request gives the reservation back; one lost in flight keeps it", async () => {
   capture(SEARCH_URL, googleError(400, "INVALID_ARGUMENT"));
-  await expect(searchText({ textQuery: "a", mask: "resolve" }, spend)).rejects.toThrow();
+  await expect(search()).rejects.toThrow();
   expect(jobs.releaseSpend).toHaveBeenCalledOnce();
   expect(jobs.settleSpend).not.toHaveBeenCalled();
 
@@ -380,7 +323,7 @@ test("only outages count against the breaker", async () => {
   const outcomes = async (reply: () => Response) => {
     vi.clearAllMocks();
     capture(SEARCH_URL, reply);
-    await searchText({ textQuery: "a", mask: "resolve" }, spend).catch(() => {});
+    await search().catch(() => {});
     return jobs.breakerRecord.mock.calls.map(([, outcome]) => outcome);
   };
   expect(await outcomes(() => HttpResponse.json({}))).toEqual(["success"]);
@@ -390,10 +333,19 @@ test("only outages count against the breaker", async () => {
   expect(await outcomes(() => HttpResponse.error())).toEqual(["failure"]);
 });
 
-test("a spend denial stops the call before it reaches Google", async () => {
+test("the slot is taken for every call and given back when it fails", async () => {
+  capture(SEARCH_URL, googleError(503, "UNAVAILABLE"));
+  await expect(search()).rejects.toThrow();
+  expect(jobs.acquireProviderSlot).toHaveBeenCalledWith(
+    "google_places",
+    expect.objectContaining({ maxInFlight: expect.any(Number) }),
+  );
+  expect(jobs.release).toHaveBeenCalledOnce();
+
+  vi.clearAllMocks();
   const seen = capture(SEARCH_URL);
   jobs.reserveSpend.mockRejectedValueOnce(new Error("cap"));
-  await expect(searchText({ textQuery: "a", mask: "resolve" }, spend)).rejects.toThrow("cap");
+  await expect(search()).rejects.toThrow("cap");
   expect(seen).toHaveLength(0);
   expect(jobs.release).toHaveBeenCalledOnce();
 });
