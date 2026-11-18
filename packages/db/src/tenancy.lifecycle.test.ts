@@ -19,6 +19,7 @@ class FakePool {
   // What the server would report after the last statement; a test can pin it.
   status: "I" | "T" | "E" = "I";
   stuckInTransaction = false;
+  readonly errorListeners = new Set<unknown>();
   private inFlight = 0;
   private readonly script: Script;
   constructor(script: Script) {
@@ -40,6 +41,12 @@ class FakePool {
         });
       },
       getTransactionStatus: () => this.status,
+      on: (event: string, listener: unknown) => {
+        if (event === "error") this.errorListeners.add(listener);
+      },
+      removeListener: (event: string, listener: unknown) => {
+        if (event === "error") this.errorListeners.delete(listener);
+      },
       release: (error?: unknown) => {
         if (done) throw new Error("released twice");
         done = true;
@@ -229,6 +236,47 @@ test("the handle closes as soon as a lone statement's COMMIT is written", async 
     expect.objectContaining({ code: "internal" }),
   );
   expect(kinds(pool)).toEqual(["begin", "select", "select", "commit"]);
+});
+
+test("a statement queued on the microtask queue cannot slip in ahead of a lone query's COMMIT", async () => {
+  const pool = use(() => undefined);
+  let late: unknown;
+  const keep = (e: unknown) => {
+    late = e;
+  };
+  await withTenant(A, (tx) => {
+    void Promise.resolve()
+      .then(() => tx.execute(sql`insert into app.t values (1)`).then(undefined, keep))
+      .catch(keep);
+    return tx.execute(sql`select 1`);
+  });
+  expect(late).toMatchObject({ code: "internal" });
+  expect(kinds(pool)).toEqual(["begin", "select", "select", "commit"]);
+});
+
+test("a lone query that writes nothing synchronously gets COMMIT only after it settles", async () => {
+  const pool = use(() => undefined);
+  await withTenant(A, (tx) => {
+    const lazy = tx.execute(sql`select 1`);
+    const then = lazy.then.bind(lazy);
+    // Stands in for a driver that defers the write past the call to then().
+    vi.spyOn(lazy, "then").mockImplementation(((onFulfilled, onRejected) =>
+      Promise.resolve().then(() => then(onFulfilled, onRejected))) as typeof lazy.then);
+    return lazy;
+  });
+  expect(kinds(pool)).toEqual(["begin", "select", "select", "commit"]);
+  expect(pool.roundTrips).toBe(2);
+});
+
+test("the client listens for connection errors only while it is checked out", async () => {
+  const pool = use(() => undefined);
+  let during = 0;
+  await withTenant(A, async (tx) => {
+    during = pool.errorListeners.size;
+    await tx.execute(sql`select 1`);
+  });
+  expect(during).toBe(1);
+  expect(pool.errorListeners.size).toBe(0);
 });
 
 test("isolation and access mode reach BEGIN, and an unknown isolation never does", async () => {

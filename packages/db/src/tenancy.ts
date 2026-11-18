@@ -87,12 +87,12 @@ function closedHandle(): AppError {
 }
 
 // Once the callback settles the connection belongs to the pool again, so a handle or a lazy
-// query kept by the caller must never reach it. `sent` runs right after a statement is written.
-function guard(client: PoolClient, isOpen: () => boolean, sent: () => void): PoolClient {
+// query kept by the caller must never reach it. `onWrite` runs right after a statement is written.
+function guard(client: PoolClient, isOpen: () => boolean, onWrite: () => void): PoolClient {
   const query = (...args: Parameters<PoolClient["query"]>) => {
     if (!isOpen()) return Promise.reject(closedHandle());
     const result = (client.query as (...a: unknown[]) => unknown)(...args);
-    sent();
+    onWrite();
     return result;
   };
   return { query } as unknown as PoolClient;
@@ -130,9 +130,12 @@ async function run<T, K extends "tenant" | "system">(
   } catch (error) {
     throw toDbError(error, ctx);
   }
+  // pg-pool listens for errors only on idle clients, and an 'error' event nobody listens to
+  // crashes the process. A connection lost mid-transaction already fails its statements.
+  client.on("error", ignoreError);
   let open = true;
   const isOpen = () => open;
-  let afterStatement: (() => void) | undefined;
+  let written = 0;
   const send = (text: string, values?: unknown[]): Promise<Outcome> =>
     client.query(text, values).then(
       () => undefined,
@@ -140,9 +143,7 @@ async function run<T, K extends "tenant" | "system">(
     );
   const session = new NodePgSession(
     guard(client, isOpen, () => {
-      const next = afterStatement;
-      afterStatement = undefined;
-      next?.();
+      written++;
     }),
     dialect,
     undefined,
@@ -158,15 +159,21 @@ async function run<T, K extends "tenant" | "system">(
   let result: { value: T } | { error: unknown };
   try {
     const pending = fn(tx);
-    // A query returned unawaited has not run yet and is exactly one statement, so nothing of the
-    // callback can follow COMMIT. Selects get QueryPromise as a mixin, outside their class chain.
+    let settled: PromiseLike<T> = pending;
+    // A query returned unawaited has not run yet. Starting it here leaves no gap in which other
+    // code of the callback could write first, so exactly one statement written now is that query
+    // alone and COMMIT can follow it. Selects get QueryPromise as a mixin, outside their class chain.
     if (is(pending, QueryPromise) || is(pending, PgSelectBase)) {
-      afterStatement = () => {
+      const before = written;
+      settled = new Promise<T>((resolve, reject) => {
+        pending.then(resolve, reject);
+      });
+      if (written === before + 1) {
         ended = send("commit");
         open = false;
-      };
+      }
     }
-    result = { value: await pending };
+    result = { value: await settled };
   } catch (error) {
     result = { error };
   }
@@ -187,10 +194,13 @@ async function run<T, K extends "tenant" | "system">(
   } finally {
     open = false;
     if (client.getTransactionStatus() !== "I") discard = true;
+    client.removeListener("error", ignoreError);
     // A truthy value makes pg-pool destroy the client instead of reusing it.
     client.release(discard === undefined ? undefined : toReleaseError(discard));
   }
 }
+
+function ignoreError(): void {}
 
 function toReleaseError(discard: unknown): Error | true {
   const error = (discard as { error?: unknown }).error;
