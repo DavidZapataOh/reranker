@@ -102,7 +102,11 @@
         "POSTHOG_FEATURE_FLAGS_KEY",
         "POSTHOG_PROJECT_TOKEN",
         "POSTHOG_QUERY_READ_KEY",
-        "GITHUB_BILLING_READ_TOKEN"
+        "GITHUB_BILLING_READ_TOKEN",
+        "R2_ACCESS_KEY_ID_CI",
+        "R2_SECRET_ACCESS_KEY_CI",
+        "CLOUDFLARE_ACCOUNT_ID",
+        "CLOUDFLARE_API_TOKEN"
       ]
     },
     "dev": { "cache": false, "persistent": true }

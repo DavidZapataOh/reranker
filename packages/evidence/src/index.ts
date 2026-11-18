@@ -1,5 +1,21 @@
 import "server-only";
 
+export {
+  type ArtifactKind,
+  artifactUrl,
+  deleteArtifact,
+  getArtifact,
+  getLogObject,
+  PRIVATE_ARTIFACT_KINDS,
+  putArtifact,
+  putLogObject,
+} from "./artifacts";
 export { signEnvelope } from "./dsse";
-export { SigningKeyMismatchError, SigningUnavailableError, StatementTooLargeError } from "./errors";
+export { evidenceEnv } from "./env";
+export {
+  EvidenceStorageUnavailableError,
+  SigningKeyMismatchError,
+  SigningUnavailableError,
+  StatementTooLargeError,
+} from "./errors";
 export { kmsSigner, loadSigner, type Signer } from "./signer";

@@ -2,11 +2,12 @@ import { expect, test } from "vitest";
 import { fragments as webFragments } from "../../../apps/web/src/env";
 import { authEnv } from "../../auth/src/env";
 import { dbEnv } from "../../db/src/env";
+import { evidenceEnv } from "../../evidence/src/env";
 import { extractionEnv } from "../../extraction/src/env";
 import { inCatalog } from "../src/catalog";
 
 // A variable added to a fragment must be declared in the catalog in the same change.
-const declared = [...webFragments, dbEnv, authEnv, extractionEnv].flatMap((fragment) =>
+const declared = [...webFragments, dbEnv, authEnv, extractionEnv, evidenceEnv].flatMap((fragment) =>
   Object.keys(fragment.shape),
 );
 

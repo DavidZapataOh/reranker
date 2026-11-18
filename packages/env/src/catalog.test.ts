@@ -57,6 +57,15 @@ test("catalog names are unique", () => {
   expect(new Set(names).size).toBe(names.length);
 });
 
+test("the catalog holds no signing-key secret and the audit flags one if it appears", () => {
+  const keyMaterial = (name: string) =>
+    /SIGNING_KEY|PRIVATE_KEY/.test(name) || name.endsWith("_SK");
+  expect(catalog.filter((e) => keyMaterial(e.name))).toEqual([]);
+  expect(auditSecrets(["EVIDENCE_CAPTURE_SIGNING_KEY"], catalog).unexpected).toContain(
+    "EVIDENCE_CAPTURE_SIGNING_KEY",
+  );
+});
+
 test("wildcard families cover their members and nothing else", () => {
   expect(inCatalog("SPEND_CAP_DAILY_OPENAI_USD")).toBe(true);
   expect(inCatalog("FREE_REPORT_VELOCITY_WINDOW_MS")).toBe(true);
