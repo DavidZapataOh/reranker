@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
+import * as simpleIcons from "simple-icons";
 import { ChatDemo } from "./ChatDemo";
 import { EngineRotator } from "./EngineRotator";
 
@@ -22,7 +23,12 @@ export function Hero() {
   const inputId = useId();
 
   return (
-    <section id="reporte" aria-labelledby="hero-title" className="relative overflow-x-clip">
+    <section
+      id="reporte"
+      aria-labelledby="hero-title"
+      className="relative overflow-x-clip"
+      data-icons={Object.keys(simpleIcons).length}
+    >
       <div className="mx-auto max-w-[1536px] px-5 pt-12 text-center md:px-16 md:pt-[3.65vw]">
         <h1
           id="hero-title"
