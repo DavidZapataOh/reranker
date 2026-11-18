@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import type { EngineAnswer } from "@reranker/capture";
 import { endPools, withSystem } from "@reranker/db";
 import { putArtifact } from "@reranker/evidence";
+import { costOf } from "@reranker/jobs";
 import { server } from "@reranker/testing/msw";
 import { sql } from "drizzle-orm";
 import { HttpResponse, http } from "msw";
@@ -33,6 +34,11 @@ const fixture = (path: string) =>
   JSON.parse(readFileSync(new URL(`./fixtures/${path}.json`, import.meta.url), "utf8"));
 
 let llmCalls = 0;
+const agreed = {
+  openai: (): unknown => fixture("openai/completed"),
+  gemini: (): unknown => fixture("gemini/completed"),
+};
+const replies = { ...agreed };
 beforeAll(() => {
   process.env.APP_ENV ??= "development";
   vi.stubEnv("OPENAI_API_KEY", "sk-int-openai");
@@ -42,16 +48,17 @@ beforeAll(() => {
   server.use(
     http.post(OPENAI_URL, () => {
       llmCalls += 1;
-      return HttpResponse.json(fixture("openai/completed"));
+      return HttpResponse.json(replies.openai() as Record<string, unknown>);
     }),
     http.post(GEMINI_URL, () => {
       llmCalls += 1;
-      return HttpResponse.json(fixture("gemini/completed"));
+      return HttpResponse.json(replies.gemini() as Record<string, unknown>);
     }),
   );
 });
 afterEach(() => {
   llmCalls = 0;
+  Object.assign(replies, agreed);
 });
 afterAll(async () => {
   server.close();
@@ -128,4 +135,33 @@ test("raw outputs go to the private extractions kind and only their digest to Po
   expect(vi.mocked(putArtifact)).toHaveBeenCalledWith("extractions", stored, {
     contentType: "application/json",
   });
+});
+
+const withoutUsage = (body: Record<string, unknown>) => {
+  const { usage: _, ...rest } = body;
+  return rest;
+};
+
+test.each([
+  ["both extractors answer", () => {}],
+  [
+    "the secondary falls back after a billed incomplete answer",
+    () => {
+      replies.gemini = () => fixture("gemini/incomplete");
+    },
+  ],
+  [
+    "the primary refuses without usage",
+    () => {
+      replies.openai = () => withoutUsage(fixture("openai/refusal"));
+    },
+  ],
+])("the cost equals what the spend ledger settled when %s", async (_, arrange) => {
+  arrange();
+  const refId = randomUUID();
+  const r = await extractResponse(await seededCapture(), {
+    spend: { purpose: "contract-test", refType: "extraction-int", refId },
+  });
+  expect(r.cost.amount_micros).toBeGreaterThan(0);
+  expect(r.cost).toEqual(await costOf("extraction-int", refId));
 });

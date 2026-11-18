@@ -140,16 +140,37 @@ export async function paidCall<T>(
   opts: PaidCallOptions,
 ): Promise<PaidResult<T>> {
   const startedAt = Date.now();
-  let spent: ProviderCost | null = null;
+  let spent = cost(0, "USD");
   for (let tried = 0; ; tried++) {
-    const outcome = await attempt(caller, call, opts);
-    spent = spent ? addCost(spent, outcome.cost) : outcome.cost;
+    let outcome: Awaited<ReturnType<typeof attempt<T>>>;
+    try {
+      outcome = await attempt(caller, call, opts);
+    } catch (error) {
+      // Admission or the reservation failed; earlier attempts may still have been charged.
+      throw withSettledCost(error, spent);
+    }
+    spent = addCost(spent, outcome.cost);
     if (outcome.result) {
       return { ...outcome.result, cost: spent, latencyMs: Date.now() - startedAt };
     }
     if (!(outcome.error instanceof ProviderUnavailableError) || tried >= opts.retries) {
-      throw outcome.error;
+      throw withSettledCost(outcome.error, spent);
     }
     await sleep(RETRY_BACKOFF_MS.min + Math.random() * RETRY_BACKOFF_MS.jitter);
   }
+}
+
+const settledCosts = new WeakMap<object, ProviderCost>();
+
+function withSettledCost(error: unknown, spent: ProviderCost): unknown {
+  if (typeof error === "object" && error !== null) settledCosts.set(error, spent);
+  return error;
+}
+
+/**
+ * What `paidCall` settled before it threw `error`, so a caller's cost matches the spend ledger;
+ * zero for an error that did not come out of `paidCall`.
+ */
+export function settledCostOf(error: unknown): ProviderCost {
+  return (typeof error === "object" && error !== null && settledCosts.get(error)) || cost(0, "USD");
 }

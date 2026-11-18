@@ -40,6 +40,7 @@ export {
   type PaidCallOptions,
   type PaidResult,
   paidCall,
+  settledCostOf,
 } from "./providers/call";
 export { callGemini } from "./providers/gemini";
 export { callOpenAI } from "./providers/openai";

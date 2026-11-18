@@ -185,7 +185,10 @@ test("secondary timeout falls back to single within 7 s", async () => {
   doubles.gemini.mockImplementation(() => new Promise(() => {}));
   const p = extractResponse(capture({}), ctx);
   await vi.advanceTimersByTimeAsync(7000);
-  await expect(p).resolves.toMatchObject({ agreement: "single", models: { secondary: null } });
+  const r = await p;
+  expect(r).toMatchObject({ agreement: "single", models: { secondary: null } });
+  // The timed-out secondary settled its reservation, so the cost carries it.
+  expect(r.cost.amount_micros).toBe(costOfUsage("gpt-6-luna", usage(300)).amount_micros + 50_000);
 });
 
 test("extraction-secondary off runs the primary only", async () => {

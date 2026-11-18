@@ -4,6 +4,7 @@ import { isEnabled } from "@reranker/flags";
 import { ProviderUnavailableError, RateLimitedError, type SpendContext } from "@reranker/jobs";
 import {
   AppError,
+  addCost,
   type CaptureChannel,
   cost,
   type EngineId,
@@ -21,10 +22,9 @@ import { configHashOf, currentExtractorConfig, type ExtractorConfig, jcs } from 
 import { type DisputeSet, mergeExtractions } from "./merge";
 import { jaroWinkler, nameHmac, normalizeName, tokenContainment } from "./normalize";
 import { platformFor, tagPlatforms } from "./platforms";
-import { costOfUsage } from "./prices";
 import { EXTRACT_PROMPT_V1 } from "./prompts/extract.v1";
 import { JUDGE_PROMPT_V1 } from "./prompts/judge.v1";
-import { callerFor, type PaidResult, paidCall } from "./providers/call";
+import { callerFor, type PaidResult, paidCall, settledCostOf } from "./providers/call";
 import { type ModelRef, ProviderIncompleteError, ProviderRefusalError } from "./providers/types";
 import { locateQuote, toExtractedMentions } from "./quote";
 import { JudgeSchema, type MentionsOutput, MentionsSchema } from "./schema";
@@ -148,12 +148,6 @@ function recallHintsOf(answer: EngineAnswer, found: ExtractedMention[], nameJw: 
   return hints;
 }
 
-// paidCall settled a refusal from its usage; one without usage settled the reservation, which
-// only the spend ledger records.
-function refusalCost(model: ModelRef, refusal: ProviderRefusalError | null): ProviderCost {
-  return refusal?.usage ? costOfUsage(model.model, refusal.usage) : cost(0, "USD");
-}
-
 function judgeMessage(markdown: string, disputed: DisputeSet): string {
   return `Respuesta:\n"""\n${markdown}\n"""\n\nDesacuerdo:\n${JSON.stringify(disputed)}`;
 }
@@ -233,10 +227,13 @@ export async function extractResponse(
   else throw primarySettled.reason;
 
   let secondaryResult: PaidResult<MentionsOutput> | null = null;
+  let secondaryFailure: unknown = null;
   if (secondarySettled.status === "fulfilled") secondaryResult = secondarySettled.value;
-  else if (!SECONDARY_FALLBACK.some((type) => secondarySettled.reason instanceof type)) {
-    throw secondarySettled.reason;
-  }
+  else if (SECONDARY_FALLBACK.some((type) => secondarySettled.reason instanceof type)) {
+    secondaryFailure = secondarySettled.reason;
+  } else throw secondarySettled.reason;
+  // Calls that failed but were billed still count, so the cost matches the spend ledger.
+  const failedCost = addCost(settledCostOf(refusal), settledCostOf(secondaryFailure));
 
   const calls: PaidResult<MentionsOutput>[] = [];
   if (primaryResult) calls.push(primaryResult);
@@ -305,10 +302,7 @@ export async function extractResponse(
     agreement: merged?.agreement ?? "single",
     disputedCount: merged?.disputedCount ?? 0,
     mentions,
-    cost: sumCosts(
-      [...calls.map((c) => c.cost), refusalCost(config.models.primary, refusal)],
-      "USD",
-    ),
+    cost: sumCosts([...calls.map((c) => c.cost), failedCost], "USD"),
     latencyMs: Date.now() - startedAt,
   };
 
