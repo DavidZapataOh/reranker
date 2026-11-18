@@ -78,6 +78,32 @@ test("opsTable adds no column: a composite primaryKey and no id, tenant_id or po
   expect(ops).not.toMatch(/"id"|tenant_id|POLICY|ROW LEVEL SECURITY/);
 });
 
+test("extraction tables: enums in public_panel, natural keys for mentions and places", () => {
+  for (const name of [
+    "answer_kind",
+    "agreement",
+    "entity_kind",
+    "stance",
+    "sentiment",
+    "resolution_status",
+    "resolution_method",
+    "places_outcome",
+  ]) {
+    expect(sql).toContain(`CREATE TYPE "public_panel"."${name}" AS ENUM(`);
+  }
+  expect(statementsFor("extractions")).toContain(
+    'CONSTRAINT "extractions_capture_id_config_hash_key" UNIQUE("capture_id","config_hash")',
+  );
+  expect(statementsFor("mentions")).toContain('PRIMARY KEY("extraction_id","start_offset")');
+  expect(statementsFor("places")).toContain(
+    'PRIMARY KEY("name_hmac","geo_key","category_key","config_hash")',
+  );
+  expect(sql).toMatch(
+    /FOREIGN KEY \("extraction_id"\) REFERENCES "public_panel"\."extractions"\("id"\) ON DELETE cascade/,
+  );
+  expect(`${statementsFor("mentions")}\n${statementsFor("places")}`).not.toContain('"id" uuid');
+});
+
 test('no CREATE ROLE and no CREATE SCHEMA "auth" duplicated in the generated SQL', () => {
   expect(sql).not.toContain("CREATE ROLE");
   expect(sql.match(/CREATE SCHEMA "auth"/g)).toHaveLength(1);

@@ -7,4 +7,5 @@ export * from "./auth";
 export * from "./capture";
 export * from "./catalog";
 export * from "./evidence";
+export * from "./extraction";
 export * from "./ops";
