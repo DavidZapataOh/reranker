@@ -166,16 +166,19 @@ describe("integrate", () => {
   });
 
   test("an integration that finds the log locked is busy and assigns nothing", async () => {
-    await drain();
     const ids = await seedCaptures(3);
     const release = await holdLogLock();
     try {
+      // Only the call under the lock counts: earlier calls sign what other suites left pending.
+      const before = await latestBatch();
+      sign.mockClear();
       expect(await integrate(ORIGIN)).toEqual({ status: "busy" });
+      expect(sign).not.toHaveBeenCalled();
       expect(await indexesOf(ids)).toEqual([null, null, null]);
+      expect(await latestBatch()).toEqual(before);
     } finally {
       await release();
     }
-    expect(sign).not.toHaveBeenCalled();
   });
 
   test("pending entries are appended in envelope_sha256 order", async () => {
