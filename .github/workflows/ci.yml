@@ -143,7 +143,7 @@ jobs:
         # Turbo lists packages without the script as <NONEXISTENT> and adds ^typecheck dependencies.
         # It also ignores the files below, which decide how the integration tests run, so they force a full run.
         run: |
-          if [ -n "$BASE" ] && [ -n "$(git diff --name-only "$BASE" HEAD -- .github/actions/neon-ci-branch .github/actions/ci-database .github/workflows/ci.yml package.json pnpm-workspace.yaml pnpm-lock.yaml vitest.config.ts)" ]; then
+          if [ -n "$BASE" ] && [ -n "$(git diff --name-only "$BASE" HEAD -- .github/actions/neon-ci-branch .github/actions/ci-database package.json pnpm-workspace.yaml pnpm-lock.yaml vitest.config.ts)" ]; then
             echo "Integration infrastructure changed, running every integration test"
             FILTER=""
           fi

@@ -38,7 +38,7 @@ jobs:
           TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha }}
         run: |
           web=$(pnpm exec turbo ls --affected --filter=web --output=json | jq '.packages.count')
-          files=$(git diff --name-only "$BASE" HEAD -- pnpm-lock.yaml .github/workflows/preview.yml .github/workflows/quality.yml .github/actions/ci-database)
+          files=$(git diff --name-only "$BASE" HEAD -- pnpm-lock.yaml .github/workflows/quality.yml .github/actions/ci-database)
           if [ "$web" != 0 ] || [ -n "$files" ]; then
             echo "affected=true" >> "$GITHUB_OUTPUT"
           else
