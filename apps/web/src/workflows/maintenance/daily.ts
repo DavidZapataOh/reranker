@@ -18,6 +18,7 @@ import { toStepError } from "@reranker/jobs/step-errors";
 import { log, sendOpsAlert } from "@reranker/telemetry";
 import { opsDigest } from "../ops/daily-digest";
 import { launchGate } from "../ops/launch-gate";
+import { vercelBilling } from "../ops/vercel-billing";
 
 export type DailyRunSummary = { failed: string[] };
 
@@ -145,8 +146,8 @@ async function checkScaleTriggersStep(date: string): Promise<void> {
  * this list, with `run` a step function of its own module (`"use step"`, wrapping its package
  * function and rethrowing `toStepError(error)`): `otsUpgrade`, `controlCanary`,
  * `prewarmIntentSets`, `qualityCanary`, `drainDeferredFreeReports`, `enqueueDueRemeasures` and
- * `leadRetentionSweep` after `checkScaleTriggers`; `launchGate` and `opsDigest` last, so the digest reports on everything
- * above.
+ * `leadRetentionSweep` after `checkScaleTriggers`; `vercelBilling`, `launchGate` and `opsDigest`
+ * last, so the digest reports on everything above.
  */
 export const DAILY_STEPS: readonly DailyStep[] = [
   { name: "cleanupLeases", run: cleanupLeasesStep },
@@ -156,6 +157,7 @@ export const DAILY_STEPS: readonly DailyStep[] = [
   { name: "reconcileSpend", run: reconcileSpendStep },
   { name: "checkWorkflowBudget", run: checkWorkflowBudgetStep },
   { name: "checkScaleTriggers", run: checkScaleTriggersStep },
+  vercelBilling,
   launchGate,
   opsDigest,
 ];

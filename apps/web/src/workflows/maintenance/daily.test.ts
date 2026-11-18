@@ -207,3 +207,9 @@ test("a step that succeeds reports nothing", async () => {
 test("the ops digest runs last, so it reports on every step before it", () => {
   expect(DAILY_STEPS.at(-1)?.name).toBe("opsDigest");
 });
+
+test("the Vercel billing check runs right before the launch gate", () => {
+  const names = DAILY_STEPS.map((s) => s.name);
+  expect(names.indexOf("vercelBilling")).toBeGreaterThan(-1);
+  expect(names.indexOf("launchGate")).toBe(names.indexOf("vercelBilling") + 1);
+});

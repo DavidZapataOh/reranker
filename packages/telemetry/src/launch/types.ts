@@ -4,6 +4,7 @@ export type CheckStatus = "pass" | "fail" | "unknown";
 export type CheckResult = { id: LaunchCheckId; status: CheckStatus; reason: string };
 
 export const LAUNCH_CHECK_IDS = [
+  "vercel-billing",
   "neon-production",
   "resend-plan",
   "resend-sending-key",
@@ -19,12 +20,12 @@ export const LAUNCH_CHECK_IDS = [
 export type LaunchCheckId = (typeof LAUNCH_CHECK_IDS)[number];
 
 /**
- * The checks each gated flag needs before it goes on in production: Neon and Resend serve both
- * flags, everything else only the free report.
+ * The checks each gated flag needs before it goes on in production: Vercel, Neon and Resend serve
+ * both flags, everything else only the free report.
  */
 export const LAUNCH_GATES = {
   "free-report-live": LAUNCH_CHECK_IDS,
-  accounts: ["neon-production", "resend-plan"],
+  accounts: ["vercel-billing", "neon-production", "resend-plan"],
 } as const satisfies Record<string, readonly LaunchCheckId[]>;
 
 export type GatedFlag = keyof typeof LAUNCH_GATES;

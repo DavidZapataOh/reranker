@@ -12,6 +12,7 @@ const TEST_EMAIL_QUOTA = {
 const PURGE_TEST = "src/purge.int.test.ts";
 const EXPIRY_TEST = "src/email-otp.int.test.ts";
 const TELEMETRY_TEST = "src/telemetry.int.test.ts";
+const HOUSE_TEST = "src/house.int.test.ts";
 
 const integration = {
   pool: "forks" as const,
@@ -47,7 +48,7 @@ export default defineConfig({
           ...integration,
           name: "integration",
           include: ["src/**/*.int.test.ts"],
-          exclude: [PURGE_TEST, EXPIRY_TEST, TELEMETRY_TEST],
+          exclude: [PURGE_TEST, EXPIRY_TEST, TELEMETRY_TEST, HOUSE_TEST],
         },
       },
       // Better Auth deletes every expired verification and idle rate-limit row on the requests it
@@ -75,6 +76,16 @@ export default defineConfig({
           name: "integration-telemetry",
           include: [TELEMETRY_TEST],
           sequence: { groupOrder: 3 },
+        },
+      },
+      // Only one house may exist per database. This file commits one and hides any house already
+      // there, while other files insert one in a transaction they roll back, so it runs alone.
+      {
+        test: {
+          ...integration,
+          name: "integration-house",
+          include: [HOUSE_TEST],
+          sequence: { groupOrder: 4 },
         },
       },
       {

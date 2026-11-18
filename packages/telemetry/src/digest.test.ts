@@ -179,6 +179,29 @@ describe("buildDailyDigest", () => {
       expect(alerts).toEqual([]);
     });
 
+    test("Vercel billing that cannot be verified, or is failing, is listed first", () => {
+      const unverified = allPass.map((c) =>
+        c.id === "vercel-billing"
+          ? { ...c, status: "unknown" as const, reason: "falta VERCEL_BILLING_READ_TOKEN" }
+          : c,
+      );
+      const { text } = buildDailyDigest({
+        ...fullInput,
+        stages: { ...stages, checks: unverified },
+      });
+      const section = text.slice(text.indexOf("Escalones pendientes"));
+      expect(section.split("\n")[1]).toMatch(
+        /^- Vercel Pro activo y al día.*sin verificar: falta VERCEL_BILLING_READ_TOKEN$/,
+      );
+      const blocked = allPass.map((c) =>
+        c.id === "vercel-billing"
+          ? { ...c, status: "fail" as const, reason: "reranker.co responde 402" }
+          : c,
+      );
+      const failing = buildDailyDigest({ ...fullInput, stages: { ...stages, checks: blocked } });
+      expect(failing.text).toMatch(/Vercel Pro activo y al día.*falta: reranker.co responde 402/);
+    });
+
     test("a gated flag on in production marks its pending stages as triggered", () => {
       const checks = allPass.map((c) =>
         c.id === "traces" ? { ...c, status: "fail" as const, reason: "sin trazas" } : c,

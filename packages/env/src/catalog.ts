@@ -62,6 +62,7 @@ const rows: Row[] = [
   ["BETTERSTACK_API_TOKEN", "secret", PROD, false, "launch"],
   ["POSTHOG_LAUNCH_READ_KEY", "secret", PROD, false, "launch"],
   ["GITHUB_REPO_READ_TOKEN", "secret", PROD, false, "launch"],
+  ["VERCEL_BILLING_READ_TOKEN", "secret", PROD, false, "launch"],
   // Previews receive both URLs per deployment, for their own Neon branch, from the preview workflow.
   ["DATABASE_URL", "secret", PROD, false, "03", true],
   ["DATABASE_URL_SYSTEM", "secret", PROD, false, "03", true],

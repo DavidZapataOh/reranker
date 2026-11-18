@@ -24,6 +24,7 @@ vercel logs <production deployment url>
 ```
 
 - `503` with `{"status":"env_invalid"}`: a required variable is missing or malformed. The deployment logs name it; the response never does. Check `vercel env ls production` and the last change to it.
+- `402` on every URL: Vercel disabled the team (`DEPLOYMENT_DISABLED`), usually for an unpaid invoice. Follow [vercel-billing.md](vercel-billing.md); no rollback or redeploy helps until the bill is paid.
 - `200` from curl but Better Stack still red: a regional or DNS problem. Check Vercel's status page and the monitor's regions in Better Stack.
 - Timeout or `5xx`: look at the latest deployment and its logs for a crash; compare `version` in a healthy response with the commit last promoted.
 - Everything fails right after a deploy: that deployment is the cause.

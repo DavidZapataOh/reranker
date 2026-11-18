@@ -58,6 +58,10 @@ export const launchEnv = z.object({
     z.string().min(1).optional(),
     "GitHub token that reads the repository's visibility and owner",
   ),
+  VERCEL_BILLING_READ_TOKEN: secret(
+    z.string().min(1).optional(),
+    "Vercel token scoped to the team that reads its plan and block status",
+  ),
 });
 
 // Credentials the daily digest reads usage with. Each one is optional: a source without its

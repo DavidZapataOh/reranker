@@ -6,6 +6,7 @@ import { checkNeonProduction } from "./neon";
 import { checkPostHogBilling, checkPostHogProjects } from "./posthog";
 import { checkResend } from "./resend";
 import { type CheckResult, LAUNCH_CHECK_IDS, type LaunchCheckId, type LaunchInputs } from "./types";
+import { checkVercelBilling } from "./vercel";
 
 export { checkBetterStackReady, checkBetterStackRouting } from "./betterstack";
 export { checkSmokeCron, checkTraces, repositoryInputs, tracerRegistered } from "./deployment";
@@ -25,6 +26,7 @@ export {
   type LaunchCheckId,
   type LaunchInputs,
 } from "./types";
+export { checkVercelBilling } from "./vercel";
 
 async function within(
   id: LaunchCheckId,
@@ -39,7 +41,8 @@ async function within(
  * provider that does not answer is `unknown` instead of holding the rest. Never rejects.
  */
 export async function runLaunchCheck(inputs: LaunchInputs): Promise<CheckResult[]> {
-  const [resend, neon, ready, routing, billing, projects, github] = await Promise.all([
+  const [vercel, resend, neon, ready, routing, billing, projects, github] = await Promise.all([
+    within("vercel-billing", checkVercelBilling),
     fetchWithin(() => checkResend(inputs.resendDailyQuota)),
     within("neon-production", checkNeonProduction),
     within("betterstack-ready", checkBetterStackReady),
@@ -55,6 +58,7 @@ export async function runLaunchCheck(inputs: LaunchInputs): Promise<CheckResult[
       );
   const byId = new Map(
     [
+      vercel,
       neon,
       plan,
       key,
