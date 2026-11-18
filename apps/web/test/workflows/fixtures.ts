@@ -9,7 +9,7 @@ import { toStepError } from "@reranker/jobs/step-errors";
 import { FatalError, getStepMetadata } from "workflow";
 import { type DailyRunSummary, runDailySteps } from "@/workflows/maintenance/daily";
 import { recordingJob } from "./jobs";
-import { entriesOf, record } from "./ledger";
+import { entriesOf, monotonicNow, record } from "./ledger";
 
 const ITEMS = Array.from({ length: 12 }, (_, i) => String(i));
 const FLAKY_ITEM = "7";
@@ -65,7 +65,7 @@ async function failOnce(runKey: string, mode: "rate" | "cap"): Promise<{ gapMs: 
     );
   }
   const [first] = await entriesOf(runKey, "attempt");
-  return { gapMs: Date.now() - (first?.at ?? Date.now()) };
+  return { gapMs: monotonicNow() - (first?.monotonicAt ?? monotonicNow()) };
 }
 
 /** Enqueues from inside a run, as domain workflows do, where only the process-wide starter exists. */

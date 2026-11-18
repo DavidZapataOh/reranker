@@ -6,13 +6,25 @@ import { join } from "node:path";
 // fixtures and the assertions can see without any shared infrastructure.
 const DIR = join(tmpdir(), "reranker-workflow-tests");
 
-type Entry = { event: string; item?: string; attempt?: number; at: number };
+/**
+ * Each entry carries both clocks. Schedules are wall-clock instants, so "not before" is checked
+ * on `at`. The wall clock can be stepped mid-run (NTP, a VM resyncing its clock), which reads as
+ * seconds of delay that never happened, so "how late" is checked on `monotonicAt`.
+ */
+type Entry = { event: string; item?: string; attempt?: number; at: number; monotonicAt: number };
 
 const fileOf = (runKey: string) => join(DIR, `${runKey}.jsonl`);
 
-export async function record(runKey: string, entry: Omit<Entry, "at">): Promise<void> {
+/** Epoch milliseconds from the monotonic clock, comparable across this process's threads. */
+export const monotonicNow = () => performance.timeOrigin + performance.now();
+
+export async function record(
+  runKey: string,
+  entry: Omit<Entry, "at" | "monotonicAt">,
+): Promise<void> {
   await mkdir(DIR, { recursive: true });
-  await appendFile(fileOf(runKey), `${JSON.stringify({ ...entry, at: Date.now() })}\n`);
+  const line = { ...entry, at: Date.now(), monotonicAt: monotonicNow() };
+  await appendFile(fileOf(runKey), `${JSON.stringify(line)}\n`);
 }
 
 export async function entriesOf(runKey: string, event?: string): Promise<Entry[]> {
