@@ -59,7 +59,9 @@ describe("generated location data", () => {
     for (const code of codes) {
       const places = expandGeoFile(read<GeoFile>(geoFile(code)));
       expect(new Set(places.map((place) => place.key)).size).toBe(places.length);
-      for (const place of places) expect(place.key).toMatch(/^[a-z]{2}-[rc][0-9a-z]+$/);
+      // One assertion per country: an expect per place (~100k) alone outlasts the test timeout on CI.
+      const malformed = places.filter((place) => !/^[a-z]{2}-[rc][0-9a-z]+$/.test(place.key));
+      expect(malformed.map((place) => place.key)).toEqual([]);
     }
   });
 });

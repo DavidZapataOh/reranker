@@ -1,0 +1,133 @@
+{
+  "categories": [
+    {
+      "key": "dental_clinic",
+      "labelKey": "catalog.categories.dental_clinic",
+      "placesTypes": ["dental_clinic", "dentist"],
+      "synonyms": ["odontólogo", "dentista"],
+      "archetype": "health",
+      "defaultScope": "local",
+      "register": "usted"
+    },
+    {
+      "key": "online_store",
+      "labelKey": "catalog.categories.online_store",
+      "placesTypes": [],
+      "synonyms": ["tienda virtual"],
+      "archetype": "online_national",
+      "defaultScope": "national",
+      "register": "tu"
+    }
+  ],
+  "intents": [
+    {
+      "intentId": "dental_clinic.best_clinic",
+      "categoryKey": "dental_clinic",
+      "scope": "local",
+      "kind": "discovery",
+      "slug": "best_clinic",
+      "labelKey": "catalog.intents.dental_clinic.best_clinic",
+      "canonicalText": "¿Cuál es la mejor clínica odontológica en {lugar}?",
+      "canonicalParaphraseId": "dental_clinic.best_clinic.p00",
+      "demandWeight": 1,
+      "freeReport": true,
+      "language": "es",
+      "registerProfile": "co"
+    },
+    {
+      "intentId": "dental_clinic.urgent_care",
+      "categoryKey": "dental_clinic",
+      "scope": "local",
+      "kind": "urgency",
+      "slug": "urgent_care",
+      "labelKey": "catalog.intents.dental_clinic.urgent_care",
+      "canonicalText": "¿Dónde me atienden una urgencia dental hoy en {lugar}?",
+      "canonicalParaphraseId": "dental_clinic.urgent_care.p00",
+      "demandWeight": 0.35,
+      "freeReport": false,
+      "language": "es",
+      "registerProfile": "co"
+    },
+    {
+      "intentId": "online_store.best_store",
+      "categoryKey": "online_store",
+      "scope": "national",
+      "kind": "discovery",
+      "slug": "best_store",
+      "labelKey": "catalog.intents.online_store.best_store",
+      "canonicalText": "¿Cuál es la mejor tienda online de {sustantivo} en {país}?",
+      "canonicalParaphraseId": "online_store.best_store.p00",
+      "demandWeight": 1,
+      "freeReport": true,
+      "language": "es",
+      "registerProfile": "co"
+    }
+  ],
+  "personas": [
+    {
+      "personaId": "dental_clinic.parent",
+      "categoryKey": "dental_clinic",
+      "preamble": "Tengo dos hijos pequeños."
+    },
+    {
+      "personaId": "dental_clinic.senior",
+      "categoryKey": "dental_clinic",
+      "preamble": "Tengo 68 años y uso prótesis."
+    },
+    {
+      "personaId": "online_store.first_buyer",
+      "categoryKey": "online_store",
+      "preamble": "Nunca he comprado por internet."
+    }
+  ],
+  "paraphrases": [
+    {
+      "paraphraseId": "dental_clinic.best_clinic.p00",
+      "intentId": "dental_clinic.best_clinic",
+      "text": "¿Cuál es la mejor clínica odontológica en {lugar}?",
+      "format": "open_question",
+      "generator": "human",
+      "humanReviewed": true
+    },
+    {
+      "paraphraseId": "dental_clinic.best_clinic.p01",
+      "intentId": "dental_clinic.best_clinic",
+      "text": "mejores odontólogos en {lugar}",
+      "format": "keyword",
+      "generator": "openai",
+      "humanReviewed": true
+    },
+    {
+      "paraphraseId": "dental_clinic.best_clinic.p02",
+      "intentId": "dental_clinic.best_clinic",
+      "text": "Dame una lista de clínicas dentales recomendadas en {lugar}",
+      "format": "list_request",
+      "generator": "gemini",
+      "humanReviewed": false
+    },
+    {
+      "paraphraseId": "dental_clinic.urgent_care.p00",
+      "intentId": "dental_clinic.urgent_care",
+      "text": "¿Dónde me atienden una urgencia dental hoy en {lugar}?",
+      "format": "open_question",
+      "generator": "human",
+      "humanReviewed": true
+    },
+    {
+      "paraphraseId": "dental_clinic.urgent_care.p01",
+      "intentId": "dental_clinic.urgent_care",
+      "text": "dentista de urgencias abierto ahora en {lugar}, que atienda sin cita",
+      "format": "constraint",
+      "generator": "openai",
+      "humanReviewed": false
+    },
+    {
+      "paraphraseId": "online_store.best_store.p00",
+      "intentId": "online_store.best_store",
+      "text": "¿Cuál es la mejor tienda online de {sustantivo} en {país}?",
+      "format": "open_question",
+      "generator": "human",
+      "humanReviewed": true
+    }
+  ]
+}
