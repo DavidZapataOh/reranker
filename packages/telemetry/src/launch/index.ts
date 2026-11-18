@@ -1,5 +1,6 @@
 import { fetchWithin } from "../digest";
 import { checkBetterStackReady, checkBetterStackRouting } from "./betterstack";
+import { spendCapsCheck } from "./caps";
 import { checkSmokeCron, checkTraces } from "./deployment";
 import { checkGitHubRepo } from "./github";
 import { checkNeonProduction } from "./neon";
@@ -9,6 +10,7 @@ import { type CheckResult, LAUNCH_CHECK_IDS, type LaunchCheckId, type LaunchInpu
 import { checkVercelBilling } from "./vercel";
 
 export { checkBetterStackReady, checkBetterStackRouting } from "./betterstack";
+export { type SpendCaps, spendCapsCheck } from "./caps";
 export { checkSmokeCron, checkTraces, repositoryInputs, tracerRegistered } from "./deployment";
 export { checkGitHubRepo } from "./github";
 export { checkNeonProduction } from "./neon";
@@ -43,7 +45,7 @@ async function within(
 export async function runLaunchCheck(inputs: LaunchInputs): Promise<CheckResult[]> {
   const [vercel, resend, neon, ready, routing, billing, projects, github] = await Promise.all([
     within("vercel-billing", checkVercelBilling),
-    fetchWithin(() => checkResend(inputs.resendDailyQuota)),
+    fetchWithin(() => checkResend(inputs.resendHourlyFloor)),
     within("neon-production", checkNeonProduction),
     within("betterstack-ready", checkBetterStackReady),
     within("betterstack-routing", checkBetterStackRouting),
@@ -69,6 +71,13 @@ export async function runLaunchCheck(inputs: LaunchInputs): Promise<CheckResult[
       github,
       checkTraces(inputs.tracing),
       checkSmokeCron(inputs.crons),
+      inputs.spendCaps
+        ? spendCapsCheck(inputs.spendCaps)
+        : {
+            id: "spend-caps" as const,
+            status: "unknown" as const,
+            reason: "solo lo verifica el despliegue",
+          },
     ].flatMap((r) => (r ? [[r.id, r] as const] : [])),
   );
   return LAUNCH_CHECK_IDS.map(

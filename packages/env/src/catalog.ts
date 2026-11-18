@@ -116,8 +116,8 @@ const rows: Row[] = [
   // The load workflow calls the preview with the same value Vercel Preview holds.
   ["PREVIEW_CRON_SECRET", "secret", NONE, true, "07", true],
   ["SPEND_CAP_DAILY_*_USD", "config", ALL, false, "07", true],
-  ["QUOTA_RESEND_EMAILS_DAILY", "config", ALL, false, "07", true],
-  ["QUOTA_RESEND_EMAILS_SPLIT", "config", ALL, false, "07", true],
+  ["QUOTA_RESEND_EMAILS_HOURLY_FLOOR", "config", ALL, false, "07", true],
+  ["QUOTA_RESEND_EMAILS_PEAK_MULTIPLIER", "config", ALL, false, "07", true],
   ["DATAFORSEO_MAX_IN_FLIGHT", "config", ALL, false, "07", true],
   ["DATAFORSEO_RPM", "config", ALL, false, "07", true],
   ["BRIGHTDATA_MAX_IN_FLIGHT", "config", ALL, false, "07", true],

@@ -44,7 +44,12 @@ vi.mock("@reranker/telemetry/launch", async (importOriginal) => ({
   runLaunchCheck: vi.fn(async () => []),
 }));
 vi.mock("../src/lib/launch-state", () => ({
-  deploymentInputs: vi.fn(() => ({ crons: [], tracing: false, resendDailyQuota: 100 })),
+  deploymentInputs: vi.fn(() => ({
+    crons: [],
+    tracing: false,
+    resendHourlyFloor: undefined,
+    spendCaps: undefined,
+  })),
   readGatedFlags: vi.fn(async () => ({ "free-report-live": false, accounts: false })),
 }));
 
@@ -94,11 +99,12 @@ test("reports the closed day's spend per provider and its Resend sends", async (
 
   expect(result.sent).toBe(true);
   const text = sources.sendDailyDigest.mock.calls[0]?.[1] ?? "";
-  expect(text).toMatch(/- dataforseo: USD\s0,75 de USD\s36,00 · mes: USD\s0,75/);
-  expect(text).toMatch(/- Total: USD\s0,75 de USD\s75,00 · mes: USD\s0,75/);
-  expect(text).toMatch(/- openai: USD\s0,00 de USD\s14,00/);
+  expect(text).toMatch(/- dataforseo: USD\s0,75 de USD\s379,80 · mes: USD\s0,75/);
+  expect(text).toMatch(/- purpose:benchmark: USD\s0,75 de USD\s40,00 · mes: USD\s0,75/);
+  expect(text).toMatch(/- Total: USD\s0,75 de USD\s320,00 · mes: USD\s0,75/);
+  expect(text).toMatch(/- openai: USD\s0,00 de USD\s379,80/);
   expect(text).toContain(`Topes alcanzados el ${day}: ninguno`);
-  expect(text).toContain(`Resend: 4 correos el ${day} de 100`);
+  expect(text).toContain(`Resend: 4 correos en el mes hasta el ${day} de 50.000`);
   // The volume triggers read the real ops tables: nothing on this far-away day fires them.
   expect(text).toMatch(/Tope del reporte gratis por demanda.*disparador sin cumplir/);
   expect(text).toMatch(/Temporal.*disparador sin cumplir/);

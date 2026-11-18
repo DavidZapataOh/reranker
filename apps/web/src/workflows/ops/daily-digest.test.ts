@@ -42,7 +42,12 @@ vi.mock("@reranker/flags", async (importOriginal) => ({
   ...flags,
 }));
 const state = vi.hoisted(() => ({
-  deploymentInputs: vi.fn(() => ({ crons: [], tracing: false, resendDailyQuota: 100 })),
+  deploymentInputs: vi.fn(() => ({
+    crons: [],
+    tracing: false,
+    resendHourlyFloor: undefined,
+    spendCaps: undefined,
+  })),
   readGatedFlags: vi.fn(async () => ({ "free-report-live": false, accounts: false })),
 }));
 vi.mock("../../lib/launch-state", () => state);
@@ -146,7 +151,7 @@ test("gathers every source, emails the digest and then pings the heartbeat", asy
   expect(text()).toContain("Gasto del 2026-11-16");
   expect(text()).toContain("reranker-prod: 10 CU-h");
   expect(text()).toContain("reranker-nonprod: 4 CU-h");
-  expect(text()).toContain("Resend: 12 correos el 2026-11-16");
+  expect(text()).toContain("Resend: 12 correos en el mes hasta el 2026-11-16 de 50.000");
   expect(text()).toContain("Topes alcanzados el 2026-11-16: provider:dataforseo");
   expect(text()).toContain("capture-provider-dataforseo: encendido");
   expect(sources.githubActionsUsage).toHaveBeenCalledWith("2026-11", expect.any(AbortSignal));

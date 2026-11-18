@@ -27,6 +27,7 @@ import {
   neonBudgetUsd,
   pingHeartbeat,
   posthogUsage,
+  RESEND_PRO_MONTHLY_EMAILS,
   SourceError,
   type SpendScope,
   type StagesInput,
@@ -68,7 +69,7 @@ type SpendRow = {
 
 /**
  * The closed day's spend per scope against the cap it ran under, beside the month so far. Every
- * provider is listed, at zero when it spent nothing; caps of other scopes appear only if used.
+ * provider and purpose is listed, at zero when it spent nothing; pools appear only if used.
  */
 async function readSpend(day: string): Promise<SpendScope[]> {
   const { rows } = await withSystem("ops.digest.spend", (tx) =>
@@ -84,7 +85,7 @@ async function readSpend(day: string): Promise<SpendScope[]> {
   );
   const caps: Readonly<Record<string, ProviderCost>> = loadJobsConfig().caps;
   const byScope = new Map(rows.map((row) => [row.scope, row]));
-  const listed = Object.keys(caps).filter((s) => s === "global" || s.startsWith("provider:"));
+  const listed = Object.keys(caps).filter((s) => s === "global" || /^(provider|purpose):/.test(s));
   const scopes = new Set([...listed, ...byScope.keys()]);
   return [...scopes].map((scope) => {
     const row = byScope.get(scope);
@@ -103,25 +104,24 @@ async function readSpend(day: string): Promise<SpendScope[]> {
 }
 
 /**
- * Emails sent through Resend on the closed day: the quota's counters plus the alert emails,
- * which are capped in their own table and never pass through the quota.
+ * Emails sent through Resend this month through the closed day, against Resend Pro's monthly
+ * emails: the brake's hourly counters plus the alert emails, which are capped in their own table
+ * and never pass through the brake.
  */
 async function readResend(day: string): Promise<{ sent: number; limit: number }> {
   const { rows } = await withSystem("ops.digest.resend", (tx) =>
     tx.execute<{ quota: number; alerts: number }>(
       sql`select
             (select coalesce(sum(used), 0) from ops.quota_counters
-              where day = ${day}::date and name = 'resend.emails')::int as quota,
+              where day between date_trunc('month', ${day}::date)::date and ${day}::date
+                and name like 'resend.emails%')::int as quota,
             (select count(*) from ops.alert_deliveries
-              where bucket_hour >= ${day}::date::timestamp at time zone ${TIME_ZONE}
+              where bucket_hour >= date_trunc('month', ${day}::date)::timestamp at time zone ${TIME_ZONE}
                 and bucket_hour < (${day}::date + 1)::timestamp at time zone ${TIME_ZONE})::int as alerts`,
     ),
   );
   const row = rows[0];
-  return {
-    sent: (row?.quota ?? 0) + (row?.alerts ?? 0),
-    limit: loadJobsConfig().quotas["resend.emails"].daily,
-  };
+  return { sent: (row?.quota ?? 0) + (row?.alerts ?? 0), limit: RESEND_PRO_MONTHLY_EMAILS };
 }
 
 /** Both projects' month so far, through the closed day (UTC days, as Neon counts them). */

@@ -90,10 +90,12 @@ describe("buildDailyDigest", () => {
     expect(text.split("\n")[0]).toBe("Resumen diario · 2026-11-17");
   });
 
-  test("shows each provider's spend against its cap and the month so far", () => {
+  test("shows each provider and purpose spend against its cap and the month so far", () => {
     const { text } = buildDailyDigest(fullInput);
     expect(text).toMatch(/dataforseo: USD\s10,00 de USD\s36,00 · mes: USD\s70,00/);
     expect(text).toMatch(/Total: USD\s12,50 de USD\s75,00/);
+    expect(text).toMatch(/- purpose:benchmark: USD\s20,00 de USD\s20,00/);
+    expect(text).toContain("Resend: 12 correos en el mes hasta el 2026-11-16 de 100");
   });
 
   test("names the caps reached that day without raising a spend alert", () => {
@@ -231,7 +233,7 @@ describe("buildDailyDigest", () => {
     });
   });
 
-  test("resend above 70% daily → free-tier-quota warning", () => {
+  test("resend above 70% of its monthly emails → free-tier-quota warning", () => {
     const below = buildDailyDigest({ ...fullInput, resend: ok({ sent: 70, limit: 100 }) });
     expect(below.alerts).toEqual([]);
     const { alerts } = buildDailyDigest({ ...fullInput, resend: ok({ sent: 71, limit: 100 }) });
@@ -248,7 +250,7 @@ describe("buildDailyDigest", () => {
     ]);
   });
 
-  test("resend near its daily quota is critical", () => {
+  test("resend near its monthly emails is critical", () => {
     const { alerts } = buildDailyDigest({ ...fullInput, resend: ok({ sent: 96, limit: 100 }) });
     expect(alerts[0]?.payload).toMatchObject({ source: "resend", severity: "critical" });
   });

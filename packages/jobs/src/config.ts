@@ -2,7 +2,6 @@ import { appEnv, type EnvSource, EnvValidationError } from "@reranker/env";
 import { costFromMajor, type ProviderCost } from "@reranker/schema";
 import { jobsEnv } from "./env";
 import type {
-  JobPriority,
   PaidProvider,
   ProviderLimits,
   SpendPool,
@@ -20,7 +19,8 @@ type CapScope =
 
 export interface JobsConfig {
   caps: Record<CapScope, ProviderCost>;
-  quotas: Record<"resend.emails", { daily: number; split: Record<JobPriority, number> }>;
+  /** Hourly flood brakes: an hour allows `max(hourlyFloor, peakMultiplier × last week's peak hour)`. */
+  quotas: Record<"resend.emails", { hourlyFloor: number; peakMultiplier: number }>;
   limits: Record<PaidProvider, ProviderLimits>;
   maxInlineWaitMs: number;
   /** Monthly provider budgets the daily run measures spend against. */
@@ -28,31 +28,49 @@ export interface JobsConfig {
   breaker: { minCalls: number; failureRatio: number; openMs: number };
 }
 
-// Daily USD. Providers other than the capture sandbox cost real money, so outside production
-// they stay at zero and only the contract tests spend, under their own cap.
-const PROVIDER_CAPS: Record<PaidProvider, string> = {
-  dataforseo: "36",
-  brightdata: "5",
-  openai: "14",
-  gemini: "11",
-  google_places: "18",
-  anthropic: "5",
-  xai: "5",
-};
-
+// Daily USD, sized by demand: the free report pools add up to its cap.
 const PURPOSE_CAPS: Record<SpendPurpose, string> = {
-  "free-report": "50",
-  "control-canary": "1",
-  "quality-canary": "3",
-  benchmark: "20",
+  "free-report": "200",
+  "control-canary": "70",
+  "quality-canary": "6",
+  benchmark: "40",
   "contract-test": "0.5",
 };
 
 const POOL_CAPS: Record<SpendPool | SpendRegionPool, string> = {
-  "free-report-anonymous": "30",
-  "free-report-verified": "20",
-  "free-report-elsewhere": "20",
+  "free-report-anonymous": "120",
+  "free-report-verified": "80",
+  "free-report-elsewhere": "80",
 };
+
+const GLOBAL_CAP = "320";
+
+const EVERY_PURPOSE = Object.keys(PURPOSE_CAPS) as SpendPurpose[];
+const BENCHMARK_ONLY: readonly SpendPurpose[] = ["benchmark", "contract-test"];
+
+// The purposes that can spend on each provider. Anthropic and xAI only annotate benchmark labels.
+const PROVIDER_PURPOSES: Record<PaidProvider, readonly SpendPurpose[]> = {
+  dataforseo: EVERY_PURPOSE,
+  brightdata: EVERY_PURPOSE,
+  openai: EVERY_PURPOSE,
+  gemini: EVERY_PURPOSE,
+  google_places: EVERY_PURPOSE,
+  anthropic: BENCHMARK_ONLY,
+  xai: BENCHMARK_ONLY,
+};
+
+/**
+ * The lowest daily cap, in micros, each provider can have without binding before the caps of the
+ * purposes that spend on it: their sum plus a fifth of headroom.
+ */
+export function providerCapFloor(config: Pick<JobsConfig, "caps">): Record<PaidProvider, number> {
+  return Object.fromEntries(
+    Object.entries(PROVIDER_PURPOSES).map(([provider, purposes]) => {
+      const sum = purposes.reduce((t, p) => t + config.caps[`purpose:${p}`].amount_micros, 0);
+      return [provider, Math.ceil((sum * 6) / 5)];
+    }),
+  ) as Record<PaidProvider, number>;
+}
 
 const ENV_SUFFIX = (name: string) => name.toUpperCase().replaceAll("-", "_");
 
@@ -82,18 +100,20 @@ function build(source: EnvSource): JobsConfig {
   const tokens = (name: string): { tpm?: number } =>
     env[name] === undefined ? {} : { tpm: Number(env[name]) };
 
-  const caps = { global: usd("GLOBAL", "75") } as Record<CapScope, ProviderCost>;
-  for (const [provider, fallback] of Object.entries(PROVIDER_CAPS)) {
-    caps[`provider:${provider as PaidProvider}`] = usd(
-      ENV_SUFFIX(provider),
-      production ? fallback : "0",
-    );
-  }
+  const caps = { global: usd("GLOBAL", GLOBAL_CAP) } as Record<CapScope, ProviderCost>;
   for (const [purpose, fallback] of Object.entries(PURPOSE_CAPS)) {
     caps[`purpose:${purpose as SpendPurpose}`] = usd(ENV_SUFFIX(purpose), fallback);
   }
   for (const [pool, fallback] of Object.entries(POOL_CAPS)) {
     caps[`pool:${pool as SpendPool | SpendRegionPool}`] = usd(ENV_SUFFIX(pool), fallback);
+  }
+  // Provider caps follow their purposes, so raising a purpose cap never needs a provider change.
+  // Outside production they stay at zero and only the contract tests spend, under their own cap.
+  for (const [provider, floor] of Object.entries(providerCapFloor({ caps }))) {
+    caps[`provider:${provider as PaidProvider}`] = usd(
+      ENV_SUFFIX(provider),
+      production ? (floor / 1_000_000).toFixed(6) : "0",
+    );
   }
 
   const freeReport = caps["purpose:free-report"].amount_micros;
@@ -107,24 +127,20 @@ function build(source: EnvSource): JobsConfig {
     throw new Error("The free report elsewhere pool cap cannot exceed the free report cap");
   }
 
-  const daily = num("QUOTA_RESEND_EMAILS_DAILY", 100);
-  const parts = String(env.QUOTA_RESEND_EMAILS_SPLIT ?? "30/16/50/4")
-    .split("/")
-    .map(Number);
-  if (parts.reduce((a, b) => a + b, 0) !== daily) {
-    throw new Error("The resend.emails split must add up to the daily quota");
-  }
-  const [critical = 0, high = 0, normal = 0, low = 0] = parts;
-
   return {
     caps,
-    quotas: { "resend.emails": { daily, split: { critical, high, normal, low } } },
+    quotas: {
+      "resend.emails": {
+        hourlyFloor: num("QUOTA_RESEND_EMAILS_HOURLY_FLOOR", 500),
+        peakMultiplier: num("QUOTA_RESEND_EMAILS_PEAK_MULTIPLIER", 10),
+      },
+    },
     limits: {
       dataforseo: {
         maxInFlight: num("DATAFORSEO_MAX_IN_FLIGHT", 28),
         rpm: num("DATAFORSEO_RPM", 9000),
       },
-      brightdata: { maxInFlight: num("BRIGHTDATA_MAX_IN_FLIGHT", 100) },
+      brightdata: { maxInFlight: num("BRIGHTDATA_MAX_IN_FLIGHT", 200) },
       openai: {
         maxInFlight: num("OPENAI_MAX_IN_FLIGHT", 10),
         ...rate("OPENAI_RPM"),
