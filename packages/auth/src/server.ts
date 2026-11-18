@@ -85,16 +85,20 @@ async function sendSignInCode(
     ctx?.context.logger.warn("Email code not sent for an unsupported flow", type);
     return;
   }
+  // Better Auth calls this once per send request, so a resend of the reused code is a new attempt
+  // and a new email; anything retrying this send keeps the same attempt.
+  const attempt = crypto.randomUUID();
   const locale = resolveEmailLocale({
     userLocale: ctx ? await savedLocale(ctx, email) : undefined,
     acceptLanguage: ctx?.headers?.get("accept-language"),
   });
   const place = requestedFrom(ctx?.headers, locale);
-  await sendAuthEmail("sign-in-code", email, {
-    otp,
-    locale,
-    ...(place ? { requestedFrom: place } : {}),
-  });
+  await sendAuthEmail(
+    "sign-in-code",
+    email,
+    { otp, locale, ...(place ? { requestedFrom: place } : {}) },
+    { attempt },
+  );
 }
 
 export const auth = betterAuth({

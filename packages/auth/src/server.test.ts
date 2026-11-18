@@ -224,6 +224,18 @@ function fakeContext({
 describe("sending the sign-in code", () => {
   const send = () => plugin("email-otp").options.sendVerificationOTP as Sender;
   const data = { email: "ana@example.co", otp: "482913", type: "sign-in" } as const;
+  const anAttempt = { attempt: expect.stringMatching(/^[0-9a-f-]{36}$/) };
+
+  test("every resend is its own attempt, so the reused code is emailed again", async () => {
+    email.sendAuthEmail.mockResolvedValue({ id: "email-1" });
+    const { ctx } = fakeContext({});
+    await send()(data, ctx);
+    await send()(data, ctx);
+    const [first, second] = email.sendAuthEmail.mock.calls.map((call) => call[3]);
+    expect(first).toEqual(anAttempt);
+    expect(second).toEqual(anAttempt);
+    expect(second).not.toEqual(first);
+  });
 
   test("uses the saved locale and the place the request came from", async () => {
     email.sendAuthEmail.mockResolvedValue({ id: "email-1" });
@@ -233,21 +245,31 @@ describe("sending the sign-in code", () => {
     });
     await send()(data, ctx);
     expect(findUserByEmail).toHaveBeenCalledWith("ana@example.co");
-    expect(email.sendAuthEmail).toHaveBeenCalledWith("sign-in-code", "ana@example.co", {
-      otp: "482913",
-      locale: "es-CO",
-      requestedFrom: { city: "Bogotá", country: "Colombia" },
-    });
+    expect(email.sendAuthEmail).toHaveBeenCalledWith(
+      "sign-in-code",
+      "ana@example.co",
+      {
+        otp: "482913",
+        locale: "es-CO",
+        requestedFrom: { city: "Bogotá", country: "Colombia" },
+      },
+      anAttempt,
+    );
   });
 
   test("a new address falls back to Accept-Language", async () => {
     email.sendAuthEmail.mockResolvedValue({ id: "email-1" });
     const { ctx } = fakeContext({ headers: { "accept-language": "es-MX,es;q=0.9" } });
     await send()(data, ctx);
-    expect(email.sendAuthEmail).toHaveBeenCalledWith("sign-in-code", "ana@example.co", {
-      otp: "482913",
-      locale: "es-CO",
-    });
+    expect(email.sendAuthEmail).toHaveBeenCalledWith(
+      "sign-in-code",
+      "ana@example.co",
+      {
+        otp: "482913",
+        locale: "es-CO",
+      },
+      anAttempt,
+    );
   });
 
   test.each([
@@ -269,10 +291,15 @@ describe("sending the sign-in code", () => {
     const failure = new TypeError("Failed query: select … params: ana@example.co");
     const { ctx, warn } = fakeContext({ lookup: () => Promise.reject(failure) });
     await send()(data, ctx);
-    expect(email.sendAuthEmail).toHaveBeenCalledWith("sign-in-code", "ana@example.co", {
-      otp: "482913",
-      locale: "es-CO",
-    });
+    expect(email.sendAuthEmail).toHaveBeenCalledWith(
+      "sign-in-code",
+      "ana@example.co",
+      {
+        otp: "482913",
+        locale: "es-CO",
+      },
+      anAttempt,
+    );
     expect(warn).toHaveBeenCalledWith(expect.any(String), "TypeError");
     expect(JSON.stringify(warn.mock.calls)).not.toContain("ana@example.co");
   });
@@ -292,10 +319,15 @@ describe("sending the sign-in code", () => {
   test("works without an endpoint context", async () => {
     email.sendAuthEmail.mockResolvedValue({ id: "email-1" });
     await send()(data);
-    expect(email.sendAuthEmail).toHaveBeenCalledWith("sign-in-code", "ana@example.co", {
-      otp: "482913",
-      locale: "es-CO",
-    });
+    expect(email.sendAuthEmail).toHaveBeenCalledWith(
+      "sign-in-code",
+      "ana@example.co",
+      {
+        otp: "482913",
+        locale: "es-CO",
+      },
+      anAttempt,
+    );
   });
 
   test("a failed send rejects so Better Auth's background handler logs it", async () => {
