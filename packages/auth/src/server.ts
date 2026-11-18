@@ -18,6 +18,7 @@ import { ac, roles } from "./permissions";
 import { AUTH_RATE_RULES, EMAIL_SENDING_PATHS } from "./rate-limits";
 import { sendAuthEmail } from "./send-auth-email";
 import { SIGN_IN_CODE_TTL_SECONDS } from "./sign-in-code";
+import { authTelemetry } from "./telemetry";
 
 const env = defineEnv([authEnv]);
 
@@ -206,6 +207,7 @@ export const auth = betterAuth({
     }),
     // Takes the client id from the Google provider, and its sign-ins pass validateUserInfo too.
     oneTap(),
+    authTelemetry(),
     nextCookies(),
   ],
 });

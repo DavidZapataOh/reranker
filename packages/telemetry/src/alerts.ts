@@ -75,6 +75,18 @@ export const opsAlerts = {
   "spend-cap-pressure": { severity: "warning", runbook: "spend-cap-pressure.md", source: "jobs" },
   "primitive-latency": { severity: "warning", runbook: "primitive-latency.md", source: "jobs" },
   "provider-volume": { severity: "warning", runbook: "provider-volume.md", source: "jobs" },
+  // A guessing attack on sign-in codes looks the same as a broken sign-in flow, and both need eyes now.
+  "auth-sign-in-failure-spike": {
+    severity: "critical",
+    runbook: "auth-sign-in-failure-spike.md",
+    source: "auth",
+  },
+  // Without the code email nobody new can get in.
+  "auth-email-delivery": {
+    severity: "critical",
+    runbook: "auth-email-delivery.md",
+    source: "auth",
+  },
 } as const satisfies Record<string, OpsAlert>;
 
 export type OpsAlertKind = keyof typeof opsAlerts;
@@ -101,6 +113,7 @@ export const procedures = [
   "rotate-secret.md",
   "neon-setup.md",
   "db-rotate-password.md",
+  "auth-rotate-secrets.md",
 ] as const satisfies readonly string[];
 
 /** Sender of every operations email: alerts and the daily digest. */

@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@better-auth/drizzle-adapter": "catalog:",
+    "@reranker/analytics": "workspace:*",
     "@reranker/db": "workspace:*",
     "@reranker/env": "workspace:*",
     "@reranker/i18n": "workspace:*",

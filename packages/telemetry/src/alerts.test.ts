@@ -253,6 +253,23 @@ describe("opsAlerts", () => {
     });
   });
 
+  test("sign-in failure spikes and code delivery failures are critical auth alerts", () => {
+    expect(
+      Object.fromEntries(Object.entries(opsAlerts).filter(([, alert]) => alert.source === "auth")),
+    ).toEqual({
+      "auth-sign-in-failure-spike": {
+        severity: "critical",
+        runbook: "auth-sign-in-failure-spike.md",
+        source: "auth",
+      },
+      "auth-email-delivery": {
+        severity: "critical",
+        runbook: "auth-email-delivery.md",
+        source: "auth",
+      },
+    });
+  });
+
   test("a gated flag on with a failing launch stage is critical", () => {
     expect(opsAlerts["launch-gate-violated"]).toEqual({
       severity: "critical",

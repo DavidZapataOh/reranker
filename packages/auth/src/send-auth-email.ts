@@ -8,6 +8,7 @@ import { render } from "react-email";
 import { Resend } from "resend";
 import { type RequestedFrom, SignInCodeEmail, signInCodeCopy } from "./emails/sign-in-code";
 import { authEnv } from "./env";
+import { recordEmailDelivery } from "./telemetry";
 
 const FROM = "Reranker <codigos@mail.reranker.co>";
 
@@ -53,6 +54,7 @@ export async function sendAuthEmail(
     { from: FROM, to, subject: subject(data), html, text },
     { idempotencyKey: idempotencyKey(template, to, data.otp) },
   );
+  await recordEmailDelivery(!error);
   if (error) {
     // No props: the address and the code never leave this function.
     captureServerEvent({ name: "auth_email_failed", props: {} }, { subject: { system: true } });
