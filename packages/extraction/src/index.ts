@@ -1,6 +1,15 @@
 export { extractionEnv } from "./env";
 export { jaroWinkler, nameHmac, normalizeName, tokenContainment } from "./normalize";
 export {
+  FIELD_MASKS,
+  type PlaceDetails,
+  type PlaceHit,
+  placeDetails,
+  type SearchTextRequest,
+  searchText,
+} from "./places/client";
+export { PLACES_SKU_PRICES } from "./prices";
+export {
   type LlmProvider,
   type ModelRef,
   ProviderIncompleteError,

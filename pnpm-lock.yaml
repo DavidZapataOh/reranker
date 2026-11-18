@@ -803,6 +803,9 @@ importers:
       '@reranker/env':
         specifier: workspace:*
         version: link:../env
+      '@reranker/jobs':
+        specifier: workspace:*
+        version: link:../jobs
       '@reranker/schema':
         specifier: workspace:*
         version: link:../schema
@@ -813,6 +816,12 @@ importers:
         specifier: 'catalog:'
         version: 4.6.7
     devDependencies:
+      '@reranker/db':
+        specifier: workspace:*
+        version: link:../db
+      '@reranker/testing':
+        specifier: workspace:*
+        version: link:../testing
       '@reranker/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
