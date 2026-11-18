@@ -263,6 +263,9 @@ catalogs:
     canonicalize:
       specifier: 5.1.0
       version: 5.1.0
+    csv-parse:
+      specifier: 7.0.3
+      version: 7.0.3
     drizzle-kit:
       specifier: ^0.31.11
       version: 0.31.11
@@ -632,6 +635,9 @@ importers:
         specifier: 'catalog:'
         version: 0.0.1
     devDependencies:
+      '@reranker/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@reranker/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
@@ -641,6 +647,12 @@ importers:
       '@vitest/coverage-v8':
         specifier: 'catalog:'
         version: 5.1.0(@vitest/browser@5.1.0)(vitest@5.1.0)
+      csv-parse:
+        specifier: 'catalog:'
+        version: 7.0.3
+      tsx:
+        specifier: 'catalog:'
+        version: 4.23.15
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -5635,6 +5647,9 @@ packages:
 
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
+
+  csv-parse@7.0.3:
+    resolution: {integrity: sha512-YFd3QM/yo17vH91L1IOZuvl09zM0zEEtdfTcOCKWcMdM++MNaQSyp09slXyFCLaPXvHstQFx/xC8myiFHSMUvw==}
 
   data-uri-to-buffer@6.0.2:
     resolution: {integrity: sha512-7hvf7/GW8e86rW0ptuwS3OcBGDjIi6SZva7hCyWC0yYry2cOPmLIjXAUHI6DK2HsnwJd9ifmt57i8eV2n4YNpw==}
@@ -13734,6 +13749,8 @@ snapshots:
       source-map-js: 1.2.2
 
   csstype@3.2.3: {}
+
+  csv-parse@7.0.3: {}
 
   data-uri-to-buffer@6.0.2: {}
 

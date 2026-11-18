@@ -8,16 +8,20 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --project unit --coverage --passWithNoTests"
+    "test": "vitest run --project unit --coverage --passWithNoTests",
+    "geo:build": "tsx scripts/build-geo.ts"
   },
   "dependencies": {
     "canonicalize": "catalog:",
     "server-only": "catalog:"
   },
   "devDependencies": {
+    "@reranker/i18n": "workspace:*",
     "@reranker/typescript-config": "workspace:*",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
+    "csv-parse": "catalog:",
+    "tsx": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }

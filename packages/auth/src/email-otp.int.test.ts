@@ -246,15 +246,13 @@ describe("signing in with a code", () => {
 
 // Last in the file: the instance it builds leaves the exhausted allocation in the module registry,
 // where the hook's lazy import of the guard would pick it up.
-describe("the daily email quota", () => {
+describe("the hourly email brake", () => {
   test("critical quota exhausted → reason quota and nothing is sent", async () => {
-    // A second instance whose critical class allows exactly what is already used today. Other
-    // files only add to `used`, so the class stays full.
-    const { quotaStatus } = await import("@reranker/jobs");
-    const { used } = (await quotaStatus("resend.emails")).critical;
+    // A second instance whose brake allows nothing in any hour, so the hour rolling over mid-test
+    // cannot let a code through.
     vi.resetModules();
-    vi.stubEnv("QUOTA_RESEND_EMAILS_DAILY", String(used + 70));
-    vi.stubEnv("QUOTA_RESEND_EMAILS_SPLIT", `${used}/16/50/4`);
+    vi.stubEnv("QUOTA_RESEND_EMAILS_HOURLY_FLOOR", "0");
+    vi.stubEnv("QUOTA_RESEND_EMAILS_PEAK_MULTIPLIER", "0");
     const [{ auth: exhausted }, db] = await Promise.all([
       import("./server"),
       import("@reranker/db"),

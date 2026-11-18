@@ -1,9 +1,11 @@
+import type { SpendCaps } from "./caps";
+
 export type CheckStatus = "pass" | "fail" | "unknown";
 
 /** One provider tier verified against its API. Reasons are Spanish: the founder reads them. */
 export type CheckResult = { id: LaunchCheckId; status: CheckStatus; reason: string };
 
-export const LAUNCH_CHECK_IDS = [
+const PROVIDER_CHECK_IDS = [
   "vercel-billing",
   "neon-production",
   "resend-plan",
@@ -17,6 +19,10 @@ export const LAUNCH_CHECK_IDS = [
   "smoke-cron",
 ] as const;
 
+// Spend caps are read from the deployment's own configuration, which a repository run cannot
+// load, so they are reported but never hold a flag back.
+export const LAUNCH_CHECK_IDS = [...PROVIDER_CHECK_IDS, "spend-caps"] as const;
+
 export type LaunchCheckId = (typeof LAUNCH_CHECK_IDS)[number];
 
 /**
@@ -24,7 +30,7 @@ export type LaunchCheckId = (typeof LAUNCH_CHECK_IDS)[number];
  * both flags, everything else only the free report.
  */
 export const LAUNCH_GATES = {
-  "free-report-live": LAUNCH_CHECK_IDS,
+  "free-report-live": PROVIDER_CHECK_IDS,
   accounts: ["vercel-billing", "neon-production", "resend-plan"],
 } as const satisfies Record<string, readonly LaunchCheckId[]>;
 
@@ -45,8 +51,10 @@ export type LaunchInputs = {
   crons: readonly Cron[];
   /** Whether a tracer provider is registered (in the deployment) or set up (in the repository). */
   tracing: boolean;
-  /** The configured `resend.emails` daily quota; undefined when left at its default. */
-  resendDailyQuota: number | undefined;
+  /** The configured `resend.emails` hourly floor; undefined when left at its default. */
+  resendHourlyFloor: number | undefined;
+  /** The spend caps the deployment runs with; undefined where they cannot be loaded. */
+  spendCaps: SpendCaps | undefined;
 };
 
 export const pass = (id: LaunchCheckId, reason: string): CheckResult => ({

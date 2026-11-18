@@ -13,6 +13,10 @@ const usd = (description: string) =>
 const count = (description: string) =>
   config(z.coerce.number().int().positive().optional(), description);
 
+// Zero is meaningful for a brake: a floor and multiplier of zero stop what it brakes.
+const whole = (description: string) =>
+  config(z.coerce.number().int().nonnegative().optional(), description);
+
 // Everything is optional: the defaults live in loadJobsConfig because they depend on APP_ENV.
 export const jobsEnv = z.object({
   SPEND_CAP_DAILY_GLOBAL_USD: usd("Daily spend cap across every provider, in USD"),
@@ -34,13 +38,9 @@ export const jobsEnv = z.object({
   SPEND_CAP_DAILY_BENCHMARK_USD: usd("Daily benchmark spend cap, in USD"),
   SPEND_CAP_DAILY_CONTRACT_TEST_USD: usd("Daily provider contract test spend cap, in USD"),
   WORKFLOWS_MONTHLY_BUDGET_USD: usd("Monthly Vercel Workflows budget, in USD"),
-  QUOTA_RESEND_EMAILS_DAILY: count("Daily Resend email quota"),
-  QUOTA_RESEND_EMAILS_SPLIT: config(
-    z
-      .string()
-      .regex(/^\d+\/\d+\/\d+\/\d+$/, "must be critical/high/normal/low")
-      .optional(),
-    "Resend daily quota split as critical/high/normal/low",
+  QUOTA_RESEND_EMAILS_HOURLY_FLOOR: whole("Fewest Resend emails an hour allows, whatever the peak"),
+  QUOTA_RESEND_EMAILS_PEAK_MULTIPLIER: whole(
+    "Resend emails an hour allows, as a multiple of last week's busiest hour",
   ),
   DATAFORSEO_MAX_IN_FLIGHT: count("DataForSEO concurrent requests"),
   DATAFORSEO_RPM: count("DataForSEO requests per minute"),

@@ -1,0 +1,357 @@
+location_code,location_name,location_code_parent,country_iso_code,location_type
+2170,Colombia,,CO,Country
+20198,"Antioquia,Colombia",2170,CO,Region
+20199,"Atlantico,Colombia",2170,CO,Region
+20200,"Bolivar,Colombia",2170,CO,Region
+20201,"Caldas,Colombia",2170,CO,Region
+20202,"Cundinamarca,Colombia",2170,CO,Region
+20203,"Bogota,Colombia",2170,CO,Region
+20204,"Huila,Colombia",2170,CO,Region
+20205,"Meta,Colombia",2170,CO,Region
+20206,"Narino,Colombia",2170,CO,Region
+20207,"Putumayo,Colombia",2170,CO,Region
+20208,"Risaralda,Colombia",2170,CO,Region
+20209,"Santander,Colombia",2170,CO,Region
+20210,"Tolima,Colombia",2170,CO,Region
+20211,"Valle del Cauca,Colombia",2170,CO,Region
+21290,"Magdalena,Colombia",2170,CO,Region
+21506,"Amazonas,Colombia",2170,CO,Region
+21507,"Arauca,Colombia",2170,CO,Region
+21508,"Boyaca,Colombia",2170,CO,Region
+21509,"Caqueta,Colombia",2170,CO,Region
+21510,"Casanare,Colombia",2170,CO,Region
+21511,"Cauca,Colombia",2170,CO,Region
+21512,"Cesar,Colombia",2170,CO,Region
+21513,"Choco,Colombia",2170,CO,Region
+21514,"Cordoba,Colombia",2170,CO,Region
+21515,"Guainia,Colombia",2170,CO,Region
+21516,"Guaviare,Colombia",2170,CO,Region
+21517,"La Guajira,Colombia",2170,CO,Region
+21518,"North Santander,Colombia",2170,CO,Region
+21519,"Quindio,Colombia",2170,CO,Region
+21520,"San Andres and Providencia,Colombia",2170,CO,Region
+21521,"Sucre,Colombia",2170,CO,Region
+21522,"Vaupes,Colombia",2170,CO,Region
+21523,"Vichada,Colombia",2170,CO,Region
+1003652,"Envigado,Antioquia,Colombia",20198,CO,City
+1003653,"Itagui,Antioquia,Colombia",20198,CO,City
+1003654,"Medellin,Antioquia,Colombia",20198,CO,City
+1003655,"Barranquillita,Atlantico,Colombia",20199,CO,Neighborhood
+1003656,"Cartagenita,Bolivar,Colombia",20200,CO,Neighborhood
+1003657,"Manizales,Caldas,Colombia",20201,CO,City
+1003658,"Tocancipa,Cundinamarca,Colombia",20202,CO,City
+1003659,"Bogota,Bogota,Colombia",20203,CO,City
+1003660,"Neiva,Huila,Colombia",20204,CO,City
+1003661,"Santa Marta,Magdalena,Colombia",21290,CO,Neighborhood
+1003662,"Villavicencio,Meta,Colombia",20205,CO,City
+1003663,"Pasto,Narino,Colombia",20206,CO,City
+1003664,"San Francisco,Putumayo,Colombia",20207,CO,City
+1003665,"Pereira,Risaralda,Colombia",20208,CO,City
+1003666,"Bucaramanga,Santander,Colombia",20209,CO,City
+1003667,"Buenaventura,Valle del Cauca,Colombia",20211,CO,City
+1003668,"Cali,Valle del Cauca,Colombia",20211,CO,City
+1003669,"Popayan,Cauca,Colombia",21511,CO,City
+1003670,"Yumbo,Valle del Cauca,Colombia",20211,CO,City
+1029255,"Abrego,North Santander,Colombia",21518,CO,City
+1029256,"Acacias,Meta,Colombia",20205,CO,City
+1029257,"Agua de Dios,Cundinamarca,Colombia",20202,CO,City
+1029258,"Aguachica,Cesar,Colombia",21512,CO,City
+1029259,"Aguadas,Caldas,Colombia",20201,CO,City
+1029260,"Aguazul,Casanare,Colombia",21510,CO,City
+1029261,"Codazzi,Cesar,Colombia",21512,CO,City
+1029262,"Algeciras,Huila,Colombia",20204,CO,City
+1029263,"Amaga,Antioquia,Colombia",20198,CO,City
+1029264,"Andes,Antioquia,Colombia",20198,CO,City
+1029265,"Anserma,Caldas,Colombia",20201,CO,City
+1029266,"Santa Fe de Antioquia,Santa Fe de Antioquia,Antioquia,Colombia",20198,CO,Neighborhood
+1029267,"Apartado,Antioquia,Colombia",20198,CO,City
+1029268,"Aracataca,Magdalena,Colombia",21290,CO,City
+1029269,"Arauca,Arauca,Colombia",21507,CO,City
+1029270,"Ariguani,Cesar,Colombia",21512,CO,Neighborhood
+1029271,"Arjona,Bolivar,Colombia",20200,CO,City
+1029272,"Armenia,Quindio,Colombia",21519,CO,City
+1029273,"Ayapel,Cordoba,Colombia",21514,CO,City
+1029274,"Baranoa,Atlantico,Colombia",20199,CO,City
+1029275,"Barbosa,Santander,Colombia",20209,CO,City
+1029276,"Barbosa,Antioquia,Colombia",20198,CO,City
+1029277,"Barrancabermeja,Santander,Colombia",20209,CO,City
+1029278,"Barrancas,La Guajira,Colombia",21517,CO,City
+1029279,"Bello,Antioquia,Colombia",20198,CO,City
+1029280,"Bolivar,Cauca,Colombia",21511,CO,City
+1029281,"Buga,Valle del Cauca,Colombia",20211,CO,City
+1029282,"Bugalagrande,Valle del Cauca,Colombia",20211,CO,City
+1029283,"Campoalegre,Huila,Colombia",20204,CO,City
+1029284,"Carepa,Antioquia,Colombia",20198,CO,City
+1029285,"Carmen de Viboral,Antioquia,Colombia",20198,CO,City
+1029286,"Cartago,Valle del Cauca,Colombia",20211,CO,City
+1029287,"Cerete,Cordoba,Colombia",21514,CO,City
+1029288,"Chaparral,Tolima,Colombia",20210,CO,City
+1029289,"Chia,Cundinamarca,Colombia",20202,CO,City
+1029290,"Chigorodo,Antioquia,Colombia",20198,CO,City
+1029291,"Chimichagua,Cesar,Colombia",21512,CO,City
+1029292,"Chinchina,Caldas,Colombia",20201,CO,City
+1029293,"Chinu,Cordoba,Colombia",21514,CO,City
+1029294,"Chiriguana,Cesar,Colombia",21512,CO,City
+1029295,"Cienaga,Magdalena,Colombia",21290,CO,City
+1029296,"Cienaga de Oro,Cordoba,Colombia",21514,CO,City
+1029297,"Cimitarra,Santander,Colombia",20209,CO,City
+1029298,"Copacabana,Antioquia,Colombia",20198,CO,City
+1029299,"Corinto,Cauca,Colombia",21511,CO,City
+1029300,"Corozal,Sucre,Colombia",21521,CO,City
+1029301,"Cucuta,North Santander,Colombia",21518,CO,City
+1029302,"Curumani,Cesar,Colombia",21512,CO,City
+1029303,"Dabeiba,Antioquia,Colombia",20198,CO,City
+1029304,"Dagua,Valle del Cauca,Colombia",20211,CO,City
+1029305,"Darien,Valle del Cauca,Colombia",20211,CO,City
+1029306,"Dosquebradas,Risaralda,Colombia",20208,CO,City
+1029307,"Duitama,Boyaca,Colombia",21508,CO,City
+1029308,"El Bordo,Cauca,Colombia",21511,CO,Neighborhood
+1029309,"El Carmen de Bolivar,Bolivar,Colombia",20200,CO,City
+1029310,"El Cerrito,Valle del Cauca,Colombia",20211,CO,City
+1029311,"El Doncello,Caqueta,Colombia",21509,CO,City
+1029312,"Facatativa,Cundinamarca,Colombia",20202,CO,City
+1029313,"Florencia,Caqueta,Colombia",21509,CO,City
+1029314,"Florida,Valle del Cauca,Colombia",20211,CO,City
+1029315,"Floridablanca,Santander,Colombia",20209,CO,City
+1029316,"Fonseca,La Guajira,Colombia",21517,CO,City
+1029317,"Fresno,Tolima,Colombia",20210,CO,City
+1029318,"Fundacion,Magdalena,Colombia",21290,CO,City
+1029319,"Fusagasuga,Cundinamarca,Colombia",20202,CO,City
+1029320,"Galapa,Atlantico,Colombia",20199,CO,City
+1029321,"Garagoa,Boyaca,Colombia",21508,CO,City
+1029322,"Garzon,Huila,Colombia",20204,CO,City
+1029323,"Girardot,Cundinamarca,Colombia",20202,CO,City
+1029324,"Girardota,Antioquia,Colombia",20198,CO,City
+1029325,"Giron,Santander,Colombia",20209,CO,City
+1029326,"Guacari,Valle del Cauca,Colombia",20211,CO,City
+1029327,"Guaduas,Cundinamarca,Colombia",20202,CO,City
+1029328,"Guamo,Tolima,Colombia",20210,CO,City
+1029329,"Guapi,Cauca,Colombia",21511,CO,City
+1029330,"Guarne,Antioquia,Colombia",20198,CO,City
+1029331,"Honda,Tolima,Colombia",20210,CO,City
+1029332,"Ibague,Tolima,Colombia",20210,CO,City
+1029333,"Ipiales,Narino,Colombia",20206,CO,City
+1029334,"Jamundi,Valle del Cauca,Colombia",20211,CO,City
+1029335,"La Calera,Cundinamarca,Colombia",20202,CO,City
+1029336,"La Ceja,Antioquia,Colombia",20198,CO,City
+1029337,"La Dorada,Caldas,Colombia",20201,CO,City
+1029338,"La Mesa,Cundinamarca,Colombia",20202,CO,City
+1029339,"La Plata,Huila,Colombia",20204,CO,City
+1029340,"La Tebaida,Quindio,Colombia",21519,CO,City
+1029341,"La Union,Narino,Colombia",20206,CO,City
+1029342,"La Victoria,Valle del Cauca,Colombia",20211,CO,City
+1029343,"La Virginia,Risaralda,Colombia",20208,CO,City
+1029344,"Lerida,Tolima,Colombia",20210,CO,City
+1029345,"Leticia,Amazonas,Colombia",21506,CO,City
+1029346,"Libano,Tolima,Colombia",20210,CO,City
+1029347,"Lorica,Cordoba,Colombia",21514,CO,City
+1029348,"Luruaco,Atlantico,Colombia",20199,CO,City
+1029349,"Magangue,Bolivar,Colombia",20200,CO,City
+1029350,"Maicao,La Guajira,Colombia",21517,CO,City
+1029351,"Majagual,Sucre,Colombia",21521,CO,City
+1029352,"Malaga,Santander,Colombia",20209,CO,City
+1029353,"Malambo,Atlantico,Colombia",20199,CO,City
+1029354,"Manati,Atlantico,Colombia",20199,CO,City
+1029355,"Mariquita,Tolima,Colombia",20210,CO,City
+1029356,"Melgar,Tolima,Colombia",20210,CO,City
+1029357,"Mocoa,Putumayo,Colombia",20207,CO,City
+1029358,"Mompos,Bolivar,Colombia",20200,CO,City
+1029359,"Monteria,Cordoba,Colombia",21514,CO,City
+1029360,"Natagaima,Tolima,Colombia",20210,CO,City
+1029361,"Neira,Caldas,Colombia",20201,CO,City
+1029362,"Ocana,North Santander,Colombia",21518,CO,City
+1029363,"Orito,Putumayo,Colombia",20207,CO,City
+1029364,"Pailitas,Cesar,Colombia",21512,CO,City
+1029365,"Paipa,Boyaca,Colombia",21508,CO,City
+1029366,"Palmar de Varela,Atlantico,Colombia",20199,CO,City
+1029367,"Palmira,Valle del Cauca,Colombia",20211,CO,City
+1029368,"Pamplona,North Santander,Colombia",21518,CO,City
+1029369,"Paz de Ariporo,Casanare,Colombia",21510,CO,City
+1029370,"Pelaya,Cesar,Colombia",21512,CO,City
+1029371,"Piedecuesta,Santander,Colombia",20209,CO,City
+1029372,"Piendamo,Cauca,Colombia",21511,CO,City
+1029373,"Pitalito,Huila,Colombia",20204,CO,City
+1029374,"Pivijay,Magdalena,Colombia",21290,CO,City
+1029375,"Pradera,Valle del Cauca,Colombia",20211,CO,City
+1029376,"Puebloviejo,Magdalena,Colombia",21290,CO,City
+1029377,"Puerto Asis,Putumayo,Colombia",20207,CO,City
+1029378,"Puerto Berrio,Antioquia,Colombia",20198,CO,City
+1029379,"Puerto Boyaca,Boyaca,Colombia",21508,CO,City
+1029380,"Puerto Colombia,Atlantico,Colombia",20199,CO,City
+1029381,"Puerto Rico,Caqueta,Colombia",21509,CO,City
+1029382,"Puerto Santander,North Santander,Colombia",21518,CO,City
+1029383,"Quibdo,Choco,Colombia",21513,CO,City
+1029384,"Repelon,Atlantico,Colombia",20199,CO,City
+1029385,"Riosucio,Caldas,Colombia",20201,CO,City
+1029386,"Roldanillo,Valle del Cauca,Colombia",20211,CO,City
+1029387,"Riohacha,La Guajira,Colombia",21517,CO,City
+1029388,"Sabana de Torres,Santander,Colombia",20209,CO,City
+1029389,"Sabanagrande,Atlantico,Colombia",20199,CO,City
+1029390,"Sabanalarga,Atlantico,Colombia",20199,CO,City
+1029391,"Salamina,Caldas,Colombia",20201,CO,City
+1029392,"Samaniego,Narino,Colombia",20206,CO,City
+1029393,"Sampues,Sucre,Colombia",21521,CO,City
+1029394,"San Antero,Cordoba,Colombia",21514,CO,City
+1029395,"San Benito Abad,Sucre,Colombia",21521,CO,City
+1029396,"San Gil,Santander,Colombia",20209,CO,City
+1029397,"San Jacinto,Bolivar,Colombia",20200,CO,City
+1029398,"San Juan Nepomuceno,Bolivar,Colombia",20200,CO,City
+1029399,"San Juan del Cesar,La Guajira,Colombia",21517,CO,City
+1029400,"San Marcos,Sucre,Colombia",21521,CO,City
+1029401,"San Martin,Meta,Colombia",20205,CO,City
+1029402,"San Pablo,Bolivar,Colombia",20200,CO,Neighborhood
+1029403,"San Pedro,Sucre,Colombia",21521,CO,City
+1029404,"San Pedro de Uraba,Antioquia,Colombia",20198,CO,City
+1029405,"San Vicente del Caguan,Caqueta,Colombia",21509,CO,City
+1029406,"Santa Lucia,Atlantico,Colombia",20199,CO,City
+1029407,"Santa Rosa,Bolivar,Colombia",20200,CO,City
+1029408,"Santa Rosa de Cabal,Risaralda,Colombia",20208,CO,City
+1029409,"Santa Rosa de Osos,Antioquia,Colombia",20198,CO,City
+1029410,"Santander de Quilichao,Cauca,Colombia",21511,CO,City
+1029411,"Tunja,Boyaca,Colombia",21508,CO,City
+1029412,"El Santuario,Antioquia,Colombia",20198,CO,City
+1029413,"Saravena,Arauca,Colombia",21507,CO,City
+1029414,"San Luis de Since,Sucre,Colombia",21521,CO,City
+1029415,"Sincelejo,Sucre,Colombia",21521,CO,City
+1029416,"Sitionuevo,Magdalena,Colombia",21290,CO,City
+1029417,"Soacha,Cundinamarca,Colombia",20202,CO,City
+1029418,"Socorro,Santander,Colombia",20209,CO,City
+1029419,"Sogamoso,Boyaca,Colombia",21508,CO,City
+1029420,"Sonson,Antioquia,Colombia",20198,CO,City
+1029421,"Suan,Atlantico,Colombia",20199,CO,City
+1029422,"Sucre,Sucre,Colombia",21521,CO,City
+1029423,"Tame,Arauca,Colombia",21507,CO,City
+1029424,"Tibu,North Santander,Colombia",21518,CO,City
+1029425,"Tierralta,Cordoba,Colombia",21514,CO,City
+1029426,"Tocaima,Cundinamarca,Colombia",20202,CO,City
+1029427,"Tolu,Sucre,Colombia",21521,CO,City
+1029428,"Tulua,Valle del Cauca,Colombia",20211,CO,City
+1029429,"San Andres de Tumaco,Narino,Colombia",20206,CO,City
+1029430,"Tuquerres,Narino,Colombia",20206,CO,City
+1029431,"Turbaco,Bolivar,Colombia",20200,CO,City
+1029432,"Turbo,Antioquia,Colombia",20198,CO,City
+1029433,"Ubate,Cundinamarca,Colombia",20202,CO,City
+1029434,"Urrao,Antioquia,Colombia",20198,CO,City
+1029435,"Valencia,Cordoba,Colombia",21514,CO,City
+1029436,"Valledupar,Cesar,Colombia",21512,CO,City
+1029437,"Velez,Santander,Colombia",20209,CO,City
+1029438,"Venadillo,Tolima,Colombia",20210,CO,City
+1029439,"Villanueva,Casanare,Colombia",21510,CO,City
+1029440,"Villanueva,La Guajira,Colombia",21517,CO,City
+1029441,"Viterbo,Caldas,Colombia",20201,CO,City
+1029442,"Yarumal,Antioquia,Colombia",20198,CO,City
+1029443,"Yopal,Casanare,Colombia",21510,CO,City
+1029444,"Zaragoza,Antioquia,Colombia",20198,CO,City
+1029445,"Zarzal,Valle del Cauca,Colombia",20211,CO,City
+1029446,"Zipaquira,Cundinamarca,Colombia",20202,CO,City
+9041174,"El Dorado International Airport,Bogota,Colombia",20203,CO,Airport
+9048059,"Barranquilla,Atlantico,Colombia",20199,CO,City
+9048060,"Caucasia,Antioquia,Colombia",20198,CO,City
+9074849,"Cartagena,Cartagena,Bolivar,Colombia",20200,CO,City
+9194862,"Funza,Cundinamarca,Colombia",20202,CO,City
+9196364,"Chia,Chia,Cundinamarca,Colombia",20202,CO,City
+9197707,"Envigado,Envigado,Antioquia,Colombia",20198,CO,City
+9197754,"Soacha,Soacha,Cundinamarca,Colombia",20202,CO,City
+9197893,"Zipaquira,Zipaquira,Cundinamarca,Colombia",20202,CO,City
+9197987,"Kennedy,Bogota,Colombia",20203,CO,District
+9198139,"Floridablanca,Floridablanca,Santander,Colombia",20209,CO,City
+9198203,"Engativa,Bogota,Colombia",20203,CO,District
+9198430,"Pereira,Pereira,Risaralda,Colombia",20208,CO,City
+9198551,"Itagui,Itagui,Antioquia,Colombia",20198,CO,City
+9198590,"Los Martires,Bogota,Colombia",20203,CO,District
+9198779,"Fontibon,Bogota,Colombia",20203,CO,District
+9199134,"Bucaramanga,Bucaramanga,Santander,Colombia",20209,CO,City
+9199230,"Barranquilla,Barranquilla,Atlantico,Colombia",20199,CO,City
+9207510,"ZONA 7,Bogota,Colombia",20203,CO,Neighborhood
+9208055,"La America,Antioquia,Colombia",20198,CO,Municipality
+9208057,"Piedecuesta,Piedecuesta,Santander,Colombia",20209,CO,City
+9209395,"Riohacha,Riohacha,La Guajira,Colombia",21517,CO,City
+9210603,"Palmira,Palmira,Valle del Cauca,Colombia",20211,CO,City
+9211075,"Teusaquillo,Bogota,Colombia",20203,CO,Neighborhood
+9211341,"Rionegro,Rionegro,Antioquia,Colombia",20198,CO,City
+9212463,"Facatativa,Facatativa,Cundinamarca,Colombia",20202,CO,City
+9212534,"Caldas,Antioquia,Colombia",20198,CO,City
+9212997,"La Estrella,Antioquia,Colombia",20198,CO,City
+9213114,"Barrancabermeja,Barrancabermeja,Santander,Colombia",20209,CO,City
+9215639,"Tulua,Tulua,Valle del Cauca,Colombia",20211,CO,City
+9215693,"San Andres,San Andres and Providencia,Colombia",21520,CO,City
+9216055,"Barrios Unidos,Bogota,Colombia",20203,CO,Neighborhood
+9216505,"Copacabana,Copacabana,Antioquia,Colombia",20198,CO,City
+9216832,"Alarcon,Santander,Colombia",20209,CO,Neighborhood
+9218618,"Usaquen,Bogota,Colombia",20203,CO,Neighborhood
+9219033,"Melgar,Melgar,Tolima,Colombia",20210,CO,City
+9219107,"Chapinero,Bogota,Colombia",20203,CO,Neighborhood
+9219132,"Madrid,Cundinamarca,Colombia",20202,CO,City
+9219397,"Cajica,Cundinamarca,Colombia",20202,CO,City
+9219531,"Bosa,Bogota,Colombia",20203,CO,Neighborhood
+9222829,"Belen,Antioquia,Colombia",20198,CO,Municipality
+9222981,"Arauca,Arauca,Arauca,Colombia",21507,CO,City
+9223199,"Chaparral,Chaparral,Tolima,Colombia",20210,CO,City
+9223257,"Puerto Boyaca,Puerto Boyaca,Boyaca,Colombia",21508,CO,City
+9223397,"Sogamoso,Sogamoso,Boyaca,Colombia",21508,CO,City
+9225361,"Lebrija,Santander,Colombia",20209,CO,Municipality
+9225409,"Cogua,Cundinamarca,Colombia",20202,CO,Municipality
+9226506,"Anapoima,Cundinamarca,Colombia",20202,CO,City
+9226733,"Cartagena,Bolivar,Colombia",20200,CO,Municipality
+9227510,"Magangue,Magangue,Bolivar,Colombia",20200,CO,City
+9227839,"Planeta Rica,Cordoba,Colombia",21514,CO,City
+9228189,"Zarzal,Zarzal,Valle del Cauca,Colombia",20211,CO,City
+9228396,"Chinu,Chinu,Cordoba,Colombia",21514,CO,City
+9228410,"Guayabal,Antioquia,Colombia",20198,CO,City
+9228802,"Manrique,Antioquia,Colombia",20198,CO,City
+9229472,"Agustin Codazzi,Cesar,Colombia",21512,CO,City
+9230057,"Castilla,Antioquia,Colombia",20198,CO,City
+9230746,"Carmen de Apicala,Tolima,Colombia",20210,CO,Municipality
+9231272,"Puerto Lopez,Meta,Colombia",20205,CO,City
+9231369,"Laureles - Estadio,Antioquia,Colombia",20198,CO,City
+9232241,"Ciudad Jardin,Valle del Cauca,Colombia",20211,CO,District
+9232286,"Commune 2,Huila,Colombia",20204,CO,District
+9232501,"Choconta,Cundinamarca,Colombia",20202,CO,Municipality
+9233532,"Tenjo,Cundinamarca,Colombia",20202,CO,Municipality
+9233558,"Arroyo Hondo,Valle del Cauca,Colombia",20211,CO,District
+9233743,"Commune 16,Valle del Cauca,Colombia",20211,CO,Neighborhood
+9233763,"Paz de Ariporo,Paz de Ariporo,Casanare,Colombia",21510,CO,City
+9234614,"Chinacota,North Santander,Colombia",21518,CO,City
+9236044,"Fonseca,Fonseca,La Guajira,Colombia",21517,CO,City
+9238328,"Santa Cruz de Lorica,Cordoba,Colombia",21514,CO,City
+9238718,"Candelaria,Valle del Cauca,Colombia",20211,CO,Municipality
+9239382,"Granada,Meta,Colombia",20205,CO,City
+9239531,"Rionegro,Antioquia,Colombia",20198,CO,Municipality
+9241535,"San Juan del Cesar,San Juan del Cesar,La Guajira,Colombia",21517,CO,City
+9241762,"Cota,Cundinamarca,Colombia",20202,CO,Municipality
+9242481,"Bojaca,Cundinamarca,Colombia",20202,CO,Municipality
+9243539,"Marinilla,Antioquia,Colombia",20198,CO,Municipality
+9244941,"Puente Aranda,Bogota,Colombia",20203,CO,District
+9245153,"Yumbo,Yumbo,Valle del Cauca,Colombia",20211,CO,City
+9245161,"La Virginia,La Virginia,Risaralda,Colombia",20208,CO,City
+9246150,"San Marcos,San Marcos,Sucre,Colombia",21521,CO,City
+9246980,"Circasia,Quindio,Colombia",21519,CO,Municipality
+9247010,"Comuna 1,Cauca,Colombia",21511,CO,District
+9248162,"Buenos Aires,Antioquia,Colombia",20198,CO,City
+9248431,"Filandia,Quindio,Colombia",21519,CO,Municipality
+9248608,"Libano,Libano,Tolima,Colombia",20210,CO,City
+9248907,"Garzon,Garzon,Huila,Colombia",20204,CO,City
+9248956,"Doce de Octubre,Antioquia,Colombia",20198,CO,Neighborhood
+9250008,"Guaduas,Guaduas,Cundinamarca,Colombia",20202,CO,City
+9250653,"Villa Hermosa,Antioquia,Colombia",20198,CO,City
+9250764,"Tabio,Cundinamarca,Colombia",20202,CO,Municipality
+9252574,"Flandes,Tolima,Colombia",20210,CO,City
+9253534,"Pitalito,Pitalito,Huila,Colombia",20204,CO,City
+9253854,"Popular,Antioquia,Colombia",20198,CO,City
+9254163,"La Candelaria,Antioquia,Colombia",20198,CO,Municipality
+9254968,"Silvania,Cundinamarca,Colombia",20202,CO,City
+9255228,"Pacho,Cundinamarca,Colombia",20202,CO,City
+9255825,"La Candelaria,La Candelaria,Antioquia,Colombia",20198,CO,District
+9256198,"Robledo,Antioquia,Colombia",20198,CO,City
+9256711,"Usme,Bogota,Colombia",20203,CO,District
+9256924,"La Dorada,La Dorada,Caldas,Colombia",20201,CO,City
+9257575,"La Esmeralda,Valle del Cauca,Colombia",20211,CO,City
+9257718,"Santa Fe de Antioquia,Antioquia,Colombia",20198,CO,Municipality
+9259819,"San Cristobal,Bogota,Colombia",20203,CO,District
+9261020,"Sabaneta,Antioquia,Colombia",20198,CO,Municipality
+9261530,"Quimbaya,Quindio,Colombia",21519,CO,Municipality
+9262450,"Pescaito,Magdalena,Colombia",21290,CO,District
+9262986,"Sopo,Cundinamarca,Colombia",20202,CO,Municipality
+9263565,"Tame,Tame,Arauca,Colombia",21507,CO,City
+9263814,"Gachancipa,Cundinamarca,Colombia",20202,CO,Municipality
+9263887,"Buenaventura,Buenaventura,Valle del Cauca,Colombia",20211,CO,City

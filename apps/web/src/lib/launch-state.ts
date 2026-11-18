@@ -1,7 +1,7 @@
 import { defineEnv } from "@reranker/env";
 import { gatedFlagsOn } from "@reranker/flags/launch-gate";
 import { createPostHogApi } from "@reranker/flags/posthog-api";
-import { loadJobsConfig } from "@reranker/jobs";
+import { loadJobsConfig, providerCapFloor } from "@reranker/jobs";
 import { SourceError } from "@reranker/telemetry/digest";
 import { launchEnv } from "@reranker/telemetry/env";
 import { type GatedFlag, type LaunchInputs, tracerRegistered } from "@reranker/telemetry/launch";
@@ -9,13 +9,15 @@ import { CRONS } from "./crons";
 
 /**
  * What only this deployment can say about itself: the crons it was built with, whether its
- * instrumentation registered a tracer, and the Resend quota it runs with.
+ * instrumentation registered a tracer, and the email brake and spend caps it runs with.
  */
 export function deploymentInputs(): LaunchInputs {
+  const config = loadJobsConfig();
   return {
     crons: CRONS,
     tracing: tracerRegistered(),
-    resendDailyQuota: loadJobsConfig().quotas["resend.emails"].daily,
+    resendHourlyFloor: config.quotas["resend.emails"].hourlyFloor,
+    spendCaps: { caps: config.caps, floors: providerCapFloor(config) },
   };
 }
 

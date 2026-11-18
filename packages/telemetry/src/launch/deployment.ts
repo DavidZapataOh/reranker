@@ -60,7 +60,7 @@ export function tracerRegistered(): boolean {
 /**
  * The inputs as the repository at `root` declares them, for runs outside the deployment: the
  * crons of `apps/web/vercel.json`, whether the instrumentation registers `@vercel/otel`, and the
- * quota in the environment the command runs with.
+ * email brake in the environment the command runs with. The spend caps need the deployment.
  */
 export function repositoryInputs(root: string, env = process.env): LaunchInputs {
   const vercel = JSON.parse(readFileSync(join(root, "apps/web/vercel.json"), "utf8")) as {
@@ -68,10 +68,12 @@ export function repositoryInputs(root: string, env = process.env): LaunchInputs 
   };
   const instrumentation = join(root, "apps/web/src/instrumentation.ts");
   const source = existsSync(instrumentation) ? readFileSync(instrumentation, "utf8") : "";
-  const quota = Number(env.QUOTA_RESEND_EMAILS_DAILY);
+  const floor = Number(env.QUOTA_RESEND_EMAILS_HOURLY_FLOOR);
   return {
     crons: vercel.crons ?? [],
     tracing: /from\s+["']@vercel\/otel["']/.test(source) && source.includes("registerOTel("),
-    resendDailyQuota: Number.isFinite(quota) && quota > 0 ? quota : undefined,
+    resendHourlyFloor:
+      env.QUOTA_RESEND_EMAILS_HOURLY_FLOOR && Number.isInteger(floor) ? floor : undefined,
+    spendCaps: undefined,
   };
 }

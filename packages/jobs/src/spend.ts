@@ -34,6 +34,9 @@ export interface SpendRequest {
   estimate: ProviderCost;
 }
 
+/** Who pays for a paid call, handed down to the code that knows the provider and the estimate. */
+export type SpendContext = Omit<SpendRequest, "provider" | "channel" | "engine" | "estimate">;
+
 export interface SpendScopeStatus {
   scope: string;
   used: ProviderCost;

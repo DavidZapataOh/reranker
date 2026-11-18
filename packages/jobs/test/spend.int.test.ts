@@ -170,9 +170,9 @@ describe("reserveSpend", () => {
     const r = await reserveSpend(req(4000, { provider: "openai", purpose: "quality-canary" }));
     expect(r.reserved).toEqual(usd(4000));
     expect(r.scopes).toEqual([
-      { scope: "global", used: usd(4000), cap: usd(75_000_000) },
-      { scope: "purpose:quality-canary", used: usd(4000), cap: usd(3_000_000) },
-      { scope: "provider:openai", used: usd(4000), cap: usd(14_000_000) },
+      { scope: "global", used: usd(4000), cap: usd(320_000_000) },
+      { scope: "purpose:quality-canary", used: usd(4000), cap: usd(6_000_000) },
+      { scope: "provider:openai", used: usd(4000), cap: usd(379_800_000) },
     ]);
   });
 
@@ -479,11 +479,11 @@ describe("spendStatus", () => {
     await reserveSpend(req(4000, { provider: "openai" }));
     const status = await spendStatus(["provider:openai", "global", "pool:free-report-verified"]);
     expect(status).toEqual([
-      { scope: "provider:openai", cap: usd(14_000_000), used: usd(4000), resetsAt: nextResetAt() },
-      { scope: "global", cap: usd(75_000_000), used: usd(4000), resetsAt: nextResetAt() },
+      { scope: "provider:openai", cap: usd(379_800_000), used: usd(4000), resetsAt: nextResetAt() },
+      { scope: "global", cap: usd(320_000_000), used: usd(4000), resetsAt: nextResetAt() },
       {
         scope: "pool:free-report-verified",
-        cap: usd(20_000_000),
+        cap: usd(80_000_000),
         used: usd(0),
         resetsAt: nextResetAt(),
       },
