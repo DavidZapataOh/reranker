@@ -19,6 +19,7 @@
     "@reranker/jobs": "workspace:*",
     "@reranker/schema": "workspace:*",
     "canonicalize": "catalog:",
+    "openai": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
