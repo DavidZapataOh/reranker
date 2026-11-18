@@ -1,4 +1,11 @@
 export {
+  type CaptureFrame,
+  type EntityColumn,
+  pairedCompare,
+  rankWithTies,
+  type Verdict,
+} from "./compare";
+export {
   clusterDeff,
   effectiveSize,
   type Interval,
