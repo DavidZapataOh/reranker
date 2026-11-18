@@ -58,7 +58,9 @@ test("catalog names are unique", () => {
 });
 
 test("the catalog holds no signing-key secret and the audit flags one if it appears", () => {
-  expect(catalog.filter((e) => /SIGNING_KEY|PRIVATE_KEY|_SK$/.test(e.name))).toEqual([]);
+  const keyMaterial = (name: string) =>
+    /SIGNING_KEY|PRIVATE_KEY/.test(name) || name.endsWith("_SK");
+  expect(catalog.filter((e) => keyMaterial(e.name))).toEqual([]);
   expect(auditSecrets(["EVIDENCE_CAPTURE_SIGNING_KEY"], catalog).unexpected).toContain(
     "EVIDENCE_CAPTURE_SIGNING_KEY",
   );

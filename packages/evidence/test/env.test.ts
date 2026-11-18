@@ -14,7 +14,9 @@ test("production requires every KMS and R2 variable and forbids anything that lo
   );
   expect(
     Object.keys(evidenceEnv.shape).some(
-      (k) => /PRIVATE|SECRET_KEY$|_SK$/.test(k) && k !== "R2_SECRET_ACCESS_KEY",
+      (k) =>
+        (k.includes("PRIVATE") || k.endsWith("SECRET_KEY") || k.endsWith("_SK")) &&
+        k !== "R2_SECRET_ACCESS_KEY",
     ),
   ).toBe(false);
 });
