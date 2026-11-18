@@ -6,13 +6,15 @@
   "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
-    "./format": "./src/format/index.ts"
+    "./format": "./src/format/index.ts",
+    "./trust": "./src/trust/keys.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run --project unit --coverage --passWithNoTests"
   },
   "dependencies": {
+    "@noble/hashes": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
