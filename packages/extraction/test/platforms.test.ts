@@ -87,6 +87,142 @@ describe("platformFor", () => {
   });
 });
 
+describe("platforms by market", () => {
+  test.each([
+    ["ES", "Idealista", "idealista"],
+    ["ES", "Fotocasa", "fotocasa"],
+    ["ES", "Habitaclia", "habitaclia"],
+    ["ES", "pisos.com", "pisos-com"],
+    ["ES", "Glovo", "glovo"],
+    ["ES", "Just Eat", "just-eat"],
+    ["ES", "ElTenedor", "thefork"],
+    ["ES", "Top Doctors", "top-doctors"],
+    ["ES", "Habitissimo", "habitissimo"],
+    ["ES", "Treatwell", "treatwell"],
+    ["ES", "Guía Repsol", "guia-repsol"],
+    ["ES", "Páginas Amarillas", "paginas-amarillas"],
+    ["ES", "Wallapop", "wallapop"],
+    ["ES", "Coches.net", "coches-net"],
+    ["ES", "Emagister", "emagister"],
+    ["MX", "Inmuebles24", "inmuebles24"],
+    ["MX", "Vivanuncios", "vivanuncios"],
+    ["MX", "Lamudi", "lamudi"],
+    ["MX", "Uber Eats", "uber-eats"],
+    ["MX", "Sección Amarilla", "seccion-amarilla"],
+    ["MX", "Doctor Anytime", "doctoranytime"],
+    ["MX", "Cronoshare", "cronoshare"],
+    ["AR", "Zonaprop", "zonaprop"],
+    ["AR", "Argenprop", "argenprop"],
+    ["AR", "PedidosYa", "pedidosya"],
+    ["AR", "Mercado Libre", "mercadolibre"],
+    ["AR", "Zolvers", "zolvers"],
+    ["AR", "Despegar", "despegar"],
+    ["CL", "Portal Inmobiliario", "portal-inmobiliario"],
+    ["CL", "Yapo", "yapo"],
+    ["CL", "TocToc", "toctoc"],
+    ["CL", "AgendaPro", "agendapro"],
+    ["CL", "Chileautos", "chileautos"],
+    ["PE", "Urbania.pe", "urbania"],
+    ["PE", "Adondevivir", "adondevivir"],
+    ["PE", "Neoauto", "neoauto"],
+    ["PE", "Lawzana", "lawzana"],
+    ["EC", "Plusvalia.com", "plusvalia"],
+    ["EC", "Patiotuerca", "patiotuerca"],
+    ["EC", "Properati", "properati"],
+    ["UY", "InfoCasas", "infocasas"],
+    ["UY", "Gallito.com.uy", "gallito"],
+    ["US", "Zillow", "zillow"],
+    ["US", "Realtor.com", "realtor-com"],
+    ["US", "Yelp", "yelp"],
+    ["US", "Zocdoc", "zocdoc"],
+    ["US", "Angi", "angi"],
+    ["US", "Thumbtack", "thumbtack"],
+    ["US", "DoorDash", "doordash"],
+    ["US", "Avvo", "avvo"],
+    ["US", "OpenTable", "opentable"],
+    ["US", "Better Business Bureau", "bbb"],
+    ["GB", "Rightmove", "rightmove"],
+    ["GB", "Checkatrade", "checkatrade"],
+    ["FR", "Doctolib", "doctolib"],
+    ["FR", "SeLoger", "seloger"],
+    ["DE", "Lieferando", "lieferando"],
+    ["IT", "MioDottore", "miodottore"],
+    ["BR", "iFood", "ifood"],
+    ["BR", "Mercado Livre", "mercadolibre"],
+  ])("%s: %s is %s", (_market, name, slug) =>
+    expect(platformFor({ nameNorm: normalizeName(name), citedUrls: [] })?.slug).toBe(slug),
+  );
+
+  test.each([
+    ["ES", "https://www.idealista.com/inmueble/1/", "idealista"],
+    ["ES", "https://www.thefork.es/restaurante/x-r1", "thefork"],
+    ["MX", "https://web.didiglobal.com/mx/food/ciudad-de-mexico-cdmx/", "didi-food"],
+    ["MX", "https://inmuebles.mercadolibre.com.mx/departamentos/", "mercadolibre"],
+    ["MX", "https://www.doctoralia.com.mx/ana-gomez", "doctoralia"],
+    ["AR", "https://www.doctoraliar.com/odontologo/capital-federal", "doctoralia"],
+    ["AR", "https://www.pedidosya.com.ar/restaurantes/buenos-aires", "pedidosya"],
+    ["CL", "https://www.trivago.cl/es-CL/srl/hoteles-santiago", "trivago"],
+    ["PE", "https://nexoinmobiliario.pe/proyectos", "nexo-inmobiliario"],
+    ["PE", "https://www.doctoralia.pe/dentista/lima", "doctoralia"],
+    ["EC", "https://www.kayak.com.ec/hoteles", "kayak"],
+    ["UY", "https://www.gallito.com.uy/inmuebles", "gallito"],
+    ["UY", "https://ar.hoteles.com/nh1705099/", "hotels-com"],
+    ["US", "https://maps.apple.com/?q=x", "apple-maps"],
+    ["GB", "https://www.just-eat.co.uk/area/ec1", "just-eat"],
+  ])("%s: %s is %s", (_market, url, slug) =>
+    expect(platformFor({ nameNorm: "x", citedUrls: [url] })?.slug).toBe(slug),
+  );
+
+  test.each(["Uber Eats", "PedidosYa", "Glovo", "Deliveroo", "DoorDash", "iFood"])(
+    "%s, a delivery app, is a directory like Rappi",
+    (name) =>
+      expect(platformFor({ nameNorm: normalizeName(name), citedUrls: [] })?.kind).toBe(
+        "directory_or_media",
+      ),
+  );
+
+  test.each([
+    "Realtor",
+    "Plusvalía",
+    "Pisos",
+    "Propiedades",
+    "Urbania",
+    "Gallito",
+    "La Haus",
+    "Nexo Inmobiliario",
+    "Toc Toc",
+    "El Tenedor",
+    "The Fork",
+    "Repsol",
+    "Michelin",
+    "Seamless",
+    "Expertise",
+    "Chambers",
+    "Martindale",
+    "Abogado",
+    "Yell",
+    "Next Door",
+    "Coches",
+    "Immobiliare",
+    "Seminuevos",
+    "Hoteles",
+    "X",
+  ])("%s, a common word or business name, is not a platform", (name) =>
+    expect(platformFor({ nameNorm: normalizeName(name), citedUrls: [] })).toBeNull(),
+  );
+
+  test("a restaurant called El Tenedor stays a business", () =>
+    expect(tagPlatforms([mention({ name: "El Tenedor" })])[0]?.entityKind).toBe("business"));
+
+  test("no alias is a single character", () => {
+    for (const entry of PLATFORMS) {
+      for (const alias of [...entry.names, ...entry.domains]) {
+        expect(normalizeName(alias).replace(/ /g, "").length).toBeGreaterThan(1);
+      }
+    }
+  });
+});
+
 describe("tagPlatforms", () => {
   test("tagging overrides what the LLM said", () =>
     expect(
