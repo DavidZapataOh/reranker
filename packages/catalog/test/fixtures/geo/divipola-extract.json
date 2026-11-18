@@ -1,0 +1,2027 @@
+[
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05001",
+    "nom_mpio": "MEDELLÍN",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,581775",
+    "latitud": "6,246631"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05002",
+    "nom_mpio": "ABEJORRAL",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,428739",
+    "latitud": "5,789315"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05004",
+    "nom_mpio": "ABRIAQUÍ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-76,064304",
+    "latitud": "6,632282"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05021",
+    "nom_mpio": "ALEJANDRÍA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,141346",
+    "latitud": "6,376061"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05030",
+    "nom_mpio": "AMAGÁ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,702188",
+    "latitud": "6,038708"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05031",
+    "nom_mpio": "AMALFI",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,077501",
+    "latitud": "6,909655"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05034",
+    "nom_mpio": "ANDES",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,878828",
+    "latitud": "5,657194"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05036",
+    "nom_mpio": "ANGELÓPOLIS",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,711389",
+    "latitud": "6,109719"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05038",
+    "nom_mpio": "ANGOSTURA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,335116",
+    "latitud": "6,885175"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05040",
+    "nom_mpio": "ANORÍ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,148355",
+    "latitud": "7,074703"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05042",
+    "nom_mpio": "SANTA FÉ DE ANTIOQUIA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,826648",
+    "latitud": "6,556484"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05044",
+    "nom_mpio": "ANZÁ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,854442",
+    "latitud": "6,302641"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05045",
+    "nom_mpio": "APARTADÓ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-76,625279",
+    "latitud": "7,882968"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05051",
+    "nom_mpio": "ARBOLETES",
+    "tipo_municipio": "Municipio",
+    "longitud": "-76,426708",
+    "latitud": "8,849317"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05055",
+    "nom_mpio": "ARGELIA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,14107",
+    "latitud": "5,731474"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05059",
+    "nom_mpio": "ARMENIA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,786647",
+    "latitud": "6,155667"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05079",
+    "nom_mpio": "BARBOSA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,331627",
+    "latitud": "6,439195"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05086",
+    "nom_mpio": "BELMIRA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,667779",
+    "latitud": "6,606319"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05088",
+    "nom_mpio": "BELLO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,555245",
+    "latitud": "6,333587"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05091",
+    "nom_mpio": "BETANIA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,97679",
+    "latitud": "5,74615"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05093",
+    "nom_mpio": "BETULIA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,984452",
+    "latitud": "6,115208"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05101",
+    "nom_mpio": "CIUDAD BOLÍVAR",
+    "tipo_municipio": "Municipio",
+    "longitud": "-76,021509",
+    "latitud": "5,850273"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05107",
+    "nom_mpio": "BRICEÑO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,55036",
+    "latitud": "7,112803"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05113",
+    "nom_mpio": "BURITICÁ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,907",
+    "latitud": "6,720759"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05120",
+    "nom_mpio": "CÁCERES",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,35205",
+    "latitud": "7,578366"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05125",
+    "nom_mpio": "CAICEDO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,98293",
+    "latitud": "6,405607"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05129",
+    "nom_mpio": "CALDAS",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,633673",
+    "latitud": "6,091077"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05134",
+    "nom_mpio": "CAMPAMENTO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,298091",
+    "latitud": "6,979771"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05138",
+    "nom_mpio": "CAÑASGORDAS",
+    "tipo_municipio": "Municipio",
+    "longitud": "-76,028228",
+    "latitud": "6,753859"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05142",
+    "nom_mpio": "CARACOLÍ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-74,757421",
+    "latitud": "6,409829"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05145",
+    "nom_mpio": "CARAMANTA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,643868",
+    "latitud": "5,54853"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05147",
+    "nom_mpio": "CAREPA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-76,652652",
+    "latitud": "7,755148"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05148",
+    "nom_mpio": "EL CARMEN DE VIBORAL",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,333901",
+    "latitud": "6,082885"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05150",
+    "nom_mpio": "CAROLINA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,283192",
+    "latitud": "6,725995"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05154",
+    "nom_mpio": "CAUCASIA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,197996",
+    "latitud": "7,977278"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05172",
+    "nom_mpio": "CHIGORODÓ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-76,681531",
+    "latitud": "7,666147"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05190",
+    "nom_mpio": "CISNEROS",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,087047",
+    "latitud": "6,537829"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05197",
+    "nom_mpio": "COCORNÁ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,185483",
+    "latitud": "6,058295"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05206",
+    "nom_mpio": "CONCEPCIÓN",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,257587",
+    "latitud": "6,394348"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05209",
+    "nom_mpio": "CONCORDIA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,908448",
+    "latitud": "6,045738"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05212",
+    "nom_mpio": "COPACABANA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,509384",
+    "latitud": "6,348557"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05234",
+    "nom_mpio": "DABEIBA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-76,261614",
+    "latitud": "6,998112"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05237",
+    "nom_mpio": "DONMATÍAS",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,39263",
+    "latitud": "6,485603"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05240",
+    "nom_mpio": "EBÉJICO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,766413",
+    "latitud": "6,325615"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05250",
+    "nom_mpio": "EL BAGRE",
+    "tipo_municipio": "Municipio",
+    "longitud": "-74,799097",
+    "latitud": "7,5975"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05264",
+    "nom_mpio": "ENTRERRÍOS",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,517685",
+    "latitud": "6,566273"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05266",
+    "nom_mpio": "ENVIGADO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,582192",
+    "latitud": "6,166695"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05282",
+    "nom_mpio": "FREDONIA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,675072",
+    "latitud": "5,928039"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05284",
+    "nom_mpio": "FRONTINO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-76,130765",
+    "latitud": "6,776066"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05306",
+    "nom_mpio": "GIRALDO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,952158",
+    "latitud": "6,680808"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05308",
+    "nom_mpio": "GIRARDOTA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,444238",
+    "latitud": "6,379472"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05310",
+    "nom_mpio": "GÓMEZ PLATA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,220018",
+    "latitud": "6,683269"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05313",
+    "nom_mpio": "GRANADA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,184446",
+    "latitud": "6,142892"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05315",
+    "nom_mpio": "GUADALUPE",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,239862",
+    "latitud": "6,815069"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05318",
+    "nom_mpio": "GUARNE",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,441612",
+    "latitud": "6,27787"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05321",
+    "nom_mpio": "GUATAPÉ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,160041",
+    "latitud": "6,232461"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05347",
+    "nom_mpio": "HELICONIA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,734322",
+    "latitud": "6,206757"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05353",
+    "nom_mpio": "HISPANIA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,906587",
+    "latitud": "5,799461"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05360",
+    "nom_mpio": "ITAGÜÍ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,612056",
+    "latitud": "6,175079"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05361",
+    "nom_mpio": "ITUANGO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,764673",
+    "latitud": "7,171629"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05364",
+    "nom_mpio": "JARDÍN",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,818982",
+    "latitud": "5,597542"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05368",
+    "nom_mpio": "JERICÓ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,785499",
+    "latitud": "5,789748"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05376",
+    "nom_mpio": "LA CEJA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,429433",
+    "latitud": "6,028062"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05380",
+    "nom_mpio": "LA ESTRELLA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,637708",
+    "latitud": "6,145238"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05390",
+    "nom_mpio": "LA PINTADA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,60781",
+    "latitud": "5,743808"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05400",
+    "nom_mpio": "LA UNIÓN",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,360874",
+    "latitud": "5,973845"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05411",
+    "nom_mpio": "LIBORINA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,812838",
+    "latitud": "6,677316"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05425",
+    "nom_mpio": "MACEO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-74,78716",
+    "latitud": "6,552116"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05440",
+    "nom_mpio": "MARINILLA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,339345",
+    "latitud": "6,173995"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05467",
+    "nom_mpio": "MONTEBELLO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,523455",
+    "latitud": "5,946313"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05475",
+    "nom_mpio": "MURINDÓ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-76,817485",
+    "latitud": "6,97771"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05480",
+    "nom_mpio": "MUTATÁ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-76,435875",
+    "latitud": "7,242875"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05483",
+    "nom_mpio": "NARIÑO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,176262",
+    "latitud": "5,610777"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05490",
+    "nom_mpio": "NECOCLÍ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-76,787271",
+    "latitud": "8,434526"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05495",
+    "nom_mpio": "NECHÍ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-74,77647",
+    "latitud": "8,094129"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05501",
+    "nom_mpio": "OLAYA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,811773",
+    "latitud": "6,626492"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05541",
+    "nom_mpio": "PEÑOL",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,242693",
+    "latitud": "6,219349"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05543",
+    "nom_mpio": "PEQUE",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,910357",
+    "latitud": "7,021029"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05576",
+    "nom_mpio": "PUEBLORRICO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,839903",
+    "latitud": "5,79158"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05579",
+    "nom_mpio": "PUERTO BERRÍO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-74,410016",
+    "latitud": "6,487028"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05585",
+    "nom_mpio": "PUERTO NARE",
+    "tipo_municipio": "Municipio",
+    "longitud": "-74,583012",
+    "latitud": "6,186025"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05591",
+    "nom_mpio": "PUERTO TRIUNFO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-74,64119",
+    "latitud": "5,871318"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05604",
+    "nom_mpio": "REMEDIOS",
+    "tipo_municipio": "Municipio",
+    "longitud": "-74,698135",
+    "latitud": "7,029424"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05607",
+    "nom_mpio": "RETIRO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,501301",
+    "latitud": "6,062454"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05615",
+    "nom_mpio": "RIONEGRO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,377316",
+    "latitud": "6,147148"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05628",
+    "nom_mpio": "SABANALARGA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,816645",
+    "latitud": "6,850028"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05631",
+    "nom_mpio": "SABANETA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,615479",
+    "latitud": "6,149903"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05642",
+    "nom_mpio": "SALGAR",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,976807",
+    "latitud": "5,964198"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05647",
+    "nom_mpio": "SAN ANDRÉS DE CUERQUÍA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,674564",
+    "latitud": "6,916676"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05649",
+    "nom_mpio": "SAN CARLOS",
+    "tipo_municipio": "Municipio",
+    "longitud": "-74,988097",
+    "latitud": "6,187746"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05652",
+    "nom_mpio": "SAN FRANCISCO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,101562",
+    "latitud": "5,963476"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05656",
+    "nom_mpio": "SAN JERÓNIMO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,726975",
+    "latitud": "6,44809"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05658",
+    "nom_mpio": "SAN JOSÉ DE LA MONTAÑA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,683352",
+    "latitud": "6,85009"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05659",
+    "nom_mpio": "SAN JUAN DE URABÁ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-76,52857",
+    "latitud": "8,758964"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05660",
+    "nom_mpio": "SAN LUIS",
+    "tipo_municipio": "Municipio",
+    "longitud": "-74,993619",
+    "latitud": "6,043017"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05664",
+    "nom_mpio": "SAN PEDRO DE LOS MILAGROS",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,556743",
+    "latitud": "6,46012"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05665",
+    "nom_mpio": "SAN PEDRO DE URABÁ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-76,380567",
+    "latitud": "8,276884"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05667",
+    "nom_mpio": "SAN RAFAEL",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,02849",
+    "latitud": "6,293759"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05670",
+    "nom_mpio": "SAN ROQUE",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,019109",
+    "latitud": "6,485939"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05674",
+    "nom_mpio": "SAN VICENTE FERRER",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,332616",
+    "latitud": "6,282164"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05679",
+    "nom_mpio": "SANTA BÁRBARA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,567351",
+    "latitud": "5,875527"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05686",
+    "nom_mpio": "SANTA ROSA DE OSOS",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,460723",
+    "latitud": "6,643366"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05690",
+    "nom_mpio": "SANTO DOMINGO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,164903",
+    "latitud": "6,473032"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05697",
+    "nom_mpio": "EL SANTUARIO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,265465",
+    "latitud": "6,136871"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05736",
+    "nom_mpio": "SEGOVIA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-74,701596",
+    "latitud": "7,079648"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05756",
+    "nom_mpio": "SONSÓN",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,309596",
+    "latitud": "5,714851"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05761",
+    "nom_mpio": "SOPETRÁN",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,747378",
+    "latitud": "6,500745"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05789",
+    "nom_mpio": "TÁMESIS",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,714429",
+    "latitud": "5,664645"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05790",
+    "nom_mpio": "TARAZÁ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,401407",
+    "latitud": "7,580127"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05792",
+    "nom_mpio": "TARSO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,822956",
+    "latitud": "5,864542"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05809",
+    "nom_mpio": "TITIRIBÍ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,791887",
+    "latitud": "6,062391"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05819",
+    "nom_mpio": "TOLEDO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,692281",
+    "latitud": "7,010328"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05837",
+    "nom_mpio": "TURBO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-76,728858",
+    "latitud": "8,089929"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05842",
+    "nom_mpio": "URAMITA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-76,173284",
+    "latitud": "6,898393"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05847",
+    "nom_mpio": "URRAO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-76,133951",
+    "latitud": "6,317343"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05854",
+    "nom_mpio": "VALDIVIA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,439274",
+    "latitud": "7,1652"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05856",
+    "nom_mpio": "VALPARAÍSO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,624452",
+    "latitud": "5,614555"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05858",
+    "nom_mpio": "VEGACHÍ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-74,798714",
+    "latitud": "6,773525"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05861",
+    "nom_mpio": "VENECIA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,735544",
+    "latitud": "5,964693"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05873",
+    "nom_mpio": "VIGÍA DEL FUERTE",
+    "tipo_municipio": "Municipio",
+    "longitud": "-76,896004",
+    "latitud": "6,588164"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05885",
+    "nom_mpio": "YALÍ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-74,840059",
+    "latitud": "6,676554"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05887",
+    "nom_mpio": "YARUMAL",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,418828",
+    "latitud": "6,963832"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05890",
+    "nom_mpio": "YOLOMBÓ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,013385",
+    "latitud": "6,594511"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05893",
+    "nom_mpio": "YONDÓ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,912445",
+    "latitud": "7,00396"
+  },
+  {
+    "cod_dpto": "05",
+    "dpto": "ANTIOQUIA",
+    "cod_mpio": "05895",
+    "nom_mpio": "ZARAGOZA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-74,867075",
+    "latitud": "7,488583"
+  },
+  {
+    "cod_dpto": "11",
+    "dpto": "BOGOTÁ, D.C.",
+    "cod_mpio": "11001",
+    "nom_mpio": "BOGOTÁ, D.C.",
+    "tipo_municipio": "Municipio",
+    "longitud": "-74,106992",
+    "latitud": "4,649251"
+  },
+  {
+    "cod_dpto": "63",
+    "dpto": "QUINDÍO",
+    "cod_mpio": "63001",
+    "nom_mpio": "ARMENIA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,680786",
+    "latitud": "4,53598"
+  },
+  {
+    "cod_dpto": "63",
+    "dpto": "QUINDÍO",
+    "cod_mpio": "63111",
+    "nom_mpio": "BUENAVISTA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,739572",
+    "latitud": "4,360029"
+  },
+  {
+    "cod_dpto": "63",
+    "dpto": "QUINDÍO",
+    "cod_mpio": "63130",
+    "nom_mpio": "CALARCÁ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,646085",
+    "latitud": "4,520982"
+  },
+  {
+    "cod_dpto": "63",
+    "dpto": "QUINDÍO",
+    "cod_mpio": "63190",
+    "nom_mpio": "CIRCASIA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,636533",
+    "latitud": "4,617759"
+  },
+  {
+    "cod_dpto": "63",
+    "dpto": "QUINDÍO",
+    "cod_mpio": "63212",
+    "nom_mpio": "CÓRDOBA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,687866",
+    "latitud": "4,392485"
+  },
+  {
+    "cod_dpto": "63",
+    "dpto": "QUINDÍO",
+    "cod_mpio": "63272",
+    "nom_mpio": "FILANDIA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,658387",
+    "latitud": "4,674338"
+  },
+  {
+    "cod_dpto": "63",
+    "dpto": "QUINDÍO",
+    "cod_mpio": "63302",
+    "nom_mpio": "GÉNOVA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,790402",
+    "latitud": "4,206641"
+  },
+  {
+    "cod_dpto": "63",
+    "dpto": "QUINDÍO",
+    "cod_mpio": "63401",
+    "nom_mpio": "LA TEBAIDA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,786887",
+    "latitud": "4,453755"
+  },
+  {
+    "cod_dpto": "63",
+    "dpto": "QUINDÍO",
+    "cod_mpio": "63470",
+    "nom_mpio": "MONTENEGRO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,749827",
+    "latitud": "4,565057"
+  },
+  {
+    "cod_dpto": "63",
+    "dpto": "QUINDÍO",
+    "cod_mpio": "63548",
+    "nom_mpio": "PIJAO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,703329",
+    "latitud": "4,335036"
+  },
+  {
+    "cod_dpto": "63",
+    "dpto": "QUINDÍO",
+    "cod_mpio": "63594",
+    "nom_mpio": "QUIMBAYA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,765074",
+    "latitud": "4,624387"
+  },
+  {
+    "cod_dpto": "63",
+    "dpto": "QUINDÍO",
+    "cod_mpio": "63690",
+    "nom_mpio": "SALENTO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-75,570844",
+    "latitud": "4,637157"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68001",
+    "nom_mpio": "BUCARAMANGA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,132562",
+    "latitud": "7,11647"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68013",
+    "nom_mpio": "AGUADA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,523132",
+    "latitud": "6,162355"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68020",
+    "nom_mpio": "ALBANIA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,91336",
+    "latitud": "5,759166"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68051",
+    "nom_mpio": "ARATOCA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,01786",
+    "latitud": "6,694418"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68077",
+    "nom_mpio": "BARBOSA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,615965",
+    "latitud": "5,932531"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68079",
+    "nom_mpio": "BARICHARA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,223047",
+    "latitud": "6,634111"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68081",
+    "nom_mpio": "BARRANCABERMEJA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,849243",
+    "latitud": "7,064857"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68092",
+    "nom_mpio": "BETULIA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,283669",
+    "latitud": "6,899525"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68101",
+    "nom_mpio": "BOLÍVAR",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,771346",
+    "latitud": "5,988953"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68121",
+    "nom_mpio": "CABRERA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,246475",
+    "latitud": "6,592118"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68132",
+    "nom_mpio": "CALIFORNIA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-72,946491",
+    "latitud": "7,347989"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68147",
+    "nom_mpio": "CAPITANEJO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-72,695427",
+    "latitud": "6,527394"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68152",
+    "nom_mpio": "CARCASÍ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-72,627099",
+    "latitud": "6,629016"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68160",
+    "nom_mpio": "CEPITÁ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-72,973536",
+    "latitud": "6,753518"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68162",
+    "nom_mpio": "CERRITO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-72,694851",
+    "latitud": "6,840405"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68167",
+    "nom_mpio": "CHARALÁ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,146873",
+    "latitud": "6,284339"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68169",
+    "nom_mpio": "CHARTA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-72,968798",
+    "latitud": "7,28082"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68176",
+    "nom_mpio": "CHIMA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,373656",
+    "latitud": "6,344348"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68179",
+    "nom_mpio": "CHIPATÁ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,637111",
+    "latitud": "6,062521"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68190",
+    "nom_mpio": "CIMITARRA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,953011",
+    "latitud": "6,320886"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68207",
+    "nom_mpio": "CONCEPCIÓN",
+    "tipo_municipio": "Municipio",
+    "longitud": "-72,694567",
+    "latitud": "6,768908"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68209",
+    "nom_mpio": "CONFINES",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,240554",
+    "latitud": "6,357327"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68211",
+    "nom_mpio": "CONTRATACIÓN",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,474426",
+    "latitud": "6,290561"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68217",
+    "nom_mpio": "COROMORO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,040816",
+    "latitud": "6,294999"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68229",
+    "nom_mpio": "CURITÍ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,069383",
+    "latitud": "6,605099"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68235",
+    "nom_mpio": "EL CARMEN DE CHUCURÍ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,51066",
+    "latitud": "6,700038"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68245",
+    "nom_mpio": "EL GUACAMAYO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,496908",
+    "latitud": "6,245111"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68250",
+    "nom_mpio": "EL PEÑÓN",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,815532",
+    "latitud": "6,05537"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68255",
+    "nom_mpio": "EL PLAYÓN",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,20287",
+    "latitud": "7,470715"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68264",
+    "nom_mpio": "ENCINO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,098749",
+    "latitud": "6,137429"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68266",
+    "nom_mpio": "ENCISO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-72,699647",
+    "latitud": "6,668034"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68271",
+    "nom_mpio": "FLORIÁN",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,97143",
+    "latitud": "5,804659"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68276",
+    "nom_mpio": "FLORIDABLANCA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,099104",
+    "latitud": "7,072329"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68296",
+    "nom_mpio": "GALÁN",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,287769",
+    "latitud": "6,638423"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68298",
+    "nom_mpio": "GÁMBITA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,344185",
+    "latitud": "5,945998"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68307",
+    "nom_mpio": "GIRÓN",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,166832",
+    "latitud": "7,070432"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68318",
+    "nom_mpio": "GUACA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-72,856322",
+    "latitud": "6,876563"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68320",
+    "nom_mpio": "GUADALUPE",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,419292",
+    "latitud": "6,245847"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68322",
+    "nom_mpio": "GUAPOTÁ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,320732",
+    "latitud": "6,308635"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68324",
+    "nom_mpio": "GUAVATÁ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,700906",
+    "latitud": "5,954348"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68327",
+    "nom_mpio": "GÜEPSA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,575146",
+    "latitud": "6,025013"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68344",
+    "nom_mpio": "HATO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,308399",
+    "latitud": "6,543957"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68368",
+    "nom_mpio": "JESÚS MARÍA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,783396",
+    "latitud": "5,876497"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68370",
+    "nom_mpio": "JORDÁN",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,096053",
+    "latitud": "6,732727"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68377",
+    "nom_mpio": "LA BELLEZA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,965494",
+    "latitud": "5,85925"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68385",
+    "nom_mpio": "LANDÁZURI",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,811359",
+    "latitud": "6,218812"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68397",
+    "nom_mpio": "LA PAZ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,58959",
+    "latitud": "6,178509"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68406",
+    "nom_mpio": "LEBRIJA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,219524",
+    "latitud": "7,113351"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68418",
+    "nom_mpio": "LOS SANTOS",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,102739",
+    "latitud": "6,755203"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68425",
+    "nom_mpio": "MACARAVITA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-72,593105",
+    "latitud": "6,50658"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68432",
+    "nom_mpio": "MÁLAGA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-72,732089",
+    "latitud": "6,703081"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68444",
+    "nom_mpio": "MATANZA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,015566",
+    "latitud": "7,323175"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68464",
+    "nom_mpio": "MOGOTES",
+    "tipo_municipio": "Municipio",
+    "longitud": "-72,969807",
+    "latitud": "6,475246"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68468",
+    "nom_mpio": "MOLAGAVITA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-72,809175",
+    "latitud": "6,67432"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68498",
+    "nom_mpio": "OCAMONTE",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,122563",
+    "latitud": "6,339988"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68500",
+    "nom_mpio": "OIBA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,299791",
+    "latitud": "6,26521"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68502",
+    "nom_mpio": "ONZAGA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-72,816766",
+    "latitud": "6,344104"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68522",
+    "nom_mpio": "PALMAR",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,29109",
+    "latitud": "6,537789"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68524",
+    "nom_mpio": "PALMAS DEL SOCORRO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,287764",
+    "latitud": "6,406139"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68533",
+    "nom_mpio": "PÁRAMO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,17022",
+    "latitud": "6,416811"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68547",
+    "nom_mpio": "PIEDECUESTA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,054795",
+    "latitud": "6,997245"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68549",
+    "nom_mpio": "PINCHOTE",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,174209",
+    "latitud": "6,531552"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68572",
+    "nom_mpio": "PUENTE NACIONAL",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,677567",
+    "latitud": "5,878381"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68573",
+    "nom_mpio": "PUERTO PARRA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-74,056129",
+    "latitud": "6,650785"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68575",
+    "nom_mpio": "PUERTO WILCHES",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,899909",
+    "latitud": "7,344057"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68615",
+    "nom_mpio": "RIONEGRO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,150177",
+    "latitud": "7,265014"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68655",
+    "nom_mpio": "SABANA DE TORRES",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,49906",
+    "latitud": "7,391919"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68669",
+    "nom_mpio": "SAN ANDRÉS",
+    "tipo_municipio": "Municipio",
+    "longitud": "-72,848864",
+    "latitud": "6,811511"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68673",
+    "nom_mpio": "SAN BENITO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,50907",
+    "latitud": "6,126656"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68679",
+    "nom_mpio": "SAN GIL",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,134776",
+    "latitud": "6,551952"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68682",
+    "nom_mpio": "SAN JOAQUÍN",
+    "tipo_municipio": "Municipio",
+    "longitud": "-72,867638",
+    "latitud": "6,427548"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68684",
+    "nom_mpio": "SAN JOSÉ DE MIRANDA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-72,733616",
+    "latitud": "6,658995"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68686",
+    "nom_mpio": "SAN MIGUEL",
+    "tipo_municipio": "Municipio",
+    "longitud": "-72,644123",
+    "latitud": "6,575315"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68689",
+    "nom_mpio": "SAN VICENTE DE CHUCURÍ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,411024",
+    "latitud": "6,880383"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68705",
+    "nom_mpio": "SANTA BÁRBARA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-72,907445",
+    "latitud": "6,990996"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68720",
+    "nom_mpio": "SANTA HELENA DEL OPÓN",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,616716",
+    "latitud": "6,339565"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68745",
+    "nom_mpio": "SIMACOTA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,337368",
+    "latitud": "6,443469"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68755",
+    "nom_mpio": "SOCORRO",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,261198",
+    "latitud": "6,46387"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68770",
+    "nom_mpio": "SUAITA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,44165",
+    "latitud": "6,101329"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68773",
+    "nom_mpio": "SUCRE",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,790975",
+    "latitud": "5,918743"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68780",
+    "nom_mpio": "SURATÁ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-72,984232",
+    "latitud": "7,36658"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68820",
+    "nom_mpio": "TONA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-72,967023",
+    "latitud": "7,201417"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68855",
+    "nom_mpio": "VALLE DE SAN JOSÉ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,143507",
+    "latitud": "6,448028"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68861",
+    "nom_mpio": "VÉLEZ",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,672447",
+    "latitud": "6,009275"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68867",
+    "nom_mpio": "VETAS",
+    "tipo_municipio": "Municipio",
+    "longitud": "-72,871041",
+    "latitud": "7,30981"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68872",
+    "nom_mpio": "VILLANUEVA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,174307",
+    "latitud": "6,670078"
+  },
+  {
+    "cod_dpto": "68",
+    "dpto": "SANTANDER",
+    "cod_mpio": "68895",
+    "nom_mpio": "ZAPATOCA",
+    "tipo_municipio": "Municipio",
+    "longitud": "-73,268034",
+    "latitud": "6,814387"
+  }
+]

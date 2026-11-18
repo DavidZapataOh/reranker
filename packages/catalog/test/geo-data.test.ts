@@ -1,0 +1,64 @@
+import { readdirSync, readFileSync, statSync } from "node:fs";
+import { measurableCountries } from "@reranker/i18n/countries";
+import { describe, expect, test } from "vitest";
+import {
+  expandGeoFile,
+  GEO_DATA_VERSION,
+  type GeoFile,
+  type GeoNamesFile,
+} from "../src/geo/format.ts";
+import { contentHash } from "../src/hash.ts";
+
+const dir = new URL("../data/geo/", import.meta.url);
+const path = (name: string) => new URL(name, dir);
+const read = <T>(name: string): T => JSON.parse(readFileSync(path(name), "utf8"));
+
+const manifest = read<{ version: string; geoDataHash: Record<string, string> }>("manifest.json");
+const codes = measurableCountries().map((country) => country.code.toLowerCase());
+const geoFile = (code: string) => `${code}-${GEO_DATA_VERSION}.json`;
+
+const MAX_COUNTRY_BYTES = 1.2 * 1024 * 1024;
+const MAX_NAMES_BYTES = 300 * 1024;
+
+describe("generated location data", () => {
+  test("one file per measurable country and none for unmeasured ones", () => {
+    const files = readdirSync(dir).filter((name) => name.endsWith(`-${GEO_DATA_VERSION}.json`));
+    expect(files.sort()).toEqual(codes.map(geoFile).sort());
+    expect(files).not.toContain(geoFile("cu"));
+    expect(Object.keys(manifest.geoDataHash).sort()).toEqual(files.sort());
+  });
+
+  test.each(codes)("%s matches its manifest hash and size budget", (code) => {
+    const file = read<GeoFile>(geoFile(code));
+    expect(file).toMatchObject({ version: GEO_DATA_VERSION, country: code.toUpperCase() });
+    const hash = contentHash(expandGeoFile(file));
+    expect(file.geoDataHash).toBe(hash);
+    expect(manifest.geoDataHash[geoFile(code)]).toBe(hash);
+    expect(statSync(path(geoFile(code))).size).toBeLessThanOrEqual(MAX_COUNTRY_BYTES);
+  });
+
+  test.each(codes)("%s names index lists exactly its cities", (code) => {
+    const names = read<GeoNamesFile>(`${code}-names.json`);
+    const cities = read<GeoFile>(geoFile(code)).cities.map((row) => row[1]);
+    expect(names.country).toBe(code.toUpperCase());
+    expect(new Set(names.names)).toEqual(new Set(cities));
+    expect(names.names).toHaveLength(new Set(cities).size);
+    expect(statSync(path(`${code}-names.json`)).size).toBeLessThanOrEqual(MAX_NAMES_BYTES);
+  });
+
+  test("Colombia carries all 1,122 DIVIPOLA records with unique keys", () => {
+    const places = expandGeoFile(read<GeoFile>(geoFile("co")));
+    const municipalities = places.filter((place) => place.divipola);
+    expect(municipalities).toHaveLength(1122);
+    expect(new Set(municipalities.map((p) => p.divipola?.municipalityCode)).size).toBe(1122);
+    expect(new Set(places.map((place) => place.key)).size).toBe(places.length);
+  });
+
+  test("every key is unique and well formed in every country", () => {
+    for (const code of codes) {
+      const places = expandGeoFile(read<GeoFile>(geoFile(code)));
+      expect(new Set(places.map((place) => place.key)).size).toBe(places.length);
+      for (const place of places) expect(place.key).toMatch(/^[a-z]{2}-[rc][0-9a-z]+$/);
+    }
+  });
+});
