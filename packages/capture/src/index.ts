@@ -10,12 +10,14 @@ export {
 export { EngineAnswer, PARSER_VERSIONS, safeParseAnswer } from "./answer";
 export { createDataForSeo } from "./dataforseo/client";
 export { type DataForSeoGeo, geoFields } from "./dataforseo/geo";
+export { captureLive } from "./dataforseo/live";
 export {
   buildRequest,
   type DataForSeoMode,
   type DataForSeoRequest,
   requestBytes,
 } from "./dataforseo/request";
+export { type DataForSeoOutcome, mapDataForSeoStatus } from "./dataforseo/status";
 export { ENGINES, type EngineSpec } from "./engines";
 export { RawSink } from "./raw/raw-sink";
 export { type Fetch, recordingFetch, teeFetch } from "./raw/tee-fetch";
