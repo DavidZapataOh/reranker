@@ -32,54 +32,66 @@ const ownRows = (tenant: TenantId) =>
 
 // Pipelined transactions share pooled connections far more often than the pool has clients, so
 // any setting, error or timeout that outlived its transaction would surface in another tenant.
+// The workers keep the checkout queue short enough to stay inside the pool's connect timeout.
+const WORKERS = 16;
+const ROUNDS = 600;
+
 test("concurrent lone, async, failing and timing-out transactions only ever see their own tenant", async () => {
-  const jobs = Array.from({ length: 600 }, async (_, i) => {
-    const tenant = tenantAt(i);
-    switch (i % 6) {
-      case 0:
-        expect(await ownRows(tenant)).toEqual([tenant]);
-        return;
-      case 1: {
-        const { rows } = await withTenant(tenant, (tx) =>
-          tx.execute<{ tenants: string }>(sql`select current_setting('app.tenant_ids') as tenants`),
-        );
-        expect(rows[0]?.tenants).toBe(`{${tenant}}`);
-        return;
-      }
-      case 2: {
-        const seen = await withTenant(tenant, async (tx) => {
-          const { rows } = await tx.execute<{ tenants: string }>(
-            sql`select current_setting('app.tenant_ids') as tenants`,
-          );
-          return [rows[0]?.tenants, (await tx.select().from(probe())).map((r) => r.tenantId)];
-        });
-        expect(seen).toEqual([`{${tenant}}`, [tenant]]);
-        return;
-      }
-      case 3: {
-        const error = await withTenant(tenant, (tx) =>
-          tx.insert(probe()).values({ tenantId: tenantAt(i + 1) }),
-        ).catch((e: unknown) => e);
-        expect(error).toMatchObject({ code: "internal" });
-        return;
-      }
-      case 4: {
-        const error = await withTenant(tenant, (tx) => tx.execute(sql`select pg_sleep(0.2)`), {
-          statementTimeoutMs: 20,
-        }).catch((e: unknown) => e);
-        expect(error).toMatchObject({ code: "timeout" });
-        return;
-      }
-      default:
-        expect(
-          await withTenants([tenant, tenantAt(i + 1)], (tx) => tx.select().from(probe())),
-        ).toHaveLength(2);
+  const failures: unknown[] = [];
+  let next = 0;
+  const worker = async () => {
+    for (let i = next++; i < ROUNDS; i = next++) {
+      await round(i).catch((error: unknown) => failures.push(error));
     }
-  });
-  const failures = (await Promise.allSettled(jobs)).filter((r) => r.status === "rejected");
+  };
+  await Promise.all(Array.from({ length: WORKERS }, worker));
   expect(failures).toEqual([]);
   expect(appPool().totalCount).toBe(appPool().idleCount);
 }, 120_000);
+
+async function round(i: number): Promise<void> {
+  const tenant = tenantAt(i);
+  switch (i % 6) {
+    case 0:
+      expect(await ownRows(tenant)).toEqual([tenant]);
+      return;
+    case 1: {
+      const { rows } = await withTenant(tenant, (tx) =>
+        tx.execute<{ tenants: string }>(sql`select current_setting('app.tenant_ids') as tenants`),
+      );
+      expect(rows[0]?.tenants).toBe(`{${tenant}}`);
+      return;
+    }
+    case 2: {
+      const seen = await withTenant(tenant, async (tx) => {
+        const { rows } = await tx.execute<{ tenants: string }>(
+          sql`select current_setting('app.tenant_ids') as tenants`,
+        );
+        return [rows[0]?.tenants, (await tx.select().from(probe())).map((r) => r.tenantId)];
+      });
+      expect(seen).toEqual([`{${tenant}}`, [tenant]]);
+      return;
+    }
+    case 3: {
+      const error = await withTenant(tenant, (tx) =>
+        tx.insert(probe()).values({ tenantId: tenantAt(i + 1) }),
+      ).catch((e: unknown) => e);
+      expect(error).toMatchObject({ code: "internal" });
+      return;
+    }
+    case 4: {
+      const error = await withTenant(tenant, (tx) => tx.execute(sql`select pg_sleep(0.2)`), {
+        statementTimeoutMs: 20,
+      }).catch((e: unknown) => e);
+      expect(error).toMatchObject({ code: "timeout" });
+      return;
+    }
+    default:
+      expect(
+        await withTenants([tenant, tenantAt(i + 1)], (tx) => tx.select().from(probe())),
+      ).toHaveLength(2);
+  }
+}
 
 test("withTenants with 1000 ids sees its own rows and nothing else", async () => {
   const ids = [
