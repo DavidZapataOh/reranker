@@ -163,7 +163,7 @@ async function refreshPlaceIdsStep(date: string): Promise<void> {
  * this list, with `run` a step function of its own module (`"use step"`, wrapping its package
  * function and rethrowing `toStepError(error)`): `otsUpgrade`, `controlCanary`,
  * `prewarmIntentSets`, `qualityCanary`, `drainDeferredFreeReports`, `enqueueDueRemeasures` and
- * `leadRetentionSweep` after `checkScaleTriggers`; `vercelBilling`, `launchGate` and `opsDigest`
+ * `leadRetentionSweep` after `checkScaleTriggers` and before `refreshPlaceIds`; `vercelBilling`, `launchGate` and `opsDigest`
  * last, so the digest reports on everything above.
  */
 export const DAILY_STEPS: readonly DailyStep[] = [

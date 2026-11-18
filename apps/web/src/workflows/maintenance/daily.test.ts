@@ -133,9 +133,9 @@ test("a failed auth purge is reported under its own name and retried", async () 
   );
 });
 
-test("the place id refresh runs after the scale triggers on 200 ids and logs its counts", async () => {
+test("the place id refresh runs right before the Vercel billing check on 200 ids and logs its counts", async () => {
   const names = DAILY_STEPS.map((s) => s.name);
-  expect(names.indexOf("refreshPlaceIds")).toBe(names.indexOf("checkScaleTriggers") + 1);
+  expect(names.indexOf("refreshPlaceIds")).toBe(names.indexOf("vercelBilling") - 1);
   extraction.refreshStalePlaceIds.mockResolvedValue({ checked: 200, moved: 3, gone: 1 });
   await step("refreshPlaceIds")("2026-11-17");
   expect(extraction.refreshStalePlaceIds).toHaveBeenCalledExactlyOnceWith(200, {
