@@ -9,7 +9,7 @@ The `network-ranges-stale` alert (warning, source `jobs`), raised by the `refres
 - `empty_lists`: every list at that upstream `commit` parsed to nothing.
 - `never_loaded`: the download failed and no list was ever loaded.
 
-The lists are `output/datacenter/*` and `output/vpn/*` of `X4BNet/lists_vpn` (MIT, built from IPLocate data, CC BY-SA 4.0), pinned to the commit read at the start of each refresh.
+The lists are `output/datacenter/*` and `output/vpn/*` of `X4BNet/lists_vpn` (MIT, built from IPLocate data, CC BY-SA 4.0), pinned to the commit `refs/heads/main` points at when the refresh starts. That commit comes from Git's smart HTTP ref discovery (`https://github.com/X4BNet/lists_vpn.git/info/refs?service=git-upload-pack`, what `git ls-remote` reads), not the REST API, whose 60 unauthenticated requests an hour per IP shared egress IPs use up.
 
 ## Impact
 
@@ -24,7 +24,7 @@ select source_commit, rows, refreshed_at from ops.network_ranges_meta order by r
 select kind, count(*) from ops.network_ranges group by kind;
 ```
 
-- `refreshed_at` two or more days old and `reason: download_failed`: look for `jobs.daily.step_failed` with `step: refreshNetworkRanges` in PostHog Logs; its `error` names the URL or status. Check https://www.githubstatus.com for an incident.
+- `refreshed_at` two or more days old and `reason: download_failed`: look for `jobs.daily.step_failed` with `step: refreshNetworkRanges` in PostHog Logs; its `error` names the URL or status. `RateLimited: Rate limited by <host>` means GitHub answered 403 or 429: the step already waited what GitHub asked for (`retry-after`, else the window reset, else one minute doubling per attempt) and ran out of retries; the next daily run tries again. Check https://www.githubstatus.com for an incident.
 - `change_too_large`: compare the loaded commit with the new one on GitHub, `https://github.com/X4BNet/lists_vpn/compare/<loaded commit>...<new commit>`, and read the changed line counts under `output/`. A mass removal or a truncated file is an upstream mistake; a large but even change (a new ASN source, many new hosting networks) is real.
 - `empty_lists`: open `https://raw.githubusercontent.com/X4BNet/lists_vpn/<commit>/output/datacenter/ipv4.txt`; an empty or HTML body means the upstream output is broken at that commit.
 

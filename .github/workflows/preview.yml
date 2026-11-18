@@ -63,7 +63,7 @@ jobs:
     needs: changes
     if: needs.changes.outputs.web == 'true'
     runs-on: ubuntu-24.04
-    # Branch reset, migration, a Vercel build and the deployment.
+    # Branch reset, migration, network lists, a Vercel build and the deployment.
     timeout-minutes: 25
     permissions: { contents: read }
     environment:
@@ -133,6 +133,11 @@ jobs:
         with:
           db-url: ${{ steps.branch.outputs.db_url }}
           db-host-pooled: ${{ steps.branch.outputs.db_host_pooled }}
+      # The branch is copied from main, which CI suites expect without network lists, so each
+      # preview loads its own, as production's daily maintenance does; without them every address
+      # classifies as residential and the lookup is measured against an empty table.
+      - name: Load the datacenter and VPN network lists
+        run: pnpm --filter @reranker/jobs network:refresh
       # Vercel builds the source with the project's Preview variables; only the database URLs,
       # which exist for this deployment alone, are passed in. The migration credentials never are.
       - id: deploy

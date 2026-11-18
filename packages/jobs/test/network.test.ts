@@ -9,10 +9,9 @@ const withSystem = vi.fn(async (_reason: string, fn: (tx: unknown) => unknown, _
 vi.mock("@reranker/db", () => ({ withSystem }));
 vi.mock("../src/network-exclusions", () => ({ NETWORK_EXCLUSIONS: ["100.64.0.0/10"] }));
 
-const { InvalidInputError } = await import("../src/errors");
-const { classifyNetwork, mergeLists, parseRangeList, refreshNetworkRanges } = await import(
-  "../src/network"
-);
+const { InvalidInputError, RateLimitedError } = await import("../src/errors");
+const { advertisedRef, classifyNetwork, mergeLists, parseRangeList, refreshNetworkRanges } =
+  await import("../src/network");
 
 const SHA = "0123456789abcdef0123456789abcdef01234567";
 const OLDER = "f".repeat(40);
@@ -25,13 +24,34 @@ function rendered(query: unknown): string {
 }
 const statements = () => execute.mock.calls.map(([q]) => rendered(q));
 
-// Serves the upstream commit and the four lists the way GitHub does.
+const REFS_URL = "https://github.com/X4BNet/lists_vpn.git/info/refs?service=git-upload-pack";
+
+const pkt = (line: string) =>
+  `${(new TextEncoder().encode(line).length + 4).toString(16).padStart(4, "0")}${line}`;
+
+// A smart HTTP ref advertisement as github.com sends it: HEAD first with the capabilities, then
+// every branch in name order.
+function advertisement(main: string) {
+  return [
+    pkt("# service=git-upload-pack\n"),
+    "0000",
+    pkt(
+      `${main} HEAD\0multi_ack thin-pack side-band symref=HEAD:refs/heads/main agent=git/github\n`,
+    ),
+    pkt(`${OLDER} refs/heads/experiment/split-list\n`),
+    pkt(`${main} refs/heads/main\n`),
+    pkt(`${OLDER} refs/heads/main-ñ\n`),
+    "0000",
+  ].join("");
+}
+const ADVERTISEMENT_TYPE = { "content-type": "application/x-git-upload-pack-advertisement" };
+
+// Serves the upstream refs and the four lists the way GitHub does.
 function upstream(lists: Partial<Record<string, string>>, sha = SHA) {
-  return vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
+  return vi.fn(async (input: string | URL | Request) => {
     const url = String(input);
-    if (url === "https://api.github.com/repos/X4BNet/lists_vpn/commits/main") {
-      expect(new Headers(init?.headers).get("accept")).toBe("application/vnd.github.sha");
-      return new Response(sha);
+    if (url === REFS_URL) {
+      return new Response(advertisement(sha), { headers: ADVERTISEMENT_TYPE });
     }
     const prefix = `https://raw.githubusercontent.com/X4BNet/lists_vpn/${sha}/output/`;
     const body = url.startsWith(prefix) ? lists[url.slice(prefix.length)] : undefined;
@@ -139,6 +159,28 @@ describe("classifyNetwork", () => {
     await expect(classifyNetwork(ip as string)).rejects.toBeInstanceOf(InvalidInputError);
     expect(withSystem).not.toHaveBeenCalled();
   });
+});
+
+describe("advertisedRef", () => {
+  const bytes = (text: string) => new TextEncoder().encode(text);
+
+  test("finds the branch among the others, counting bytes, not characters", () => {
+    expect(advertisedRef(bytes(advertisement(SHA)), "refs/heads/main")).toBe(SHA);
+    expect(advertisedRef(bytes(advertisement(SHA)), "refs/heads/main-ñ")).toBe(OLDER);
+  });
+
+  test("the ref on the capabilities line is read without them", () =>
+    expect(advertisedRef(bytes(advertisement(SHA)), "HEAD")).toBe(SHA));
+
+  test.each([
+    ["a missing ref", advertisement(SHA).replace("refs/heads/main\n", "refs/heads/trunk\n")],
+    ["a dumb server listing", `${SHA}\trefs/heads/main\n`],
+    ["no service line", pkt(`${SHA} refs/heads/main\n`)],
+    ["a truncated pkt-line", advertisement(SHA).slice(0, -20)],
+    ["an object id that is not one", advertisement("z".repeat(40))],
+  ])("gives nothing for %s", (_, text) =>
+    expect(advertisedRef(bytes(text), "refs/heads/main")).toBeUndefined(),
+  );
 });
 
 describe("refreshNetworkRanges", () => {
@@ -253,6 +295,10 @@ describe("refreshNetworkRanges", () => {
 
   test.each([
     ["the commit lookup fails", upstream(LISTS, "not-a-sha")],
+    [
+      "github answers in another format",
+      vi.fn(async () => new Response(advertisement(SHA))) as unknown as typeof fetch,
+    ],
     ["a list is missing", upstream({ ...LISTS, "vpn/ipv6.txt": undefined })],
     [
       "the network is down",
@@ -291,6 +337,66 @@ describe("refreshNetworkRanges", () => {
     expect(onAlert).toHaveBeenCalledWith({
       kind: "network-ranges-stale",
       payload: { reason: "never_loaded" },
+    });
+  });
+});
+
+describe("a throttled download", () => {
+  const throttled = (url: string, status: number, headers: Record<string, string>) => {
+    const serve = upstream(LISTS);
+    return vi.fn(async (input: string | URL | Request) =>
+      String(input).startsWith(url) ? new Response("", { status, headers }) : serve(input),
+    ) as unknown as typeof fetch;
+  };
+  const waitOf = async (fetchImpl: typeof fetch, attempt = 1) => {
+    const error = await refreshNetworkRanges(fetchImpl, { attempt }).catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(RateLimitedError);
+    return (error as InstanceType<typeof RateLimitedError>).retryAfterMs;
+  };
+
+  beforeEach(() => execute.mockResolvedValue({ rows: [] }));
+
+  test("waits the seconds of retry-after", async () =>
+    expect(await waitOf(throttled(REFS_URL, 429, { "retry-after": "120" }))).toBeGreaterThan(
+      119_000,
+    ));
+
+  test("waits for the reset of an exhausted window", async () => {
+    const reset = String(Math.floor(Date.now() / 1000) + 1800);
+    const wait = await waitOf(
+      throttled("https://raw.githubusercontent.com/", 403, {
+        "x-ratelimit-remaining": "0",
+        "x-ratelimit-reset": reset,
+      }),
+    );
+    expect(wait).toBeGreaterThan(1_798_000);
+    expect(wait).toBeLessThanOrEqual(1_800_000);
+  });
+
+  test("without a hint waits a minute, doubling with each attempt", async () => {
+    const fetchImpl = throttled(REFS_URL, 403, {});
+    expect(await waitOf(fetchImpl)).toBe(60_000);
+    expect(await waitOf(fetchImpl, 3)).toBe(240_000);
+  });
+
+  test("names the host that throttled", async () => {
+    const error = await refreshNetworkRanges(throttled(REFS_URL, 429, {})).catch((e) => e);
+    expect((error as Error).message).toMatch(/^Rate limited by github.com, retry in/);
+  });
+
+  test("still alerts once the loaded list is 48 h old", async () => {
+    execute.mockResolvedValue({
+      rows: [
+        { source_commit: OLDER, rows: 42, refreshed_at: new Date(Date.now() - 50 * 3_600_000) },
+      ],
+    });
+    const onAlert = vi.fn();
+    await expect(
+      refreshNetworkRanges(throttled(REFS_URL, 429, {}), { onAlert }),
+    ).rejects.toBeInstanceOf(RateLimitedError);
+    expect(onAlert).toHaveBeenCalledWith({
+      kind: "network-ranges-stale",
+      payload: { reason: "download_failed", hours: 50 },
     });
   });
 });

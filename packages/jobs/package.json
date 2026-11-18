@@ -16,7 +16,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run --project unit --coverage --passWithNoTests",
     "test:integration": "vitest run --project integration",
-    "test:contract": "vitest run --project contract"
+    "test:contract": "vitest run --project contract",
+    "network:refresh": "tsx scripts/refresh-network-ranges.ts"
   },
   "dependencies": {
     "@reranker/analytics": "workspace:*",

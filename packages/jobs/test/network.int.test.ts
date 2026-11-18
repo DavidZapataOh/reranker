@@ -69,12 +69,19 @@ function lists(n: number, { vpn = 0, offset = 0 } = {}): Lists {
 let commits = 0;
 const alerts: NetworkRangesAlert[] = [];
 
+const pkt = (line: string) => `${(line.length + 4).toString(16).padStart(4, "0")}${line}`;
+
 // Each refresh sees a new upstream commit, as GitHub serves it.
 async function refreshWith(body: Lists) {
   const sha = (++commits).toString(16).padStart(40, "0");
+  const refs = `${pkt("# service=git-upload-pack\n")}0000${pkt(`${sha} refs/heads/main\n`)}0000`;
   const fetchImpl = (async (input: string | URL | Request) => {
     const url = String(input);
-    if (url.endsWith("/commits/main")) return new Response(sha);
+    if (url.endsWith("/info/refs?service=git-upload-pack")) {
+      return new Response(refs, {
+        headers: { "content-type": "application/x-git-upload-pack-advertisement" },
+      });
+    }
     const path = url.split(`/${sha}/output/`)[1] as keyof Lists | undefined;
     return path && path in body ? new Response(body[path]) : new Response("", { status: 404 });
   }) as typeof fetch;
