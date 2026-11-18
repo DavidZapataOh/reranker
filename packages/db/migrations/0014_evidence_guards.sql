@@ -1,13 +1,14 @@
--- The transparency log is append-only: a signed entry, an integrated batch or a published key is
--- never rewritten or removed. The trigger arguments name the only columns that may go from null to
--- a value, once; the rest of the row is compared whole, so a column added later is immutable too.
+-- The transparency log is append-only: a signed entry, an integrated batch, a published key or an
+-- artifact removal is never rewritten or removed. The trigger arguments name the only columns that
+-- may go from null to a value, once; the rest of the row is compared whole, so a column added later
+-- is immutable too.
 create function public_panel.evidence_append_only_guard() returns trigger
   language plpgsql
   security invoker
   set search_path = ''
 as $$
 declare
-  settable text[] := tg_argv;
+  settable text[] := coalesce(tg_argv, '{}');
   column_name text;
 begin
   if tg_op = 'DELETE' then
@@ -23,8 +24,9 @@ begin
     end if;
   end loop;
   if (to_jsonb(new) - settable) is distinct from (to_jsonb(old) - settable) then
-    raise exception '%.% rows are immutable except for setting %',
-      tg_table_schema, tg_table_name, array_to_string(settable, ', ')
+    raise exception '%.% rows are immutable%', tg_table_schema, tg_table_name,
+      case when cardinality(settable) > 0
+        then ' except for setting ' || array_to_string(settable, ', ') else '' end
       using errcode = 'restrict_violation';
   end if;
   return new;
@@ -44,3 +46,8 @@ create trigger evidence_batches_guard
 create trigger signing_keys_guard
   before update or delete on public_panel.signing_keys
   for each row execute function public_panel.evidence_append_only_guard('valid_to', 'compromised_after');
+--> statement-breakpoint
+-- The record of what was taken down and why; a removal recorded once is never edited or hidden.
+create trigger artifact_removals_guard
+  before update or delete on public_panel.artifact_removals
+  for each row execute function public_panel.evidence_append_only_guard();

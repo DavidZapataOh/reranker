@@ -297,6 +297,25 @@ test("artifact removals hold one row per 32-byte digest with a closed kind and r
   await expect(remove(randomBytes(32), "raw", "because")).rejects.toMatchObject({ code: "23514" });
 });
 
+test("a recorded removal is never updated or deleted, and recording it again is a no-op", async () => {
+  const digest = randomBytes(32);
+  const record = `insert into public_panel.artifact_removals (sha256, kind, reason)
+    values ($1, 'raw', 'personal_data_request') on conflict do nothing`;
+  await sys(record, [digest]);
+  await expect(sys(record, [digest])).resolves.toMatchObject({ rowCount: 0 });
+  await expect(
+    sys(`update public_panel.artifact_removals set reason = 'legal_order' where sha256 = $1`, [
+      digest,
+    ]),
+  ).rejects.toThrow(/immutable/);
+  await expect(
+    sys(`update public_panel.artifact_removals set removed_at = now() where sha256 = $1`, [digest]),
+  ).rejects.toThrow(/immutable/);
+  await expect(
+    sys(`delete from public_panel.artifact_removals where sha256 = $1`, [digest]),
+  ).rejects.toThrow(/immutable/);
+});
+
 test("the pending entry queue uses its partial index with 10,000 rows", async () => {
   // Rolled back so the rows never count toward the other tests; the owner can ANALYZE them.
   await owner.query("begin");
