@@ -23,6 +23,7 @@ export {
 } from "./places/client";
 export { PLATFORMS, type PlatformEntry, platformFor, tagPlatforms } from "./platforms";
 export { costOfUsage, estimateOf, PLACES_SKU_PRICES } from "./prices";
+export { callOpenAI } from "./providers/openai";
 export {
   type LlmProvider,
   type ModelRef,
@@ -31,6 +32,7 @@ export {
   type StructuredCall,
   type StructuredCaller,
   type StructuredResult,
+  type StructuredUsage,
 } from "./providers/types";
 export { assignOrdinals, locateQuote, toExtractedMentions } from "./quote";
 export {

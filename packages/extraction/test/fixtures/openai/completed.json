@@ -1,0 +1,57 @@
+{
+  "id": "resp_0c1f8e2a7b9d4e6f",
+  "object": "response",
+  "created_at": 1795478400,
+  "status": "completed",
+  "background": false,
+  "error": null,
+  "incomplete_details": null,
+  "instructions": null,
+  "max_output_tokens": 2048,
+  "model": "gpt-6-luna",
+  "output": [
+    {
+      "id": "rs_0c1f8e2a7b9d4e70",
+      "type": "reasoning",
+      "summary": []
+    },
+    {
+      "id": "msg_0c1f8e2a7b9d4e71",
+      "type": "message",
+      "status": "completed",
+      "role": "assistant",
+      "content": [
+        {
+          "type": "output_text",
+          "annotations": [],
+          "logprobs": [],
+          "text": "{\"answerKind\":\"names_entities\",\"mentions\":[{\"name\":\"Clínica Dental Sonrisa Paisa\",\"quote\":\"Clínica Dental Sonrisa Paisa\",\"stance\":\"recommendation\",\"entityKind\":\"business\",\"sentiment\":\"positive\",\"locationHint\":\"El Poblado\",\"citedUrls\":[]},{\"name\":\"Doctoralia\",\"quote\":\"Doctoralia\",\"stance\":\"incidental\",\"entityKind\":\"platform\",\"sentiment\":\"neutral\",\"locationHint\":null,\"citedUrls\":[\"https://www.doctoralia.co\"]}]}"
+        }
+      ]
+    }
+  ],
+  "parallel_tool_calls": true,
+  "previous_response_id": null,
+  "prompt_cache_options": { "mode": "explicit", "ttl": "30m" },
+  "reasoning": { "effort": "low", "summary": null },
+  "store": false,
+  "text": {
+    "format": { "type": "json_schema", "name": "mentions", "strict": true, "schema": {} },
+    "verbosity": "medium"
+  },
+  "tool_choice": "auto",
+  "tools": [],
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 1512,
+    "input_tokens_details": {
+      "cached_tokens": 1024,
+      "cache_write_tokens": 0,
+      "cache_write_tokens_details": { "ttl_30m_tokens": 0, "ttl_12h_tokens": 0 }
+    },
+    "output_tokens": 288,
+    "output_tokens_details": { "reasoning_tokens": 96 },
+    "total_tokens": 1800
+  },
+  "metadata": {}
+}
