@@ -73,7 +73,12 @@ async function signAndStore(
   statement: InTotoStatement<string, unknown>,
   artifacts: Promise<unknown>[],
 ): Promise<{ envelopeSha256: string; keyid: string }> {
-  const [signed] = await Promise.all([signStatement(statement), ...artifacts]);
+  // Settles every write before failing, so no request outlives the call that started it.
+  const signing = signStatement(statement);
+  const settled = await Promise.allSettled([signing, ...artifacts]);
+  const failed = settled.find((r): r is PromiseRejectedResult => r.status === "rejected");
+  if (failed) throw failed.reason;
+  const signed = await signing;
   await putArtifact("envelopes", signed.envelopeBytes, { contentType: ENVELOPE_CONTENT_TYPE });
   return { envelopeSha256: signed.envelopeSha256, keyid: keyidOf(signed.envelope) };
 }
