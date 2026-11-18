@@ -1,4 +1,5 @@
 import { purgeExpiredAuthRecords } from "@reranker/auth/purge";
+import { refreshStalePlaceIds } from "@reranker/extraction";
 import {
   checkPrimitiveLatency,
   checkProviderVolume,
@@ -26,6 +27,7 @@ export type DailyRunSummary = { failed: string[] };
 type Alert = NetworkRangesAlert | WorkflowBudgetAlert | ScaleTriggerAlert;
 
 const DAY_MS = 86_400_000;
+const PLACE_IDS_PER_DAY = 200;
 
 const previousDay = (date: string) =>
   new Date(Date.parse(`${date}T00:00:00Z`) - DAY_MS).toISOString().slice(0, 10);
@@ -143,12 +145,25 @@ async function checkScaleTriggersStep(date: string): Promise<void> {
   });
 }
 
+// IDs Only details are free, so nothing is reserved; the context only names the run.
+async function refreshPlaceIdsStep(date: string): Promise<void> {
+  "use step";
+  await asStep("refreshPlaceIds", async () => {
+    const counts = await refreshStalePlaceIds(PLACE_IDS_PER_DAY, {
+      purpose: "quality-canary",
+      refType: "places-refresh",
+      refId: date,
+    });
+    log.info("jobs.daily.place_ids_refreshed", counts);
+  });
+}
+
 /**
  * The daily maintenance steps, in the order they run. Each owner adds its entry at its place in
  * this list, with `run` a step function of its own module (`"use step"`, wrapping its package
  * function and rethrowing `toStepError(error)`): `otsUpgrade`, `controlCanary`,
  * `prewarmIntentSets`, `qualityCanary`, `drainDeferredFreeReports`, `enqueueDueRemeasures` and
- * `leadRetentionSweep` after `checkScaleTriggers`; `vercelBilling`, `launchGate` and `opsDigest`
+ * `leadRetentionSweep` after `checkScaleTriggers` and before `refreshPlaceIds`; `vercelBilling`, `launchGate` and `opsDigest`
  * last, so the digest reports on everything above.
  */
 export const DAILY_STEPS: readonly DailyStep[] = [
@@ -159,6 +174,7 @@ export const DAILY_STEPS: readonly DailyStep[] = [
   { name: "reconcileSpend", run: reconcileSpendStep },
   { name: "checkWorkflowBudget", run: checkWorkflowBudgetStep },
   { name: "checkScaleTriggers", run: checkScaleTriggersStep },
+  { name: "refreshPlaceIds", run: refreshPlaceIdsStep },
   vercelBilling,
   launchGate,
   opsDigest,
