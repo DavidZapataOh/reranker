@@ -49,3 +49,17 @@ export class TimestampUnavailableError extends Error {
     super(message, options);
   }
 }
+
+/**
+ * A published log object holds other bytes than the log in Postgres derives, so serving more would
+ * fork the public log. Publishing stops until someone finds which copy is wrong.
+ */
+export class LogForkError extends Error {
+  override readonly name = "LogFork";
+  readonly key: string;
+
+  constructor(key: string, reason: string) {
+    super(`Transparency log object ${key}: ${reason}`);
+    this.key = key;
+  }
+}

@@ -89,6 +89,12 @@ export const opsAlerts = {
     runbook: "auth-email-delivery.md",
     source: "auth",
   },
+  // The public log stopped growing: a served tile differs from what Postgres derives.
+  "evidence-log-fork": {
+    severity: "critical",
+    runbook: "evidence-log-fork.md",
+    source: "evidence",
+  },
 } as const satisfies Record<string, OpsAlert>;
 
 export type OpsAlertKind = keyof typeof opsAlerts;

@@ -182,17 +182,18 @@ export async function deleteArtifact(kind: ArtifactKind, sha256: string): Promis
 }
 
 /**
- * Writes a transparency log object as is. Tiles are immutable and written once; the checkpoint
- * is replaced and must be revalidated by every reader.
+ * Writes a transparency log object as is. Tiles are immutable and written once, so `created` is
+ * false when the key already held an object; the checkpoint is replaced and must be revalidated by
+ * every reader.
  */
 export async function putLogObject(
   key: string,
   bytes: Uint8Array<ArrayBuffer>,
   opts: { immutable: boolean; contentType: string },
-): Promise<void> {
+): Promise<{ created: boolean }> {
   checkLogKey(key);
   const { R2_LOG_BUCKET } = requireEvidenceEnv("R2_LOG_BUCKET");
-  await put(
+  const created = await put(
     R2_LOG_BUCKET,
     key,
     bytes,
@@ -204,6 +205,7 @@ export async function putLogObject(
         }
       : { "Content-Type": opts.contentType, "Cache-Control": "no-cache" },
   );
+  return { created };
 }
 
 export async function getLogObject(key: string): Promise<Uint8Array | null> {

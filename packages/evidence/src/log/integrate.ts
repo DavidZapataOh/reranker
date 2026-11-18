@@ -4,6 +4,7 @@ import { desc, eq, sql } from "drizzle-orm";
 import { loadSigner } from "../signer";
 import { formatCheckpoint, signCheckpoint } from "./checkpoint";
 import { extendTree } from "./frontier";
+import { publishPendingBatches } from "./tiles";
 
 export type IntegrateResult =
   | { status: "integrated"; treeSize: number; firstIndex: number }
@@ -38,6 +39,9 @@ function splitHashes(bytes: Buffer): Uint8Array[] {
  * lock rolls back and frees it.
  */
 export async function integrate(origin: string): Promise<IntegrateResult> {
+  // A batch whose publication died is served before the log grows past it; until R2 takes it,
+  // entries keep waiting rather than piling up behind an unpublished checkpoint.
+  await publishPendingBatches(origin);
   return withSystem(
     "evidence.integrate",
     async (tx): Promise<IntegrateResult> => {

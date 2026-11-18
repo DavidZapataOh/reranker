@@ -220,10 +220,12 @@ describe("log objects", () => {
   test("an immutable tile is written once, uncompressed, with a year-long cache", async () => {
     const fetchSpy = recordingFetch(200, 412);
     const tile = new Uint8Array(32).fill(1);
-    await putLogObject("tile/0/000", tile, {
-      immutable: true,
-      contentType: "application/octet-stream",
-    });
+    expect(
+      await putLogObject("tile/0/000", tile, {
+        immutable: true,
+        contentType: "application/octet-stream",
+      }),
+    ).toEqual({ created: true });
     expect(fetchSpy.lastRequest.url).toBe(`${R2}/rr-log-preview/tile/0/000`);
     expect(fetchSpy.lastRequest.body).toEqual(tile);
     expect(fetchSpy.lastRequest.headers).toMatchObject({
@@ -236,7 +238,7 @@ describe("log objects", () => {
         immutable: true,
         contentType: "application/octet-stream",
       }),
-    ).resolves.toBeUndefined();
+    ).resolves.toEqual({ created: false });
   });
 
   test("the checkpoint is overwritten and revalidated on every read", async () => {
