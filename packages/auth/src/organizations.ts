@@ -30,7 +30,7 @@ const SLUG_BASE_LENGTH = 40;
 const SLUG_SUFFIX_LENGTH = 4;
 const SLUG_ALPHABET = "abcdefghijklmnopqrstuvwxyz0123456789";
 const PRINCIPAL_TEAM = "Principal";
-// Slug collisions are checked before insert; four extra draws make a repeat practically impossible.
+// A taken slug is drawn again; four draws make a repeated collision practically impossible.
 const SLUG_ATTEMPTS = 4;
 
 /** URL slug for an organization name: ASCII, dash-separated, with a random suffix. */
@@ -47,8 +47,9 @@ export function slugFor(name: string): string {
   const suffix: string[] = [];
   while (suffix.length < SLUG_SUFFIX_LENGTH) {
     for (const byte of crypto.getRandomValues(new Uint8Array(SLUG_SUFFIX_LENGTH))) {
-      if (byte < 252 && suffix.length < SLUG_SUFFIX_LENGTH)
+      if (byte < 252 && suffix.length < SLUG_SUFFIX_LENGTH) {
         suffix.push(SLUG_ALPHABET.charAt(byte % 36));
+      }
     }
   }
   return `${base}-${suffix.join("")}`;
