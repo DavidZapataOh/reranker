@@ -1,0 +1,86 @@
+[
+  {
+    "country": "CO",
+    "query": "Harry Sasson",
+    "anchor": "Harry Sasson restaurante, Bogotá, Colombia"
+  },
+  { "country": "CO", "query": "Restaurante Leo", "anchor": "Restaurante Leo, Bogotá, Colombia" },
+  {
+    "country": "CO",
+    "query": "Hotel Casa San Agustín",
+    "anchor": "Hotel Casa San Agustín, Cartagena, Colombia"
+  },
+  {
+    "country": "CO",
+    "query": "Mesa Franca",
+    "anchor": "Mesa Franca restaurante, Bogotá, Colombia"
+  },
+  { "country": "MX", "query": "Pujol", "anchor": "Pujol restaurante, Polanco, Ciudad de México" },
+  {
+    "country": "MX",
+    "query": "Contramar",
+    "anchor": "Contramar restaurante, Roma Norte, Ciudad de México"
+  },
+  {
+    "country": "MX",
+    "query": "Quintonil",
+    "anchor": "Quintonil restaurante, Polanco, Ciudad de México"
+  },
+  {
+    "country": "MX",
+    "query": "Panadería Rosetta",
+    "anchor": "Panadería Rosetta, Colima, Roma Norte, Ciudad de México"
+  },
+  {
+    "country": "ES",
+    "query": "Sobrino de Botín",
+    "anchor": "Restaurante Sobrino de Botín, Madrid, España"
+  },
+  { "country": "ES", "query": "Casa Lucio", "anchor": "Casa Lucio, Cava Baja, Madrid, España" },
+  {
+    "country": "ES",
+    "query": "Chocolatería San Ginés",
+    "anchor": "Chocolatería San Ginés, Pasadizo de San Ginés, Madrid, España"
+  },
+  {
+    "country": "ES",
+    "query": "El Celler de Can Roca",
+    "anchor": "El Celler de Can Roca, Girona, España"
+  },
+  {
+    "country": "AR",
+    "query": "Parrilla Don Julio",
+    "anchor": "Parrilla Don Julio, Palermo, Buenos Aires, Argentina"
+  },
+  {
+    "country": "AR",
+    "query": "Café Tortoni",
+    "anchor": "Café Tortoni, Avenida de Mayo, Buenos Aires, Argentina"
+  },
+  {
+    "country": "AR",
+    "query": "El Ateneo Grand Splendid",
+    "anchor": "El Ateneo Grand Splendid, Santa Fe, Buenos Aires, Argentina"
+  },
+  {
+    "country": "AR",
+    "query": "La Cabrera",
+    "anchor": "La Cabrera parrilla, Cabrera, Palermo, Buenos Aires, Argentina"
+  },
+  {
+    "country": "PE",
+    "query": "Central Restaurante",
+    "anchor": "Central Restaurante, Barranco, Lima, Perú"
+  },
+  { "country": "PE", "query": "Maido", "anchor": "Maido restaurante, Miraflores, Lima, Perú" },
+  {
+    "country": "PE",
+    "query": "Astrid y Gastón",
+    "anchor": "Astrid y Gastón, San Isidro, Lima, Perú"
+  },
+  {
+    "country": "PE",
+    "query": "Isolina Taberna Peruana",
+    "anchor": "Isolina Taberna Peruana, Barranco, Lima, Perú"
+  }
+]

@@ -1,5 +1,6 @@
 import type { ProviderCost } from "../cost";
 import { z } from "../z";
+import type { BusinessCategory, GeoTarget } from "./catalog";
 
 export const Stance = z.enum(["recommendation", "incidental", "negative"]);
 export type Stance = z.infer<typeof Stance>;
@@ -81,4 +82,28 @@ export interface ResponseExtraction {
   models: { primary: string; secondary: string | null; judge: string | null };
   cost: ProviderCost;
   latencyMs: number;
+}
+
+/** A business the owner may mean, found by name in Places or by the domain they typed. */
+export interface BusinessCandidate {
+  kind: "place" | "website";
+  placeId: string | null;
+  domain: string | null;
+  displayName: string;
+  formattedAddress: string | null;
+  /** Null only for a website without a country signal: the owner is asked for the country. */
+  geo: GeoTarget | null;
+  neighborhood: string | null;
+  categoryHint: BusinessCategory | null;
+  confidence: number;
+  attribution: "Google Maps" | null;
+  /** In memory only, for category inference; Places content is never stored. */
+  places?: {
+    types: string[];
+    primaryType: string | null;
+    primaryTypeDisplayName: string | null;
+    googleMapsTypeLabel: string | null;
+    pureServiceAreaBusiness: boolean;
+  };
+  website?: { title: string | null; siteName: string | null; description: string | null };
 }
