@@ -21,7 +21,16 @@ export interface StructuredCall<T> {
 export interface StructuredResult<T> {
   output: T;
   modelReported: string;
-  usage: { inputTokens: number; cachedInputTokens: number; outputTokens: number };
+  /**
+   * `inputTokens` counts every input token; `cachedInputTokens` (cache reads) and
+   * `cacheWriteTokens` are the parts of it billed at their own rates.
+   */
+  usage: {
+    inputTokens: number;
+    cachedInputTokens: number;
+    cacheWriteTokens: number;
+    outputTokens: number;
+  };
   raw: unknown;
 }
 

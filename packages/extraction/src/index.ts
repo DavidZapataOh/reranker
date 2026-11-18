@@ -1,3 +1,9 @@
+export {
+  assertDistinctProviders,
+  configHashOf,
+  currentExtractorConfig,
+  type ExtractorConfig,
+} from "./config";
 export { extractionEnv } from "./env";
 export { jaroWinkler, nameHmac, normalizeName, tokenContainment } from "./normalize";
 export {
@@ -9,7 +15,7 @@ export {
   searchText,
 } from "./places/client";
 export { PLATFORMS, type PlatformEntry, platformFor, tagPlatforms } from "./platforms";
-export { PLACES_SKU_PRICES } from "./prices";
+export { costOfUsage, estimateOf, PLACES_SKU_PRICES } from "./prices";
 export {
   type LlmProvider,
   type ModelRef,
