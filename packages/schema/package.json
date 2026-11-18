@@ -12,7 +12,8 @@
   "scripts": {
     "build:json-schema": "tsx scripts/export-json-schema.ts",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --project unit --coverage --passWithNoTests"
+    "test": "vitest run --project unit --coverage --passWithNoTests",
+    "test:perf": "vitest run --project perf"
   },
   "dependencies": {
     "@reranker/i18n": "workspace:*",
