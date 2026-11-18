@@ -32,10 +32,25 @@ const fill = (priority: JobPriority, amount: number) =>
   consumeQuota("resend.emails", { priority, amount });
 const send = (priority: JobPriority) => consumeQuota("resend.emails", { priority });
 
+// Waves of 100 keep every call contending on the hour's row while staying inside the pool's
+// 2 s connection timeout; the database never sees more than the pool's 20 at once anyway.
+async function burst(count: number, priority: JobPriority): Promise<number> {
+  let granted = 0;
+  for (let done = 0; done < count; done += 100) {
+    const wave = await Promise.allSettled(
+      Array.from({ length: Math.min(100, count - done) }, () => send(priority)),
+    );
+    for (const r of wave) {
+      if (r.status === "fulfilled") granted++;
+      else expect(r.reason).toBeInstanceOf(QuotaExceededError);
+    }
+  }
+  return granted;
+}
+
 describe("the hourly email brake", () => {
   test("300 report emails in one hour all pass with the 500 floor", async () => {
-    const sent = await Promise.allSettled(Array.from({ length: 300 }, () => send("normal")));
-    expect(sent.every((r) => r.status === "fulfilled")).toBe(true);
+    expect(await burst(300, "normal")).toBe(300);
     expect((await quotaStatus("resend.emails")).normal).toEqual({ used: 300, limit: 400 });
   });
 
@@ -82,8 +97,7 @@ describe("the hourly email brake", () => {
   });
 
   test("10× burst: 5,000 concurrent consumes never pass H and count once each", async () => {
-    const results = await Promise.allSettled(Array.from({ length: 5_000 }, () => send("critical")));
-    expect(results.filter((r) => r.status === "fulfilled")).toHaveLength(500);
+    expect(await burst(5_000, "critical")).toBe(500);
     expect((await quotaStatus("resend.emails")).critical).toEqual({ used: 500, limit: 500 });
   }, 120_000);
 
