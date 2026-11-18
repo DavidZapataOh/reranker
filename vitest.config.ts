@@ -28,15 +28,17 @@ export default defineConfig({
           name: "unit",
           environment: "node",
           include: ["**/{src,test}/**/*.test.ts"],
-          exclude: [...ignored, "**/*.{int,contract,browser,workflow,perf,stat}.test.*"],
+          exclude: [...ignored, "**/*.{int,contract,browser,workflow,perf,heavy}.test.*"],
         },
       },
-      // Sampler validation draws hundreds of thousands of variates; coverage instrumentation
-      // makes each ~5× slower and adds nothing, since the unit project already covers those lines.
+      // CPU-heavy checks, such as sampler validation or every Merkle tree size, run without
+      // coverage: instrumentation slows their hot loops 5-10× and adds nothing, since the unit
+      // project already covers those lines.
       {
         test: {
-          name: "statistical",
-          include: ["**/{src,test}/**/*.stat.test.ts"],
+          name: "heavy",
+          environment: "node",
+          include: ["**/{src,test}/**/*.heavy.test.ts"],
           exclude: ignored,
         },
       },
