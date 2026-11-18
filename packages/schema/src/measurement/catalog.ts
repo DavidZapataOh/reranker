@@ -188,6 +188,29 @@ export const IntentSet = z.object({
 });
 export type IntentSet = z.infer<typeof IntentSet>;
 
+export const SeedCategory = z.object({
+  key: SeedCategoryKey,
+  labelKey: z.string().min(1),
+  placesTypes: z.array(z.string().min(1)),
+  synonyms: z.array(z.string().min(1)),
+  archetype: CategoryArchetype,
+  defaultScope: QuestionScope,
+  register: z.enum(["tu", "usted"]),
+});
+export type SeedCategory = z.infer<typeof SeedCategory>;
+
+// The reviewed seed as committed. Its set id derives from the frozen content hash, so intents
+// carry none; every seed intent has its message key.
+export const SeedCatalogFile = z.object({
+  categories: z.array(SeedCategory).min(1),
+  intents: z
+    .array(Intent.omit({ intentSetId: true }).extend({ labelKey: z.string().min(1) }))
+    .min(1),
+  personas: z.array(Persona),
+  paraphrases: z.array(Paraphrase).min(1),
+});
+export type SeedCatalogFile = z.infer<typeof SeedCatalogFile>;
+
 export const PromptVariant = z.object({
   variantId: VariantId,
   intentId: IntentId,

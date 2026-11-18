@@ -13,16 +13,12 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
-import { bytea } from "./_columns";
+import { bytea, enumValues as values } from "./_columns";
 import { costMicrosColumn } from "./_money";
 import { publicPanelSchema } from "./_schemas";
 import { sharedTable } from "./_tables";
 
 const at = () => timestamp({ withTimezone: true });
-
-// drizzle-kit drops the schema of an enum built from an object, so the values go in as a tuple;
-// a zod enum always has at least one option.
-const values = <T extends string>(zodEnum: { options: T[] }) => zodEnum.options as [T, ...T[]];
 
 export const captureEngine = publicPanelSchema.enum("capture_engine", values(EngineId));
 export const captureChannel = publicPanelSchema.enum("capture_channel", values(CaptureChannel));

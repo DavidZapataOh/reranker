@@ -7,6 +7,11 @@ export const bytea = customType<{ data: Buffer; driverData: Buffer }>({
   dataType: () => "bytea",
 });
 
+// drizzle-kit drops the schema of an enum built from an object, so the values go in as a tuple;
+// a zod enum always has at least one option.
+export const enumValues = <T extends string>(zodEnum: { options: T[] }) =>
+  zodEnum.options as [T, ...T[]];
+
 export const id = () => uuid("id").primaryKey().default(sql`uuidv7()`);
 
 export const tenantId = () =>
