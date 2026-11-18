@@ -98,12 +98,16 @@ export function toExtractedMentions(
     });
   }
   mentions.sort((a, b) => a.startOffset - b.startOffset);
+  assignOrdinals(mentions);
+  return { mentions, quoteMisses: out.mentions.length - mentions.length };
+}
 
+/** Ranks recommended commercial entities in place; `mentions` must be in answer order. */
+export function assignOrdinals(mentions: ExtractedMention[]): ExtractedMention[] {
   let ordinal = 0;
   for (const mention of mentions) {
-    if (mention.stance === "recommendation" && RANKED_KINDS.has(mention.entityKind)) {
-      mention.ordinal = ++ordinal;
-    }
+    const ranked = mention.stance === "recommendation" && RANKED_KINDS.has(mention.entityKind);
+    mention.ordinal = ranked ? ++ordinal : null;
   }
-  return { mentions, quoteMisses: out.mentions.length - mentions.length };
+  return mentions;
 }
