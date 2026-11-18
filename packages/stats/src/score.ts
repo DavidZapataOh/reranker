@@ -1,4 +1,5 @@
 import type { RateEstimate, ScoreEstimate } from "@reranker/schema/measurement";
+import { type CaptureFrame, type Replicates, replicates } from "./compare";
 import { type DirichletStratum, dirichletStratum, drawStratifiedDirichlet } from "./dirichlet";
 import { levelDisplay, levelOf, sufficiency } from "./levels";
 import { methodology } from "./methodology";
@@ -16,6 +17,8 @@ export interface EntityObservation {
 
 interface Prominence {
   discounts: Float64Array;
+  /** `captureIndex` of each ranked recommendation, aligned with `discounts`. */
+  captures: Int32Array;
   /** Bootstrap strata whose members index `discounts`; the rest of each stratum is `rest`. */
   strata: DirichletStratum[];
   estimate: number;
@@ -51,6 +54,7 @@ function prominenceOf(
   strata: Map<string, StratumCounts>,
 ): Prominence | null {
   const discounts: number[] = [];
+  const captures: number[] = [];
   const ranked = new Map<string, { stratum: StratumCounts; members: number[] }>();
   let num = 0;
   let den = 0;
@@ -66,6 +70,7 @@ function prominenceOf(
     const coefficient = o.weight / r.stratum.trials;
     r.members.push(discounts.length);
     discounts.push(discount);
+    captures.push(o.captureIndex);
     num += coefficient * discount;
     den += coefficient;
   }
@@ -73,6 +78,7 @@ function prominenceOf(
 
   return {
     discounts: Float64Array.from(discounts),
+    captures: Int32Array.from(captures),
     strata: [...ranked.values()].map(({ stratum, members }) =>
       dirichletStratum(stratum.weight, members, stratum.trials - members.length),
     ),
@@ -102,6 +108,20 @@ function quantile(sorted: Float64Array, q: number): number {
 
 const clampScore = (n: number) => Math.min(100, Math.max(0, n));
 
+function sharedDraws(
+  obs: readonly EntityObservation[],
+  { frame, seed }: { frame: CaptureFrame; seed: string },
+): Replicates {
+  for (const o of obs) {
+    const capture = frame.captures[o.captureIndex];
+    // A misaligned index would silently read another capture's weight.
+    if (capture === undefined || capture.stratum !== o.stratum || capture.weight !== o.weight) {
+      throw new RangeError(`observation of capture ${o.captureIndex} does not match the frame`);
+    }
+  }
+  return replicates(frame, seed);
+}
+
 export function pointScore(obs: EntityObservation[]): number {
   return point(obs).value;
 }
@@ -109,9 +129,19 @@ export function pointScore(obs: EntityObservation[]): number {
 export function estimateScore(
   obs: EntityObservation[],
   seed: string,
-  opts: { preliminary?: boolean; runsPerVariant?: number } = {},
+  opts: {
+    preliminary?: boolean;
+    runsPerVariant?: number;
+    /**
+     * The report's frame and seed, as passed to `pairedCompare`. G then reads the frame's cached
+     * bootstrap draws instead of drawing its own, so the score range and the comparisons share
+     * one bootstrap. `captureIndex` must index `frame.captures`.
+     */
+    bootstrap?: { frame: CaptureFrame; seed: string };
+  } = {},
 ): ScoreEstimate {
   const { rate, prominence, value } = point(obs, opts.runsPerVariant);
+  const shared = opts.bootstrap === undefined ? null : sharedDraws(obs, opts.bootstrap);
   const tail = (1 - methodology.confidenceLevel) / 2;
 
   let lower: number;
@@ -135,17 +165,26 @@ export function estimateScore(
     const ySt = Math.min(rate.estimate * nEff, nEff);
     // With a single discount value G is that constant, so only mixed ranks need the bootstrap.
     const ranked = prominence !== null && prominence.min < prominence.max ? prominence : null;
-    const buffer = new Float64Array(ranked?.discounts.length ?? 0);
+    const k = ranked?.discounts.length ?? 0;
+    const buffer = new Float64Array(shared === null ? k : 0);
+    // Own draws land in `buffer` in discount order; shared draws are read at each capture's slot.
+    const source = shared?.weights ?? buffer;
+    const stride = shared?.n ?? 0;
+    const slots =
+      shared === null || ranked === null
+        ? Int32Array.from({ length: k }, (_, i) => i)
+        : ranked.captures;
 
     for (let s = 0; s < draws; s++) {
       const p = beta(rng, ySt + 0.5, nEff - ySt + 0.5);
       let g = prominence?.estimate ?? 1;
       if (ranked !== null) {
-        drawStratifiedDirichlet(rng, ranked.strata, buffer);
+        if (shared === null) drawStratifiedDirichlet(rng, ranked.strata, buffer);
+        const row = s * stride;
         let num = 0;
         let den = 0;
-        for (let i = 0; i < buffer.length; i++) {
-          const w = buffer[i] as number;
+        for (let i = 0; i < slots.length; i++) {
+          const w = source[row + (slots[i] as number)] as number;
           num += w * (ranked.discounts[i] as number);
           den += w;
         }

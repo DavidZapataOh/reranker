@@ -270,3 +270,86 @@ describe("estimateScore", () => {
     expect(pairedCompare(column("a", 0, 8), column("b", 8, 15), frame, seed).pAAhead).toBe(1);
   });
 });
+
+describe("estimateScore on the report's shared bootstrap", () => {
+  const reportSeed = seedFor("report");
+  // 25 strata of 8 captures with equal weights, as in the free report.
+  const frameOf = () => ({
+    captures: Array.from({ length: 200 }, (_, i) => ({
+      stratum: `s${Math.floor(i / 8)}`,
+      weight: 1 / 25,
+    })),
+  });
+  const entity = (recommended: number, offset: number): EntityObservation[] =>
+    frameOf().captures.map(({ stratum, weight }, captureIndex) => {
+      const r = (captureIndex - offset + 200) % 7 === 0 ? (captureIndex - offset) / 7 : -1;
+      const y = r >= 0 && r < recommended ? 1 : 0;
+      return obs({ captureIndex, stratum, weight, y, ordinal: y === 1 ? 1 + (r % 5) : null });
+    });
+
+  test("matches the standalone estimate up to Monte Carlo noise", () => {
+    const e = entity(40, 0);
+    const alone = estimateScore(e, seed);
+    const shared = estimateScore(e, seed, { bootstrap: { frame: frameOf(), seed: reportSeed } });
+    expect(shared.value).toBe(alone.value);
+    expect(shared.components.prominence.estimate).toBe(alone.components.prominence.estimate);
+    expect(Math.abs(shared.lower - alone.lower)).toBeLessThanOrEqual(1);
+    expect(Math.abs(shared.upper - alone.upper)).toBeLessThanOrEqual(1);
+    const g = (x: typeof alone) => x.components.prominence;
+    expect(Math.abs(g(shared).lower - g(alone).lower)).toBeLessThan(0.01);
+    expect(Math.abs(g(shared).upper - g(alone).upper)).toBeLessThan(0.01);
+  });
+
+  test("reads the same draws as pairedCompare, whichever runs first", () => {
+    const e = entity(30, 2);
+    const column = {
+      key: "e",
+      y: Uint8Array.from(e, (o) => o.y),
+      ordinal: Int16Array.from(e, (o) => o.ordinal ?? 0),
+    };
+    const other = { ...column, key: "o", y: new Uint8Array(200) };
+    const first = frameOf();
+    const scoreFirst = estimateScore(e, seed, { bootstrap: { frame: first, seed: reportSeed } });
+    pairedCompare(column, other, first, reportSeed);
+    const second = frameOf();
+    pairedCompare(column, other, second, reportSeed);
+    expect(estimateScore(e, seed, { bootstrap: { frame: second, seed: reportSeed } })).toEqual(
+      scoreFirst,
+    );
+    expect(Object.isFrozen(first)).toBe(true);
+  });
+
+  test("whole ranked strata keep G fixed on the shared draws too", () => {
+    const e = frameOf().captures.map(({ stratum, weight }, captureIndex) =>
+      obs({ captureIndex, stratum, weight, y: 1, ordinal: captureIndex < 8 ? 1 : 3 }),
+    );
+    const g = (1 / 25 + (24 / 25) * 0.81) / 1;
+    const { prominence } = estimateScore(e, seed, {
+      bootstrap: { frame: frameOf(), seed: reportSeed },
+    }).components;
+    expect(prominence.lower).toBeCloseTo(g, 12);
+    expect(prominence.upper).toBeCloseTo(g, 12);
+  });
+
+  test("rejects observations that do not line up with the frame", () => {
+    const e = entity(10, 0);
+    const bootstrap = { frame: frameOf(), seed: reportSeed };
+    expect(() =>
+      estimateScore([{ ...e[0], captureIndex: 200 } as EntityObservation], seed, { bootstrap }),
+    ).toThrow(RangeError);
+    expect(() =>
+      estimateScore(
+        e.map((o) => ({ ...o, stratum: "x" })),
+        seed,
+        { bootstrap },
+      ),
+    ).toThrow(RangeError);
+    expect(() =>
+      estimateScore(
+        e.map((o) => ({ ...o, weight: 1 })),
+        seed,
+        { bootstrap },
+      ),
+    ).toThrow(RangeError);
+  });
+});
