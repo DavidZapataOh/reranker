@@ -5,4 +5,5 @@ export { appSchema, authSchema, opsSchema, publicPanelSchema } from "./_schemas"
 export { opsTable, sameTenant, sharedTable, tenantTable } from "./_tables";
 export * from "./auth";
 export * from "./capture";
+export * from "./evidence";
 export * from "./ops";

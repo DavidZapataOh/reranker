@@ -21,7 +21,7 @@ export interface EntityColumn {
 export type Verdict = "ahead" | "behind" | "tied";
 
 /** Bootstrap weights of every capture in every draw: `weights[draw · n + capture]`. */
-interface Replicates {
+export interface Replicates {
   n: number;
   weights: Float64Array;
 }
@@ -60,11 +60,11 @@ function deepFreeze(frame: CaptureFrame): void {
   Object.freeze(frame);
 }
 
-// The frame and seed fix the draws, so every comparison against the same frame reuses them:
-// the free report compares the target with each competitor and ranks them on one bootstrap.
+// The frame and seed fix the draws, so every reader of the same frame shares them: the free
+// report's score ranges (G), comparisons and ranking all come from one bootstrap.
 const memo = new WeakMap<CaptureFrame, Map<string, Replicates>>();
 
-function replicates(frame: CaptureFrame, seed: string): Replicates {
+export function replicates(frame: CaptureFrame, seed: string): Replicates {
   const pairSeed = seedFor(seed, "pair");
   let bySeed = memo.get(frame);
   if (bySeed === undefined) {

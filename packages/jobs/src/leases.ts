@@ -100,8 +100,7 @@ export async function acquireProviderSlot(
   if (breaker.state === "open") throw new ProviderUnavailableError(provider, breaker.retryAfterMs);
 
   for (let attempt = 0; ; attempt++) {
-    const waitLeft = maxWaitMs - (Date.now() - startedAt);
-    const row = await takeSlot(poolKey, limits.maxInFlight, taken, waitLeft);
+    const row = await takeSlot(poolKey, limits.maxInFlight, taken, startedAt + maxWaitMs);
     if (row.lease_id) {
       emit({ name: "jobs.lease.wait_ms", props: { provider, wait_ms: Date.now() - startedAt } });
       return slotFor(row.lease_id);
@@ -117,11 +116,73 @@ export async function acquireProviderSlot(
   }
 }
 
-// Every acquirer of a pool queues on its row, each holding it for a round trip to the database.
-// When more arrive than that queue serves, the wait for the row is the wait for a slot: it is
-// bounded by the caller's own wait and answered as a full pool, never left to the statement
-// timeout.
+/** One acquirer at a time per pool on this instance; the rest wait their turn in memory. */
+class Turn {
+  private busy = false;
+  private readonly waiting: Array<() => void> = [];
+
+  /** False when `waitMs` runs out before the turn comes. */
+  take(waitMs: number): Promise<boolean> {
+    if (!this.busy) {
+      this.busy = true;
+      return Promise.resolve(true);
+    }
+    return new Promise((resolve) => {
+      const grant = () => {
+        clearTimeout(timer);
+        resolve(true);
+      };
+      const timer = setTimeout(() => {
+        this.waiting.splice(this.waiting.indexOf(grant), 1);
+        resolve(false);
+      }, waitMs);
+      this.waiting.push(grant);
+    });
+  }
+
+  give(): void {
+    const next = this.waiting.shift();
+    if (next) next();
+    else this.busy = false;
+  }
+}
+
+const turns = new Map<string, Turn>();
+
+function turnOf(poolKey: string): Turn {
+  let turn = turns.get(poolKey);
+  if (!turn) {
+    turn = new Turn();
+    turns.set(poolKey, turn);
+  }
+  return turn;
+}
+
+// Every acquirer of a pool queues on its row, and each one waiting there holds a connection of
+// its instance's small pool for as long as it waits. Under overload those waits filled the pool,
+// and the breaker, spend and release transactions of the same instance timed out behind them. So
+// an instance sends one acquirer per pool to the row and queues the rest in memory: the database
+// serializes them on the row anyway, so the slot is no further away. When more arrive than the
+// row serves, the wait for it is the wait for a slot: it is bounded by the caller's own wait and
+// answered as a full pool, never left to the statement timeout.
 async function takeSlot(
+  poolKey: string,
+  maxInFlight: number,
+  taken: Bucket[],
+  deadline: number,
+): Promise<SlotRow> {
+  const turn = turnOf(poolKey);
+  if (!(await turn.take(Math.max(0, deadline - Date.now())))) {
+    return { lease_id: null, retry_after_ms: MAX_BACKOFF_MS };
+  }
+  try {
+    return await takeSlotRow(poolKey, maxInFlight, taken, deadline - Date.now());
+  } finally {
+    turn.give();
+  }
+}
+
+async function takeSlotRow(
   poolKey: string,
   maxInFlight: number,
   taken: Bucket[],

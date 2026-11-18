@@ -15,10 +15,12 @@
     "test:perf": "vitest run --project perf --passWithNoTests"
   },
   "dependencies": {
+    "@google/genai": "catalog:",
     "@reranker/env": "workspace:*",
     "@reranker/jobs": "workspace:*",
     "@reranker/schema": "workspace:*",
     "canonicalize": "catalog:",
+    "openai": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

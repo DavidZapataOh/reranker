@@ -42,6 +42,7 @@ jobs:
           BRIGHTDATA_API_KEY_CI: ${{ secrets.BRIGHTDATA_API_KEY_CI }}
           OPENAI_API_KEY_CI: ${{ secrets.OPENAI_API_KEY_CI }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY_CI: ${{ secrets.GEMINI_API_KEY_CI }}
           GOOGLE_PLACES_API_KEY_CI: ${{ secrets.GOOGLE_PLACES_API_KEY_CI }}
           ANTHROPIC_API_KEY_CI: ${{ secrets.ANTHROPIC_API_KEY_CI }}
           XAI_API_KEY_CI: ${{ secrets.XAI_API_KEY_CI }}

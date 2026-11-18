@@ -5,6 +5,7 @@ import {
   RateLimitedError,
   SpendCapExceededError,
 } from "@reranker/jobs";
+import { AppError } from "@reranker/schema";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 
 const jobs = vi.hoisted(() => ({ probeSpendPath: vi.fn(), probeNetworkLookup: vi.fn() }));
@@ -103,11 +104,22 @@ test.each([
     "61200",
   ],
   ["an open breaker", new ProviderUnavailableError("dataforseo", 30_000), 503, "30"],
+  [
+    "a database that is out of connections",
+    new AppError("service_unavailable", { retryAfterSeconds: 2 }),
+    503,
+    "2",
+  ],
 ])("answers %s with its status and when to retry", async (_, error, status, retryAfter) => {
   jobs.probeSpendPath.mockRejectedValue(error);
   const response = await probe(BEARER);
   expect(response.status).toBe(status);
   expect(response.headers.get("retry-after")).toBe(retryAfter);
+});
+
+test("anything a step would not retry on a schedule is still a server error", async () => {
+  jobs.probeSpendPath.mockRejectedValue(new AppError("internal"));
+  await expect(probe(BEARER)).rejects.toMatchObject({ code: "internal" });
 });
 
 test("times the network lookup when asked, and nothing of the spend path", async () => {

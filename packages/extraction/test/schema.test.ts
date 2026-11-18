@@ -131,4 +131,12 @@ describe("provider errors", () => {
     expect(error.reason).toBe("max_output_tokens");
     expect(error.message).toContain("max_output_tokens");
   });
+
+  test("billed errors carry the provider's usage and unbilled ones leave it absent", () => {
+    const usage = { inputTokens: 10, cachedInputTokens: 0, cacheWriteTokens: 0, outputTokens: 2 };
+    expect(new ProviderRefusalError("openai", "declined", usage).usage).toEqual(usage);
+    expect(new ProviderIncompleteError("openai", "invalid_output", usage).usage).toEqual(usage);
+    expect(new ProviderRefusalError("openai", "declined").usage).toBeUndefined();
+    expect(new ProviderIncompleteError("gemini", "max_output_tokens").usage).toBeUndefined();
+  });
 });

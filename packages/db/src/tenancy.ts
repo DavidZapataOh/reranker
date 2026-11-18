@@ -109,10 +109,11 @@ function seal<T extends object>(tx: T, isOpen: () => boolean): T {
 
 type Outcome = { error: unknown } | undefined;
 
-// The pools pipeline, so BEGIN and the settings are written without waiting and travel with the
-// callback's first statement; a callback that returns a single unawaited query also has COMMIT
-// written right behind it, and the whole transaction is one round trip. The server still runs
-// them in order inside one transaction, so the settings are in place before any statement.
+// The pools pipeline, so BEGIN and the settings go out together, and a callback that returns a
+// single unawaited query has COMMIT written right behind it: two round trips in all. The callback
+// only starts once the server reports the transaction open with its settings in place: pg sends
+// every query as its own message with its own Sync, so a statement written behind a BEGIN that
+// failed would run, and commit, on its own.
 // set_config(..., true) is transaction-local: COMMIT or ROLLBACK clears it before the pooler
 // hands the server connection to anyone else, and a client is only returned to the pool idle.
 async function run<T, K extends "tenant" | "system">(
@@ -158,6 +159,9 @@ async function run<T, K extends "tenant" | "system">(
   let ended: Promise<Outcome> | undefined;
   let result: { value: T } | { error: unknown };
   try {
+    const setupFailed = (await began) ?? (await configured);
+    if (setupFailed) throw setupFailed.error;
+    if (client.getTransactionStatus() !== "T") throw invalid("transaction did not open");
     const pending = fn(tx);
     let settled: PromiseLike<T> = pending;
     // A query returned unawaited has not run yet. Starting it here leaves no gap in which other
