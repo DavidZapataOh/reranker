@@ -83,6 +83,8 @@ describe("web environment", () => {
     const flags = {
       POSTHOG_FEATURE_FLAGS_KEY: "phs_test",
       CRON_SECRET: "cron-secret-with-enough-length",
+      DATAFORSEO_LOGIN: "login",
+      DATAFORSEO_PASSWORD: "password",
     };
     expect(withKey("production", { ...flags, ...ids })).toMatchObject(ids);
     for (const APP_ENV of ["preview", "development"]) {
@@ -100,6 +102,13 @@ describe("web environment", () => {
     expect(() => withKey("preview", { CRON_SECRET: "short" })).toThrowError(
       /CRON_SECRET \(invalid\)/,
     );
+  });
+
+  test("production needs the DataForSEO credentials to capture answers", () => {
+    expect(() => withKey("production")).toThrowError(
+      /DATAFORSEO_LOGIN \(missing\), DATAFORSEO_PASSWORD \(missing\)/,
+    );
+    expect(withKey("preview").DATAFORSEO_LOGIN).toBeUndefined();
   });
 
   test("the PostHog region defaults to us and rejects unknown values", () => {

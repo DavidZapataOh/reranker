@@ -1,0 +1,30 @@
+{
+  "name": "@reranker/capture",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./env": "./src/env.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --coverage --passWithNoTests"
+  },
+  "dependencies": {
+    "@reranker/env": "workspace:*",
+    "@reranker/jobs": "workspace:*",
+    "@reranker/schema": "workspace:*",
+    "@reranker/verify": "workspace:*",
+    "dataforseo-client": "catalog:",
+    "server-only": "catalog:",
+    "ulid": "catalog:"
+  },
+  "devDependencies": {
+    "@reranker/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
