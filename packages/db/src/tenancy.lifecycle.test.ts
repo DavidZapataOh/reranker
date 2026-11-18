@@ -218,6 +218,16 @@ test("a failed setup statement wins over the error it causes downstream", async 
   expect(pool.released).toEqual([undefined]);
 });
 
+test("what the callback throws wins over a statement of its own that failed first", async () => {
+  use((text) => (text.startsWith("insert") ? reject(pgError("23505")) : undefined));
+  const thrown = new Error("rollback sentinel");
+  const error = await withSystem("test.setup", async (tx) => {
+    await tx.execute(sql`insert into app.t values (1)`).catch(() => undefined);
+    throw thrown;
+  }).catch((e: unknown) => e);
+  expect(error).toBe(thrown);
+});
+
 // A dead backend fails every query already on the wire; each of those promises must be handled
 // even when it settles after the run has.
 test.each([

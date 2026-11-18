@@ -30,6 +30,10 @@ test("creates a client organization with no members", async () => {
 
 test("creates the house once; a second house violates the partial unique index", async () => {
   await rolledBack(async (tx) => {
+    // Other packages' suites run on this database at the same time, and one keeps a committed
+    // house while its file runs; demoted inside this rolled-back transaction, it stays as it was
+    // for everyone else.
+    await tx.update(organizations).set({ kind: "client" }).where(eq(organizations.kind, "house"));
     const house = await createTenant(tx, { kind: "house", name: "Casa" });
     const [row] = await tx.select().from(organizations).where(eq(organizations.id, house));
     expect(row).toMatchObject({ kind: "house", name: "Casa" });
