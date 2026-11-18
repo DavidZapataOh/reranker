@@ -88,6 +88,7 @@ describe("lighthouseConfig", () => {
       APP_TARGET: "preview",
     });
     expect(config.ci.collect.puppeteerScript).toBe("./lighthouse-bypass.cjs");
+    expect(config.ci.collect.puppeteerLaunchOptions).toEqual({ args: ["--no-sandbox"] });
     expect(config.ci.collect.settings).not.toHaveProperty("extraHeaders");
     expect(JSON.stringify(config)).not.toContain("s3cret");
   });
