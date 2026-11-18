@@ -1,0 +1,87 @@
+location_code,location_name,location_code_parent,country_iso_code,location_type
+2484,Mexico,,MX,Country
+20708,"Jalisco,Mexico",2484,MX,State
+1010072,"Arandas,Jalisco,Mexico",20708,MX,City
+1010073,"Atotonilco El Alto,Jalisco,Mexico",20708,MX,City
+1010075,"Chapala,Chapala,Jalisco,Mexico",20708,MX,City
+1010078,"El Salto,Jalisco,Mexico",20708,MX,City
+1010079,"Guadalajara,Guadalajara,Jalisco,Mexico",20708,MX,City
+1010080,"Jocotepec,Jalisco,Mexico",20708,MX,City
+1010081,"Lagos de Moreno,Jalisco,Mexico",20708,MX,City
+1010082,"Magdalena Municipality,Jalisco,Mexico",20708,MX,City
+1010083,"Ocotlan,Jalisco,Mexico",20708,MX,City
+1010084,"Puerto Vallarta,Jalisco,Mexico",20708,MX,City
+1010085,"Tala,Jalisco,Mexico",20708,MX,City
+1010086,"Tepatitlan de Morelos,Jalisco,Mexico",20708,MX,City
+1010087,"Tlajomulco de Zuniga,Tlajomulco de Zuniga,Jalisco,Mexico",20708,MX,City
+1010088,"Zapopan,Jalisco,Mexico",20708,MX,City
+1010089,"Zapotlanejo,Jalisco,Mexico",20708,MX,City
+1031152,"Acatic,Jalisco,Mexico",20708,MX,City
+1031164,"Ameca,Jalisco,Mexico",20708,MX,City
+1031173,"Autlan,Jalisco,Mexico",20708,MX,City
+1031184,"Capilla de Guadalupe,Jalisco,Mexico",20708,MX,City
+1031185,"Casimiro Castillo,Jalisco,Mexico",20708,MX,City
+1031196,"Cihuatlan,Cihuatlan,Jalisco,Mexico",20708,MX,City
+1031198,"Ciudad Guzman,Jalisco,Mexico",20708,MX,City
+1031203,"Cocula,Jalisco,Mexico",20708,MX,City
+1031204,"Colotlan,Jalisco,Mexico",20708,MX,City
+1031220,"Degollado,Jalisco,Mexico",20708,MX,City
+1031221,"El Arenal,Jalisco,Mexico",20708,MX,City
+1031224,"El Grullo,Jalisco,Mexico",20708,MX,City
+1031229,"Etzatlan,Jalisco,Mexico",20708,MX,City
+1031248,"Jalostotitlan,Jalisco,Mexico",20708,MX,Municipality
+1031250,"Jamay,Jalisco,Mexico",20708,MX,City
+1031259,"La Barca,Jalisco,Mexico",20708,MX,City
+1031308,"Poncitlan,Jalisco,Mexico",20708,MX,City
+1031335,"San Juan de los Lagos,Jalisco,Mexico",20708,MX,City
+1031337,"San Julian,Jalisco,Mexico",20708,MX,Municipality
+1031340,"San Miguel el Alto,Jalisco,Mexico",20708,MX,City
+1031342,"Santa Anita,Jalisco,Mexico",20708,MX,City
+1031349,"Sayula,Jalisco,Mexico",20708,MX,City
+1031366,"Teocaltiche,Jalisco,Mexico",20708,MX,City
+1031370,"Tequila,Jalisco,Mexico",20708,MX,City
+1031388,"Tototlan,Jalisco,Mexico",20708,MX,City
+1031389,"Tuxpan,Jalisco,Mexico",20708,MX,City
+1031403,"Zapotiltic,Jalisco,Mexico",20708,MX,City
+9047210,"Guadalajara,Jalisco,Mexico",20708,MX,Municipality
+9047217,"Mascota,Jalisco,Mexico",20708,MX,Municipality
+9047229,"San Martin de Hidalgo,Jalisco,Mexico",20708,MX,Municipality
+9073786,"Los Gavilanes,Jalisco,Mexico",20708,MX,City
+9073788,"Tlaquepaque,Jalisco,Mexico",20708,MX,City
+9073804,"Hacienda Santa Fe,Jalisco,Mexico",20708,MX,City
+9073809,"Santa Cruz del Valle,Jalisco,Mexico",20708,MX,City
+9073811,"El Capulin,Jalisco,Mexico",20708,MX,City
+9073816,"Nuevo Mexico,Jalisco,Mexico",20708,MX,City
+9073826,"La Calera,Jalisco,Mexico",20708,MX,City
+9073836,"Zapote del Valle,Jalisco,Mexico",20708,MX,City
+9073845,"Ajijic,Jalisco,Mexico",20708,MX,City
+9073852,"Las Pintas,Jalisco,Mexico",20708,MX,City
+9073859,"Tesistan,Jalisco,Mexico",20708,MX,City
+9073866,"Santa Cruz de las Flores,Jalisco,Mexico",20708,MX,City
+9073889,"San Jose del Castillo,Jalisco,Mexico",20708,MX,City
+9073899,"Jardines de la Calera,Jalisco,Mexico",20708,MX,City
+9073909,"Tamazula de Gordiano,Jalisco,Mexico",20708,MX,City
+9073911,"La Union del Cuatro,Jalisco,Mexico",20708,MX,City
+9073922,"La Primavera,Jalisco,Mexico",20708,MX,City
+9073923,"Las Pintitas,Jalisco,Mexico",20708,MX,City
+9073935,"La Venta del Astillero,Jalisco,Mexico",20708,MX,City
+9073940,"San Agustin,Jalisco,Mexico",20708,MX,City
+9073956,"Pinar de la Venta,Jalisco,Mexico",20708,MX,City
+9073980,"Las Juntas,Jalisco,Mexico",20708,MX,City
+9073995,"San Jose el Quince,Jalisco,Mexico",20708,MX,City
+9074017,"Buenavista,Jalisco,Mexico",20708,MX,City
+9074021,"Tonala,Jalisco,Mexico",20708,MX,City
+9196195,"Tlajomulco de Zuniga,Jalisco,Mexico",20708,MX,City
+9196699,"La Tijera,Jalisco,Mexico",20708,MX,City
+9196950,"San Pedro Tlaquepaque,Jalisco,Mexico",20708,MX,City
+9212974,"Ixtapa,Jalisco,Mexico",20708,MX,City
+9248790,"Lomas del Sur,Jalisco,Mexico",20708,MX,City
+9250435,"Jalostotitlan,Jalostotitlan,Jalisco,Mexico",20708,MX,City
+9251890,"San Sebastian el Grande,Jalisco,Mexico",20708,MX,City
+9253182,"Cihuatlan,Jalisco,Mexico",20708,MX,Municipality
+9254409,"Villa Hidalgo,Jalisco,Mexico",20708,MX,City
+9255884,"Mazamitla,Jalisco,Mexico",20708,MX,City
+9258086,"Palomar,Jalisco,Mexico",20708,MX,City
+9259446,"Coyula,Jalisco,Mexico",20708,MX,City
+9261942,"Chapala,Jalisco,Mexico",20708,MX,Municipality
+9264108,"Encarnacion de Diaz,Jalisco,Mexico",20708,MX,City
