@@ -52,7 +52,7 @@ const rows: Row[] = [
   ["POSTHOG_QUERY_READ_KEY", "secret", PROD, false, "08"],
   // CI copies of the digest keys, for the nightly contract tests of the digest sources.
   ["POSTHOG_QUERY_READ_KEY_CI", "secret", NONE, true, "08", true],
-  ["GITHUB_BILLING_READ_TOKEN_CI", "secret", NONE, true, "08", true],
+  ["GH_BILLING_READ_TOKEN_CI", "secret", NONE, true, "08", true],
   ["LOG_LEVEL", "config", ALL, false, "08"],
   ["BETTERSTACK_HEARTBEAT_DAILY_URL", "secret", PROD, false, "08"],
   ["BETTERSTACK_HEARTBEAT_NIGHTLY_URL", "secret", NONE, true, "02 / 08"],
@@ -167,6 +167,11 @@ const rows: Row[] = [
   ["VERCEL_ORG_ID", "config", NONE, false, "02", true],
   ["VERCEL_PROJECT_ID", "config", NONE, false, "02", true],
   ["NEON_NONPROD_API_KEY", "secret", NONE, true, "02 / 03", true],
+  // Provisioning token scoped to R2, DNS, cache purge and zone read on reranker.co; it cannot
+  // mint other tokens.
+  ["CLOUDFLARE_API_TOKEN", "secret", NONE, true, "S02-06", true],
+  ["CLOUDFLARE_ACCOUNT_ID", "config", NONE, true, "S02-06", true],
+  ["CLOUDFLARE_ZONE_ID", "config", NONE, true, "S02-06", true],
 ];
 
 export const catalog: readonly CatalogEntry[] = rows.map(

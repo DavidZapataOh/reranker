@@ -54,7 +54,7 @@ jobs:
           POSTHOG_FEATURE_FLAGS_KEY: ${{ secrets.POSTHOG_READONLY_API_KEY }}
           POSTHOG_PROJECT_TOKEN: ${{ vars.POSTHOG_PROJECT_TOKEN_CI }}
           POSTHOG_QUERY_READ_KEY: ${{ secrets.POSTHOG_QUERY_READ_KEY_CI }}
-          GITHUB_BILLING_READ_TOKEN: ${{ secrets.GITHUB_BILLING_READ_TOKEN_CI }}
+          GITHUB_BILLING_READ_TOKEN: ${{ secrets.GH_BILLING_READ_TOKEN_CI }}
         run: |
           status=0
           pnpm exec turbo run test:contract --continue=dependencies-successful --summarize || status=$?
