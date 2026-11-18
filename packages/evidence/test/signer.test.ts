@@ -10,6 +10,7 @@ import type { TrustedKey } from "@reranker/verify/trust";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { SigningKeyMismatchError, SigningUnavailableError } from "../src/errors";
 import { connectKmsSigner, kmsSigner, loadSigner, resetSigners } from "../src/signer";
+import { productionEnv } from "./support/evidence-env";
 
 const registry = vi.hoisted(() => ({
   production: [] as TrustedKey[],
@@ -185,7 +186,8 @@ describe("loadSigner", () => {
   });
 
   test("production uses the production registry, and a failure is not memoized", async () => {
-    vi.stubEnv("APP_ENV", "production");
+    for (const [name, value] of Object.entries(productionEnv)) vi.stubEnv(name, value);
+    vi.stubEnv("EVIDENCE_CAPTURE_KMS_KEY_ARN", arn);
     resetAppEnv();
     send.mockImplementationOnce(async () => ({ PublicKey: spki(pubA) }));
     await expect(loadSigner("capture")).rejects.toBeInstanceOf(SigningKeyMismatchError);

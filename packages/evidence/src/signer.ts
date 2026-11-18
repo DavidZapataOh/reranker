@@ -4,9 +4,10 @@ import {
   KMSServiceException,
   SignCommand,
 } from "@aws-sdk/client-kms";
-import { appEnv, EnvValidationError } from "@reranker/env";
+import { appEnv } from "@reranker/env";
 import { KEYS_BY_ENV, type KeyPurpose, type TrustedKey } from "@reranker/verify/trust";
 import { awsCredentialsProvider } from "@vercel/oidc-aws-credentials-provider";
+import { requireEvidenceEnv, resetEvidenceEnv } from "./env";
 import { SigningKeyMismatchError, SigningUnavailableError } from "./errors";
 
 export interface Signer {
@@ -124,18 +125,10 @@ function currentKey(purpose: KeyPurpose): TrustedKey | undefined {
 }
 
 function kmsConfig(purpose: KeyPurpose) {
-  const names = [
-    "AWS_REGION",
-    "AWS_ROLE_ARN",
-    purpose === "capture" ? "EVIDENCE_CAPTURE_KMS_KEY_ARN" : "EVIDENCE_LOG_KMS_KEY_ARN",
-  ] as const;
-  const [region, roleArn, keyArn] = names.map((name) => process.env[name]);
-  if (!region || !roleArn || !keyArn) {
-    throw new EnvValidationError(
-      names.filter((name) => !process.env[name]).map((name) => ({ name, problem: "missing" })),
-    );
-  }
-  return { region, roleArn, keyArn };
+  const keyArnName =
+    purpose === "capture" ? "EVIDENCE_CAPTURE_KMS_KEY_ARN" : "EVIDENCE_LOG_KMS_KEY_ARN";
+  const env = requireEvidenceEnv("AWS_REGION", "AWS_ROLE_ARN", keyArnName);
+  return { region: env.AWS_REGION, roleArn: env.AWS_ROLE_ARN, keyArn: env[keyArnName] };
 }
 
 let client: KMSClient | undefined;
@@ -165,4 +158,5 @@ export function loadSigner(purpose: KeyPurpose): Promise<Signer> {
 export function resetSigners(): void {
   signers.clear();
   client = undefined;
+  resetEvidenceEnv();
 }

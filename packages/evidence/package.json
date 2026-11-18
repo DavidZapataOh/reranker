@@ -8,17 +8,23 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --project unit --coverage --passWithNoTests"
+    "test": "vitest run --project unit --coverage --passWithNoTests",
+    "test:contract": "vitest run --project contract"
   },
   "dependencies": {
     "@aws-sdk/client-kms": "catalog:",
     "@reranker/env": "workspace:*",
+    "@reranker/jobs": "workspace:*",
+    "@reranker/schema": "workspace:*",
+    "@reranker/telemetry": "workspace:*",
     "@reranker/verify": "workspace:*",
     "@vercel/oidc-aws-credentials-provider": "catalog:",
+    "aws4fetch": "catalog:",
     "server-only": "catalog:"
   },
   "devDependencies": {
     "@noble/curves": "catalog:",
+    "@reranker/testing": "workspace:*",
     "@reranker/typescript-config": "workspace:*",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",

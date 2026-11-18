@@ -156,10 +156,20 @@ const rows: Row[] = [
   ["R2_SECRET_ACCESS_KEY", "secret", ALL, false, "S02-06"],
   ["R2_EVIDENCE_BUCKET", "config", ALL, false, "S02-06"],
   ["R2_LOG_BUCKET", "config", ALL, false, "S02-06"],
+  ["R2_INTERNAL_BUCKET", "config", ALL, false, "S02-06"],
+  // Bucket-scoped R2 S3 key of the preview buckets, for the nightly storage contract test.
+  ["R2_ACCESS_KEY_ID_CI", "secret", NONE, true, "S02-06"],
+  ["R2_SECRET_ACCESS_KEY_CI", "secret", NONE, true, "S02-06"],
   ["CLOUDFLARE_CACHE_PURGE_TOKEN", "secret", ALL, false, "S02-06"],
-  ["EVIDENCE_CAPTURE_SIGNING_KEY", "secret", ALL, false, "S02-06"],
-  ["EVIDENCE_LOG_SIGNING_KEY", "secret", ALL, false, "S02-06"],
+  // Signing keys live in AWS KMS: the deployment holds ARNs and assumes the role through Vercel
+  // OIDC, so no variable ever carries private key material.
+  ["AWS_REGION", "config", ALL, false, "S02-06"],
+  ["AWS_ROLE_ARN", "config", ALL, false, "S02-06"],
+  ["EVIDENCE_*_KMS_KEY_ARN", "config", ALL, false, "S02-06"],
   ["EVIDENCE_*_KEY_ID", "config", ALL, false, "S02-06"],
+  // qtsa.eu stamps are bought for production only.
+  ["QTSA_TSA_URL", "secret", PROD, false, "S02-06"],
+  ["QTSA_PACKAGE_*", "config", PROD, false, "S02-06"],
   ["EVIDENCE_LOG_ORIGIN", "config", ALL, false, "S02-06"],
   ["EVIDENCE_*_BASE_URL", "config", ALL, false, "S02-06"],
   ["TURBO_TEAM", "config", NONE, true, "01", true],
@@ -175,7 +185,8 @@ const rows: Row[] = [
   // mint other tokens.
   ["CLOUDFLARE_API_TOKEN", "secret", NONE, true, "S02-06", true],
   ["CLOUDFLARE_ACCOUNT_ID", "config", NONE, true, "S02-06", true],
-  ["CLOUDFLARE_ZONE_ID", "config", NONE, true, "S02-06", true],
+  // Vercel also holds it for the cache purge after an artifact removal.
+  ["CLOUDFLARE_ZONE_ID", "config", ALL, true, "S02-06", true],
 ];
 
 export const catalog: readonly CatalogEntry[] = rows.map(

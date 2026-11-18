@@ -31,3 +31,12 @@ export class SigningUnavailableError extends Error {
     super(message, options);
   }
 }
+
+/** R2 answered 5xx or 429, timed out or was unreachable; the same call succeeds later. */
+export class EvidenceStorageUnavailableError extends Error {
+  override readonly name = "EvidenceStorageUnavailable";
+
+  constructor(message: string, options?: ErrorOptions) {
+    super(message, options);
+  }
+}
