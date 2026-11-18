@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import { defineEnv } from "@reranker/env";
 import { DEFAULT_LOCALE, type Locale } from "@reranker/i18n";
 import { AppError } from "@reranker/schema";
@@ -35,24 +34,26 @@ function resend(): Resend {
   return client;
 }
 
-/** Same recipient and code within Resend's 24-hour window is one email, so an SDK retry never double-sends. */
-export function idempotencyKey(template: AuthEmailTemplate, to: string, otp: string): string {
-  return `${template}/${createHash("sha256")
-    .update(to + otp)
-    .digest("hex")}`;
+/**
+ * One key per send attempt: resending a reused code is a new attempt and a new email, while a
+ * retry of the same attempt stays one email within Resend's 24-hour window.
+ */
+export function idempotencyKey(template: AuthEmailTemplate, attempt: string): string {
+  return `${template}/${attempt}`;
 }
 
 export async function sendAuthEmail(
   template: "sign-in-code",
   to: string,
   data: SignInCodeData,
+  { attempt }: { attempt: string },
 ): Promise<{ id: string }> {
   const { subject, element } = templates[template];
   const node = element(data);
   const [html, text] = await Promise.all([render(node), render(node, { plainText: true })]);
   const { data: sent, error } = await resend().emails.send(
     { from: FROM, to, subject: subject(data), html, text },
-    { idempotencyKey: idempotencyKey(template, to, data.otp) },
+    { idempotencyKey: idempotencyKey(template, attempt) },
   );
   await recordEmailDelivery(!error);
   if (error) {

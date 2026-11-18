@@ -98,6 +98,12 @@ const sentTo = (email: string) =>
     .filter(([, to]) => to === email)
     .map(([, , data]) => (data as { otp: string }).otp);
 
+// Resend sends one email per idempotency key, so each send has to be its own attempt to arrive.
+const attemptsTo = (email: string) =>
+  mail.sendAuthEmail.mock.calls
+    .filter(([, to]) => to === email)
+    .map(([, , , options]) => (options as { attempt: string }).attempt);
+
 const wrongCode = (otp: string) => String((Number(otp) + 1) % 1_000_000).padStart(6, "0");
 
 describe("sending a sign-in code", () => {
@@ -216,7 +222,7 @@ describe("signing in with a code", () => {
     expect(ids[1]).toBe(ids[0]);
   });
 
-  test("two tabs: the first code still works after a second send (reuse strategy)", async () => {
+  test("two tabs: the second send is a new email with the same code, and that code works", async () => {
     const email = "delivered+tabs@resend.dev";
     expect((await sendCode(email, { ip: nextIp() })).status).toBe(200);
     const first = await readSignInCode(email);
@@ -224,6 +230,7 @@ describe("signing in with a code", () => {
     expect(await readSignInCode(email)).toBe(first);
     // The email goes out in the background, after the response.
     await vi.waitFor(() => expect(sentTo(email)).toEqual([first, first]));
+    expect(new Set(attemptsTo(email)).size).toBe(2);
     expect((await signIn(email, first, nextIp())).status).toBe(200);
   });
 
