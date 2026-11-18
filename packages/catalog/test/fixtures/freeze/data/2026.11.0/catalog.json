@@ -1,0 +1,54 @@
+{
+  "categories": [
+    {
+      "key": "dental_clinic",
+      "labelKey": "catalog.categories.dental_clinic",
+      "placesTypes": ["dental_clinic", "dentist"],
+      "synonyms": ["odontólogo", "dentista"],
+      "archetype": "health",
+      "defaultScope": "local",
+      "register": "usted"
+    }
+  ],
+  "intents": [
+    {
+      "intentId": "dental_clinic.best_clinic",
+      "categoryKey": "dental_clinic",
+      "scope": "local",
+      "kind": "discovery",
+      "slug": "best_clinic",
+      "labelKey": "catalog.intents.dental_clinic.best_clinic",
+      "canonicalText": "¿Cuál es la mejor clínica odontológica en {lugar}?",
+      "canonicalParaphraseId": "dental_clinic.best_clinic.p00",
+      "demandWeight": 1,
+      "freeReport": true,
+      "language": "es",
+      "registerProfile": "co"
+    }
+  ],
+  "personas": [
+    {
+      "personaId": "dental_clinic.parent",
+      "categoryKey": "dental_clinic",
+      "preamble": "Tengo dos hijos pequeños."
+    }
+  ],
+  "paraphrases": [
+    {
+      "paraphraseId": "dental_clinic.best_clinic.p00",
+      "intentId": "dental_clinic.best_clinic",
+      "text": "¿Cuál es la mejor clínica odontológica en {lugar}?",
+      "format": "open_question",
+      "generator": "human",
+      "humanReviewed": true
+    },
+    {
+      "paraphraseId": "dental_clinic.best_clinic.p01",
+      "intentId": "dental_clinic.best_clinic",
+      "text": "clínicas dentales recomendadas en {lugar}",
+      "format": "keyword",
+      "generator": "human",
+      "humanReviewed": true
+    }
+  ]
+}
