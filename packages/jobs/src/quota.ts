@@ -30,11 +30,13 @@ function brake(name: string): { hourlyFloor: number; peakMultiplier: number } {
 // UTC hours: Bogota's offset is whole hours, so they start when local hours do.
 const hourKey = (name: string, at: number) => `${name}@${new Date(at).toISOString().slice(0, 13)}`;
 
+type Hour = { day: string; key: string; limit: SQL };
+
 /**
  * The hour's counter and its limit, `max(floor, multiplier × busiest hour of the last week)`. The
  * current hour is left out of the peak, so a flood can never raise its own limit.
  */
-function hour(name: string, now: Date): { day: string; key: string; limit: SQL } {
+function hour(name: string, now: Date): Hour {
   const { hourlyFloor, peakMultiplier } = brake(name);
   const key = hourKey(name, now.getTime());
   const weekAgo = now.getTime() - WEEK_MS;
@@ -44,6 +46,68 @@ function hour(name: string, now: Date): { day: string; key: string; limit: SQL }
                        and name >= ${hourKey(name, weekAgo)}::text and name < ${key}::text)`;
   const limit = sql`least(greatest(${hourlyFloor}::bigint, ${peakMultiplier}::bigint * ${peak}), ${MAX_AMOUNT}::bigint)`;
   return { day: spendDay(now), key, limit };
+}
+
+type Request = {
+  amount: number;
+  tenths: number;
+  resolve: (granted: boolean) => void;
+  reject: (error: unknown) => void;
+};
+
+// Bounds one transaction's work; anything past it waits for the next batch.
+const MAX_BATCH = 1_000;
+
+// Requests waiting on each hour's counter, keyed by `day/key`. A key is present while its batches
+// run.
+const waiting = new Map<string, Request[]>();
+
+/**
+ * The hour's row stays locked until COMMIT, a client round trip after the update, so one
+ * transaction per send admits one send per round trip and a burst queues on the pool until
+ * checkouts time out. Sends that arrive while a batch runs are decided together in the next one,
+ * in arrival order, on a single connection.
+ */
+async function drain(id: string, queue: Request[], { day, key, limit }: Hour): Promise<void> {
+  try {
+    while (queue.length > 0) {
+      const batch = queue.splice(0, MAX_BATCH);
+      try {
+        const { rows } = await withSystem("jobs.quota", (tx) =>
+          tx.execute<{ ok: boolean }>(
+            sql`select ops.consume_quota(${day}::date, ${key}::text, ${ROW_PRIORITY}::text, r.amount,
+                       (h.hour_limit * r.tenths / 10)::int) as ok
+                  from (select ${limit} as hour_limit) h,
+                       unnest(${sql.param(batch.map((r) => r.amount))}::int[],
+                              ${sql.param(batch.map((r) => r.tenths))}::int[])
+                         with ordinality as r(amount, tenths, n)
+                 order by r.n`,
+          ),
+        );
+        for (const [i, request] of batch.entries()) request.resolve(rows[i]?.ok === true);
+      } catch (error) {
+        for (const request of batch) request.reject(error);
+      }
+    }
+  } finally {
+    waiting.delete(id);
+  }
+}
+
+function decide(now: Date, name: string, amount: number, priority: JobPriority): Promise<boolean> {
+  const current = hour(name, now);
+  const id = `${current.day}/${current.key}`;
+  const running = waiting.get(id);
+  const queue = running ?? [];
+  const decision = new Promise<boolean>((resolve, reject) => {
+    queue.push({ amount, tenths: TENTHS[priority], resolve, reject });
+  });
+  if (!running) {
+    waiting.set(id, queue);
+    // Sends issued in the same tick join the first batch instead of waiting behind a batch of one.
+    queueMicrotask(() => void drain(id, queue, current));
+  }
+  return decision;
 }
 
 /**
@@ -61,14 +125,7 @@ export async function consumeQuota(
   }
   // The hour and its reset come from one instant, so a call on the hour cannot mix two hours.
   const now = new Date();
-  const { day, key, limit } = hour(name, now);
-  const { rows } = await withSystem("jobs.quota", (tx) =>
-    tx.execute<{ ok: boolean }>(
-      sql`select ops.consume_quota(${day}::date, ${key}::text, ${ROW_PRIORITY}::text, ${amount}::int,
-                 (${limit} * ${TENTHS[priority]}::bigint / 10)::int) as ok`,
-    ),
-  );
-  if (rows[0]?.ok !== true) {
+  if (!(await decide(now, name, amount, priority))) {
     const nextHour = new Date(Math.floor(now.getTime() / HOUR_MS) * HOUR_MS + HOUR_MS);
     throw new QuotaExceededError(name, priority, nextHour);
   }

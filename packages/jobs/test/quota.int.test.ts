@@ -7,11 +7,27 @@ import { consumeQuota, quotaStatus } from "../src/quota";
 // Quotas read the job config, which needs to know the environment.
 vi.stubEnv("APP_ENV", "development");
 
-// Concurrency is real only with more connections than the default three of the system pool.
-beforeAll(() => {
-  process.env.DB_POOL_MAX = "20";
+const INSTANCES = 4;
+
+// Each import after a reset is a module graph of its own, with its own pool at the default size
+// and its own batches: separate function instances contending for the same hour's row.
+async function load() {
+  vi.resetModules();
+  const [quota, errors, db] = await Promise.all([
+    import("../src/quota"),
+    import("../src/errors"),
+    import("@reranker/db"),
+  ]);
+  return { consumeQuota: quota.consumeQuota, QuotaExceededError: errors.QuotaExceededError, db };
+}
+const instances: Awaited<ReturnType<typeof load>>[] = [];
+beforeAll(async () => {
+  // One at a time: a reset while another graph is still importing would mix the two.
+  for (let i = 0; i < INSTANCES; i++) instances.push(await load());
 });
-afterAll(() => endPools());
+afterAll(async () => {
+  await Promise.all([...instances.map(({ db }) => db.endPools()), endPools()]);
+});
 
 const HOUR = 3_600_000;
 
@@ -32,20 +48,21 @@ const fill = (priority: JobPriority, amount: number) =>
   consumeQuota("resend.emails", { priority, amount });
 const send = (priority: JobPriority) => consumeQuota("resend.emails", { priority });
 
-// Waves of 100 keep every call contending on the hour's row while staying inside the pool's
-// 2 s connection timeout; the database never sees more than the pool's 20 at once anyway.
+// Every send is issued at once, spread over the instances. Each one must get a decision: a grant
+// or QuotaExceeded, never a pool or lock timeout.
 async function burst(count: number, priority: JobPriority): Promise<number> {
-  let granted = 0;
-  for (let done = 0; done < count; done += 100) {
-    const wave = await Promise.allSettled(
-      Array.from({ length: Math.min(100, count - done) }, () => send(priority)),
+  const sends = Array.from({ length: count }, (_, i) => {
+    const instance = instances[i % INSTANCES];
+    if (!instance) throw new Error("instances are not loaded");
+    return instance.consumeQuota("resend.emails", { priority }).then(
+      () => true,
+      (error: unknown) => {
+        expect(error).toBeInstanceOf(instance.QuotaExceededError);
+        return false;
+      },
     );
-    for (const r of wave) {
-      if (r.status === "fulfilled") granted++;
-      else expect(r.reason).toBeInstanceOf(QuotaExceededError);
-    }
-  }
-  return granted;
+  });
+  return (await Promise.all(sends)).filter(Boolean).length;
 }
 
 describe("the hourly email brake", () => {

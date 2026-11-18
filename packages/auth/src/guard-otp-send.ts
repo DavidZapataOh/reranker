@@ -5,6 +5,7 @@ import { defineEnv } from "@reranker/env";
 import { QuotaExceededError } from "@reranker/jobs/errors";
 import { consumeQuota } from "@reranker/jobs/quota";
 import { type BucketLimits, refundTokens, takeTokens } from "@reranker/jobs/rate";
+import { ERRORS, isAppError } from "@reranker/schema";
 import type { GenericEndpointContext } from "better-auth";
 import { APIError, getIP } from "better-auth/api";
 import { checkEmailDomain } from "./email-domain";
@@ -28,7 +29,7 @@ const GMAIL_DOMAINS = new Set(["gmail.com", "googlemail.com"]);
 
 const hmacEnv = authEnv.pick({ CAPACITY_HMAC_KEY: true });
 
-export type OtpSendRejection = "disposable" | "no_mx" | "rate_limited" | "quota";
+export type OtpSendRejection = "disposable" | "no_mx" | "rate_limited" | "quota" | "unavailable";
 
 type GuardContext = Pick<GenericEndpointContext, "body" | "headers" | "request"> & {
   context: Pick<GenericEndpointContext["context"], "options">;
@@ -64,6 +65,23 @@ function reject(
 }
 
 /**
+ * A retryable database failure, such as a pool still full past its checkout timeout, answers 503
+ * with the wait it advertises and keeps no token; left alone it would be an untyped 500 that spends
+ * a send from the person's hourly allowance. Anything else is a bug and propagates as it is.
+ */
+async function unavailable(error: unknown, giveBack: () => Promise<void>): Promise<unknown> {
+  if (!isAppError(error) || !error.retryable) return error;
+  // The refunds go to the same database; one that fails must not turn the answer into a 500.
+  await giveBack().catch(() => undefined);
+  const definition: { status: number; retryAfterSeconds?: number } = ERRORS[error.code];
+  return reject(
+    "SERVICE_UNAVAILABLE",
+    "unavailable",
+    error.retryAfterSeconds ?? definition.retryAfterSeconds,
+  );
+}
+
+/**
  * Runs before a sign-in code is created: domain, then send limits, then the daily email quota.
  * Turnstile has already run in the captcha plugin's onRequest. A rejection sends nothing and gives
  * back every token it took.
@@ -92,10 +110,19 @@ export async function guardOtpSend(ctx: GuardContext): Promise<void> {
       : []),
   ];
 
-  const results = await Promise.all(buckets.map(({ key, limits }) => takeTokens(key, limits)));
-  const taken = buckets.filter((_, i) => results[i]?.ok);
+  const settled = await Promise.allSettled(
+    buckets.map(({ key, limits }) => takeTokens(key, limits)),
+  );
+  const results = settled.flatMap((r) => (r.status === "fulfilled" ? [r.value] : []));
+  const taken = buckets.filter((_, i) => {
+    const r = settled[i];
+    return r?.status === "fulfilled" && r.value.ok;
+  });
   const giveBack = () =>
     Promise.all(taken.map(({ key, limits }) => refundTokens(key, limits))).then(() => undefined);
+
+  const failure = settled.find((r) => r.status === "rejected");
+  if (failure) throw await unavailable(failure.reason, giveBack);
 
   if (taken.length < buckets.length) {
     await giveBack();
@@ -106,7 +133,7 @@ export async function guardOtpSend(ctx: GuardContext): Promise<void> {
   try {
     await consumeQuota("resend.emails", { priority: "critical" });
   } catch (error) {
-    if (!(error instanceof QuotaExceededError)) throw error;
+    if (!(error instanceof QuotaExceededError)) throw await unavailable(error, giveBack);
     await giveBack();
     const waitSeconds = Math.ceil((error.resetsAt.getTime() - Date.now()) / 1000);
     throw reject("SERVICE_UNAVAILABLE", "quota", Math.max(1, waitSeconds));

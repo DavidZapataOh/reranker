@@ -7,10 +7,11 @@ import {
 } from "@reranker/jobs";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 
-const jobs = vi.hoisted(() => ({ probeSpendPath: vi.fn() }));
+const jobs = vi.hoisted(() => ({ probeSpendPath: vi.fn(), probeNetworkLookup: vi.fn() }));
 vi.mock("@reranker/jobs", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@reranker/jobs")>()),
   probeSpendPath: jobs.probeSpendPath,
+  probeNetworkLookup: jobs.probeNetworkLookup,
 }));
 
 const { POST } = await import("./route");
@@ -19,6 +20,7 @@ const CRON_SECRET = "cron-secret-with-enough-length";
 const BEARER = { authorization: `Bearer ${CRON_SECRET}` };
 const stats = { p50: 1.2, p95: 3.4, n: 1000 };
 const report = { acquireProviderSlot: stats, reserveSpend: stats, settleSpend: stats };
+const networkReport = { classifyNetwork: stats, ranges: 42_000 };
 
 function probe(headers: Record<string, string> = {}, body?: string) {
   return POST(
@@ -38,6 +40,8 @@ beforeEach(() => {
   resetAppEnv();
   jobs.probeSpendPath.mockReset();
   jobs.probeSpendPath.mockResolvedValue(report);
+  jobs.probeNetworkLookup.mockReset();
+  jobs.probeNetworkLookup.mockResolvedValue(networkReport);
 });
 
 afterEach(() => {
@@ -104,4 +108,27 @@ test.each([
   const response = await probe(BEARER);
   expect(response.status).toBe(status);
   expect(response.headers.get("retry-after")).toBe(retryAfter);
+});
+
+test("times the network lookup when asked, and nothing of the spend path", async () => {
+  const response = await probe(BEARER, JSON.stringify({ probe: "network", n: 1000 }));
+  expect(response.status).toBe(200);
+  expect(response.headers.get("cache-control")).toBe("no-store");
+  expect(await response.json()).toEqual(networkReport);
+  expect(jobs.probeNetworkLookup).toHaveBeenCalledWith(1000);
+  expect(jobs.probeSpendPath).not.toHaveBeenCalled();
+});
+
+test("probes the spend path when the probe is named", async () => {
+  await probe(BEARER, JSON.stringify({ probe: "spend", n: 3 }));
+  expect(jobs.probeSpendPath).toHaveBeenCalledWith(3, {});
+});
+
+test.each([
+  ["an unknown probe", { probe: "disk" }],
+  ["a hold on the network probe", { probe: "network", holdMs: 100 }],
+])("refuses %s", async (_, body) => {
+  expect((await probe(BEARER, JSON.stringify(body))).status).toBe(400);
+  expect(jobs.probeSpendPath).not.toHaveBeenCalled();
+  expect(jobs.probeNetworkLookup).not.toHaveBeenCalled();
 });

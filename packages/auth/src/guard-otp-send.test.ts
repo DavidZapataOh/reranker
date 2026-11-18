@@ -1,6 +1,7 @@
 import { assertOpaqueKey } from "@reranker/jobs";
 import { QuotaExceededError } from "@reranker/jobs/errors";
 import type { BucketLimits } from "@reranker/jobs/rate";
+import { AppError, ERRORS } from "@reranker/schema";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 const calls = vi.hoisted(() => [] as string[]);
@@ -179,11 +180,48 @@ describe("guardOtpSend", () => {
     expect(jobs.refundTokens).toHaveBeenCalledTimes(4);
   });
 
-  test("any other quota failure propagates", async () => {
-    jobs.consumeQuota.mockRejectedValue(new Error("connection reset"));
-    await expect(guardOtpSend(context("ana@empresa.co", "203.0.113.7"))).rejects.toThrow(
-      "connection reset",
+  test("a database too busy to decide the quota is 503 with its wait and gives every token back", async () => {
+    jobs.consumeQuota.mockRejectedValue(
+      new AppError("service_unavailable", { retryAfterSeconds: 2 }),
     );
+    const error = await guardOtpSend(context("ana@empresa.co", "203.0.113.7")).catch((e) => e);
+    expect(error).toMatchObject({ statusCode: 503, body: { reason: "unavailable" } });
+    expect(new Headers(error.headers).get("X-Retry-After")).toBe("2");
+    expect(jobs.refundTokens).toHaveBeenCalledTimes(4);
+  });
+
+  test("a bucket the database could not answer is 503, refunds the taken ones and takes no quota", async () => {
+    jobs.takeTokens.mockImplementation(async (key: string) => {
+      if (key.startsWith("otp:net:")) throw new AppError("timeout");
+      return { ok: true, remaining: 1, retryAfterMs: 0 };
+    });
+    const error = await guardOtpSend(context("ana@empresa.co", "203.0.113.7")).catch((e) => e);
+    expect(error).toMatchObject({ statusCode: 503, body: { reason: "unavailable" } });
+    expect(new Headers(error.headers).get("X-Retry-After")).toBe(
+      String(ERRORS.timeout.retryAfterSeconds),
+    );
+    const refunded = jobs.refundTokens.mock.calls.map(([key]) => key as string);
+    expect(refunded).toHaveLength(3);
+    expect(refunded.some((key) => key.startsWith("otp:net:"))).toBe(false);
+    expect(jobs.consumeQuota).not.toHaveBeenCalled();
+  });
+
+  test("a refund that fails while the database is busy still answers 503", async () => {
+    jobs.consumeQuota.mockRejectedValue(new AppError("service_unavailable"));
+    jobs.refundTokens.mockRejectedValue(new AppError("service_unavailable"));
+    const error = await guardOtpSend(context("ana@empresa.co", "203.0.113.7")).catch((e) => e);
+    expect(error).toMatchObject({ statusCode: 503, body: { reason: "unavailable" } });
+    expect(new Headers(error.headers).get("X-Retry-After")).toBe(
+      String(ERRORS.service_unavailable.retryAfterSeconds),
+    );
+  });
+
+  test.each([
+    ["a non-retryable error", new AppError("internal")],
+    ["a plain error", new Error("connection reset")],
+  ])("%s from the quota propagates", async (_label, failure) => {
+    jobs.consumeQuota.mockRejectedValue(failure);
+    await expect(guardOtpSend(context("ana@empresa.co", "203.0.113.7"))).rejects.toBe(failure);
   });
 
   test("without a client IP only the email buckets apply", async () => {
