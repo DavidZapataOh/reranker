@@ -84,9 +84,11 @@ export async function submitDigest(
   digest: Uint8Array,
   opts: Options = {},
 ): Promise<{ timestamp: OtsTimestamp; calendars: string[] }> {
+  // A copy is ArrayBuffer-backed, which fetch's BodyInit requires.
+  const submitted = digest.slice();
   const results = await Promise.allSettled(
     OTS_CALENDARS.map(async (calendar) => {
-      const body = await call(`${calendar}/digest`, { method: "POST", body: digest }, opts);
+      const body = await call(`${calendar}/digest`, { method: "POST", body: submitted }, opts);
       if (!body) throw new CalendarAnswerError("Calendar answered 404");
       return { calendar, proof: parseOtsTimestamp(body, digest) };
     }),

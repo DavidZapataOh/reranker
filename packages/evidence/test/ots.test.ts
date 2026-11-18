@@ -55,7 +55,7 @@ function recordingFetch(reply: (url: string, init: RequestInit) => Reply) {
     calls.push({ url, init });
     const r = reply(url, init);
     if (r instanceof Error) throw r;
-    return new Response(r.body ?? null, { status: r.status });
+    return new Response(r.body?.slice() ?? null, { status: r.status });
   }) as typeof fetch;
   return Object.assign(f, { calls });
 }
