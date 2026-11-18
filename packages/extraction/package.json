@@ -17,15 +17,16 @@
   "dependencies": {
     "@anthropic-ai/sdk": "catalog:",
     "@google/genai": "catalog:",
+    "@reranker/db": "workspace:*",
     "@reranker/env": "workspace:*",
     "@reranker/jobs": "workspace:*",
     "@reranker/schema": "workspace:*",
     "canonicalize": "catalog:",
+    "drizzle-orm": "catalog:",
     "openai": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@reranker/db": "workspace:*",
     "@reranker/testing": "workspace:*",
     "@reranker/typescript-config": "workspace:*",
     "@types/node": "catalog:",
