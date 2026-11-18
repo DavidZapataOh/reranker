@@ -4,26 +4,44 @@
   timezone: "America/Bogota",
   schedule: ["before 6am on monday"],
   minimumReleaseAge: "3 days",
-  // ci runs on pull requests only, so the PR must exist for its checks to gate automerge.
-  prCreation: "immediate",
-  platformAutomerge: false,
+  // pnpm enforces its own minimumReleaseAge on every version it resolves, transitive ones included.
+  // Syncing passes it to pnpm and lets lock file maintenance through, which has no release
+  // timestamp and would otherwise wait on renovate/stability-days forever.
+  minimumReleaseAgePackageManagerSync: true,
+  // Automerge goes through GitHub auto-merge, which hands a PR to the merge queue once the required
+  // checks pass. internalChecksFilter is strict by default, so a version younger than
+  // minimumReleaseAge never reaches a PR and a green PR is also an old enough one.
+  lockFileMaintenance: { enabled: true, automerge: true },
   packageRules: [
-    // Later rules win: runtime updates are grouped and never automerge, tooling overrides below.
-    { matchUpdateTypes: ["minor", "patch"], groupName: "non-major dependencies" },
+    // Later rules win. Majors stay ungrouped and wait for a person.
+    {
+      matchUpdateTypes: ["minor", "patch"],
+      groupName: "non-major dependencies",
+      automerge: true,
+    },
+    // Tooling apart from runtime, so a broken linter bump never holds back a runtime fix.
     {
       matchUpdateTypes: ["minor", "patch"],
       matchDepTypes: ["devDependencies"],
       groupName: "tooling",
-      automerge: true,
     },
     {
       matchUpdateTypes: ["minor", "patch"],
       matchDepTypes: ["pnpm.catalog.default"],
       matchPackageNames: ["@biomejs/biome", "turbo", "lefthook", "typescript", "@types/**"],
       groupName: "tooling",
+    },
+    {
+      matchManagers: ["github-actions"],
+      matchUpdateTypes: ["minor", "patch", "digest", "pinDigest"],
+      groupName: "GitHub Actions",
       automerge: true,
     },
-    { matchManagers: ["github-actions"], matchUpdateTypes: ["pinDigest"], automerge: true },
+    // The image ships only the browsers of its own release, so it moves with the npm packages.
+    {
+      matchPackageNames: ["playwright", "@playwright/test", "mcr.microsoft.com/playwright"],
+      groupName: "Playwright",
+    },
     // 2.2.2 was published by hand without the provenance 2.2.1 had, and pnpm's trust policy
     // refuses it; wait for a release published from CI again.
     { matchPackageNames: ["lefthook"], allowedVersions: "!/^2\\.2\\.2$/" },

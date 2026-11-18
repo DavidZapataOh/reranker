@@ -66,7 +66,7 @@ jobs:
           api_key: ${{ secrets.NEON_NONPROD_API_KEY }}
   full:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 30
     permissions: { contents: read }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -106,6 +106,16 @@ jobs:
           APP_TARGET: production
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: pnpm --filter web test:smoke
+      # On a shared runner the relative gate only catches gross regressions; production measures
+      # the strict budgets. Suspending the compute is safe: the branch belongs to this run alone,
+      # and the script refuses any branch whose name does not start with ci/.
+      - name: Benchmark tenant transactions and the cold start
+        if: ${{ !cancelled() && steps.branch.outputs.branch-id != '' }}
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_NONPROD_API_KEY }}
+          NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
+          NEON_BRANCH_ID: ${{ steps.branch.outputs.branch-id }}
+        run: pnpm --filter @reranker/db db:bench
       # delete-branch-action runs `npm i -g neonctl@v2`: pnpm's Node runtime keeps no global bin on PATH, and an
       # unlocked global install would otherwise resolve to whatever was published last and run its install scripts.
       - if: always() && steps.branch.outputs.branch-id != ''
@@ -133,6 +143,7 @@ jobs:
             apps/web/playwright-report
             apps/web/test-results
             apps/web/results.json
+            packages/db/bench-report.json
           retention-days: 3
           if-no-files-found: ignore
   report:
