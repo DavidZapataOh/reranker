@@ -138,8 +138,10 @@ jobs:
       # classifies as residential and the lookup is measured against an empty table.
       - name: Load the datacenter and VPN network lists
         run: pnpm --filter @reranker/jobs network:refresh
-      # Vercel builds the source with the project's Preview variables; only the database URLs,
-      # which exist for this deployment alone, are passed in. The migration credentials never are.
+      # Vercel builds the source with the project's Preview variables; only what exists for this
+      # deployment alone is passed in, never the migration credentials: the database URLs and the
+      # transparency log origin. A log lives as long as its database branch, so each branch gets its
+      # own path in the shared preview bucket, where a published tile is never rewritten.
       - id: deploy
         name: Deploy the preview
         env:
@@ -148,10 +150,13 @@ jobs:
           VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
           HEAD_REF: ${{ github.head_ref }}
+          PR: ${{ github.event.pull_request.number }}
+          BRANCH_ID: ${{ steps.branch.outputs.branch_id }}
         run: |
           url=$("$VERCEL" deploy --yes \
             --env "DATABASE_URL=$DATABASE_URL" \
             --env "DATABASE_URL_SYSTEM=$DATABASE_URL_SYSTEM" \
+            --env "EVIDENCE_LOG_ORIGIN=log-preview.reranker.co/pr-$PR/$BRANCH_ID/captures/2026" \
             --meta githubDeployment=1 \
             --meta "githubCommitRef=$HEAD_REF")
           if [[ ! "$url" =~ ^https://[a-z0-9-]+\.vercel\.app$ ]]; then
@@ -204,3 +209,19 @@ jobs:
           project_id: ${{ vars.NEON_PROJECT_ID }}
           branch: ${{ steps.branch.outputs.id }}
           api_key: ${{ secrets.NEON_NONPROD_API_KEY }}
+      # The transparency logs of this pull request's deployments go with their databases. The
+      # infrastructure token's R2 permission works as S3 credentials: its id and the SHA-256 of its
+      # value (https://developers.cloudflare.com/r2/api/tokens/).
+      - name: Delete this pull request's preview transparency logs
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          id=$(curl -fsS -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            https://api.cloudflare.com/client/v4/user/tokens/verify | jq -r .result.id)
+          secret=$(printf %s "$CLOUDFLARE_API_TOKEN" | sha256sum | cut -d' ' -f1)
+          echo "::add-mask::$secret"
+          AWS_ACCESS_KEY_ID="$id" AWS_SECRET_ACCESS_KEY="$secret" AWS_REGION=auto \
+            aws s3 rm "s3://rr-log-preview/pr-$PR/" --recursive \
+            --endpoint-url "https://$ACCOUNT_ID.r2.cloudflarestorage.com"
