@@ -125,8 +125,17 @@ export function resetPlanCache(): void {
   planCache.clear();
 }
 
+function deepFreeze<T>(value: T): T {
+  if (value !== null && typeof value === "object" && !Object.isFrozen(value)) {
+    for (const child of Object.values(value)) deepFreeze(child);
+    Object.freeze(value);
+  }
+  return value;
+}
+
+// Every caller shares the cached object, so a mutation would corrupt every later read.
 function remember(measurementId: string, plan: LoadedPlan): void {
-  planCache.set(measurementId, plan);
+  planCache.set(measurementId, deepFreeze(plan));
   if (planCache.size > PLAN_CACHE_SIZE) {
     const oldest = planCache.keys().next().value;
     if (oldest !== undefined) planCache.delete(oldest);

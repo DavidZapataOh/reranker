@@ -288,6 +288,28 @@ describe("loadPlan", () => {
     expect(vi.mocked(fetch).mock.calls.length).toBe(reads);
   });
 
+  test("the shared plan cannot be mutated, down to each slot's geo", async () => {
+    // ES modules run in strict mode, so writing to a frozen object throws.
+    const { measurementId } = await newMeasurement();
+    await freezeMeasurementPlan(measurementId, plannedSlots(2));
+    const plan = await loadPlan(measurementId);
+    const [slot] = plan.slots;
+    if (!slot) throw new Error("plan has no slots");
+    expect(() => {
+      plan.refId = "other";
+    }).toThrow(TypeError);
+    expect(() => plan.slots.push(slot)).toThrow(TypeError);
+    expect(() => {
+      slot.promptText = "otra pregunta";
+    }).toThrow(TypeError);
+    expect(() => {
+      Object.assign(slot.geoDeclared, { level: "country" });
+    }).toThrow(TypeError);
+    const reread = await loadPlan(measurementId);
+    expect(reread.refId).not.toBe("other");
+    expect(reread.slots).toHaveLength(2);
+  });
+
   test("an unfrozen or unknown measurement has no plan", async () => {
     const { measurementId } = await newMeasurement();
     await expect(loadPlan(measurementId)).rejects.toBeInstanceOf(InvalidInputError);
