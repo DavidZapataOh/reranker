@@ -11,6 +11,7 @@ export {
   putArtifact,
   putLogObject,
 } from "./artifacts";
+export { buildBundle, getSealSummaries, type SealSummary, verifyUrl } from "./bundle";
 export { signEnvelope } from "./dsse";
 export { evidenceEnv } from "./env";
 export {

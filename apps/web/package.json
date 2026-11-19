@@ -31,6 +31,7 @@
     "@reranker/schema": "workspace:*",
     "@reranker/telemetry": "workspace:*",
     "@reranker/ui": "workspace:*",
+    "@reranker/verify": "workspace:*",
     "better-auth": "catalog:",
     "drizzle-orm": "catalog:",
     "lucide-react": "1.68.0",

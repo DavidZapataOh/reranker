@@ -8,6 +8,7 @@ import { type SQL, sql } from "drizzle-orm";
 import { PgDialect } from "drizzle-orm/pg-core";
 import pg from "pg";
 import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
+import { bundleQuery, sealSummariesQuery } from "../src/bundle";
 import { resetEvidenceEnv } from "../src/env";
 import { integrate, pendingEntriesQuery } from "../src/log/integrate";
 import { latestNormalizedQuery, sealCapture, sealPlan } from "../src/seal";
@@ -258,15 +259,30 @@ describe(`index plans with ${SEED_ROWS.toLocaleString("en")} rows`, () => {
        from generate_series(1, $3::int) g`,
       [prefix, ENTRY_INDEX_BASE, SEED_ROWS],
     );
+    // Published batches over the seeded captures' indexes, each with its OpenTimestamps proof
+    // (the newest still pending) and a DigiCert token.
     await owner.query(
       `insert into public_panel.evidence_batches (origin, tree_size, first_index, root, frontier,
-         checkpoint_note)
-       select $1::text, g * 10, g * 10 - 10, sha256(convert_to('root' || g, 'UTF8')),
-         sha256(convert_to('frontier' || g, 'UTF8')), $1::text || E'\\n' || g * 10 || E'\\n'
+         checkpoint_note, published_at)
+       select $1::text, $3::bigint + g * 10, $3::bigint + g * 10 - 10,
+         sha256(convert_to('root' || g, 'UTF8')), sha256(convert_to('frontier' || g, 'UTF8')),
+         $1::text || E'\\n' || g * 10 || E'\\n', now()
        from generate_series(1, $2::int) g`,
-      [seedOrigin, SEED_ROWS],
+      [seedOrigin, SEED_ROWS, CAPTURE_INDEX_BASE],
     );
-    for (const table of ["captures", "evidence_entries", "evidence_batches"]) {
+    await owner.query(
+      `insert into public_panel.timestamp_anchors (origin, tree_size, kind, provider, status,
+         proof, bitcoin_height, attested_at)
+       select $1::text, $3::bigint + g * 10, k.kind, k.provider,
+         case when k.kind = 'ots' and g > $2::int - 10 then 'pending' else 'confirmed' end,
+         sha256(convert_to(k.provider || g, 'UTF8')),
+         case when k.kind = 'ots' and g <= $2::int - 10 then 900000 + g end,
+         case when k.kind = 'ots' and g <= $2::int - 10 then now() end
+       from generate_series(1, $2::int) g,
+         (values ('ots', 'ots-calendars'), ('rfc3161', 'digicert')) as k(kind, provider)`,
+      [seedOrigin, SEED_ROWS, CAPTURE_INDEX_BASE],
+    );
+    for (const table of ["captures", "evidence_entries", "evidence_batches", "timestamp_anchors"]) {
       await owner.query(`analyze public_panel.${table}`);
     }
     sampleCaptureId = `${prefix}${"4242".padStart(20, "0")}` as CaptureId;
@@ -290,19 +306,19 @@ describe(`index plans with ${SEED_ROWS.toLocaleString("en")} rows`, () => {
     expectNoSeqScanOn(plan, "public_panel.evidence_entries");
   });
 
-  test("a capture is found by its log index", async () => {
-    const plan = await explain(owner, "select id from public_panel.captures where log_index = $1", [
-      CAPTURE_INDEX_BASE + 4242,
-    ]);
-    expectNoSeqScanOn(plan, "public_panel.captures");
+  test("a bundle finds its capture, its batches and their anchors through indexes", async () => {
+    const { sql: text, params } = query(bundleQuery(sampleCaptureId, seedOrigin));
+    const plan = await explain(owner, text, params);
+    for (const table of ["captures", "evidence_batches", "timestamp_anchors"]) {
+      expectNoSeqScanOn(plan, `public_panel.${table}`);
+    }
   });
 
-  test("the batch covering an index is found by its tree size", async () => {
-    const plan = await explain(
-      owner,
-      "select * from public_panel.evidence_batches where origin = $1 and tree_size > $2 order by tree_size limit 1",
-      [seedOrigin, 42_420],
-    );
-    expectNoSeqScanOn(plan, "public_panel.evidence_batches");
+  test("seal summaries find each capture's batch and confirmed anchor through indexes", async () => {
+    const { sql: text, params } = query(sealSummariesQuery([sampleCaptureId], seedOrigin));
+    const plan = await explain(owner, text, params);
+    for (const table of ["captures", "evidence_batches", "timestamp_anchors"]) {
+      expectNoSeqScanOn(plan, `public_panel.${table}`);
+    }
   });
 });
