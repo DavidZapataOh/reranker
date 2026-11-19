@@ -5,7 +5,7 @@ import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import { RetryableError } from "workflow";
 import { breakerRecord } from "../src/breaker";
 import { ProviderUnavailableError, RateLimitedError } from "../src/errors";
-import { acquireProviderSlot } from "../src/leases";
+import { acquireProviderSlot, type ProviderSlot } from "../src/leases";
 import { toStepError } from "../src/step-errors";
 import { registerJobsTelemetry } from "../src/telemetry";
 import { runWorker, startWorker } from "./support/lease-fleet";
@@ -81,6 +81,36 @@ describe("acquireProviderSlot", () => {
     }
     expect(await liveLeases(key)).toBe(0);
   }, 60_000);
+
+  test("callers that queue while the pool row is busy are granted by one transaction", async () => {
+    const acct = account();
+    const key = `dataforseo:${acct}`;
+    const limits = { maxInFlight: 28, account: acct };
+    await (await acquireProviderSlot("dataforseo", limits)).release();
+    let all: Promise<ProviderSlot[]> | undefined;
+    await withSystem("test.leases", async (tx) => {
+      await tx.execute(sql`select 1 from ops.lease_pools where key = ${key} for update`);
+      all = Promise.all(
+        Array.from({ length: 28 }, () =>
+          acquireProviderSlot("dataforseo", limits, { maxWaitMs: 20_000 }),
+        ),
+      );
+      // Long enough for every caller to pass its breaker check and queue behind the first
+      // transaction, which waits for this lock up to its 2 s lock timeout.
+      await delay(1200);
+    });
+    const slots = (await all) ?? [];
+    expect(slots).toHaveLength(28);
+    // A transaction gives every lease it grants the same expiry: the first caller's, then the rest.
+    const { rows } = await withSystem("test.leases", (tx) =>
+      tx.execute<{ n: number }>(
+        sql`select count(distinct expires_at)::int as n from ops.concurrency_leases where key = ${key}`,
+      ),
+    );
+    expect(rows[0]?.n).toBeLessThanOrEqual(3);
+    await Promise.all(slots.map((slot) => slot.release()));
+    expect(await liveLeases(key)).toBe(0);
+  }, 30_000);
 
   test("a process that dies holding a lease frees it after the ttl", async () => {
     const acct = account();
