@@ -42,7 +42,7 @@ Required. Update the "Last rotation" cell of the row in this file in the same pu
 
 ## Inventory
 
-`Where it lives`: Prod, Prev and Dev are Vercel environments; GH is a GitHub repository secret (a CI value, never a production credential); GH env `<name>` is a secret of that GitHub Environment, readable only by the jobs that reference it. Rows marked "not active yet" belong to a plan that has not shipped; they are rotated from the day they exist.
+`Where it lives`: Prod, Prev and Dev are Vercel environments; GH is a GitHub repository secret (a CI value, never a production credential); GH env `<name>` is a secret of that GitHub Environment, readable only by the jobs that reference it. Rows marked "not active yet" belong to code that has not shipped; they are rotated from the day they exist.
 
 | Secret | Where it lives | Last rotation | Cadence |
 |---|---|---|---|
@@ -86,9 +86,10 @@ Required. Update the "Last rotation" cell of the row in this file in the same pu
 | `GOOGLE_PLACES_API_KEY_CI` | GH | not active yet | 180 days |
 | `R2_ACCESS_KEY_ID` | Prod, Prev, Dev | not active yet | 180 days |
 | `R2_SECRET_ACCESS_KEY` | Prod, Prev, Dev | not active yet | 180 days |
+| `R2_ACCESS_KEY_ID_CI` | GH | not active yet | 180 days |
+| `R2_SECRET_ACCESS_KEY_CI` | GH | not active yet | 180 days |
 | `CLOUDFLARE_CACHE_PURGE_TOKEN` | Prod, Prev, Dev | not active yet | 180 days |
-| `EVIDENCE_CAPTURE_SIGNING_KEY` | Prod, Prev, Dev | not active yet | 180 days |
-| `EVIDENCE_LOG_SIGNING_KEY` | Prod, Prev, Dev | not active yet | 180 days |
+| `QTSA_TSA_URL` | Prod | not active yet | at package renewal |
 | `TURBO_REMOTE_CACHE_SIGNATURE_KEY` | Prod, Prev, Dev, GH | not rotated yet | 180 days |
 | `VERCEL_AUTOMATION_BYPASS_SECRET` | GH | not rotated yet | 180 days |
 | `NEON_NONPROD_API_KEY` | GH | not rotated yet | 180 days |

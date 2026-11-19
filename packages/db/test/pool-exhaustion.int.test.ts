@@ -1,10 +1,10 @@
 import { randomUUID } from "node:crypto";
-import { sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import pg from "pg";
 import { afterAll, afterEach, beforeAll, expect, test, vi } from "vitest";
 import { appPool, endPools } from "../src/client";
 import { type DbEvent, resetDbEventsForTest, setDbEventSink } from "../src/events";
-import { asTenantId, withTenant } from "../src/tenancy";
+import { asTenantId, withSystem, withTenant } from "../src/tenancy";
 import { createProbeTable } from "./probe";
 
 // The pools read the variable when they are first created.
@@ -66,13 +66,31 @@ test("a failed BEGIN gives the only slot back: the next transaction runs at once
   expect(performance.now() - started).toBeLessThan(1500);
 });
 
+// The system pool has no row policy to stop a statement that runs outside the transaction.
+test("a BEGIN refused on a live connection commits nothing the callback meant to write", async () => {
+  const label = `begin-${randomUUID()}`;
+  const refused = Object.assign(new pg.DatabaseError("internal error", 0, "error"), {
+    code: "XX000",
+  });
+  failOnce("begin", refused);
+  await expect(
+    withSystem("test.begin", (tx) => tx.insert(probeTable.table).values({ tenantId: A, label })),
+  ).rejects.toMatchObject({ code: "internal" });
+  vi.restoreAllMocks();
+  const written = await withSystem("test.read", (tx) =>
+    tx.select().from(probeTable.table).where(eq(probeTable.table.label, label)),
+  );
+  expect(written).toEqual([]);
+});
+
 test("a failed ROLLBACK keeps the original 42501 and its event, and the slot comes back clean", async () => {
   const events: DbEvent[] = [];
   setDbEventSink((event) => events.push(event));
   failOnce("rollback", new Error("Connection terminated unexpectedly"));
-  const error = await withTenant(A, (tx) =>
-    tx.insert(probeTable.table).values({ tenantId: B }),
-  ).catch((e: unknown) => e);
+  // Awaited inside, so the transaction ends with ROLLBACK rather than a pipelined COMMIT.
+  const error = await withTenant(A, async (tx) => {
+    await tx.insert(probeTable.table).values({ tenantId: B });
+  }).catch((e: unknown) => e);
   vi.restoreAllMocks();
   expect(error).toMatchObject({ code: "internal", cause: { code: "42501" } });
   expect(events).toEqual([{ name: "db_rls_violation", pool: "app", pgCode: "42501" }]);
@@ -147,6 +165,11 @@ test("after a 42501 and a 57014 the same connection starts clean (empty app.tena
 
   // A committed transaction must not leave its settings behind either.
   expect(await withTenant(A, async () => "ok", { statementTimeoutMs: 300 })).toBe("ok");
+  expect(await session()).toEqual({ tenants: "", timeout: "15s" });
+
+  // Nor one whose COMMIT went out in the same flight as its settings and its statement.
+  const lone = await withTenant(A, (tx) => tx.select().from(probe), { statementTimeoutMs: 300 });
+  expect(lone).toEqual([]);
   expect(await session()).toEqual({ tenants: "", timeout: "15s" });
 
   vi.restoreAllMocks();

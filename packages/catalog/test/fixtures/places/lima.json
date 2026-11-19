@@ -1,0 +1,51 @@
+{
+  "formattedAddress": "Jirón de la Unión 300, Lima 15001, Perú",
+  "addressComponents": [
+    {
+      "longText": "300",
+      "shortText": "300",
+      "types": ["street_number"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Jirón de la Unión",
+      "shortText": "Jr. de la Unión",
+      "types": ["route"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Lima",
+      "shortText": "Lima",
+      "types": ["locality", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Provincia de Lima",
+      "shortText": "Provincia de Lima",
+      "types": ["administrative_area_level_2", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Municipalidad Metropolitana de Lima",
+      "shortText": "Municipalidad Metropolitana de Lima",
+      "types": ["administrative_area_level_1", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Perú",
+      "shortText": "PE",
+      "types": ["country", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "15001",
+      "shortText": "15001",
+      "types": ["postal_code"],
+      "languageCode": "es"
+    }
+  ],
+  "location": {
+    "latitude": -12.0464,
+    "longitude": -77.0428
+  }
+}

@@ -55,12 +55,36 @@ jobs:
           TURBO_SCM_BASE: ${{ steps.scope.outputs.base }}
           TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
         run: pnpm exec turbo run typecheck test ${{ steps.scope.outputs.affected }} --summarize
+      # Every measurement cites its seed version's hashes; a registered version never changes.
+      - name: Check frozen seed catalog versions
+        run: pnpm --filter @reranker/catalog freeze --check
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with: { version: "0.13.7" }
+      # An independent DSSE implementation (pyca/cryptography) must accept what the signer emits.
+      - name: Cross-verify a signed DSSE envelope with Python
+        run: |
+          pnpm --filter @reranker/evidence exec tsx test/py/emit-envelope.ts |
+            uv run --no-project --with cryptography==50.0.2 python packages/evidence/test/py/verify_envelope.py
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: "1.27"
+          cache-dependency-path: packages/evidence/test/go/go.sum
+      # The log's hashes, proofs and tile paths are pinned to golang.org/x/mod/sumdb/tlog.
+      - name: Check the transparency log fixtures match the Go reference
+        working-directory: packages/evidence/test/go
+        run: go run . --check
+      # golang.org/x/mod/sumdb/note must open the checkpoints the log signs.
+      - name: Cross-verify a signed checkpoint with Go
+        run: |
+          pnpm --filter @reranker/evidence exec tsx test/go/emit-checkpoint.ts |
+            (cd packages/evidence/test/go && go run . note-verify)
       # --affected never selects this package when only the root Biome config changes.
       - name: Test Biome plugins against the current configuration
         run: pnpm --filter @reranker/biome-plugins test
       # After the test run, so the timings come from an otherwise idle runner.
       - name: Check timing budgets
-        run: pnpm --filter @reranker/schema test:perf
+        # One package at a time, so no budget measures a sibling run.
+        run: pnpm --filter @reranker/schema test:perf && pnpm --filter @reranker/stats test:perf
       # Fails when PostHog lacks a registry flag, so a new flag can't ship before it exists.
       - name: Check PostHog holds every registry flag
         env:

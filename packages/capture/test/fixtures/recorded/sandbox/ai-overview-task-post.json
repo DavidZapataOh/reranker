@@ -1,0 +1,40 @@
+{
+    "version": "0.1.20261117",
+    "status_code": 20000,
+    "status_message": "Ok.",
+    "time": "0 sec.",
+    "cost": 0,
+    "tasks_count": 1,
+    "tasks_error": 0,
+    "tasks": [
+        {
+            "id": "11190445-3192-0066-2000-fce8555c41b1",
+            "status_code": 20100,
+            "status_message": "Task Created.",
+            "time": "0 sec.",
+            "cost": 0,
+            "result_count": 0,
+            "path": [
+                "v3",
+                "serp",
+                "google",
+                "organic",
+                "task_post"
+            ],
+            "data": {
+                "api": "serp",
+                "function": "task_post",
+                "se": "google",
+                "se_type": "organic",
+                "keyword": "mejor odontólogo en Medellín",
+                "location_code": 2170,
+                "language_code": "es",
+                "device": "mobile",
+                "load_async_ai_overview": true,
+                "tag": "contract:ai-overview",
+                "os": "android"
+            },
+            "result": null
+        }
+    ]
+}

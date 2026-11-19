@@ -1,0 +1,64 @@
+{
+    "version": "0.1.20261117",
+    "status_code": 20000,
+    "status_message": "Ok.",
+    "time": "0 sec.",
+    "cost": 0,
+    "tasks_count": 1,
+    "tasks_error": 0,
+    "tasks": [
+        {
+            "id": "11190445-3192-0087-2000-e4b73b21aabf",
+            "status_code": 20000,
+            "status_message": "Ok.",
+            "time": "0 sec.",
+            "cost": 0,
+            "result_count": 3,
+            "path": [
+                "v3",
+                "serp",
+                "google",
+                "organic",
+                "tasks_ready"
+            ],
+            "data": {
+                "api": "serp",
+                "function": "tasks_ready",
+                "se": "google",
+                "se_type": "organic"
+            },
+            "result": [
+                {
+                    "id": "11171018-0001-0066-0000-4e95f38f2957",
+                    "se": "google",
+                    "se_type": "organic",
+                    "date_posted": "2026-11-17 10:18:23 +00:00",
+                    "tag": "user_tag=2",
+                    "endpoint_regular": "\/v3\/serp\/google\/organic\/task_get\/regular\/11171018-0001-0066-0000-4e95f38f2957",
+                    "endpoint_advanced": "\/v3\/serp\/google\/organic\/task_get\/advanced\/11171018-0001-0066-0000-4e95f38f2957",
+                    "endpoint_html": "\/v3\/serp\/google\/organic\/task_get\/html\/11171018-0001-0066-0000-4e95f38f2957"
+                },
+                {
+                    "id": "11171018-0001-0066-0000-1c40400b11bb",
+                    "se": "google",
+                    "se_type": "organic",
+                    "date_posted": "2026-11-17 10:18:23 +00:00",
+                    "tag": "user_tag=2",
+                    "endpoint_regular": "\/v3\/serp\/google\/organic\/task_get\/regular\/11171018-0001-0066-0000-1c40400b11bb",
+                    "endpoint_advanced": "\/v3\/serp\/google\/organic\/task_get\/advanced\/11171018-0001-0066-0000-1c40400b11bb",
+                    "endpoint_html": "\/v3\/serp\/google\/organic\/task_get\/html\/11171018-0001-0066-0000-1c40400b11bb"
+                },
+                {
+                    "id": "11171018-0001-0066-0000-577da24209a7",
+                    "se": "google",
+                    "se_type": "organic",
+                    "date_posted": "2026-11-17 10:18:23 +00:00",
+                    "tag": "user_tag=2",
+                    "endpoint_regular": "\/v3\/serp\/google\/organic\/task_get\/regular\/11171018-0001-0066-0000-577da24209a7",
+                    "endpoint_advanced": "\/v3\/serp\/google\/organic\/task_get\/advanced\/11171018-0001-0066-0000-577da24209a7",
+                    "endpoint_html": "\/v3\/serp\/google\/organic\/task_get\/html\/11171018-0001-0066-0000-577da24209a7"
+                }
+            ]
+        }
+    ]
+}

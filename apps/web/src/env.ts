@@ -1,4 +1,6 @@
 import { authEnv } from "@reranker/auth/env";
+import { brightdataEnv } from "@reranker/capture/brightdata/env";
+import { captureEnv } from "@reranker/capture/env";
 import { config, defineEnv, forbiddenIn, requiredIn, secret } from "@reranker/env";
 import { flagsEnv } from "@reranker/flags/env";
 import { jobsEnv } from "@reranker/jobs/env";
@@ -43,6 +45,10 @@ export const fragments = [
   opsEnv,
   jobsEnv,
   authEnv,
+  // After digestEnv, which declares the same DataForSEO credentials as optional: the last
+  // declaration wins, so capture makes them mandatory where it runs.
+  captureEnv,
+  brightdataEnv,
 ] as const;
 
 let validated: ReturnType<typeof compose> | undefined;

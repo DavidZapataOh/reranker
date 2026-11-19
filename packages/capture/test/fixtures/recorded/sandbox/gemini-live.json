@@ -1,0 +1,150 @@
+{
+    "version": "0.1.20261117",
+    "status_code": 20000,
+    "status_message": "Ok.",
+    "time": "0 sec.",
+    "cost": 0,
+    "tasks_count": 1,
+    "tasks_error": 0,
+    "tasks": [
+        {
+            "id": "11190445-3192-0629-2000-8a68195585e5",
+            "status_code": 20000,
+            "status_message": "Ok.",
+            "time": "0 sec.",
+            "cost": 0,
+            "result_count": 1,
+            "path": [
+                "v3",
+                "ai_optimization",
+                "gemini",
+                "llm_scraper",
+                "live",
+                "advanced"
+            ],
+            "data": {
+                "api": "ai_optimization",
+                "function": "llm_scraper",
+                "se": "gemini",
+                "keyword": "mejor odontólogo en Medellín",
+                "location_code": 2170,
+                "language_code": "es",
+                "tag": "contract:gemini"
+            },
+            "result": [
+                {
+                    "keyword": "albert einstein",
+                    "location_code": 2840,
+                    "language_code": "en",
+                    "model": "3.5 Flash-Lite",
+                    "datetime": "2026-11-16 22:17:35 +00:00",
+                    "markdown": "Albert Einstein (1879–1955) was a German-born theoretical physicist who is widely ranked among the most influential scientists of all time. Best known for developing the **theory of relativity**, he also made foundational contributions to quantum mechanics and reshaped humanity's understanding of space, time, gravity, and the universe.\n\n![Albert Einstein in 1951](https:\/\/upload.wikimedia.org\/wikipedia\/commons\/4\/46\/Albert_Einstein_sticks_his_tongue.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original)\n\n---\n\n## Key Scientific Contributions\n\n*   **Special Relativity (1905):** Postulated that the laws of physics are the same for all non-accelerating observers and that the speed of light in a vacuum is regardless of the motion of all observers. This led to the famous mass-energy equivalence formula: \n    $$E = mc^2$$\n*   **General Relativity (1915):** A revolutionary geometric theory of gravitation stating that what we perceive as the force of gravity arises from the curvature of space and time caused by mass and energy.\n*   **The Photoelectric Effect (1905):** Proved that light can be thought of as streams of particles (photons) rather than just waves, laying the quantum groundwork that earned him the **1921 Nobel Prize in Physics**.\n\n---\n\n## Life and Legacy\n\n|   |   |\n| :--- | :--- |\n| Born | March 14, 1879, in Ulm, Kingdom of Württemberg, German Empire |\n| Died | April 18, 1955 (aged 76) in Princeton, New Jersey, US |\n| Citizenship | German, Swiss, American |\n| Key Institutions | University of Zurich, Prussian Academy of Sciences, Institute for Advanced Study (Princeton) |\n\nBeyond his scientific achievements, Einstein became a global cultural icon of genius and a passionate advocate for pacifism, civil rights, and international cooperation.\n\nAlbert Einstein biography documentary overview physics - youtube (1)\n\nExplain General Relativity in simple terms -> Explain Albert Einstein's theory of General Relativity in simple terms without heavy math.\n\nExplore Einstein's 1905 Annus Mirabilis papers -> What were the four papers Albert Einstein published during his 1905 Miracle Year?",
+                    "sources": null,
+                    "se_results_count": 0,
+                    "item_types": [
+                        "gemini_text",
+                        "gemini_images",
+                        "gemini_table"
+                    ],
+                    "items_count": 8,
+                    "items": [
+                        {
+                            "type": "gemini_text",
+                            "rank_group": 1,
+                            "rank_absolute": 1,
+                            "markdown": "Albert Einstein (1879–1955) was a German-born theoretical physicist who is widely ranked among the most influential scientists of all time. Best known for developing the **theory of relativity**, he also made foundational contributions to quantum mechanics and reshaped humanity's understanding of space, time, gravity, and the universe.",
+                            "original_text": "Albert Einstein (1879–1955) was a German-born theoretical physicist who is widely ranked among the most influential scientists of all time. Best known for developing the **theory of relativity**, he also made foundational contributions to quantum mechanics and reshaped humanity's understanding of space, time, gravity, and the universe.",
+                            "sources": null
+                        },
+                        {
+                            "type": "gemini_images",
+                            "rank_group": 1,
+                            "rank_absolute": 2,
+                            "markdown": "![Albert Einstein in 1951](https:\/\/upload.wikimedia.org\/wikipedia\/commons\/4\/46\/Albert_Einstein_sticks_his_tongue.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original)",
+                            "items": [
+                                {
+                                    "type": "gemini_images_element",
+                                    "url": "https:\/\/en.wikipedia.org\/wiki\/Albert_Einstein_in_popular_culture",
+                                    "alt": "Albert Einstein in 1951",
+                                    "image_url": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/4\/46\/Albert_Einstein_sticks_his_tongue.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original",
+                                    "markdown": "![Albert Einstein in 1951](https:\/\/upload.wikimedia.org\/wikipedia\/commons\/4\/46\/Albert_Einstein_sticks_his_tongue.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original)"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "gemini_text",
+                            "rank_group": 2,
+                            "rank_absolute": 3,
+                            "markdown": "---\n\n## Key Scientific Contributions\n\n*   **Special Relativity (1905):** Postulated that the laws of physics are the same for all non-accelerating observers and that the speed of light in a vacuum is regardless of the motion of all observers. This led to the famous mass-energy equivalence formula: \n    $$E = mc^2$$\n*   **General Relativity (1915):** A revolutionary geometric theory of gravitation stating that what we perceive as the force of gravity arises from the curvature of space and time caused by mass and energy.\n*   **The Photoelectric Effect (1905):** Proved that light can be thought of as streams of particles (photons) rather than just waves, laying the quantum groundwork that earned him the **1921 Nobel Prize in Physics**.\n\n---\n\n## Life and Legacy",
+                            "original_text": "---\n\n## Key Scientific Contributions\n\n*   **Special Relativity (1905):** Postulated that the laws of physics are the same for all non-accelerating observers and that the speed of light in a vacuum is regardless of the motion of all observers. This led to the famous mass-energy equivalence formula: \n    $$E = mc^2$$\n*   **General Relativity (1915):** A revolutionary geometric theory of gravitation stating that what we perceive as the force of gravity arises from the curvature of space and time caused by mass and energy.\n*   **The Photoelectric Effect (1905):** Proved that light can be thought of as streams of particles (photons) rather than just waves, laying the quantum groundwork that earned him the **1921 Nobel Prize in Physics**.\n\n---\n\n## Life and Legacy",
+                            "sources": null
+                        },
+                        {
+                            "type": "gemini_table",
+                            "rank_group": 1,
+                            "rank_absolute": 4,
+                            "markdown": "|   |   |\n| :--- | :--- |\n| Born | March 14, 1879, in Ulm, Kingdom of Württemberg, German Empire |\n| Died | April 18, 1955 (aged 76) in Princeton, New Jersey, US |\n| Citizenship | German, Swiss, American |\n| Key Institutions | University of Zurich, Prussian Academy of Sciences, Institute for Advanced Study (Princeton) |",
+                            "original_text": " \t \nBorn\tMarch 14, 1879, in Ulm, Kingdom of Württemberg, German Empire\nDied\tApril 18, 1955 (aged 76) in Princeton, New Jersey, US\nCitizenship\tGerman, Swiss, American\nKey Institutions\tUniversity of Zurich, Prussian Academy of Sciences, Institute for Advanced Study (Princeton)",
+                            "table": {
+                                "table_header": [
+                                    " ",
+                                    " "
+                                ],
+                                "table_content": [
+                                    [
+                                        "Born",
+                                        "March 14, 1879, in Ulm, Kingdom of Württemberg, German Empire"
+                                    ],
+                                    [
+                                        "Died",
+                                        "April 18, 1955 (aged 76) in Princeton, New Jersey, US"
+                                    ],
+                                    [
+                                        "Citizenship",
+                                        "German, Swiss, American"
+                                    ],
+                                    [
+                                        "Key Institutions",
+                                        "University of Zurich, Prussian Academy of Sciences, Institute for Advanced Study (Princeton)"
+                                    ]
+                                ]
+                            }
+                        },
+                        {
+                            "type": "gemini_text",
+                            "rank_group": 3,
+                            "rank_absolute": 5,
+                            "markdown": "Beyond his scientific achievements, Einstein became a global cultural icon of genius and a passionate advocate for pacifism, civil rights, and international cooperation.",
+                            "original_text": "Beyond his scientific achievements, Einstein became a global cultural icon of genius and a passionate advocate for pacifism, civil rights, and international cooperation.",
+                            "sources": null
+                        },
+                        {
+                            "type": "gemini_text",
+                            "rank_group": 4,
+                            "rank_absolute": 6,
+                            "markdown": "Albert Einstein biography documentary overview physics - youtube (1)",
+                            "original_text": "Albert Einstein biography documentary overview physics - youtube (1)",
+                            "sources": null
+                        },
+                        {
+                            "type": "gemini_text",
+                            "rank_group": 5,
+                            "rank_absolute": 7,
+                            "markdown": "Explain General Relativity in simple terms -> Explain Albert Einstein's theory of General Relativity in simple terms without heavy math.",
+                            "original_text": "Explain General Relativity in simple terms -> Explain Albert Einstein's theory of General Relativity in simple terms without heavy math.",
+                            "sources": null
+                        },
+                        {
+                            "type": "gemini_text",
+                            "rank_group": 6,
+                            "rank_absolute": 8,
+                            "markdown": "Explore Einstein's 1905 Annus Mirabilis papers -> What were the four papers Albert Einstein published during his 1905 Miracle Year?",
+                            "original_text": "Explore Einstein's 1905 Annus Mirabilis papers -> What were the four papers Albert Einstein published during his 1905 Miracle Year?",
+                            "sources": null
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

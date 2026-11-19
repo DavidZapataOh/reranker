@@ -7,7 +7,7 @@ export {
   providerCapacity,
   registerCapacitySource,
 } from "./capacity";
-export { type JobsConfig, jobsEnv, loadJobsConfig } from "./config";
+export { type JobsConfig, jobsEnv, loadJobsConfig, providerCapFloor } from "./config";
 export { nextResetAt, spendDay } from "./day";
 export {
   InvalidInputError,
@@ -36,9 +36,12 @@ export { assertOpaqueKey } from "./keys";
 export {
   type LatencyStats,
   MAX_PROBE_CALLS,
+  type NetworkLookupLatency,
   type ProbeOptions,
+  probeNetworkLookup,
   probeSpendPath,
   type SpendPathLatency,
+  summarize,
 } from "./latency";
 export {
   type AcquireOptions,
@@ -79,6 +82,7 @@ export {
   releaseSpend,
   releaseStaleSpend,
   reserveSpend,
+  type SpendContext,
   type SpendRequest,
   type SpendReservation,
   type SpendScopeStatus,

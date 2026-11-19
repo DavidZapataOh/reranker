@@ -4,7 +4,13 @@ import { AppEnv, CaptureChannel, CaptureProvider, EngineId } from "../src/domain
 import { CountryCode, CurrencyCode, LocaleCode } from "../src/primitives";
 
 test("domain ids", () => {
-  expect(EngineId.options).toEqual(["chatgpt", "gemini", "google-ai-overview", "perplexity"]);
+  expect(EngineId.options).toEqual([
+    "chatgpt",
+    "gemini",
+    "google-ai-overview",
+    "google-ai-mode",
+    "perplexity",
+  ]);
   expect(EngineId.options).toEqual([...ENGINES]);
   expect(CaptureChannel.options).toEqual(["ui-vendor", "ui-own", "api"]);
   expect(CaptureProvider.options).toEqual(["dataforseo", "brightdata", "openai"]);

@@ -1,0 +1,39 @@
+{
+  "formattedAddress": "Av. Francisco de Miranda, Chacao, Caracas 1060, Distrito Capital, Venezuela",
+  "addressComponents": [
+    {
+      "longText": "Avenida Francisco de Miranda",
+      "shortText": "Av. Francisco de Miranda",
+      "types": ["route"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Caracas",
+      "shortText": "Caracas",
+      "types": ["locality", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Distrito Capital",
+      "shortText": "Distrito Capital",
+      "types": ["administrative_area_level_1", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Venezuela",
+      "shortText": "VE",
+      "types": ["country", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "1060",
+      "shortText": "1060",
+      "types": ["postal_code"],
+      "languageCode": "es"
+    }
+  ],
+  "location": {
+    "latitude": 10.4961,
+    "longitude": -66.8533
+  }
+}

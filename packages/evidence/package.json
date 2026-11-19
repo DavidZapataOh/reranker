@@ -1,0 +1,46 @@
+{
+  "name": "@reranker/evidence",
+  "private": true,
+  "type": "module",
+  "sideEffects": [
+    "./src/jobs.ts"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./jobs": "./src/jobs.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --coverage --passWithNoTests",
+    "test:contract": "vitest run --project contract",
+    "test:integration": "vitest run --project integration --no-file-parallelism",
+    "r2:provision": "node scripts/provision-r2.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-kms": "catalog:",
+    "@reranker/db": "workspace:*",
+    "@reranker/env": "workspace:*",
+    "@reranker/i18n": "workspace:*",
+    "@reranker/jobs": "workspace:*",
+    "@reranker/schema": "workspace:*",
+    "@reranker/telemetry": "workspace:*",
+    "@reranker/verify": "workspace:*",
+    "@vercel/oidc-aws-credentials-provider": "catalog:",
+    "aws4fetch": "catalog:",
+    "drizzle-orm": "catalog:",
+    "server-only": "catalog:",
+    "ulid": "catalog:"
+  },
+  "devDependencies": {
+    "@noble/curves": "catalog:",
+    "@reranker/testing": "workspace:*",
+    "@reranker/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/pg": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "pg": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

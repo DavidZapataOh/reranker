@@ -23,6 +23,9 @@ function createPool(name: PoolName): pg.Pool {
     max: env.DB_POOL_MAX ?? DEFAULT_MAX[name],
     idleTimeoutMillis: 5000,
     connectionTimeoutMillis: 2000,
+    // Lets a transaction send BEGIN, its settings and its statements without waiting for each
+    // answer; tenancy.ts depends on it.
+    pipeline: true,
   });
   // An idle client dropped by the pooler or a suspended compute must not crash the process;
   // the pool discards it and the next checkout opens a fresh connection.

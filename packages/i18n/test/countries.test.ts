@@ -17,7 +17,7 @@ import {
   type ProviderCoverage,
 } from "../src/countries";
 import { PROVIDER_COVERAGE } from "../src/countries/generated";
-import { TIME_ZONES } from "../src/countries/policy";
+import { AI_MODE_UNAVAILABLE, TIME_ZONES } from "../src/countries/policy";
 import type { Locale } from "../src/locales";
 
 describe("country registry", () => {
@@ -43,6 +43,24 @@ describe("country registry", () => {
     expect(new Set(codes).size).toBe(codes.length);
   });
 
+  test("Colombia measures five engines", () => {
+    expect(getCountry("CO").engines).toEqual([
+      "chatgpt",
+      "gemini",
+      "google-ai-overview",
+      "google-ai-mode",
+      "perplexity",
+    ]);
+    expect(PROVIDER_COVERAGE.CO.engines).toEqual(getCountry("CO").engines);
+  });
+
+  test("a country without AI Mode does not list it", () => {
+    for (const code of AI_MODE_UNAVAILABLE) {
+      expect(PROVIDER_COVERAGE[code].engines).toContain("google-ai-overview");
+      expect(PROVIDER_COVERAGE[code].engines).not.toContain("google-ai-mode");
+    }
+  });
+
   test("Venezuela is measured without ChatGPT and Nicaragua with every engine", () => {
     expect(isMeasurable("VE")).toBe(true);
     expect(getCountry("VE").engines).not.toContain("chatgpt");
@@ -56,11 +74,16 @@ describe("country registry", () => {
       name: "Prueba",
       timeZone: "America/Caracas",
       dataforseoLocationCode: 1,
-      engines: ["chatgpt", "gemini", "google-ai-overview", "perplexity"],
+      engines: ["chatgpt", "gemini", "google-ai-overview", "google-ai-mode", "perplexity"],
     };
     const built = buildCountries({ CU: everyEngine, VE: everyEngine, CO: everyEngine });
     expect(Object.keys(built)).toEqual(["VE"]);
-    expect(built.VE?.engines).toEqual(["gemini", "google-ai-overview", "perplexity"]);
+    expect(built.VE?.engines).toEqual([
+      "gemini",
+      "google-ai-overview",
+      "google-ai-mode",
+      "perplexity",
+    ]);
     expect(built.VE?.billing).toEqual({ blocked: true });
     expect(built.VE?.providers).not.toHaveProperty("brightdata");
   });

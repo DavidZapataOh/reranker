@@ -1,7 +1,7 @@
 import { BlockList, isIP, SocketAddress } from "node:net";
 import { withSystem } from "@reranker/db";
 import { sql } from "drizzle-orm";
-import { InvalidInputError } from "./errors";
+import { InvalidInputError, RateLimitedError } from "./errors";
 import { NETWORK_EXCLUSIONS } from "./network-exclusions";
 
 export type NetworkKind = "hosting" | "vpn";
@@ -24,7 +24,10 @@ export interface NetworkRangesRefresh {
 // X4BNet/lists_vpn (MIT), built from IPLocate's IP to ASN data (CC BY-SA 4.0). The datacenter
 // lists already include VPN networks, so a prefix in both is a VPN.
 const REPOSITORY = "X4BNet/lists_vpn";
-const COMMIT_URL = `https://api.github.com/repos/${REPOSITORY}/commits/main`;
+const BRANCH = "refs/heads/main";
+// Git's smart HTTP ref discovery, the request `git ls-remote` starts with. Unlike the REST API it
+// is not held to 60 unauthenticated requests an hour per IP, which shared egress IPs exhaust.
+const REFS_URL = `https://github.com/${REPOSITORY}.git/info/refs?service=git-upload-pack`;
 const SOURCES: readonly { path: string; kind: NetworkKind }[] = [
   { path: "datacenter/ipv4.txt", kind: "hosting" },
   { path: "datacenter/ipv6.txt", kind: "hosting" },
@@ -37,6 +40,7 @@ const MAX_CHANGE = 0.2;
 const STALE_AFTER_HOURS = 48;
 const BATCH_SIZE = 10_000;
 const HOUR_MS = 3_600_000;
+const RATE_LIMIT_BACKOFF_MS = 60_000;
 
 type Family = 4 | 6;
 interface Prefix {
@@ -169,40 +173,87 @@ export async function classifyNetwork(ip: string): Promise<NetworkKind | null> {
   return rows[0]?.kind ?? null;
 }
 
-async function download(fetchImpl: typeof fetch, url: string, init: RequestInit = {}) {
-  const response = await fetchImpl(url, {
-    ...init,
-    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-  });
+// GitHub's documented order: retry-after, then the reset of an exhausted window, then at least a
+// minute, doubling with every attempt.
+function rateLimitWait(headers: Headers, attempt: number): number {
+  const retryAfter = headers.get("retry-after");
+  if (retryAfter !== null) {
+    const at = /^\d+$/.test(retryAfter)
+      ? Date.now() + Number(retryAfter) * 1000
+      : Date.parse(retryAfter);
+    if (Number.isFinite(at)) return Math.max(0, at - Date.now());
+  }
+  const reset = Number(headers.get("x-ratelimit-reset"));
+  if (headers.get("x-ratelimit-remaining") === "0" && reset > 0) {
+    return Math.max(0, reset * 1000 - Date.now());
+  }
+  return RATE_LIMIT_BACKOFF_MS * 2 ** Math.max(0, attempt - 1);
+}
+
+async function request(fetchImpl: typeof fetch, url: string, attempt: number): Promise<Response> {
+  const response = await fetchImpl(url, { signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) });
+  if (response.status === 403 || response.status === 429) {
+    throw new RateLimitedError(rateLimitWait(response.headers, attempt), new URL(url).host);
+  }
   if (!response.ok) throw new Error(`GET ${url} answered ${response.status}`);
-  return response.text();
+  return response;
+}
+
+const PKT_LENGTH = /^[0-9a-f]{4}$/;
+const OBJECT_ID = /^[0-9a-f]{40}$/;
+
+/**
+ * The commit `ref` points at in a smart HTTP ref advertisement (gitprotocol-http): pkt-lines, the
+ * first naming the service, then `<object id> <ref name>`, capabilities after a NUL on the first.
+ */
+export function advertisedRef(body: Uint8Array, ref: string): string | undefined {
+  const decoder = new TextDecoder();
+  const lines: string[] = [];
+  for (let at = 0; at < body.length; ) {
+    const length = decoder.decode(body.subarray(at, at + 4));
+    if (!PKT_LENGTH.test(length)) return undefined;
+    const size = Number.parseInt(length, 16);
+    if (size === 0) {
+      at += 4;
+      continue;
+    }
+    if (size < 4 || at + size > body.length) return undefined;
+    lines.push(decoder.decode(body.subarray(at + 4, at + size)));
+    at += size;
+  }
+  if (lines[0] !== "# service=git-upload-pack\n") return undefined;
+  for (const line of lines.slice(1)) {
+    const [id, name] = (line.split("\0")[0] ?? "").trimEnd().split(" ");
+    if (name === ref && id && OBJECT_ID.test(id)) return id;
+  }
+  return undefined;
 }
 
 // The commit is read once and every list is fetched at it, so the four files are one version.
-async function latestCommit(fetchImpl: typeof fetch): Promise<string> {
-  const sha = (
-    await download(fetchImpl, COMMIT_URL, {
-      headers: {
-        Accept: "application/vnd.github.sha",
-        "X-GitHub-Api-Version": "2022-11-28",
-        "User-Agent": "reranker",
-      },
-    })
-  ).trim();
-  if (!/^[0-9a-f]{40}$/.test(sha)) throw new Error(`Unexpected commit id from ${COMMIT_URL}`);
-  return sha;
+async function latestCommit(fetchImpl: typeof fetch, attempt: number): Promise<string> {
+  const response = await request(fetchImpl, REFS_URL, attempt);
+  // A dumb server answers in another format; only the smart one is parsed.
+  if (response.headers.get("content-type") !== "application/x-git-upload-pack-advertisement") {
+    throw new Error(`Unexpected content type from ${REFS_URL}`);
+  }
+  const commit = advertisedRef(new Uint8Array(await response.arrayBuffer()), BRANCH);
+  if (!commit) throw new Error(`No ${BRANCH} in the refs of ${REPOSITORY}`);
+  return commit;
 }
 
-async function fetchLists(fetchImpl: typeof fetch, commit: string) {
+async function fetchLists(fetchImpl: typeof fetch, commit: string, attempt: number) {
   return mergeLists(
     await Promise.all(
       SOURCES.map(async ({ path, kind }) => ({
         kind,
         prefixes: parseRangeList(
-          await download(
-            fetchImpl,
-            `https://raw.githubusercontent.com/${REPOSITORY}/${commit}/output/${path}`,
-          ),
+          await (
+            await request(
+              fetchImpl,
+              `https://raw.githubusercontent.com/${REPOSITORY}/${commit}/output/${path}`,
+              attempt,
+            )
+          ).text(),
         ),
       })),
     ),
@@ -292,12 +343,14 @@ async function apply(ranges: Map<string, NetworkKind>, commit: string): Promise<
  * Daily refresh of the datacenter and VPN lists, pinned to the upstream commit read first. A list
  * that is empty or more than 20% away from the current one is not applied, and neither is a failed
  * download: the current list stays and `onAlert` hears about it (a failed download only once the
- * data is 48 h old). A failed download also throws, so the step retries.
+ * data is 48 h old). A failed download also throws, so the step retries; a throttled one throws
+ * `RateLimitedError` with the wait GitHub asked for, or a backoff that doubles with `attempt`.
  */
 export async function refreshNetworkRanges(
   fetchImpl: typeof fetch = fetch,
-  opts: { onAlert?: (alert: NetworkRangesAlert) => void } = {},
+  opts: { onAlert?: (alert: NetworkRangesAlert) => void; attempt?: number } = {},
 ): Promise<NetworkRangesRefresh> {
+  const attempt = opts.attempt ?? 1;
   const alert = (payload: NetworkRangesAlert["payload"]) =>
     opts.onAlert?.({ kind: "network-ranges-stale", payload });
 
@@ -305,7 +358,7 @@ export async function refreshNetworkRanges(
   let ranges: Map<string, NetworkKind>;
   let meta: Meta | undefined;
   try {
-    commit = await latestCommit(fetchImpl);
+    commit = await latestCommit(fetchImpl, attempt);
     meta = await currentMeta();
     if (meta?.source_commit === commit) {
       await withSystem("jobs.network.meta", (tx) =>
@@ -315,7 +368,7 @@ export async function refreshNetworkRanges(
       );
       return { applied: true, rows: meta.rows, added: 0, removed: 0, changed: 0, commit };
     }
-    ranges = await fetchLists(fetchImpl, commit);
+    ranges = await fetchLists(fetchImpl, commit, attempt);
   } catch (error) {
     meta ??= await currentMeta();
     if (!meta) {

@@ -12,6 +12,7 @@ import {
   PlannedObservation,
   PlannedSlot,
   PromptVariant,
+  SeedCatalogFile,
   SeedCategoryKey,
   VariantId,
 } from "../src/measurement/catalog";
@@ -235,6 +236,56 @@ describe("measurement catalog schemas", () => {
     expect(PromptVariant.safeParse(variant).success).toBe(true);
     const { personaId, ...missing } = variant;
     expect(PromptVariant.safeParse(missing).success).toBe(false);
+  });
+
+  test("a seed catalog file holds categories and set-free intents, personas and paraphrases", () => {
+    const file = {
+      categories: [
+        {
+          key: "dental_clinic",
+          labelKey: "catalog.categories.dental_clinic",
+          placesTypes: ["dental_clinic", "dentist"],
+          synonyms: ["odontólogo"],
+          archetype: "health",
+          defaultScope: "local",
+          register: "usted",
+        },
+      ],
+      intents: [
+        {
+          intentId: "dental_clinic.best_clinic",
+          categoryKey: "dental_clinic",
+          scope: "local",
+          kind: "discovery",
+          slug: "best_clinic",
+          labelKey: "catalog.intents.dental_clinic.best_clinic",
+          canonicalText: "¿Cuál es la mejor clínica odontológica en {lugar}?",
+          canonicalParaphraseId: "dental_clinic.best_clinic.p00",
+          demandWeight: 1,
+          freeReport: true,
+          language: "es",
+          registerProfile: "co",
+        },
+      ],
+      personas: [
+        { personaId: "dental_clinic.parent", categoryKey: "dental_clinic", preamble: "Soy mamá." },
+      ],
+      paraphrases: [
+        {
+          paraphraseId: "dental_clinic.best_clinic.p00",
+          intentId: "dental_clinic.best_clinic",
+          text: "¿Cuál es la mejor clínica odontológica en {lugar}?",
+          format: "open_question",
+          generator: "human",
+          humanReviewed: true,
+        },
+      ],
+    };
+    expect(SeedCatalogFile.parse(file)).toEqual(file);
+    const generated = { ...file.categories[0], key: "gen:places:bakery" };
+    expect(SeedCatalogFile.safeParse({ ...file, categories: [generated] }).success).toBe(false);
+    const unlabeled = { ...file.intents[0], labelKey: null };
+    expect(SeedCatalogFile.safeParse({ ...file, intents: [unlabeled] }).success).toBe(false);
   });
 
   test("the measurement entry point exposes the catalog schemas", () => {

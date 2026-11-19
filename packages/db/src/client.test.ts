@@ -53,8 +53,9 @@ describe("pools", () => {
       max: 5,
       idleTimeoutMillis: 5000,
       connectionTimeoutMillis: 2000,
+      pipeline: true,
     });
-    expect(systemPool().options).toMatchObject({ max: 3 });
+    expect(systemPool().options).toMatchObject({ max: 3, pipeline: true });
     expect(appPool().options.connectionString).toContain("reranker_app");
     expect(systemPool().options.connectionString).toContain("reranker_system");
     for (const pool of [appPool(), systemPool()]) {

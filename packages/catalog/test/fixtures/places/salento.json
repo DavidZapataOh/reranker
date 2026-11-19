@@ -1,0 +1,51 @@
+{
+  "formattedAddress": "Cra. 6 #4-30, Salento, Quindío, Colombia",
+  "addressComponents": [
+    {
+      "longText": "4-30",
+      "shortText": "4-30",
+      "types": ["street_number"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Carrera 6",
+      "shortText": "Cra. 6",
+      "types": ["route"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Salento",
+      "shortText": "Salento",
+      "types": ["locality", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Salento",
+      "shortText": "Salento",
+      "types": ["administrative_area_level_2", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Quindío",
+      "shortText": "Quindío",
+      "types": ["administrative_area_level_1", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Colombia",
+      "shortText": "CO",
+      "types": ["country", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "631020",
+      "shortText": "631020",
+      "types": ["postal_code"],
+      "languageCode": "es"
+    }
+  ],
+  "location": {
+    "latitude": 4.6375,
+    "longitude": -75.5706
+  }
+}

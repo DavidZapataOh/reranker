@@ -9,7 +9,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --project unit --coverage --passWithNoTests",
+    "test": "vitest run --project unit --coverage --passWithNoTests && vitest run --project heavy",
     "test:perf": "vitest run --project perf --passWithNoTests",
     "test:integration": "vitest run --project integration --passWithNoTests"
   },
@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@reranker/typescript-config": "workspace:*",
+    "@stdlib/stats-base-dists-beta-cdf": "catalog:",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "fast-check": "catalog:",

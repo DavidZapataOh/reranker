@@ -1,12 +1,11 @@
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
 
-// Every code sent takes from today's critical email quota, which the database branch shares with
-// every test file and with whatever its parent branch already counted today. The quota test sets
-// its own allocation.
+// Every code sent takes from the current hour of the email brake, which the database branch
+// shares with every test file and with whatever its parent branch already counted. The quota test
+// sets its own limit.
 const TEST_EMAIL_QUOTA = {
-  QUOTA_RESEND_EMAILS_DAILY: "100070",
-  QUOTA_RESEND_EMAILS_SPLIT: "100000/16/50/4",
+  QUOTA_RESEND_EMAILS_HOURLY_FLOOR: "100000",
 };
 
 const PURGE_TEST = "src/purge.int.test.ts";

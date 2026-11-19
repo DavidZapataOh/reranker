@@ -40,7 +40,19 @@ catalog:
   "@types/pg": ^8.23.1
   zod: 4.6.7
   canonicalize: 5.1.0
+  openai: 7.57.0
+  # 3.4.0+ and 1.9.0+ are younger than minimumReleaseAge.
+  "@google/genai": 3.3.0
+  "@anthropic-ai/sdk": 1.8.0
+  "@noble/hashes": 2.4.0
+  "@noble/curves": 2.4.0
+  # 3.1170.0 and 3.1171.0 are younger than minimumReleaseAge.
+  "@aws-sdk/client-kms": 3.1169.0
+  "@vercel/oidc-aws-credentials-provider": 3.3.21
+  aws4fetch: 1.0.20
   server-only: 0.0.1
+  csv-parse: 7.0.3
+  fflate: 0.8.3
   next-intl: 4.14.9
   use-intl: 4.14.9
   "@formatjs/intl-localematcher": 0.10.1
@@ -69,7 +81,12 @@ catalog:
   "@posthog/nextjs-config": 1.12.2
   workflow: 5.4.0
   "@workflow/vitest": 5.0.8
+  "@stdlib/stats-base-dists-beta-cdf": 0.2.3
   "@stdlib/stats-base-dists-beta-quantile": 0.2.3
+  dataforseo-client: 2.1.13
+  ulid: 3.0.2
+  htmlparser2: 12.0.0
+  tldts: 7.5.4
 overrides:
   # GHSA-mrhx-c7xc-m3w5: @vercel/cli-config pins zod 4.1.11.
   "@vercel/cli-config>zod": 4.6.7
@@ -112,6 +129,8 @@ trustPolicyExclude:
   - "@vercel/oidc@4.0.9"
   - "@vercel/cli-config@0.4.0"
   - "@vercel/cli-exec@1.0.1"
+  # Same publishing path; the official AWS credentials provider for Vercel OIDC.
+  - "@vercel/oidc-aws-credentials-provider@3.3.21"
   # SWC publishes through trusted publishing without provenance; the workflow compiler pins
   # @swc/core 1.15.3 and its plugin needs that exact runtime. Linux x64 covers WSL, CI and Vercel.
   - "@swc/core-linux-x64-gnu@1.15.3"
@@ -134,6 +153,8 @@ allowBuilds:
   # cbor-x's native decoder (via the workflow runtime): the platform binaries ship as optional
   # dependencies; the install script only locates them.
   cbor-extract: false
+  # The postinstall only warns about dependents' version ranges (via @google/genai).
+  protobufjs: false
 verifyDepsBeforeRun: error
 
 auditConfig:

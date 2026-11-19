@@ -16,7 +16,7 @@ const viewed = {
   time_to_view_s: 42,
 } as const;
 
-test("server catalog names every event the other plans emit", () => {
+test("server catalog names every event the other packages emit", () => {
   expect(Object.keys(SERVER_EVENT_KEYS).sort()).toEqual([
     "account_deleted",
     "account_ready",

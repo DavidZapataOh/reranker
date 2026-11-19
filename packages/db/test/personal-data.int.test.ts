@@ -13,13 +13,18 @@ const SUSPICIOUS = /(^|_)(email|phone|name|ip_address|user_agent|document_number
 
 // Suspicious by name but not personal: teams are named by the product, not by people,
 // email_verified is a flag, not an address, and the ops names are code identifiers of guard
-// modes, quotas and opportunistic jobs.
+// modes, quotas and opportunistic jobs. Mentions keep business names only: a check nulls name_norm
+// for professionals, whose names stay only as the keyed HMAC, which no one can reverse without
+// the key.
 const NOT_PERSONAL = new Set([
   "auth.teams.name",
   "auth.users.email_verified",
   "ops.guard_modes.name",
   "ops.opportunistic_runs.name",
   "ops.quota_counters.name",
+  "public_panel.mentions.name_hmac",
+  "public_panel.mentions.name_norm",
+  "public_panel.places.name_hmac",
 ]);
 
 const inventoried = new Set(

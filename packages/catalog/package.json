@@ -4,14 +4,19 @@
   "type": "module",
   "sideEffects": false,
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./testing": "./src/testing.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --project unit --coverage --passWithNoTests"
+    "test": "vitest run --project unit --coverage --passWithNoTests",
+    "geo:build": "tsx scripts/build-geo.ts",
+    "freeze": "tsx scripts/freeze.ts"
   },
   "dependencies": {
+    "@reranker/i18n": "workspace:*",
     "@reranker/schema": "workspace:*",
+    "@reranker/verify": "workspace:*",
     "canonicalize": "catalog:",
     "server-only": "catalog:"
   },
@@ -19,6 +24,9 @@
     "@reranker/typescript-config": "workspace:*",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
+    "csv-parse": "catalog:",
+    "fflate": "catalog:",
+    "tsx": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }

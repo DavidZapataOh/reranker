@@ -14,19 +14,35 @@ afterAll(() => endPools());
 const key = (name: string) => `test:velocity:${name}:${randomUUID()}`;
 
 // The tests write relative to the database clock, the one record_velocity buckets by.
+async function currentMinute(): Promise<string> {
+  const { rows } = await withSystem("test.velocity", (tx) =>
+    tx.execute<{ m: string }>(sql`select date_trunc('minute', clock_timestamp())::text as m`),
+  );
+  const m = rows[0]?.m;
+  if (!m) throw new Error("The database returned no clock");
+  return m;
+}
+
+// Buckets are placed from one reading of the clock, so a minute that rolls over between seeds
+// cannot shift one onto another; seeds that must keep their spacing share an anchor.
 async function seedBuckets(
   k: string,
   buckets: { minutesAgo: number; count: number; spend?: number }[],
+  anchor?: string,
 ) {
-  for (const b of buckets) {
-    await withSystem("test.velocity", (tx) =>
-      tx.execute(
-        sql`insert into ops.velocity_buckets (key, bucket_start, count, flagged, spend_amount_micros, spend_currency)
-            values (${k}, date_trunc('minute', clock_timestamp()) - ${b.minutesAgo} * interval '1 minute',
-                    ${b.count}, 0, ${b.spend ?? 0}, 'USD')`,
-      ),
-    );
-  }
+  const at = anchor ?? (await currentMinute());
+  await withSystem("test.velocity", (tx) =>
+    tx.execute(
+      sql`insert into ops.velocity_buckets (key, bucket_start, count, flagged, spend_amount_micros, spend_currency)
+          values ${sql.join(
+            buckets.map(
+              (b) =>
+                sql`(${k}, ${at}::timestamptz - ${b.minutesAgo} * interval '1 minute', ${b.count}, 0, ${b.spend ?? 0}, 'USD')`,
+            ),
+            sql`, `,
+          )}`,
+    ),
+  );
 }
 
 // One bucket per minute for a week; the last `spikeMinutes` minutes before the end carry `spikeCount`.
@@ -131,10 +147,11 @@ describe("velocityBaseline", () => {
   test("a key never seen has no baseline, and a refresh replaces the old one", async () => {
     expect(await velocityBaseline(key("never"))).toBeNull();
     const k = key("again");
-    await seedBuckets(k, [{ minutesAgo: 1, count: 3 }]);
+    const now = await currentMinute();
+    await seedBuckets(k, [{ minutesAgo: 1, count: 3 }], now);
     await refreshVelocityBaselines();
     const first = await velocityBaseline(k);
-    await seedBuckets(k, [{ minutesAgo: 2, count: 50 }]);
+    await seedBuckets(k, [{ minutesAgo: 2, count: 50 }], now);
     await refreshVelocityBaselines();
     const second = await velocityBaseline(k);
     expect(first?.p95Count10m).toBe(3);

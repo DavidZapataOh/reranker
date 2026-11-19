@@ -89,6 +89,12 @@ export const opsAlerts = {
     runbook: "auth-email-delivery.md",
     source: "auth",
   },
+  // The public log stopped growing: a served tile differs from what Postgres derives.
+  "evidence-log-fork": {
+    severity: "critical",
+    runbook: "evidence-log-fork.md",
+    source: "evidence",
+  },
 } as const satisfies Record<string, OpsAlert>;
 
 export type OpsAlertKind = keyof typeof opsAlerts;
@@ -110,7 +116,7 @@ export const externalAlerts = {
   }
 >;
 
-/** Runbooks for procedures nobody is alerted about; each owning plan adds its own. */
+/** Runbooks for procedures nobody is alerted about; each area adds its own. */
 export const procedures = [
   "rotate-secret.md",
   "neon-setup.md",

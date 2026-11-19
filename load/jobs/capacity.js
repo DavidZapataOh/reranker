@@ -1,7 +1,7 @@
 import { check } from "k6";
 import http from "k6/http";
 import { Trend } from "k6/metrics";
-import { baseUrl, params } from "../lib/target.js";
+import { baseUrl, functionRegion, params } from "../lib/target.js";
 import { latency } from "../lib/thresholds.js";
 
 // Ten free reports at once, each admitting 120 provider calls: 1,200 DataForSEO slots taken,
@@ -12,12 +12,20 @@ const CALLS_PER_REPORT = 120;
 const HOLD_MS = 500;
 const SCENARIO = __ENV.SCENARIO || "nominal";
 
-// The plan's budget is p95 < 25 ms per primitive from iad1, read from the timings the
+// The budget is p95 < 25 ms per primitive from iad1, read from the timings the
 // deployment reports; the HTTP budget only adds the hold and the function around it.
 const PRIMITIVE_P95_MS = 25;
 const slotMs = new Trend("jobs_acquire_slot_ms", true);
 const reserveMs = new Trend("jobs_reserve_spend_ms", true);
 const settleMs = new Trend("jobs_settle_spend_ms", true);
+
+// The longest a stress iteration can take: the inline wait, a last lock wait that starts just
+// before it ends, the hold, then settle, release and the round trip from the runner.
+const STRESS_RATE = 160;
+const INLINE_WAIT_MS = 5000;
+const LOCK_WAIT_MS = 2000;
+const WORST_ITERATION_S = (INLINE_WAIT_MS + LOCK_WAIT_MS + HOLD_MS + 500) / 1000;
+const STRESS_VUS = STRESS_RATE * WORST_ITERATION_S;
 
 const scenarios = {
   nominal: {
@@ -42,16 +50,22 @@ const scenarios = {
   stress: {
     options: {
       executor: "constant-arrival-rate",
-      rate: 160,
+      rate: STRESS_RATE,
       timeUnit: "1s",
       duration: "1m",
-      preAllocatedVUs: 300,
-      maxVUs: 1200,
+      // Little's law: every VU the arrivals need exists before the first one. VUs allocated
+      // mid-run come too late, and the arrivals they miss are dropped load the run never sent.
+      preAllocatedVUs: STRESS_VUS,
+      maxVUs: STRESS_VUS,
     },
     thresholds: {
       checks: ["rate>0.99"],
       http_req_failed: ["rate<0.01"],
-      dropped_iterations: [`count<${160 * 60 * 0.01}`],
+      dropped_iterations: [`count<${STRESS_RATE * 60 * 0.01}`],
+      // Budgets that always hold, so the summary reports every status the deployment answered.
+      ...Object.fromEntries(
+        [200, 429, 500, 503, 504].map((status) => [`http_reqs{status:${status}}`, ["count>=0"]]),
+      ),
     },
   },
 };
@@ -84,8 +98,24 @@ const body = JSON.stringify({ n: 1, holdMs: HOLD_MS });
 
 if (SCENARIO === "stress") http.setResponseCallback(http.expectedStatuses(200, 429));
 
+const requestId = (res) => res.headers["X-Vercel-Id"] ?? "none";
+
+// One probe before the load: a target that cannot answer it, such as a preview whose database
+// branch is gone or a wrong secret, stops the run with its status instead of failing every request.
+export function setup() {
+  const res = http.post(url, body, requestParams);
+  if (res.status !== 200 && res.status !== 429) {
+    throw new Error(`The target answered the first probe ${res.status} (${requestId(res)})`);
+  }
+  console.log(`Target ready: ${res.status} from the function in ${functionRegion(res)}`);
+}
+
 export default function () {
   const res = http.post(url, body, requestParams);
+  // The request id finds the function's logs: `vercel logs --query 'requestId:"<id>"'`.
+  if (res.status !== 200 && res.status !== 429) {
+    console.warn(`Unexpected ${res.status} (${requestId(res)}) ${res.error}`);
+  }
   if (res.status === 200) {
     const report = res.json();
     slotMs.add(report.acquireProviderSlot.p50);
@@ -99,5 +129,9 @@ export default function () {
     });
     return;
   }
-  check(res, { admitted: (r) => r.status === 200 });
+  check(res, {
+    admitted: (r) => r.status === 200,
+    // The budgets hold only next to the database.
+    "ran in iad1": (r) => functionRegion(r) === "iad1",
+  });
 }

@@ -1,0 +1,49 @@
+{
+  "name": "@reranker/extraction",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./env": "./src/env.ts",
+    "./extract": "./src/extract.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --coverage --passWithNoTests",
+    "test:integration": "vitest run --project integration --passWithNoTests",
+    "test:contract": "vitest run --project contract --passWithNoTests",
+    "test:perf": "vitest run --project perf --passWithNoTests"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "catalog:",
+    "@google/genai": "catalog:",
+    "@reranker/capture": "workspace:*",
+    "@reranker/catalog": "workspace:*",
+    "@reranker/db": "workspace:*",
+    "@reranker/env": "workspace:*",
+    "@reranker/evidence": "workspace:*",
+    "@reranker/flags": "workspace:*",
+    "@reranker/i18n": "workspace:*",
+    "@reranker/jobs": "workspace:*",
+    "@reranker/schema": "workspace:*",
+    "canonicalize": "catalog:",
+    "drizzle-orm": "catalog:",
+    "htmlparser2": "catalog:",
+    "openai": "catalog:",
+    "server-only": "catalog:",
+    "tldts": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@reranker/testing": "workspace:*",
+    "@reranker/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/pg": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "msw": "catalog:",
+    "pg": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

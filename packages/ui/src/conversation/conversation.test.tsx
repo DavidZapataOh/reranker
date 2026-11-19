@@ -228,6 +228,9 @@ test("EngineMark shows the engine icon decoratively next to its visible name", (
     /src="\/engines\/openai.svg"[^>]*width="20"[^>]*height="20"/,
   );
   expect(html(<EngineMark engine="gemini" />)).toContain("/engines/gemini.svg");
+  const aiMode = html(<EngineMark engine="google-ai-mode" />);
+  expect(aiMode).toContain('src="/engines/google.svg"');
+  expect(textOf(aiMode)).toBe("Google (modo IA)");
   expect(html(<EngineMark engine="perplexity" />)).toContain("/engines/perplexity.svg");
 });
 

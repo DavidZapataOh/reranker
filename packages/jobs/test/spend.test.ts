@@ -87,10 +87,10 @@ describe("reserveSpend", () => {
       "purpose:free-report",
       "provider:dataforseo",
     ]);
-    expect(caps).toEqual([75_000_000, 30_000_000, 20_000_000, 50_000_000, 36_000_000]);
+    expect(caps).toEqual([320_000_000, 120_000_000, 80_000_000, 200_000_000, 379_800_000]);
     expect([fallback, fallbackCap, amount]).toEqual([
       "pool:free-report-verified",
-      20_000_000,
+      80_000_000,
       40_000,
     ]);
     expect(JSON.parse(ledger as string)).toEqual({
@@ -284,8 +284,8 @@ describe("spendStatus", () => {
     const status = await spendStatus(["global", "provider:openai"]);
     expect(execute).toHaveBeenCalledTimes(1);
     expect(status.map(({ scope, used, cap }) => ({ scope, used, cap }))).toEqual([
-      { scope: "global", used: usd(1200), cap: usd(75_000_000) },
-      { scope: "provider:openai", used: usd(0), cap: usd(14_000_000) },
+      { scope: "global", used: usd(1200), cap: usd(320_000_000) },
+      { scope: "provider:openai", used: usd(0), cap: usd(379_800_000) },
     ]);
     expect(status[0]?.resetsAt).toEqual(status[1]?.resetsAt);
   });

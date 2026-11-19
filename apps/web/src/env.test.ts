@@ -24,8 +24,15 @@ const posthog = {
   POSTHOG_HOST: "https://us.i.posthog.com",
 };
 
-const withKey = (APP_ENV: string, extra: Record<string, string> = {}) =>
+const dataforseo = { DATAFORSEO_LOGIN: "login", DATAFORSEO_PASSWORD: "password" };
+
+const brightdata = { BRIGHTDATA_API_KEY: "user-key", BRIGHTDATA_BILLING_API_KEY: "finance-key" };
+
+const withoutDataforseo = (APP_ENV: string, extra: Record<string, string> = {}) =>
   defineEnv(fragments, { APP_ENV, ...authVars, ...origin(APP_ENV), ...posthog, ...extra });
+
+const withKey = (APP_ENV: string, extra: Record<string, string> = {}) =>
+  withoutDataforseo(APP_ENV, { ...dataforseo, ...extra });
 
 describe("web environment", () => {
   test("development needs nothing beyond APP_ENV and the auth variables", () => {
@@ -35,6 +42,8 @@ describe("web environment", () => {
       NEXT_PUBLIC_POSTHOG_REGION: "us",
       LOG_LEVEL: "info",
       POSTHOG_PLAN: "free",
+      BRIGHTDATA_PERPLEXITY_DATASET_ID: "gd_m7dhdot1vw9a7gc1n",
+      BRIGHTDATA_CHATGPT_DATASET_ID: "gd_m7aof0k82r803d5bjm",
       ...local,
     });
   });
@@ -84,7 +93,7 @@ describe("web environment", () => {
       POSTHOG_FEATURE_FLAGS_KEY: "phs_test",
       CRON_SECRET: "cron-secret-with-enough-length",
     };
-    expect(withKey("production", { ...flags, ...ids })).toMatchObject(ids);
+    expect(withKey("production", { ...flags, ...brightdata, ...ids })).toMatchObject(ids);
     for (const APP_ENV of ["preview", "development"]) {
       expect(() => withKey(APP_ENV, ids)).toThrowError(
         /NEXT_PUBLIC_GA_ID \(forbidden\), NEXT_PUBLIC_CLARITY_ID \(forbidden\)/,
@@ -100,6 +109,27 @@ describe("web environment", () => {
     expect(() => withKey("preview", { CRON_SECRET: "short" })).toThrowError(
       /CRON_SECRET \(invalid\)/,
     );
+  });
+
+  test("preview and production need the DataForSEO credentials to capture answers", () => {
+    for (const APP_ENV of ["preview", "production"]) {
+      expect(() => withoutDataforseo(APP_ENV)).toThrowError(
+        /DATAFORSEO_LOGIN \(missing\), DATAFORSEO_PASSWORD \(missing\)/,
+      );
+    }
+    expect(withoutDataforseo("development").DATAFORSEO_LOGIN).toBeUndefined();
+  });
+
+  test("production needs both Bright Data keys; previews never capture through it", () => {
+    const flags = {
+      POSTHOG_FEATURE_FLAGS_KEY: "phs_test",
+      CRON_SECRET: "cron-secret-with-enough-length",
+    };
+    expect(() => withKey("production", flags)).toThrowError(
+      /BRIGHTDATA_API_KEY \(missing\), BRIGHTDATA_BILLING_API_KEY \(missing\)/,
+    );
+    expect(withKey("production", { ...flags, ...brightdata })).toMatchObject(brightdata);
+    expect(withKey("preview").BRIGHTDATA_API_KEY).toBeUndefined();
   });
 
   test("the PostHog region defaults to us and rejects unknown values", () => {

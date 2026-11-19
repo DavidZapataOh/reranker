@@ -1,0 +1,27 @@
+{
+  "name": "@reranker/verify",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./format": "./src/format/index.ts",
+    "./trust": "./src/trust/keys.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --coverage --passWithNoTests && vitest run --project heavy"
+  },
+  "dependencies": {
+    "@noble/hashes": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@reranker/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

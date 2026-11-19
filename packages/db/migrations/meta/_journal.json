@@ -78,6 +78,55 @@
       "when": 1794944379368,
       "tag": "0010_spend_day_lock",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1795024528173,
+      "tag": "0011_capture",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1795024529441,
+      "tag": "0012_capture_evidence_guard",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1795027711432,
+      "tag": "0013_evidence",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1795027712789,
+      "tag": "0014_evidence_guards",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1795029606321,
+      "tag": "0015_catalog",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1795032489352,
+      "tag": "0016_capture_engine_ai_mode",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1795034218875,
+      "tag": "0017_extraction",
+      "breakpoints": true
     }
   ]
 }

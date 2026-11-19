@@ -8,8 +8,8 @@ export class RateLimitedError extends Error {
   override readonly name = "RateLimited";
   readonly retryAfterMs: number;
 
-  constructor(retryAfterMs: number) {
-    super(`Rate limited, retry in ${retryAfterMs} ms`);
+  constructor(retryAfterMs: number, source?: string) {
+    super(`Rate limited${source ? ` by ${source}` : ""}, retry in ${retryAfterMs} ms`);
     this.retryAfterMs = retryAfterMs;
   }
 }

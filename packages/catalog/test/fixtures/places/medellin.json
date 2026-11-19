@@ -1,0 +1,57 @@
+{
+  "formattedAddress": "Cra. 43A #7-50, El Poblado, Medellín, Antioquia, Colombia",
+  "addressComponents": [
+    {
+      "longText": "7-50",
+      "shortText": "7-50",
+      "types": ["street_number"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Carrera 43A",
+      "shortText": "Cra. 43A",
+      "types": ["route"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "El Poblado",
+      "shortText": "El Poblado",
+      "types": ["neighborhood", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Medellín",
+      "shortText": "Medellín",
+      "types": ["locality", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Medellín",
+      "shortText": "Medellín",
+      "types": ["administrative_area_level_2", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Antioquia",
+      "shortText": "ANT",
+      "types": ["administrative_area_level_1", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Colombia",
+      "shortText": "CO",
+      "types": ["country", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "050021",
+      "shortText": "050021",
+      "types": ["postal_code"],
+      "languageCode": "es"
+    }
+  ],
+  "location": {
+    "latitude": 6.2087,
+    "longitude": -75.5678
+  }
+}

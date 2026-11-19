@@ -30,6 +30,7 @@ const ALL_ON = definitions({
   "capture-engine-chatgpt": true,
   "capture-engine-gemini": true,
   "capture-engine-google-ai-overview": true,
+  "capture-engine-google-ai-mode": true,
   "capture-engine-perplexity": true,
 });
 
@@ -67,6 +68,17 @@ describe("assertCaptureAllowed", () => {
       expect(error).toBeInstanceOf(CaptureChannelDisabledError);
       expect(error).toMatchObject({ retryable: false, flags: off });
     }
+  });
+
+  test("google-ai-mode capture is blocked when its engine switch is off", async () => {
+    serveDefinitions(withOff(ALL_ON, ["capture-engine-google-ai-mode"]));
+    await expect(
+      assertCaptureAllowed({
+        channel: "ui-vendor",
+        provider: "dataforseo",
+        engine: "google-ai-mode",
+      }),
+    ).rejects.toBeInstanceOf(CaptureChannelDisabledError);
   });
 
   test("a flag missing from PostHog counts as off", async () => {

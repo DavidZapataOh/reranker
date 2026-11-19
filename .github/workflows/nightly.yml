@@ -32,6 +32,14 @@ jobs:
         with:
           db-url: ${{ steps.branch.outputs.db-url }}
           db-host-pooled: ${{ steps.branch.outputs.db-host-pooled }}
+      # The OpenTimestamps reference client: the evidence contract tests compare our proofs with its output.
+      - name: Install the OpenTimestamps client
+        run: pipx install opentimestamps-client==0.8.0
+      # golang.org/x/mod/sumdb/tlog checks the log tiles the evidence contract tests publish.
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: "1.27"
+          cache-dependency-path: packages/evidence/test/go/go.sum
       # A missing secret fails the contract tests that need it; they never skip. Every package runs
       # even after one fails, so a night reports each broken adapter instead of the first.
       - id: tests
@@ -40,8 +48,9 @@ jobs:
           DATAFORSEO_LOGIN: ${{ secrets.DATAFORSEO_LOGIN }}
           DATAFORSEO_PASSWORD: ${{ secrets.DATAFORSEO_PASSWORD }}
           BRIGHTDATA_API_KEY_CI: ${{ secrets.BRIGHTDATA_API_KEY_CI }}
+          BRIGHTDATA_BILLING_API_KEY_CI: ${{ secrets.BRIGHTDATA_BILLING_API_KEY_CI }}
           OPENAI_API_KEY_CI: ${{ secrets.OPENAI_API_KEY_CI }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY_CI: ${{ secrets.GEMINI_API_KEY_CI }}
           GOOGLE_PLACES_API_KEY_CI: ${{ secrets.GOOGLE_PLACES_API_KEY_CI }}
           ANTHROPIC_API_KEY_CI: ${{ secrets.ANTHROPIC_API_KEY_CI }}
           XAI_API_KEY_CI: ${{ secrets.XAI_API_KEY_CI }}
@@ -55,12 +64,25 @@ jobs:
           POSTHOG_PROJECT_TOKEN: ${{ vars.POSTHOG_PROJECT_TOKEN_CI }}
           POSTHOG_QUERY_READ_KEY: ${{ secrets.POSTHOG_QUERY_READ_KEY_CI }}
           GITHUB_BILLING_READ_TOKEN: ${{ secrets.GH_BILLING_READ_TOKEN_CI }}
+          R2_ACCESS_KEY_ID_CI: ${{ secrets.R2_ACCESS_KEY_ID_CI }}
+          R2_SECRET_ACCESS_KEY_CI: ${{ secrets.R2_SECRET_ACCESS_KEY_CI }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          # Reads the private bucket's domain settings only.
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           status=0
           pnpm exec turbo run test:contract --continue=dependencies-successful --summarize || status=$?
           failed=$(jq -r '[.tasks[] | select((.execution.exitCode // 0) != 0) | .taskId] | join(" ")' .turbo/runs/*.json)
           echo "failed=$failed" >> "$GITHUB_OUTPUT"
           exit "$status"
+      # The sandbox bytes the parser tests replay; a run's artifact is how they are refreshed.
+      - if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: contract-recordings
+          path: packages/*/test/fixtures/recorded/sandbox
+          retention-days: 3
+          if-no-files-found: ignore
       - if: always() && steps.branch.outputs.branch-id != ''
         name: Prepare npm for the branch cleanup
         env:

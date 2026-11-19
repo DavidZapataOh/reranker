@@ -1,5 +1,5 @@
 /**
- * Latency and error budget for a scenario, from the budget its owning plan declares.
+ * Latency and error budget for a scenario, from the performance budget of the feature it covers.
  * @param {{ p95Ms: number, errorRate?: number }} budget
  */
 export function latency({ p95Ms, errorRate = 0.01 }) {

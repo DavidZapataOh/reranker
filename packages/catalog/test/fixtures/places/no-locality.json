@@ -1,0 +1,33 @@
+{
+  "formattedAddress": "Vía Llanogrande, Rionegro, Antioquia, Colombia",
+  "addressComponents": [
+    {
+      "longText": "Vía Llanogrande",
+      "shortText": "Vía Llanogrande",
+      "types": ["route"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Rionegro",
+      "shortText": "Rionegro",
+      "types": ["administrative_area_level_2", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Antioquia",
+      "shortText": "ANT",
+      "types": ["administrative_area_level_1", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Colombia",
+      "shortText": "CO",
+      "types": ["country", "political"],
+      "languageCode": "es"
+    }
+  ],
+  "location": {
+    "latitude": 6.1308,
+    "longitude": -75.4135
+  }
+}

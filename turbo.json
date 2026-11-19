@@ -31,6 +31,10 @@
         "GITHUB_BILLING_READ_TOKEN",
         "DATAFORSEO_LOGIN",
         "DATAFORSEO_PASSWORD",
+        "BRIGHTDATA_API_KEY",
+        "BRIGHTDATA_BILLING_API_KEY",
+        "BRIGHTDATA_PERPLEXITY_DATASET_ID",
+        "BRIGHTDATA_CHATGPT_DATASET_ID",
         "NEON_API_KEY",
         "NEON_PROJECT_ID",
         "NEON_NONPROD_PROJECT_ID",
@@ -90,8 +94,9 @@
         "DATAFORSEO_LOGIN",
         "DATAFORSEO_PASSWORD",
         "BRIGHTDATA_API_KEY_CI",
+        "BRIGHTDATA_BILLING_API_KEY_CI",
         "OPENAI_API_KEY_CI",
-        "GEMINI_API_KEY",
+        "GEMINI_API_KEY_CI",
         "GOOGLE_PLACES_API_KEY_CI",
         "ANTHROPIC_API_KEY_CI",
         "XAI_API_KEY_CI",
@@ -102,8 +107,13 @@
         "POSTHOG_FEATURE_FLAGS_KEY",
         "POSTHOG_PROJECT_TOKEN",
         "POSTHOG_QUERY_READ_KEY",
-        "GITHUB_BILLING_READ_TOKEN"
-      ]
+        "GITHUB_BILLING_READ_TOKEN",
+        "R2_ACCESS_KEY_ID_CI",
+        "R2_SECRET_ACCESS_KEY_CI",
+        "CLOUDFLARE_ACCOUNT_ID",
+        "CLOUDFLARE_API_TOKEN"
+      ],
+      "passThroughEnv": ["HOME", "GOROOT", "GOPATH", "GOMODCACHE", "GOCACHE", "GOTOOLCHAIN"]
     },
     "dev": { "cache": false, "persistent": true }
   }

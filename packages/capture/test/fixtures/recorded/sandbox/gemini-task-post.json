@@ -1,0 +1,36 @@
+{
+    "version": "0.1.20261117",
+    "status_code": 20000,
+    "status_message": "Ok.",
+    "time": "0 sec.",
+    "cost": 0,
+    "tasks_count": 1,
+    "tasks_error": 0,
+    "tasks": [
+        {
+            "id": "11190445-3192-0626-2000-cda4f0e78522",
+            "status_code": 20100,
+            "status_message": "Task Created.",
+            "time": "0 sec.",
+            "cost": 0,
+            "result_count": 0,
+            "path": [
+                "v3",
+                "ai_optimization",
+                "gemini",
+                "llm_scraper",
+                "task_post"
+            ],
+            "data": {
+                "api": "ai_optimization",
+                "function": "llm_scraper",
+                "se": "gemini",
+                "keyword": "mejor odontólogo en Medellín",
+                "location_code": 2170,
+                "language_code": "es",
+                "tag": "contract:gemini"
+            },
+            "result": null
+        }
+    ]
+}

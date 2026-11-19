@@ -10,6 +10,7 @@
     "./schema/auth": "./src/schema/auth.ts",
     "./auth-adapter": "./src/auth-adapter.ts",
     "./testing": "./src/testing.ts",
+    "./seed/catalog": "./src/seed/catalog.ts",
     "./neon-usage": "./src/neon-usage.ts",
     "./neon-production": "./src/neon-production.ts"
   },

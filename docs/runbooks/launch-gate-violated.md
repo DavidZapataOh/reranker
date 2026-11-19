@@ -11,7 +11,7 @@ Stages each flag needs (the source of truth is `LAUNCH_GATES` in `packages/telem
 | Check | Stage | `accounts` | `free-report-live` |
 |---|---|---|---|
 | `neon-production` | `reranker-prod` always on (scale to zero off), 0.5–4 CU, 7 days of history, protected default branch | yes | yes |
-| `resend-plan` | Resend Pro: no Free daily quota header, `QUOTA_RESEND_EMAILS_DAILY` above 100 | yes | yes |
+| `resend-plan` | Resend Pro: no Free daily quota header, `QUOTA_RESEND_EMAILS_HOURLY_FLOOR` unset or at least 500 | yes | yes |
 | `resend-sending-key` | Production `RESEND_API_KEY` is a sending-only key | | yes |
 | `betterstack-ready` | A Better Stack monitor on `https://reranker.co/api/ready`, every 30 s, paging the on-call person | | yes |
 | `betterstack-routing` | An incoming webhook that pages the on-call person for critical alerts | | yes |
@@ -20,6 +20,7 @@ Stages each flag needs (the source of truth is `LAUNCH_GATES` in `packages/telem
 | `github-private-org` | The repository is private and owned by an organization | | yes |
 | `traces` | A tracer provider registered with `@vercel/otel` | | yes |
 | `smoke-cron` | A `/api/cron/smoke` cron every 15 minutes in `apps/web/vercel.json` | | yes |
+| `spend-caps` | Free report cap at least US$200 and every `provider:*` cap at least what its purposes can spend on it × 1.2 (`providerCapFloor`); read from the deployment, so it is reported but gates no flag | | |
 
 ## Impact
 

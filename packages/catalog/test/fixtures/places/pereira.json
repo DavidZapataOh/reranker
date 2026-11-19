@@ -1,0 +1,51 @@
+{
+  "formattedAddress": "Cra. 7 #19-28, Pereira, Risaralda, Colombia",
+  "addressComponents": [
+    {
+      "longText": "19-28",
+      "shortText": "19-28",
+      "types": ["street_number"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Carrera 7",
+      "shortText": "Cra. 7",
+      "types": ["route"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Pereira",
+      "shortText": "Pereira",
+      "types": ["locality", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Pereira",
+      "shortText": "Pereira",
+      "types": ["administrative_area_level_2", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Risaralda",
+      "shortText": "RIS",
+      "types": ["administrative_area_level_1", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Colombia",
+      "shortText": "CO",
+      "types": ["country", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "660001",
+      "shortText": "660001",
+      "types": ["postal_code"],
+      "languageCode": "es"
+    }
+  ],
+  "location": {
+    "latitude": 4.8133,
+    "longitude": -75.6961
+  }
+}
