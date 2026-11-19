@@ -18,11 +18,11 @@ export interface SealLatency {
   sealCapture: LatencyStats | null;
   /** The four objects a seal writes, written at once as a seal writes them. */
   r2WriteRound: LatencyStats;
-  /** The retry check and the integration a seal schedules. */
+  /** The integration a seal schedules, its only database work. */
   database: LatencyStats;
   /**
-   * The retry check alone: one of the two single-statement transactions, with the insert of the
-   * row, for which a capture holds a system connection.
+   * The retry check before a seal: one of the two transactions, with the insert of the row, for
+   * which a capture holds a system connection. Not part of the seal.
    */
   hold: LatencyStats;
   /** Digests, statement and the DSSE message KMS would sign. */
@@ -202,14 +202,12 @@ export async function probeSealCapture(n: number = DEFAULT_SEAL_PROBES): Promise
         written.push(["envelopes", sealed.envelopeSha256]);
       }
       await writeRound(pick(samples.round), written);
-      await timed(pick(samples.database), async () => {
-        await timed(pick(samples.hold), () =>
-          withSystem("evidence.latency_probe", (tx) => captureRow(tx, `cap_${ulid()}`), {
-            readOnly: true,
-          }),
-        );
-        await scheduleIntegration(origin, new Date());
-      });
+      await timed(pick(samples.hold), () =>
+        withSystem("evidence.latency_probe", (tx) => captureRow(tx, `cap_${ulid()}`), {
+          readOnly: true,
+        }),
+      );
+      await timed(pick(samples.database), () => scheduleIntegration(origin, new Date()));
       const input = probeCapture();
       const message = await timed(pick(samples.envelope), async () => envelopeMessage(input));
       if (signer) await timed(pick(samples.sign), () => signer.sign(message));
