@@ -32,7 +32,8 @@ class CalendarAnswerError extends Error {
   override readonly name = "CalendarAnswerError";
 }
 
-async function readCapped(response: Response): Promise<Uint8Array> {
+/** Reads a response body, giving up as soon as it passes `max` bytes. */
+export async function readCapped(response: Response, max: number): Promise<Uint8Array> {
   const reader = (response.body as ReadableStream<Uint8Array>).getReader();
   const chunks: Uint8Array[] = [];
   let length = 0;
@@ -40,9 +41,9 @@ async function readCapped(response: Response): Promise<Uint8Array> {
     const { done, value } = await reader.read();
     if (done) break;
     length += value.length;
-    if (length > MAX_RESPONSE_BYTES) {
+    if (length > max) {
       await reader.cancel();
-      throw new CalendarAnswerError(`Calendar answer over ${MAX_RESPONSE_BYTES} bytes`);
+      throw new CalendarAnswerError(`Answer over ${max} bytes`);
     }
     chunks.push(value);
   }
@@ -73,7 +74,7 @@ async function call(url: string, init: RequestInit, opts: Options): Promise<Uint
     await response.body?.cancel();
     throw new CalendarAnswerError(`Calendar answered ${response.status}`);
   }
-  return readCapped(response);
+  return readCapped(response, MAX_RESPONSE_BYTES);
 }
 
 /**
