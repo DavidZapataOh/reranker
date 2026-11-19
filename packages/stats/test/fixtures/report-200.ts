@@ -1,5 +1,3 @@
-import type { EngineAnswer } from "@reranker/capture";
-import type { RawCapture } from "@reranker/extraction/extract";
 import { DEFAULT_COUNTRY_CODE } from "@reranker/i18n/countries";
 import { type CaptureChannel, cost, EngineId } from "@reranker/schema";
 import type {
@@ -10,6 +8,7 @@ import type {
   ResolvedMention,
   ResponseExtraction,
 } from "@reranker/schema/measurement";
+import type { ObservedCapture } from "../../src/observations";
 
 // V0 design: 5 engines × 5 intents × 8 variants, engine-major, so slot = e·40 + i·8 + v.
 export const ENGINES = EngineId.options;
@@ -122,7 +121,7 @@ const defaultMentions = (slot: number) =>
     : [mention({ entityKey: RIVAL })];
 
 export function fixture(opts: FixtureOptions = {}) {
-  const captures: RawCapture[] = [];
+  const captures: ObservedCapture[] = [];
   const extractions: ResponseExtraction[] = [];
   plan.observations.forEach((o, slot) => {
     const nth = slot % PER_ENGINE;
@@ -131,19 +130,7 @@ export function fixture(opts: FixtureOptions = {}) {
     const present = !failed && nth >= failedCount + (opts.notPresent?.[o.engine] ?? 0);
     const channel = opts.channel?.[slot] ?? "ui-vendor";
     const mentions = present ? (opts.mentions ?? defaultMentions)(slot) : [];
-    const answer: EngineAnswer | null = failed
-      ? null
-      : {
-          parserVersion: "fixture@1",
-          engine: o.engine,
-          channel,
-          provider: o.provider,
-          modelReported: null,
-          present,
-          markdown: present ? "answer" : "",
-          sources: [],
-          searchQueries: "unavailable",
-        };
+    const answer = failed ? null : { present };
     captures.push({
       capture: {
         id: captureId(slot),
