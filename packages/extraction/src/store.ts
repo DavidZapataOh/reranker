@@ -11,7 +11,7 @@ import type {
   Sentiment,
   Stance,
 } from "@reranker/schema/measurement";
-import { and, asc, eq, gt, gte } from "drizzle-orm";
+import { and, asc, eq, gt, gte, inArray } from "drizzle-orm";
 
 const REASON = "extraction.store";
 
@@ -110,6 +110,26 @@ export async function findExtraction(
       ),
   );
   return row ? { id: row.id, outputsSha256: row.outputsSha256.toString("hex") } : null;
+}
+
+/** The stored extraction id of each capture under one config, in one query. */
+export async function extractionIdsOf(
+  captureIds: string[],
+  configHash: string,
+): Promise<Map<string, string>> {
+  if (captureIds.length === 0) return new Map();
+  const rows = await withSystem(REASON, (tx) =>
+    tx
+      .select({ id: extractions.id, captureId: extractions.captureId })
+      .from(extractions)
+      .where(
+        and(
+          inArray(extractions.captureId, captureIds),
+          eq(extractions.configHash, bytes(configHash)),
+        ),
+      ),
+  );
+  return new Map(rows.map((row) => [row.captureId, row.id]));
 }
 
 /** Writes a report's mentions in one statement; rows already stored are skipped. */

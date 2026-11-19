@@ -52,6 +52,7 @@ export {
   type StructuredUsage,
 } from "./providers/types";
 export { assignOrdinals, locateQuote, toExtractedMentions } from "./quote";
+export { entityKeyOf, matchesTarget, resolveReportMentions } from "./resolve";
 export {
   type ClassifierOutput,
   ClassifierSchema,
@@ -63,6 +64,7 @@ export {
 } from "./schema";
 export {
   type ExtractionRow,
+  extractionIdsOf,
   findExtraction,
   insertExtraction,
   insertMentions,
