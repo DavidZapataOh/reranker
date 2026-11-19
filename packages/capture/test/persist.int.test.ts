@@ -46,6 +46,7 @@ describe("persistCapture", () => {
     await expect(persistCapture(record, { attempt: 1, late: false })).resolves.toEqual({
       captureId: record.captureId,
       stored: true,
+      transacted: true,
     });
     const [row] = await rowsOf(m);
     if (!row) throw new Error("no capture stored");
@@ -110,6 +111,7 @@ describe("persistCapture", () => {
     await expect(persistCapture(record, { attempt: 1, late: false })).resolves.toEqual({
       captureId: record.captureId,
       stored: false,
+      transacted: false,
     });
     expect(envelopeCount()).toBe(envelopes);
     expect(await rowsOf(m)).toHaveLength(1);
@@ -123,6 +125,30 @@ describe("persistCapture", () => {
     provider.r2RefusesWrites = false;
     await persistCapture(record, { attempt: 1, late: true });
     expect((await rowsOf(m)).map((r) => r.late)).toEqual([true]);
+  });
+
+  test("writes given in inTransaction commit with the row, and a failing one stores no row", async () => {
+    const { m, record } = await aiOverviewCapture();
+    await expect(
+      persistCapture(record, {
+        attempt: 1,
+        late: false,
+        inTransaction: async () => {
+          throw new Error("settle failed");
+        },
+      }),
+    ).rejects.toThrow("settle failed");
+    expect(await rowsOf(m)).toHaveLength(0);
+    const ran: string[] = [];
+    await expect(
+      persistCapture(record, {
+        attempt: 1,
+        late: false,
+        inTransaction: async () => void ran.push("settled"),
+      }),
+    ).resolves.toMatchObject({ stored: true, transacted: true });
+    expect(ran).toEqual(["settled"]);
+    expect(await rowsOf(m)).toHaveLength(1);
   });
 
   test("a call without a reported cost keeps the reserved estimate as its cost", async () => {

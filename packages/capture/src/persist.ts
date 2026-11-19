@@ -1,5 +1,5 @@
 import { getGeo, jcs } from "@reranker/catalog";
-import { withSystem } from "@reranker/db";
+import { type SystemTx, withSystem } from "@reranker/db";
 import { captures, intentSets } from "@reranker/db/schema";
 import { type CapturePredicateInput, captureRow, sealCapture } from "@reranker/evidence";
 import { getCountry } from "@reranker/i18n/countries";
@@ -87,11 +87,18 @@ const versionOf = (answer: EngineAnswer) => Number(answer.parserVersion.split("@
 /**
  * Seals a capture, then stores its row: a row exists only once its signed evidence does, and a
  * seal that fails stores nothing. Persisting the same capture again stores nothing new.
+ *
+ * `inTransaction` runs in the transaction that stores the row, after the insert, so its writes
+ * commit or roll back with it; `transacted` says whether that transaction ran and committed.
  */
 export async function persistCapture(
   record: CaptureRecord,
-  opts: { attempt: number; late: boolean },
-): Promise<{ captureId: string; stored: boolean }> {
+  opts: {
+    attempt: number;
+    late: boolean;
+    inTransaction?: (tx: SystemTx) => Promise<unknown>;
+  },
+): Promise<{ captureId: string; stored: boolean; transacted: boolean }> {
   const { slot, answer } = record;
   const plan = await loadPlan(slot.measurementId);
   const set = (await loadIntentSets([slot.intentSetId])).get(slot.intentSetId);
@@ -142,7 +149,7 @@ export async function persistCapture(
   const existing = await withSystem("capture", (tx) => captureRow(tx, record.captureId), {
     readOnly: true,
   });
-  if (existing) return { captureId: record.captureId, stored: false };
+  if (existing) return { captureId: record.captureId, stored: false, transacted: false };
   // Signed and written before any connection is taken: a capture holds one only for the insert.
   const sealed = await sealCapture({
     captureId: record.captureId,
@@ -184,6 +191,7 @@ export async function persistCapture(
       })
       .onConflictDoNothing()
       .returning({ id: captures.id });
-    return { captureId: record.captureId, stored: inserted !== undefined };
+    await opts.inTransaction?.(tx);
+    return { captureId: record.captureId, stored: inserted !== undefined, transacted: true };
   });
 }
