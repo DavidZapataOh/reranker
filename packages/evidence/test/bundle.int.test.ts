@@ -34,7 +34,6 @@ vi.mock("@reranker/jobs", async (importOriginal) => ({
 // the tiles suite does, and asserts only on its own captures.
 const ORIGIN = previewEnv.EVIDENCE_LOG_ORIGIN;
 const LOG_BUCKET = previewEnv.R2_LOG_BUCKET;
-const BUILDS = 50;
 const signers = {
   capture: localSigner("rr-capture-preview-1-ed25519"),
   log: localSigner("rr-log-preview-1"),
@@ -42,6 +41,8 @@ const signers = {
 
 // Both buckets behind the S3 API, holding objects as fetch hands them back: ungzipped.
 const r2 = new Map<string, Uint8Array<ArrayBuffer>>();
+const reads: string[] = [];
+let envelopeGate: (() => Promise<void>) | undefined;
 async function memoryR2(request: Request): Promise<Response> {
   const key = decodeURIComponent(new URL(request.url).pathname).slice(1);
   if (request.method === "PUT") {
@@ -52,6 +53,8 @@ async function memoryR2(request: Request): Promise<Response> {
     r2.set(key, request.headers.get("content-encoding") === "gzip" ? gunzipSync(body) : body);
     return new Response(null, { status: 200 });
   }
+  reads.push(key);
+  if (envelopeGate && key.includes("/envelopes/")) await envelopeGate();
   const body = r2.get(key);
   return body ? new Response(body) : new Response(null, { status: 404 });
 }
@@ -353,13 +356,10 @@ test("a removed artifact is marked removed and a capture without a parse has no 
   expect(rootFromInclusion(bundle)).toEqual(parseCheckpoint(bundle.checkpoint).root);
 });
 
-// A runner pays its own distance to Neon on every round trip (about 30 ms from GitHub's, under
-// 2 ms from iad1), and a bundle opens two read transactions. So CI holds buildBundle to those two
-// transactions, timed from the same runner in the same minutes, plus this for the queries' own
-// work, the proofs and the envelope; the 250 ms production budget sits well above that from iad1.
-const BEYOND_TWO_TRANSACTIONS_MS = 60;
-
-test(`buildBundle p95 stays within two Neon transactions over ${BUILDS} builds`, async () => {
+// Latency is held from iad1 by load/evidence/bundle.js; a runner's distance to Neon only adds
+// jitter. Here the cost is counted, which is exact: three read statements in their own
+// transactions, one envelope read from R2 overlapping the proofs, and no tile read.
+test("a bundle reads three statements and one envelope, with the proofs beside the envelope", async () => {
   await seedEntries(500);
   const [capture] = await seal();
   if (!capture) throw new Error("No capture was sealed");
@@ -367,23 +367,46 @@ test(`buildBundle p95 stays within two Neon transactions over ${BUILDS} builds`,
   await integrateBatch();
   await buildBundle(capture.captureId);
 
-  const builds: number[] = [];
-  const transactions: number[] = [];
-  for (let i = 0; i < BUILDS; i++) {
-    let start = performance.now();
-    await buildBundle(capture.captureId);
-    builds.push(performance.now() - start);
-    start = performance.now();
-    await withSystem("evidence.test", (tx) => tx.execute(sql`select 1`), { readOnly: true });
-    transactions.push(performance.now() - start);
+  const statements: string[] = [];
+  let proofsSent!: () => void;
+  const proofs = new Promise<void>((resolve) => {
+    proofsSent = resolve;
+  });
+  const original = pg.Client.prototype.query;
+  const spy = vi.spyOn(pg.Client.prototype, "query").mockImplementation(function (
+    this: pg.Client,
+    ...args: unknown[]
+  ) {
+    const [config] = args;
+    const text = typeof config === "string" ? config : (config as { text?: string }).text;
+    if (text) statements.push(text);
+    if (text?.includes("evidence_tree_hashes")) proofsSent();
+    return (original as (...a: unknown[]) => unknown).apply(this, args);
+  } as never);
+  // The envelope is answered only once the proofs are asked for: a build that waited for the
+  // envelope before proving would stall here and be caught.
+  let serialized = false;
+  envelopeGate = () =>
+    Promise.race([
+      proofs,
+      new Promise<void>((resolve) =>
+        setTimeout(() => {
+          serialized = true;
+          resolve();
+        }, 5_000),
+      ),
+    ]);
+  reads.length = 0;
+  try {
+    expect(await buildBundle(capture.captureId)).not.toBeNull();
+  } finally {
+    spy.mockRestore();
+    envelopeGate = undefined;
   }
-  const p = (times: number[], q: number) =>
-    times.sort((a, b) => a - b)[Math.ceil(q * times.length) - 1] ?? Number.NaN;
-  const p95 = p(builds, 0.95);
-  const transaction = p(transactions, 0.5);
-  console.info(
-    `buildBundle p50 ${p(builds, 0.5).toFixed(1)} ms, p95 ${p95.toFixed(1)} ms; ` +
-      `one read transaction p50 ${transaction.toFixed(1)} ms`,
-  );
-  expect(p95 - 2 * transaction).toBeLessThan(BEYOND_TWO_TRANSACTIONS_MS);
+
+  const data = statements.filter((text) => text.includes("public_panel."));
+  expect(data).toHaveLength(3);
+  expect(statements.filter((text) => /^begin\b/i.test(text))).toHaveLength(3);
+  expect(serialized).toBe(false);
+  expect(reads).toEqual([`${previewEnv.R2_EVIDENCE_BUCKET}/envelopes/${capture.envelopeSha256}`]);
 });
