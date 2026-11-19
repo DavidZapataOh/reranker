@@ -14,7 +14,7 @@ import {
   type SpendReservation,
   settleSpend,
 } from "@reranker/jobs";
-import type { ProviderCost } from "@reranker/schema";
+import { isAppError, type ProviderCost } from "@reranker/schema";
 import { and, eq } from "drizzle-orm";
 import { adapterFor, type CaptureRecord, registerCaptureAdapter } from "./adapters";
 import { dataforseoAdapter } from "./dataforseo/adapter";
@@ -39,7 +39,8 @@ export type CaptureSlotsOptions = {
 type Outcome = { ok: true } | { ok: false; error: Error; retryable: boolean };
 
 const asError = (error: unknown) => (error instanceof Error ? error : new Error(String(error)));
-const codeOf = (error: Error) => error.name.replace(/Error$/, "");
+const codeOf = (error: Error) =>
+  isAppError(error) ? error.code : error.name.replace(/Error$/, "");
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function bodyOf(bytes: Uint8Array): unknown | null {
@@ -177,7 +178,13 @@ export async function captureSlots(
   const done = await succeededSlots(measurementId);
 
   const ordered = dispatchOrder(slots);
-  // Every slot starts at once; the provider's lease pool is what limits calls in flight.
+  // No more slots run than their providers' lease pools admit: the rest would only wait for a
+  // lease while holding database connections the running ones need to seal and settle.
+  const { limits } = loadJobsConfig();
+  const admitted = [...new Set(ordered.map((slot) => slot.provider))].reduce(
+    (sum, provider) => sum + limits[provider].maxInFlight,
+    0,
+  );
   const results = await runBatch(
     ordered,
     async (slot) => {
@@ -193,7 +200,7 @@ export async function captureSlots(
     {
       key: (slot) => slot.slotId,
       isDone: async (key) => (done.has(parseSlotId(key).slotIndex) ? true : null),
-      concurrency: Math.max(1, ordered.length),
+      concurrency: Math.max(1, Math.min(ordered.length, admitted)),
     },
   );
   return {
