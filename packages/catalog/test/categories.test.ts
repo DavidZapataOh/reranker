@@ -85,9 +85,8 @@ describe("archetypes", () => {
     }
   });
 
-  test("usted only for health, professional services and education", () => {
-    const usted = CategoryArchetype.options.filter((a) => registerFor(a) === "usted");
-    expect(usted).toEqual(["health", "professional_services", "education"]);
+  test("every archetype is asked in tú", () => {
+    for (const a of CategoryArchetype.options) expect(registerFor(a)).toBe("tu");
   });
 });
 

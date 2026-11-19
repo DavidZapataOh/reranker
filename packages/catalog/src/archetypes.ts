@@ -31,12 +31,9 @@ export const ARCHETYPE_SCOPES: Readonly<Record<CategoryArchetype, readonly Quest
   online_national: ["national"],
 };
 
-const USTED: ReadonlySet<CategoryArchetype> = new Set([
-  "health",
-  "professional_services",
-  "education",
-]);
-
-export function registerFor(archetype: CategoryArchetype): "tu" | "usted" {
-  return USTED.has(archetype) ? "usted" : "tu";
+// People ask assistants and search engines in tú, doctors and lawyers included: usted shows up in
+// about one Spanish chatbot prompt in seven (3 of 94 from Colombia) and autocomplete never offers
+// "recomiéndeme". The field stays so a market that asks in usted can opt in.
+export function registerFor(_archetype: CategoryArchetype): "tu" | "usted" {
+  return "tu";
 }

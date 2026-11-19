@@ -5,6 +5,7 @@ import {
   type QuestionScope,
 } from "@reranker/schema/measurement";
 import { describe, expect, test } from "vitest";
+import evidence from "../data/templates/2026.11.0.evidence.json" with { type: "json" };
 import { ARCHETYPE_SCOPES, ARCHETYPE_SLATES, registerFor } from "../src/archetypes";
 import {
   BRAND_TEMPLATES,
@@ -12,6 +13,12 @@ import {
   fallbackTemplates,
   placeholderShape,
 } from "../src/templates";
+
+// The audit trail of the templates: which observed query phrasings each text follows.
+const EVIDENCE = evidence as {
+  patterns: Record<string, { support: string; evidence: unknown[] }>;
+  templates: Record<string, string[][]>;
+};
 
 const entries = CategoryArchetype.options.flatMap((archetype) =>
   ARCHETYPE_SCOPES[archetype].map((scope) => ({ archetype, scope })),
@@ -94,6 +101,32 @@ describe("fallback templates", () => {
   test("the noun never carries a gendered article: it can be masculine or feminine", () => {
     for (const { text } of allTemplateTexts()) {
       expect(text).not.toMatch(/\b(el|la|los|las|un|una|algún|alguna)\s+\{sustantivo\}/i);
+      expect(text, text).not.toMatch(/\b(el|la|un|una|buen|buena)\s+mejor\s+\{sustantivo\}/i);
+      // "Comprar X barato" is an adverb and stays as it is.
+      expect(text, text).not.toMatch(
+        /(?<!compr\w*\s+)\{sustantivo\}\s+(barat|abiert|económic|recomendad|especializad|cercan|ubicad|vigilad)[oa]s?\b/i,
+      );
+    }
+  });
+
+  // The noun can name a place (clínica odontológica) or a person (odontólogo), so it is never a location.
+  test("the noun reads right for a place and for a professional", () => {
+    for (const { text } of allTemplateTexts()) {
+      expect(text, text).not.toMatch(/\ben\s+(qué|cuál|el|la)\s+\{sustantivo\}/i);
+    }
+  });
+
+  test("every text names the observed phrasings it follows", () => {
+    const declared = new Set(Object.keys(EVIDENCE.patterns));
+    for (const { archetype, scope } of entries) {
+      for (const i of fallbackTemplates(archetype, scope)) {
+        const keys = EVIDENCE.templates[`${archetype}/${scope}/${i.kind}`];
+        expect(keys, `${archetype}/${scope}/${i.kind}`).toHaveLength(1 + i.paraphrases.length);
+        for (const k of (keys ?? []).flat()) expect(declared).toContain(k);
+      }
+    }
+    for (const [key, p] of Object.entries(EVIDENCE.patterns)) {
+      expect(p.support === "unsupported" || p.evidence.length > 0, key).toBe(true);
     }
   });
 
@@ -147,7 +180,7 @@ describe("canonicalTemplate", () => {
       "¿Cuál es la mejor tienda online de {sustantivo} en {país}?",
     );
     expect(canonicalTemplate("health", "discovery", "local")).toBe(
-      "¿Qué {sustantivo} me recomienda en {lugar}?",
+      "¿Qué {sustantivo} me recomiendas en {lugar}?",
     );
   });
 

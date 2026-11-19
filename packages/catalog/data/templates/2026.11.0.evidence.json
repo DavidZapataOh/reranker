@@ -1,0 +1,1900 @@
+{
+  "version": "2026.11.0",
+  "collected": "2026-11-19",
+  "method": "Each text names the observed phrasings it follows. 'observed': people type that form; 'adapted': the form is observed but reworded so the slot works for either gender and for a person or a place; 'unsupported': no query in the data.",
+  "register": "tú",
+  "patterns": {
+    "rec_tu": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "qué restaurante me recomiendas",
+          "rank": 10
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "co",
+          "query": "qué restaurante me recomiendas en medellín",
+          "volume": 132
+        }
+      ]
+    },
+    "rec_imp": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "que odontologo me recomiendan",
+          "rank": 8
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "que curso de ingles me recomiendan online",
+          "rank": 5
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "que inmobiliaria me recomiendan para vender mi casa",
+          "rank": 8
+        }
+      ]
+    },
+    "donde_encuentro": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "es",
+          "query": "dónde encuentro restaurante en madrid",
+          "volume": 332
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "co",
+          "query": "dónde encuentro hotel en medellín",
+          "volume": 28
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Dónde puedo encontrar odontología a domicilio en Medellín?"
+        }
+      ]
+    },
+    "hay": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Qué guarderías hay en Medellín para niños de 0 a 3 años?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "es",
+          "query": "¿Qué colegios privados hay en Madrid?"
+        }
+      ],
+      "note": "the slot is singular and either gender, so the plural list takes 'opciones de'"
+    },
+    "recomiendame": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "recomiéndame una película buena",
+          "rank": 2
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "es",
+          "query": "recomiéndame una buena película",
+          "rank": 7
+        }
+      ],
+      "note": "tú imperative is the only form autocomplete offers ('recomiéndeme' completes to 'recomiéndame'); the slot is singular and either gender, so the plural list takes 'opciones de'"
+    },
+    "kw_en": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "co",
+          "query": "restaurante en medellín",
+          "volume": 2434
+        },
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "restaurante en bogota",
+          "volume": 33100
+        },
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "inmobiliaria en medellin",
+          "volume": 9900
+        }
+      ]
+    },
+    "kw_bare": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "floristería cali",
+          "volume": 6600
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "co",
+          "query": "hotel medellín",
+          "volume": 1838
+        },
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "plomero bucaramanga",
+          "volume": 480
+        }
+      ]
+    },
+    "busco": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "busco colegio",
+          "rank": 6
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "mx",
+          "query": "busco casa en renta",
+          "rank": 3
+        }
+      ]
+    },
+    "necesito": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "necesito un contador para hacer mi declaración",
+          "rank": 3
+        }
+      ]
+    },
+    "que_subj": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "taller mecanico que trabaje con seguros",
+          "rank": 10
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "cerrajero que trabaje los domingos",
+          "rank": 10
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "floristeria que hagan delivery",
+          "rank": 8
+        }
+      ]
+    },
+    "best_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "co",
+          "query": "mejor restaurante en medellín",
+          "volume": 997
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "es",
+          "query": "mejor restaurante en madrid",
+          "volume": 8020
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "co",
+          "query": "mejor colegio en medellín",
+          "volume": 158
+        }
+      ]
+    },
+    "best_de": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "mejor hotel de medellin",
+          "rank": 8
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "mejor floristeria de medellin",
+          "rank": 5
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "mejor colegio de bogotá",
+          "rank": 1
+        }
+      ]
+    },
+    "es_mejor": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "que inmobiliaria es mejor",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "qué colegio es mejor",
+          "rank": 3
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "qué restaurante es mejor",
+          "rank": 5
+        }
+      ]
+    },
+    "cual_mejor": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "co",
+          "query": "cuál es el mejor restaurante en medellín",
+          "volume": 163
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Cuál es el mejor abogado de Medellín?"
+        },
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "cual es el mejor colegio de bogota",
+          "volume": 210
+        }
+      ],
+      "note": "'el mejor X' agrees in gender, so the slot goes after 'la mejor opción de'"
+    },
+    "top10": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "ar",
+          "query": "¿Cuáles son los 10 mejores colegios de Buenos Aires?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "es",
+          "query": "¿Cuáles son los 10 mejores colegios en Madrid?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Cuáles son los 5 mejores colegios de Medellín?"
+        }
+      ],
+      "note": "the slot is singular and either gender, so the plural list takes 'opciones de'"
+    },
+    "confiable": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "mx",
+          "query": "¿Cómo saber si un dentista es confiable?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "mx",
+          "query": "¿Cómo saber si un grupo inmobiliario es confiable?"
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "ar",
+          "query": "tienda online confiable",
+          "volume": 31
+        }
+      ]
+    },
+    "saber_bueno": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Cómo saber si un odontólogo es bueno?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Cómo saber si una barbería es buena?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Cómo saber si un abogado es bueno o malo?"
+        }
+      ],
+      "note": "'un X es bueno' agrees in gender, so it reads 'qué X es confiable'"
+    },
+    "opiniones": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "opiniones de clínica odontológica vía oral",
+          "volume": 40
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "mx",
+          "query": "¿Es confiable Tecnocasa?"
+        }
+      ]
+    },
+    "precio_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "curso de inglés precio",
+          "volume": 170
+        },
+        {
+          "source": "google_volume",
+          "market": "ar",
+          "query": "lista de precios taller mecánico argentina 2026",
+          "volume": 140
+        },
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "cuanto cobra un contador por una declaracion de renta",
+          "volume": 390
+        }
+      ]
+    },
+    "barato": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "co",
+          "query": "hotel barato en medellín",
+          "volume": 357
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "es",
+          "query": "restaurante barato en madrid",
+          "volume": 185
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "que dentista es mas barato",
+          "rank": 6
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "que tienda de ropa es mas barata",
+          "rank": 2
+        }
+      ],
+      "note": "'barato/barata' agrees with the noun, so the price words attach to 'precios' or 'opciones'"
+    },
+    "cobra_menos": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "que inmobiliaria cobra menos comision",
+          "rank": 4
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Cuánto cobra un abogado en Medellín?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Cuánto cobra un plomero?"
+        }
+      ]
+    },
+    "h24": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "cerrajero 24 horas",
+          "volume": 2900
+        },
+        {
+          "source": "google_volume",
+          "market": "mx",
+          "query": "dentista 24 horas",
+          "volume": 2900
+        },
+        {
+          "source": "google_ai_overview_question",
+          "market": "co",
+          "query": "odontólogos 24 horas",
+          "volume": 480
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "co",
+          "query": "ferretería 24 horas medellín",
+          "volume": 32
+        }
+      ]
+    },
+    "urgente": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "cerrajero urgente",
+          "volume": 880
+        },
+        {
+          "source": "google_volume",
+          "market": "es",
+          "query": "dentista de urgencia",
+          "volume": 1300
+        },
+        {
+          "source": "google_volume",
+          "market": "es",
+          "query": "urgencias dentista",
+          "volume": 1900
+        }
+      ]
+    },
+    "hoy": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "qué ferretería está abierta hoy",
+          "rank": 3
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "que peluqueria esta abierta hoy",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "que tienda de ropa abre hoy",
+          "rank": 5
+        }
+      ],
+      "note": "'abierta/abierto' agrees in gender, so it reads 'atiende hoy' or 'abre hoy'"
+    },
+    "abierto_ahora": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "ar",
+          "query": "ferretería abierto ahora",
+          "volume": 3600
+        },
+        {
+          "source": "google_volume",
+          "market": "es",
+          "query": "ferretería cerca de mí abierto ahora",
+          "volume": 2400
+        }
+      ],
+      "note": "people type the Maps chip 'abierto ahora' even after a feminine noun; the template says 'abre ahora'"
+    },
+    "domicilio": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "cerrajero a domicilio bogotá",
+          "volume": 1300
+        },
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "plomero a domicilio",
+          "volume": 260
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Dónde puedo encontrar odontología a domicilio en Medellín?"
+        }
+      ]
+    },
+    "cerca": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "restaurante cerca de mí",
+          "volume": 368000
+        },
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "ferretería cerca de mí",
+          "volume": 110000
+        },
+        {
+          "source": "google_volume",
+          "market": "mx",
+          "query": "dentista cerca de mi",
+          "volume": 246000
+        }
+      ],
+      "note": "'cerca de mí' is the most searched modifier; a measured question names the neighborhood instead of 'mí'"
+    },
+    "zona_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_ai_overview_question",
+          "market": "co",
+          "query": "restaurante en las palmas",
+          "volume": 3600
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "es",
+          "query": "hotel centro madrid",
+          "volume": 255
+        },
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "mattelsa medellín laureles tienda de ropa",
+          "volume": 2400
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "mx",
+          "query": "¿Dónde comer rico y barato en Polanco, CDMX?"
+        }
+      ]
+    },
+    "especialista": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "odontólogo especialista",
+          "volume": 140
+        },
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "taller mecánico especialista en dodge",
+          "volume": 20
+        },
+        {
+          "source": "google_volume",
+          "market": "es",
+          "query": "abogado especializado en herencias",
+          "volume": 2400
+        }
+      ]
+    },
+    "que_hace": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "que dentista pone brackets",
+          "rank": 4
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "que odontologo hace implantes",
+          "rank": 10
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "que abogado se encarga de los divorcios",
+          "rank": 7
+        }
+      ]
+    },
+    "ninos": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "odontólogo para niños",
+          "rank": 3
+        },
+        {
+          "source": "google_volume",
+          "market": "mx",
+          "query": "dentista infantil",
+          "volume": 2400
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "tienda de ropa para niños",
+          "rank": 7
+        }
+      ]
+    },
+    "parejas": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "spa para parejas",
+          "volume": 1300
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Cómo se llaman los hoteles para parejas?"
+        }
+      ]
+    },
+    "cumple": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_ai_overview_question",
+          "market": "co",
+          "query": "restaurantes para celebrar cumpleaños",
+          "volume": 2400
+        }
+      ]
+    },
+    "comer_rico": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Dónde comer rico en Medellín?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Dónde puedo comer bien en Medellín?"
+        }
+      ]
+    },
+    "quedarse": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Dónde quedarse en Medellín seguro?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Cuál es la mejor zona de Medellín?"
+        }
+      ]
+    },
+    "look": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "mejor peluquería madrid cambio de look",
+          "rank": 6
+        },
+        {
+          "source": "google_volume",
+          "market": "es",
+          "query": "peluquería hombre cerca de mí",
+          "volume": 18100
+        }
+      ]
+    },
+    "seguros": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "taller mecanico que trabaje con seguros",
+          "rank": 10
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "que dentista acepta medicaid",
+          "rank": 3
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Cubre la EPS los implantes dentales?"
+        }
+      ],
+      "note": "people name their own plan (EPS, prepagada, Medicaid); a neutral template says 'seguro médico'"
+    },
+    "en_linea": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "abogado en linea",
+          "rank": 3
+        },
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "curso de inglés virtual",
+          "volume": 1300
+        }
+      ]
+    },
+    "consulta": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Cuánto cobra un contador por consulta?"
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "qué abogado necesito para pelear una casa",
+          "rank": 2
+        }
+      ]
+    },
+    "vender_casa": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "que inmobiliaria me recomiendan para vender mi casa",
+          "rank": 8
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "que inmobiliaria es mejor para vender una casa",
+          "rank": 10
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "mejor inmobiliaria para comprar casa",
+          "rank": 7
+        }
+      ]
+    },
+    "inmob_vigila": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Quién vigila las inmobiliarias en Medellín?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Dónde poner una queja de una inmobiliaria en Medellín?"
+        }
+      ]
+    },
+    "academico": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "qué colegio tuvo el mejor puntaje del icfes",
+          "rank": 1
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Dónde puedo ver el ranking de colegios?"
+        }
+      ]
+    },
+    "colegio_costo": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Cuánto cuesta un colegio privado en Medellín?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "es",
+          "query": "¿Cuánto cuesta al mes un colegio concertado en Madrid?"
+        },
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "cuanto cuesta un curso de inglés",
+          "volume": 90
+        }
+      ]
+    },
+    "noche": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "es",
+          "query": "¿Cuánto vale una noche de hotel en Madrid?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Qué es más barato, un hostal o un hotel?"
+        }
+      ]
+    },
+    "lujo": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Cuál es el hotel más lujoso de Medellín?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Cuáles son los restaurantes más lujosos de Medellín?"
+        }
+      ]
+    },
+    "on_mejor": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "es",
+          "query": "mejor tienda online",
+          "volume": 5152
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "ar",
+          "query": "mejor tienda online",
+          "volume": 1171
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "que tienda online es mejor",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "mejores tiendas online de ropa colombia",
+          "rank": 10
+        }
+      ]
+    },
+    "on_mejores": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "ar",
+          "query": "¿Cuáles son las mejores tiendas online?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Cuál es la mejor página para comprar en línea?"
+        }
+      ]
+    },
+    "on_tienda_de": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "es",
+          "query": "tienda online de ropa",
+          "volume": 2584
+        },
+        {
+          "source": "google_ai_overview_question",
+          "market": "co",
+          "query": "tienda de ropa online",
+          "volume": 210
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "ar",
+          "query": "tienda online en argentina",
+          "volume": 1009
+        }
+      ]
+    },
+    "on_comprar": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "comprar ropa online",
+          "volume": 140
+        },
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "comprar ropa online colombia",
+          "volume": 20
+        },
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "donde puedo comprar ropa online en colombia",
+          "volume": 10
+        }
+      ]
+    },
+    "on_calidad": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Dónde comprar ropa en línea de buena calidad?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Dónde puedo comprar ropa colombiana online?"
+        }
+      ]
+    },
+    "on_barata": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "que tienda online es mas barata",
+          "rank": 2
+        },
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "donde comprar ropa online barata",
+          "volume": 10
+        }
+      ]
+    },
+    "on_rapido": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "que tienda online llega mas rapido",
+          "rank": 5
+        }
+      ]
+    },
+    "on_envios": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "qué tienda online hace envíos a cuba",
+          "rank": 6
+        }
+      ]
+    },
+    "on_confiable": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "ar",
+          "query": "tienda online confiable",
+          "volume": 31
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "mx",
+          "query": "tienda en línea confiable",
+          "volume": 18
+        },
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "cual es la tienda online mas confiable",
+          "volume": 10
+        }
+      ]
+    },
+    "on_variedad": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "mejor tienda online para comprar ropa",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "mejor tienda online productos naturales",
+          "rank": 4
+        }
+      ],
+      "note": "people name the product line; the template asks for variety"
+    },
+    "recomendaciones": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "recomendaciones de una tienda de ropa",
+          "volume": 10
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "que curso de ingles recomiendan",
+          "rank": 4
+        }
+      ]
+    },
+    "bilingue": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "colegio santo domingo bilingüe",
+          "volume": 14800
+        }
+      ]
+    },
+    "shop_online": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "mejor ferretería online",
+          "rank": 1
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "ar",
+          "query": "tienda online en argentina",
+          "volume": 1009
+        }
+      ]
+    },
+    "none_becas": {
+      "support": "unsupported",
+      "evidence": [],
+      "note": "no scholarship or instalment query showed up for schools or courses; the only education money query is 'gratis' (price)"
+    },
+    "register_tu": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "wildchat_first_turns",
+          "market": "es",
+          "query": "second-person forms in 4,165 Spanish first prompts",
+          "tu": 1314,
+          "usted": 229
+        },
+        {
+          "source": "wildchat_first_turns",
+          "market": "co",
+          "query": "same, Colombia",
+          "tu": 91,
+          "usted": 3
+        }
+      ]
+    }
+  },
+  "templates": {
+    "health/local/discovery": [
+      ["rec_tu"],
+      ["rec_imp"],
+      ["donde_encuentro"],
+      ["recomiendame"],
+      ["hay"],
+      ["kw_en"],
+      ["recomendaciones"],
+      ["busco"],
+      ["necesito", "que_subj", "ninos"]
+    ],
+    "health/local/specialty": [
+      ["rec_tu", "especialista"],
+      ["rec_imp", "especialista"],
+      ["que_hace"],
+      ["recomiendame", "especialista"],
+      ["hay", "especialista"],
+      ["especialista"],
+      ["ninos"],
+      ["busco", "que_subj", "que_hace"],
+      ["necesito", "especialista"]
+    ],
+    "health/local/zone": [
+      ["rec_tu", "cerca"],
+      ["rec_imp", "cerca"],
+      ["donde_encuentro", "zona_kw"],
+      ["recomiendame", "cerca"],
+      ["hay", "zona_kw"],
+      ["cerca"],
+      ["zona_kw"],
+      ["busco", "cerca"],
+      ["rec_tu", "zona_kw"]
+    ],
+    "health/local/urgency": [
+      ["hoy"],
+      ["urgente", "hoy"],
+      ["urgente"],
+      ["recomiendame", "hoy"],
+      ["hay", "h24"],
+      ["h24"],
+      ["domicilio", "urgente"],
+      ["necesito", "que_subj", "hoy"],
+      ["busco", "urgente", "domicilio"]
+    ],
+    "health/local/insurance_or_payment": [
+      ["seguros"],
+      ["seguros"],
+      ["rec_imp", "seguros"],
+      ["recomiendame", "seguros"],
+      ["hay", "seguros"],
+      ["seguros"],
+      ["seguros"],
+      ["busco", "que_subj", "seguros"],
+      ["necesito", "que_subj"]
+    ],
+    "health/local/trust": [
+      ["confiable"],
+      ["saber_bueno"],
+      ["opiniones"],
+      ["recomiendame", "confiable"],
+      ["hay", "confiable"],
+      ["confiable"],
+      ["opiniones"],
+      ["busco", "que_subj", "opiniones"],
+      ["necesito", "confiable"]
+    ],
+    "beauty_wellness/local/discovery": [
+      ["rec_tu"],
+      ["rec_imp"],
+      ["donde_encuentro"],
+      ["recomiendame"],
+      ["hay"],
+      ["kw_en"],
+      ["recomendaciones"],
+      ["busco", "look"],
+      ["necesito", "que_subj", "look"]
+    ],
+    "beauty_wellness/local/specialty": [
+      ["rec_tu", "especialista"],
+      ["rec_imp", "especialista"],
+      ["que_hace", "especialista"],
+      ["recomiendame", "especialista"],
+      ["hay", "especialista"],
+      ["especialista"],
+      ["parejas"],
+      ["busco", "especialista", "look"],
+      ["necesito", "que_subj", "que_hace"]
+    ],
+    "beauty_wellness/local/zone": [
+      ["rec_tu", "cerca"],
+      ["rec_imp", "cerca"],
+      ["donde_encuentro", "zona_kw"],
+      ["recomiendame", "cerca"],
+      ["hay", "zona_kw"],
+      ["cerca"],
+      ["zona_kw"],
+      ["busco", "cerca", "look"],
+      ["rec_tu", "zona_kw"]
+    ],
+    "beauty_wellness/local/price": [
+      ["barato"],
+      ["cobra_menos"],
+      ["donde_encuentro", "barato"],
+      ["recomiendame", "barato"],
+      ["hay", "barato"],
+      ["precio_kw"],
+      ["precio_kw"],
+      ["busco", "que_subj", "cobra_menos"],
+      ["necesito", "que_subj", "barato"]
+    ],
+    "beauty_wellness/local/trust": [
+      ["confiable"],
+      ["saber_bueno"],
+      ["opiniones"],
+      ["recomiendame", "confiable"],
+      ["hay", "confiable"],
+      ["confiable"],
+      ["opiniones"],
+      ["busco", "que_subj", "opiniones"],
+      ["necesito", "confiable"]
+    ],
+    "beauty_wellness/local/ranking": [
+      ["es_mejor"],
+      ["cual_mejor"],
+      ["rec_imp", "es_mejor"],
+      ["top10"],
+      ["recomiendame", "top10"],
+      ["best_kw"],
+      ["best_de"],
+      ["busco", "cual_mejor", "look"],
+      ["best_de", "que_subj", "opiniones"]
+    ],
+    "lodging/local/discovery": [
+      ["rec_tu"],
+      ["rec_imp"],
+      ["donde_encuentro"],
+      ["recomiendame"],
+      ["hay"],
+      ["kw_en"],
+      ["recomendaciones"],
+      ["busco", "quedarse"],
+      ["necesito", "ninos"]
+    ],
+    "lodging/local/specialty": [
+      ["rec_tu", "parejas"],
+      ["rec_imp", "parejas"],
+      ["cual_mejor", "parejas"],
+      ["recomiendame", "parejas"],
+      ["hay", "parejas"],
+      ["parejas"],
+      ["parejas", "kw_bare"],
+      ["busco", "cumple"],
+      ["necesito", "que_subj", "parejas"]
+    ],
+    "lodging/local/zone": [
+      ["rec_tu", "cerca"],
+      ["rec_imp", "cerca"],
+      ["donde_encuentro", "zona_kw"],
+      ["recomiendame", "cerca"],
+      ["hay", "zona_kw"],
+      ["cerca"],
+      ["zona_kw"],
+      ["busco", "cerca", "quedarse"],
+      ["quedarse", "zona_kw"]
+    ],
+    "lodging/local/price": [
+      ["barato", "noche"],
+      ["cobra_menos"],
+      ["donde_encuentro", "barato"],
+      ["recomiendame", "barato"],
+      ["hay", "barato"],
+      ["precio_kw"],
+      ["precio_kw"],
+      ["busco", "que_subj", "noche"],
+      ["necesito", "que_subj", "barato"]
+    ],
+    "lodging/local/trust": [
+      ["confiable"],
+      ["saber_bueno"],
+      ["opiniones"],
+      ["recomiendame", "confiable"],
+      ["hay", "confiable"],
+      ["confiable"],
+      ["opiniones"],
+      ["busco", "que_subj", "opiniones"],
+      ["quedarse", "confiable"]
+    ],
+    "lodging/local/ranking": [
+      ["es_mejor"],
+      ["cual_mejor"],
+      ["rec_imp", "es_mejor"],
+      ["top10"],
+      ["recomiendame", "top10"],
+      ["best_kw"],
+      ["best_de"],
+      ["busco", "cual_mejor", "quedarse"],
+      ["best_de", "ninos"]
+    ],
+    "food/local/discovery": [
+      ["rec_tu"],
+      ["rec_imp"],
+      ["donde_encuentro"],
+      ["recomiendame"],
+      ["hay"],
+      ["kw_en"],
+      ["recomendaciones"],
+      ["busco", "comer_rico"],
+      ["necesito", "ninos"]
+    ],
+    "food/local/specialty": [
+      ["rec_tu", "cumple"],
+      ["rec_imp", "cumple"],
+      ["cual_mejor", "cumple"],
+      ["recomiendame", "cumple"],
+      ["hay", "cumple"],
+      ["cumple"],
+      ["parejas", "kw_bare"],
+      ["busco", "parejas"],
+      ["necesito", "que_subj", "cumple"]
+    ],
+    "food/local/zone": [
+      ["rec_tu", "cerca"],
+      ["rec_imp", "cerca"],
+      ["donde_encuentro", "zona_kw"],
+      ["recomiendame", "cerca"],
+      ["hay", "zona_kw"],
+      ["cerca"],
+      ["zona_kw"],
+      ["comer_rico", "zona_kw"],
+      ["rec_tu", "zona_kw"]
+    ],
+    "food/local/price": [
+      ["barato"],
+      ["cobra_menos"],
+      ["donde_encuentro", "barato"],
+      ["recomiendame", "barato"],
+      ["hay", "barato"],
+      ["precio_kw"],
+      ["precio_kw"],
+      ["zona_kw", "barato", "comer_rico"],
+      ["necesito", "que_subj", "barato"]
+    ],
+    "food/local/trust": [
+      ["confiable"],
+      ["saber_bueno"],
+      ["opiniones"],
+      ["recomiendame", "confiable"],
+      ["hay", "confiable"],
+      ["confiable"],
+      ["opiniones"],
+      ["busco", "que_subj", "opiniones"],
+      ["necesito", "confiable", "ninos"]
+    ],
+    "food/local/ranking": [
+      ["es_mejor"],
+      ["cual_mejor"],
+      ["rec_imp", "es_mejor"],
+      ["top10"],
+      ["recomiendame", "top10"],
+      ["best_kw"],
+      ["best_de"],
+      ["busco", "cual_mejor", "comer_rico"],
+      ["best_de", "que_subj", "opiniones"]
+    ],
+    "home_auto_services/local/discovery": [
+      ["rec_tu"],
+      ["rec_imp"],
+      ["donde_encuentro"],
+      ["recomiendame"],
+      ["hay"],
+      ["kw_en"],
+      ["recomendaciones"],
+      ["busco", "que_subj", "domicilio"],
+      ["necesito", "que_subj", "seguros"]
+    ],
+    "home_auto_services/local/specialty": [
+      ["rec_tu", "especialista"],
+      ["rec_imp", "especialista"],
+      ["que_hace", "especialista"],
+      ["recomiendame", "especialista"],
+      ["hay", "especialista"],
+      ["especialista"],
+      ["especialista", "kw_bare"],
+      ["busco", "especialista"],
+      ["necesito", "que_subj", "que_hace"]
+    ],
+    "home_auto_services/local/zone": [
+      ["rec_tu", "cerca"],
+      ["rec_imp", "cerca"],
+      ["donde_encuentro", "zona_kw"],
+      ["recomiendame", "cerca"],
+      ["hay", "zona_kw"],
+      ["cerca"],
+      ["zona_kw"],
+      ["busco", "cerca", "domicilio"],
+      ["rec_tu", "zona_kw"]
+    ],
+    "home_auto_services/local/price": [
+      ["cobra_menos"],
+      ["cobra_menos"],
+      ["donde_encuentro", "barato"],
+      ["recomiendame", "barato"],
+      ["hay", "barato"],
+      ["precio_kw"],
+      ["precio_kw"],
+      ["busco", "que_subj", "cobra_menos"],
+      ["necesito", "que_subj", "barato"]
+    ],
+    "home_auto_services/local/urgency": [
+      ["hoy"],
+      ["urgente", "hoy"],
+      ["urgente"],
+      ["recomiendame", "hoy"],
+      ["hay", "h24"],
+      ["h24"],
+      ["domicilio", "urgente"],
+      ["necesito", "que_subj", "hoy"],
+      ["busco", "h24", "domicilio"]
+    ],
+    "home_auto_services/local/trust": [
+      ["confiable"],
+      ["saber_bueno"],
+      ["opiniones"],
+      ["recomiendame", "confiable"],
+      ["hay", "confiable"],
+      ["confiable"],
+      ["opiniones"],
+      ["busco", "que_subj", "opiniones"],
+      ["necesito", "confiable"]
+    ],
+    "local_retail/local/discovery": [
+      ["rec_tu"],
+      ["rec_imp"],
+      ["donde_encuentro"],
+      ["recomiendame"],
+      ["hay"],
+      ["kw_en"],
+      ["recomendaciones"],
+      ["busco", "que_subj", "domicilio"],
+      ["necesito", "que_subj", "shop_online"]
+    ],
+    "local_retail/local/specialty": [
+      ["on_variedad"],
+      ["rec_imp", "on_variedad"],
+      ["que_hace", "on_variedad"],
+      ["recomiendame", "on_variedad"],
+      ["hay", "on_variedad"],
+      ["on_variedad"],
+      ["ninos"],
+      ["busco", "que_subj", "on_variedad"],
+      ["necesito", "que_subj", "que_hace"]
+    ],
+    "local_retail/local/price": [
+      ["barato"],
+      ["cobra_menos"],
+      ["donde_encuentro", "barato"],
+      ["recomiendame", "barato"],
+      ["hay", "barato"],
+      ["precio_kw"],
+      ["precio_kw"],
+      ["busco", "que_subj", "barato"],
+      ["necesito", "que_subj", "barato"]
+    ],
+    "local_retail/local/urgency": [
+      ["hoy"],
+      ["abierto_ahora", "hoy"],
+      ["hoy"],
+      ["recomiendame", "hoy"],
+      ["hay", "h24"],
+      ["hoy"],
+      ["h24"],
+      ["necesito", "que_subj", "hoy"],
+      ["busco", "que_subj", "domicilio", "hoy"]
+    ],
+    "local_retail/local/trust": [
+      ["confiable"],
+      ["saber_bueno"],
+      ["opiniones"],
+      ["recomiendame", "confiable"],
+      ["hay", "confiable"],
+      ["confiable"],
+      ["opiniones"],
+      ["busco", "que_subj", "opiniones"],
+      ["necesito", "confiable"]
+    ],
+    "local_retail/local/ranking": [
+      ["es_mejor"],
+      ["cual_mejor"],
+      ["rec_imp", "es_mejor"],
+      ["top10"],
+      ["recomiendame", "top10"],
+      ["best_kw"],
+      ["best_de"],
+      ["busco", "cual_mejor"],
+      ["best_de", "que_subj", "opiniones"]
+    ],
+    "local_retail/national/discovery": [
+      ["rec_tu", "shop_online"],
+      ["rec_imp", "shop_online"],
+      ["donde_encuentro", "on_envios"],
+      ["recomiendame", "shop_online"],
+      ["hay", "shop_online"],
+      ["shop_online", "on_tienda_de"],
+      ["shop_online", "on_envios"],
+      ["busco", "que_subj", "on_envios"],
+      ["necesito", "que_subj", "on_comprar"]
+    ],
+    "local_retail/national/specialty": [
+      ["on_variedad", "shop_online"],
+      ["rec_imp", "on_variedad"],
+      ["que_hace", "on_variedad"],
+      ["recomiendame", "on_variedad"],
+      ["hay", "on_variedad"],
+      ["que_hace", "shop_online"],
+      ["on_variedad"],
+      ["busco", "que_subj", "on_variedad"],
+      ["necesito", "que_subj", "que_hace"]
+    ],
+    "local_retail/national/price": [
+      ["barato", "shop_online"],
+      ["on_barata"],
+      ["donde_encuentro", "barato"],
+      ["recomiendame", "barato"],
+      ["hay", "barato"],
+      ["precio_kw", "shop_online"],
+      ["precio_kw", "on_envios"],
+      ["busco", "que_subj", "barato", "on_envios"],
+      ["necesito", "que_subj", "barato"]
+    ],
+    "local_retail/national/urgency": [
+      ["on_rapido"],
+      ["on_rapido"],
+      ["on_rapido"],
+      ["recomiendame", "on_rapido"],
+      ["hay", "on_rapido"],
+      ["on_rapido", "shop_online"],
+      ["on_rapido"],
+      ["busco", "que_subj", "on_rapido"],
+      ["necesito", "que_subj", "on_rapido"]
+    ],
+    "local_retail/national/trust": [
+      ["on_confiable"],
+      ["saber_bueno", "on_confiable"],
+      ["opiniones", "shop_online"],
+      ["recomiendame", "on_confiable"],
+      ["hay", "on_confiable"],
+      ["on_confiable"],
+      ["opiniones", "shop_online"],
+      ["busco", "que_subj", "opiniones"],
+      ["necesito", "on_confiable"]
+    ],
+    "local_retail/national/ranking": [
+      ["es_mejor", "on_mejor"],
+      ["cual_mejor", "on_mejor"],
+      ["rec_imp", "on_mejor"],
+      ["top10", "on_mejores"],
+      ["recomiendame", "on_mejores"],
+      ["shop_online", "best_kw"],
+      ["shop_online"],
+      ["busco", "cual_mejor"],
+      ["shop_online", "que_subj", "opiniones"]
+    ],
+    "professional_services/local/discovery": [
+      ["rec_tu"],
+      ["rec_imp"],
+      ["donde_encuentro"],
+      ["recomiendame"],
+      ["hay"],
+      ["kw_en"],
+      ["recomendaciones"],
+      ["necesito", "consulta"],
+      ["busco", "que_subj", "en_linea"]
+    ],
+    "professional_services/local/specialty": [
+      ["rec_tu", "especialista"],
+      ["rec_imp", "especialista"],
+      ["que_hace"],
+      ["recomiendame", "especialista"],
+      ["hay", "especialista"],
+      ["especialista"],
+      ["especialista", "kw_bare"],
+      ["busco", "especialista"],
+      ["necesito", "que_subj", "que_hace"]
+    ],
+    "professional_services/local/price": [
+      ["barato", "cobra_menos"],
+      ["cobra_menos"],
+      ["donde_encuentro", "barato"],
+      ["recomiendame", "barato"],
+      ["hay", "barato"],
+      ["precio_kw"],
+      ["precio_kw"],
+      ["busco", "que_subj", "consulta", "cobra_menos"],
+      ["necesito", "que_subj", "barato"]
+    ],
+    "professional_services/local/urgency": [
+      ["hoy"],
+      ["urgente", "hoy"],
+      ["urgente"],
+      ["recomiendame", "hoy"],
+      ["hay", "hoy"],
+      ["urgente"],
+      ["urgente", "kw_bare"],
+      ["necesito", "que_subj", "hoy"],
+      ["busco", "urgente", "en_linea"]
+    ],
+    "professional_services/local/trust": [
+      ["confiable"],
+      ["saber_bueno"],
+      ["opiniones"],
+      ["recomiendame", "confiable"],
+      ["hay", "confiable"],
+      ["confiable"],
+      ["opiniones"],
+      ["busco", "que_subj", "opiniones"],
+      ["necesito", "confiable"]
+    ],
+    "professional_services/local/ranking": [
+      ["es_mejor"],
+      ["cual_mejor"],
+      ["rec_imp", "es_mejor"],
+      ["top10"],
+      ["recomiendame", "top10"],
+      ["best_kw"],
+      ["best_de"],
+      ["busco", "cual_mejor"],
+      ["best_de", "que_subj", "opiniones"]
+    ],
+    "real_estate/local/discovery": [
+      ["rec_tu"],
+      ["rec_imp"],
+      ["donde_encuentro"],
+      ["recomiendame"],
+      ["hay"],
+      ["kw_en"],
+      ["recomendaciones"],
+      ["busco", "vender_casa"],
+      ["necesito", "vender_casa"]
+    ],
+    "real_estate/local/specialty": [
+      ["rec_tu", "vender_casa"],
+      ["rec_imp", "vender_casa"],
+      ["es_mejor", "vender_casa"],
+      ["recomiendame", "vender_casa"],
+      ["hay", "vender_casa"],
+      ["vender_casa"],
+      ["especialista"],
+      ["busco", "que_subj", "vender_casa"],
+      ["necesito", "vender_casa"]
+    ],
+    "real_estate/local/zone": [
+      ["rec_tu", "cerca"],
+      ["rec_imp", "cerca"],
+      ["donde_encuentro", "zona_kw"],
+      ["recomiendame", "cerca"],
+      ["hay", "zona_kw"],
+      ["cerca"],
+      ["zona_kw"],
+      ["busco", "cerca", "vender_casa"],
+      ["rec_tu", "zona_kw"]
+    ],
+    "real_estate/local/price": [
+      ["cobra_menos"],
+      ["cobra_menos"],
+      ["donde_encuentro", "barato"],
+      ["recomiendame", "barato"],
+      ["hay", "barato"],
+      ["precio_kw"],
+      ["precio_kw"],
+      ["busco", "que_subj", "cobra_menos"],
+      ["necesito", "que_subj", "barato"]
+    ],
+    "real_estate/local/trust": [
+      ["confiable"],
+      ["saber_bueno"],
+      ["opiniones"],
+      ["recomiendame", "confiable"],
+      ["hay", "confiable"],
+      ["confiable"],
+      ["opiniones"],
+      ["busco", "que_subj", "opiniones"],
+      ["necesito", "confiable", "inmob_vigila"]
+    ],
+    "real_estate/local/ranking": [
+      ["es_mejor"],
+      ["cual_mejor"],
+      ["rec_imp", "es_mejor"],
+      ["top10"],
+      ["recomiendame", "top10"],
+      ["best_kw"],
+      ["best_de"],
+      ["busco", "cual_mejor", "vender_casa"],
+      ["best_de", "vender_casa"]
+    ],
+    "education/local/discovery": [
+      ["rec_tu"],
+      ["rec_imp"],
+      ["donde_encuentro"],
+      ["recomiendame"],
+      ["hay"],
+      ["kw_en"],
+      ["recomendaciones"],
+      ["busco", "ninos"],
+      ["necesito", "en_linea"]
+    ],
+    "education/local/specialty": [
+      ["academico", "es_mejor"],
+      ["academico"],
+      ["rec_imp", "academico"],
+      ["recomiendame", "academico"],
+      ["hay", "bilingue"],
+      ["academico"],
+      ["bilingue"],
+      ["busco", "bilingue"],
+      ["necesito", "que_subj", "academico"]
+    ],
+    "education/local/zone": [
+      ["rec_tu", "cerca"],
+      ["rec_imp", "cerca"],
+      ["donde_encuentro", "zona_kw"],
+      ["recomiendame", "cerca"],
+      ["hay", "zona_kw"],
+      ["cerca"],
+      ["zona_kw"],
+      ["busco", "cerca", "ninos"],
+      ["rec_tu", "zona_kw"]
+    ],
+    "education/local/price": [
+      ["barato", "colegio_costo"],
+      ["cobra_menos"],
+      ["donde_encuentro", "barato"],
+      ["recomiendame", "barato"],
+      ["hay", "barato"],
+      ["precio_kw"],
+      ["precio_kw"],
+      ["busco", "barato", "colegio_costo"],
+      ["necesito", "que_subj", "cobra_menos"]
+    ],
+    "education/local/insurance_or_payment": [
+      ["none_becas"],
+      ["none_becas", "academico"],
+      ["rec_imp", "none_becas"],
+      ["recomiendame", "none_becas"],
+      ["hay", "none_becas"],
+      ["none_becas"],
+      ["none_becas"],
+      ["busco", "que_subj", "none_becas"],
+      ["necesito", "que_subj", "none_becas"]
+    ],
+    "education/local/trust": [
+      ["confiable"],
+      ["saber_bueno"],
+      ["opiniones"],
+      ["recomiendame", "confiable"],
+      ["hay", "confiable"],
+      ["confiable"],
+      ["opiniones"],
+      ["busco", "que_subj", "opiniones"],
+      ["necesito", "confiable", "ninos"]
+    ],
+    "online_national/national/discovery": [
+      ["on_mejor", "on_tienda_de"],
+      ["rec_tu", "on_tienda_de"],
+      ["on_comprar"],
+      ["on_mejores", "on_tienda_de"],
+      ["recomiendame", "on_tienda_de"],
+      ["on_tienda_de"],
+      ["on_comprar"],
+      ["on_calidad"],
+      ["busco", "que_subj", "on_envios"]
+    ],
+    "online_national/national/specialty": [
+      ["on_variedad"],
+      ["rec_imp", "on_variedad"],
+      ["on_variedad"],
+      ["recomiendame", "on_variedad"],
+      ["hay", "especialista"],
+      ["especialista", "on_tienda_de"],
+      ["on_tienda_de", "on_variedad"],
+      ["busco", "que_subj", "on_variedad"],
+      ["necesito", "que_subj", "on_variedad"]
+    ],
+    "online_national/national/price": [
+      ["on_barata", "on_envios"],
+      ["on_barata"],
+      ["on_barata", "on_comprar"],
+      ["recomiendame", "barato"],
+      ["hay", "on_barata"],
+      ["on_barata", "on_comprar"],
+      ["precio_kw", "on_tienda_de"],
+      ["busco", "barato", "on_envios"],
+      ["necesito", "on_comprar", "barato"]
+    ],
+    "online_national/national/trust": [
+      ["on_confiable"],
+      ["on_confiable"],
+      ["saber_bueno", "on_confiable"],
+      ["recomiendame", "on_confiable"],
+      ["hay", "opiniones"],
+      ["on_confiable"],
+      ["opiniones", "on_tienda_de"],
+      ["busco", "on_confiable"],
+      ["necesito", "que_subj", "on_confiable"]
+    ],
+    "online_national/national/urgency": [
+      ["on_rapido"],
+      ["on_rapido", "on_comprar"],
+      ["on_rapido"],
+      ["recomiendame", "on_rapido"],
+      ["hay", "on_rapido"],
+      ["on_rapido", "kw_bare"],
+      ["on_comprar", "on_rapido"],
+      ["necesito", "on_rapido"],
+      ["busco", "que_subj", "on_rapido"]
+    ],
+    "online_national/national/ranking": [
+      ["on_mejor"],
+      ["on_mejor"],
+      ["rec_imp", "on_mejor"],
+      ["on_mejores", "top10"],
+      ["recomiendame", "on_mejores"],
+      ["on_mejor", "on_tienda_de"],
+      ["on_mejor"],
+      ["busco", "on_mejor"],
+      ["on_comprar", "opiniones"]
+    ]
+  }
+}
