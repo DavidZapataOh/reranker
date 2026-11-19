@@ -1,6 +1,7 @@
 import { fileURLToPath } from "node:url";
 import { workflow } from "@workflow/vitest";
 import { defineConfig } from "vitest/config";
+import { serverOnlyAlias } from "../../vitest.config.ts";
 
 // Workflows run in-process on the local world; their steps reach the real database, so this
 // project shares the integration setup that checks the connection strings first.
@@ -11,6 +12,7 @@ export default defineConfig({
     name: "workflow",
     include: ["test/**/*.workflow.test.ts"],
     environment: "node",
+    alias: serverOnlyAlias,
     // The local world is a development runtime; telemetry reads APP_ENV to stay local.
     env: { APP_ENV: "development" },
     globalSetup: [

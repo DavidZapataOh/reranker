@@ -11,9 +11,6 @@ import { captureLive } from "../../src/dataforseo/live";
 import { type DataForSeoOutcome, mapDataForSeoStatus } from "../../src/dataforseo/status";
 import { type FrozenSlot, slotId } from "../../src/slot";
 
-// The catalog's entry is marked server-only; tests run outside a React Server Components bundler.
-vi.mock("server-only", () => ({}));
-
 const jobs = vi.hoisted(() => ({
   breakerRecord: vi.fn(async (_provider: string, _outcome: "success" | "failure") => {}),
 }));

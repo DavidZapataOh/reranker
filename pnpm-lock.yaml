@@ -430,6 +430,9 @@ importers:
       playwright:
         specifier: 'catalog:'
         version: 1.64.1
+      server-only:
+        specifier: 'catalog:'
+        version: 0.0.1
       turbo:
         specifier: 'catalog:'
         version: 2.11.11

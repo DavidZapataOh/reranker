@@ -7,8 +7,6 @@ import { afterAll, afterEach, beforeAll, beforeEach, expect, test, vi } from "vi
 import { FIELD_MASKS } from "../src/places/client";
 import { assignCountry, findBusinessCandidates } from "../src/target";
 
-vi.mock("server-only", () => ({}));
-
 const jobs = vi.hoisted(() => ({
   acquireProviderSlot: vi.fn(),
   reserveSpend: vi.fn(),

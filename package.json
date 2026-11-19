@@ -36,6 +36,7 @@
     "@vitest/browser-playwright": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "playwright": "catalog:",
+    "server-only": "catalog:",
     "turbo": "catalog:",
     "typescript": "catalog:",
     "lefthook": "catalog:",
