@@ -700,6 +700,9 @@ importers:
       '@reranker/evidence':
         specifier: workspace:*
         version: link:../evidence
+      '@reranker/flags':
+        specifier: workspace:*
+        version: link:../flags
       '@reranker/i18n':
         specifier: workspace:*
         version: link:../i18n
