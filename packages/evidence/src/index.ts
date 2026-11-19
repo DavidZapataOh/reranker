@@ -22,6 +22,7 @@ export {
 export {
   type CapturePredicateInput,
   latestNormalized,
+  logOrigin,
   readRaw,
   requestLogInclusion,
   type SealCaptureInput,
