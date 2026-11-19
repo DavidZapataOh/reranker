@@ -11,7 +11,8 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --project unit --coverage --passWithNoTests && vitest run --project heavy"
+    "test": "vitest run --project unit --coverage --passWithNoTests && vitest run --project heavy",
+    "test:contract": "vitest run --project contract"
   },
   "dependencies": {
     "@noble/curves": "catalog:",
