@@ -63,6 +63,9 @@ test("the sink holds the exact wire bytes and the client still parses", async ()
     expect.objectContaining({ keyword: request.keyword }),
   ]);
   expect(sink).toMatchObject({ status: 200, contentType: "application/json", calls: 1 });
+  expect(sink.url).toBe(
+    "https://sandbox.dataforseo.com/v3/ai_optimization/gemini/llm_scraper/live/advanced",
+  );
   expect(res?.status_code).toBe(20000);
 });
 

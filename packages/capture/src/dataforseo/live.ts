@@ -61,6 +61,11 @@ function reportedCost(body: unknown): ProviderCost | null {
     : null;
 }
 
+function reportedTaskId(body: unknown): string | null {
+  const id = field(first(field(body, "tasks")), "id");
+  return typeof id === "string" && id !== "" ? id : null;
+}
+
 function reportedModel(body: unknown): string | null {
   const model = field(first(field(first(field(body, "tasks")), "result")), "model");
   return typeof model === "string" && model !== "" ? model : null;
@@ -97,7 +102,7 @@ export async function captureLive(
   }
   const latencyMs = Math.round(performance.now() - started);
 
-  if (sink.status === null || sink.request === null) {
+  if (sink.status === null || sink.request === null || sink.url === null) {
     await breakerRecord("dataforseo", "failure");
     throw new ProviderUnavailableError("dataforseo", RETRY_AFTER_MS);
   }
@@ -119,6 +124,8 @@ export async function captureLive(
     request: sink.request,
     response,
     responseContentType: sink.contentType ?? "application/octet-stream",
+    endpoint: sink.url,
+    providerTaskId: reportedTaskId(body),
     answer: parsed.answer,
     parseError: parsed.error,
     modelReported: reportedModel(body),
