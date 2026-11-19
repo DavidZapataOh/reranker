@@ -1,7 +1,6 @@
 import { createHash } from "node:crypto";
 import { type SystemTx, withSystem } from "@reranker/db";
 import { captures, evidenceEntries, type evidenceEntryKind } from "@reranker/db/schema";
-import { enqueue } from "@reranker/jobs";
 import { InvalidInputError, NotFoundError } from "@reranker/jobs/errors";
 import { Uuid } from "@reranker/schema";
 import {
@@ -15,7 +14,7 @@ import { and, eq, sql } from "drizzle-orm";
 import { getArtifact, putArtifact } from "./artifacts";
 import { signEnvelope } from "./dsse";
 import { requireEvidenceEnv } from "./env";
-import { integrateJob } from "./jobs";
+import { scheduleIntegration } from "./jobs";
 import { loadSigner } from "./signer";
 import {
   buildCaptureStatement,
@@ -109,16 +108,6 @@ function subjectDigest(statement: Statement, name: string): string {
 
 // Read before any write, so a deployment without a log signs and stores nothing.
 const logOrigin = () => requireEvidenceEnv("EVIDENCE_LOG_ORIGIN").EVIDENCE_LOG_ORIGIN;
-
-// Integration runs at most once a minute, a minute after the first seal that needs it.
-async function scheduleIntegration(origin: string, now: Date): Promise<void> {
-  const minute = Math.floor(now.getTime() / 60_000);
-  await enqueue(
-    integrateJob,
-    { origin },
-    { dedupeKey: `int-${minute}`, runAt: new Date((minute + 1) * 60_000) },
-  );
-}
 
 function checkParserVersion(parserVersion: number): void {
   if (!Number.isInteger(parserVersion) || parserVersion < 0 || parserVersion > MAX_SMALLINT) {
