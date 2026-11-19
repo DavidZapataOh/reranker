@@ -1,0 +1,447 @@
+{
+    "version": "0.1.20261117",
+    "status_code": 20000,
+    "status_message": "Ok.",
+    "time": "0 sec.",
+    "cost": 0,
+    "tasks_count": 1,
+    "tasks_error": 0,
+    "tasks": [
+        {
+            "id": "11190445-3192-0627-2000-3b0dd5d99759",
+            "status_code": 20000,
+            "status_message": "Ok.",
+            "time": "0 sec.",
+            "cost": 0,
+            "result_count": 46,
+            "path": [
+                "v3",
+                "ai_optimization",
+                "chat_gpt",
+                "llm_scraper",
+                "tasks_ready"
+            ],
+            "data": {
+                "api": "ai_optimization",
+                "function": "llm_scraper",
+                "se": "chat_gpt"
+            },
+            "result": [
+                {
+                    "id": "11130015-0001-0626-0000-c6fb89a2769b",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-13 00:15:53 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11130015-0001-0626-0000-c6fb89a2769b",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11130015-0001-0626-0000-c6fb89a2769b"
+                },
+                {
+                    "id": "11130216-0001-0626-0000-27f45991968f",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-13 02:16:04 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11130216-0001-0626-0000-27f45991968f",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11130216-0001-0626-0000-27f45991968f"
+                },
+                {
+                    "id": "11130415-0001-0626-0000-1a2cb647e583",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-13 04:15:58 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11130415-0001-0626-0000-1a2cb647e583",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11130415-0001-0626-0000-1a2cb647e583"
+                },
+                {
+                    "id": "11130616-0001-0626-0000-a5f3ea75b01e",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-13 06:16:25 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11130616-0001-0626-0000-a5f3ea75b01e",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11130616-0001-0626-0000-a5f3ea75b01e"
+                },
+                {
+                    "id": "11130816-0001-0626-0000-72b4d484c6ec",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-13 08:16:21 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11130816-0001-0626-0000-72b4d484c6ec",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11130816-0001-0626-0000-72b4d484c6ec"
+                },
+                {
+                    "id": "11131015-0001-0626-0000-24d92f86f514",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-13 10:15:55 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11131015-0001-0626-0000-24d92f86f514",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11131015-0001-0626-0000-24d92f86f514"
+                },
+                {
+                    "id": "11131110-0001-0626-0000-9158b032d46a",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-13 11:10:26 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11131110-0001-0626-0000-9158b032d46a",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11131110-0001-0626-0000-9158b032d46a"
+                },
+                {
+                    "id": "11131217-0001-0626-0000-1d6d3cae0b67",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-13 12:17:03 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11131217-0001-0626-0000-1d6d3cae0b67",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11131217-0001-0626-0000-1d6d3cae0b67"
+                },
+                {
+                    "id": "11131416-0001-0626-0000-315fedf19c8a",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-13 14:16:46 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11131416-0001-0626-0000-315fedf19c8a",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11131416-0001-0626-0000-315fedf19c8a"
+                },
+                {
+                    "id": "11131616-0001-0626-0000-24561eba8272",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-13 16:16:18 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11131616-0001-0626-0000-24561eba8272",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11131616-0001-0626-0000-24561eba8272"
+                },
+                {
+                    "id": "11131616-0001-0626-0000-831265c338b8",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-13 16:16:55 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11131616-0001-0626-0000-831265c338b8",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11131616-0001-0626-0000-831265c338b8"
+                },
+                {
+                    "id": "11131816-0001-0626-0000-1e2309334f0e",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-13 18:16:14 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11131816-0001-0626-0000-1e2309334f0e",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11131816-0001-0626-0000-1e2309334f0e"
+                },
+                {
+                    "id": "11132016-0001-0626-0000-af64c6eef05c",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-13 20:16:02 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11132016-0001-0626-0000-af64c6eef05c",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11132016-0001-0626-0000-af64c6eef05c"
+                },
+                {
+                    "id": "11132215-0001-0626-0000-bfef19203ecb",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-13 22:15:47 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11132215-0001-0626-0000-bfef19203ecb",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11132215-0001-0626-0000-bfef19203ecb"
+                },
+                {
+                    "id": "11140015-0001-0626-0000-563a46186583",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 00:15:59 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11140015-0001-0626-0000-563a46186583",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11140015-0001-0626-0000-563a46186583"
+                },
+                {
+                    "id": "11140216-0001-0626-0000-83084f6965f3",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 02:16:27 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11140216-0001-0626-0000-83084f6965f3",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11140216-0001-0626-0000-83084f6965f3"
+                },
+                {
+                    "id": "11140416-0001-0626-0000-eba4cce2e074",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 04:16:48 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11140416-0001-0626-0000-eba4cce2e074",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11140416-0001-0626-0000-eba4cce2e074"
+                },
+                {
+                    "id": "11140616-0001-0626-0000-b007ed5f334d",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 06:16:17 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11140616-0001-0626-0000-b007ed5f334d",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11140616-0001-0626-0000-b007ed5f334d"
+                },
+                {
+                    "id": "11140816-0001-0626-0000-a5dedd1cecac",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 08:16:19 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11140816-0001-0626-0000-a5dedd1cecac",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11140816-0001-0626-0000-a5dedd1cecac"
+                },
+                {
+                    "id": "11141016-0001-0626-0000-fd5289b72a16",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 10:16:09 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11141016-0001-0626-0000-fd5289b72a16",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11141016-0001-0626-0000-fd5289b72a16"
+                },
+                {
+                    "id": "11141109-0001-0626-0000-f535fd448773",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 11:09:36 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11141109-0001-0626-0000-f535fd448773",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11141109-0001-0626-0000-f535fd448773"
+                },
+                {
+                    "id": "11141216-0001-0626-0000-a189b568e11d",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 12:16:15 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11141216-0001-0626-0000-a189b568e11d",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11141216-0001-0626-0000-a189b568e11d"
+                },
+                {
+                    "id": "11141416-0001-0626-0000-d023da1153ca",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 14:16:15 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11141416-0001-0626-0000-d023da1153ca",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11141416-0001-0626-0000-d023da1153ca"
+                },
+                {
+                    "id": "11141616-0001-0626-0000-6e27a7cb8369",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 16:16:39 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11141616-0001-0626-0000-6e27a7cb8369",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11141616-0001-0626-0000-6e27a7cb8369"
+                },
+                {
+                    "id": "11141616-0001-0626-0000-be9030675c8c",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 16:16:53 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11141616-0001-0626-0000-be9030675c8c",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11141616-0001-0626-0000-be9030675c8c"
+                },
+                {
+                    "id": "11141816-0001-0626-0000-c3630cd0d122",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 18:16:22 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11141816-0001-0626-0000-c3630cd0d122",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11141816-0001-0626-0000-c3630cd0d122"
+                },
+                {
+                    "id": "11142016-0001-0626-0000-a461c56629b3",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 20:16:31 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11142016-0001-0626-0000-a461c56629b3",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11142016-0001-0626-0000-a461c56629b3"
+                },
+                {
+                    "id": "11142217-0001-0626-0000-eab27804de8c",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 22:17:53 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11142217-0001-0626-0000-eab27804de8c",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11142217-0001-0626-0000-eab27804de8c"
+                },
+                {
+                    "id": "11150017-0001-0626-0000-3d923a0317bb",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 00:17:05 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11150017-0001-0626-0000-3d923a0317bb",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11150017-0001-0626-0000-3d923a0317bb"
+                },
+                {
+                    "id": "11150216-0001-0626-0000-ccfd02d879f5",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 02:16:23 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11150216-0001-0626-0000-ccfd02d879f5",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11150216-0001-0626-0000-ccfd02d879f5"
+                },
+                {
+                    "id": "11150416-0001-0626-0000-a0564c89dbff",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 04:16:19 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11150416-0001-0626-0000-a0564c89dbff",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11150416-0001-0626-0000-a0564c89dbff"
+                },
+                {
+                    "id": "11150617-0001-0626-0000-9fceb2f1d7f6",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 06:17:34 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11150617-0001-0626-0000-9fceb2f1d7f6",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11150617-0001-0626-0000-9fceb2f1d7f6"
+                },
+                {
+                    "id": "11150816-0001-0626-0000-8f6642b28c56",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 08:16:46 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11150816-0001-0626-0000-8f6642b28c56",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11150816-0001-0626-0000-8f6642b28c56"
+                },
+                {
+                    "id": "11151016-0001-0626-0000-21beedb41adc",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 10:16:18 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11151016-0001-0626-0000-21beedb41adc",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11151016-0001-0626-0000-21beedb41adc"
+                },
+                {
+                    "id": "11151109-0001-0626-0000-40847a7661ea",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 11:09:38 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11151109-0001-0626-0000-40847a7661ea",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11151109-0001-0626-0000-40847a7661ea"
+                },
+                {
+                    "id": "11151216-0001-0626-0000-0d445b2bb6ec",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 12:16:19 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11151216-0001-0626-0000-0d445b2bb6ec",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11151216-0001-0626-0000-0d445b2bb6ec"
+                },
+                {
+                    "id": "11151416-0001-0626-0000-ee737e7a5bff",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 14:16:12 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11151416-0001-0626-0000-ee737e7a5bff",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11151416-0001-0626-0000-ee737e7a5bff"
+                },
+                {
+                    "id": "11151616-0001-0626-0000-2d11cfb14c4b",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 16:16:31 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11151616-0001-0626-0000-2d11cfb14c4b",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11151616-0001-0626-0000-2d11cfb14c4b"
+                },
+                {
+                    "id": "11151616-0001-0626-0000-98979cb19e95",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 16:16:39 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11151616-0001-0626-0000-98979cb19e95",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11151616-0001-0626-0000-98979cb19e95"
+                },
+                {
+                    "id": "11151815-0001-0626-0000-4f1f6228f4a3",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 18:15:52 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11151815-0001-0626-0000-4f1f6228f4a3",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11151815-0001-0626-0000-4f1f6228f4a3"
+                },
+                {
+                    "id": "11152015-0001-0626-0000-72fe869c66a9",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 20:15:56 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11152015-0001-0626-0000-72fe869c66a9",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11152015-0001-0626-0000-72fe869c66a9"
+                },
+                {
+                    "id": "11152215-0001-0626-0000-785a2fe6b658",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 22:15:55 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11152215-0001-0626-0000-785a2fe6b658",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11152215-0001-0626-0000-785a2fe6b658"
+                },
+                {
+                    "id": "11160015-0001-0626-0000-074744f4ba27",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-16 00:15:56 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11160015-0001-0626-0000-074744f4ba27",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11160015-0001-0626-0000-074744f4ba27"
+                },
+                {
+                    "id": "11160216-0001-0626-0000-fe2a7beb1c8d",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-16 02:16:15 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11160216-0001-0626-0000-fe2a7beb1c8d",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11160216-0001-0626-0000-fe2a7beb1c8d"
+                },
+                {
+                    "id": "11160416-0001-0626-0000-c6f2e818a768",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-16 04:16:35 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11160416-0001-0626-0000-c6f2e818a768",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11160416-0001-0626-0000-c6f2e818a768"
+                },
+                {
+                    "id": "11160616-0001-0626-0000-ac5fd453ba51",
+                    "se": "chat_gpt",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-16 06:16:50 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/advanced\/11160616-0001-0626-0000-ac5fd453ba51",
+                    "endpoint_html": "\/v3\/ai_optimization\/chat_gpt\/llm_scraper\/task_get\/html\/11160616-0001-0626-0000-ac5fd453ba51"
+                }
+            ]
+        }
+    ]
+}

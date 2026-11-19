@@ -1,0 +1,866 @@
+{
+    "version": "0.1.20261117",
+    "status_code": 20000,
+    "status_message": "Ok.",
+    "time": "0 sec.",
+    "cost": 0,
+    "tasks_count": 1,
+    "tasks_error": 0,
+    "tasks": [
+        {
+            "id": "11190445-3192-0139-2000-4b5914a91d61",
+            "status_code": 20000,
+            "status_message": "Ok.",
+            "time": "0 sec.",
+            "cost": 0,
+            "result_count": 1,
+            "path": [
+                "v3",
+                "serp",
+                "google",
+                "organic",
+                "live",
+                "advanced"
+            ],
+            "data": {
+                "api": "serp",
+                "function": "live",
+                "se": "google",
+                "se_type": "organic",
+                "keyword": "mejor odontólogo en Medellín",
+                "location_code": 2170,
+                "language_code": "es",
+                "device": "mobile",
+                "load_async_ai_overview": true,
+                "os": "android",
+                "tag": "contract:ai-overview"
+            },
+            "result": [
+                {
+                    "keyword": "pizza",
+                    "type": "organic",
+                    "se_domain": "google.com",
+                    "location_code": 1006886,
+                    "language_code": "en",
+                    "check_url": "https:\/\/www.google.com\/search?q=pizza&hl=en&gl=GB&ie=UTF-8&uule=w+CAIQIFISCXXeIa8LoNhHEZkq1d1aOpZS",
+                    "datetime": "2026-11-18 16:20:45 +00:00",
+                    "spell": null,
+                    "refinement_chips": null,
+                    "item_types": [
+                        "find_results_on",
+                        "local_pack",
+                        "organic",
+                        "people_also_ask",
+                        "people_also_search",
+                        "google_reviews",
+                        "knowledge_graph"
+                    ],
+                    "se_results_count": 99,
+                    "pages_count": 1,
+                    "items_count": 18,
+                    "items": [
+                        {
+                            "type": "find_results_on",
+                            "rank_group": 1,
+                            "rank_absolute": 1,
+                            "page": 1,
+                            "position": "left",
+                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[1]\/div[2]\/div[2]\/div[1]\/div[1]\/div[1]\/div[1]",
+                            "items": [
+                                {
+                                    "type": "find_results_on_element",
+                                    "title": "THE 10 BEST Pizza Places in Watford (Updated 2026)",
+                                    "domain": "google.com",
+                                    "url": "https:\/\/google.com\/goto?url=CAESkwEBxCJF1zg5RdqeP-YBvVmUVMZwcXs3V7g4oGVUqDO4DGPxN4C4y-Wf4K6NAX9iqBMupq9b9uhIiGPFKhDhI4hvxgNVpMsEBNV9Cj3QlZCXtwpI7fIekgyTLS8t1WZnIxChm2RzEP9z5thwSyksvxK44nZ55QvjfrJgovcJDeYkICeYx2_zgOvIDJc2AYWxSEa2ick&gsessionid=rbyLC2P2ttAm9QGAWf-zDI6Z-2C_H_1mhA0Reay5Ug5mvub87pBOTg",
+                                    "source": "Tripadvisor"
+                                },
+                                {
+                                    "type": "find_results_on_element",
+                                    "title": "",
+                                    "domain": "google.com",
+                                    "url": "https:\/\/google.com\/goto?url=CAESewHEIkXXND3xXeXs-miPpmdvZmhpg-i_kD_NfkuXNz76nmCPs5n2M4_MO9Pn_zsqzjpae1hAHaUUHJYJ0weh-zm2N6dBm7zjkfece-IchO5jG34ur5i589lyZc6O2EB_LQBqjOWkaRuhLNTsQsVJrlLFUShkRU-PZpzhQg&gsessionid=rbyLC2P2ttAm9QGAWf-zDI6Z-2C_H_1mhA0Reay5Ug5mvub87pBOTg",
+                                    "source": "Yelp"
+                                },
+                                {
+                                    "type": "find_results_on_element",
+                                    "title": "Pizza in Leeds (West Yorkshire)",
+                                    "domain": "google.com",
+                                    "url": "https:\/\/google.com\/goto?url=CAESdwHEIkXXg9GcbtnIWiaSMdIWXjimlSySzAjgGWnWLr2M62iaCJLvcENlI2VBxI5y-V4Tpd_Q_2P8w6P-e22xxUHKtA0gFe6UlTXQpsE95fB36-ciT6iEYWM9hSF3ApFIEYOzzcqWs7jWqYXYYmnakzTSd4PYacwT&gsessionid=rbyLC2P2ttAm9QGAWf-zDI6Z-2C_H_1mhA0Reay5Ug5mvub87pBOTg",
+                                    "source": "infoisinfo"
+                                },
+                                {
+                                    "type": "find_results_on_element",
+                                    "title": "THE 10 BEST Pizza Takeaway in Torquay 2026 - Order Pizza ...",
+                                    "domain": "google.com",
+                                    "url": "https:\/\/google.com\/goto?url=CAEScwHEIkXXehp_rz1Xa7MDyei-ePqfostdxnX_8CtaIQiktad0YgnXxC3VCKpHjuNfuaLu3uryv_m9VQYAzb9mbpYEJBnPR0DPYRTyYgfXVHglyVKVmkS3rkaNeoT31C2uIajinoK8m21Ekcv2t4Ob5bXGJxA&gsessionid=rbyLC2P2ttAm9QGAWf-zDI6Z-2C_H_1mhA0Reay5Ug5mvub87pBOTg",
+                                    "source": "ubereats"
+                                }
+                            ],
+                            "rectangle": null
+                        },
+                        {
+                            "type": "local_pack",
+                            "rank_group": 1,
+                            "rank_absolute": 2,
+                            "page": 1,
+                            "position": "left",
+                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[1]\/div[2]\/div[2]\/div[1]\/div[1]\/div[3]\/div[1]\/div[1]\/div[1]\/div[1]\/div[3]\/div[1]\/div[1]\/div[1]\/div[1]",
+                            "title": "Crust Bros Pizza Covent Garden",
+                            "description": "29 Bedford St \n\"Really light pizza dough and tasty toppings - very generous.\" \n",
+                            "domain": "www.crustbros.co.uk",
+                            "phone": "020 3034 0421",
+                            "booking_url": null,
+                            "url": "https:\/\/www.crustbros.co.uk\/find-your-restaurant\/covent-garden?utm_source=GMB&utm_medium=website_click&utm_campaign=crust-bros-covent-garden&utm_id=GMB",
+                            "is_paid": false,
+                            "rating": {
+                                "rating_type": "Max5",
+                                "value": 4.7,
+                                "votes_count": 1700,
+                                "rating_max": 5
+                            },
+                            "cid": "17820353906423378423",
+                            "rectangle": null
+                        },
+                        {
+                            "type": "local_pack",
+                            "rank_group": 2,
+                            "rank_absolute": 3,
+                            "page": 1,
+                            "position": "left",
+                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[1]\/div[2]\/div[2]\/div[1]\/div[1]\/div[3]\/div[1]\/div[1]\/div[1]\/div[1]\/div[3]\/div[1]\/div[3]\/div[1]\/div[1]",
+                            "title": "Fatto a Mano Covent Garden",
+                            "description": "30 St Martin's Ln \n\"The crust, the sauce, and all of the toppings were exquisite.\" \n",
+                            "domain": "www.fattoamanopizza.com",
+                            "phone": "020 3345 0003",
+                            "booking_url": null,
+                            "url": "https:\/\/www.fattoamanopizza.com\/locations\/covent-garden-london\/",
+                            "is_paid": false,
+                            "rating": {
+                                "rating_type": "Max5",
+                                "value": 4.7,
+                                "votes_count": 2100,
+                                "rating_max": 5
+                            },
+                            "cid": "13311743875956888497",
+                            "rectangle": null
+                        },
+                        {
+                            "type": "local_pack",
+                            "rank_group": 3,
+                            "rank_absolute": 4,
+                            "page": 1,
+                            "position": "left",
+                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[1]\/div[2]\/div[2]\/div[1]\/div[1]\/div[3]\/div[1]\/div[1]\/div[1]\/div[1]\/div[3]\/div[1]\/div[5]\/div[1]\/div[1]",
+                            "title": "Pizza Pilgrims Covent Garden",
+                            "description": "23 Garrick St \n\"Principessa pizza and double hot honey pepperoni taste just like Italy!\" \n",
+                            "domain": "www.pizzapilgrims.co.uk",
+                            "phone": "020 7240 4145",
+                            "booking_url": null,
+                            "url": "https:\/\/www.pizzapilgrims.co.uk\/pizzerias\/covent-garden\/?utm_source=google&utm_medium=local&utm_campaign=gbplisting",
+                            "is_paid": false,
+                            "rating": {
+                                "rating_type": "Max5",
+                                "value": 4.6,
+                                "votes_count": 6300,
+                                "rating_max": 5
+                            },
+                            "cid": "17735597761891726926",
+                            "rectangle": null
+                        },
+                        {
+                            "type": "organic",
+                            "rank_group": 1,
+                            "rank_absolute": 5,
+                            "page": 1,
+                            "position": "left",
+                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[1]\/div[2]\/div[2]\/div[1]\/div[1]\/div[5]\/div[1]\/div[1]",
+                            "domain": "google.com",
+                            "title": "THE 10 BEST Pizza Places in Watford (Updated 2026)",
+                            "url": "https:\/\/google.com\/goto?url=CAESkwEBxCJF1zQlaKqGxAnV4P_SQX4fBoh9BSnuLukAqMYA0I2RBki9xkZ2owWO-H3jVCC7jwfSBh7b0Ok8_JnX5bEmyEVVoitdY7hTtr87tLKXoN9sXuzB64wA9FqCln1l9IwOxsRa7-K_e4bhIsJbN9TQaMjAHugFyhDcWFRlAFU07GkppwSRoyTSSvGwkRXN9lPCsLY&gsessionid=rbyLC2P2ttAm9QGAWf-zDI6Z-2C_H_1mhA0Reay5Ug5mvub87pBOTg",
+                            "cache_url": null,
+                            "related_search_url": null,
+                            "breadcrumb": "https:\/\/www.tripadvisor.com › ... › Watford Restaurants",
+                            "website_name": "Tripadvisor",
+                            "is_image": true,
+                            "is_video": false,
+                            "is_featured_snippet": false,
+                            "is_malicious": false,
+                            "is_web_story": false,
+                            "checks": [
+                                "is_image"
+                            ],
+                            "description": "Best Pizza in Watford, Hertfordshire : Find Tripadvisor traveller reviews of Watford Pizza places and search by price, location, ...",
+                            "pre_snippet": null,
+                            "extended_snippet": null,
+                            "images": [
+                                {
+                                    "type": "images_element",
+                                    "alt": "pizza from www.tripadvisor.com",
+                                    "url": "https:\/\/google.com\/goto?url=CAESkwEBxCJF1zg5RdqeP-YBvVmUVMZwcXs3V7g4oGVUqDO4DGPxN4C4y-Wf4K6NAX9iqBMupq9b9uhIiGPFKhDhI4hvxgNVpMsEBNV9Cj3QlZCXtwpI7fIekgyTLS8t1WZnIxChm2RzEP9z5thwSyksvxK44nZ55QvjfrJgovcJDeYkICeYx2_zgOvIDJc2AYWxSEa2ick&gsessionid=rbyLC2P2ttAm9QGAWf-zDI6Z-2C_H_1mhA0Reay5Ug5mvub87pBOTg",
+                                    "image_url": "https:\/\/api.dataforseo.com\/cdn\/i\/11181620-0001-0139-0000-59fe7b7de61b:0"
+                                }
+                            ],
+                            "amp_version": false,
+                            "rating": null,
+                            "price": null,
+                            "highlighted": [
+                                "Best Pizza in Watford, Hertfordshire"
+                            ],
+                            "links": null,
+                            "faq": null,
+                            "extended_people_also_search": null,
+                            "about_this_result": null,
+                            "related_result": null,
+                            "timestamp": null,
+                            "rectangle": null
+                        },
+                        {
+                            "type": "people_also_ask",
+                            "rank_group": 1,
+                            "rank_absolute": 6,
+                            "page": 1,
+                            "position": "left",
+                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[1]\/div[2]\/div[2]\/div[1]\/div[1]\/div[7]\/div[1]\/div[1]\/div[1]",
+                            "items": [
+                                {
+                                    "type": "people_also_ask_element",
+                                    "title": "Where can I get a slice of pizza in London?",
+                                    "seed_question": null,
+                                    "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[1]\/div[2]\/div[2]\/div[1]\/div[1]\/div[7]\/div[1]\/div[1]\/div[1]\/div[1]\/div[2]\/div[1]",
+                                    "expanded_element": [
+                                        {
+                                            "type": "people_also_ask_ai_overview_expanded_element",
+                                            "items": null,
+                                            "references": null,
+                                            "asynchronous_ai_overview": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "people_also_ask_element",
+                                    "title": "What is the 2 hour rule for pizza?",
+                                    "seed_question": null,
+                                    "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[1]\/div[2]\/div[2]\/div[1]\/div[1]\/div[7]\/div[1]\/div[1]\/div[1]\/div[1]\/div[2]\/div[2]",
+                                    "expanded_element": [
+                                        {
+                                            "type": "people_also_ask_ai_overview_expanded_element",
+                                            "items": null,
+                                            "references": null,
+                                            "asynchronous_ai_overview": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "people_also_ask_element",
+                                    "title": "What is the #1 best pizza in the world?",
+                                    "seed_question": null,
+                                    "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[1]\/div[2]\/div[2]\/div[1]\/div[1]\/div[7]\/div[1]\/div[1]\/div[1]\/div[1]\/div[2]\/div[3]",
+                                    "expanded_element": [
+                                        {
+                                            "type": "people_also_ask_ai_overview_expanded_element",
+                                            "items": null,
+                                            "references": null,
+                                            "asynchronous_ai_overview": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "people_also_ask_element",
+                                    "title": "Is Tops Pizza halal?",
+                                    "seed_question": null,
+                                    "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[1]\/div[2]\/div[2]\/div[1]\/div[1]\/div[7]\/div[1]\/div[1]\/div[1]\/div[1]\/div[2]\/div[4]",
+                                    "expanded_element": [
+                                        {
+                                            "type": "people_also_ask_ai_overview_expanded_element",
+                                            "items": null,
+                                            "references": null,
+                                            "asynchronous_ai_overview": true
+                                        }
+                                    ]
+                                }
+                            ],
+                            "rectangle": null
+                        },
+                        {
+                            "type": "organic",
+                            "rank_group": 2,
+                            "rank_absolute": 7,
+                            "page": 1,
+                            "position": "left",
+                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[1]\/div[2]\/div[2]\/div[1]\/div[1]\/div[9]\/div[1]\/div[1]",
+                            "domain": "google.com",
+                            "title": "THE BEST Pizza Places Delivery in Watford",
+                            "url": "https:\/\/google.com\/goto?url=CAESmQEBxCJF10hFeg5Jl73RsgAtb6bcUfPGAgkoYyBC-d6aoSgYjTMY1lVbUERrosaQWXXi3TS9TPhVjiJ7JT3reyes0wm6zOd2vHiQpKmxBboIoZA8WmKY1WDhHeBNbU3mA2DZR_DfTW5rNDoKGuN0wFjKawyVnpZYLqYCZl4UpYEqVuyYc6TXDCinfAV8fViBCvWpOu31kpLmFr4&gsessionid=rbyLC2P2ttAm9QGAWf-zDI6Z-2C_H_1mhA0Reay5Ug5mvub87pBOTg",
+                            "cache_url": null,
+                            "related_search_url": null,
+                            "breadcrumb": "https:\/\/www.tripadvisor.com › ... › Watford",
+                            "website_name": "Tripadvisor",
+                            "is_image": true,
+                            "is_video": false,
+                            "is_featured_snippet": false,
+                            "is_malicious": false,
+                            "is_web_story": false,
+                            "checks": [
+                                "is_image"
+                            ],
+                            "description": "Best Pizza in Watford, Hertfordshire : Find Tripadvisor traveller reviews of Watford Pizza places and search by price, location, and more.",
+                            "pre_snippet": null,
+                            "extended_snippet": null,
+                            "images": [
+                                {
+                                    "type": "images_element",
+                                    "alt": "pizza from www.tripadvisor.com",
+                                    "url": "https:\/\/google.com\/goto?url=CAESmQEBxCJF1-uWenaoOGjxUJuejRcgO6WxZqFOQvg-CrTXXL_7HOlSz3WQJHGp0exWMpEaEkRn29DpthtULKIRcrBtSm2b0knazYTo-FkGWQRpyQRCj2fI0yRK-LhIZ_1MdEpbrKJsCr02qKSOw49tL63FMZgop-djuuNT2CS7AN2JI6gwiD-BpXsxYJfTQ-V6q3e-tdvGchAprB0&gsessionid=rbyLC2P2ttAm9QGAWf-zDI6Z-2C_H_1mhA0Reay5Ug5mvub87pBOTg",
+                                    "image_url": "https:\/\/api.dataforseo.com\/cdn\/i\/11181620-0001-0139-0000-59fe7b7de61b:1"
+                                }
+                            ],
+                            "amp_version": false,
+                            "rating": null,
+                            "price": null,
+                            "highlighted": [
+                                "Best Pizza in Watford, Hertfordshire"
+                            ],
+                            "links": null,
+                            "faq": null,
+                            "extended_people_also_search": null,
+                            "about_this_result": null,
+                            "related_result": null,
+                            "timestamp": null,
+                            "rectangle": null
+                        },
+                        {
+                            "type": "people_also_search",
+                            "rank_group": 1,
+                            "rank_absolute": 8,
+                            "page": 1,
+                            "position": "left",
+                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[1]\/div[2]\/div[2]\/div[1]\/div[1]\/div[10]",
+                            "title": "Find related products and services",
+                            "items": [
+                                "Order pizza online",
+                                "Cheap pizza near me",
+                                "Pizza place near me",
+                                "Pepperoni pizza",
+                                "Italian restaurants"
+                            ],
+                            "rectangle": null
+                        },
+                        {
+                            "type": "organic",
+                            "rank_group": 3,
+                            "rank_absolute": 9,
+                            "page": 1,
+                            "position": "left",
+                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[1]\/div[2]\/div[2]\/div[1]\/div[1]\/div[11]\/div[1]\/div[1]",
+                            "domain": "google.com",
+                            "title": "THE 10 BEST Pizza Places in Harlow (Updated 2026)",
+                            "url": "https:\/\/google.com\/goto?url=CAESigEBxCJF10168ueTaMhOI3xMwNUfQ9cAEOn-Fc8p763mQ5ARHo1krBgvxKA6c99NLlM6ukm2AXYlQv27nhayzvk-RDK5QSvEFUpF3JX1X4N0bGBeE-OPfjUQAOTxLeJsqOSUfqvs37NoNlLp1BmogAUfECqCMLpVnTeo7ptfVRLC5a9Z-qNIjauA0dc&gsessionid=rbyLC2P2ttAm9QGAWf-zDI6Z-2C_H_1mhA0Reay5Ug5mvub87pBOTg",
+                            "cache_url": null,
+                            "related_search_url": null,
+                            "breadcrumb": "https:\/\/www.tripadvisor.com › ... › Harlow Restaurants",
+                            "website_name": "Tripadvisor",
+                            "is_image": true,
+                            "is_video": false,
+                            "is_featured_snippet": false,
+                            "is_malicious": false,
+                            "is_web_story": false,
+                            "checks": [
+                                "is_image"
+                            ],
+                            "description": "Pizza in Harlow · 1. Caine's Pizza Ltd. 5.0. 5 of 5 bubbles. (123 reviews) · 2. PizzaExpress. 3.0. 3 of 5 bubbles · 3. TGF Pizza. 3.8. 3.8 ... Read more",
+                            "pre_snippet": null,
+                            "extended_snippet": null,
+                            "images": [
+                                {
+                                    "type": "images_element",
+                                    "alt": "pizza from www.tripadvisor.com",
+                                    "url": "https:\/\/google.com\/goto?url=CAESigEBxCJF1-158K-TzM4UU0yrHa4rrJXY-f4KUgrpE29zkoFvhpoTGmsBnEcL54wlHO_HlaEipPBE0RsYaNXNB-gPHyRLIUA0BAlj4KcK88MAGHRcM8E9wqFPdwAc05GvOAwFmmIZT-VUyqgDWS92DZ7gxYo_VL6V_Bb8LWBF-MXQDKEoRVA-brPlFhw&gsessionid=rbyLC2P2ttAm9QGAWf-zDI6Z-2C_H_1mhA0Reay5Ug5mvub87pBOTg",
+                                    "image_url": "https:\/\/api.dataforseo.com\/cdn\/i\/11181620-0001-0139-0000-59fe7b7de61b:2"
+                                }
+                            ],
+                            "amp_version": false,
+                            "rating": null,
+                            "price": null,
+                            "highlighted": [
+                                "Pizza in Harlow"
+                            ],
+                            "links": [
+                                {
+                                    "type": "link_element",
+                                    "title": "Read more",
+                                    "description": null,
+                                    "url": "https:\/\/google.com\/goto?url=CAESjAIBxCJF15ij7M0wd0DDxrKAvZJpm61reGfI7erunjmcSXJsrYA090k2fzyJb_7TyWyX9eqGIlqqJ2bVZN1vA6JgKTWBhmBV3O8b4qem5Zf9WrkdVpa8KOPp9q8a46X7BUQ6lx0zeT7OuVXkZZB7bRgy3r6lTaNlhAriX88hy8DrtM5mJbwZeeEQXd7VWtvUdtb44ch3LlNNxdHwrzlE0G4mru2XVgVKABdlgFmecxSscqu3DcBJOxVhx88rppWysCJd5LGU5fL617q4i_V7mhQ98K4jImeIFjWZsUz5SUIYzknvnZd8zsJNX13k6RbhrYEN_m2g_D5TWys5zZgiGnrd51XYz_fU3QQVg7R_&gsessionid=rbyLC2P2ttAm9QGAWf-zDI6Z-2C_H_1mhA0Reay5Ug5mvub87pBOTg",
+                                    "domain": "google.com"
+                                }
+                            ],
+                            "faq": null,
+                            "extended_people_also_search": null,
+                            "about_this_result": null,
+                            "related_result": null,
+                            "timestamp": null,
+                            "rectangle": null
+                        },
+                        {
+                            "type": "organic",
+                            "rank_group": 4,
+                            "rank_absolute": 10,
+                            "page": 1,
+                            "position": "left",
+                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[1]\/div[2]\/div[2]\/div[1]\/div[1]\/div[13]\/div[1]\/div[1]",
+                            "domain": "google.com",
+                            "title": "Pizza (64) - Got 2 Eat",
+                            "url": "https:\/\/google.com\/goto?url=CAEShQEBxCJF12lE2WKyCWNZMVIv9hhE6dAnMjpYOiqxtLhOQPHXJ4nAooD4MVnycZRBjvkOZLeLtzJjcOoHqXZ0_V8t41jRd99YjWKcmKbOgu5TJLXmwE28E3u-51c43ryiTQPy5cILx66sQv7DdCyzPkFmti8RZhiMUArUZNsFpZ-M5RuMWi-M&gsessionid=rbyLC2P2ttAm9QGAWf-zDI6Z-2C_H_1mhA0Reay5Ug5mvub87pBOTg",
+                            "cache_url": null,
+                            "related_search_url": null,
+                            "breadcrumb": "https:\/\/got2eat.co.uk › directory › category=pizza",
+                            "website_name": "got2eat.co.uk",
+                            "is_image": false,
+                            "is_video": false,
+                            "is_featured_snippet": false,
+                            "is_malicious": false,
+                            "is_web_story": false,
+                            "checks": null,
+                            "description": null,
+                            "pre_snippet": null,
+                            "extended_snippet": null,
+                            "images": null,
+                            "amp_version": false,
+                            "rating": null,
+                            "price": null,
+                            "highlighted": null,
+                            "links": null,
+                            "faq": null,
+                            "extended_people_also_search": null,
+                            "about_this_result": null,
+                            "related_result": null,
+                            "timestamp": null,
+                            "rectangle": null
+                        },
+                        {
+                            "type": "organic",
+                            "rank_group": 5,
+                            "rank_absolute": 11,
+                            "page": 1,
+                            "position": "left",
+                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[1]\/div[2]\/div[2]\/div[1]\/div[1]\/div[15]\/div[1]\/div[1]",
+                            "domain": "google.com",
+                            "title": "Menu, Prices & Restaurant Reviews - Just Pizza UK",
+                            "url": "https:\/\/google.com\/goto?url=CAESsAEBxCJF110UPhUHr-Ux20CvCLdWWaLuyqn9dPgI0jBbxcIK-j1eExKhfUG_mYkKmRqOTBN-AWD6d1sH4EH-LqgvakBbMNnlM7Hou8zYeU-Zm-i1Efcetn8N_vxIDS74dNuNLzwmeBFjaP9Mt6iySHWQouk845xE6hPSo3kh4F3Qe2nhjBqZ8iO73TuDStrhGtCyEoZK6nhpcNvQUikXi8WsSEg7Cxt1kUWmu3zyr_XAEg&gsessionid=rbyLC2P2ttAm9QGAWf-zDI6Z-2C_H_1mhA0Reay5Ug5mvub87pBOTg",
+                            "cache_url": null,
+                            "related_search_url": null,
+                            "breadcrumb": "https:\/\/www.tripadvisor.com › ... › Reading Restaurants",
+                            "website_name": "Tripadvisor",
+                            "is_image": false,
+                            "is_video": false,
+                            "is_featured_snippet": false,
+                            "is_malicious": false,
+                            "is_web_story": false,
+                            "checks": null,
+                            "description": "Just Pizza UK, Reading : See 18 unbiased reviews of Just Pizza UK, rated 3.3 of 5 on Tripadvisor and ranked #436 of 574 restaurants in Reading.",
+                            "pre_snippet": null,
+                            "extended_snippet": "3.3(18)  · Price range: $",
+                            "images": null,
+                            "amp_version": false,
+                            "rating": {
+                                "rating_type": "Max5",
+                                "value": 3.3,
+                                "votes_count": 18,
+                                "rating_max": 5
+                            },
+                            "price": null,
+                            "highlighted": [
+                                "Just Pizza UK, Reading"
+                            ],
+                            "links": null,
+                            "faq": null,
+                            "extended_people_also_search": null,
+                            "about_this_result": null,
+                            "related_result": null,
+                            "timestamp": null,
+                            "rectangle": null
+                        },
+                        {
+                            "type": "organic",
+                            "rank_group": 6,
+                            "rank_absolute": 12,
+                            "page": 1,
+                            "position": "left",
+                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[1]\/div[2]\/div[2]\/div[1]\/div[1]\/div[17]\/div[1]\/div[1]",
+                            "domain": "google.com",
+                            "title": "Food Stop Menu | Get 10% Off | Order Takeaway Online",
+                            "url": "https:\/\/google.com\/goto?url=CAESawHEIkXXULy0uzCVl_ebqXywIeHH9wksFdIM5-rDog3IIOJwRz1Y92NjpCk1UY3__TGnx4qTR4AGvv_w93Ayc16WBxZMb4Hoo_6hmrgadAB0xrlWhd6X76kEb0vW7O7eGnXqDwb11dExyrg0&gsessionid=rbyLC2P2ttAm9QGAWf-zDI6Z-2C_H_1mhA0Reay5Ug5mvub87pBOTg",
+                            "cache_url": null,
+                            "related_search_url": null,
+                            "breadcrumb": "https:\/\/foodstoplincoln.co.uk › order-now › pizzas",
+                            "website_name": "foodstoplincoln.co.uk",
+                            "is_image": false,
+                            "is_video": false,
+                            "is_featured_snippet": false,
+                            "is_malicious": false,
+                            "is_web_story": false,
+                            "checks": null,
+                            "description": "Food Stop in Lincoln offers a mouthwatering menu and exclusive online deals. Order now and satisfy your cravings.",
+                            "pre_snippet": null,
+                            "extended_snippet": null,
+                            "images": null,
+                            "amp_version": false,
+                            "rating": null,
+                            "price": null,
+                            "highlighted": [
+                                "Food Stop in Lincoln"
+                            ],
+                            "links": null,
+                            "faq": null,
+                            "extended_people_also_search": null,
+                            "about_this_result": null,
+                            "related_result": null,
+                            "timestamp": null,
+                            "rectangle": null
+                        },
+                        {
+                            "type": "organic",
+                            "rank_group": 7,
+                            "rank_absolute": 13,
+                            "page": 1,
+                            "position": "left",
+                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[1]\/div[2]\/div[2]\/div[1]\/div[1]\/div[19]\/div[1]\/div[1]",
+                            "domain": "google.com",
+                            "title": "THE BEST Pizza Places Delivery in Reading",
+                            "url": "https:\/\/google.com\/goto?url=CAESlQEBxCJF161cML01iMsBp_oINisXl8Q0TZv0Ou2xTLU3koT3asLgVPQIqgMsdUfqQVwu7jswNCtlg7hgDma9OfsG4_j5NMOw6y9P6-LH0-1FYkYjvk6Z9Hsi-P1V64-XKRevMyScW5te4lNwobcfGvVAth7fSPsiOjtmiiIue9uWklbdDP1__clldGCkhXwQEdlC4A6w5Q&gsessionid=rbyLC2P2ttAm9QGAWf-zDI6Z-2C_H_1mhA0Reay5Ug5mvub87pBOTg",
+                            "cache_url": null,
+                            "related_search_url": null,
+                            "breadcrumb": "https:\/\/www.tripadvisor.com › ... › Berkshire › Reading",
+                            "website_name": "Tripadvisor",
+                            "is_image": true,
+                            "is_video": false,
+                            "is_featured_snippet": false,
+                            "is_malicious": false,
+                            "is_web_story": false,
+                            "checks": [
+                                "is_image"
+                            ],
+                            "description": "Best Pizza in Reading, Berkshire: Find Tripadvisor traveller reviews of Reading Pizza places and search by price, location, and more.",
+                            "pre_snippet": null,
+                            "extended_snippet": null,
+                            "images": [
+                                {
+                                    "type": "images_element",
+                                    "alt": "pizza from www.tripadvisor.com",
+                                    "url": "https:\/\/google.com\/goto?url=CAESlQEBxCJF11iQpMiRfbqrULrhEXl2_BjY1B6XRyNBzMwZYfkwZ85Qix2P9BrCt2XlHMNB9AKhFLU-LtGysuZc5LAAZL8db5D2MORX_l7kljIE38RO4VKQFsyQ5kl5lFwDKg3IY04ziy5VIXFhw0hxr39In8GsoqA9hoRMMuSKQ9JbJNAgmUTp8gACOuAr-H07NZbCjNmW1A&gsessionid=rbyLC2P2ttAm9QGAWf-zDI6Z-2C_H_1mhA0Reay5Ug5mvub87pBOTg",
+                                    "image_url": "https:\/\/encrypted-tbn0.gstatic.com\/images?q=tbn:ANd9GcTAfIUowSLTKT9Oyd08im4ccT8CdcdRUcjcNSLptkzYQgjZvSEHEdcl&usqp=CAE&s"
+                                }
+                            ],
+                            "amp_version": false,
+                            "rating": null,
+                            "price": null,
+                            "highlighted": [
+                                "Reading Pizza places"
+                            ],
+                            "links": null,
+                            "faq": null,
+                            "extended_people_also_search": null,
+                            "about_this_result": null,
+                            "related_result": null,
+                            "timestamp": null,
+                            "rectangle": null
+                        },
+                        {
+                            "type": "organic",
+                            "rank_group": 8,
+                            "rank_absolute": 14,
+                            "page": 1,
+                            "position": "left",
+                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[1]\/div[2]\/div[2]\/div[1]\/div[1]\/div[21]\/div[1]\/div[1]",
+                            "domain": "google.com",
+                            "title": "https:\/\/northeastpizza.co.uk\/order-now\/pizzas\/pizzas",
+                            "url": "https:\/\/google.com\/goto?url=CAEScQHEIkXXYvmdQsmYnPlwR5ktKSaI2Gd4wuZBGXTuXxxWrQcz_Qa-Jh0Vp-kFb6nTyPAf0ZZ9ry28lB2RhS_UaoZiQQbg-lVxTK4gKAwrZEy9nWw4Ek2d3FAbiHs_J7BdeNk4MhlUFyxsffdoWCWKJhzz&gsessionid=rbyLC2P2ttAm9QGAWf-zDI6Z-2C_H_1mhA0Reay5Ug5mvub87pBOTg",
+                            "cache_url": null,
+                            "related_search_url": null,
+                            "breadcrumb": "https:\/\/northeastpizza.co.uk › order-now › pizzas › pizzas",
+                            "website_name": "North East pizza",
+                            "is_image": true,
+                            "is_video": false,
+                            "is_featured_snippet": false,
+                            "is_malicious": false,
+                            "is_web_story": false,
+                            "checks": [
+                                "is_image"
+                            ],
+                            "description": null,
+                            "pre_snippet": null,
+                            "extended_snippet": null,
+                            "images": [
+                                {
+                                    "type": "images_element",
+                                    "alt": "pizza from northeastpizza.co.uk",
+                                    "url": "https:\/\/google.com\/goto?url=CAEScQHEIkXXaFO1qXxf8Gkktudj7xJWBhQig6q_o3WnHC3kjKelWsv0H7txHG0U4O9SWOZ1Nhgy_xp_TCPsAuWoljKwyHncmL2nGtLOl_DlIvMgEHScTDgk0O826vdc5MFbXDv-anA7IGf-ImknAcAH3xQR&gsessionid=rbyLC2P2ttAm9QGAWf-zDI6Z-2C_H_1mhA0Reay5Ug5mvub87pBOTg",
+                                    "image_url": "https:\/\/encrypted-tbn0.gstatic.com\/images?q=tbn:ANd9GcSRSgZEVUkIfH9MDRNuSCkus2C8dfhiqXu75w1rBqTpJ5WUNfZGpdbG&usqp=CAE&s"
+                                }
+                            ],
+                            "amp_version": false,
+                            "rating": null,
+                            "price": null,
+                            "highlighted": null,
+                            "links": null,
+                            "faq": null,
+                            "extended_people_also_search": null,
+                            "about_this_result": null,
+                            "related_result": null,
+                            "timestamp": null,
+                            "rectangle": null
+                        },
+                        {
+                            "type": "organic",
+                            "rank_group": 9,
+                            "rank_absolute": 15,
+                            "page": 1,
+                            "position": "left",
+                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[1]\/div[2]\/div[2]\/div[1]\/div[1]\/div[23]\/div[1]\/div[1]",
+                            "domain": "google.com",
+                            "title": "THE BEST Pizza Places Delivery in Aylesbury",
+                            "url": "https:\/\/google.com\/goto?url=CAESrAEBxCJF1-FcJhTmqdQDOR845dzkuHvkm0hNuav8Vcd3SuMUKal_H2qVTPUHllhQQhD-a1CET5Q7TqsmGiIUhjZ0TWa93EqVr-bHLaPTnDGOJWEUTPIj6cEhOnU97jtirqhOEFoIn2KHoRLzAU_UWQWz8Vokg0lWpi97PaDJ4E30v87UWoaAxCedRbsJ0weT7a6DDqrM1woCHLhsstcwt0c_EnJYfuP-DiqC2G25&gsessionid=rbyLC2P2ttAm9QGAWf-zDI6Z-2C_H_1mhA0Reay5Ug5mvub87pBOTg",
+                            "cache_url": null,
+                            "related_search_url": null,
+                            "breadcrumb": "https:\/\/www.tripadvisor.com › ... › Aylesbury",
+                            "website_name": "Tripadvisor",
+                            "is_image": true,
+                            "is_video": false,
+                            "is_featured_snippet": false,
+                            "is_malicious": false,
+                            "is_web_story": false,
+                            "checks": [
+                                "is_image"
+                            ],
+                            "description": "Best Pizza in Aylesbury, Aylesbury Vale: Find Tripadvisor traveller reviews of Aylesbury Pizza places and search by price, location, ...",
+                            "pre_snippet": null,
+                            "extended_snippet": null,
+                            "images": [
+                                {
+                                    "type": "images_element",
+                                    "alt": "pizza from www.tripadvisor.com",
+                                    "url": "https:\/\/google.com\/goto?url=CAESrAEBxCJF15TTs-qd3LPqNZ6-r9BRHkFUamRwc4VLyhrGL9apDEcaTawCq3CPsSZj0vPbMU7nSNCF5bsSHtVNtDaED-afAyYo4iqxWp6Xnl0qbVI5tmTpOpuA8KlCrJrb0Q8SyjVaftMeddisaQGb2tbzAXncMaYO-ah2c2HJZTvO66yaU1bMbjOrKzJ1haMN-hd69lMtlTzn2lbkQU__MUbgyhiSKYpd2uxTNwV3&gsessionid=rbyLC2P2ttAm9QGAWf-zDI6Z-2C_H_1mhA0Reay5Ug5mvub87pBOTg",
+                                    "image_url": "https:\/\/encrypted-tbn0.gstatic.com\/images?q=tbn:ANd9GcQFb-DTBZMRFFZfCAePBJsTM235ji_u2almb0iss5xOrRlK-0_w8ZfZ&usqp=CAE&s"
+                                }
+                            ],
+                            "amp_version": false,
+                            "rating": null,
+                            "price": null,
+                            "highlighted": [
+                                "Best Pizza in Aylesbury"
+                            ],
+                            "links": null,
+                            "faq": null,
+                            "extended_people_also_search": null,
+                            "about_this_result": null,
+                            "related_result": null,
+                            "timestamp": null,
+                            "rectangle": null
+                        },
+                        {
+                            "type": "organic",
+                            "rank_group": 10,
+                            "rank_absolute": 16,
+                            "page": 1,
+                            "position": "left",
+                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[1]\/div[2]\/div[2]\/div[1]\/div[1]\/div[25]\/div[1]\/div[1]",
+                            "domain": "google.com",
+                            "title": "THE BEST Pizza Places for Families in Watford",
+                            "url": "https:\/\/google.com\/goto?url=CAESmAEBxCJF1x4GgZ3B0Eb_IGykiXVaZXP0ntnF5onmmBJIQtQJGfKwqkfGxio2BloRkQLx5m4hNZaMCvlGpsP9TF5pQvk_3wETxHNyR8UdeYLDmObFCYCpeGoxSBZ8Nx2iQZFuwQoITZOvZmhgzbp1FDyLKEw8XuKhxckHI4LU0PG_LvRXJ1EbGr0QuUUYFSJGUXQe-VqeIzNcaw&gsessionid=rbyLC2P2ttAm9QGAWf-zDI6Z-2C_H_1mhA0Reay5Ug5mvub87pBOTg",
+                            "cache_url": null,
+                            "related_search_url": null,
+                            "breadcrumb": "https:\/\/www.tripadvisor.com › ... › Watford",
+                            "website_name": "Tripadvisor",
+                            "is_image": true,
+                            "is_video": false,
+                            "is_featured_snippet": false,
+                            "is_malicious": false,
+                            "is_web_story": false,
+                            "checks": [
+                                "is_image"
+                            ],
+                            "description": "Best Pizza in Watford, Hertfordshire : Find Tripadvisor traveller reviews of Watford Pizza places and search by price, location, and more.",
+                            "pre_snippet": null,
+                            "extended_snippet": null,
+                            "images": [
+                                {
+                                    "type": "images_element",
+                                    "alt": "pizza from www.tripadvisor.com",
+                                    "url": "https:\/\/google.com\/goto?url=CAESmAEBxCJF11WhiUZ8wBookbSDUdMCwOpIXxZ3SUEnzeIS6imP1pbONC-kp07KHXmUPSRMUChXhvf8FU45M6r44GIszbDYZNqrtnC0Um4Nk9qBvjxmJMNx5tRJvQH8xlbgJP7AIef4MA-nXhZhWJtJ1rju8EeuXyFdH5k5uEoFkJFJ3yk3r4GQ7oU5u0gJHc3Sb2eYrzUCn--nzA&gsessionid=rbyLC2P2ttAm9QGAWf-zDI6Z-2C_H_1mhA0Reay5Ug5mvub87pBOTg",
+                                    "image_url": "https:\/\/encrypted-tbn0.gstatic.com\/images?q=tbn:ANd9GcTpaZSzm_NhzdcJTx-vCdFyt78RbM5LIyDp1I5JiwvIQ6vbeiOHcNhZ&usqp=CAE&s"
+                                }
+                            ],
+                            "amp_version": false,
+                            "rating": null,
+                            "price": null,
+                            "highlighted": [
+                                "Best Pizza in Watford, Hertfordshire"
+                            ],
+                            "links": null,
+                            "faq": null,
+                            "extended_people_also_search": null,
+                            "about_this_result": null,
+                            "related_result": null,
+                            "timestamp": null,
+                            "rectangle": null
+                        },
+                        {
+                            "type": "knowledge_graph",
+                            "rank_group": 1,
+                            "rank_absolute": 1,
+                            "page": 1,
+                            "position": "right",
+                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[2]",
+                            "title": "Pizza",
+                            "subtitle": "Dish",
+                            "description": "Pizza is an Italian dish typically consisting of a flat base of leavened wheat-based dough topped with tomato, cheese, and other ingredients, baked at a high temperature, traditionally in a wood-fired oven. Source: More Less Description",
+                            "card_id": null,
+                            "url": null,
+                            "image_url": null,
+                            "logo_url": null,
+                            "cid": "17820353906423378423",
+                            "items": [
+                                {
+                                    "type": "knowledge_graph_images_item",
+                                    "rank_group": 0,
+                                    "rank_absolute": 0,
+                                    "page": 1,
+                                    "position": "left",
+                                    "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[2]\/div[1]\/div[2]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]",
+                                    "link": null,
+                                    "items": [
+                                        {
+                                            "type": "knowledge_graph_images_element",
+                                            "url": null,
+                                            "domain": null,
+                                            "alt": "Image of Easy Homemade Pizza Recipe | Schwartz",
+                                            "image_url": "https:\/\/api.dataforseo.com\/cdn\/i\/11181620-0001-0139-0000-59fe7b7de61b:3",
+                                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[2]\/div[1]\/div[2]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]"
+                                        },
+                                        {
+                                            "type": "knowledge_graph_images_element",
+                                            "url": null,
+                                            "domain": null,
+                                            "alt": "Image of Pizza - Wikipedia",
+                                            "image_url": "https:\/\/api.dataforseo.com\/cdn\/i\/11181620-0001-0139-0000-59fe7b7de61b:4",
+                                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[2]\/div[1]\/div[2]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[2]"
+                                        },
+                                        {
+                                            "type": "knowledge_graph_images_element",
+                                            "url": null,
+                                            "domain": null,
+                                            "alt": "Image of Easy Roasted Veggie Pizza (With Eggplant & Zucchini) | Live ...",
+                                            "image_url": "https:\/\/api.dataforseo.com\/cdn\/i\/11181620-0001-0139-0000-59fe7b7de61b:5",
+                                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[2]\/div[1]\/div[2]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[3]"
+                                        },
+                                        {
+                                            "type": "knowledge_graph_images_element",
+                                            "url": null,
+                                            "domain": null,
+                                            "alt": "Image of Garlic cheese pizza - RecipeTin Eats",
+                                            "image_url": "https:\/\/api.dataforseo.com\/cdn\/i\/11181620-0001-0139-0000-59fe7b7de61b:6",
+                                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[2]\/div[1]\/div[2]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[4]"
+                                        }
+                                    ],
+                                    "rectangle": null
+                                },
+                                {
+                                    "type": "knowledge_graph_description_item",
+                                    "rank_group": 0,
+                                    "rank_absolute": 0,
+                                    "page": 1,
+                                    "position": "left",
+                                    "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[2]\/div[1]\/div[2]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[2]\/div[1]\/div[1]\/div[1]",
+                                    "text": "Pizza is an Italian dish typically consisting of a flat base of leavened wheat-based dough topped with tomato, cheese, and other ingredients, baked at a high temperature, traditionally in a wood-fired oven. Source: Wikipedia Wikipedia More Less Description",
+                                    "links": [
+                                        {
+                                            "type": "link_element",
+                                            "title": "Wikipedia",
+                                            "url": "https:\/\/www.google.com\/goto?url=CAESYAHEIkXXHSx8dYojFGfzEyj6ZnEo3tTnCRi936wkImIEcFgPatKSNmK-sGEDcvP2oJENAqGXXNUIWlCL1YZsg7Stja4IcMx7Z8Jr77GHVze2luQS8LmcJd2rvtuEaetXkg&gsessionid=rbyLC2P2ttAm9QGAWf-zDI6Z-2C_H_1mhA0Reay5Ug5mvub87pBOTg",
+                                            "domain": "www.google.com",
+                                            "description": null,
+                                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[2]\/div[1]\/div[2]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[2]\/div[1]\/div[1]\/div[1]\/visd-inline-description[1]\/div[1]\/div[1]\/a[1]"
+                                        },
+                                        {
+                                            "type": "link_element",
+                                            "title": "Wikipedia",
+                                            "url": "https:\/\/www.google.com\/goto?url=CAESYAHEIkXXHSx8dYojFGfzEyj6ZnEo3tTnCRi936wkImIEcFgPatKSNmK-sGEDcvP2oJENAqGXXNUIWlCL1YZsg7Stja4IcMx7Z8Jr77GHVze2luQS8LmcJd2rvtuEaetXkg&gsessionid=rbyLC2P2ttAm9QGAWf-zDI6Z-2C_H_1mhA0Reay5Ug5mvub87pBOTg",
+                                            "domain": "www.google.com",
+                                            "description": null,
+                                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[2]\/div[1]\/div[2]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[2]\/div[1]\/div[1]\/div[1]\/visd-inline-description[1]\/div[1]\/span[2]\/span[1]\/span[1]\/a[1]"
+                                        }
+                                    ],
+                                    "rectangle": null
+                                },
+                                {
+                                    "type": "knowledge_graph_carousel_item",
+                                    "rank_group": 0,
+                                    "rank_absolute": 0,
+                                    "page": 1,
+                                    "position": "left",
+                                    "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[2]\/div[1]\/div[3]\/div[1]\/div[1]",
+                                    "title": "People also search for",
+                                    "data_attrid": null,
+                                    "link": null,
+                                    "items": [
+                                        {
+                                            "type": "knowledge_graph_carousel_element",
+                                            "title": "Vegetable",
+                                            "subtitle": null,
+                                            "url": "https:\/\/www.google.com\/search?sca_esv=f4c3717dfa735614&hl=en&gl=GB&sxsrf=AKL5yDh-b0nwg-_SgfZ_yOJlEbkZm-Gx5Q:1795018844178&si=AE1YtOruOSDH5h0KlIqwNcNYS7e3cFcPRS41TGgpXOwnNEOgU0ovNR4eJGNeWsXd81P8HSwf0kYVu7FfTqh3ZkTC3GhioYgqmGuESSlTFp0fz8vrJlvgwNtXKYHXGqLrzzoi_YD6UYIrw9bJ5yPy78B7uSHfQSLUv3B_6DZxoagsgBPmjzhLdiuh7q7WMob_Ez6bNbs-0UEB&q=Vegetable&sa=X&ved=2ahUKEwiwvcmk9pGYAxX4ExAIHRg8MxQQs9oBKAB6BAgREAY",
+                                            "domain": "www.google.com",
+                                            "image_url": "https:\/\/api.dataforseo.com\/cdn\/i\/11181620-0001-0139-0000-59fe7b7de61b:7",
+                                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[2]\/div[1]\/div[3]\/div[1]\/div[1]\/div[2]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]"
+                                        },
+                                        {
+                                            "type": "knowledge_graph_carousel_element",
+                                            "title": "Coffee",
+                                            "subtitle": null,
+                                            "url": "https:\/\/www.google.com\/search?sca_esv=f4c3717dfa735614&hl=en&gl=GB&sxsrf=AKL5yDh-b0nwg-_SgfZ_yOJlEbkZm-Gx5Q:1795018844178&si=AE1YtOruOSDH5h0KlIqwNcNYS7e3cFcPRS41TGgpXOwnNEOgU-1AksEdMy4OkH4N0t4XJiHdHcZ1--HOJBin6SrwnqM2CIjRFih926biyH39Dk8tM6MBkUui165LatQusdSfRvcdZPzLlTYDo9n1xd_7MXMSZEQ2HXAahrmWrQG8NvCQZYyFF89-R6-FFCXIHEr-JeuJO3W_&q=Coffee&sa=X&ved=2ahUKEwiwvcmk9pGYAxX4ExAIHRg8MxQQs9oBKAB6BAgREAo",
+                                            "domain": "www.google.com",
+                                            "image_url": "https:\/\/api.dataforseo.com\/cdn\/i\/11181620-0001-0139-0000-59fe7b7de61b:8",
+                                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[2]\/div[1]\/div[3]\/div[1]\/div[1]\/div[2]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[2]\/div[1]"
+                                        },
+                                        {
+                                            "type": "knowledge_graph_carousel_element",
+                                            "title": "Tea",
+                                            "subtitle": null,
+                                            "url": "https:\/\/www.google.com\/search?sca_esv=f4c3717dfa735614&hl=en&gl=GB&sxsrf=AKL5yDh-b0nwg-_SgfZ_yOJlEbkZm-Gx5Q:1795018844178&si=AE1YtOokWSHJBSjaFAVuHrKvdUXDnt4IC6FbHBKzd9pU_Dnj_D_pc1-KFuLXtFQ_rawR3PTqQY6poqVBb2UX_oskt_MdP_TzFJ5FnwjAkAufUOM7sNQP55VYXb09n7XELc8JDsWEYX6NlQZTRKJ4bTb0h8R_taaG84XWzwcd5cCMLPo1rhfqZWdcBy7D2LIJmN8iqyhFIGz-&q=Tea&sa=X&ved=2ahUKEwiwvcmk9pGYAxX4ExAIHRg8MxQQs9oBKAB6BAgREA4",
+                                            "domain": "www.google.com",
+                                            "image_url": "https:\/\/api.dataforseo.com\/cdn\/i\/11181620-0001-0139-0000-59fe7b7de61b:9",
+                                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[2]\/div[1]\/div[3]\/div[1]\/div[1]\/div[2]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[3]\/div[1]"
+                                        },
+                                        {
+                                            "type": "knowledge_graph_carousel_element",
+                                            "title": "White pizza",
+                                            "subtitle": null,
+                                            "url": "https:\/\/www.google.com\/search?sca_esv=f4c3717dfa735614&hl=en&gl=GB&sxsrf=AKL5yDh-b0nwg-_SgfZ_yOJlEbkZm-Gx5Q:1795018844178&si=AE1YtOpq69kQPYJq7TIn_jext5SiMwQcb6Hqfr7QepP6tJJpj7xKfIeZ58RWzGwZ11OtE80eY_U9vhYq4alIiMu3kmfMsIHIdR58qCcBEr8ShXtZRmxMt7a37UBKXdxeg13om1UOuxiUxMWQuUmwhmCpo_xCLdESJarePhJ5bybigoeH0rECqIPu0UQ1K0_SzsbrhO0TqIPJHwDE7ldSHuYJtmrY7JwZVQ%3D%3D&q=White+pizza&sa=X&ved=2ahUKEwiwvcmk9pGYAxX4ExAIHRg8MxQQs9oBKAB6BAgREBI",
+                                            "domain": "www.google.com",
+                                            "image_url": "https:\/\/api.dataforseo.com\/cdn\/i\/11181620-0001-0139-0000-59fe7b7de61b:10",
+                                            "xpath": "\/html[1]\/body[1]\/div[3]\/div[1]\/div[13]\/div[1]\/div[2]\/div[1]\/div[3]\/div[1]\/div[1]\/div[2]\/div[1]\/div[1]\/div[1]\/div[1]\/div[1]\/div[4]\/div[1]"
+                                        }
+                                    ],
+                                    "rectangle": null
+                                }
+                            ],
+                            "rectangle": null
+                        },
+                        {
+                            "type": "google_reviews",
+                            "rank_group": 1,
+                            "rank_absolute": 17,
+                            "page": 1,
+                            "position": "left",
+                            "xpath": "\/#document",
+                            "reviews_count": 0,
+                            "rating": null,
+                            "place_id": "ChIJY6Il8TIFdkgR9zEcLHadTvc",
+                            "feature": "0x48760532f125a263:0xf74e9d762c1c31f7",
+                            "cid": "17820353906423378423",
+                            "rectangle": null
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
