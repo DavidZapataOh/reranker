@@ -54,7 +54,10 @@ beforeEach(() => {
   for (const [name, value] of Object.entries(previewEnv)) vi.stubEnv(name, value);
   vi.stubEnv("VERCEL_REGION", "iad1");
   vi.stubEnv("VERCEL_GIT_COMMIT_SHA", "fedcba9876543210fedcba9876543210fedcba98");
-  vi.stubGlobal("fetch", vi.fn(fakeR2));
+  vi.stubGlobal(
+    "fetch",
+    vi.fn((input: RequestInfo | URL, init?: RequestInit) => fakeR2(new Request(input, init))),
+  );
   vi.mocked(signingProvisioned).mockReturnValue(false);
   vi.mocked(loadSigner).mockResolvedValue(localSigner("rr-capture-preview-1-ed25519"));
   vi.mocked(enqueue).mockClear();

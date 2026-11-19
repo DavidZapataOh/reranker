@@ -145,7 +145,10 @@ beforeEach(() => {
   for (const [name, value] of Object.entries(previewEnv)) vi.stubEnv(name, value);
   vi.stubEnv("VERCEL_REGION", "iad1");
   vi.stubEnv("VERCEL_GIT_COMMIT_SHA", COMMIT);
-  vi.stubGlobal("fetch", vi.fn(fakeR2));
+  vi.stubGlobal(
+    "fetch",
+    vi.fn((input: RequestInfo | URL, init?: RequestInit) => fakeR2(new Request(input, init))),
+  );
   vi.mocked(loadSigner).mockResolvedValue(signer);
   vi.mocked(enqueue).mockClear();
   r2.clear();
