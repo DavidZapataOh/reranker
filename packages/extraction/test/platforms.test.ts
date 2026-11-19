@@ -33,15 +33,17 @@ describe("platformFor", () => {
     "Metro Cuadrado",
     "Google Maps",
   ])("%s is a platform", (name) =>
-    expect(platformFor({ nameNorm: normalizeName(name), citedUrls: [] })?.kind).toBe("platform"),
+    expect(platformFor({ nameNorm: normalizeName(name, "platform"), citedUrls: [] })?.kind).toBe(
+      "platform",
+    ),
   );
 
   test.each(["Rappi", "rappi.com", "DiDi Food", "Facebook", "TikTok", "YouTube", "Waze"])(
     "%s is a directory or medium",
     (name) =>
-      expect(platformFor({ nameNorm: normalizeName(name), citedUrls: [] })?.kind).toBe(
-        "directory_or_media",
-      ),
+      expect(
+        platformFor({ nameNorm: normalizeName(name, "directory_or_media"), citedUrls: [] })?.kind,
+      ).toBe("directory_or_media"),
   );
 
   test("cited domain identifies the platform even with an odd name", () =>
@@ -79,7 +81,9 @@ describe("platformFor", () => {
   test("every alias and domain belongs to exactly one platform", () => {
     const owners = new Map<string, string>();
     for (const entry of PLATFORMS) {
-      for (const alias of [...entry.names, ...entry.domains].map((a) => normalizeName(a))) {
+      for (const alias of [...entry.names, ...entry.domains].map((a) =>
+        normalizeName(a, entry.kind),
+      )) {
         expect(owners.get(alias) ?? entry.slug).toBe(entry.slug);
         owners.set(alias, entry.slug);
       }
@@ -150,7 +154,9 @@ describe("platforms by market", () => {
     ["BR", "iFood", "ifood"],
     ["BR", "Mercado Livre", "mercadolibre"],
   ])("%s: %s is %s", (_market, name, slug) =>
-    expect(platformFor({ nameNorm: normalizeName(name), citedUrls: [] })?.slug).toBe(slug),
+    expect(platformFor({ nameNorm: normalizeName(name, "platform"), citedUrls: [] })?.slug).toBe(
+      slug,
+    ),
   );
 
   test.each([
@@ -176,9 +182,9 @@ describe("platforms by market", () => {
   test.each(["Uber Eats", "PedidosYa", "Glovo", "Deliveroo", "DoorDash", "iFood"])(
     "%s, a delivery app, is a directory like Rappi",
     (name) =>
-      expect(platformFor({ nameNorm: normalizeName(name), citedUrls: [] })?.kind).toBe(
-        "directory_or_media",
-      ),
+      expect(
+        platformFor({ nameNorm: normalizeName(name, "directory_or_media"), citedUrls: [] })?.kind,
+      ).toBe("directory_or_media"),
   );
 
   test.each([
@@ -208,7 +214,7 @@ describe("platforms by market", () => {
     "Hoteles",
     "X",
   ])("%s, a common word or business name, is not a platform", (name) =>
-    expect(platformFor({ nameNorm: normalizeName(name), citedUrls: [] })).toBeNull(),
+    expect(platformFor({ nameNorm: normalizeName(name, "business"), citedUrls: [] })).toBeNull(),
   );
 
   test("a restaurant called El Tenedor stays a business", () =>
@@ -217,7 +223,7 @@ describe("platforms by market", () => {
   test("no alias is a single character", () => {
     for (const entry of PLATFORMS) {
       for (const alias of [...entry.names, ...entry.domains]) {
-        expect(normalizeName(alias).replace(/ /g, "").length).toBeGreaterThan(1);
+        expect(normalizeName(alias, entry.kind).replace(/ /g, "").length).toBeGreaterThan(1);
       }
     }
   });

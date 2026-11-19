@@ -4,16 +4,88 @@ import type { EntityKind } from "@reranker/schema/measurement";
 import { extractionEnv } from "./env";
 
 const MARKS = /\p{M}/gu;
-// A period right after a lone letter belongs to an initialism ("S.A.S.", "E.U."), so it joins
-// the letters; any other period separates words ("rappi.com", "Dra.Ana").
-const INITIAL_PERIOD = /(?<![\p{L}\p{N}])(\p{L})\./gu;
+// A period right after a lone letter belongs to an initialism ("S.A.S.", "S. A. S.", "E.U."), so
+// it joins the letters; any other period separates words ("rappi.com", "Dra.Ana").
+const INITIAL_PERIOD = /(?<![\p{L}\p{N}])(\p{L})\.(?:\s+(?=\p{L}\.))?/gu;
 const NON_WORD = /[^\p{L}\p{N}]+/gu;
-const LEGAL_FORMS = new Set(["sas", "ltda", "eu", "sa"]);
-const TITLES = new Set(["dr", "dra"]);
+// Listings append a professional's specialty after a separator: "Dra. Ana Gómez - Odontóloga".
+// A hyphen inside a word ("Gómez-Restrepo") is part of the name.
+const DESCRIPTOR_SEPARATOR = /\s[-–—]\s|[|·•,(/]/u;
 
-/** Folds a name to the key two extractors and Places must agree on; category words stay. */
-export function normalizeName(name: string, kind?: EntityKind): string {
-  const tokens = name
+export interface NameRules {
+  legalForms: readonly (readonly string[])[];
+  professionalTitles: readonly string[];
+}
+
+/**
+ * The words two spellings of one entity may differ by. Every comparison folds both of its sides
+ * with these rules, and the extractor config hashes them, so changing them is a new method.
+ */
+export const NAME_RULES: NameRules = {
+  // Trailing token sequences, longer ones before the forms they end with.
+  legalForms: [
+    ["sapi", "de", "cv"],
+    ["s", "de", "rl", "de", "cv"],
+    ["s", "de", "rl"],
+    ["sa", "de", "cv"],
+    ["s", "en", "c"],
+    ["y", "cia"],
+    ["sas"],
+    ["sa"],
+    ["saa"],
+    ["sac"],
+    ["sca"],
+    ["ltda"],
+    ["eu"],
+    ["eirl"],
+    ["srl"],
+    ["sl"],
+    ["slu"],
+    ["cia"],
+    ["llc"],
+    ["inc"],
+    ["ltd"],
+  ],
+  // Honorifics, degrees and professions listed around a professional's name, at either end.
+  professionalTitles: [
+    "dr",
+    "dra",
+    "doctor",
+    "doctora",
+    "prof",
+    "profesor",
+    "profesora",
+    "lic",
+    "licenciado",
+    "licenciada",
+    "ing",
+    "ingeniero",
+    "ingeniera",
+    "abg",
+    "abogado",
+    "abogada",
+    "psic",
+    "psicologo",
+    "psicologa",
+    "odontologo",
+    "odontologa",
+    "ortodoncista",
+    "medico",
+    "medica",
+    "nutricionista",
+    "fisioterapeuta",
+    "dentista",
+    "dentist",
+    "md",
+    "dds",
+    "phd",
+  ],
+};
+
+const TITLES: ReadonlySet<string> = new Set(NAME_RULES.professionalTitles);
+
+function foldWords(text: string): string[] {
+  return text
     .normalize("NFD")
     .replace(MARKS, "")
     .toLowerCase()
@@ -22,10 +94,45 @@ export function normalizeName(name: string, kind?: EntityKind): string {
     .trim()
     .split(" ")
     .filter(Boolean);
-  if (kind === "professional") {
-    while (tokens.length > 1 && TITLES.has(tokens[0] as string)) tokens.shift();
+}
+
+function dropLegalForms(tokens: string[]): void {
+  for (;;) {
+    const form = NAME_RULES.legalForms.find(
+      (f) => tokens.length > f.length && f.every((word, i) => tokens.at(i - f.length) === word),
+    );
+    if (form === undefined) return;
+    tokens.splice(-form.length);
   }
-  while (tokens.length > 1 && LEGAL_FORMS.has(tokens.at(-1) as string)) tokens.pop();
+}
+
+// The first segment that still names someone once titles go; a title alone stays a name.
+function personTokens(name: string): string[] {
+  let first: string[] | undefined;
+  for (const segment of name.split(DESCRIPTOR_SEPARATOR)) {
+    const tokens = foldWords(segment);
+    if (tokens.length === 0) continue;
+    first ??= [...tokens];
+    while (tokens.length > 0 && TITLES.has(tokens[0] as string)) tokens.shift();
+    while (tokens.length > 0 && TITLES.has(tokens.at(-1) as string)) tokens.pop();
+    if (tokens.length > 0) return tokens;
+  }
+  return first ?? [];
+}
+
+/** Folds free text such as a location or an address: accents, case and punctuation only. */
+export function normalizeText(text: string): string {
+  return foldWords(text).join(" ");
+}
+
+/**
+ * Folds a name to the key two extractors and Places must agree on; category words stay. The kind
+ * is required because both sides of a comparison must fold alike: only a professional's titles
+ * are noise.
+ */
+export function normalizeName(name: string, kind: EntityKind): string {
+  const tokens = kind === "professional" ? personTokens(name) : foldWords(name);
+  dropLegalForms(tokens);
   return tokens.join(" ");
 }
 

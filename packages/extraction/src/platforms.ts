@@ -962,7 +962,9 @@ function indexOf(registry: readonly PlatformEntry[]): RegistryIndex {
     // Domains count as names too: answers often write "rappi.com" for Rappi.
     byName: new Map(
       registry.flatMap((entry) =>
-        [...entry.names, ...entry.domains].map((alias) => [normalizeName(alias), entry] as const),
+        [...entry.names, ...entry.domains].map(
+          (alias) => [normalizeName(alias, entry.kind), entry] as const,
+        ),
       ),
     ),
     domainRules: registry.flatMap((entry) =>

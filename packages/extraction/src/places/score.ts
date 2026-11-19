@@ -1,5 +1,6 @@
+import type { EntityKind } from "@reranker/schema/measurement";
 import type { ExtractorConfig } from "../config";
-import { jaroWinkler, normalizeName, tokenContainment } from "../normalize";
+import { jaroWinkler, normalizeName, normalizeText, tokenContainment } from "../normalize";
 import type { PlaceHit } from "./client";
 
 type ResolutionConfig = ExtractorConfig["resolution"];
@@ -46,20 +47,21 @@ function containsWords(haystack: string, needle: string): boolean {
 }
 
 export function scoreCandidates(
-  m: { nameNorm: string; locationHint: string | null; citedDomains: string[] },
+  m: { nameNorm: string; kind: EntityKind; locationHint: string | null; citedDomains: string[] },
   hits: PlaceHit[],
   ctx: { categoryTypes: string[]; websites?: Map<string, string> },
   cfg: ResolutionConfig,
 ): ScoredCandidate[] {
   const { weights } = cfg;
-  const hintNorm = m.locationHint === null ? null : normalizeName(m.locationHint);
+  const hintNorm = m.locationHint === null ? null : normalizeText(m.locationHint);
   const cited = new Set(m.citedDomains.map(hostOf).filter((host) => host !== null));
   const categoryTypes = new Set(ctx.categoryTypes);
   const awaitingWebsite = cited.size > 0 && ctx.websites === undefined;
 
   return hits
     .map((hit): ScoredCandidate => {
-      const displayNorm = normalizeName(hit.displayName);
+      // Folded like the mention, or "Dra. Ana Gómez" would never equal "ana gomez".
+      const displayNorm = normalizeName(hit.displayName, m.kind);
       const website = ctx.websites?.get(hit.id);
       const websiteHost = website === undefined ? null : hostOf(website);
       const parts = {
@@ -69,7 +71,7 @@ export function scoreCandidates(
         location:
           hintNorm !== null &&
           hit.formattedAddress !== null &&
-          containsWords(normalizeName(hit.formattedAddress), hintNorm)
+          containsWords(normalizeText(hit.formattedAddress), hintNorm)
             ? weights.location
             : 0,
         operational: hit.businessStatus === "OPERATIONAL" ? weights.operational : 0,

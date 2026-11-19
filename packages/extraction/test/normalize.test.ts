@@ -1,7 +1,13 @@
 import { createHmac, randomBytes } from "node:crypto";
 import type { EntityKind } from "@reranker/schema/measurement";
 import { afterEach, describe, expect, test, vi } from "vitest";
-import { jaroWinkler, nameHmac, normalizeName, tokenContainment } from "../src/normalize";
+import {
+  jaroWinkler,
+  nameHmac,
+  normalizeName,
+  normalizeText,
+  tokenContainment,
+} from "../src/normalize";
 
 describe("normalizeName", () => {
   test.each([
@@ -14,20 +20,57 @@ describe("normalizeName", () => {
     ["Pinturas Tito S.A.", "business", "pinturas tito"],
     ["Café & Té: “La Esquina”!", "business", "cafe te la esquina"],
     ["rappi.com", "platform", "rappi com"],
+    // Spellings Places listings use for legal forms.
+    ["Clínica Sonrisas S. A. S.", "business", "clinica sonrisas"],
+    ["Inversiones Gómez S.A.S", "business", "inversiones gomez"],
+    ["Ferretería Pérez & Cía. Ltda.", "business", "ferreteria perez"],
+    ["Ferretería Pérez y Cía", "business", "ferreteria perez"],
+    ["Farmacias del Ahorro S.A. de C.V.", "business", "farmacias del ahorro"],
+    ["Taller Ruiz S. de R.L. de C.V.", "business", "taller ruiz"],
+    ["Constructora Andina S.A.C.", "business", "constructora andina"],
+    ["Café Lima E.I.R.L.", "business", "cafe lima"],
+    ["Hotel Sol S.L.", "business", "hotel sol"],
+    ["Joe's Pizza LLC", "business", "joe s pizza"],
+    // Spellings Places listings use for professionals.
+    ["Doctora Ana Gómez", "professional", "ana gomez"],
+    ["Odontóloga Ana Gómez", "professional", "ana gomez"],
+    ["Dra. Ana Gómez - Odontóloga", "professional", "ana gomez"],
+    ["Dra. Ana Gómez | Ortodoncia y Estética Dental", "professional", "ana gomez"],
+    ["Dr. Juan Pérez, Cirujano Plástico", "professional", "juan perez"],
+    ["Dr. Juan Pérez (Ortopedista)", "professional", "juan perez"],
+    ["Juan Pérez MD", "professional", "juan perez"],
+    ["Ana Gómez-Restrepo", "professional", "ana gomez restrepo"],
+    ["J. P. Restrepo", "professional", "jp restrepo"],
   ])("normalizes %s", (raw, kind, expected) =>
     expect(normalizeName(raw, kind as EntityKind)).toBe(expected),
   );
 
   test("category words distinguish homonyms", () =>
-    expect(normalizeName("Hotel La Ceiba")).not.toBe(normalizeName("La Ceiba Spa")));
+    expect(normalizeName("Hotel La Ceiba", "business")).not.toBe(
+      normalizeName("La Ceiba Spa", "business"),
+    ));
 
-  test("titles are only dropped for professionals", () =>
-    expect(normalizeName("Dr. Muelas Clínica", "business")).toBe("dr muelas clinica"));
+  test("titles are only dropped for professionals", () => {
+    expect(normalizeName("Dr. Muelas Clínica", "business")).toBe("dr muelas clinica");
+    expect(normalizeName("Doctor Simi", "chain")).toBe("doctor simi");
+  });
 
-  test("a legal form alone is still a name", () => expect(normalizeName("S.A.S.")).toBe("sas"));
+  test("separators only cut descriptors from professionals' names", () =>
+    expect(normalizeName("Café - Bar La Esquina", "business")).toBe("cafe bar la esquina"));
+
+  test("a title or legal form alone is still a name", () => {
+    expect(normalizeName("S.A.S.", "business")).toBe("sas");
+    expect(normalizeName("Dra.", "professional")).toBe("dra");
+    expect(normalizeName("Odontóloga - Ana Gómez", "professional")).toBe("ana gomez");
+  });
 
   test("decomposed and precomposed accents normalize alike", () =>
-    expect(normalizeName("Gómez")).toBe(normalizeName("Gómez")));
+    expect(normalizeName("Gómez", "business")).toBe(normalizeName("Gómez", "business")));
+});
+
+describe("normalizeText", () => {
+  test("folds addresses without dropping what a name would", () =>
+    expect(normalizeText("Dr. Simi, Sabaneta S.A.")).toBe("dr simi sabaneta sa"));
 });
 
 describe("jaroWinkler", () => {
