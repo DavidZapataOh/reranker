@@ -8,6 +8,7 @@ export {
   registerCaptureAdapter,
 } from "./adapters";
 export { EngineAnswer, PARSER_VERSIONS, safeParseAnswer } from "./answer";
+export { type CaptureRowSummary, getAnswer, listAnswers, reparse } from "./answers";
 export { type CaptureSlotsOptions, captureSlots } from "./capture";
 export { dataforseoAdapter } from "./dataforseo/adapter";
 export { createDataForSeo } from "./dataforseo/client";
