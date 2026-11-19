@@ -6,7 +6,7 @@ import { latestNormalized, readRaw } from "@reranker/evidence";
 import { InvalidInputError } from "@reranker/jobs/errors";
 import type { EngineId } from "@reranker/schema";
 import { eq } from "drizzle-orm";
-import { describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import type { EngineAnswer } from "../src/answer";
 import { getAnswer, listAnswers, reparse } from "../src/answers";
 import { captureSlots } from "../src/capture";
@@ -32,17 +32,28 @@ vi.mock("@reranker/flags", async (importOriginal) => ({
   assertCaptureAllowed: vi.fn(async () => {}),
 }));
 
-// The Gemini parser at whatever version a test raises it to.
-const gemini = vi.hoisted(() => ({ version: 1 }));
+// Parsers at whatever version a test raises them to.
+const versions = vi.hoisted(() => ({ gemini: 1, "google-ai-overview": 1 }));
 vi.mock("../src/dataforseo/parse/gemini", async (importOriginal) => {
   const { parseGemini } = await importOriginal<typeof import("../src/dataforseo/parse/gemini")>();
   return {
     parseGemini: (bytes: Uint8Array) => ({
       ...parseGemini(bytes),
-      parserVersion: `gemini@${gemini.version}`,
+      parserVersion: `gemini@${versions.gemini}`,
     }),
   };
 });
+vi.mock("../src/dataforseo/parse/ai-overview", async (importOriginal) => {
+  const original = await importOriginal<typeof import("../src/dataforseo/parse/ai-overview")>();
+  return {
+    ...original,
+    parseAiOverview: (bytes: Uint8Array) => ({
+      ...original.parseAiOverview(bytes),
+      parserVersion: `google-ai-overview@${versions["google-ai-overview"]}`,
+    }),
+  };
+});
+beforeEach(() => Object.assign(versions, { gemini: 1, "google-ai-overview": 1 }));
 
 // Counts the system transactions of a reason and the statements each one runs.
 const counted = vi.hoisted(() => ({ reason: "", transactions: 0, statements: 0 }));
@@ -89,28 +100,31 @@ async function captured(engines: EngineId[]) {
 }
 
 const urlOf = (input: unknown) => (input instanceof Request ? input.url : String(input));
+const REDIRECT_HOSTS = ["google.com", "www.google.com", "vertexaisearch.cloud.google.com"];
 const redirectFetches = () =>
-  vi.mocked(fetch).mock.calls.filter(([input]) => /google\.com\//.test(urlOf(input))).length;
+  vi
+    .mocked(fetch)
+    .mock.calls.filter(([input]) => REDIRECT_HOSTS.includes(new URL(urlOf(input)).hostname)).length;
 
 const digestOf = (answer: EngineAnswer | null) => (answer === null ? null : sha256Hex(jcs(answer)));
 
 describe("reparse", () => {
   test("raising parserVersion and reparsing derives a new answer without touching raw bytes or the row", async () => {
-    gemini.version = 1;
-    const { rows } = await captured(["gemini"]);
+    // Its references come wrapped in Google redirects, resolved when it was captured.
+    const { rows } = await captured(["google-ai-overview"]);
     const before = rows[0];
     if (!before) throw new Error("no capture stored");
     const id = before.id as `cap_${string}`;
     const raw = await readRaw(id);
-    expect((await getAnswer(id)).parserVersion).toBe("gemini@1");
+    expect((await getAnswer(id)).parserVersion).toBe("google-ai-overview@1");
 
-    gemini.version = 2;
+    versions["google-ai-overview"] = 2;
     const resolving = redirectFetches();
     const answer = await reparse(id);
-    expect(answer.parserVersion).toBe("gemini@2");
+    expect(answer.parserVersion).toBe("google-ai-overview@2");
     // Where each redirect led was established at capture time and carries over unchanged.
     expect(redirectFetches()).toBe(resolving);
-    const redirected = answer.sources.filter((s) => s.url.includes("grounding-api-redirect"));
+    const redirected = answer.sources.filter((s) => s.url.includes("/goto?"));
     expect(redirected.length).toBeGreaterThan(0);
     expect(redirected.every((s) => s.resolvedUrl === SITE)).toBe(true);
 
@@ -126,7 +140,6 @@ describe("reparse", () => {
       tx.select().from(evidenceEntries).where(eq(evidenceEntries.ref, id)),
     );
     expect(entries).toHaveLength(1);
-    gemini.version = 1;
   });
 
   test("a capture the provider answered with an error cannot be reparsed", async () => {
@@ -146,7 +159,6 @@ describe("reparse", () => {
 
 describe("listAnswers", () => {
   test("lists each succeeded capture with its newest reading; a failed parse lists with answer null", async () => {
-    gemini.version = 1;
     const unparsable = JSON.parse(
       new TextDecoder().decode(fixture("recorded/live/gemini-dentistas-medellin.json")),
     );
@@ -156,9 +168,8 @@ describe("listAnswers", () => {
     const { m, ids, rows } = await captured(["gemini", "gemini", "google-ai-overview"]);
     const parsedGemini = rows.find((r) => r.engine === "gemini" && r.normalizedSha256 !== null);
     if (!parsedGemini) throw new Error("no parsed Gemini capture");
-    gemini.version = 2;
+    versions.gemini = 2;
     await reparse(parsedGemini.id);
-    gemini.version = 1;
 
     const listed = await listAnswers(m);
     expect(listed.map((l) => l.slotId)).toEqual(ids);
