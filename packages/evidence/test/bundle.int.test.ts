@@ -86,7 +86,7 @@ afterAll(async () => {
   await endPools();
 });
 
-/** Seals captures and writes their rows in one transaction, as the capture step does. */
+/** Seals captures, then writes their rows, as the capture step does. */
 async function sealAndPersist(inputs: SealCaptureInput[]): Promise<SealedCapture[]> {
   return withSystem("evidence.test", async (tx) => {
     const {
@@ -97,7 +97,7 @@ async function sealAndPersist(inputs: SealCaptureInput[]): Promise<SealedCapture
       returning id`);
     if (!plan) throw new Error("No measurement plan was inserted");
     const seals: SealedCapture[] = [];
-    for (const input of inputs) seals.push(await sealCapture(input, { tx }));
+    for (const input of inputs) seals.push(await sealCapture(input));
     await tx.execute(sql`
       insert into public_panel.captures (id, measurement_id, slot_index, attempt, intent_set_id,
         intent_id, engine, channel, provider, mode, status, response_bytes, latency_ms,

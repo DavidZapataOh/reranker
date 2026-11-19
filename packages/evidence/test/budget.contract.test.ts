@@ -1,5 +1,5 @@
 import { randomBytes } from "node:crypto";
-import { endPools, withSystem } from "@reranker/db";
+import { endPools } from "@reranker/db";
 import { requireEnv } from "@reranker/testing/env";
 import { afterAll, beforeAll, expect, test, vi } from "vitest";
 import { type ArtifactKind, deleteArtifact, putArtifact } from "../src/artifacts";
@@ -97,15 +97,14 @@ test(`sealCapture p95 within one R2 write round plus ${BEYOND_ONE_WRITE_ROUND_MS
   timeout: 300_000,
 }, async () => {
   // A warm function reuses its connections, so the first seal pays the handshakes alone.
-  const seal = (record: boolean) =>
-    withSystem("evidence.test", async (tx) => {
-      const input = sealInputFor(newCaptureId(), RESPONSE_BYTES);
-      const start = performance.now();
-      const result = await sealCapture(input, { tx });
-      const ms = performance.now() - start;
-      sealed.push(result);
-      return record ? ms : null;
-    });
+  const seal = async (record: boolean) => {
+    const input = sealInputFor(newCaptureId(), RESPONSE_BYTES);
+    const start = performance.now();
+    const result = await sealCapture(input);
+    const ms = performance.now() - start;
+    sealed.push(result);
+    return record ? ms : null;
+  };
   await seal(false);
   // Interleaved, so both series see the same network.
   const seals: number[] = [];

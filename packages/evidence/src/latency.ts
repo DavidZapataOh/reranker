@@ -18,8 +18,13 @@ export interface SealLatency {
   sealCapture: LatencyStats | null;
   /** The four objects a seal writes, written at once as a seal writes them. */
   r2WriteRound: LatencyStats;
-  /** The retry check in the caller's transaction and the integration it schedules. */
+  /** The retry check and the integration a seal schedules. */
   database: LatencyStats;
+  /**
+   * The retry check alone: one of the two single-statement transactions, with the insert of the
+   * row, for which a capture holds a system connection.
+   */
+  hold: LatencyStats;
   /** Digests, statement and the DSSE message KMS would sign. */
   envelope: LatencyStats;
   /** One KMS Sign; null like sealCapture. */
@@ -178,6 +183,7 @@ export async function probeSealCapture(n: number = DEFAULT_SEAL_PROBES): Promise
     seal: [] as number[],
     round: [] as number[],
     database: [] as number[],
+    hold: [] as number[],
     envelope: [] as number[],
     sign: [] as number[],
   };
@@ -192,18 +198,18 @@ export async function probeSealCapture(n: number = DEFAULT_SEAL_PROBES): Promise
       if (canSign) {
         const input = probeCapture();
         written.push(...inputArtifacts(input));
-        const sealed = await withSystem("evidence.latency_probe", (tx) =>
-          timed(pick(samples.seal), () => sealCapture(input, { tx })),
-        );
+        const sealed = await timed(pick(samples.seal), () => sealCapture(input));
         written.push(["envelopes", sealed.envelopeSha256]);
       }
       await writeRound(pick(samples.round), written);
-      await withSystem("evidence.latency_probe", (tx) =>
-        timed(pick(samples.database), async () => {
-          await captureRow(tx, `cap_${ulid()}`);
-          await scheduleIntegration(origin, new Date());
-        }),
-      );
+      await timed(pick(samples.database), async () => {
+        await timed(pick(samples.hold), () =>
+          withSystem("evidence.latency_probe", (tx) => captureRow(tx, `cap_${ulid()}`), {
+            readOnly: true,
+          }),
+        );
+        await scheduleIntegration(origin, new Date());
+      });
       const input = probeCapture();
       const message = await timed(pick(samples.envelope), async () => envelopeMessage(input));
       if (signer) await timed(pick(samples.sign), () => signer.sign(message));
@@ -223,6 +229,7 @@ export async function probeSealCapture(n: number = DEFAULT_SEAL_PROBES): Promise
     sealCapture: canSign ? summarize(samples.seal) : null,
     r2WriteRound: summarize(samples.round),
     database: summarize(samples.database),
+    hold: summarize(samples.hold),
     envelope: summarize(samples.envelope),
     sign: canSign ? summarize(samples.sign) : null,
   };

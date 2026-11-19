@@ -93,7 +93,7 @@ function envelopeAt(envelopeSha256: string): DsseEnvelope {
 const statementOf = (envelope: DsseEnvelope) =>
   JSON.parse(Buffer.from(envelope.payload, "base64").toString("utf8"));
 
-/** What persistCapture does with a seal: the capture row, in the same transaction. */
+/** What persistCapture does once a capture is sealed: the capture row. */
 async function insertCaptureRow(
   tx: SystemTx,
   captureId: CaptureId,
@@ -117,11 +117,9 @@ async function insertCaptureRow(
 }
 
 async function sealAndPersist(input: SealCaptureInput) {
-  return withSystem("evidence.test", async (tx) => {
-    const sealed = await sealCapture(input, { tx });
-    await insertCaptureRow(tx, input.captureId, sealed);
-    return sealed;
-  });
+  const sealed = await sealCapture(input);
+  await withSystem("evidence.test", (tx) => insertCaptureRow(tx, input.captureId, sealed));
+  return sealed;
 }
 
 async function scalar(query: ReturnType<typeof sql>): Promise<number> {
@@ -165,7 +163,7 @@ afterEach(() => {
 describe("sealCapture", () => {
   test("stores raw, request, normalized and envelope, and the statement digests match the bytes", async () => {
     const input = captureInput();
-    const sealed = await withSystem("evidence.test", (tx) => sealCapture(input, { tx }));
+    const sealed = await sealCapture(input);
     const envelope = envelopeAt(sealed.envelopeSha256);
     const stmt = statementOf(envelope);
     expect(stmt.subject).toEqual([
@@ -206,7 +204,7 @@ describe("sealCapture", () => {
 
   test("an answer that did not parse is sealed without a normalized subject", async () => {
     const input = captureInput({ normalized: null });
-    const sealed = await withSystem("evidence.test", (tx) => sealCapture(input, { tx }));
+    const sealed = await sealCapture(input);
     expect(sealed.normalizedSha256).toBeNull();
     const names = statementOf(envelopeAt(sealed.envelopeSha256)).subject.map(
       (s: { name: string }) => s.name,
@@ -214,25 +212,27 @@ describe("sealCapture", () => {
     expect(names).toEqual(["raw", "request"]);
   });
 
-  test("inserts no row; a capture row already present in tx returns its envelope", async () => {
+  test("seals while every system connection is taken, and inserts no row", async () => {
     const input = captureInput();
-    const first = await sealAndPersist(input);
-    vi.mocked(enqueue).mockClear();
-    const retry = await withSystem("evidence.test", (tx) => sealCapture(input, { tx }));
-    expect(retry).toEqual(first);
-    expect(storedEnvelopes()).toEqual([`envelopes/${first.envelopeSha256}`]);
-    expect(await entriesFor(input.captureId)).toBe(0);
-    expect(enqueue).not.toHaveBeenCalled();
-  });
-
-  test("a rolled back capture transaction leaves no row and nothing pending in the log", async () => {
-    const input = captureInput();
-    await expect(
-      withSystem("evidence.test", async (tx) => {
-        await sealCapture(input, { tx });
-        throw new Error("capture insert failed");
+    let release = () => {};
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    let held = 0;
+    const holders = Array.from({ length: 12 }, () =>
+      withSystem("evidence.test", async () => {
+        held += 1;
+        await gate;
       }),
-    ).rejects.toThrow("capture insert failed");
+    );
+    await vi.waitUntil(() => held === 12);
+    try {
+      const sealed = await sealCapture(input);
+      expect(storedEnvelopes()).toEqual([`envelopes/${sealed.envelopeSha256}`]);
+    } finally {
+      release();
+      await Promise.all(holders);
+    }
     expect(await capturesWith(input.captureId)).toBe(0);
     expect(await entriesFor(input.captureId)).toBe(0);
   });
@@ -240,11 +240,7 @@ describe("sealCapture", () => {
   test("enqueues one integrate per minute, a minute later", async () => {
     vi.useFakeTimers({ toFake: ["Date"] });
     vi.setSystemTime(new Date("2026-11-18T15:04:05.000Z"));
-    await Promise.all(
-      Array.from({ length: 5 }, () =>
-        withSystem("evidence.test", (tx) => sealCapture(captureInput(), { tx })),
-      ),
-    );
+    await Promise.all(Array.from({ length: 5 }, () => sealCapture(captureInput())));
     const calls = vi.mocked(enqueue).mock.calls;
     expect(calls).toHaveLength(5);
     const minute = Math.floor(Date.parse("2026-11-18T15:04:00.000Z") / 60_000);
@@ -265,9 +261,7 @@ describe("fails closed", () => {
     ["the key is not the pinned one", new SigningKeyMismatchError("k", "differs from registry")],
   ])("when %s: no envelope, no entry, nothing queued", async (_, failure) => {
     vi.mocked(loadSigner).mockRejectedValue(failure);
-    await expect(
-      withSystem("evidence.test", (tx) => sealCapture(captureInput(), { tx })),
-    ).rejects.toBe(failure);
+    await expect(sealCapture(captureInput())).rejects.toBe(failure);
     const measurementId = randomUUID();
     await expect(
       withSystem("evidence.test", (tx) =>
@@ -282,9 +276,7 @@ describe("fails closed", () => {
   test("a statement whose PAE is over 4096 bytes is never signed", async () => {
     const prompt = { ...predicateInput.prompt, text: "x".repeat(4096) };
     const input = captureInput({ predicate: { ...predicateInput, prompt } });
-    await expect(
-      withSystem("evidence.test", (tx) => sealCapture(input, { tx })),
-    ).rejects.toBeInstanceOf(StatementTooLargeError);
+    await expect(sealCapture(input)).rejects.toBeInstanceOf(StatementTooLargeError);
     expect(storedEnvelopes()).toEqual([]);
     expect(enqueue).not.toHaveBeenCalled();
   });
@@ -292,9 +284,7 @@ describe("fails closed", () => {
   test("R2 down: EvidenceStorageUnavailableError and nothing is inserted", async () => {
     r2Down = true;
     const input = captureInput();
-    await expect(
-      withSystem("evidence.test", (tx) => sealCapture(input, { tx })),
-    ).rejects.toBeInstanceOf(EvidenceStorageUnavailableError);
+    await expect(sealCapture(input)).rejects.toBeInstanceOf(EvidenceStorageUnavailableError);
     const measurementId = randomUUID();
     await expect(
       withSystem("evidence.test", (tx) =>
@@ -307,9 +297,7 @@ describe("fails closed", () => {
 
   test("a deployment that does not name its commit signs nothing", async () => {
     vi.stubEnv("VERCEL_GIT_COMMIT_SHA", "");
-    await expect(
-      withSystem("evidence.test", (tx) => sealCapture(captureInput(), { tx })),
-    ).rejects.toThrow("VERCEL_GIT_COMMIT_SHA (missing)");
+    await expect(sealCapture(captureInput())).rejects.toThrow("VERCEL_GIT_COMMIT_SHA (missing)");
     expect(r2.size).toBe(0);
   });
 });

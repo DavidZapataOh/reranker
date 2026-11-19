@@ -15,14 +15,19 @@ const KMS_SIGN_P95_MS = 40;
 // A pass seals once, writes one more round of the same objects and deletes both, each within the
 // seal budget, plus the transaction and envelope beside them.
 const PASS_MS = 1500;
+// A capture holds a system connection for two one-statement transactions; a report's captures
+// share three connections per instance, each waited for at most two seconds.
+const HOLD_P95_MS = 50;
 const SCENARIO = __ENV.SCENARIO || "nominal";
 
 const sealMs = new Trend("evidence_seal_ms", true);
 const unsignedMs = new Trend("evidence_seal_unsigned_ms", true);
+const holdMs = new Trend("evidence_capture_hold_ms", true);
 const budgets = {
   checks: ["rate>0.99"],
   evidence_seal_ms: [`p(95)<${SEAL_P95_MS}`],
   evidence_seal_unsigned_ms: [`p(95)<${SEAL_P95_MS - KMS_SIGN_P95_MS}`],
+  evidence_capture_hold_ms: [`p(95)<${HOLD_P95_MS}`],
 };
 
 const scenarios = {
@@ -82,6 +87,7 @@ export default function () {
     // Added up, their p95s stand in conservatively for a seal without its signature: the seal
     // overlaps the envelope write with the others, the sum does not.
     unsignedMs.add(report.r2WriteRound.p95 + report.database.p95 + report.envelope.p95);
+    holdMs.add(report.hold.p95);
   }
   console.log(
     `seal status=${res.status} ${JSON.stringify(report ?? null)} x-vercel-id=${res.headers["X-Vercel-Id"]}`,
