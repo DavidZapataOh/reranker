@@ -1,4 +1,5 @@
-import { defineJob, enqueue } from "@reranker/jobs";
+import { defineJob, enqueue, registerOpportunistic } from "@reranker/jobs";
+import { anchorLatest, upgradePendingOts } from "./anchors/anchor";
 import { integrate, MAX_BATCH_ENTRIES } from "./log/integrate";
 import { publishPendingBatches } from "./log/tiles";
 
@@ -50,3 +51,21 @@ export const publishJob = defineJob<LogPayload>({
     await publishPendingBatches(origin);
   },
 });
+
+/** Anchors the newest published checkpoint of `origin`; the hourly cron runs it directly. */
+export const anchorJob = defineJob<LogPayload>({
+  name: "evidence.anchor",
+  handler: async ({ origin }) => {
+    await anchorLatest(origin);
+  },
+});
+
+/** Upgrades waiting OpenTimestamps proofs between hourly runs, as soon as Bitcoin confirms them. */
+export const otsUpgradeJob = defineJob<void>({
+  name: "evidence.ots_upgrade",
+  handler: async () => {
+    await upgradePendingOts();
+  },
+});
+
+registerOpportunistic("evidence.ots_upgrade", otsUpgradeJob, { minIntervalMs: 900_000 });
