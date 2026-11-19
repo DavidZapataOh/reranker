@@ -64,8 +64,16 @@ describe("breakerRecord", () => {
     expect(events).toEqual([]);
   });
 
-  test("fails loudly when the function returns nothing", async () => {
-    execute.mockResolvedValue({ rows: [] });
-    await expect(breakerRecord("openai", "success")).rejects.toThrow("no row");
+  test.each([
+    ["the function returns nothing", () => execute.mockResolvedValue({ rows: [] })],
+    ["the database is unreachable", () => execute.mockRejectedValue(new Error("pool timeout"))],
+  ])("logs and never throws when %s, so a paid call is never failed by it", async (_, fail) => {
+    fail();
+    const logged = vi.spyOn(console, "error").mockImplementation(() => {});
+    await expect(breakerRecord("openai", "success")).resolves.toBeUndefined();
+    expect(logged).toHaveBeenCalledWith("[jobs] breaker record (openai, success) failed", {
+      name: "Error",
+    });
+    logged.mockRestore();
   });
 });
