@@ -60,7 +60,7 @@ function bucketFor(kind: ArtifactKind): string {
     : requireEvidenceEnv("R2_EVIDENCE_BUCKET").R2_EVIDENCE_BUCKET;
 }
 
-function checkDigest(sha256: string): void {
+export function checkDigest(sha256: string): void {
   if (!SHA256_HEX.test(sha256)) {
     throw new InvalidInputError("An artifact key is a lowercase hex SHA-256 digest");
   }
