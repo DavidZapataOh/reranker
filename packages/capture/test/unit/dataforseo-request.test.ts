@@ -12,9 +12,6 @@ import { buildRequest, requestBytes } from "../../src/dataforseo/request";
 import { RawSink } from "../../src/raw/raw-sink";
 import { type FrozenSlot, slotId } from "../../src/slot";
 
-// The catalog's entry is marked server-only; tests run outside a React Server Components bundler.
-vi.mock("server-only", () => ({}));
-
 const MEDELLIN = "co-c1003654";
 const SALENTO = "co-c63690";
 const GUADALAJARA = "mx-c9047210";

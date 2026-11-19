@@ -7,8 +7,6 @@ import { afterAll, beforeAll, expect, test, vi } from "vitest";
 import { searchText } from "../src/places/client";
 import { findBusinessCandidates } from "../src/target";
 
-vi.mock("server-only", () => ({}));
-
 interface BiasCase {
   country: string;
   query: string;

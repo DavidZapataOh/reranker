@@ -1,3 +1,5 @@
+import { createRequire } from "node:module";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
 import { playwright } from "@vitest/browser-playwright";
@@ -10,6 +12,14 @@ const ignored = ["**/node_modules/**", "**/.next/**", "**/e2e/**"];
 // stricter bar: their vitest.config.ts is
 // `mergeConfig(root, { test: { coverage: { thresholds: CRITICAL_COVERAGE } } })`.
 export const CRITICAL_COVERAGE = { lines: 95, branches: 90 } as const;
+
+// Next's server compilers and the workflow bundler both swap `server-only` for its empty module, so
+// Node test projects do the same and load server code the way production does. Browser projects
+// keep the throwing entry, like a client bundle. The package exports only its throwing entry to
+// Node, hence the sibling path.
+export const serverOnlyAlias = {
+  "server-only": join(dirname(createRequire(import.meta.url).resolve("server-only")), "empty.js"),
+};
 
 // Globs are relative to the package that re-exports this config.
 export default defineConfig({
@@ -26,6 +36,7 @@ export default defineConfig({
       {
         test: {
           name: "unit",
+          alias: serverOnlyAlias,
           environment: "node",
           include: ["**/{src,test}/**/*.test.ts"],
           exclude: [...ignored, "**/*.{int,contract,browser,workflow,perf,heavy}.test.*"],
@@ -37,6 +48,7 @@ export default defineConfig({
       {
         test: {
           name: "heavy",
+          alias: serverOnlyAlias,
           environment: "node",
           include: ["**/{src,test}/**/*.heavy.test.ts"],
           exclude: ignored,
@@ -47,6 +59,7 @@ export default defineConfig({
       {
         test: {
           name: "perf",
+          alias: serverOnlyAlias,
           include: ["**/{src,test}/**/*.perf.test.ts"],
           exclude: ignored,
           fileParallelism: false,
@@ -70,6 +83,7 @@ export default defineConfig({
       {
         test: {
           name: "integration",
+          alias: serverOnlyAlias,
           include: ["**/{src,test}/**/*.int.test.ts"],
           exclude: ignored,
           pool: "forks",
@@ -84,6 +98,7 @@ export default defineConfig({
       {
         test: {
           name: "contract",
+          alias: serverOnlyAlias,
           include: ["**/{src,test}/**/*.contract.test.ts"],
           exclude: ignored,
           retry: 1,
