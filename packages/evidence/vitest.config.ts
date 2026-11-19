@@ -18,6 +18,7 @@ export default mergeConfig(
           "src/log/tiles.ts",
           "src/anchors/anchor.ts",
           "src/bundle.ts",
+          "src/bundle-latency.ts",
         ],
       },
     },

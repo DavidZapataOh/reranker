@@ -1,7 +1,9 @@
 import { appEnv } from "@reranker/env";
 import {
+  DEFAULT_BUNDLE_PROBES,
   DEFAULT_SEAL_PROBES,
   EvidenceStorageUnavailableError,
+  probeBuildBundle,
   probeSealCapture,
   SigningUnavailableError,
 } from "@reranker/evidence";
@@ -42,6 +44,10 @@ async function readBody(req: Request): Promise<Body | undefined> {
 }
 
 function run(body: Body) {
+  if (body.probe === "bundle") {
+    if (body.holdMs !== undefined) throw new InvalidInputError("A bundle probe holds nothing");
+    return probeBuildBundle((body.n ?? DEFAULT_BUNDLE_PROBES) as number);
+  }
   if (body.probe === "seal") {
     if (body.holdMs !== undefined) throw new InvalidInputError("A seal probe holds nothing");
     return probeSealCapture((body.n ?? DEFAULT_SEAL_PROBES) as number);
@@ -52,7 +58,7 @@ function run(body: Body) {
     return probeNetworkLookup(n);
   }
   if (body.probe !== undefined && body.probe !== "spend") {
-    throw new InvalidInputError("Probe is spend, network or seal");
+    throw new InvalidInputError("Probe is spend, network, seal or bundle");
   }
   const opts: ProbeOptions = body.holdMs === undefined ? {} : { holdMs: body.holdMs as number };
   return probeSpendPath(n, opts);
@@ -62,7 +68,8 @@ function run(body: Body) {
  * Measures primitives from where the functions run (iad1, next to Neon us-east-1): `{ probe?,
  * n?, holdMs? }` in, p50 and p95 per primitive out, nothing spent. The default `spend` probe times
  * the admission path of a provider call; `network` times the datacenter and VPN lookup; `seal`
- * times capture sealing against the preview's R2 buckets and KMS key, deleting all it writes. It exists
+ * times capture sealing against the preview's R2 buckets and KMS key, deleting all it writes; `bundle`
+ * times verification bundles over a throwaway log it deletes and rolls back. It exists
  * only on previews, answers only to the cron bearer, and with `n: 1` and a hold it is the request
  * the capacity load test sends, so a denial answers the way a step would be told to retry.
  */
