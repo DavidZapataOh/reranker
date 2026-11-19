@@ -4,7 +4,12 @@ import { defineEnv } from "@reranker/env";
 // The subpaths keep the rest of the jobs runtime out of every auth request's module graph.
 import { QuotaExceededError } from "@reranker/jobs/errors";
 import { consumeQuota } from "@reranker/jobs/quota";
-import { type BucketLimits, refundTokens, takeTokens } from "@reranker/jobs/rate";
+import {
+  type BucketLimits,
+  refundAllTokens,
+  type TokenBucket,
+  takeAllTokens,
+} from "@reranker/jobs/rate";
 import { ERRORS, isAppError } from "@reranker/schema";
 import type { GenericEndpointContext } from "better-auth";
 import { APIError, getIP } from "better-auth/api";
@@ -69,10 +74,10 @@ function reject(
  * with the wait it advertises and keeps no token; left alone it would be an untyped 500 that spends
  * a send from the person's hourly allowance. Anything else is a bug and propagates as it is.
  */
-async function unavailable(error: unknown, giveBack: () => Promise<void>): Promise<unknown> {
+async function unavailable(error: unknown, giveBack?: () => Promise<void>): Promise<unknown> {
   if (!isAppError(error) || !error.retryable) return error;
   // The refunds go to the same database; one that fails must not turn the answer into a 500.
-  await giveBack().catch(() => undefined);
+  await giveBack?.().catch(() => undefined);
   const definition: { status: number; retryAfterSeconds?: number } = ERRORS[error.code];
   return reject(
     "SERVICE_UNAVAILABLE",
@@ -99,7 +104,7 @@ export async function guardOtpSend(ctx: GuardContext): Promise<void> {
     createHmac("sha256", CAPACITY_HMAC_KEY).update(value).digest("base64url");
   const mailbox = opaque(normalizeEmailForLimits(email));
   const ip = getIP(ctx.request ?? ctx.headers ?? new Headers(), ctx.context.options);
-  const buckets: { key: string; limits: BucketLimits }[] = [
+  const buckets: TokenBucket[] = [
     { key: `otp:email:hour:${mailbox}`, limits: LIMITS.emailHour },
     { key: `otp:email:day:${mailbox}`, limits: LIMITS.emailDay },
     ...(ip
@@ -110,26 +115,23 @@ export async function guardOtpSend(ctx: GuardContext): Promise<void> {
       : []),
   ];
 
-  const settled = await Promise.allSettled(
-    buckets.map(({ key, limits }) => takeTokens(key, limits)),
-  );
-  const results = settled.flatMap((r) => (r.status === "fulfilled" ? [r.value] : []));
-  const taken = buckets.filter((_, i) => {
-    const r = settled[i];
-    return r?.status === "fulfilled" && r.value.ok;
-  });
-  const giveBack = () =>
-    Promise.all(taken.map(({ key, limits }) => refundTokens(key, limits))).then(() => undefined);
-
-  const failure = settled.find((r) => r.status === "rejected");
-  if (failure) throw await unavailable(failure.reason, giveBack);
-
-  if (taken.length < buckets.length) {
-    await giveBack();
-    const waitMs = Math.max(...results.filter((r) => !r.ok).map((r) => r.retryAfterMs));
-    throw reject("TOO_MANY_REQUESTS", "rate_limited", Math.max(1, Math.ceil(waitMs / 1000)));
+  // One all-or-nothing statement: a burst holds one pooled connection per send instead of one per
+  // bucket, and a denial has nothing to give back.
+  let taken: Awaited<ReturnType<typeof takeAllTokens>>;
+  try {
+    taken = await takeAllTokens(buckets);
+  } catch (error) {
+    throw await unavailable(error);
+  }
+  if (!taken.ok) {
+    throw reject(
+      "TOO_MANY_REQUESTS",
+      "rate_limited",
+      Math.max(1, Math.ceil(taken.retryAfterMs / 1000)),
+    );
   }
 
+  const giveBack = () => refundAllTokens(buckets);
   try {
     await consumeQuota("resend.emails", { priority: "critical" });
   } catch (error) {

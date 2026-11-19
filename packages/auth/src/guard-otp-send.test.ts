@@ -1,20 +1,20 @@
 import { assertOpaqueKey } from "@reranker/jobs";
 import { QuotaExceededError } from "@reranker/jobs/errors";
-import type { BucketLimits } from "@reranker/jobs/rate";
+import type { TokenBucket } from "@reranker/jobs/rate";
 import { AppError, ERRORS } from "@reranker/schema";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 const calls = vi.hoisted(() => [] as string[]);
 
 const jobs = vi.hoisted(() => ({
-  takeTokens: vi.fn(),
-  refundTokens: vi.fn(),
+  takeAllTokens: vi.fn(),
+  refundAllTokens: vi.fn(),
   consumeQuota: vi.fn(),
 }));
 
 vi.mock("@reranker/jobs/rate", () => ({
-  takeTokens: jobs.takeTokens,
-  refundTokens: jobs.refundTokens,
+  takeAllTokens: jobs.takeAllTokens,
+  refundAllTokens: jobs.refundAllTokens,
 }));
 vi.mock("@reranker/jobs/quota", () => ({ consumeQuota: jobs.consumeQuota }));
 
@@ -40,8 +40,12 @@ function context(email: unknown, ip?: string): GuardContext {
   } as unknown as GuardContext;
 }
 
-const takenKeys = () => jobs.takeTokens.mock.calls.map(([key]) => key as string);
-const takenLimits = () => jobs.takeTokens.mock.calls.map(([, limits]) => limits as BucketLimits);
+const taken = () => jobs.takeAllTokens.mock.calls.flatMap(([buckets]) => buckets as TokenBucket[]);
+const takenKeys = () => taken().map(({ key }) => key);
+const refundedKeys = () =>
+  jobs.refundAllTokens.mock.calls.flatMap(([buckets]) =>
+    (buckets as TokenBucket[]).map((b) => b.key),
+  );
 
 beforeEach(() => {
   vi.stubEnv("APP_ENV", "development");
@@ -50,11 +54,11 @@ beforeEach(() => {
     calls.push("domain");
     return { ok: true };
   });
-  jobs.takeTokens.mockImplementation(async () => {
+  jobs.takeAllTokens.mockImplementation(async (buckets: TokenBucket[]) => {
     calls.push("tokens");
-    return { ok: true, remaining: 1, retryAfterMs: 0 };
+    return { ok: true, remaining: buckets.map(() => 1), retryAfterMs: 0 };
   });
-  jobs.refundTokens.mockResolvedValue(undefined);
+  jobs.refundAllTokens.mockResolvedValue(undefined);
   jobs.consumeQuota.mockImplementation(async () => {
     calls.push("quota");
   });
@@ -78,9 +82,10 @@ describe("normalizeEmailForLimits", () => {
 });
 
 describe("guardOtpSend", () => {
-  test("checks the domain, then the limits, then the email quota", async () => {
+  test("checks the domain, then every limit in one take, then the email quota", async () => {
     await guardOtpSend(context("ana@empresa.co", "203.0.113.7"));
-    expect(calls).toEqual(["domain", "tokens", "tokens", "tokens", "tokens", "quota"]);
+    expect(calls).toEqual(["domain", "tokens", "quota"]);
+    expect(takenKeys()).toHaveLength(4);
     expect(jobs.consumeQuota).toHaveBeenCalledExactlyOnceWith("resend.emails", {
       priority: "critical",
     });
@@ -89,7 +94,7 @@ describe("guardOtpSend", () => {
   test("limits: 3 per hour and 5 per day per email, 5 per day per IP and 15 per /24", async () => {
     await guardOtpSend(context("ana@empresa.co", "203.0.113.7"));
     const day = 86_400;
-    expect(takenLimits()).toEqual([
+    expect(taken().map(({ limits }) => limits)).toEqual([
       { capacity: 3, refillPerSecond: 3 / 3_600 },
       { capacity: 5, refillPerSecond: 5 / day },
       { capacity: 5, refillPerSecond: 5 / day },
@@ -111,7 +116,7 @@ describe("guardOtpSend", () => {
   test("the email keys come from the normalized address", async () => {
     await guardOtpSend(context("A.na+1@Gmail.com", "203.0.113.7"));
     const first = takenKeys().slice(0, 2);
-    jobs.takeTokens.mockClear();
+    jobs.takeAllTokens.mockClear();
     await guardOtpSend(context("ana@gmail.com", "198.51.100.9"));
     expect(takenKeys().slice(0, 2)).toEqual(first);
   });
@@ -119,7 +124,7 @@ describe("guardOtpSend", () => {
   test("two addresses in the same /24 share the network bucket only", async () => {
     await guardOtpSend(context("ana@empresa.co", "203.0.113.7"));
     const [, , ipA, netA] = takenKeys();
-    jobs.takeTokens.mockClear();
+    jobs.takeAllTokens.mockClear();
     await guardOtpSend(context("ana@empresa.co", "203.0.113.200"));
     const [, , ipB, netB] = takenKeys();
     expect(ipA).not.toBe(ipB);
@@ -135,7 +140,7 @@ describe("guardOtpSend", () => {
   test("a different HMAC key yields different bucket keys", async () => {
     await guardOtpSend(context("ana@empresa.co", "203.0.113.7"));
     const first = takenKeys();
-    jobs.takeTokens.mockClear();
+    jobs.takeAllTokens.mockClear();
     vi.stubEnv("CAPACITY_HMAC_KEY", "j".repeat(32));
     await guardOtpSend(context("ana@empresa.co", "203.0.113.7"));
     expect(takenKeys()).not.toEqual(first);
@@ -149,23 +154,21 @@ describe("guardOtpSend", () => {
         statusCode: 400,
         body: { reason },
       });
-      expect(jobs.takeTokens).not.toHaveBeenCalled();
+      expect(jobs.takeAllTokens).not.toHaveBeenCalled();
       expect(jobs.consumeQuota).not.toHaveBeenCalled();
     },
   );
 
-  test("a denied bucket is 429 with the wait, gives back the others and takes no quota", async () => {
-    jobs.takeTokens.mockImplementation(async (key: string) =>
-      key.startsWith("otp:ip:")
-        ? { ok: false, remaining: 0, retryAfterMs: 4_200 }
-        : { ok: true, remaining: 1, retryAfterMs: 0 },
-    );
+  test("a denied limit is 429 with the wait, gives nothing back and takes no quota", async () => {
+    jobs.takeAllTokens.mockResolvedValue({
+      ok: false,
+      remaining: [1, 1, 0, 1],
+      retryAfterMs: 4_200,
+    });
     const error = await guardOtpSend(context("ana@empresa.co", "203.0.113.7")).catch((e) => e);
     expect(error).toMatchObject({ statusCode: 429, body: { reason: "rate_limited" } });
     expect(new Headers(error.headers).get("X-Retry-After")).toBe("5");
-    const refunded = jobs.refundTokens.mock.calls.map(([key]) => key as string);
-    expect(refunded).toHaveLength(3);
-    expect(refunded.some((key) => key.startsWith("otp:ip:"))).toBe(false);
+    expect(jobs.refundAllTokens).not.toHaveBeenCalled();
     expect(jobs.consumeQuota).not.toHaveBeenCalled();
   });
 
@@ -177,7 +180,7 @@ describe("guardOtpSend", () => {
     const error = await guardOtpSend(context("ana@empresa.co", "203.0.113.7")).catch((e) => e);
     expect(error).toMatchObject({ statusCode: 503, body: { reason: "quota" } });
     expect(Number(new Headers(error.headers).get("X-Retry-After"))).toBeGreaterThanOrEqual(89);
-    expect(jobs.refundTokens).toHaveBeenCalledTimes(4);
+    expect(refundedKeys()).toEqual(takenKeys());
   });
 
   test("a database too busy to decide the quota is 503 with its wait and gives every token back", async () => {
@@ -187,28 +190,23 @@ describe("guardOtpSend", () => {
     const error = await guardOtpSend(context("ana@empresa.co", "203.0.113.7")).catch((e) => e);
     expect(error).toMatchObject({ statusCode: 503, body: { reason: "unavailable" } });
     expect(new Headers(error.headers).get("X-Retry-After")).toBe("2");
-    expect(jobs.refundTokens).toHaveBeenCalledTimes(4);
+    expect(refundedKeys()).toEqual(takenKeys());
   });
 
-  test("a bucket the database could not answer is 503, refunds the taken ones and takes no quota", async () => {
-    jobs.takeTokens.mockImplementation(async (key: string) => {
-      if (key.startsWith("otp:net:")) throw new AppError("timeout");
-      return { ok: true, remaining: 1, retryAfterMs: 0 };
-    });
+  test("limits the database could not answer are 503, give nothing back and take no quota", async () => {
+    jobs.takeAllTokens.mockRejectedValue(new AppError("timeout"));
     const error = await guardOtpSend(context("ana@empresa.co", "203.0.113.7")).catch((e) => e);
     expect(error).toMatchObject({ statusCode: 503, body: { reason: "unavailable" } });
     expect(new Headers(error.headers).get("X-Retry-After")).toBe(
       String(ERRORS.timeout.retryAfterSeconds),
     );
-    const refunded = jobs.refundTokens.mock.calls.map(([key]) => key as string);
-    expect(refunded).toHaveLength(3);
-    expect(refunded.some((key) => key.startsWith("otp:net:"))).toBe(false);
+    expect(jobs.refundAllTokens).not.toHaveBeenCalled();
     expect(jobs.consumeQuota).not.toHaveBeenCalled();
   });
 
   test("a refund that fails while the database is busy still answers 503", async () => {
     jobs.consumeQuota.mockRejectedValue(new AppError("service_unavailable"));
-    jobs.refundTokens.mockRejectedValue(new AppError("service_unavailable"));
+    jobs.refundAllTokens.mockRejectedValue(new AppError("service_unavailable"));
     const error = await guardOtpSend(context("ana@empresa.co", "203.0.113.7")).catch((e) => e);
     expect(error).toMatchObject({ statusCode: 503, body: { reason: "unavailable" } });
     expect(new Headers(error.headers).get("X-Retry-After")).toBe(
@@ -222,6 +220,13 @@ describe("guardOtpSend", () => {
   ])("%s from the quota propagates", async (_label, failure) => {
     jobs.consumeQuota.mockRejectedValue(failure);
     await expect(guardOtpSend(context("ana@empresa.co", "203.0.113.7"))).rejects.toBe(failure);
+  });
+
+  test("a non-retryable error from the limits propagates", async () => {
+    const failure = new Error("connection reset");
+    jobs.takeAllTokens.mockRejectedValue(failure);
+    await expect(guardOtpSend(context("ana@empresa.co", "203.0.113.7"))).rejects.toBe(failure);
+    expect(jobs.consumeQuota).not.toHaveBeenCalled();
   });
 
   test("without a client IP only the email buckets apply", async () => {

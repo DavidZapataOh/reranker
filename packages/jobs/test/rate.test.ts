@@ -6,7 +6,9 @@ const withSystem = vi.fn(async (_reason: string, fn: (tx: unknown) => unknown) =
 vi.mock("@reranker/db", () => ({ withSystem }));
 
 const { InvalidInputError } = await import("../src/errors");
-const { peekTokens, refundTokens, takeTokens } = await import("../src/rate");
+const { peekTokens, refundAllTokens, refundTokens, takeAllTokens, takeTokens } = await import(
+  "../src/rate"
+);
 
 const limits = { capacity: 3, refillPerSecond: 0.001 };
 const key = "test:rate:unit";
@@ -55,6 +57,38 @@ describe("takeTokens", () => {
     await expect(takeTokens(key, limits)).rejects.toBe(failure);
     execute.mockRejectedValue(new Error("boom"));
     await expect(takeTokens(key, limits)).rejects.toThrow("boom");
+  });
+});
+
+describe("takeAllTokens", () => {
+  const other = { capacity: 5, refillPerSecond: 0.002 };
+
+  test("takes every bucket in one system statement and keeps their order", async () => {
+    execute.mockResolvedValue({ rows: [{ ok: true, remaining: [2, 4], retry_after_ms: 0 }] });
+    await expect(
+      takeAllTokens([
+        { key, limits },
+        { key: `${key}:b`, limits: other },
+      ]),
+    ).resolves.toEqual({ ok: true, remaining: [2, 4], retryAfterMs: 0 });
+    expect(withSystem).toHaveBeenCalledTimes(1);
+    expect(execute).toHaveBeenCalledTimes(1);
+  });
+
+  test("validates every bucket before any statement", async () => {
+    await expect(
+      takeAllTokens([
+        { key, limits },
+        { key: `${key}:b`, limits, cost: 4 },
+      ]),
+    ).rejects.toBeInstanceOf(InvalidInputError);
+    await expect(
+      takeAllTokens([
+        { key, limits },
+        { key: "otp:a@b.co", limits },
+      ]),
+    ).rejects.toBeInstanceOf(InvalidInputError);
+    expect(withSystem).not.toHaveBeenCalled();
   });
 });
 
@@ -112,6 +146,29 @@ describe("refundTokens", () => {
 
   test("rejects a raw key without a statement", async () => {
     await expect(refundTokens("otp:a@b.co", limits)).rejects.toBeInstanceOf(InvalidInputError);
+    expect(withSystem).not.toHaveBeenCalled();
+  });
+});
+
+describe("refundAllTokens", () => {
+  test("gives every bucket back in one system statement", async () => {
+    execute.mockResolvedValue({ rows: [] });
+    await refundAllTokens([
+      { key, limits },
+      { key: `${key}:b`, limits, cost: 2 },
+    ]);
+    expect(withSystem).toHaveBeenCalledTimes(1);
+    expect(execute).toHaveBeenCalledTimes(1);
+  });
+
+  test("validates every bucket before any statement and skips an empty list", async () => {
+    await expect(
+      refundAllTokens([
+        { key, limits },
+        { key: `${key}:b`, limits, cost: -1 },
+      ]),
+    ).rejects.toBeInstanceOf(InvalidInputError);
+    await refundAllTokens([]);
     expect(withSystem).not.toHaveBeenCalled();
   });
 });
