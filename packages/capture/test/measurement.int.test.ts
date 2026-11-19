@@ -3,10 +3,11 @@ import { readFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
 import { geoForEngine, getGeo, jcs, sha256Hex } from "@reranker/catalog";
 import { endPools, withSystem } from "@reranker/db";
+import { measurementPlans } from "@reranker/db/schema";
 import { InvalidInputError, NotFoundError } from "@reranker/jobs/errors";
 import type { EngineId } from "@reranker/schema";
 import { PlannedObservation, type PlannedSlot } from "@reranker/schema/measurement";
-import { sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
 import { loadSigner } from "../../evidence/src/signer";
 import { previewEnv } from "../../evidence/test/support/evidence-env";
@@ -79,18 +80,18 @@ const installedClientVersion: string = JSON.parse(
 const range = (n: number) => Array.from({ length: n }, (_, i) => i);
 
 async function row(measurementId: string) {
-  const { rows } = await withSystem("capture.test", (tx) =>
-    tx.execute<{
-      digest: Buffer | null;
-      plan_envelope_sha256: Buffer | null;
-      slot_count: number | null;
-      frozen_at: Date | null;
-    }>(
-      sql`select digest, plan_envelope_sha256, slot_count, frozen_at
-          from public_panel.measurement_plans where id = ${measurementId}`,
-    ),
+  const [found] = await withSystem("capture.test", (tx) =>
+    tx
+      .select({
+        digest: measurementPlans.digest,
+        plan_envelope_sha256: measurementPlans.planEnvelopeSha256,
+        slot_count: measurementPlans.slotCount,
+        frozen_at: measurementPlans.frozenAt,
+      })
+      .from(measurementPlans)
+      .where(eq(measurementPlans.id, measurementId)),
   );
-  return rows[0];
+  return found;
 }
 
 async function planEntries(measurementId: string): Promise<number> {
