@@ -23,8 +23,20 @@ function requireSessionCookie(request: NextRequest) {
   return NextResponse.redirect(url);
 }
 
+// A test domain of the project: its home is a fixed page, never the product.
+const TEST_STORE_HOST = "tienda-ejemplo.reranker.co";
+
+function rewriteTestStore(request: NextRequest) {
+  const url = request.nextUrl.clone();
+  url.pathname = "/tienda-ejemplo";
+  return NextResponse.rewrite(url);
+}
+
 export function proxy(request: NextRequest) {
-  if (request.nextUrl.pathname === "/") return rewriteHome(request);
+  if (request.nextUrl.pathname === "/") {
+    if (request.nextUrl.hostname === TEST_STORE_HOST) return rewriteTestStore(request);
+    return rewriteHome(request);
+  }
   return requireSessionCookie(request);
 }
 

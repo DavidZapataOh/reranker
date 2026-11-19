@@ -31,6 +31,15 @@ describe("proxy", () => {
     );
   });
 
+  test("serves the test store page on its own domain, whatever the country", () => {
+    const headers = new Headers({ "x-vercel-ip-country": "CO" });
+    const response = proxy(new NextRequest("https://tienda-ejemplo.reranker.co/", { headers }));
+    expect(response?.headers.get("x-middleware-rewrite")).toBe(
+      "https://tienda-ejemplo.reranker.co/tienda-ejemplo",
+    );
+    expect(existsSync(new URL("./app/tienda-ejemplo/route.ts", import.meta.url))).toBe(true);
+  });
+
   test.each(CURRENCIES)("the %s rewrite target is a prerendered page", (currency) => {
     expect(existsSync(new URL(`./app/home/${currency}/page.tsx`, import.meta.url))).toBe(true);
   });
