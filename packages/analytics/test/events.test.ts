@@ -58,6 +58,7 @@ test("server catalog names every event the other packages emit", () => {
     "report_verification_required",
     "report_verified",
     "report_viewed",
+    "stats_computed",
   ]);
 });
 

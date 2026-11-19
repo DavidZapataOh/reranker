@@ -75,6 +75,7 @@ catalog:
   "@opentelemetry/exporter-logs-otlp-http": 0.301.1
   "@opentelemetry/resources": 3.1.1
   "@opentelemetry/api": 1.10.0
+  "@opentelemetry/sdk-trace": 3.1.1
   squawk-cli: ^2.70.0
   "@neon/sdk": 7.13.0
   "@posthog/next": 0.11.0
