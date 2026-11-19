@@ -12,6 +12,12 @@ export {
   putLogObject,
 } from "./artifacts";
 export { buildBundle, getSealSummaries, type SealSummary, verifyUrl } from "./bundle";
+export {
+  type BundleLatency,
+  DEFAULT_BUNDLE_PROBES,
+  MAX_BUNDLE_PROBES,
+  probeBuildBundle,
+} from "./bundle-latency";
 export { signEnvelope } from "./dsse";
 export { evidenceEnv } from "./env";
 export {

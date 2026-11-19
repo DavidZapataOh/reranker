@@ -146,6 +146,14 @@ export async function integrate(origin: string): Promise<IntegrateResult> {
         frontier: Buffer.concat(tree.frontier),
         checkpointNote: note,
       });
+      if (tree.nodes.length > 0) {
+        await tx.execute(sql`
+          insert into public_panel.evidence_tree_hashes (origin, stored_index, hash)
+          select ${origin}, v.stored_index, decode(v.hash, 'hex')
+          from unnest(${sql.param(tree.nodes.map((node) => node.index))}::bigint[],
+                      ${sql.param(tree.nodes.map((node) => Buffer.from(node.hash).toString("hex")))}::text[])
+                 as v(stored_index, hash)`);
+      }
       return { status: "integrated", treeSize: tree.size, firstIndex };
     },
     { statementTimeoutMs: 10_000 },

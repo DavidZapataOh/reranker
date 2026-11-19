@@ -11,6 +11,8 @@ import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import { bundleQuery, sealSummariesQuery } from "../src/bundle";
 import { resetEvidenceEnv } from "../src/env";
 import { integrate, pendingEntriesQuery } from "../src/log/integrate";
+import { proofHashesQuery, proofHashIndexes } from "../src/log/proofs";
+import { storedHashIndex } from "../src/log/tlog";
 import { latestNormalizedQuery, sealCapture, sealPlan } from "../src/seal";
 import { loadSigner } from "../src/signer";
 import { newCaptureId, sealInputFor } from "./support/capture-input";
@@ -198,11 +200,22 @@ async function evidenceShareOf(report: Report): Promise<number> {
     "origin = $1 and first_index <= $3 and tree_size > $2",
     [ORIGIN, span[0]?.first, span[0]?.last],
   );
+  // The stored hashes of subtrees of 256 entries and more appended with the report's entries.
+  const treeHashes = await rowBytes(
+    "public_panel.evidence_tree_hashes",
+    "origin = $1 and stored_index >= $2 and stored_index < $3",
+    [
+      ORIGIN,
+      storedHashIndex(0, Number(span[0]?.first)),
+      storedHashIndex(0, Number(span[0]?.last) + 1),
+    ],
+  );
   console.info(
     `evidence bytes of a ${report.captureIds.length}-capture report: capture columns ${captureColumns}, ` +
-      `their index entries ${captureIndexes}, plan entry ${planEntry}, batches ${batches}`,
+      `their index entries ${captureIndexes}, plan entry ${planEntry}, batches ${batches}, ` +
+      `tree hashes ${treeHashes}`,
   );
-  return captureColumns + captureIndexes + planEntry + batches;
+  return captureColumns + captureIndexes + planEntry + batches + treeHashes;
 }
 
 test("the evidence share of one 200-capture report stays within its budget", {
@@ -282,7 +295,19 @@ describe(`index plans with ${SEED_ROWS.toLocaleString("en")} rows`, () => {
          (values ('ots', 'ots-calendars'), ('rfc3161', 'digicert')) as k(kind, provider)`,
       [seedOrigin, SEED_ROWS, CAPTURE_INDEX_BASE],
     );
-    for (const table of ["captures", "evidence_entries", "evidence_batches", "timestamp_anchors"]) {
+    await owner.query(
+      `insert into public_panel.evidence_tree_hashes (origin, stored_index, hash)
+       select $1::text, g, sha256(convert_to('node' || g, 'UTF8'))
+       from generate_series(1, $2::int) g`,
+      [seedOrigin, SEED_ROWS],
+    );
+    for (const table of [
+      "captures",
+      "evidence_entries",
+      "evidence_batches",
+      "timestamp_anchors",
+      "evidence_tree_hashes",
+    ]) {
       await owner.query(`analyze public_panel.${table}`);
     }
     sampleCaptureId = `${prefix}${"4242".padStart(20, "0")}` as CaptureId;
@@ -310,6 +335,17 @@ describe(`index plans with ${SEED_ROWS.toLocaleString("en")} rows`, () => {
     const { sql: text, params } = query(bundleQuery(sampleCaptureId, seedOrigin));
     const plan = await explain(owner, text, params);
     for (const table of ["captures", "evidence_batches", "timestamp_anchors"]) {
+      expectNoSeqScanOn(plan, `public_panel.${table}`);
+    }
+  });
+
+  test("a bundle's proofs read entries by log index and tree hashes by key", async () => {
+    const index = CAPTURE_INDEX_BASE + 4242;
+    const treeSize = CAPTURE_INDEX_BASE + 4250;
+    const indexes = await proofHashIndexes(treeSize, index, treeSize + 300);
+    const { sql: text, params } = query(proofHashesQuery(seedOrigin, indexes));
+    const plan = await explain(owner, text, params);
+    for (const table of ["captures", "evidence_entries", "evidence_tree_hashes"]) {
       expectNoSeqScanOn(plan, `public_panel.${table}`);
     }
   });

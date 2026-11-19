@@ -6,8 +6,7 @@ import type {
   RemovalReason,
 } from "@reranker/verify/format";
 import { type SQL, sql } from "drizzle-orm";
-import { readHashes } from "./log/tiles";
-import { proveRecord, proveTree } from "./log/tlog";
+import { proveFromDatabase, type Read } from "./log/proofs";
 import { logOrigin, readStatement, subjectDigest } from "./seal";
 
 export interface SealSummary {
@@ -125,17 +124,24 @@ export function sealSummariesQuery(captureIds: readonly CaptureId[], origin: str
     order by v.ord`;
 }
 
+// Outside the latency probe, each read runs in its own read-only system transaction.
+export type Reader = Read;
+
+const systemReader =
+  (reason: string): Reader =>
+  async <T extends Record<string, unknown>>(query: SQL) =>
+    (await withSystem(reason, (tx) => tx.execute<T>(query), { readOnly: true })).rows as T[];
+
+export function removalsQuery(digests: string[]): SQL {
+  return sql`
+    select r.sha256, (extract(epoch from r.removed_at) * 1000)::float8 as removed_ms, r.reason
+    from unnest(${sql.param(digests)}::text[]) as d(sha256)
+    join public_panel.artifact_removals r on r.sha256 = decode(d.sha256, 'hex')`;
+}
+
 /** Removal records of the given digests, keyed by hex digest. */
-async function removalsOf(digests: string[]): Promise<Map<string, Removal>> {
-  const { rows } = await withSystem(
-    "evidence.bundle",
-    (tx) =>
-      tx.execute<{ sha256: Buffer } & Removal>(sql`
-        select r.sha256, (extract(epoch from r.removed_at) * 1000)::float8 as removed_ms, r.reason
-        from unnest(${sql.param(digests)}::text[]) as d(sha256)
-        join public_panel.artifact_removals r on r.sha256 = decode(d.sha256, 'hex')`),
-    { readOnly: true },
-  );
+async function removalsOf(digests: string[], read: Reader): Promise<Map<string, Removal>> {
+  const rows = await read<{ sha256: Buffer } & Removal>(removalsQuery(digests));
   return new Map(rows.map((row) => [toHex(row.sha256), row]));
 }
 
@@ -155,15 +161,17 @@ function artifact(sha256: string, removals: Map<string, Removal>): BundleArtifac
  * inclusion in a published checkpoint, consistency with the latest one, and that checkpoint's
  * timestamps. Null for an unknown capture and for one no published checkpoint holds yet.
  */
-export async function buildBundle(captureId: CaptureId): Promise<EvidenceBundleV1 | null> {
-  const origin = logOrigin();
-  const {
-    rows: [row],
-  } = await withSystem(
-    "evidence.bundle",
-    (tx) => tx.execute<BundleRow>(bundleQuery(captureId, origin)),
-    { readOnly: true },
-  );
+export function buildBundle(captureId: CaptureId): Promise<EvidenceBundleV1 | null> {
+  return assembleBundle(captureId, logOrigin(), systemReader("evidence.bundle"));
+}
+
+/** {@link buildBundle} over any log origin and reader, so the latency probe times the same code. */
+export async function assembleBundle(
+  captureId: CaptureId,
+  origin: string,
+  read: Reader,
+): Promise<EvidenceBundleV1 | null> {
+  const [row] = await read<BundleRow>(bundleQuery(captureId, origin));
   if (!row?.tree_size || !row.checkpoint_note || !row.latest_size || !row.latest_note) return null;
   const index = Number(row.log_index);
   const treeSize = Number(row.tree_size);
@@ -171,16 +179,15 @@ export async function buildBundle(captureId: CaptureId): Promise<EvidenceBundleV
   const normalizedSha256 = row.normalized_sha256 ? toHex(row.normalized_sha256) : null;
 
   // The raw digest is only in the signed statement, so its removal is looked up after the
-  // envelope arrives, while the proofs are read from the tiles.
+  // envelope arrives, while the proofs are read from Postgres.
   const signed = readStatement(toHex(row.envelope_sha256)).then(async ({ envelope, statement }) => {
     const rawSha256 = subjectDigest(statement, "raw");
     const digests = normalizedSha256 ? [rawSha256, normalizedSha256] : [rawSha256];
-    return { envelope, rawSha256, removals: await removalsOf(digests) };
+    return { envelope, rawSha256, removals: await removalsOf(digests, read) };
   });
-  const [{ envelope, rawSha256, removals }, inclusion, consistency] = await Promise.all([
+  const [{ envelope, rawSha256, removals }, { inclusion, consistency }] = await Promise.all([
     signed,
-    proveRecord(treeSize, index, readHashes(origin, treeSize)),
-    proveTree(latestSize, treeSize, readHashes(origin, latestSize)),
+    proveFromDatabase(origin, treeSize, index, latestSize, read),
   ]);
 
   const tsrProofs = row.tsr_proofs ?? [];
@@ -219,14 +226,18 @@ export async function buildBundle(captureId: CaptureId): Promise<EvidenceBundleV
  * The seal state of each capture for reports and emails, in one query: input order, unknown ids
  * dropped. A capture is dated by the first confirmed checkpoint that holds it.
  */
-export async function getSealSummaries(captureIds: readonly CaptureId[]): Promise<SealSummary[]> {
+export function getSealSummaries(captureIds: readonly CaptureId[]): Promise<SealSummary[]> {
+  return summarizeSeals(captureIds, logOrigin(), systemReader("evidence.seal_summaries"));
+}
+
+/** {@link getSealSummaries} over any log origin and reader. */
+export async function summarizeSeals(
+  captureIds: readonly CaptureId[],
+  origin: string,
+  read: Reader,
+): Promise<SealSummary[]> {
   if (captureIds.length === 0) return [];
-  const origin = logOrigin();
-  const { rows } = await withSystem(
-    "evidence.seal_summaries",
-    (tx) => tx.execute<SummaryRow>(sealSummariesQuery(captureIds, origin)),
-    { readOnly: true },
-  );
+  const rows = await read<SummaryRow>(sealSummariesQuery(captureIds, origin));
   return rows.map((row) => ({
     captureId: row.id,
     savedAt: new Date(row.saved_ms),

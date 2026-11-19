@@ -16,10 +16,11 @@ vi.mock("@reranker/jobs", async (importOriginal) => ({
   probeNetworkLookup: jobs.probeNetworkLookup,
 }));
 
-const evidence = vi.hoisted(() => ({ probeSealCapture: vi.fn() }));
+const evidence = vi.hoisted(() => ({ probeSealCapture: vi.fn(), probeBuildBundle: vi.fn() }));
 vi.mock("@reranker/evidence", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@reranker/evidence")>()),
   probeSealCapture: evidence.probeSealCapture,
+  probeBuildBundle: evidence.probeBuildBundle,
 }));
 
 const { POST } = await import("./route");
@@ -35,6 +36,16 @@ const sealReport = {
   database: stats,
   envelope: stats,
   sign: null,
+};
+const bundleReport = {
+  buildBundle: stats,
+  transaction: stats,
+  database: stats,
+  removals: stats,
+  envelopeRead: stats,
+
+  proofs: stats,
+  sealSummaries: stats,
 };
 
 function probe(headers: Record<string, string> = {}, body?: string) {
@@ -59,6 +70,8 @@ beforeEach(() => {
   jobs.probeNetworkLookup.mockResolvedValue(networkReport);
   evidence.probeSealCapture.mockReset();
   evidence.probeSealCapture.mockResolvedValue(sealReport);
+  evidence.probeBuildBundle.mockReset();
+  evidence.probeBuildBundle.mockResolvedValue(bundleReport);
 });
 
 afterEach(() => {
@@ -170,6 +183,23 @@ test("times capture sealing when asked, a hundred seals unless the body says oth
   await probe(BEARER, JSON.stringify({ probe: "seal", n: 5 }));
   expect(evidence.probeSealCapture).toHaveBeenLastCalledWith(5);
   expect(jobs.probeSpendPath).not.toHaveBeenCalled();
+});
+
+test("times verification bundles when asked, a hundred unless the body says otherwise", async () => {
+  const response = await probe(BEARER, JSON.stringify({ probe: "bundle" }));
+  expect(response.status).toBe(200);
+  expect(await response.json()).toEqual(bundleReport);
+  expect(evidence.probeBuildBundle).toHaveBeenLastCalledWith(100);
+  await probe(BEARER, JSON.stringify({ probe: "bundle", n: 5 }));
+  expect(evidence.probeBuildBundle).toHaveBeenLastCalledWith(5);
+  expect(evidence.probeSealCapture).not.toHaveBeenCalled();
+});
+
+test("refuses a hold on the bundle probe and answers an R2 failure with a 503", async () => {
+  expect((await probe(BEARER, JSON.stringify({ probe: "bundle", holdMs: 100 }))).status).toBe(400);
+  expect(evidence.probeBuildBundle).not.toHaveBeenCalled();
+  evidence.probeBuildBundle.mockRejectedValue(new EvidenceStorageUnavailableError("R2 GET: 503"));
+  expect((await probe(BEARER, JSON.stringify({ probe: "bundle" }))).status).toBe(503);
 });
 
 test("refuses a hold on the seal probe", async () => {

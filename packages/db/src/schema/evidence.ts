@@ -87,6 +87,25 @@ export const evidenceBatches = publicPanelSchema.table(
   ],
 );
 
+/**
+ * The log's stored hashes of subtrees of 256 entries and more (about one per 128 entries), keyed
+ * by sumdb/tlog's stored hash index. With the entries themselves, which give every smaller
+ * subtree, they serve proofs from Postgres instead of from the published tiles.
+ */
+export const evidenceTreeHashes = publicPanelSchema.table(
+  "evidence_tree_hashes",
+  {
+    storedIndex: bigint({ mode: "number" }).notNull(),
+    origin: text().notNull(),
+    hash: bytea().notNull(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.origin, t.storedIndex] }),
+    check("evidence_tree_hashes_stored_index_check", sql`${t.storedIndex} >= 0`),
+    check("evidence_tree_hashes_hash_length", sql`octet_length(${t.hash}) = 32`),
+  ],
+);
+
 /** OpenTimestamps and RFC 3161 proofs of a checkpoint; retried until confirmed or failed. */
 export const timestampAnchors = sharedTable(
   "timestamp_anchors",

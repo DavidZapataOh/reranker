@@ -39,7 +39,7 @@ const utf8 = (s: string) => new TextEncoder().encode(s);
 // signed but never logged: no capture row or log entry ever names it.
 const country = COUNTRIES[DEFAULT_COUNTRY_CODE];
 
-const PROBE_PREDICATE: CapturePredicateInput = {
+export const PROBE_PREDICATE: CapturePredicateInput = {
   plan: null,
   prompt: {
     set_version: "latency-probe",
