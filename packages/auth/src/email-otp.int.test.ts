@@ -21,7 +21,7 @@ vi.stubEnv("NEXT_PUBLIC_TURNSTILE_SITE_KEY", "1x00000000000000000000AA");
 vi.stubEnv("CAPACITY_HMAC_KEY", secret());
 const DUMMY_TOKEN = "XXXX.DUMMY.TOKEN.XXXX";
 
-const { auth } = await import("./server");
+const { auth, handleAuthRequest } = await import("./server");
 type Auth = typeof auth;
 
 const emails = new Set<string>();
@@ -50,8 +50,10 @@ function nextIp(): string {
   return `10.${octet()}.${octet()}.${1 + Math.floor(Math.random() * 254)}`;
 }
 
+// The configured instance goes through the app's entry point, so its answers are the ones users get.
 function post(instance: Auth, path: string, body: unknown, headers: Record<string, string>) {
-  return instance.handler(
+  const handle = instance === auth ? handleAuthRequest : instance.handler;
+  return handle(
     new Request(`http://localhost:3000/api/auth${path}`, {
       method: "POST",
       headers: { "content-type": "application/json", origin: "http://localhost:3000", ...headers },

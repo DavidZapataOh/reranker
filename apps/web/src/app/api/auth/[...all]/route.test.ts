@@ -1,7 +1,7 @@
 import { afterEach, expect, test, vi } from "vitest";
 
 const handler = vi.hoisted(() => ({ GET: vi.fn(), POST: vi.fn() }));
-vi.mock("@reranker/auth/server", () => ({ auth: {} }));
+vi.mock("@reranker/auth/server", () => ({ handleAuthRequest: vi.fn() }));
 vi.mock("better-auth/next-js", () => ({ toNextJsHandler: () => handler }));
 
 const telemetry = vi.hoisted(() => ({ captureServerEvent: vi.fn() }));

@@ -1,8 +1,8 @@
-import { auth } from "@reranker/auth/server";
+import { handleAuthRequest } from "@reranker/auth/server";
 import { captureServerEvent } from "@reranker/telemetry";
 import { toNextJsHandler } from "better-auth/next-js";
 
-const handler = toNextJsHandler(auth);
+const handler = toNextJsHandler(handleAuthRequest);
 
 export const { GET } = handler;
 
