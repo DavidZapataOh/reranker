@@ -1,0 +1,65 @@
+name: query-phrasing
+# Spends real money on DataForSEO production endpoints, so it only ever runs when dispatched.
+on:
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: query-phrasing
+  cancel-in-progress: false
+jobs:
+  record:
+    # Only reviewed code reaches the production credentials.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    # Up to 15 min queueing for a Neon CI branch slot, then about 400 Live calls six at a time.
+    timeout-minutes: 45
+    permissions: { contents: read }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
+        with: { cache: true, require-lockfile: true }
+      # Every call is reserved and settled on the spend ledger under the contract-test cap.
+      - id: branch
+        uses: ./.github/actions/neon-ci-branch
+        with:
+          api-key: ${{ secrets.NEON_NONPROD_API_KEY }}
+          project-id: ${{ vars.NEON_PROJECT_ID }}
+          branch-name: ci/query-phrasing-${{ github.run_id }}-${{ github.run_attempt }}
+      - uses: ./.github/actions/ci-database
+        with:
+          db-url: ${{ steps.branch.outputs.db-url }}
+          db-host-pooled: ${{ steps.branch.outputs.db-host-pooled }}
+      - name: Record how people phrase local-business searches
+        env:
+          APP_ENV: development
+          DATAFORSEO_LOGIN: ${{ secrets.DATAFORSEO_LOGIN }}
+          DATAFORSEO_PASSWORD: ${{ secrets.DATAFORSEO_PASSWORD }}
+          # The run's own ceiling is US$4.50; the ledger refuses anything past US$5.
+          SPEND_CAP_DAILY_CONTRACT_TEST_USD: "5"
+          OUT_DIR: ${{ runner.temp }}/query-phrasing
+        run: pnpm --filter @reranker/capture record:phrasing "$OUT_DIR"
+      - if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: query-phrasing
+          path: ${{ runner.temp }}/query-phrasing
+          retention-days: 7
+          if-no-files-found: error
+      - if: always() && steps.branch.outputs.branch-id != ''
+        name: Prepare npm for the branch cleanup
+        env:
+          PREFIX: ${{ runner.temp }}/npm-global
+        run: |
+          {
+            echo "NPM_CONFIG_PREFIX=$PREFIX"
+            echo "NPM_CONFIG_BEFORE=2026-11-01T00:00:00Z"
+            echo "NPM_CONFIG_IGNORE_SCRIPTS=true"
+          } >> "$GITHUB_ENV"
+          echo "$PREFIX/bin" >> "$GITHUB_PATH"
+      - if: always() && steps.branch.outputs.branch-id != ''
+        uses: neondatabase/delete-branch-action@4468d825d5a88ef4012f1705a82f02ec3072f776 # v3.2.1
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          branch: ${{ steps.branch.outputs.branch-id }}
+          api_key: ${{ secrets.NEON_NONPROD_API_KEY }}
