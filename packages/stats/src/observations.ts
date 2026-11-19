@@ -43,6 +43,8 @@ export interface ObservationFrame extends CaptureFrame {
       recommended: number;
       incidental: number;
       negative: number;
+      /** The capture's stance, aligned with `captures`: see `STANCE`; 0 = not mentioned. */
+      stance: Uint8Array;
     }
   >;
   extractorConfigHash: string;
@@ -50,6 +52,8 @@ export interface ObservationFrame extends CaptureFrame {
 
 // Directories, media and other mentions are neither competitors nor platforms.
 const KEPT_KINDS = new Set<EntityKind>(["business", "professional", "chain", "platform"]);
+
+export const STANCE = { recommendation: 1, incidental: 2, negative: 3 } as const;
 
 /** All the statistics read from a capture's answer: whether the AI surface showed. */
 export type ObservedCapture = RawCaptureOf<{ present: boolean }>;
@@ -190,6 +194,7 @@ export function buildObservations(input: {
           recommended: 0,
           incidental: 0,
           negative: 0,
+          stance: new Uint8Array(n),
         };
         entities.set(m.entityKey, entity);
       }
@@ -210,6 +215,7 @@ export function buildObservations(input: {
     }
     for (const [key, stance] of stances) {
       const entity = entities.get(key) as Entity;
+      entity.stance[i] = STANCE[stance];
       if (stance === "recommendation") entity.recommended++;
       else entity[stance]++;
     }

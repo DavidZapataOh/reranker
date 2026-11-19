@@ -9,6 +9,7 @@ import type {
   ResponseExtraction,
 } from "@reranker/schema/measurement";
 import type { ObservedCapture } from "../../src/observations";
+import type { FreeReportInput } from "../../src/report";
 
 // V0 design: 5 engines × 5 intents × 8 variants, engine-major, so slot = e·40 + i·8 + v.
 export const ENGINES = EngineId.options;
@@ -164,3 +165,28 @@ export function fixture(opts: FixtureOptions = {}) {
     ...(opts.intentWeights === undefined ? {} : { intentWeights: opts.intentWeights }),
   };
 }
+
+export const REPORT = "fr_01JD3N7Q8ZK4R5T6V7W8X9Y0AB";
+
+export function reportInput(
+  opts: FixtureOptions = {},
+  over: Partial<FreeReportInput> = {},
+): FreeReportInput {
+  return {
+    reportId: REPORT,
+    asOf: new Date("2026-11-19T15:00:00.000Z"),
+    target: { entityKey: TARGET, displayName: "Clínica Sonrisas", entityKind: "business" },
+    ...fixture(opts),
+    ...over,
+  };
+}
+
+export const rival = (k: number): EntityKey => `place:rival${k}`;
+
+/** The target first in even answers; rival k recommended second in every (k + 2)-th answer. */
+export const ladder = (slot: number): ResolvedMention[] => [
+  ...(slot % 2 === 0 ? [mention({ entityKey: TARGET })] : []),
+  ...Array.from({ length: 7 }, (_, k) => k)
+    .filter((k) => slot % (k + 2) === 0)
+    .map((k) => mention({ entityKey: rival(k), ordinal: 2 })),
+];
