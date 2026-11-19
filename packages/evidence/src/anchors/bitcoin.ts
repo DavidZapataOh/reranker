@@ -6,6 +6,8 @@ import { createHash } from "node:crypto";
 export const ESPLORA_APIS = ["https://blockstream.info/api", "https://mempool.space/api"] as const;
 
 const TIMEOUT_MS = 10_000;
+const BACKOFF_BASE_MS = 250;
+const BACKOFF_CAP_MS = 2_000;
 const HEADER_BYTES = 80;
 const BLOCK_HASH = /^[0-9a-f]{64}$/;
 
@@ -19,16 +21,32 @@ const sha256d = (bytes: Uint8Array) =>
 // Bitcoin prints hashes byte-reversed; OpenTimestamps commitments use the same order.
 const displayHex = (bytes: Uint8Array) => Buffer.from(bytes).reverse().toString("hex");
 
+const retryable = (status: number) => status >= 500 || status === 429;
+
+/**
+ * One explorer read. A dropped connection, a 5xx or a 429 is retried with capped full-jitter
+ * backoff until the timeout, honoring Retry-After; what is left over is the lookup's to retry later.
+ */
 async function get(url: string, fetchImpl: typeof fetch): Promise<string> {
-  const response = await fetchImpl(url, {
-    redirect: "error",
-    signal: AbortSignal.timeout(TIMEOUT_MS),
-  });
-  const text = (await response.text()).trim();
-  if (response.status !== 200) {
-    throw new BlockHeaderUnavailableError(`${url} answered ${response.status}`);
+  const deadline = performance.now() + TIMEOUT_MS;
+  const signal = AbortSignal.timeout(TIMEOUT_MS);
+  for (let attempt = 0; ; attempt++) {
+    let pause = Math.random() * Math.min(BACKOFF_CAP_MS, BACKOFF_BASE_MS * 2 ** attempt);
+    let failure: BlockHeaderUnavailableError;
+    try {
+      const response = await fetchImpl(url, { redirect: "error", signal });
+      const text = (await response.text()).trim();
+      if (response.status === 200) return text;
+      failure = new BlockHeaderUnavailableError(`${url} answered ${response.status}`);
+      if (!retryable(response.status)) throw failure;
+      pause = Math.max(pause, Number(response.headers.get("retry-after")) * 1000 || 0);
+    } catch (error) {
+      if (error instanceof BlockHeaderUnavailableError) throw error;
+      failure = new BlockHeaderUnavailableError(`${url} could not be reached`, { cause: error });
+    }
+    if (signal.aborted || performance.now() + pause >= deadline) throw failure;
+    await new Promise((resolve) => setTimeout(resolve, pause));
   }
-  return text;
 }
 
 /** The merkle root and time of the block at `height`, from a header both explorers agree on. */
