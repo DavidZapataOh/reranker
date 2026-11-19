@@ -1,6 +1,15 @@
 import type { EngineAnswer } from "./answer";
 
-const GROUNDING_REDIRECT = "https://vertexaisearch.cloud.google.com/grounding-api-redirect/";
+// Gemini's grounding redirects, and the ones AI Overviews put in front of their references.
+const REDIRECTS = [
+  "https://vertexaisearch.cloud.google.com/grounding-api-redirect/",
+  "https://google.com/goto?",
+  "https://www.google.com/goto?",
+];
+// google.com/goto first moves to www.google.com/goto, which then names the site.
+const MAX_HOPS = 3;
+
+const isRedirect = (url: string) => REDIRECTS.some((prefix) => url.startsWith(prefix));
 
 async function locationOf(url: string, timeoutMs: number): Promise<string | undefined> {
   try {
@@ -16,8 +25,19 @@ async function locationOf(url: string, timeoutMs: number): Promise<string | unde
   }
 }
 
+/** Where a chain of Google redirects leads, without ever contacting the site at its end. */
+async function targetOf(url: string, timeoutMs: number): Promise<string | undefined> {
+  let current = url;
+  for (let hop = 0; hop < MAX_HOPS; hop++) {
+    const next = await locationOf(current, timeoutMs);
+    if (next === undefined || !isRedirect(next)) return next;
+    current = next;
+  }
+  return undefined;
+}
+
 /**
- * Adds `resolvedUrl` to Gemini's grounding redirects, so a source can be attributed to its site.
+ * Adds `resolvedUrl` to Google's redirects (Gemini grounding, AI Overview references), so a source can be attributed to its site.
  * The returned `url` is kept as is; a redirect that fails or is slow simply stays unresolved.
  */
 export async function resolveRedirects(
@@ -25,15 +45,13 @@ export async function resolveRedirects(
   opts: { timeoutMs?: number; concurrency?: number } = {},
 ): Promise<EngineAnswer> {
   const { timeoutMs = 3000, concurrency = 20 } = opts;
-  const pending = [
-    ...new Set(answer.sources.map((s) => s.url).filter((u) => u.startsWith(GROUNDING_REDIRECT))),
-  ];
+  const pending = [...new Set(answer.sources.map((s) => s.url).filter(isRedirect))];
   if (pending.length === 0) return answer;
 
   const resolved = new Map<string, string>();
   const worker = async () => {
     for (let url = pending.pop(); url !== undefined; url = pending.pop()) {
-      const target = await locationOf(url, timeoutMs);
+      const target = await targetOf(url, timeoutMs);
       if (target !== undefined) resolved.set(url, target);
     }
   };

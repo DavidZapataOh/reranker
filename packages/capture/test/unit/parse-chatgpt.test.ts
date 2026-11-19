@@ -136,3 +136,63 @@ describe("parseChatGpt", () => {
     expect(Buffer.from(bytes).equals(Buffer.from(copy))).toBe(true);
   });
 });
+
+// Production answers to Spanish local questions, recorded byte for byte.
+const live = (name: string) =>
+  new Uint8Array(readFileSync(new URL(`../fixtures/recorded/live/${name}`, import.meta.url)));
+
+describe("parseChatGpt on production answers", () => {
+  test("a local question yields its businesses, brands, fan-out and cited pages", () => {
+    const a = parseChatGpt(live("chatgpt-colchon-bogota.json"));
+    expect(EngineAnswer.parse(a)).toEqual(a);
+    expect(a).toMatchObject({ modelReported: "gpt-6", present: true });
+    expect(a.searchQueries).toEqual([
+      "dónde comprar colchones en Bogotá tiendas direcciones marcas Colombia 2026",
+    ]);
+    expect(a.localBusinesses).toHaveLength(5);
+    expect(a.localBusinesses?.[0]).toEqual({
+      name: "Colchones El Dorado CC Multiplaza",
+      url: "https://www.colchoneseldorado.com/",
+      address: "Avenida Boyaca Calle 19 Local c-146 A, Bogotá, Cundinamarca, Colombia",
+      rating: 4.9,
+    });
+    // A business without a website keeps its name and address.
+    expect(a.localBusinesses).toContainEqual({
+      name: "Basecamas y colchones El Dormilon Alamos",
+      address: "Dg. 63f #88-14, Bogotá, Colombia",
+      rating: 4.8,
+    });
+    expect(a.brandEntities?.[0]).toEqual({
+      name: "Colchones El Dorado",
+      category: "local_business",
+      urls: [],
+    });
+    expect(a.sources.filter((s) => s.cited).map((s) => s.domain)).toEqual([
+      "www.colchoneseldorado.com",
+      "americanadecolchones.com",
+      "colchonesdormiluna.com",
+      "www.sleepgreen.com.co",
+      "www.pullman.com.co",
+    ]);
+  });
+
+  test("an answer that cites nothing keeps what it searched as not cited", () => {
+    const a = parseChatGpt(live("chatgpt-dentistas-medellin.json"));
+    expect(EngineAnswer.parse(a)).toEqual(a);
+    expect(a.sources).toHaveLength(12);
+    expect(a.sources.some((s) => s.cited)).toBe(false);
+    expect(a.localBusinesses).toHaveLength(7);
+    expect(a.brandEntities).toHaveLength(7);
+  });
+
+  test.each(["chatgpt-abogado-laboral-cdmx.json", "chatgpt-pico-y-placa-medellin.json"])(
+    "%s parses into a valid answer with its fan-out",
+    (name) => {
+      const a = parseChatGpt(live(name));
+      expect(EngineAnswer.parse(a)).toEqual(a);
+      expect(a.markdown.length).toBeGreaterThan(0);
+      expect(a.searchQueries).not.toEqual("unavailable");
+      expect((a.searchQueries as string[]).length).toBeGreaterThan(0);
+    },
+  );
+});
