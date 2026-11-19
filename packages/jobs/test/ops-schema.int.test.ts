@@ -83,6 +83,7 @@ const FUNCTIONS = [
   "breaker_check",
   "breaker_record",
   "breaker_record_transition",
+  "breaker_record_outcomes",
   "record_velocity",
   "trip_guard_mode",
   "guard_mode_status",
@@ -947,6 +948,59 @@ describe("breaker", () => {
     });
     // With the old failures still counted, a single success would reopen it at minCalls 1.
     expect(await breakerRecord(provider, "default", false, 1)).toBe("closed");
+  });
+});
+
+const recordOutcomes = (provider: string, successes: number, failures: number, minCalls = 20) =>
+  one<{ state: string; previous: string }>(
+    sql`select * from ops.breaker_record_outcomes(${provider}, 'default', ${successes}::int,
+      ${failures}::int, ${minCalls}::int, 0.5, 30000)`,
+  );
+
+describe("breaker_record_outcomes", () => {
+  test("one batch of 8 successes and 12 failures opens it as 20 single records would", async () => {
+    const provider = unique("provider");
+    expect(await recordOutcomes(provider, 8, 12)).toEqual({ state: "open", previous: "closed" });
+    const check = await breakerCheck(provider, "default");
+    expect(check.state).toBe("open");
+    expect(check.retry_after_ms).toBeGreaterThan(29_000);
+  });
+
+  test("batches and single records add up in the same window, as a mixed fleet records them", async () => {
+    const provider = unique("provider");
+    await times(10, () => breakerRecord(provider, "default", true));
+    expect(await recordOutcomes(provider, 9, 0)).toEqual({ state: "closed", previous: "closed" });
+    expect(await recordOutcomes(provider, 0, 1)).toEqual({ state: "open", previous: "closed" });
+    // Outcomes that land while it is open are not counted toward the next window.
+    expect(await recordOutcomes(provider, 50, 0)).toEqual({ state: "open", previous: "open" });
+  });
+
+  test("with a probe out, any failure in the batch reopens it and none closes it", async () => {
+    const provider = unique("provider");
+    await recordOutcomes(provider, 0, 20);
+    await expireOpen(provider, "default");
+    expect((await breakerCheck(provider, "default")).state).toBe("half_open");
+    expect(await recordOutcomes(provider, 3, 1)).toEqual({ state: "open", previous: "half_open" });
+    await expireOpen(provider, "default");
+    expect((await breakerCheck(provider, "default")).state).toBe("half_open");
+    expect(await recordOutcomes(provider, 2, 0)).toEqual({
+      state: "closed",
+      previous: "half_open",
+    });
+    expect(await breakerCheck(provider, "default")).toMatchObject({
+      state: "closed",
+      opened_at: null,
+    });
+  });
+
+  test.each([
+    [0, 0],
+    [-1, 2],
+    [2, -1],
+  ])("%i successes and %i failures are rejected", async (successes, failures) => {
+    await expect(recordOutcomes(unique("provider"), successes, failures)).rejects.toMatchObject(
+      pgCode("22023"),
+    );
   });
 });
 
