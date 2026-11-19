@@ -22,11 +22,11 @@ import {
 const TILE_WIDTH = 2 ** TILE_HEIGHT;
 const HASH_BYTES = 32;
 const OCTETS = "application/octet-stream";
-// Full tiles never change; 1,024 of them (8 MiB) hold the hashes of 262,144 entries.
-const FULL_TILE_CACHE = 1024;
+// At most 8 MiB: 1,024 full tiles hold the hashes of 262,144 entries.
+const TILE_CACHE = 1024;
 const BATCH_PAGE = 100;
 
-const fullTiles = new Map<string, Uint8Array>();
+const tileCache = new Map<string, Promise<Uint8Array>>();
 
 /** Key prefix of a log's objects: C2SP tlog-tiles serves it at its origin, without the host. */
 function prefixOf(origin: string): string {
@@ -57,20 +57,33 @@ function tileHash(data: Uint8Array): Hash {
   return nodeHash(tileHash(data.subarray(0, half)), tileHash(data.subarray(half)));
 }
 
-async function readTile(key: string, width: number): Promise<Uint8Array> {
-  const cached = fullTiles.get(key);
-  if (cached) return cached;
+async function fetchTile(key: string, width: number): Promise<Uint8Array> {
   const data = await getLogObject(key);
   if (data === null) throw new Error(`Transparency log tile ${key} is missing`);
   if (data.length !== width * HASH_BYTES) {
     throw new LogForkError(key, `holds ${data.length} bytes instead of ${width} hashes`);
   }
-  if (width === TILE_WIDTH) {
-    const oldest = fullTiles.keys().next();
-    if (fullTiles.size >= FULL_TILE_CACHE && !oldest.done) fullTiles.delete(oldest.value);
-    fullTiles.set(key, data);
-  }
   return data;
+}
+
+// Every tile path names immutable bytes, a partial one included (its width is in the path), so
+// any tile once read is served from memory, least recently used out first. Readers of a tile
+// still in flight share its request; a failed read is forgotten so the next one retries.
+function readTile(key: string, width: number): Promise<Uint8Array> {
+  const cached = tileCache.get(key);
+  if (cached !== undefined) {
+    tileCache.delete(key);
+    tileCache.set(key, cached);
+    return cached;
+  }
+  const read = fetchTile(key, width);
+  read.catch(() => {
+    if (tileCache.get(key) === read) tileCache.delete(key);
+  });
+  const oldest = tileCache.keys().next();
+  if (tileCache.size >= TILE_CACHE && !oldest.done) tileCache.delete(oldest.value);
+  tileCache.set(key, read);
+  return read;
 }
 
 /**

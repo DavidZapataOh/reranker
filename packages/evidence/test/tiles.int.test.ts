@@ -198,7 +198,7 @@ describe("publishPendingBatches", () => {
       (await proveTree(treeSize, before.treeSize, local)).map(hex),
     );
 
-    // Full tiles never change, so a second reader takes the first one from memory.
+    // Tiles never change, so a second reader takes the first one from memory.
     const gets = vi.spyOn(bucket, "fetch");
     await readHashes(ORIGIN, treeSize)([0]);
     expect(gets).not.toHaveBeenCalled();
