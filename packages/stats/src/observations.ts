@@ -1,4 +1,4 @@
-import { parseSlotId } from "@reranker/capture";
+import { parseSlotId } from "@reranker/capture/slot";
 import type { RawCapture } from "@reranker/extraction/extract";
 import { AppError, type CaptureChannel, EngineId } from "@reranker/schema";
 import type {
