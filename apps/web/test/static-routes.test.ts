@@ -19,6 +19,7 @@ test.skipIf(!existsSync(manifest))("landing and error pages stay prerendered", (
       "/politica-de-datos",
       "/robots.txt",
       "/sitemap.xml",
+      "/tienda-ejemplo",
       ...ERROR_CODES.map((code) => `/errores/${code}`),
     ]),
   );
