@@ -107,7 +107,8 @@
         "R2_SECRET_ACCESS_KEY_CI",
         "CLOUDFLARE_ACCOUNT_ID",
         "CLOUDFLARE_API_TOKEN"
-      ]
+      ],
+      "passThroughEnv": ["HOME", "GOROOT", "GOPATH", "GOMODCACHE", "GOCACHE", "GOTOOLCHAIN"]
     },
     "dev": { "cache": false, "persistent": true }
   }

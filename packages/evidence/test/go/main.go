@@ -4,6 +4,9 @@
 //
 // The note-verify subcommand reads {"vkey", "note"} as JSON from stdin and opens the signed note
 // with golang.org/x/mod/sumdb/note, so checkpoints are checked by an independent implementation.
+//
+// The tiles-verify subcommand takes a log's URL prefix and its verifier key, and checks the
+// published checkpoint, hash tiles and entry bundles with tlog.TileHashReader.
 package main
 
 import (
@@ -229,6 +232,15 @@ func main() {
 			os.Exit(1)
 		}
 		fmt.Println("OK")
+		return
+	}
+	if len(os.Args) == 4 && os.Args[1] == "tiles-verify" {
+		size, err := tilesVerify(os.Args[2], os.Args[3])
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		fmt.Printf("OK %d\n", size)
 		return
 	}
 

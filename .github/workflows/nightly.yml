@@ -35,6 +35,11 @@ jobs:
       # The OpenTimestamps reference client: the evidence contract tests compare our proofs with its output.
       - name: Install the OpenTimestamps client
         run: pipx install opentimestamps-client==0.8.0
+      # golang.org/x/mod/sumdb/tlog checks the log tiles the evidence contract tests publish.
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: "1.27"
+          cache-dependency-path: packages/evidence/test/go/go.sum
       # A missing secret fails the contract tests that need it; they never skip. Every package runs
       # even after one fails, so a night reports each broken adapter instead of the first.
       - id: tests
