@@ -1,0 +1,146 @@
+[
+  {
+    "name": "production checkpoint",
+    "origin": "log.reranker.co/captures/2026",
+    "vkey": "log.reranker.co/captures/2026+2984bf03+AQdX2JSa9yAzwx04XVaNcGb7T9TAveduQ+z+QSVEWsl5",
+    "publicKey": "B1fYlJr3IDPDHThdVo1wZvtP1MC9525D7P5BJURayXk=",
+    "note": "log.reranker.co/captures/2026\n1240\nYPLBwaecbUADI43e0R0bL8OZoDvsSwgW/0M6s9REiqI=\n\n— log.reranker.co/captures/2026 KYS/A+uUHBvBqQ19S+OZ1AOBlaigtR2VyMJScvDdjYTeTnQSKEsAVV4/TaLD/bmSm3NRDMiweQvbeVifWnDc8fQkcg8=\n",
+    "go": "ok"
+  },
+  {
+    "name": "preview checkpoint",
+    "origin": "log-preview.reranker.co/pr-123/br-misty-sun-a1b2c3/captures/2026",
+    "vkey": "log-preview.reranker.co/pr-123/br-misty-sun-a1b2c3/captures/2026+e4bc785c+Afm+5P6ifZxwS14uVSivUNRMQiCte32uD5RncFGJomiB",
+    "publicKey": "+b7k/qJ9nHBLXi5VKK9Q1ExCIK17fa4PlGdwUYmiaIE=",
+    "note": "log-preview.reranker.co/pr-123/br-misty-sun-a1b2c3/captures/2026\n7\nuBOYMwigaaSAlqpbuBMQu2pAXTzgFJB6uQztKmR/O1A=\n\n— log-preview.reranker.co/pr-123/br-misty-sun-a1b2c3/captures/2026 5Lx4XK7dDjsS6xKQcQRf/CfrBQ1zQb1TWGYSZeaBF1A6lAbfVZcGrrnbns/A+pcZ/vAgZ5qMBB4VGSzKNN1SY/UoGwY=\n",
+    "go": "ok"
+  },
+  {
+    "name": "empty tree",
+    "origin": "log.reranker.co/captures/2026",
+    "vkey": "log.reranker.co/captures/2026+2984bf03+AQdX2JSa9yAzwx04XVaNcGb7T9TAveduQ+z+QSVEWsl5",
+    "publicKey": "B1fYlJr3IDPDHThdVo1wZvtP1MC9525D7P5BJURayXk=",
+    "note": "log.reranker.co/captures/2026\n0\nAn7kL/Y4LgiDGmL4Fb/0Uyb0rTtt3VfbVFrgKCv/528=\n\n— log.reranker.co/captures/2026 KYS/A6tLzemnlXSXv7nvoo8yB22x9iy/xEcd4cK4SN6d40f3kPBoVpzTMEK6SzmVTb2TnSCFv63iWDU/IfFBPB1V7Qs=\n",
+    "go": "ok"
+  },
+  {
+    "name": "extension line",
+    "origin": "log.reranker.co/captures/2026",
+    "vkey": "log.reranker.co/captures/2026+2984bf03+AQdX2JSa9yAzwx04XVaNcGb7T9TAveduQ+z+QSVEWsl5",
+    "publicKey": "B1fYlJr3IDPDHThdVo1wZvtP1MC9525D7P5BJURayXk=",
+    "note": "log.reranker.co/captures/2026\n1240\nYPLBwaecbUADI43e0R0bL8OZoDvsSwgW/0M6s9REiqI=\next\n\n— log.reranker.co/captures/2026 KYS/A2LQwIZJotheblB3RNGV3aOC1l4WL9PkBm3Wuz9xBNTLGNB7GqPUvxEWtUPpGbhP8t8mHJwF7S/Ry4OhPZrlCgM=\n",
+    "go": "ok"
+  },
+  {
+    "name": "cosigned by an unknown witness",
+    "origin": "log.reranker.co/captures/2026",
+    "vkey": "log.reranker.co/captures/2026+2984bf03+AQdX2JSa9yAzwx04XVaNcGb7T9TAveduQ+z+QSVEWsl5",
+    "publicKey": "B1fYlJr3IDPDHThdVo1wZvtP1MC9525D7P5BJURayXk=",
+    "note": "log.reranker.co/captures/2026\n1240\nYPLBwaecbUADI43e0R0bL8OZoDvsSwgW/0M6s9REiqI=\n\n— witness.example/w1 TM3vR474kejBDBRJrEZqzVdUfeyhCH67Mn9WSfQkXsV94x4dMZTssm/XY/TPmjZ0tQSdLV+oKLMrcIVSgZK/COL1awg=\n— log.reranker.co/captures/2026 KYS/A+uUHBvBqQ19S+OZ1AOBlaigtR2VyMJScvDdjYTeTnQSKEsAVV4/TaLD/bmSm3NRDMiweQvbeVifWnDc8fQkcg8=\n",
+    "go": "ok"
+  },
+  {
+    "name": "same name, unknown key id",
+    "origin": "log.reranker.co/captures/2026",
+    "vkey": "log.reranker.co/captures/2026+2984bf03+AQdX2JSa9yAzwx04XVaNcGb7T9TAveduQ+z+QSVEWsl5",
+    "publicKey": "B1fYlJr3IDPDHThdVo1wZvtP1MC9525D7P5BJURayXk=",
+    "note": "log.reranker.co/captures/2026\n1240\nYPLBwaecbUADI43e0R0bL8OZoDvsSwgW/0M6s9REiqI=\n\n— log.reranker.co/captures/2026 t7ABXTGGT6bihht73LENz4OvwacF3EkCWLs0jsRHifBzQeI8iIPxn6a3l00Y1BlyliaKuSWO/UeP0bZEKcBbXyl0PAY=\n— log.reranker.co/captures/2026 KYS/A+uUHBvBqQ19S+OZ1AOBlaigtR2VyMJScvDdjYTeTnQSKEsAVV4/TaLD/bmSm3NRDMiweQvbeVifWnDc8fQkcg8=\n",
+    "go": "ok"
+  },
+  {
+    "name": "only an unknown key",
+    "origin": "log.reranker.co/captures/2026",
+    "vkey": "log.reranker.co/captures/2026+2984bf03+AQdX2JSa9yAzwx04XVaNcGb7T9TAveduQ+z+QSVEWsl5",
+    "publicKey": "B1fYlJr3IDPDHThdVo1wZvtP1MC9525D7P5BJURayXk=",
+    "note": "log.reranker.co/captures/2026\n1240\nYPLBwaecbUADI43e0R0bL8OZoDvsSwgW/0M6s9REiqI=\n\n— log.reranker.co/captures/2026 t7ABXTGGT6bihht73LENz4OvwacF3EkCWLs0jsRHifBzQeI8iIPxn6a3l00Y1BlyliaKuSWO/UeP0bZEKcBbXyl0PAY=\n",
+    "go": "unverified"
+  },
+  {
+    "name": "only an unknown witness",
+    "origin": "log.reranker.co/captures/2026",
+    "vkey": "log.reranker.co/captures/2026+2984bf03+AQdX2JSa9yAzwx04XVaNcGb7T9TAveduQ+z+QSVEWsl5",
+    "publicKey": "B1fYlJr3IDPDHThdVo1wZvtP1MC9525D7P5BJURayXk=",
+    "note": "log.reranker.co/captures/2026\n1240\nYPLBwaecbUADI43e0R0bL8OZoDvsSwgW/0M6s9REiqI=\n\n— witness.example/w1 TM3vR474kejBDBRJrEZqzVdUfeyhCH67Mn9WSfQkXsV94x4dMZTssm/XY/TPmjZ0tQSdLV+oKLMrcIVSgZK/COL1awg=\n",
+    "go": "unverified"
+  },
+  {
+    "name": "text changed after signing",
+    "origin": "log.reranker.co/captures/2026",
+    "vkey": "log.reranker.co/captures/2026+2984bf03+AQdX2JSa9yAzwx04XVaNcGb7T9TAveduQ+z+QSVEWsl5",
+    "publicKey": "B1fYlJr3IDPDHThdVo1wZvtP1MC9525D7P5BJURayXk=",
+    "note": "log.reranker.co/captures/2026\n1241\nYPLBwaecbUADI43e0R0bL8OZoDvsSwgW/0M6s9REiqI=\n\n— log.reranker.co/captures/2026 KYS/A+uUHBvBqQ19S+OZ1AOBlaigtR2VyMJScvDdjYTeTnQSKEsAVV4/TaLD/bmSm3NRDMiweQvbeVifWnDc8fQkcg8=\n",
+    "go": "invalid_signature"
+  },
+  {
+    "name": "signature from another note",
+    "origin": "log.reranker.co/captures/2026",
+    "vkey": "log.reranker.co/captures/2026+2984bf03+AQdX2JSa9yAzwx04XVaNcGb7T9TAveduQ+z+QSVEWsl5",
+    "publicKey": "B1fYlJr3IDPDHThdVo1wZvtP1MC9525D7P5BJURayXk=",
+    "note": "log.reranker.co/captures/2026\n1240\nYPLBwaecbUADI43e0R0bL8OZoDvsSwgW/0M6s9REiqI=\n\n— log.reranker.co/captures/2026 KYS/A0R8EzgUUgFShZz+hDxsTbg1jJgoJjS6A86z3t/ZlhBPfQIVHUfbVuNd29GENMOlUdut2aKyveaQhk21r9InoQo=\n",
+    "go": "invalid_signature"
+  },
+  {
+    "name": "no signature block",
+    "origin": "log.reranker.co/captures/2026",
+    "vkey": "log.reranker.co/captures/2026+2984bf03+AQdX2JSa9yAzwx04XVaNcGb7T9TAveduQ+z+QSVEWsl5",
+    "publicKey": "B1fYlJr3IDPDHThdVo1wZvtP1MC9525D7P5BJURayXk=",
+    "note": "log.reranker.co/captures/2026\n1240\nYPLBwaecbUADI43e0R0bL8OZoDvsSwgW/0M6s9REiqI=\n",
+    "go": "malformed"
+  },
+  {
+    "name": "control character",
+    "origin": "log.reranker.co/captures/2026",
+    "vkey": "log.reranker.co/captures/2026+2984bf03+AQdX2JSa9yAzwx04XVaNcGb7T9TAveduQ+z+QSVEWsl5",
+    "publicKey": "B1fYlJr3IDPDHThdVo1wZvtP1MC9525D7P5BJURayXk=",
+    "note": "log.reranker.co/captures/2026\n1240\r\nYPLBwaecbUADI43e0R0bL8OZoDvsSwgW/0M6s9REiqI=\n\n— log.reranker.co/captures/2026 KYS/A+uUHBvBqQ19S+OZ1AOBlaigtR2VyMJScvDdjYTeTnQSKEsAVV4/TaLD/bmSm3NRDMiweQvbeVifWnDc8fQkcg8=\n",
+    "go": "malformed"
+  },
+  {
+    "name": "leading zero in size",
+    "origin": "log.reranker.co/captures/2026",
+    "vkey": "log.reranker.co/captures/2026+2984bf03+AQdX2JSa9yAzwx04XVaNcGb7T9TAveduQ+z+QSVEWsl5",
+    "publicKey": "B1fYlJr3IDPDHThdVo1wZvtP1MC9525D7P5BJURayXk=",
+    "note": "log.reranker.co/captures/2026\n01240\ncQAm9O2xAvWYEgTpHuTS8CqGRiENY21mEHJuQ5wjEIk=\n\n— log.reranker.co/captures/2026 KYS/A7hYZi8r1syNnLIJGm3hODmnTKzFjMvPJtdpt2NOnvNe0RBJ/jIjpl9LCyYfV6yoOYvdg/SbciJFYM6xMUnLMAU=\n",
+    "go": "ok"
+  },
+  {
+    "name": "non-decimal size",
+    "origin": "log.reranker.co/captures/2026",
+    "vkey": "log.reranker.co/captures/2026+2984bf03+AQdX2JSa9yAzwx04XVaNcGb7T9TAveduQ+z+QSVEWsl5",
+    "publicKey": "B1fYlJr3IDPDHThdVo1wZvtP1MC9525D7P5BJURayXk=",
+    "note": "log.reranker.co/captures/2026\n12a\nq9T1JIKG3U2JCOOymfsPzhiIyyRfc+AZBJeNlor8A2M=\n\n— log.reranker.co/captures/2026 KYS/A4fw+CZ84rGEz0NV7C0+dqkQLHVF1sT+wcwo1wqP+1N4nfxu2ar8vAsXdXVbxYTSo/48s8tPaPOqBblo+KCZRQc=\n",
+    "go": "ok"
+  },
+  {
+    "name": "root is not 32 bytes",
+    "origin": "log.reranker.co/captures/2026",
+    "vkey": "log.reranker.co/captures/2026+2984bf03+AQdX2JSa9yAzwx04XVaNcGb7T9TAveduQ+z+QSVEWsl5",
+    "publicKey": "B1fYlJr3IDPDHThdVo1wZvtP1MC9525D7P5BJURayXk=",
+    "note": "log.reranker.co/captures/2026\n1240\nAAAA\n\n— log.reranker.co/captures/2026 KYS/A11fsUrc2apeaISXuzxi0TOSVG0XaBHr/C9K5sHaZySsYnTR3frd0gjyabwhG4Q17mLoRzzr3iCtk01au58FBwk=\n",
+    "go": "ok"
+  },
+  {
+    "name": "empty extension line",
+    "origin": "log.reranker.co/captures/2026",
+    "vkey": "log.reranker.co/captures/2026+2984bf03+AQdX2JSa9yAzwx04XVaNcGb7T9TAveduQ+z+QSVEWsl5",
+    "publicKey": "B1fYlJr3IDPDHThdVo1wZvtP1MC9525D7P5BJURayXk=",
+    "note": "log.reranker.co/captures/2026\n1240\nYPLBwaecbUADI43e0R0bL8OZoDvsSwgW/0M6s9REiqI=\n\next\n\n— log.reranker.co/captures/2026 KYS/A1++nVe/6lOyjVhtkozGk9LrqmmuftjpzwMmT0352ip5CvBskt2kN89zenCoq0w03Hjd1mpxupxVvCrRETHzjQk=\n",
+    "go": "ok"
+  },
+  {
+    "name": "two lines",
+    "origin": "log.reranker.co/captures/2026",
+    "vkey": "log.reranker.co/captures/2026+2984bf03+AQdX2JSa9yAzwx04XVaNcGb7T9TAveduQ+z+QSVEWsl5",
+    "publicKey": "B1fYlJr3IDPDHThdVo1wZvtP1MC9525D7P5BJURayXk=",
+    "note": "log.reranker.co/captures/2026\n1240\n\n— log.reranker.co/captures/2026 KYS/A0in+mJ7qDDPxe59UNWNDWBAX7XFCjsh9Kbyv+RRzhyN7ZN1z+wWpRThQ4gHchNAckWc9SGKVL8jUjHD4TKGWAA=\n",
+    "go": "ok"
+  },
+  {
+    "name": "another origin",
+    "origin": "log.reranker.co/captures/2026",
+    "vkey": "log.reranker.co/captures/2026+2984bf03+AQdX2JSa9yAzwx04XVaNcGb7T9TAveduQ+z+QSVEWsl5",
+    "publicKey": "B1fYlJr3IDPDHThdVo1wZvtP1MC9525D7P5BJURayXk=",
+    "note": "log.example.org/other\n1240\nYPLBwaecbUADI43e0R0bL8OZoDvsSwgW/0M6s9REiqI=\n\n— log.reranker.co/captures/2026 KYS/AxSGDv9dWFAvK13rz7wKPmC7z7oMlA9qPF9jelyZ+4V3FwfY+smJCc4QvQVQtuPwLgu4245TDW8lKBUqAo+HTQA=\n",
+    "go": "ok"
+  }
+]

@@ -78,6 +78,10 @@ jobs:
         run: |
           pnpm --filter @reranker/evidence exec tsx test/go/emit-checkpoint.ts |
             (cd packages/evidence/test/go && go run . note-verify)
+      # The browser's checkpoint verifier is tested against notes golang.org/x/mod/sumdb/note signed.
+      - name: Check the signed note fixtures match the Go reference
+        working-directory: packages/verify/test/go/note
+        run: go run . --check
       # --affected never selects this package when only the root Biome config changes.
       - name: Test Biome plugins against the current configuration
         run: pnpm --filter @reranker/biome-plugins test
