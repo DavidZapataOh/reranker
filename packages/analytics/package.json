@@ -12,7 +12,8 @@
     "test": "vitest run --project unit --coverage --passWithNoTests"
   },
   "dependencies": {
-    "@reranker/schema": "workspace:*"
+    "@reranker/schema": "workspace:*",
+    "@reranker/verify": "workspace:*"
   },
   "devDependencies": {
     "@reranker/typescript-config": "workspace:*",
