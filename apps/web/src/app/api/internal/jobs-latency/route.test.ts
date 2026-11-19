@@ -1,4 +1,5 @@
 import { resetAppEnv } from "@reranker/env";
+import { EvidenceStorageUnavailableError, SigningUnavailableError } from "@reranker/evidence";
 import {
   InvalidInputError,
   ProviderUnavailableError,
@@ -15,6 +16,12 @@ vi.mock("@reranker/jobs", async (importOriginal) => ({
   probeNetworkLookup: jobs.probeNetworkLookup,
 }));
 
+const evidence = vi.hoisted(() => ({ probeSealCapture: vi.fn() }));
+vi.mock("@reranker/evidence", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@reranker/evidence")>()),
+  probeSealCapture: evidence.probeSealCapture,
+}));
+
 const { POST } = await import("./route");
 
 const CRON_SECRET = "cron-secret-with-enough-length";
@@ -22,6 +29,13 @@ const BEARER = { authorization: `Bearer ${CRON_SECRET}` };
 const stats = { p50: 1.2, p95: 3.4, n: 1000 };
 const report = { acquireProviderSlot: stats, reserveSpend: stats, settleSpend: stats };
 const networkReport = { classifyNetwork: stats, ranges: 42_000 };
+const sealReport = {
+  sealCapture: null,
+  r2WriteRound: stats,
+  database: stats,
+  envelope: stats,
+  sign: null,
+};
 
 function probe(headers: Record<string, string> = {}, body?: string) {
   return POST(
@@ -43,6 +57,8 @@ beforeEach(() => {
   jobs.probeSpendPath.mockResolvedValue(report);
   jobs.probeNetworkLookup.mockReset();
   jobs.probeNetworkLookup.mockResolvedValue(networkReport);
+  evidence.probeSealCapture.mockReset();
+  evidence.probeSealCapture.mockResolvedValue(sealReport);
 });
 
 afterEach(() => {
@@ -143,4 +159,28 @@ test.each([
   expect((await probe(BEARER, JSON.stringify(body))).status).toBe(400);
   expect(jobs.probeSpendPath).not.toHaveBeenCalled();
   expect(jobs.probeNetworkLookup).not.toHaveBeenCalled();
+});
+
+test("times capture sealing when asked, a hundred seals unless the body says otherwise", async () => {
+  const response = await probe(BEARER, JSON.stringify({ probe: "seal" }));
+  expect(response.status).toBe(200);
+  expect(response.headers.get("cache-control")).toBe("no-store");
+  expect(await response.json()).toEqual(sealReport);
+  expect(evidence.probeSealCapture).toHaveBeenLastCalledWith(100);
+  await probe(BEARER, JSON.stringify({ probe: "seal", n: 5 }));
+  expect(evidence.probeSealCapture).toHaveBeenLastCalledWith(5);
+  expect(jobs.probeSpendPath).not.toHaveBeenCalled();
+});
+
+test("refuses a hold on the seal probe", async () => {
+  expect((await probe(BEARER, JSON.stringify({ probe: "seal", holdMs: 100 }))).status).toBe(400);
+  expect(evidence.probeSealCapture).not.toHaveBeenCalled();
+});
+
+test.each([
+  ["R2 failing", new EvidenceStorageUnavailableError("R2 PUT raw/x: 503")],
+  ["KMS failing", new SigningUnavailableError("KMS is unreachable")],
+])("answers %s with a 503", async (_, error) => {
+  evidence.probeSealCapture.mockRejectedValue(error);
+  expect((await probe(BEARER, JSON.stringify({ probe: "seal" }))).status).toBe(503);
 });

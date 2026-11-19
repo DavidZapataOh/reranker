@@ -7,7 +7,7 @@ import {
 import { appEnv } from "@reranker/env";
 import { KEYS_BY_ENV, type KeyPurpose, type TrustedKey } from "@reranker/verify/trust";
 import { awsCredentialsProvider } from "@vercel/oidc-aws-credentials-provider";
-import { requireEvidenceEnv, resetEvidenceEnv } from "./env";
+import { getEvidenceEnv, requireEvidenceEnv, resetEvidenceEnv } from "./env";
 import { SigningKeyMismatchError, SigningUnavailableError } from "./errors";
 
 export interface Signer {
@@ -129,6 +129,22 @@ function kmsConfig(purpose: KeyPurpose) {
     purpose === "capture" ? "EVIDENCE_CAPTURE_KMS_KEY_ARN" : "EVIDENCE_LOG_KMS_KEY_ARN";
   const env = requireEvidenceEnv("AWS_REGION", "AWS_ROLE_ARN", keyArnName);
   return { region: env.AWS_REGION, roleArn: env.AWS_ROLE_ARN, keyArn: env[keyArnName] };
+}
+
+/**
+ * Whether this environment holds a key to sign `purpose` with: a current one pinned in the registry
+ * and the KMS variables that reach it. Without both, signing fails closed by design, not by outage.
+ */
+export function signingProvisioned(purpose: KeyPurpose): boolean {
+  const env = getEvidenceEnv();
+  const keyArn =
+    purpose === "capture" ? env.EVIDENCE_CAPTURE_KMS_KEY_ARN : env.EVIDENCE_LOG_KMS_KEY_ARN;
+  return (
+    currentKey(purpose) !== undefined &&
+    env.AWS_REGION !== undefined &&
+    env.AWS_ROLE_ARN !== undefined &&
+    keyArn !== undefined
+  );
 }
 
 let client: KMSClient | undefined;

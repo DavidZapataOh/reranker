@@ -18,14 +18,23 @@ import { previewEnv } from "./support/evidence-env";
 
 vi.mock("@reranker/telemetry", () => ({ log: { error: vi.fn() } }));
 
-type Recorded = { url: string; method: string; headers: Record<string, string>; body: Uint8Array };
+type Recorded = {
+  url: string;
+  method: string;
+  headers: Record<string, string>;
+  body: Uint8Array;
+  /** Whether the bytes reached fetch as they are, so their length is known without reading them. */
+  rawBody: boolean;
+};
 type Reply = number | Response | Error;
 
 /** Stands in for the global fetch aws4fetch calls, replying in order and keeping every request. */
 function recordingFetch(...replies: Reply[]) {
   const requests: Recorded[] = [];
-  const spy = vi.fn(async (request: Request) => {
+  const spy = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+    const request = new Request(input, init);
     requests.push({
+      rawBody: !(input instanceof Request) && init?.body instanceof Uint8Array,
       url: request.url,
       method: request.method,
       headers: Object.fromEntries(request.headers),
@@ -80,6 +89,9 @@ describe("putArtifact", () => {
       /^AWS4-HMAC-SHA256 Credential=fedcba9876543210fedcba9876543210\/\d{8}\/auto\/s3\/aws4_request, SignedHeaders=.*if-none-match/,
     );
     expect(fetchSpy.lastRequest.body).toEqual(new Uint8Array(gzipSync(bytes)));
+    // Next.js re-creates a Request input from its body stream, dropping Content-Length, which R2
+    // requires on every PUT (411 otherwise).
+    expect(fetchSpy.lastRequest.rawBody).toBe(true);
   });
 
   test("412 means the object already exists and is success", async () => {

@@ -137,13 +137,19 @@ const rows: Row[] = [
   ["DATAFORSEO_LOGIN", "secret", ALL, true, "S02-02", true],
   ["DATAFORSEO_PASSWORD", "secret", ALL, true, "S02-02", true],
   ["OPENAI_API_KEY", "secret", ALL, false, "S02-03 / S02-04", true],
-  ["OPENAI_API_KEY_CI", "secret", NONE, true, "S02-03 / S02-04"],
+  ["OPENAI_API_KEY_CI", "secret", NONE, true, "S02-03 / S02-04", true],
   ["OPENAI_CONTROL_MODEL", "config", ALL, false, "S02-03 / S02-04"],
+  ["OPENAI_CONTROL_API_KEY", "secret", PROD, false, "S02-03", true],
   ["GEMINI_API_KEY", "secret", ALL, false, "S02-04 / S02-01", true],
   ["GEMINI_API_KEY_CI", "secret", NONE, true, "S02-04"],
-  ["BRIGHTDATA_API_KEY", "secret", PROD, false, "S02-08"],
-  ["BRIGHTDATA_API_KEY_CI", "secret", NONE, true, "S02-08"],
+  ["BRIGHTDATA_API_KEY", "secret", PROD, false, "S02-08", true],
+  ["BRIGHTDATA_API_KEY_CI", "secret", NONE, true, "S02-08", true],
+  // Finance permission: the only role that reads the account's free tier and balance.
+  ["BRIGHTDATA_BILLING_API_KEY", "secret", PROD, false, "S02-08", true],
+  ["BRIGHTDATA_BILLING_API_KEY_CI", "secret", NONE, true, "S02-08", true],
+  // Unset unless Bright Data replaces a scraper: the defaults are its published dataset ids.
   ["BRIGHTDATA_PERPLEXITY_DATASET_ID", "config", PROD, false, "S02-08"],
+  ["BRIGHTDATA_CHATGPT_DATASET_ID", "config", PROD, false, "S02-08"],
   // Inactive until a Claude model wins an extraction role in the extractor benchmark.
   ["ANTHROPIC_API_KEY", "secret", ALL, false, "S02-04"],
   ["ANTHROPIC_API_KEY_CI", "secret", NONE, true, "B0-01"],
@@ -158,8 +164,8 @@ const rows: Row[] = [
   ["R2_LOG_BUCKET", "config", ALL, false, "S02-06"],
   ["R2_INTERNAL_BUCKET", "config", ALL, false, "S02-06"],
   // Bucket-scoped R2 S3 key of the preview buckets, for the nightly storage contract test.
-  ["R2_ACCESS_KEY_ID_CI", "secret", NONE, true, "S02-06"],
-  ["R2_SECRET_ACCESS_KEY_CI", "secret", NONE, true, "S02-06"],
+  ["R2_ACCESS_KEY_ID_CI", "secret", NONE, true, "S02-06", true],
+  ["R2_SECRET_ACCESS_KEY_CI", "secret", NONE, true, "S02-06", true],
   ["CLOUDFLARE_CACHE_PURGE_TOKEN", "secret", ALL, false, "S02-06"],
   // Signing keys live in AWS KMS: the deployment holds ARNs and assumes the role through Vercel
   // OIDC, so no variable ever carries private key material.
