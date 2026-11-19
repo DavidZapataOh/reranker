@@ -134,6 +134,13 @@
       "when": 1795101202266,
       "tag": "0018_measurement_plan_frozen",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1795109895159,
+      "tag": "0019_evidence_tree_hashes",
+      "breakpoints": true
     }
   ]
 }

@@ -3,7 +3,6 @@ import { endPools, withSystem } from "@reranker/db";
 import { InvalidInputError } from "@reranker/jobs/errors";
 import { sql } from "drizzle-orm";
 import { afterAll, afterEach, beforeEach, expect, test, vi } from "vitest";
-import { deleteLogObject } from "../src/artifacts";
 import { probeBuildBundle } from "../src/bundle-latency";
 import { resetEvidenceEnv } from "../src/env";
 import { previewEnv } from "./support/evidence-env";
@@ -35,12 +34,16 @@ async function fakeR2(request: Request): Promise<Response> {
 
 const probeRows = async () => {
   const { rows } = await withSystem("evidence.test", (tx) =>
-    tx.execute<{ captures: number; batches: number }>(sql`
+    tx.execute<{ captures: number; logRows: number }>(sql`
       select
         (select count(*)::int from public_panel.captures where intent_id = 'latency-probe')
           as captures,
         (select count(*)::int from public_panel.evidence_batches
-         where origin like '%/latency-probe/%') as batches`),
+         where origin like '%/latency-probe/%')
+          + (select count(*)::int from public_panel.evidence_tree_hashes
+             where origin like '%/latency-probe/%')
+          + (select count(*)::int from public_panel.evidence_entries
+             where ref like '%/latency-probe/%') as "logRows"`),
   );
   return rows[0];
 };
@@ -76,7 +79,7 @@ test("times whole bundles and each part, then leaves no object and no row behind
   }
   expect(puts).toBeGreaterThan(0);
   expect(r2.size).toBe(0);
-  expect(await probeRows()).toEqual({ captures: 0, batches: 0 });
+  expect(await probeRows()).toEqual({ captures: 0, logRows: 0 });
 });
 
 test("fails rather than report numbers when its objects cannot be deleted", {
@@ -84,16 +87,10 @@ test("fails rather than report numbers when its objects cannot be deleted", {
 }, async () => {
   failDeletes = true;
   await expect(probeBuildBundle(1)).rejects.toThrow(/probe objects were not deleted/);
-  expect(await probeRows()).toEqual({ captures: 0, batches: 0 });
+  expect(await probeRows()).toEqual({ captures: 0, logRows: 0 });
 });
 
 test.each([0, 201, 1.5])("refuses %s bundles before writing anything", async (n) => {
   await expect(probeBuildBundle(n)).rejects.toBeInstanceOf(InvalidInputError);
   expect(puts).toBe(0);
-});
-
-test("never deletes an object of the real log", async () => {
-  await expect(deleteLogObject("captures/2026/checkpoint")).rejects.toBeInstanceOf(
-    InvalidInputError,
-  );
 });

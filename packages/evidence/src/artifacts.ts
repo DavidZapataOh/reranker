@@ -231,23 +231,6 @@ export async function putLogObject(
   return { created };
 }
 
-/** Key prefix of the throwaway logs the latency probe publishes; nothing else is ever deleted. */
-export const PROBE_LOG_PREFIX = "latency-probe/";
-
-/** Removes an object of a latency probe's log. The real log is append-only, so it refuses any other key. */
-export async function deleteLogObject(key: string): Promise<void> {
-  checkLogKey(key);
-  if (!key.startsWith(PROBE_LOG_PREFIX)) {
-    throw new InvalidInputError(`Only latency probe objects leave the log bucket: ${key}`);
-  }
-  const { R2_LOG_BUCKET } = requireEvidenceEnv("R2_LOG_BUCKET");
-  const response = await send("DELETE", R2_LOG_BUCKET, key);
-  await response.body?.cancel();
-  if (!response.ok && response.status !== 404) {
-    throw new Error(`R2 DELETE ${R2_LOG_BUCKET}/${key}: ${response.status}`);
-  }
-}
-
 export async function getLogObject(key: string): Promise<Uint8Array | null> {
   checkLogKey(key);
   return get(requireEvidenceEnv("R2_LOG_BUCKET").R2_LOG_BUCKET, key);

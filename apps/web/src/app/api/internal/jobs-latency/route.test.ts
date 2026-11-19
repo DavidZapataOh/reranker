@@ -43,7 +43,7 @@ const bundleReport = {
   database: stats,
   removals: stats,
   envelopeRead: stats,
-  tileRead: stats,
+
   proofs: stats,
   sealSummaries: stats,
 };

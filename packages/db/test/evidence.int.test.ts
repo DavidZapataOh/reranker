@@ -16,6 +16,7 @@ const EVIDENCE_TABLES: Record<string, string> = {
   timestamp_anchors: "origin",
   signing_keys: "keyid",
   artifact_removals: "sha256",
+  evidence_tree_hashes: "origin",
 };
 const TABLE_NAMES = Object.keys(EVIDENCE_TABLES);
 const ORIGIN = "log.reranker.co/captures/2026";
@@ -386,4 +387,30 @@ test("a report's plan entry and its batch stay within 1 KB of rows and index ent
     `evidence entry+batch bytes per report: ${entry + batch} (entry ${entry}, batch ${batch})`,
   );
   expect(entry + batch).toBeLessThanOrEqual(1024);
+});
+
+test("a tree hash is one 32-byte hash per origin and stored index, never rewritten", async () => {
+  const index = ++nextTreeSize;
+  const insert = (hash: Buffer) =>
+    sys(
+      `insert into public_panel.evidence_tree_hashes (origin, stored_index, hash)
+       values ($1, $2, $3)`,
+      [ORIGIN, index, hash],
+    );
+  await insert(sha("node"));
+  await expect(insert(sha("other"))).rejects.toMatchObject({ code: "23505" });
+  await expect(
+    sys(
+      `insert into public_panel.evidence_tree_hashes (origin, stored_index, hash)
+         values ($1, $2, $3)`,
+      [ORIGIN, index + 1, randomBytes(31)],
+    ),
+  ).rejects.toMatchObject({ code: "23514" });
+  const where = `where origin = '${ORIGIN}' and stored_index = ${index}`;
+  await expect(
+    sys(`update public_panel.evidence_tree_hashes set hash = $1 ${where}`, [sha("other")]),
+  ).rejects.toThrow(/immutable/);
+  await expect(sys(`delete from public_panel.evidence_tree_hashes ${where}`)).rejects.toThrow(
+    /immutable/,
+  );
 });

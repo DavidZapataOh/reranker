@@ -6,8 +6,7 @@ import type {
   RemovalReason,
 } from "@reranker/verify/format";
 import { type SQL, sql } from "drizzle-orm";
-import { readHashes } from "./log/tiles";
-import { proveRecord, proveTree } from "./log/tlog";
+import { proveFromDatabase, type Read } from "./log/proofs";
 import { logOrigin, readStatement, subjectDigest } from "./seal";
 
 export interface SealSummary {
@@ -125,8 +124,8 @@ export function sealSummariesQuery(captureIds: readonly CaptureId[], origin: str
     order by v.ord`;
 }
 
-/** Runs one read; outside the latency probe, each in its own read-only system transaction. */
-export type Reader = <T extends Record<string, unknown>>(query: SQL) => Promise<T[]>;
+// Outside the latency probe, each read runs in its own read-only system transaction.
+export type Reader = Read;
 
 const systemReader =
   (reason: string): Reader =>
@@ -180,16 +179,15 @@ export async function assembleBundle(
   const normalizedSha256 = row.normalized_sha256 ? toHex(row.normalized_sha256) : null;
 
   // The raw digest is only in the signed statement, so its removal is looked up after the
-  // envelope arrives, while the proofs are read from the tiles.
+  // envelope arrives, while the proofs are read from Postgres.
   const signed = readStatement(toHex(row.envelope_sha256)).then(async ({ envelope, statement }) => {
     const rawSha256 = subjectDigest(statement, "raw");
     const digests = normalizedSha256 ? [rawSha256, normalizedSha256] : [rawSha256];
     return { envelope, rawSha256, removals: await removalsOf(digests, read) };
   });
-  const [{ envelope, rawSha256, removals }, inclusion, consistency] = await Promise.all([
+  const [{ envelope, rawSha256, removals }, { inclusion, consistency }] = await Promise.all([
     signed,
-    proveRecord(treeSize, index, readHashes(origin, treeSize)),
-    proveTree(latestSize, treeSize, readHashes(origin, latestSize)),
+    proveFromDatabase(origin, treeSize, index, latestSize, read),
   ]);
 
   const tsrProofs = row.tsr_proofs ?? [];

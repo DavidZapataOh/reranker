@@ -4,9 +4,10 @@ import { Trend } from "k6/metrics";
 import { baseUrl, functionRegion, params } from "../lib/target.js";
 import { latency } from "../lib/thresholds.js";
 
-// One probe of 100 verification bundles in a row over a throwaway three-level log on the
-// preview's database and R2 buckets, timed inside the deployment (iad1) so the runner's distance
-// to Vercel stays out of the number. The budget is the evidence plan's: buildBundle p95 < 250 ms.
+// One probe of 100 verification bundles in a row over a throwaway log of millions of entries on
+// the preview's database and evidence bucket, timed inside the deployment (iad1) so the runner's
+// distance to Vercel stays out of the number.
+// The budget is the evidence plan's: buildBundle p95 < 250 ms.
 const BUNDLES = 100;
 const BUNDLE_P95_MS = 250;
 // A pass builds two bundles' worth of reads plus a report's seal summaries; seeding the log and

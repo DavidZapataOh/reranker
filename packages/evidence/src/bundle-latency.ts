@@ -1,4 +1,4 @@
-import { createHash, generateKeyPairSync, randomBytes, sign } from "node:crypto";
+import { createHash, generateKeyPairSync, randomBytes, randomInt, sign } from "node:crypto";
 import { type SystemTx, withSystem } from "@reranker/db";
 import { type LatencyStats, summarize } from "@reranker/jobs";
 import { InvalidInputError } from "@reranker/jobs/errors";
@@ -6,30 +6,20 @@ import { log } from "@reranker/telemetry";
 import type { CaptureId } from "@reranker/verify/format";
 import { type SQL, sql } from "drizzle-orm";
 import { ulid } from "ulid";
-import {
-  deleteArtifact,
-  deleteLogObject,
-  getArtifact,
-  getLogObject,
-  PROBE_LOG_PREFIX,
-  putArtifact,
-  putLogObject,
-} from "./artifacts";
+import { deleteArtifact, putArtifact } from "./artifacts";
 import { assembleBundle, bundleQuery, type Reader, removalsQuery, summarizeSeals } from "./bundle";
 import { signEnvelope } from "./dsse";
 import { EvidenceStorageUnavailableError } from "./errors";
 import { PROBE_PREDICATE } from "./latency";
 import { formatCheckpoint, signCheckpoint } from "./log/checkpoint";
-import { readHashes } from "./log/tiles";
+import { proofHashIndexes, proveFromDatabase } from "./log/proofs";
 import {
   type Hash,
-  newTiles,
-  proveRecord,
-  proveTree,
+  type ReadHashes,
+  splitStoredHashIndex,
   storedHashes,
   storedHashIndex,
   TILE_HEIGHT,
-  tilePath,
   treeHash,
 } from "./log/tlog";
 import { logOrigin, readStatement, subjectDigest } from "./seal";
@@ -39,7 +29,7 @@ import { buildCaptureStatement } from "./statement";
 export interface BundleLatency {
   /** A whole bundle, its reads inside the probe's transaction. */
   buildBundle: LatencyStats;
-  /** One empty read-only transaction: a real bundle opens two around its reads. */
+  /** One empty read-only transaction: a real bundle waits on two around its reads. */
   transaction: LatencyStats;
   /** The query for the capture, its batches and their anchors. */
   database: LatencyStats;
@@ -47,11 +37,7 @@ export interface BundleLatency {
   removals: LatencyStats;
   /** The envelope from R2, checked against its digest. */
   envelopeRead: LatencyStats;
-  /** One cold level-0 tile read from R2 on its own. */
-  tileRead: LatencyStats;
-  /** One tile-sized (8 KiB) object read from the evidence bucket, beside the log bucket's tile. */
-  artifactRead: LatencyStats;
-  /** Inclusion and consistency proofs from the tiles, their own level-0 tile cold. */
+  /** Inclusion and consistency proofs from Postgres. */
   proofs: LatencyStats;
   /** getSealSummaries over every capture the probe seeded, as a report asks for them. */
   sealSummaries: LatencyStats;
@@ -61,18 +47,28 @@ export const MAX_BUNDLE_PROBES = 200;
 export const DEFAULT_BUNDLE_PROBES = 100;
 
 const TILE_WIDTH = 2 ** TILE_HEIGHT;
-// Three tile levels, as the log has past 65,536 entries; the last level-0 tile is partial.
-const MIN_TREE_SIZE = TILE_WIDTH ** 2 + 100;
+// Each probe's log sits in a slot of its own, past any index the real log will reach soon, so
+// concurrent probes never contend for an index. A slot holds 402 captures' tiles and the growth.
+const FIRST_SLOT = 2 ** 24;
+const SLOT_SIZE = 2 ** 17;
+const SLOTS = 2 ** 13;
 // What the latest checkpoint adds past the anchored one: a few minutes of captures.
 const LATEST_GROWTH = 300;
 const WRITE_CONCURRENCY = 32;
 // The sizes the anchors have: a calendar-upgraded .ots and a DigiCert token.
 const OTS_PROOF_BYTES = 2048;
 const TSR_BYTES = 5 * 1024;
-const OCTETS = "application/octet-stream";
 const ENVELOPE_CONTENT_TYPE = "application/vnd.dsse.envelope.v1+json";
 
 const randomHex = () => randomBytes(32).toString("hex");
+
+// Entries the probe never proves are the SHA-256 of their 8-byte index, which Postgres derives
+// the same way (`sha256(int8send(i))`), so they are inserted without being sent.
+function fillerEntry(index: number): Uint8Array {
+  const bytes = Buffer.alloc(8);
+  bytes.writeBigInt64BE(BigInt(index));
+  return new Uint8Array(createHash("sha256").update(bytes).digest());
+}
 
 // The probe's statements and checkpoints are signed with a key that lives for one call: they
 // name no real capture and are never part of the real log.
@@ -97,15 +93,13 @@ class ProbeDone extends Error {
 
 type Seed = {
   origin: string;
-  prefix: string;
+  base: number;
   captures: Array<{ id: CaptureId; index: number; envelopeSha256: string }>;
   anchored: number;
   latest: number;
   notes: { anchored: string; latest: string };
-  tiles: Map<string, Uint8Array<ArrayBuffer>>;
+  nodes: Map<number, Hash>;
   envelopes: Map<string, Uint8Array>;
-  // One tile-sized object per pass in the evidence bucket, to compare its reads with the log's.
-  blobs: Map<string, Uint8Array>;
 };
 
 async function inBatches<T>(items: T[], fn: (item: T) => Promise<unknown>): Promise<void> {
@@ -117,14 +111,15 @@ async function inBatches<T>(items: T[], fn: (item: T) => Promise<unknown>): Prom
 }
 
 /**
- * A log of its own origin with `count` captures, each alone in its level-0 tile, at indexes past
- * every one the real log holds, so the rows never collide with it.
+ * A log of its own origin with `count` captures, each alone in its level-0 tile, in a slot past
+ * every index the real log holds. Subtrees wholly below the slot get random hashes: no proof of
+ * the probe's captures reaches inside them, only their roots.
  */
 async function buildSeed(count: number, firstFreeIndex: number, signer: Signer): Promise<Seed> {
-  const host = logOrigin().split("/")[0];
-  const origin = `${host}/${PROBE_LOG_PREFIX}${ulid()}`;
-  const base = Math.ceil(firstFreeIndex / TILE_WIDTH) * TILE_WIDTH;
-  const anchored = Math.max(base + count * TILE_WIDTH + 100, MIN_TREE_SIZE);
+  const origin = `${logOrigin().split("/")[0]}/latency-probe/${ulid()}`;
+  const start = Math.max(Math.ceil(firstFreeIndex / SLOT_SIZE) * SLOT_SIZE, FIRST_SLOT);
+  const base = start + randomInt(SLOTS) * SLOT_SIZE;
+  const anchored = base + count * TILE_WIDTH + 100;
   const latest = anchored + LATEST_GROWTH;
 
   const captures: Seed["captures"] = [];
@@ -149,13 +144,20 @@ async function buildSeed(count: number, firstFreeIndex: number, signer: Signer):
     leaves.set(index, new Uint8Array(Buffer.from(signed.sha256, "hex")));
   }
 
-  // Every other entry is a random digest: only the probe's own leaves are ever proven.
-  const filler = randomBytes(latest * 32);
-  const store: Hash[] = [];
-  const read = async (indexes: number[]) => indexes.map((index) => store[index] as Hash);
-  for (let n = 0; n < latest; n++) {
-    const entry = leaves.get(n) ?? filler.subarray(n * 32, (n + 1) * 32);
-    store.push(...(await storedHashes(n, entry, read)));
+  const store = new Map<number, Hash>();
+  const read: ReadHashes = async (indexes) =>
+    indexes.map((index) => {
+      let hash = store.get(index);
+      if (!hash) {
+        hash = new Uint8Array(randomBytes(32));
+        store.set(index, hash);
+      }
+      return hash;
+    });
+  for (let n = base; n < latest; n++) {
+    const hashes = await storedHashes(n, leaves.get(n) ?? fillerEntry(n), read);
+    const first = storedHashIndex(0, n);
+    for (const [j, hash] of hashes.entries()) store.set(first + j, hash);
   }
   const note = async (size: number) =>
     signCheckpoint(
@@ -163,33 +165,16 @@ async function buildSeed(count: number, firstFreeIndex: number, signer: Signer):
       signer,
       origin,
     );
+  const notes = { anchored: await note(anchored), latest: await note(latest) };
 
-  const prefix = `${origin.slice(origin.indexOf("/") + 1)}/`;
-  const tiles = new Map<string, Uint8Array<ArrayBuffer>>();
-  for (const tile of [...newTiles(0, anchored), ...newTiles(0, latest)]) {
-    const start = tile.n * TILE_WIDTH;
-    const hashes = Array.from(
-      { length: tile.width },
-      (_, i) => store[storedHashIndex(tile.level * TILE_HEIGHT, start + i)] as Hash,
-    );
-    tiles.set(prefix + tilePath(tile), Buffer.concat(hashes));
+  // The stored hashes of large subtrees integration would have written, as many as proofs read.
+  const nodes = new Map<number, Hash>();
+  for (const capture of captures) {
+    const indexes = await proofHashIndexes(anchored, capture.index, latest);
+    const large = indexes.filter((i) => splitStoredHashIndex(i).level >= TILE_HEIGHT);
+    for (const [i, hash] of (await read(large)).entries()) nodes.set(large[i] as number, hash);
   }
-  return {
-    origin,
-    prefix,
-    captures,
-    anchored,
-    latest,
-    notes: { anchored: await note(anchored), latest: await note(latest) },
-    tiles,
-    envelopes,
-    blobs: new Map(
-      Array.from({ length: count }, () => {
-        const bytes = randomBytes(TILE_WIDTH * 32);
-        return [createHash("sha256").update(bytes).digest("hex"), bytes] as const;
-      }),
-    ),
-  };
+  return { origin, base, captures, anchored, latest, notes, nodes, envelopes };
 }
 
 async function firstFreeIndex(tx: SystemTx): Promise<number> {
@@ -209,6 +194,7 @@ async function insertSeed(tx: SystemTx, seed: Seed): Promise<void> {
       ${seed.captures.length})
     returning id`);
   if (!plan) throw new Error("The probe's measurement plan was not inserted");
+  const indexes = seed.captures.map((c) => c.index);
   await tx.execute(sql`
     insert into public_panel.captures (id, measurement_id, slot_index, attempt, intent_set_id,
       intent_id, engine, channel, provider, mode, status, response_bytes, latency_ms,
@@ -219,8 +205,19 @@ async function insertSeed(tx: SystemTx, seed: Seed): Promise<void> {
       decode(v.envelope, 'hex'), sha256(convert_to(v.id, 'UTF8')), 1, v.log_index
     from unnest(${sql.param(seed.captures.map((c) => c.id))}::text[],
                 ${sql.param(seed.captures.map((c) => c.envelopeSha256))}::text[],
-                ${sql.param(seed.captures.map((c) => c.index))}::bigint[])
+                ${sql.param(indexes)}::bigint[])
       with ordinality as v(id, envelope, log_index, slot)`);
+  await tx.execute(sql`
+    insert into public_panel.evidence_entries (ref, kind, envelope_sha256, log_index)
+    select ${seed.origin} || '/' || g, 'consent', sha256(int8send(g)), g
+    from generate_series(${seed.base}::bigint, ${seed.latest - 1}::bigint) g
+    where g <> all(${sql.param(indexes)}::bigint[])`);
+  await tx.execute(sql`
+    insert into public_panel.evidence_tree_hashes (origin, stored_index, hash)
+    select ${seed.origin}, v.stored_index, decode(v.hash, 'hex')
+    from unnest(${sql.param([...seed.nodes.keys()])}::bigint[],
+                ${sql.param([...seed.nodes.values()].map((h) => Buffer.from(h).toString("hex")))}::text[])
+      as v(stored_index, hash)`);
   await tx.execute(sql`
     insert into public_panel.evidence_batches (origin, tree_size, first_index, root, frontier,
       checkpoint_note, published_at)
@@ -246,20 +243,15 @@ async function timed<T>(samples: number[] | null, fn: () => Promise<T>): Promise
   return result;
 }
 
-// Every object is attempted even when one fails; each one left behind is logged by its key, and
-// the probe fails instead of reporting numbers over a leak.
-async function removeAll(seed: Seed | undefined, written: Set<string>): Promise<void> {
-  if (!seed) return;
-  const removals = [...written].map((key) =>
-    seed.envelopes.has(key)
-      ? deleteArtifact("envelopes", key)
-      : seed.blobs.has(key)
-        ? deleteArtifact("raw", key)
-        : deleteLogObject(key),
+// Every envelope is attempted even when one fails; each one left behind is logged by its digest,
+// and the probe fails instead of reporting numbers over a leak.
+async function removeAll(written: string[]): Promise<void> {
+  const settled = await Promise.allSettled(
+    written.map((sha256) => deleteArtifact("envelopes", sha256)),
   );
-  const settled = await Promise.allSettled(removals);
-  const leaked = [...written].filter((_, i) => settled[i]?.status === "rejected");
-  for (const key of leaked) log.error("evidence.bundle_probe.leak", { key });
+  const leaked = written.filter((_, i) => settled[i]?.status === "rejected");
+  for (const sha256 of leaked)
+    log.error("evidence.bundle_probe.leak", { kind: "envelopes", sha256 });
   if (leaked.length > 0) {
     throw new EvidenceStorageUnavailableError(`${leaked.length} probe objects were not deleted`);
   }
@@ -275,12 +267,10 @@ async function measure(tx: SystemTx, seed: Seed, n: number): Promise<BundleLaten
     database: [] as number[],
     removals: [] as number[],
     envelope: [] as number[],
-    tile: [] as number[],
-    artifact: [] as number[],
     proofs: [] as number[],
     summaries: [] as number[],
   };
-  // The first pass opens every connection and loads the upper tiles, as a warm function has them.
+  // The first pass opens every connection, as a warm function has them open.
   for (let i = 0; i <= n; i++) {
     const pick = (series: number[]) => (i > 0 ? series : null);
     const whole = seed.captures[2 * i];
@@ -303,20 +293,8 @@ async function measure(tx: SystemTx, seed: Seed, n: number): Promise<BundleLaten
     await timed(pick(samples.removals), () =>
       read(removalsQuery([subjectDigest(statement, "raw"), randomHex()])),
     );
-    const blob = [...seed.blobs.keys()][i];
-    if (blob) await timed(pick(samples.artifact), () => getArtifact("raw", blob));
-    // One tile GET on its own, so the proofs can be told apart from R2's latency.
-    const tileN = Math.floor(parts.index / TILE_WIDTH);
-    await timed(pick(samples.tile), () =>
-      getLogObject(
-        `${seed.prefix}${tilePath({ height: TILE_HEIGHT, level: 0, n: tileN, width: TILE_WIDTH })}`,
-      ),
-    );
     await timed(pick(samples.proofs), () =>
-      Promise.all([
-        proveRecord(seed.anchored, parts.index, readHashes(seed.origin, seed.anchored)),
-        proveTree(seed.latest, seed.anchored, readHashes(seed.origin, seed.latest)),
-      ]),
+      proveFromDatabase(seed.origin, seed.anchored, parts.index, seed.latest, read),
     );
     await timed(pick(samples.summaries), () => summarizeSeals(ids, seed.origin, read));
   }
@@ -326,8 +304,6 @@ async function measure(tx: SystemTx, seed: Seed, n: number): Promise<BundleLaten
     database: summarize(samples.database),
     removals: summarize(samples.removals),
     envelopeRead: summarize(samples.envelope),
-    tileRead: summarize(samples.tile),
-    artifactRead: summarize(samples.artifact),
     proofs: summarize(samples.proofs),
     sealSummaries: summarize(samples.summaries),
   };
@@ -335,39 +311,29 @@ async function measure(tx: SystemTx, seed: Seed, n: number): Promise<BundleLaten
 
 /**
  * Times `n` bundles, and each of their parts on its own, against this deployment's database and
- * R2 buckets. It publishes a throwaway log of its own origin: the envelopes and tiles it writes
- * are deleted before it returns, and its rows live only in a transaction it rolls back, since
- * the real log's tables are append-only.
+ * evidence bucket, over a throwaway log of its own origin. The real log's tables are append-only,
+ * so the probe's rows live only in a transaction it rolls back; the envelopes it stores in R2 are
+ * deleted before it returns.
  */
 export async function probeBuildBundle(n: number = DEFAULT_BUNDLE_PROBES): Promise<BundleLatency> {
   if (!Number.isInteger(n) || n < 1 || n > MAX_BUNDLE_PROBES) {
     throw new InvalidInputError(`A bundle probe builds 1 to ${MAX_BUNDLE_PROBES} bundles`);
   }
   const signer = probeSigner();
-  let seed: Seed | undefined;
-  const written = new Set<string>();
+  const written: string[] = [];
   let report: BundleLatency | undefined;
   let failure: unknown;
   try {
     await withSystem(
       "evidence.latency_probe",
       async (tx) => {
-        seed = await buildSeed(2 * (n + 1), await firstFreeIndex(tx), signer);
-        const current = seed;
-        await inBatches([...current.envelopes], async ([sha256, bytes]) => {
+        const seed = await buildSeed(2 * (n + 1), await firstFreeIndex(tx), signer);
+        await inBatches([...seed.envelopes], async ([sha256, bytes]) => {
           await putArtifact("envelopes", bytes, { contentType: ENVELOPE_CONTENT_TYPE });
-          written.add(sha256);
+          written.push(sha256);
         });
-        await inBatches([...current.blobs], async ([sha256, bytes]) => {
-          await putArtifact("raw", bytes, { contentType: OCTETS });
-          written.add(sha256);
-        });
-        await inBatches([...current.tiles], async ([key, bytes]) => {
-          await putLogObject(key, bytes, { immutable: true, contentType: OCTETS });
-          written.add(key);
-        });
-        await insertSeed(tx, current);
-        throw new ProbeDone(await measure(tx, current, n));
+        await insertSeed(tx, seed);
+        throw new ProbeDone(await measure(tx, seed, n));
       },
       { statementTimeoutMs: 30_000 },
     );
@@ -375,7 +341,7 @@ export async function probeBuildBundle(n: number = DEFAULT_BUNDLE_PROBES): Promi
     if (error instanceof ProbeDone) report = error.report;
     else failure = error;
   }
-  const removal = removeAll(seed, written);
+  const removal = removeAll(written);
   if (failure !== undefined || !report) {
     // The leak is already logged; the error that interrupted the probe is the one to answer.
     await removal.catch(() => undefined);
