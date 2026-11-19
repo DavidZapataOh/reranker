@@ -1,0 +1,447 @@
+{
+    "version": "0.1.20261117",
+    "status_code": 20000,
+    "status_message": "Ok.",
+    "time": "0 sec.",
+    "cost": 0,
+    "tasks_count": 1,
+    "tasks_error": 0,
+    "tasks": [
+        {
+            "id": "11190445-3192-0627-2000-e0c3725db9ef",
+            "status_code": 20000,
+            "status_message": "Ok.",
+            "time": "0 sec.",
+            "cost": 0,
+            "result_count": 46,
+            "path": [
+                "v3",
+                "ai_optimization",
+                "gemini",
+                "llm_scraper",
+                "tasks_ready"
+            ],
+            "data": {
+                "api": "ai_optimization",
+                "function": "llm_scraper",
+                "se": "gemini"
+            },
+            "result": [
+                {
+                    "id": "11140016-0001-0626-0000-62f7e0e1e903",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 00:16:28 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11140016-0001-0626-0000-62f7e0e1e903",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11140016-0001-0626-0000-62f7e0e1e903"
+                },
+                {
+                    "id": "11140216-0001-0626-0000-fa1f393a5bfa",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 02:16:55 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11140216-0001-0626-0000-fa1f393a5bfa",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11140216-0001-0626-0000-fa1f393a5bfa"
+                },
+                {
+                    "id": "11140418-0001-0626-0000-4045d0d581fc",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 04:18:00 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11140418-0001-0626-0000-4045d0d581fc",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11140418-0001-0626-0000-4045d0d581fc"
+                },
+                {
+                    "id": "11140617-0001-0626-0000-725fd47a5405",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 06:17:20 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11140617-0001-0626-0000-725fd47a5405",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11140617-0001-0626-0000-725fd47a5405"
+                },
+                {
+                    "id": "11140816-0001-0626-0000-9235078206c1",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 08:16:48 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11140816-0001-0626-0000-9235078206c1",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11140816-0001-0626-0000-9235078206c1"
+                },
+                {
+                    "id": "11141016-0001-0626-0000-7f13583b0dd7",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 10:16:37 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11141016-0001-0626-0000-7f13583b0dd7",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11141016-0001-0626-0000-7f13583b0dd7"
+                },
+                {
+                    "id": "11141110-0001-0626-0000-98cfd7d6c281",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 11:10:04 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11141110-0001-0626-0000-98cfd7d6c281",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11141110-0001-0626-0000-98cfd7d6c281"
+                },
+                {
+                    "id": "11141216-0001-0626-0000-8e1a07799eb3",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 12:16:49 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11141216-0001-0626-0000-8e1a07799eb3",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11141216-0001-0626-0000-8e1a07799eb3"
+                },
+                {
+                    "id": "11141416-0001-0626-0000-e2ffedc7bf4c",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 14:16:44 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11141416-0001-0626-0000-e2ffedc7bf4c",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11141416-0001-0626-0000-e2ffedc7bf4c"
+                },
+                {
+                    "id": "11141617-0001-0626-0000-34bad998786d",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 16:17:22 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11141617-0001-0626-0000-34bad998786d",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11141617-0001-0626-0000-34bad998786d"
+                },
+                {
+                    "id": "11141617-0001-0626-0000-307f78be0f53",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 16:17:58 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11141617-0001-0626-0000-307f78be0f53",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11141617-0001-0626-0000-307f78be0f53"
+                },
+                {
+                    "id": "11141816-0001-0626-0000-431ac3de70ea",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 18:16:50 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11141816-0001-0626-0000-431ac3de70ea",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11141816-0001-0626-0000-431ac3de70ea"
+                },
+                {
+                    "id": "11142016-0001-0626-0000-b4fd9e046a08",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 20:16:58 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11142016-0001-0626-0000-b4fd9e046a08",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11142016-0001-0626-0000-b4fd9e046a08"
+                },
+                {
+                    "id": "11142218-0001-0626-0000-6047989c19ea",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-14 22:18:19 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11142218-0001-0626-0000-6047989c19ea",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11142218-0001-0626-0000-6047989c19ea"
+                },
+                {
+                    "id": "11150018-0001-0626-0000-562e55d3fa22",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 00:18:07 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11150018-0001-0626-0000-562e55d3fa22",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11150018-0001-0626-0000-562e55d3fa22"
+                },
+                {
+                    "id": "11150218-0001-0626-0000-ba566e86df6a",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 02:18:13 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11150218-0001-0626-0000-ba566e86df6a",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11150218-0001-0626-0000-ba566e86df6a"
+                },
+                {
+                    "id": "11150416-0001-0626-0000-6fb5a5d98955",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 04:16:45 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11150416-0001-0626-0000-6fb5a5d98955",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11150416-0001-0626-0000-6fb5a5d98955"
+                },
+                {
+                    "id": "11150618-0001-0626-0000-1dd086ee299a",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 06:18:07 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11150618-0001-0626-0000-1dd086ee299a",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11150618-0001-0626-0000-1dd086ee299a"
+                },
+                {
+                    "id": "11150817-0001-0626-0000-1a05a12e429a",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 08:17:47 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11150817-0001-0626-0000-1a05a12e429a",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11150817-0001-0626-0000-1a05a12e429a"
+                },
+                {
+                    "id": "11151016-0001-0626-0000-29100edebf68",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 10:16:45 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11151016-0001-0626-0000-29100edebf68",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11151016-0001-0626-0000-29100edebf68"
+                },
+                {
+                    "id": "11151110-0001-0626-0000-1fb667ddfeb3",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 11:10:04 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11151110-0001-0626-0000-1fb667ddfeb3",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11151110-0001-0626-0000-1fb667ddfeb3"
+                },
+                {
+                    "id": "11151217-0001-0626-0000-a9cb4284a37d",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 12:17:44 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11151217-0001-0626-0000-a9cb4284a37d",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11151217-0001-0626-0000-a9cb4284a37d"
+                },
+                {
+                    "id": "11151416-0001-0626-0000-5f0acb7c1666",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 14:16:40 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11151416-0001-0626-0000-5f0acb7c1666",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11151416-0001-0626-0000-5f0acb7c1666"
+                },
+                {
+                    "id": "11151618-0001-0626-0000-e55da63ad983",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 16:18:08 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11151618-0001-0626-0000-e55da63ad983",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11151618-0001-0626-0000-e55da63ad983"
+                },
+                {
+                    "id": "11151617-0001-0626-0000-904319661fa8",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 16:17:40 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11151617-0001-0626-0000-904319661fa8",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11151617-0001-0626-0000-904319661fa8"
+                },
+                {
+                    "id": "11151816-0001-0626-0000-b7a7b1e9b796",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 18:16:31 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11151816-0001-0626-0000-b7a7b1e9b796",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11151816-0001-0626-0000-b7a7b1e9b796"
+                },
+                {
+                    "id": "11152016-0001-0626-0000-9ed5f4e7b264",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 20:16:21 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11152016-0001-0626-0000-9ed5f4e7b264",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11152016-0001-0626-0000-9ed5f4e7b264"
+                },
+                {
+                    "id": "11152216-0001-0626-0000-60aa0557f3c1",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-15 22:16:53 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11152216-0001-0626-0000-60aa0557f3c1",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11152216-0001-0626-0000-60aa0557f3c1"
+                },
+                {
+                    "id": "11160016-0001-0626-0000-c0c0f0ec7808",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-16 00:16:30 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11160016-0001-0626-0000-c0c0f0ec7808",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11160016-0001-0626-0000-c0c0f0ec7808"
+                },
+                {
+                    "id": "11160216-0001-0626-0000-13cb5c3669f9",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-16 02:16:47 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11160216-0001-0626-0000-13cb5c3669f9",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11160216-0001-0626-0000-13cb5c3669f9"
+                },
+                {
+                    "id": "11160417-0001-0626-0000-09d8e1962008",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-16 04:17:00 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11160417-0001-0626-0000-09d8e1962008",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11160417-0001-0626-0000-09d8e1962008"
+                },
+                {
+                    "id": "11160618-0001-0626-0000-effc887aa869",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-16 06:18:02 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11160618-0001-0626-0000-effc887aa869",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11160618-0001-0626-0000-effc887aa869"
+                },
+                {
+                    "id": "11160823-0001-0626-0000-31b69b1b72cb",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-16 08:23:34 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11160823-0001-0626-0000-31b69b1b72cb",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11160823-0001-0626-0000-31b69b1b72cb"
+                },
+                {
+                    "id": "11161017-0001-0626-0000-559aff8f0e39",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-16 10:17:16 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11161017-0001-0626-0000-559aff8f0e39",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11161017-0001-0626-0000-559aff8f0e39"
+                },
+                {
+                    "id": "11161110-0001-0626-0000-e0915de725b1",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-16 11:10:13 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11161110-0001-0626-0000-e0915de725b1",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11161110-0001-0626-0000-e0915de725b1"
+                },
+                {
+                    "id": "11161216-0001-0626-0000-b4ffbb6f973a",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-16 12:16:50 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11161216-0001-0626-0000-b4ffbb6f973a",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11161216-0001-0626-0000-b4ffbb6f973a"
+                },
+                {
+                    "id": "11161417-0001-0626-0000-e0e2e1f97a47",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-16 14:17:29 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11161417-0001-0626-0000-e0e2e1f97a47",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11161417-0001-0626-0000-e0e2e1f97a47"
+                },
+                {
+                    "id": "11161618-0001-0626-0000-33254eded30a",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-16 16:18:02 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11161618-0001-0626-0000-33254eded30a",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11161618-0001-0626-0000-33254eded30a"
+                },
+                {
+                    "id": "11161617-0001-0626-0000-a30dccd3ff55",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-16 16:17:57 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11161617-0001-0626-0000-a30dccd3ff55",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11161617-0001-0626-0000-a30dccd3ff55"
+                },
+                {
+                    "id": "11161817-0001-0626-0000-e2dec99ff421",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-16 18:17:49 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11161817-0001-0626-0000-e2dec99ff421",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11161817-0001-0626-0000-e2dec99ff421"
+                },
+                {
+                    "id": "11162017-0001-0626-0000-ce32376f2105",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-16 20:17:00 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11162017-0001-0626-0000-ce32376f2105",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11162017-0001-0626-0000-ce32376f2105"
+                },
+                {
+                    "id": "11162217-0001-0626-0000-19a2895af5d1",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-16 22:17:12 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11162217-0001-0626-0000-19a2895af5d1",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11162217-0001-0626-0000-19a2895af5d1"
+                },
+                {
+                    "id": "11170016-0001-0626-0000-ad6c639f6346",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-17 00:16:54 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11170016-0001-0626-0000-ad6c639f6346",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11170016-0001-0626-0000-ad6c639f6346"
+                },
+                {
+                    "id": "11170219-0001-0626-0000-882ca1c6ea3a",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-17 02:19:05 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11170219-0001-0626-0000-882ca1c6ea3a",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11170219-0001-0626-0000-882ca1c6ea3a"
+                },
+                {
+                    "id": "11170417-0001-0626-0000-86adcf236ba6",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-17 04:17:17 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11170417-0001-0626-0000-86adcf236ba6",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11170417-0001-0626-0000-86adcf236ba6"
+                },
+                {
+                    "id": "11170617-0001-0626-0000-13bcceb641e0",
+                    "se": "gemini",
+                    "function": "llm_scraper",
+                    "date_posted": "2026-11-17 06:17:10 +00:00",
+                    "tag": "",
+                    "endpoint_advanced": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/advanced\/11170617-0001-0626-0000-13bcceb641e0",
+                    "endpoint_html": "\/v3\/ai_optimization\/gemini\/llm_scraper\/task_get\/html\/11170617-0001-0626-0000-13bcceb641e0"
+                }
+            ]
+        }
+    ]
+}

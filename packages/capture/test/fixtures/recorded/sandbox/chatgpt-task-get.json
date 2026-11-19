@@ -1,0 +1,552 @@
+{
+    "version": "0.1.20261117",
+    "status_code": 20000,
+    "status_message": "Ok.",
+    "time": "0 sec.",
+    "cost": 0,
+    "tasks_count": 1,
+    "tasks_error": 0,
+    "tasks": [
+        {
+            "id": "11190445-3192-0626-2000-af1b2cdae815",
+            "status_code": 20000,
+            "status_message": "Ok.",
+            "time": "0 sec.",
+            "cost": 0,
+            "result_count": 1,
+            "path": [
+                "v3",
+                "ai_optimization",
+                "chat_gpt",
+                "llm_scraper",
+                "task_get",
+                "advanced",
+                "11190445-3192-0626-2000-af1b2cdae815"
+            ],
+            "data": {
+                "api": "ai_optimization",
+                "function": "llm_scraper",
+                "se": "chat_gpt",
+                "id": "11190445-3192-0626-2000-af1b2cdae815"
+            },
+            "result": [
+                {
+                    "keyword": "albert einstein",
+                    "location_code": 2840,
+                    "language_code": "en",
+                    "model": "gpt-6",
+                    "check_url": "https:\/\/chatgpt.com\/?prompt=albert%20einstein&hints=search",
+                    "datetime": "2026-11-18 10:16:45 +00:00",
+                    "markdown": "# Albert Einstein (1879–1955)\n![Lernen als Lebensphilosophie](https:\/\/images.openai.com\/static-rsc-4\/BVln23h_0ydco0fJD_5D6B2E9ZITGdJt-feLF-3ixB8LYLEfwMYNBv16Ks6NMIFiImT8AjMuGcyHAHpox3pCeUSI69pjGsvrStKy8g5WVEklOTGUf1rMT6ewAl16rs_dZscXewl2JOMBRA7mB1N9_A61MOFsRG8cQOo0R7TN7izyWi-DwzS2fQu_6mwHkRkB?purpose=fullsize)![Inteligentni częściej mają bałagan na biurku, zarywają noce i przeklinają? - Zdrowie Radio ZET](https:\/\/images.openai.com\/static-rsc-4\/N5wz0KUw7TH4jJHVia8V-zOnRBZiiBPwcHoM7mHaRGMv6JX_8TInFY_EnICTozDL8MD5allwdnpYK1fcqIZgOa8hu1gxeWvMhowQ5ZfynSXvlidKx5HgVC57CbGlns9_cNXVgsR4VUZoQiMF15YBXvRKobPiPNHuwrqaZxY3pRmCXLRGLdyT1T9xBAjyRL8h?purpose=fullsize)![Manhattan Project Pioneers: Albert Einstein (U.S. National Park Service)](https:\/\/images.openai.com\/static-rsc-4\/BrWnzGyoptXbC62tWNDblm8sTLg4FEa3JAtU-1n-FkMvThZFHaNPkfa6wwZdoCvMOpQgyMi35IU_9cggsOZZWgr1mKJU77QYHcSsYJGZIFs0gAcMp4RKd3wYXcVIU-SRRhUAI0G6X8I5rXogamOWioWZdt9kx07poalAhMbCuRZMiknRTJKfDKx7E35zXnhF?purpose=fullsize)![These Candid Photographs Capture the Daily Life of Albert Einstein, 1930s-1950s - Rare Historical Photos](https:\/\/images.openai.com\/static-rsc-4\/X0vL2dwxC3vcQ0E_3xSlWA48unMrN0vZ49xZgtLda1pCMCKQklxFVZhwW4EbSqK-t2osSY9V-Ts0JRnT6bgrbzCqlepj2ibgtbsDfSzaY5vjWWhWkECX0lBBKlqsnEnFcmujzOflkdBEd_Pxpf6-CgJ_VR43wuSKDc5Jj0WT8z92fTcOtX0CCWJpq_CkDcKC?purpose=fullsize)![Albert Einstein’s House: 112 Mercer Street, Princeton | Institute for Advanced Study](https:\/\/images.openai.com\/static-rsc-4\/a90G9lFIFF4NFqEMW7JWRQmxsgWKs0NUwRVywzD5JotoT42CHeVO-UYBGeAWMh4mTOvO3BH4zv7K7cSolcpoStm0QiAUS7-HlJJcIfvYogUoAbifEik6mSHMI0VHuVo9TCPrXuxSFk89HgADglCtVqWTMVQSjNsgSo3hG4v4qHumDmhnrA_kpyhm_Qxy6nNw?purpose=fullsize)![Albert Einstein, German-american #2 by Science Source](https:\/\/images.openai.com\/static-rsc-4\/Zwgh53qKtqVjZJWE4dV8xH-mp702cpSWmv1LKXzG8p03UwvSY010lD5vKoqQU3q78ikgYAoc3RLSY3PmVZ9cyKKwtnlIKua-juZkJUj2uK6xdtuSl7Rm_qcoQslirqP69l18eYHfYMIBIbVW3d_tZhLfPD09aOd-6ZuLMsVpwZiDY2e8tX1tlxqu8dujcYBi?purpose=fullsize)![Vintage Photos That Show the Home Offices of Famous People - Business Insider](https:\/\/images.openai.com\/static-rsc-4\/D9zi8OaPJX3Dki71PiyZarRBHmH9yymqCtWgwweLMWi-B-szGkt1SSL8asV_zCf19wfFst6cnQfh_akJ9E8GU82z6FMt4yaeBbyaaV0F0Z3_maudWHX5fffkRvKW7TAlLYZXZsKeFaWHb3d7dgGAbHzoVhtE2Qs6inM7cZG4uFavTp1fveSEr2Fw2jzkHkd4?purpose=fullsize)\n\n**Albert Einstein** was a German-born theoretical physicist widely regarded as one of the greatest scientists in history. He revolutionized our understanding of space, time, gravity, light, and energy.\n\n## Quick facts\n\n| Detail | Information |\n|--------|--------|\n| Born | March 14, 1879 |\n| Birthplace | Ulm, Germany |\n| Died | April 18, 1955 |\n| Age | 76 |\n| Profession | Theoretical physicist |\n| Nobel Prize | Physics, 1921 |\n| Famous equation | E = mc² |\n\n\n## His greatest discoveries\n\n![E = mc² (1905 original Einstein handwriting) | Einstein, California institute of technology, Albert einstein](https:\/\/images.openai.com\/static-rsc-4\/exB4lpso70w3_Re7oiQ84sEyl2kkmAXZDje8ogZCmyaZVq-2utCVZ7j31M7NvB-KQDmq8-VXMl2fnZZy-VsQhPDxB1n-anFNSrAeIJyMSucF5tYADlKMhHNFAv_AJsdVZjxryPf_qIVpTXwPuyzcFA1cxtbwupfrw5o-KjbHg1I-oMasegB1bxaHlT8cjATt?purpose=fullsize)\n\n**1\\. Mass-energy equivalence**\n\nHis famous equation\\:\n\n\\[\nE=mc^2\n\\]\n\nIt shows that mass and energy are interchangeable.\n\n---\n\n![general relativity - When spacetime is being curved, Does that mean it is moving? - Physics Stack Exchange](https:\/\/images.openai.com\/static-rsc-4\/BIDOvutl9zR1xu2DrVr0M7pEReMd7CEw8dU-GlmKRE_yTAO0GjimXWOQq9nOxEuHhr6_1JI93IDc8ehslXJ7cDXcn5YHeMtyausFn-Wyrs1QOS0pj6huFPVCqCei-mRLJ_LD2R11O7PY1Ae_JW_Bs1pHOMEvjQZNONb7In4we-G-RoKkBW0R4YgJh1UUrfuh?purpose=fullsize)\n\n**2\\. General relativity (1915)**\n\nExplained gravity as the curvature of space and time caused by mass and energy.\n\n---\n\n![PPT - MODERN PHYSICS PowerPoint Presentation, free download - ID:5107044](https:\/\/images.openai.com\/static-rsc-4\/KglVd4YB1eVaxcTTnYJVsOHk2PDJBPccLR6wXy3nLQXjR3v7RQH7kWA4VT5_PdgcguJAiWBLqBe7IE3mOIloMRpaURWcnjqhYZVPriuX5DOSCfsaJlulXSUnyLgCYypHRbofcEekW-ZnzyLuiuKyiVqXolR9XMN4DSVni43g_UA1q4GseOW2Pr2nTrIc_OWr?purpose=fullsize)\n\n**3\\. Photoelectric effect**\n\nExplained how light can release electrons from materials. This work earned him the Nobel Prize.\n\n---\n\n![PPT - Exploring Relativity and Quantum Mechanics: A Comprehensive Lecture Series PowerPoint Presentation - ID:2225862](https:\/\/images.openai.com\/static-rsc-4\/QCRO6EzaoXVArQQ0UwczAwZRipnwDhjvNjX-recVd5NO4l25_JBuaa0ddr9x303CeoBAaacgoXLrSjKSXeQgeHtcKTq9L8fGYes3-k8j4R8OxC-5uDCgX-zso2WEnqbgmrxiZK5hleYBq7qouEjnDzaDISW4Er5smGqleWy6bQgoPwTaXdwcI1hftBifJWPV?purpose=fullsize)\n\n**4\\. Special relativity (1905)**\n\nDemonstrated that space and time depend on the observer's motion, while the speed of light in a vacuum is constant.\n\n[www.nobel.mpg.de](https:\/\/www.nobel.mpg.de\/en\/albert-einstein?utm_source=chatgpt.com)[www.uzh.ch](https:\/\/www.uzh.ch\/en\/researchinnovation\/excellence\/nobelprize\/einstein.html?utm_source=chatgpt.com)[www.mpg.de](https:\/\/www.mpg.de\/nobel-prize?utm_source=chatgpt.com)\n\n## His life timeline\n\n- **1879\\:** Born in Germany.\n- **1896\\:** Began studying mathematics and physics in Switzerland.\n- **1905\\:** Published groundbreaking scientific papers, known as his miracle year.\n- **1915\\:** Presented general relativity.\n- **1921\\:** Awarded the Nobel Prize in Physics.\n- **1933\\:** Emigrated to the United States.\n- **1955\\:** Died in Princeton, New Jersey.\n\n[ahf.nuclearmuseum.org](https:\/\/ahf.nuclearmuseum.org\/ahf\/profile\/albert-einstein\/?utm_source=chatgpt.com)[www.nps.gov](https:\/\/www.nps.gov\/people\/manhattan-project-pioneers-albert-einstein.htm?utm_source=chatgpt.com)[www.ias.edu](https:\/\/www.ias.edu\/sites\/default\/files\/pdfs\/publications\/IASBlueBook_2013.pdf?utm_source=chatgpt.com)\n\n## Recommended reading\n\n- [Max Planck Society – Einstein's life](https:\/\/www.nobel.mpg.de\/en\/albert-einstein?utm_source=chatgpt.com)\n- [Nobel Prize – Albert Einstein](https:\/\/www.nobelprize.org\/prizes\/physics\/1921\/einstein\/biographical\/_\/?utm_source=chatgpt.com)\n- [Institute for Advanced Study – Einstein](https:\/\/www.ias.edu\/sites\/default\/files\/pdfs\/publications\/IASBlueBook_2013.pdf?utm_source=chatgpt.com)\n\n## What would you like to explore?\n\nI can explain any of these subjects\\:\n\n1. Einstein's theory of relativity in simple language.\n2. How E = mc² actually works.\n3. Einstein's intelligence and IQ.\n4. His childhood, education, and personal life.\n5. His discoveries and how they changed the modern world.\n6. Einstein's views on God, religion, and the universe.",
+                    "search_results": [
+                        {
+                            "type": "chatgpt_search_result",
+                            "url": "https:\/\/www.nobel.mpg.de\/en\/albert-einstein?utm_source=chatgpt.com",
+                            "domain": "www.nobel.mpg.de",
+                            "title": "Digital Story – Albert Einstein | MAX PLANCK GESELLSCHAFT",
+                            "description": "ALBERT Einstein  1879 Ulm – 1955 Princeton (USA)  1921 Nobel Prize in Physics  FOR HIS CONTRIBUTIONS TO THEORETICAL PHYSICS, IN PARTICULAR FOR HIS DISCOVERY OF THE LAW OF THE PHOTOELECTRIC EFFECT  Ka...",
+                            "breadcrumb": "mpg.de"
+                        },
+                        {
+                            "type": "chatgpt_search_result",
+                            "url": "https:\/\/www.mpg.de\/nobel-prize?utm_source=chatgpt.com",
+                            "domain": "www.mpg.de",
+                            "title": "Nobel Laureates | Max-Planck-Gesellschaft",
+                            "description": "1921 - NOBEL PRIZE IN PHYSICS  Image: Albert Einstein  ALBERT EINSTEIN  Kaiser Wilhelm Institute for Physics, Berlin (Today: Max Planck Institute for Physics, Munich) (1879–1955)  Albert Einstein rece...",
+                            "breadcrumb": "mpg.de"
+                        },
+                        {
+                            "type": "chatgpt_search_result",
+                            "url": "https:\/\/ahf.nuclearmuseum.org\/ahf\/profile\/albert-einstein\/?utm_source=chatgpt.com",
+                            "domain": "ahf.nuclearmuseum.org",
+                            "title": "Albert Einstein - Nuclear Museum",
+                            "description": "ALBERT EINSTEIN  THEORETICAL PHYSICIST PRINCETON, NJ  GERMANY  NOBEL PRIZE WINNERSCIENTIST  Image: Albert Einstein. Photo courtesy of the Hebrew University Archives.  Albert Einstein (1879-1955) was...",
+                            "breadcrumb": "nuclearmuseum.org"
+                        },
+                        {
+                            "type": "chatgpt_search_result",
+                            "url": "https:\/\/www.history.com\/articles\/albert-einstein?utm_source=chatgpt.com",
+                            "domain": "www.history.com",
+                            "title": "Albert Einstein | HISTORY",
+                            "description": "By: HISTORY.com Editors  Inventions & Science  ALBERT EINSTEIN  HISTORY.com Editors  Image  Lambert\/Keystone\/Getty Images  Published: October 27, 2009 Last Updated: May 28, 2025  The German-born phys...",
+                            "breadcrumb": "history.com"
+                        },
+                        {
+                            "type": "chatgpt_search_result",
+                            "url": "https:\/\/www.nobelprize.org\/prizes\/physics\/1921\/einstein\/biographical\/_\/?utm_source=chatgpt.com",
+                            "domain": "www.nobelprize.org",
+                            "title": "Albert Einstein – Biographical - NobelPrize.org",
+                            "description": "WHY WE SHOULD THANK EINSTEIN FOR OUR SMARTPHONE CAMERAS  [Select]  Learn more about how the photoelectric effect has shaped technologies such as burglar alarms, solar panels and the camera in your sm...",
+                            "breadcrumb": "nobelprize.org"
+                        },
+                        {
+                            "type": "chatgpt_search_result",
+                            "url": "https:\/\/www.uzh.ch\/en\/researchinnovation\/excellence\/nobelprize\/einstein.html?utm_source=chatgpt.com",
+                            "domain": "www.uzh.ch",
+                            "title": "Albert Einstein – Nobel Prize in Physics 1921 | University of Zurich | UZH",
+                            "description": "ALBERT EINSTEIN – NOBEL PRIZE IN PHYSICS 1921  A QUANTUM OF LIGHT  1905 was Albert Einstein’s annus mirabilis: he published no less than five groundbreaking papers. Among these was his Light Quanta H...",
+                            "breadcrumb": "uzh.ch"
+                        },
+                        {
+                            "type": "chatgpt_search_result",
+                            "url": "https:\/\/www.uzh.ch\/en\/researchinnovation\/excellence\/nobelprize\/einstein\/doctorate.html?utm_source=chatgpt.com",
+                            "domain": "www.uzh.ch",
+                            "title": "Einstein's Dissertation at UZH | University of Zurich | UZH",
+                            "description": "* Image: Einstein Urkunden  Left to right: The new UZH and ETH publication in commemoration of the 100th anniversary of Albert Einstein’s Nobel Prize, the cover of his doctoral thesis at the Universi...",
+                            "breadcrumb": "uzh.ch"
+                        },
+                        {
+                            "type": "chatgpt_search_result",
+                            "url": "https:\/\/mathshistory.st-andrews.ac.uk\/Biographies\/Einstein\/?utm_source=chatgpt.com",
+                            "domain": "mathshistory.st-andrews.ac.uk",
+                            "title": "Albert Einstein (1879 - 1955) - Biography - MacTutor History of Mathematics",
+                            "description": "ALBERT EINSTEIN  QUICK INFO  Born 14 March 1879 Ulm, Württemberg, Germany Died 18 April 1955 Princeton, New Jersey, USA  * * *  Summary Einstein contributed more than any other scientist to the moder...",
+                            "breadcrumb": "st-andrews.ac.uk"
+                        },
+                        {
+                            "type": "chatgpt_search_result",
+                            "url": "https:\/\/www.nps.gov\/people\/manhattan-project-pioneers-albert-einstein.htm?utm_source=chatgpt.com",
+                            "domain": "www.nps.gov",
+                            "title": "Manhattan Project Pioneers: Albert Einstein (U.S. National Park Service)",
+                            "description": "MANHATTAN PROJECT PIONEERS: ALBERT EINSTEIN  Manhattan Project National Historical Park  Image: Black and white photograph of a man in a black suit with white collar, moustache, and frizzy hair. Albe...",
+                            "breadcrumb": "nps.gov"
+                        },
+                        {
+                            "type": "chatgpt_search_result",
+                            "url": "https:\/\/physicstoday.aip.org\/news\/albert-einstein?utm_source=chatgpt.com",
+                            "domain": "physicstoday.aip.org",
+                            "title": "Albert Einstein",
+                            "description": "ALBERT EINSTEIN  MAR 14, 2017  Devising the general theory of relativity was just one of many accomplishments for the world’s most influential physicist since Newton.  DOI: 10.1063\/PT.5.031434  Physi...",
+                            "breadcrumb": "aip.org"
+                        },
+                        {
+                            "type": "chatgpt_search_result",
+                            "url": "https:\/\/www.pbs.org\/wgbh\/aso\/databank\/entries\/bpeins.html?utm_source=chatgpt.com",
+                            "domain": "www.pbs.org",
+                            "title": "A Science Odyssey: People and Discoveries: Albert Einstein",
+                            "description": "Image: A Science Odyssey  | Image: People and Discoveries Image: photo Albert Einstein 1879 - 1955 Albert Einstein is one of the most recognized and well-known scientists of the century. His theories...",
+                            "breadcrumb": "pbs.org"
+                        },
+                        {
+                            "type": "chatgpt_search_result",
+                            "url": "https:\/\/plato.stanford.edu\/archives\/spr2026\/entries\/einstein-philscience\/?utm_source=chatgpt.com",
+                            "domain": "plato.stanford.edu",
+                            "title": "Einstein’s Philosophy of Science",
+                            "description": "EINSTEIN’S PHILOSOPHY OF SCIENCE  First published Wed Feb 11, 2004; substantive revision Sun Feb 2, 2025  Albert Einstein (1879–1955) is well known as the most prominent physicist of the twentieth ce...",
+                            "breadcrumb": "stanford.edu"
+                        }
+                    ],
+                    "sources": [
+                        {
+                            "type": "chat_gpt_source",
+                            "title": "Digital Story – Albert Einstein",
+                            "snippet": null,
+                            "domain": "www.nobel.mpg.de",
+                            "url": "https:\/\/www.nobel.mpg.de\/en\/albert-einstein?utm_source=chatgpt.com",
+                            "thumbnail": null,
+                            "source_name": "MAX PLANCK GESELLSCHAFT",
+                            "publication_date": null,
+                            "markdown": null
+                        },
+                        {
+                            "type": "chat_gpt_source",
+                            "title": "Albert Einstein – Nobel Prize in Physics 1921 | University of Zurich",
+                            "snippet": null,
+                            "domain": "www.uzh.ch",
+                            "url": "https:\/\/www.uzh.ch\/en\/researchinnovation\/excellence\/nobelprize\/einstein.html?utm_source=chatgpt.com",
+                            "thumbnail": null,
+                            "source_name": "UZH",
+                            "publication_date": null,
+                            "markdown": null
+                        },
+                        {
+                            "type": "chat_gpt_source",
+                            "title": "Nobel Laureates",
+                            "snippet": null,
+                            "domain": "www.mpg.de",
+                            "url": "https:\/\/www.mpg.de\/nobel-prize?utm_source=chatgpt.com",
+                            "thumbnail": null,
+                            "source_name": "Max-Planck-Gesellschaft",
+                            "publication_date": null,
+                            "markdown": null
+                        },
+                        {
+                            "type": "chat_gpt_source",
+                            "title": "Albert Einstein",
+                            "snippet": null,
+                            "domain": "ahf.nuclearmuseum.org",
+                            "url": "https:\/\/ahf.nuclearmuseum.org\/ahf\/profile\/albert-einstein\/?utm_source=chatgpt.com",
+                            "thumbnail": null,
+                            "source_name": "Nuclear Museum",
+                            "publication_date": null,
+                            "markdown": null
+                        },
+                        {
+                            "type": "chat_gpt_source",
+                            "title": "Manhattan Project Pioneers: Albert Einstein (U.S. National Park Service)",
+                            "snippet": null,
+                            "domain": "www.nps.gov",
+                            "url": "https:\/\/www.nps.gov\/people\/manhattan-project-pioneers-albert-einstein.htm?utm_source=chatgpt.com",
+                            "thumbnail": null,
+                            "source_name": "National Park Service",
+                            "publication_date": null,
+                            "markdown": null
+                        },
+                        {
+                            "type": "chat_gpt_source",
+                            "title": "Albert Einstein 1879–1955",
+                            "snippet": null,
+                            "domain": "www.ias.edu",
+                            "url": "https:\/\/www.ias.edu\/sites\/default\/files\/pdfs\/publications\/IASBlueBook_2013.pdf?utm_source=chatgpt.com",
+                            "thumbnail": null,
+                            "source_name": "Institute for Advanced Study",
+                            "publication_date": "2014-05-09 14:12:15 +00:00",
+                            "markdown": null
+                        },
+                        {
+                            "type": "chat_gpt_source",
+                            "title": "Nobel Prize – Albert Einstein",
+                            "snippet": null,
+                            "domain": "www.nobelprize.org",
+                            "url": "https:\/\/www.nobelprize.org\/prizes\/physics\/1921\/einstein\/biographical\/_\/?utm_source=chatgpt.com",
+                            "thumbnail": null,
+                            "source_name": null,
+                            "publication_date": null,
+                            "markdown": "[Nobel Prize – Albert Einstein](https:\/\/www.nobelprize.org\/prizes\/physics\/1921\/einstein\/biographical\/_\/?utm_source=chatgpt.com)"
+                        }
+                    ],
+                    "fan_out_queries": [
+                        "Albert Einstein biography scientific contributions Nobel Prize reliable sources"
+                    ],
+                    "brand_entities": null,
+                    "se_results_count": 0,
+                    "item_types": [
+                        "chat_gpt_text",
+                        "chat_gpt_images",
+                        "chat_gpt_table"
+                    ],
+                    "items_count": 13,
+                    "items": [
+                        {
+                            "type": "chat_gpt_text",
+                            "rank_group": 1,
+                            "rank_absolute": 1,
+                            "markdown": "# Albert Einstein (1879–1955)\n",
+                            "sources": null,
+                            "brand_entities": null
+                        },
+                        {
+                            "type": "chat_gpt_images",
+                            "rank_group": 1,
+                            "rank_absolute": 2,
+                            "markdown": "![Lernen als Lebensphilosophie](https:\/\/images.openai.com\/static-rsc-4\/BVln23h_0ydco0fJD_5D6B2E9ZITGdJt-feLF-3ixB8LYLEfwMYNBv16Ks6NMIFiImT8AjMuGcyHAHpox3pCeUSI69pjGsvrStKy8g5WVEklOTGUf1rMT6ewAl16rs_dZscXewl2JOMBRA7mB1N9_A61MOFsRG8cQOo0R7TN7izyWi-DwzS2fQu_6mwHkRkB?purpose=fullsize)![Inteligentni częściej mają bałagan na biurku, zarywają noce i przeklinają? - Zdrowie Radio ZET](https:\/\/images.openai.com\/static-rsc-4\/N5wz0KUw7TH4jJHVia8V-zOnRBZiiBPwcHoM7mHaRGMv6JX_8TInFY_EnICTozDL8MD5allwdnpYK1fcqIZgOa8hu1gxeWvMhowQ5ZfynSXvlidKx5HgVC57CbGlns9_cNXVgsR4VUZoQiMF15YBXvRKobPiPNHuwrqaZxY3pRmCXLRGLdyT1T9xBAjyRL8h?purpose=fullsize)![Manhattan Project Pioneers: Albert Einstein (U.S. National Park Service)](https:\/\/images.openai.com\/static-rsc-4\/BrWnzGyoptXbC62tWNDblm8sTLg4FEa3JAtU-1n-FkMvThZFHaNPkfa6wwZdoCvMOpQgyMi35IU_9cggsOZZWgr1mKJU77QYHcSsYJGZIFs0gAcMp4RKd3wYXcVIU-SRRhUAI0G6X8I5rXogamOWioWZdt9kx07poalAhMbCuRZMiknRTJKfDKx7E35zXnhF?purpose=fullsize)![These Candid Photographs Capture the Daily Life of Albert Einstein, 1930s-1950s - Rare Historical Photos](https:\/\/images.openai.com\/static-rsc-4\/X0vL2dwxC3vcQ0E_3xSlWA48unMrN0vZ49xZgtLda1pCMCKQklxFVZhwW4EbSqK-t2osSY9V-Ts0JRnT6bgrbzCqlepj2ibgtbsDfSzaY5vjWWhWkECX0lBBKlqsnEnFcmujzOflkdBEd_Pxpf6-CgJ_VR43wuSKDc5Jj0WT8z92fTcOtX0CCWJpq_CkDcKC?purpose=fullsize)![Albert Einstein’s House: 112 Mercer Street, Princeton | Institute for Advanced Study](https:\/\/images.openai.com\/static-rsc-4\/a90G9lFIFF4NFqEMW7JWRQmxsgWKs0NUwRVywzD5JotoT42CHeVO-UYBGeAWMh4mTOvO3BH4zv7K7cSolcpoStm0QiAUS7-HlJJcIfvYogUoAbifEik6mSHMI0VHuVo9TCPrXuxSFk89HgADglCtVqWTMVQSjNsgSo3hG4v4qHumDmhnrA_kpyhm_Qxy6nNw?purpose=fullsize)![Albert Einstein, German-american #2 by Science Source](https:\/\/images.openai.com\/static-rsc-4\/Zwgh53qKtqVjZJWE4dV8xH-mp702cpSWmv1LKXzG8p03UwvSY010lD5vKoqQU3q78ikgYAoc3RLSY3PmVZ9cyKKwtnlIKua-juZkJUj2uK6xdtuSl7Rm_qcoQslirqP69l18eYHfYMIBIbVW3d_tZhLfPD09aOd-6ZuLMsVpwZiDY2e8tX1tlxqu8dujcYBi?purpose=fullsize)![Vintage Photos That Show the Home Offices of Famous People - Business Insider](https:\/\/images.openai.com\/static-rsc-4\/D9zi8OaPJX3Dki71PiyZarRBHmH9yymqCtWgwweLMWi-B-szGkt1SSL8asV_zCf19wfFst6cnQfh_akJ9E8GU82z6FMt4yaeBbyaaV0F0Z3_maudWHX5fffkRvKW7TAlLYZXZsKeFaWHb3d7dgGAbHzoVhtE2Qs6inM7cZG4uFavTp1fveSEr2Fw2jzkHkd4?purpose=fullsize)",
+                            "items": [
+                                {
+                                    "type": "chat_gpt_images_element",
+                                    "url": "https:\/\/judentum-projekt.de\/religion\/religioesegrundlagen\/lernen\/index.php",
+                                    "alt": "Lernen als Lebensphilosophie",
+                                    "image_url": "https:\/\/images.openai.com\/static-rsc-4\/BVln23h_0ydco0fJD_5D6B2E9ZITGdJt-feLF-3ixB8LYLEfwMYNBv16Ks6NMIFiImT8AjMuGcyHAHpox3pCeUSI69pjGsvrStKy8g5WVEklOTGUf1rMT6ewAl16rs_dZscXewl2JOMBRA7mB1N9_A61MOFsRG8cQOo0R7TN7izyWi-DwzS2fQu_6mwHkRkB?purpose=fullsize",
+                                    "markdown": "![Lernen als Lebensphilosophie](https:\/\/images.openai.com\/static-rsc-4\/BVln23h_0ydco0fJD_5D6B2E9ZITGdJt-feLF-3ixB8LYLEfwMYNBv16Ks6NMIFiImT8AjMuGcyHAHpox3pCeUSI69pjGsvrStKy8g5WVEklOTGUf1rMT6ewAl16rs_dZscXewl2JOMBRA7mB1N9_A61MOFsRG8cQOo0R7TN7izyWi-DwzS2fQu_6mwHkRkB?purpose=fullsize)"
+                                },
+                                {
+                                    "type": "chat_gpt_images_element",
+                                    "url": "https:\/\/zdrowie.radiozet.pl\/psychologia\/inteligentni-czesciej-maja-balagan-na-biurku-zarywaja-noce-i-przeklinaja",
+                                    "alt": "Inteligentni częściej mają bałagan na biurku, zarywają noce i przeklinają? - Zdrowie Radio ZET",
+                                    "image_url": "https:\/\/images.openai.com\/static-rsc-4\/N5wz0KUw7TH4jJHVia8V-zOnRBZiiBPwcHoM7mHaRGMv6JX_8TInFY_EnICTozDL8MD5allwdnpYK1fcqIZgOa8hu1gxeWvMhowQ5ZfynSXvlidKx5HgVC57CbGlns9_cNXVgsR4VUZoQiMF15YBXvRKobPiPNHuwrqaZxY3pRmCXLRGLdyT1T9xBAjyRL8h?purpose=fullsize",
+                                    "markdown": "![Inteligentni częściej mają bałagan na biurku, zarywają noce i przeklinają? - Zdrowie Radio ZET](https:\/\/images.openai.com\/static-rsc-4\/N5wz0KUw7TH4jJHVia8V-zOnRBZiiBPwcHoM7mHaRGMv6JX_8TInFY_EnICTozDL8MD5allwdnpYK1fcqIZgOa8hu1gxeWvMhowQ5ZfynSXvlidKx5HgVC57CbGlns9_cNXVgsR4VUZoQiMF15YBXvRKobPiPNHuwrqaZxY3pRmCXLRGLdyT1T9xBAjyRL8h?purpose=fullsize)"
+                                },
+                                {
+                                    "type": "chat_gpt_images_element",
+                                    "url": "https:\/\/home.nps.gov\/people\/manhattan-project-pioneers-albert-einstein.htm",
+                                    "alt": "Manhattan Project Pioneers: Albert Einstein (U.S. National Park Service)",
+                                    "image_url": "https:\/\/images.openai.com\/static-rsc-4\/BrWnzGyoptXbC62tWNDblm8sTLg4FEa3JAtU-1n-FkMvThZFHaNPkfa6wwZdoCvMOpQgyMi35IU_9cggsOZZWgr1mKJU77QYHcSsYJGZIFs0gAcMp4RKd3wYXcVIU-SRRhUAI0G6X8I5rXogamOWioWZdt9kx07poalAhMbCuRZMiknRTJKfDKx7E35zXnhF?purpose=fullsize",
+                                    "markdown": "![Manhattan Project Pioneers: Albert Einstein (U.S. National Park Service)](https:\/\/images.openai.com\/static-rsc-4\/BrWnzGyoptXbC62tWNDblm8sTLg4FEa3JAtU-1n-FkMvThZFHaNPkfa6wwZdoCvMOpQgyMi35IU_9cggsOZZWgr1mKJU77QYHcSsYJGZIFs0gAcMp4RKd3wYXcVIU-SRRhUAI0G6X8I5rXogamOWioWZdt9kx07poalAhMbCuRZMiknRTJKfDKx7E35zXnhF?purpose=fullsize)"
+                                },
+                                {
+                                    "type": "chat_gpt_images_element",
+                                    "url": "https:\/\/rarehistoricalphotos.com\/albert-einstein-old-photos\/",
+                                    "alt": "These Candid Photographs Capture the Daily Life of Albert Einstein, 1930s-1950s - Rare Historical Photos",
+                                    "image_url": "https:\/\/images.openai.com\/static-rsc-4\/X0vL2dwxC3vcQ0E_3xSlWA48unMrN0vZ49xZgtLda1pCMCKQklxFVZhwW4EbSqK-t2osSY9V-Ts0JRnT6bgrbzCqlepj2ibgtbsDfSzaY5vjWWhWkECX0lBBKlqsnEnFcmujzOflkdBEd_Pxpf6-CgJ_VR43wuSKDc5Jj0WT8z92fTcOtX0CCWJpq_CkDcKC?purpose=fullsize",
+                                    "markdown": "![These Candid Photographs Capture the Daily Life of Albert Einstein, 1930s-1950s - Rare Historical Photos](https:\/\/images.openai.com\/static-rsc-4\/X0vL2dwxC3vcQ0E_3xSlWA48unMrN0vZ49xZgtLda1pCMCKQklxFVZhwW4EbSqK-t2osSY9V-Ts0JRnT6bgrbzCqlepj2ibgtbsDfSzaY5vjWWhWkECX0lBBKlqsnEnFcmujzOflkdBEd_Pxpf6-CgJ_VR43wuSKDc5Jj0WT8z92fTcOtX0CCWJpq_CkDcKC?purpose=fullsize)"
+                                },
+                                {
+                                    "type": "chat_gpt_images_element",
+                                    "url": "https:\/\/www.ias.edu\/albert-einsteins-house-112-mercer-street-princeton",
+                                    "alt": "Albert Einstein’s House: 112 Mercer Street, Princeton | Institute for Advanced Study",
+                                    "image_url": "https:\/\/images.openai.com\/static-rsc-4\/a90G9lFIFF4NFqEMW7JWRQmxsgWKs0NUwRVywzD5JotoT42CHeVO-UYBGeAWMh4mTOvO3BH4zv7K7cSolcpoStm0QiAUS7-HlJJcIfvYogUoAbifEik6mSHMI0VHuVo9TCPrXuxSFk89HgADglCtVqWTMVQSjNsgSo3hG4v4qHumDmhnrA_kpyhm_Qxy6nNw?purpose=fullsize",
+                                    "markdown": "![Albert Einstein’s House: 112 Mercer Street, Princeton | Institute for Advanced Study](https:\/\/images.openai.com\/static-rsc-4\/a90G9lFIFF4NFqEMW7JWRQmxsgWKs0NUwRVywzD5JotoT42CHeVO-UYBGeAWMh4mTOvO3BH4zv7K7cSolcpoStm0QiAUS7-HlJJcIfvYogUoAbifEik6mSHMI0VHuVo9TCPrXuxSFk89HgADglCtVqWTMVQSjNsgSo3hG4v4qHumDmhnrA_kpyhm_Qxy6nNw?purpose=fullsize)"
+                                },
+                                {
+                                    "type": "chat_gpt_images_element",
+                                    "url": "https:\/\/prints.sciencesource.com\/featured\/2-albert-einstein-german-american-science-source.html",
+                                    "alt": "Albert Einstein, German-american #2 by Science Source",
+                                    "image_url": "https:\/\/images.openai.com\/static-rsc-4\/Zwgh53qKtqVjZJWE4dV8xH-mp702cpSWmv1LKXzG8p03UwvSY010lD5vKoqQU3q78ikgYAoc3RLSY3PmVZ9cyKKwtnlIKua-juZkJUj2uK6xdtuSl7Rm_qcoQslirqP69l18eYHfYMIBIbVW3d_tZhLfPD09aOd-6ZuLMsVpwZiDY2e8tX1tlxqu8dujcYBi?purpose=fullsize",
+                                    "markdown": "![Albert Einstein, German-american #2 by Science Source](https:\/\/images.openai.com\/static-rsc-4\/Zwgh53qKtqVjZJWE4dV8xH-mp702cpSWmv1LKXzG8p03UwvSY010lD5vKoqQU3q78ikgYAoc3RLSY3PmVZ9cyKKwtnlIKua-juZkJUj2uK6xdtuSl7Rm_qcoQslirqP69l18eYHfYMIBIbVW3d_tZhLfPD09aOd-6ZuLMsVpwZiDY2e8tX1tlxqu8dujcYBi?purpose=fullsize)"
+                                },
+                                {
+                                    "type": "chat_gpt_images_element",
+                                    "url": "https:\/\/www.businessinsider.com\/photos-of-famous-home-offices-2020-4",
+                                    "alt": "Vintage Photos That Show the Home Offices of Famous People - Business Insider",
+                                    "image_url": "https:\/\/images.openai.com\/static-rsc-4\/D9zi8OaPJX3Dki71PiyZarRBHmH9yymqCtWgwweLMWi-B-szGkt1SSL8asV_zCf19wfFst6cnQfh_akJ9E8GU82z6FMt4yaeBbyaaV0F0Z3_maudWHX5fffkRvKW7TAlLYZXZsKeFaWHb3d7dgGAbHzoVhtE2Qs6inM7cZG4uFavTp1fveSEr2Fw2jzkHkd4?purpose=fullsize",
+                                    "markdown": "![Vintage Photos That Show the Home Offices of Famous People - Business Insider](https:\/\/images.openai.com\/static-rsc-4\/D9zi8OaPJX3Dki71PiyZarRBHmH9yymqCtWgwweLMWi-B-szGkt1SSL8asV_zCf19wfFst6cnQfh_akJ9E8GU82z6FMt4yaeBbyaaV0F0Z3_maudWHX5fffkRvKW7TAlLYZXZsKeFaWHb3d7dgGAbHzoVhtE2Qs6inM7cZG4uFavTp1fveSEr2Fw2jzkHkd4?purpose=fullsize)"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "chat_gpt_text",
+                            "rank_group": 2,
+                            "rank_absolute": 3,
+                            "markdown": "\n\n**Albert Einstein** was a German-born theoretical physicist widely regarded as one of the greatest scientists in history. He revolutionized our understanding of space, time, gravity, light, and energy.\n\n## Quick facts\n\n",
+                            "sources": null,
+                            "brand_entities": null
+                        },
+                        {
+                            "type": "chat_gpt_table",
+                            "rank_group": 1,
+                            "rank_absolute": 4,
+                            "text": null,
+                            "markdown": "| Detail | Information |\n|--------|--------|\n| Born | March 14, 1879 |\n| Birthplace | Ulm, Germany |\n| Died | April 18, 1955 |\n| Age | 76 |\n| Profession | Theoretical physicist |\n| Nobel Prize | Physics, 1921 |\n| Famous equation | E = mc² |\n\n",
+                            "table": {
+                                "table_header": [
+                                    "Detail",
+                                    "Information"
+                                ],
+                                "table_content": [
+                                    [
+                                        "Born",
+                                        "March 14, 1879"
+                                    ],
+                                    [
+                                        "Birthplace",
+                                        "Ulm, Germany"
+                                    ],
+                                    [
+                                        "Died",
+                                        "April 18, 1955"
+                                    ],
+                                    [
+                                        "Age",
+                                        "76"
+                                    ],
+                                    [
+                                        "Profession",
+                                        "Theoretical physicist"
+                                    ],
+                                    [
+                                        "Nobel Prize",
+                                        "Physics, 1921"
+                                    ],
+                                    [
+                                        "Famous equation",
+                                        "E = mc²"
+                                    ]
+                                ]
+                            },
+                            "brand_entities": null
+                        },
+                        {
+                            "type": "chat_gpt_text",
+                            "rank_group": 3,
+                            "rank_absolute": 5,
+                            "markdown": "\n## His greatest discoveries\n\n",
+                            "sources": null,
+                            "brand_entities": null
+                        },
+                        {
+                            "type": "chat_gpt_images",
+                            "rank_group": 2,
+                            "rank_absolute": 6,
+                            "markdown": "![E = mc² (1905 original Einstein handwriting) | Einstein, California institute of technology, Albert einstein](https:\/\/images.openai.com\/static-rsc-4\/exB4lpso70w3_Re7oiQ84sEyl2kkmAXZDje8ogZCmyaZVq-2utCVZ7j31M7NvB-KQDmq8-VXMl2fnZZy-VsQhPDxB1n-anFNSrAeIJyMSucF5tYADlKMhHNFAv_AJsdVZjxryPf_qIVpTXwPuyzcFA1cxtbwupfrw5o-KjbHg1I-oMasegB1bxaHlT8cjATt?purpose=fullsize)",
+                            "items": [
+                                {
+                                    "type": "chat_gpt_images_element",
+                                    "url": "https:\/\/www.pinterest.com\/pin\/426364289696566617\/",
+                                    "alt": "E = mc² (1905 original Einstein handwriting) | Einstein, California institute of technology, Albert einstein",
+                                    "image_url": "https:\/\/images.openai.com\/static-rsc-4\/exB4lpso70w3_Re7oiQ84sEyl2kkmAXZDje8ogZCmyaZVq-2utCVZ7j31M7NvB-KQDmq8-VXMl2fnZZy-VsQhPDxB1n-anFNSrAeIJyMSucF5tYADlKMhHNFAv_AJsdVZjxryPf_qIVpTXwPuyzcFA1cxtbwupfrw5o-KjbHg1I-oMasegB1bxaHlT8cjATt?purpose=fullsize",
+                                    "markdown": "![E = mc² (1905 original Einstein handwriting) | Einstein, California institute of technology, Albert einstein](https:\/\/images.openai.com\/static-rsc-4\/exB4lpso70w3_Re7oiQ84sEyl2kkmAXZDje8ogZCmyaZVq-2utCVZ7j31M7NvB-KQDmq8-VXMl2fnZZy-VsQhPDxB1n-anFNSrAeIJyMSucF5tYADlKMhHNFAv_AJsdVZjxryPf_qIVpTXwPuyzcFA1cxtbwupfrw5o-KjbHg1I-oMasegB1bxaHlT8cjATt?purpose=fullsize)"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "chat_gpt_text",
+                            "rank_group": 4,
+                            "rank_absolute": 7,
+                            "markdown": "\n\n**1\\. Mass-energy equivalence**\n\nHis famous equation\\:\n\n\\[\nE=mc^2\n\\]\n\nIt shows that mass and energy are interchangeable.\n\n---\n\n",
+                            "sources": null,
+                            "brand_entities": null
+                        },
+                        {
+                            "type": "chat_gpt_images",
+                            "rank_group": 3,
+                            "rank_absolute": 8,
+                            "markdown": "![general relativity - When spacetime is being curved, Does that mean it is moving? - Physics Stack Exchange](https:\/\/images.openai.com\/static-rsc-4\/BIDOvutl9zR1xu2DrVr0M7pEReMd7CEw8dU-GlmKRE_yTAO0GjimXWOQq9nOxEuHhr6_1JI93IDc8ehslXJ7cDXcn5YHeMtyausFn-Wyrs1QOS0pj6huFPVCqCei-mRLJ_LD2R11O7PY1Ae_JW_Bs1pHOMEvjQZNONb7In4we-G-RoKkBW0R4YgJh1UUrfuh?purpose=fullsize)",
+                            "items": [
+                                {
+                                    "type": "chat_gpt_images_element",
+                                    "url": "https:\/\/physics.stackexchange.com\/questions\/529173\/when-spacetime-is-being-curved-does-that-mean-it-is-moving",
+                                    "alt": "general relativity - When spacetime is being curved, Does that mean it is moving? - Physics Stack Exchange",
+                                    "image_url": "https:\/\/images.openai.com\/static-rsc-4\/BIDOvutl9zR1xu2DrVr0M7pEReMd7CEw8dU-GlmKRE_yTAO0GjimXWOQq9nOxEuHhr6_1JI93IDc8ehslXJ7cDXcn5YHeMtyausFn-Wyrs1QOS0pj6huFPVCqCei-mRLJ_LD2R11O7PY1Ae_JW_Bs1pHOMEvjQZNONb7In4we-G-RoKkBW0R4YgJh1UUrfuh?purpose=fullsize",
+                                    "markdown": "![general relativity - When spacetime is being curved, Does that mean it is moving? - Physics Stack Exchange](https:\/\/images.openai.com\/static-rsc-4\/BIDOvutl9zR1xu2DrVr0M7pEReMd7CEw8dU-GlmKRE_yTAO0GjimXWOQq9nOxEuHhr6_1JI93IDc8ehslXJ7cDXcn5YHeMtyausFn-Wyrs1QOS0pj6huFPVCqCei-mRLJ_LD2R11O7PY1Ae_JW_Bs1pHOMEvjQZNONb7In4we-G-RoKkBW0R4YgJh1UUrfuh?purpose=fullsize)"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "chat_gpt_text",
+                            "rank_group": 5,
+                            "rank_absolute": 9,
+                            "markdown": "\n\n**2\\. General relativity (1915)**\n\nExplained gravity as the curvature of space and time caused by mass and energy.\n\n---\n\n",
+                            "sources": null,
+                            "brand_entities": null
+                        },
+                        {
+                            "type": "chat_gpt_images",
+                            "rank_group": 4,
+                            "rank_absolute": 10,
+                            "markdown": "![PPT - MODERN PHYSICS PowerPoint Presentation, free download - ID:5107044](https:\/\/images.openai.com\/static-rsc-4\/KglVd4YB1eVaxcTTnYJVsOHk2PDJBPccLR6wXy3nLQXjR3v7RQH7kWA4VT5_PdgcguJAiWBLqBe7IE3mOIloMRpaURWcnjqhYZVPriuX5DOSCfsaJlulXSUnyLgCYypHRbofcEekW-ZnzyLuiuKyiVqXolR9XMN4DSVni43g_UA1q4GseOW2Pr2nTrIc_OWr?purpose=fullsize)",
+                            "items": [
+                                {
+                                    "type": "chat_gpt_images_element",
+                                    "url": "https:\/\/www.slideserve.com\/tejana\/modern-physics",
+                                    "alt": "PPT - MODERN PHYSICS PowerPoint Presentation, free download - ID:5107044",
+                                    "image_url": "https:\/\/images.openai.com\/static-rsc-4\/KglVd4YB1eVaxcTTnYJVsOHk2PDJBPccLR6wXy3nLQXjR3v7RQH7kWA4VT5_PdgcguJAiWBLqBe7IE3mOIloMRpaURWcnjqhYZVPriuX5DOSCfsaJlulXSUnyLgCYypHRbofcEekW-ZnzyLuiuKyiVqXolR9XMN4DSVni43g_UA1q4GseOW2Pr2nTrIc_OWr?purpose=fullsize",
+                                    "markdown": "![PPT - MODERN PHYSICS PowerPoint Presentation, free download - ID:5107044](https:\/\/images.openai.com\/static-rsc-4\/KglVd4YB1eVaxcTTnYJVsOHk2PDJBPccLR6wXy3nLQXjR3v7RQH7kWA4VT5_PdgcguJAiWBLqBe7IE3mOIloMRpaURWcnjqhYZVPriuX5DOSCfsaJlulXSUnyLgCYypHRbofcEekW-ZnzyLuiuKyiVqXolR9XMN4DSVni43g_UA1q4GseOW2Pr2nTrIc_OWr?purpose=fullsize)"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "chat_gpt_text",
+                            "rank_group": 6,
+                            "rank_absolute": 11,
+                            "markdown": "\n\n**3\\. Photoelectric effect**\n\nExplained how light can release electrons from materials. This work earned him the Nobel Prize.\n\n---\n\n",
+                            "sources": null,
+                            "brand_entities": null
+                        },
+                        {
+                            "type": "chat_gpt_images",
+                            "rank_group": 5,
+                            "rank_absolute": 12,
+                            "markdown": "![PPT - Exploring Relativity and Quantum Mechanics: A Comprehensive Lecture Series PowerPoint Presentation - ID:2225862](https:\/\/images.openai.com\/static-rsc-4\/QCRO6EzaoXVArQQ0UwczAwZRipnwDhjvNjX-recVd5NO4l25_JBuaa0ddr9x303CeoBAaacgoXLrSjKSXeQgeHtcKTq9L8fGYes3-k8j4R8OxC-5uDCgX-zso2WEnqbgmrxiZK5hleYBq7qouEjnDzaDISW4Er5smGqleWy6bQgoPwTaXdwcI1hftBifJWPV?purpose=fullsize)",
+                            "items": [
+                                {
+                                    "type": "chat_gpt_images_element",
+                                    "url": "https:\/\/www.slideserve.com\/uma\/a-lecture-series-on-relativity-theory-and-quantum-mechanics",
+                                    "alt": "PPT - Exploring Relativity and Quantum Mechanics: A Comprehensive Lecture Series PowerPoint Presentation - ID:2225862",
+                                    "image_url": "https:\/\/images.openai.com\/static-rsc-4\/QCRO6EzaoXVArQQ0UwczAwZRipnwDhjvNjX-recVd5NO4l25_JBuaa0ddr9x303CeoBAaacgoXLrSjKSXeQgeHtcKTq9L8fGYes3-k8j4R8OxC-5uDCgX-zso2WEnqbgmrxiZK5hleYBq7qouEjnDzaDISW4Er5smGqleWy6bQgoPwTaXdwcI1hftBifJWPV?purpose=fullsize",
+                                    "markdown": "![PPT - Exploring Relativity and Quantum Mechanics: A Comprehensive Lecture Series PowerPoint Presentation - ID:2225862](https:\/\/images.openai.com\/static-rsc-4\/QCRO6EzaoXVArQQ0UwczAwZRipnwDhjvNjX-recVd5NO4l25_JBuaa0ddr9x303CeoBAaacgoXLrSjKSXeQgeHtcKTq9L8fGYes3-k8j4R8OxC-5uDCgX-zso2WEnqbgmrxiZK5hleYBq7qouEjnDzaDISW4Er5smGqleWy6bQgoPwTaXdwcI1hftBifJWPV?purpose=fullsize)"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "chat_gpt_text",
+                            "rank_group": 7,
+                            "rank_absolute": 13,
+                            "markdown": "\n\n**4\\. Special relativity (1905)**\n\nDemonstrated that space and time depend on the observer's motion, while the speed of light in a vacuum is constant.\n\n[www.nobel.mpg.de](https:\/\/www.nobel.mpg.de\/en\/albert-einstein?utm_source=chatgpt.com)[www.uzh.ch](https:\/\/www.uzh.ch\/en\/researchinnovation\/excellence\/nobelprize\/einstein.html?utm_source=chatgpt.com)[www.mpg.de](https:\/\/www.mpg.de\/nobel-prize?utm_source=chatgpt.com)\n\n## His life timeline\n\n- **1879\\:** Born in Germany.\n- **1896\\:** Began studying mathematics and physics in Switzerland.\n- **1905\\:** Published groundbreaking scientific papers, known as his miracle year.\n- **1915\\:** Presented general relativity.\n- **1921\\:** Awarded the Nobel Prize in Physics.\n- **1933\\:** Emigrated to the United States.\n- **1955\\:** Died in Princeton, New Jersey.\n\n[ahf.nuclearmuseum.org](https:\/\/ahf.nuclearmuseum.org\/ahf\/profile\/albert-einstein\/?utm_source=chatgpt.com)[www.nps.gov](https:\/\/www.nps.gov\/people\/manhattan-project-pioneers-albert-einstein.htm?utm_source=chatgpt.com)[www.ias.edu](https:\/\/www.ias.edu\/sites\/default\/files\/pdfs\/publications\/IASBlueBook_2013.pdf?utm_source=chatgpt.com)\n\n## Recommended reading\n\n- [Max Planck Society – Einstein's life](https:\/\/www.nobel.mpg.de\/en\/albert-einstein?utm_source=chatgpt.com)\n- [Nobel Prize – Albert Einstein](https:\/\/www.nobelprize.org\/prizes\/physics\/1921\/einstein\/biographical\/_\/?utm_source=chatgpt.com)\n- [Institute for Advanced Study – Einstein](https:\/\/www.ias.edu\/sites\/default\/files\/pdfs\/publications\/IASBlueBook_2013.pdf?utm_source=chatgpt.com)\n\n## What would you like to explore?\n\nI can explain any of these subjects\\:\n\n1. Einstein's theory of relativity in simple language.\n2. How E = mc² actually works.\n3. Einstein's intelligence and IQ.\n4. His childhood, education, and personal life.\n5. His discoveries and how they changed the modern world.\n6. Einstein's views on God, religion, and the universe.",
+                            "sources": [
+                                {
+                                    "type": "chat_gpt_source",
+                                    "title": "Digital Story – Albert Einstein",
+                                    "snippet": null,
+                                    "domain": "www.nobel.mpg.de",
+                                    "url": "https:\/\/www.nobel.mpg.de\/en\/albert-einstein?utm_source=chatgpt.com",
+                                    "thumbnail": null,
+                                    "source_name": "MAX PLANCK GESELLSCHAFT",
+                                    "publication_date": null,
+                                    "markdown": null
+                                },
+                                {
+                                    "type": "chat_gpt_source",
+                                    "title": "Albert Einstein – Nobel Prize in Physics 1921 | University of Zurich",
+                                    "snippet": null,
+                                    "domain": "www.uzh.ch",
+                                    "url": "https:\/\/www.uzh.ch\/en\/researchinnovation\/excellence\/nobelprize\/einstein.html?utm_source=chatgpt.com",
+                                    "thumbnail": null,
+                                    "source_name": "UZH",
+                                    "publication_date": null,
+                                    "markdown": null
+                                },
+                                {
+                                    "type": "chat_gpt_source",
+                                    "title": "Nobel Laureates",
+                                    "snippet": null,
+                                    "domain": "www.mpg.de",
+                                    "url": "https:\/\/www.mpg.de\/nobel-prize?utm_source=chatgpt.com",
+                                    "thumbnail": null,
+                                    "source_name": "Max-Planck-Gesellschaft",
+                                    "publication_date": null,
+                                    "markdown": null
+                                },
+                                {
+                                    "type": "chat_gpt_source",
+                                    "title": "Albert Einstein",
+                                    "snippet": null,
+                                    "domain": "ahf.nuclearmuseum.org",
+                                    "url": "https:\/\/ahf.nuclearmuseum.org\/ahf\/profile\/albert-einstein\/?utm_source=chatgpt.com",
+                                    "thumbnail": null,
+                                    "source_name": "Nuclear Museum",
+                                    "publication_date": null,
+                                    "markdown": null
+                                },
+                                {
+                                    "type": "chat_gpt_source",
+                                    "title": "Manhattan Project Pioneers: Albert Einstein (U.S. National Park Service)",
+                                    "snippet": null,
+                                    "domain": "www.nps.gov",
+                                    "url": "https:\/\/www.nps.gov\/people\/manhattan-project-pioneers-albert-einstein.htm?utm_source=chatgpt.com",
+                                    "thumbnail": null,
+                                    "source_name": "National Park Service",
+                                    "publication_date": null,
+                                    "markdown": null
+                                },
+                                {
+                                    "type": "chat_gpt_source",
+                                    "title": "Albert Einstein 1879–1955",
+                                    "snippet": null,
+                                    "domain": "www.ias.edu",
+                                    "url": "https:\/\/www.ias.edu\/sites\/default\/files\/pdfs\/publications\/IASBlueBook_2013.pdf?utm_source=chatgpt.com",
+                                    "thumbnail": null,
+                                    "source_name": "Institute for Advanced Study",
+                                    "publication_date": "2014-05-09 14:12:15 +00:00",
+                                    "markdown": null
+                                },
+                                {
+                                    "type": "chat_gpt_source",
+                                    "title": "Max Planck Society – Einstein's life",
+                                    "snippet": null,
+                                    "domain": "www.nobel.mpg.de",
+                                    "url": "https:\/\/www.nobel.mpg.de\/en\/albert-einstein?utm_source=chatgpt.com",
+                                    "thumbnail": null,
+                                    "source_name": null,
+                                    "publication_date": null,
+                                    "markdown": "[Max Planck Society – Einstein's life](https:\/\/www.nobel.mpg.de\/en\/albert-einstein?utm_source=chatgpt.com)"
+                                },
+                                {
+                                    "type": "chat_gpt_source",
+                                    "title": "Nobel Prize – Albert Einstein",
+                                    "snippet": null,
+                                    "domain": "www.nobelprize.org",
+                                    "url": "https:\/\/www.nobelprize.org\/prizes\/physics\/1921\/einstein\/biographical\/_\/?utm_source=chatgpt.com",
+                                    "thumbnail": null,
+                                    "source_name": null,
+                                    "publication_date": null,
+                                    "markdown": "[Nobel Prize – Albert Einstein](https:\/\/www.nobelprize.org\/prizes\/physics\/1921\/einstein\/biographical\/_\/?utm_source=chatgpt.com)"
+                                },
+                                {
+                                    "type": "chat_gpt_source",
+                                    "title": "Institute for Advanced Study – Einstein",
+                                    "snippet": null,
+                                    "domain": "www.ias.edu",
+                                    "url": "https:\/\/www.ias.edu\/sites\/default\/files\/pdfs\/publications\/IASBlueBook_2013.pdf?utm_source=chatgpt.com",
+                                    "thumbnail": null,
+                                    "source_name": null,
+                                    "publication_date": null,
+                                    "markdown": "[Institute for Advanced Study – Einstein](https:\/\/www.ias.edu\/sites\/default\/files\/pdfs\/publications\/IASBlueBook_2013.pdf?utm_source=chatgpt.com)"
+                                }
+                            ],
+                            "brand_entities": null
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

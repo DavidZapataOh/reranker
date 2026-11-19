@@ -1,0 +1,409 @@
+{
+    "version": "0.1.20261117",
+    "status_code": 20000,
+    "status_message": "Ok.",
+    "time": "0 sec.",
+    "cost": 0,
+    "tasks_count": 1,
+    "tasks_error": 0,
+    "tasks": [
+        {
+            "id": "11190445-3192-0139-2000-00b66367e851",
+            "status_code": 20000,
+            "status_message": "Ok.",
+            "time": "0 sec.",
+            "cost": 0,
+            "result_count": 1,
+            "path": [
+                "v3",
+                "serp",
+                "google",
+                "ai_mode",
+                "live",
+                "advanced"
+            ],
+            "data": {
+                "api": "serp",
+                "function": "live",
+                "se": "google",
+                "se_type": "ai_mode",
+                "keyword": "mejor odontólogo en Medellín",
+                "location_code": 2170,
+                "language_code": "es",
+                "device": "mobile",
+                "os": "android",
+                "tag": "contract:ai-mode"
+            },
+            "result": [
+                {
+                    "keyword": "albert einstein",
+                    "type": "ai_mode",
+                    "se_domain": "google.com",
+                    "location_code": 2840,
+                    "language_code": "en",
+                    "check_url": "https:\/\/www.google.com\/search?q=albert%20einstein&hl=en&gl=US&udm=50&uule=w+CAIQIFISCQs2MuSEtepUEUK33kOSuTsc",
+                    "datetime": "2026-11-16 12:57:11 +00:00",
+                    "spell": null,
+                    "refinement_chips": null,
+                    "item_types": [
+                        "ai_overview"
+                    ],
+                    "se_results_count": 0,
+                    "items_count": 1,
+                    "items": [
+                        {
+                            "type": "ai_overview",
+                            "rank_group": 1,
+                            "rank_absolute": 1,
+                            "page": 1,
+                            "position": "left",
+                            "xpath": "\/html[1]\/body[1]\/div[2]\/div[1]\/div[9]\/div[1]\/section[1]\/div[1]\/div[1]\/div[3]\/div[4]\/div[1]\/div[1]\/div[1]\/div[3]",
+                            "markdown": "![Albert Einstein - Wikipedia](https:\/\/api.dataforseo.com\/cdn\/i\/11161256-0001-0139-0000-f7c7df1cdbbf:32)\n![Albert Einstein | Biography, Relativity, Education ...](https:\/\/api.dataforseo.com\/cdn\/i\/11161256-0001-0139-0000-f7c7df1cdbbf:33)\n![Albert Einstein – Biographical - NobelPrize.org](https:\/\/api.dataforseo.com\/cdn\/i\/11161256-0001-0139-0000-f7c7df1cdbbf:34)\n![Albert Einstein: His life, theories and impact on science | Space](https:\/\/api.dataforseo.com\/cdn\/i\/11161256-0001-0139-0000-f7c7df1cdbbf:35)\n![Albert Einstein: Biography, Physicist, Nobel Prize Winner](https:\/\/api.dataforseo.com\/cdn\/i\/11161256-0001-0139-0000-f7c7df1cdbbf:36)\n![Albert Einstein - Global Governance Forum](https:\/\/api.dataforseo.com\/cdn\/i\/11161256-0001-0139-0000-f7c7df1cdbbf:37)\n![Albert Einstein | HISTORY](https:\/\/api.dataforseo.com\/cdn\/i\/11161256-0001-0139-0000-f7c7df1cdbbf:38)\n![Albert Einstein&#39;s biography | American Masters | PBS](https:\/\/api.dataforseo.com\/cdn\/i\/11161256-0001-0139-0000-f7c7df1cdbbf:39)\n\n**Albert Einstein** (1879–1955) was a `German-born theoretical physicist` who revolutionized modern science by developing the **theory of relativity** and making foundational contributions to **quantum mechanics** . He won the **1921 Nobel Prize in Physics** for explaining the photoelectric effect.[[1]](https:\/\/en.wikipedia.org\/wiki\/Albert_Einstein)[[2]](https:\/\/www.alberteinstein.com\/)\n\n### Major Scientific Contributions\n\n- **Special Relativity (1905).** Einstein showed that space and time are linked into a single continuum and change depending on an object's speed.[[1]](https:\/\/www.youtube.com\/watch?v=0Zn9M8bjB4s)\n- **Mass-Energy Equivalence (E = mc²).** Derived from special relativity, this famous equation proves that small amounts of mass can convert into massive amounts of energy.[[1]](https:\/\/en.wikipedia.org\/wiki\/Albert_Einstein)[[2]](https:\/\/www.youtube.com\/watch?v=0Zn9M8bjB4s)\n- **Photoelectric Effect (1905).** He demonstrated that light travels in discrete energy packets called photons, laying the groundwork for quantum theory.[[1]](https:\/\/www.facebook.com\/nobelprize\/videos\/did-you-know-we-can-thank-physics-laureate-albert-einstein-in-part-for-our-smart\/805492161962539\/)\n- **Brownian Motion (1905).** His mathematical explanation of particles suspended in fluid provided decisive proof that atoms exist.[[1]](https:\/\/www.ias.edu\/albert-einstein-brief)[[2]](https:\/\/www.youtube.com\/watch?v=_DLYu53GyAA&t=33)\n- **General Relativity (1915).** Einstein redefined gravity not as an invisible force, but as the curving of spacetime caused by massive objects like stars and planets.[[1]](https:\/\/www.youtube.com\/watch?v=0Zn9M8bjB4s)[[2]](https:\/\/www.youtube.com\/watch?v=XvQrDToUPoU)\n\n### Early Life & Career\n\n- **Birth & Education.** Born on March 14, 1879, in Ulm, Germany, Einstein studied physics and mathematics at the [Swiss Federal Polytechnic School](https:\/\/en.wikipedia.org\/wiki\/ETH_Zurich) in Zurich.\n- **The \"Miracle Year.\"** While working as a patent clerk in Bern in 1905, he published four groundbreaking papers that transformed modern physics.\n- **Academic Rise.** Following his 1905 breakthroughs, he held prestigious professorships in Zurich, Prague, and Berlin before leading the Kaiser Wilhelm Institute for Physics.[[1]](https:\/\/en.wikipedia.org\/wiki\/Albert_Einstein)[[2]](https:\/\/www.youtube.com\/watch?v=_DLYu53GyAA&t=33)[[3]](https:\/\/www.ias.edu\/albert-einstein-brief)\n\n### Later Years & Legacy\n\n- **Move to the United States.** Fleeing the rise of the Nazi regime in 1933, Einstein emigrated to the U.S. and joined the [Institute for Advanced Study](https:\/\/www.ias.edu\/albert-einstein-brief) in Princeton, New Jersey. He became a U.S. citizen in 1940.\n- **World War II & Pacifism.** Despite his lifelong pacifism, he signed a 1939 letter to President Franklin D. Roosevelt warning that Germany might build nuclear weapons, which helped spark the Manhattan Project. He was excluded from working on the project himself due to security concerns and later campaigned fiercely for nuclear disarmament.\n- **Personal Life & Death.** He married Mileva Marić in 1903, with whom he had three children, before divorcing and marrying his cousin Elsa Löwenthal in 1919. Einstein died on April 18, 1955, at age 76 in Princeton.[[1]](https:\/\/en.wikipedia.org\/wiki\/Albert_Einstein)[[2]](https:\/\/www.ias.edu\/albert-einstein-brief)[[3]](https:\/\/www.osti.gov\/opennet\/manhattan-project-history\/People\/Scientists\/albert-einstein.html)[[4]](https:\/\/www.youtube.com\/watch?v=XvQrDToUPoU)\n\nAre you exploring a specific aspect of **Einstein's life** or **scientific theories** (such as relativity, his role in WWII, or his personal biography) that I can dive deeper into for you?",
+                            "items": [
+                                {
+                                    "type": "ai_overview_element",
+                                    "position": "left",
+                                    "title": null,
+                                    "text": null,
+                                    "markdown": "![Albert Einstein - Wikipedia](https:\/\/api.dataforseo.com\/cdn\/i\/11161256-0001-0139-0000-f7c7df1cdbbf:16)\n![Albert Einstein | Biography, Relativity, Education ...](https:\/\/api.dataforseo.com\/cdn\/i\/11161256-0001-0139-0000-f7c7df1cdbbf:17)\n![Albert Einstein – Biographical - NobelPrize.org](https:\/\/api.dataforseo.com\/cdn\/i\/11161256-0001-0139-0000-f7c7df1cdbbf:18)\n![Albert Einstein: His life, theories and impact on science | Space](https:\/\/api.dataforseo.com\/cdn\/i\/11161256-0001-0139-0000-f7c7df1cdbbf:19)\n![Albert Einstein: Biography, Physicist, Nobel Prize Winner](https:\/\/api.dataforseo.com\/cdn\/i\/11161256-0001-0139-0000-f7c7df1cdbbf:20)\n![Albert Einstein - Global Governance Forum](https:\/\/api.dataforseo.com\/cdn\/i\/11161256-0001-0139-0000-f7c7df1cdbbf:21)\n![Albert Einstein | HISTORY](https:\/\/api.dataforseo.com\/cdn\/i\/11161256-0001-0139-0000-f7c7df1cdbbf:22)\n![Albert Einstein&#39;s biography | American Masters | PBS](https:\/\/api.dataforseo.com\/cdn\/i\/11161256-0001-0139-0000-f7c7df1cdbbf:23)",
+                                    "links": null,
+                                    "images": [
+                                        {
+                                            "type": "images_element",
+                                            "alt": "Albert Einstein - Wikipedia",
+                                            "url": null,
+                                            "image_url": "https:\/\/api.dataforseo.com\/cdn\/i\/11161256-0001-0139-0000-f7c7df1cdbbf:24"
+                                        },
+                                        {
+                                            "type": "images_element",
+                                            "alt": "Albert Einstein | Biography, Relativity, Education ...",
+                                            "url": null,
+                                            "image_url": "https:\/\/api.dataforseo.com\/cdn\/i\/11161256-0001-0139-0000-f7c7df1cdbbf:25"
+                                        },
+                                        {
+                                            "type": "images_element",
+                                            "alt": "Albert Einstein – Biographical - NobelPrize.org",
+                                            "url": null,
+                                            "image_url": "https:\/\/api.dataforseo.com\/cdn\/i\/11161256-0001-0139-0000-f7c7df1cdbbf:26"
+                                        },
+                                        {
+                                            "type": "images_element",
+                                            "alt": "Albert Einstein: His life, theories and impact on science | Space",
+                                            "url": null,
+                                            "image_url": "https:\/\/api.dataforseo.com\/cdn\/i\/11161256-0001-0139-0000-f7c7df1cdbbf:27"
+                                        },
+                                        {
+                                            "type": "images_element",
+                                            "alt": "Albert Einstein: Biography, Physicist, Nobel Prize Winner",
+                                            "url": null,
+                                            "image_url": "https:\/\/api.dataforseo.com\/cdn\/i\/11161256-0001-0139-0000-f7c7df1cdbbf:28"
+                                        },
+                                        {
+                                            "type": "images_element",
+                                            "alt": "Albert Einstein - Global Governance Forum",
+                                            "url": null,
+                                            "image_url": "https:\/\/api.dataforseo.com\/cdn\/i\/11161256-0001-0139-0000-f7c7df1cdbbf:29"
+                                        },
+                                        {
+                                            "type": "images_element",
+                                            "alt": "Albert Einstein | HISTORY",
+                                            "url": null,
+                                            "image_url": "https:\/\/api.dataforseo.com\/cdn\/i\/11161256-0001-0139-0000-f7c7df1cdbbf:30"
+                                        },
+                                        {
+                                            "type": "images_element",
+                                            "alt": "Albert Einstein's biography | American Masters | PBS",
+                                            "url": null,
+                                            "image_url": "https:\/\/api.dataforseo.com\/cdn\/i\/11161256-0001-0139-0000-f7c7df1cdbbf:31"
+                                        }
+                                    ],
+                                    "references": null
+                                },
+                                {
+                                    "type": "ai_overview_element",
+                                    "position": "left",
+                                    "title": null,
+                                    "text": "Albert Einstein (1879–1955) was a German-born theoretical physicist who revolutionized modern science by developing the theory of relativity and making foundational contributions to quantum mechanics. He won the 1921 Nobel Prize in Physics for explaining the photoelectric effect.",
+                                    "markdown": "**Albert Einstein** (1879–1955) was a `German-born theoretical physicist` who revolutionized modern science by developing the **theory of relativity** and making foundational contributions to **quantum mechanics** . He won the **1921 Nobel Prize in Physics** for explaining the photoelectric effect.[[1]](https:\/\/en.wikipedia.org\/wiki\/Albert_Einstein)[[2]](https:\/\/www.alberteinstein.com\/)",
+                                    "links": null,
+                                    "images": null,
+                                    "references": [
+                                        {
+                                            "type": "ai_overview_reference",
+                                            "position": "left",
+                                            "source": "Wikipedia",
+                                            "domain": "en.wikipedia.org",
+                                            "url": "https:\/\/en.wikipedia.org\/wiki\/Albert_Einstein",
+                                            "title": "Albert Einstein - Wikipedia",
+                                            "text": "He received the 1921 Nobel Prize in Physics for \"his services to theoretical physics, and especially for his discovery of the law ..."
+                                        },
+                                        {
+                                            "type": "ai_overview_reference",
+                                            "position": "left",
+                                            "source": "www.alberteinstein.com",
+                                            "domain": "www.alberteinstein.com",
+                                            "url": "https:\/\/www.alberteinstein.com\/",
+                                            "title": "Albert Einstein – The Official Website of Albert Einstein",
+                                            "text": "Albert Einstein was a theoretical physicist and the most famous scientist in human history. He developed the general theory of rel..."
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "ai_overview_element",
+                                    "position": "left",
+                                    "title": "Major Scientific Contributions",
+                                    "text": "Special Relativity (1905). Einstein showed that space and time are linked into a single continuum and change depending on an object's speed. Mass-Energy Equivalence (E = mc²). Derived from special relativity, this famous equation proves that small amounts of mass can convert into massive amounts of energy. Photoelectric Effect (1905). He demonstrated that light travels in discrete energy packets called photons, laying the groundwork for quantum theory. Brownian Motion (1905). His mathematical explanation of particles suspended in fluid provided decisive proof that atoms exist. General Relativity (1915). Einstein redefined gravity not as an invisible force, but as the curving of spacetime caused by massive objects like stars and planets.",
+                                    "markdown": "- **Special Relativity (1905).** Einstein showed that space and time are linked into a single continuum and change depending on an object's speed.[[1]](https:\/\/www.youtube.com\/watch?v=0Zn9M8bjB4s)\n- **Mass-Energy Equivalence (E = mc²).** Derived from special relativity, this famous equation proves that small amounts of mass can convert into massive amounts of energy.[[1]](https:\/\/en.wikipedia.org\/wiki\/Albert_Einstein)[[2]](https:\/\/www.youtube.com\/watch?v=0Zn9M8bjB4s)\n- **Photoelectric Effect (1905).** He demonstrated that light travels in discrete energy packets called photons, laying the groundwork for quantum theory.[[1]](https:\/\/www.facebook.com\/nobelprize\/videos\/did-you-know-we-can-thank-physics-laureate-albert-einstein-in-part-for-our-smart\/805492161962539\/)\n- **Brownian Motion (1905).** His mathematical explanation of particles suspended in fluid provided decisive proof that atoms exist.[[1]](https:\/\/www.ias.edu\/albert-einstein-brief)[[2]](https:\/\/www.youtube.com\/watch?v=_DLYu53GyAA&t=33)\n- **General Relativity (1915).** Einstein redefined gravity not as an invisible force, but as the curving of spacetime caused by massive objects like stars and planets.[[1]](https:\/\/www.youtube.com\/watch?v=0Zn9M8bjB4s)[[2]](https:\/\/www.youtube.com\/watch?v=XvQrDToUPoU)",
+                                    "links": null,
+                                    "images": null,
+                                    "references": [
+                                        {
+                                            "type": "ai_overview_reference",
+                                            "position": "left",
+                                            "source": "YouTube",
+                                            "domain": "www.youtube.com",
+                                            "url": "https:\/\/www.youtube.com\/watch?v=0Zn9M8bjB4s",
+                                            "title": "Who was Albert Einstein? | The World Famous Scientist",
+                                            "text": "This theory showed that time and space are connected and can change depending on how fast you're moving."
+                                        },
+                                        {
+                                            "type": "ai_overview_reference",
+                                            "position": "left",
+                                            "source": "Wikipedia",
+                                            "domain": "en.wikipedia.org",
+                                            "url": "https:\/\/en.wikipedia.org\/wiki\/Albert_Einstein",
+                                            "title": "Albert Einstein - Wikipedia",
+                                            "text": "Albert Einstein (14 March 1879 – 18 April 1955) was a German-born theoretical physicist best known for developing the theory of relativity. Died | 18 April 1955 (a..."
+                                        },
+                                        {
+                                            "type": "ai_overview_reference",
+                                            "position": "left",
+                                            "source": "Facebook",
+                                            "domain": "www.facebook.com",
+                                            "url": "https:\/\/www.facebook.com\/nobelprize\/videos\/did-you-know-we-can-thank-physics-laureate-albert-einstein-in-part-for-our-smart\/805492161962539\/",
+                                            "title": "Did you know we can thank physics laureate Albert Einstein, in part, for ...",
+                                            "text": "The photoelectric effect is a phenomenon where light, which has different frequencies or colors, shines on a material and frees el..."
+                                        },
+                                        {
+                                            "type": "ai_overview_reference",
+                                            "position": "left",
+                                            "source": "Institute for Advanced Study",
+                                            "domain": "www.ias.edu",
+                                            "url": "https:\/\/www.ias.edu\/albert-einstein-brief",
+                                            "title": "Albert Einstein: In Brief | Institute for Advanced Study",
+                                            "text": "publishing four foundational physics papers in 1905, introducing light quanta, atomic proof, relativity, and mass-energy equivalen..."
+                                        },
+                                        {
+                                            "type": "ai_overview_reference",
+                                            "position": "left",
+                                            "source": "YouTube",
+                                            "domain": "www.youtube.com",
+                                            "url": "https:\/\/www.youtube.com\/watch?v=_DLYu53GyAA&t=33",
+                                            "title": "Albert Einstein birth anniversary: The Genius Who Changed the Universe",
+                                            "text": "Einstein published four papers proving that light functions as both a wave and a particle and confirming the existence of atoms."
+                                        },
+                                        {
+                                            "type": "ai_overview_reference",
+                                            "position": "left",
+                                            "source": "YouTube",
+                                            "domain": "www.youtube.com",
+                                            "url": "https:\/\/www.youtube.com\/watch?v=XvQrDToUPoU",
+                                            "title": "Who is Albert Einstein?",
+                                            "text": "general relativity (1915) revolutionized the understanding of space, time, and gravity, proposing that time and space are not abso..."
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "ai_overview_element",
+                                    "position": "left",
+                                    "title": "Early Life & Career",
+                                    "text": "Birth & Education. Born on March 14, 1879, in Ulm, Germany, Einstein studied physics and mathematics at the Swiss Federal Polytechnic School in Zurich. The \"Miracle Year.\" While working as a patent clerk in Bern in 1905, he published four groundbreaking papers that transformed modern physics. Academic Rise. Following his 1905 breakthroughs, he held prestigious professorships in Zurich, Prague, and Berlin before leading the Kaiser Wilhelm Institute for Physics.",
+                                    "markdown": "- **Birth & Education.** Born on March 14, 1879, in Ulm, Germany, Einstein studied physics and mathematics at the [Swiss Federal Polytechnic School](https:\/\/en.wikipedia.org\/wiki\/ETH_Zurich) in Zurich.\n- **The \"Miracle Year.\"** While working as a patent clerk in Bern in 1905, he published four groundbreaking papers that transformed modern physics.\n- **Academic Rise.** Following his 1905 breakthroughs, he held prestigious professorships in Zurich, Prague, and Berlin before leading the Kaiser Wilhelm Institute for Physics.[[1]](https:\/\/en.wikipedia.org\/wiki\/Albert_Einstein)[[2]](https:\/\/www.youtube.com\/watch?v=_DLYu53GyAA&t=33)[[3]](https:\/\/www.ias.edu\/albert-einstein-brief)",
+                                    "links": [
+                                        {
+                                            "type": "link_element",
+                                            "title": "Swiss Federal Polytechnic School",
+                                            "description": null,
+                                            "url": "https:\/\/en.wikipedia.org\/wiki\/ETH_Zurich",
+                                            "domain": "en.wikipedia.org"
+                                        }
+                                    ],
+                                    "images": null,
+                                    "references": [
+                                        {
+                                            "type": "ai_overview_reference",
+                                            "position": "left",
+                                            "source": "Wikipedia",
+                                            "domain": "en.wikipedia.org",
+                                            "url": "https:\/\/en.wikipedia.org\/wiki\/Albert_Einstein",
+                                            "title": "Albert Einstein - Wikipedia",
+                                            "text": "Albert Einstein (14 March 1879 – 18 April 1955) was a German-born theoretical physicist best known for developing the theory of relativity. Died | 18 April 1955 (a..."
+                                        },
+                                        {
+                                            "type": "ai_overview_reference",
+                                            "position": "left",
+                                            "source": "YouTube",
+                                            "domain": "www.youtube.com",
+                                            "url": "https:\/\/www.youtube.com\/watch?v=_DLYu53GyAA&t=33",
+                                            "title": "Albert Einstein birth anniversary: The Genius Who Changed the Universe",
+                                            "text": "Einstein published four papers proving that light functions as both a wave and a particle and confirming the existence of atoms."
+                                        },
+                                        {
+                                            "type": "ai_overview_reference",
+                                            "position": "left",
+                                            "source": "Institute for Advanced Study",
+                                            "domain": "www.ias.edu",
+                                            "url": "https:\/\/www.ias.edu\/albert-einstein-brief",
+                                            "title": "Albert Einstein: In Brief | Institute for Advanced Study",
+                                            "text": "Fleeing Nazi Germany in 1933, he joined Princeton's Institute for Advanced Study, became a U.S. citizen in 1940, and spent his later years pursuing a unified field..."
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "ai_overview_element",
+                                    "position": "left",
+                                    "title": "Later Years & Legacy",
+                                    "text": "Move to the United States. Fleeing the rise of the Nazi regime in 1933, Einstein emigrated to the U.S. and joined the Institute for Advanced Study in Princeton, New Jersey. He became a U.S. citizen in 1940. World War II & Pacifism. Despite his lifelong pacifism, he signed a 1939 letter to President Franklin D. Roosevelt warning that Germany might build nuclear weapons, which helped spark the Manhattan Project. He was excluded from working on the project himself due to security concerns and later campaigned fiercely for nuclear disarmament. Personal Life & Death. He married Mileva Marić in 1903, with whom he had three children, before divorcing and marrying his cousin Elsa Löwenthal in 1919. Einstein died on April 18, 1955, at age 76 in Princeton.",
+                                    "markdown": "- **Move to the United States.** Fleeing the rise of the Nazi regime in 1933, Einstein emigrated to the U.S. and joined the [Institute for Advanced Study](https:\/\/www.ias.edu\/albert-einstein-brief) in Princeton, New Jersey. He became a U.S. citizen in 1940.\n- **World War II & Pacifism.** Despite his lifelong pacifism, he signed a 1939 letter to President Franklin D. Roosevelt warning that Germany might build nuclear weapons, which helped spark the Manhattan Project. He was excluded from working on the project himself due to security concerns and later campaigned fiercely for nuclear disarmament.\n- **Personal Life & Death.** He married Mileva Marić in 1903, with whom he had three children, before divorcing and marrying his cousin Elsa Löwenthal in 1919. Einstein died on April 18, 1955, at age 76 in Princeton.[[1]](https:\/\/en.wikipedia.org\/wiki\/Albert_Einstein)[[2]](https:\/\/www.ias.edu\/albert-einstein-brief)[[3]](https:\/\/www.osti.gov\/opennet\/manhattan-project-history\/People\/Scientists\/albert-einstein.html)[[4]](https:\/\/www.youtube.com\/watch?v=XvQrDToUPoU)",
+                                    "links": [
+                                        {
+                                            "type": "link_element",
+                                            "title": "Institute for Advanced Study",
+                                            "description": null,
+                                            "url": "https:\/\/www.ias.edu\/albert-einstein-brief",
+                                            "domain": "www.ias.edu"
+                                        }
+                                    ],
+                                    "images": null,
+                                    "references": [
+                                        {
+                                            "type": "ai_overview_reference",
+                                            "position": "left",
+                                            "source": "Wikipedia",
+                                            "domain": "en.wikipedia.org",
+                                            "url": "https:\/\/en.wikipedia.org\/wiki\/Albert_Einstein",
+                                            "title": "Albert Einstein - Wikipedia",
+                                            "text": "Albert Einstein (14 March 1879 – 18 April 1955) was a German-born theoretical physicist best known for developing the theory of relativity. Died | 18 April 1955 (a..."
+                                        },
+                                        {
+                                            "type": "ai_overview_reference",
+                                            "position": "left",
+                                            "source": "Institute for Advanced Study",
+                                            "domain": "www.ias.edu",
+                                            "url": "https:\/\/www.ias.edu\/albert-einstein-brief",
+                                            "title": "Albert Einstein: In Brief | Institute for Advanced Study",
+                                            "text": "Fleeing Nazi Germany in 1933, he joined Princeton's Institute for Advanced Study, became a U.S. citizen in 1940, and spent his later years pursuing a unified field..."
+                                        },
+                                        {
+                                            "type": "ai_overview_reference",
+                                            "position": "left",
+                                            "source": "OSTI (.gov)",
+                                            "domain": "www.osti.gov",
+                                            "url": "https:\/\/www.osti.gov\/opennet\/manhattan-project-history\/People\/Scientists\/albert-einstein.html",
+                                            "title": "Manhattan Project: People > Scientists > ALBERT EINSTEIN",
+                                            "text": "FDR via Szilard\/Wigner\/Teller warning of German bomb threat; delivered Oct 11 by Alexander Sachs. - Excluded from Manhattan Projec..."
+                                        },
+                                        {
+                                            "type": "ai_overview_reference",
+                                            "position": "left",
+                                            "source": "YouTube",
+                                            "domain": "www.youtube.com",
+                                            "url": "https:\/\/www.youtube.com\/watch?v=XvQrDToUPoU",
+                                            "title": "Who is Albert Einstein?",
+                                            "text": "general relativity (1915) revolutionized the understanding of space, time, and gravity, proposing that time and space are not abso..."
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "ai_overview_element",
+                                    "position": "left",
+                                    "title": null,
+                                    "text": "Are you exploring a specific aspect of Einstein's life or scientific theories (such as relativity, his role in WWII, or his personal biography) that I can dive deeper into for you?",
+                                    "markdown": "Are you exploring a specific aspect of **Einstein's life** or **scientific theories** (such as relativity, his role in WWII, or his personal biography) that I can dive deeper into for you?",
+                                    "links": null,
+                                    "images": null,
+                                    "references": null
+                                }
+                            ],
+                            "references": [
+                                {
+                                    "type": "ai_overview_reference",
+                                    "position": "right",
+                                    "source": "Wikipedia",
+                                    "domain": "en.wikipedia.org",
+                                    "url": "https:\/\/en.wikipedia.org\/wiki\/Albert_Einstein",
+                                    "title": "Albert Einstein - Wikipedia",
+                                    "text": "Albert Einstein (14 March 1879 – 18 April 1955) was a German-born theoretical physicist best known for developing the theory of relativity. Died | 18 April 1955 (a..."
+                                },
+                                {
+                                    "type": "ai_overview_reference",
+                                    "position": "right",
+                                    "source": "www.alberteinstein.com",
+                                    "domain": "www.alberteinstein.com",
+                                    "url": "https:\/\/www.alberteinstein.com\/",
+                                    "title": "Albert Einstein – The Official Website of Albert Einstein",
+                                    "text": "Albert Einstein was a theoretical physicist and the most famous scientist in human history. He developed the general theory of relativity, one of the two pillars o..."
+                                },
+                                {
+                                    "type": "ai_overview_reference",
+                                    "position": "right",
+                                    "source": "Institute for Advanced Study",
+                                    "domain": "www.ias.edu",
+                                    "url": "https:\/\/www.ias.edu\/albert-einstein-brief",
+                                    "title": "Albert Einstein: In Brief | Institute for Advanced Study",
+                                    "text": "Fleeing Nazi Germany in 1933, he joined Princeton's Institute for Advanced Study, became a U.S. citizen in 1940, and spent his later years pursuing a unified field..."
+                                },
+                                {
+                                    "type": "ai_overview_reference",
+                                    "position": "right",
+                                    "source": "YouTube",
+                                    "domain": "www.youtube.com",
+                                    "url": "https:\/\/www.youtube.com\/watch?v=0Zn9M8bjB4s",
+                                    "title": "Who was Albert Einstein? | The World Famous Scientist",
+                                    "text": "This theory showed that time and space are connected and can change depending on how fast you're moving."
+                                },
+                                {
+                                    "type": "ai_overview_reference",
+                                    "position": "right",
+                                    "source": "Facebook",
+                                    "domain": "www.facebook.com",
+                                    "url": "https:\/\/www.facebook.com\/nobelprize\/videos\/did-you-know-we-can-thank-physics-laureate-albert-einstein-in-part-for-our-smart\/805492161962539\/",
+                                    "title": "Did you know we can thank physics laureate Albert Einstein, in part, for ...",
+                                    "text": "The photoelectric effect is a phenomenon where light, which has different frequencies or colors, shines on a material and frees el..."
+                                },
+                                {
+                                    "type": "ai_overview_reference",
+                                    "position": "right",
+                                    "source": "YouTube",
+                                    "domain": "www.youtube.com",
+                                    "url": "https:\/\/www.youtube.com\/watch?v=_DLYu53GyAA&t=33",
+                                    "title": "Albert Einstein birth anniversary: The Genius Who Changed the Universe",
+                                    "text": "Einstein published four papers proving that light functions as both a wave and a particle and confirming the existence of atoms."
+                                },
+                                {
+                                    "type": "ai_overview_reference",
+                                    "position": "right",
+                                    "source": "YouTube",
+                                    "domain": "www.youtube.com",
+                                    "url": "https:\/\/www.youtube.com\/watch?v=XvQrDToUPoU",
+                                    "title": "Who is Albert Einstein?",
+                                    "text": "general relativity (1915) revolutionized the understanding of space, time, and gravity, proposing that time and space are not abso..."
+                                },
+                                {
+                                    "type": "ai_overview_reference",
+                                    "position": "right",
+                                    "source": "OSTI (.gov)",
+                                    "domain": "www.osti.gov",
+                                    "url": "https:\/\/www.osti.gov\/opennet\/manhattan-project-history\/People\/Scientists\/albert-einstein.html",
+                                    "title": "Manhattan Project: People > Scientists > ALBERT EINSTEIN",
+                                    "text": "FDR via Szilard\/Wigner\/Teller warning of German bomb threat; delivered Oct 11 by Alexander Sachs. - Excluded from Manhattan Projec..."
+                                }
+                            ],
+                            "rectangle": null
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

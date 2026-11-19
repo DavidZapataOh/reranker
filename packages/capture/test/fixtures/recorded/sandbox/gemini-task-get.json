@@ -1,0 +1,163 @@
+{
+    "version": "0.1.20261117",
+    "status_code": 20000,
+    "status_message": "Ok.",
+    "time": "0 sec.",
+    "cost": 0,
+    "tasks_count": 1,
+    "tasks_error": 0,
+    "tasks": [
+        {
+            "id": "11190445-3192-0626-2000-cda4f0e78522",
+            "status_code": 20000,
+            "status_message": "Ok.",
+            "time": "0 sec.",
+            "cost": 0,
+            "result_count": 1,
+            "path": [
+                "v3",
+                "ai_optimization",
+                "gemini",
+                "llm_scraper",
+                "task_get",
+                "advanced",
+                "11190445-3192-0626-2000-cda4f0e78522"
+            ],
+            "data": {
+                "api": "ai_optimization",
+                "function": "llm_scraper",
+                "se": "gemini",
+                "id": "11190445-3192-0626-2000-cda4f0e78522"
+            },
+            "result": [
+                {
+                    "keyword": "albert einstein",
+                    "location_code": 2840,
+                    "language_code": "en",
+                    "model": "3.5 Flash-Lite",
+                    "datetime": "2026-11-19 00:18:23 +00:00",
+                    "markdown": "**Albert Einstein** (1879–1955) was a German-born theoretical physicist who reshaped human understanding of space, time, matter, and energy. Awarded the 1921 Nobel Prize in Physics for his explanation of the photoelectric effect, he is best known for developing the theories of **special** and **general relativity**.\n\n![Albert Einstein in later life](https:\/\/upload.wikimedia.org\/wikipedia\/commons\/2\/28\/Albert_Einstein_Head_cleaned.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original)\n\n---\n\n## Core Contributions to Physics\n\n* **Special Relativity (1905):** Proposed that the laws of physics are the same for all non-accelerating observers and that the speed of light in a vacuum is constant regardless of motion. This led to time dilation, length contraction, and mass–energy equivalence:\n\n$$E = mc^2$$\n\n* **Photoelectric Effect (1905):** Showed that light behaves not only as a wave but also as discrete packets of energy called **photons**. Ejecting electrons from a metal surface requires light above a threshold frequency, laying foundational groundwork for quantum theory.\n* **Brownian Motion (1905):** Explained the erratic jiggling of microscopic particles suspended in fluid as caused by collisions with fast-moving molecules, providing strong statistical proof for the physical reality of atoms.\n* **General Relativity (1915):** Reimagined gravity not as an invisible pulling force, but as the **curvature of spacetime** caused by mass and energy. Massive objects bend spacetime, and other objects follow curved paths—predicting gravitational lensing, black holes, and gravitational waves, later confirmed by observations such as the 1919 solar eclipse deflection and LIGO detections.\n* **Bose–Einstein Statistics & Condensate (1924–1925):** Building on Satyendra Nath Bose's work, Einstein predicted a new state of matter—the **Bose–Einstein condensate**—where bosonic atoms cooled near absolute zero coalesce into a single quantum state.\n\n---\n\n## Key Milestones\n\n| Year | Event | Significance |\n| :--- | :--- | :--- |\n| 1879 | Born in Ulm, Kingdom of Württemberg | Later raised in Munich and educated in Switzerland (ETH Zurich) |\n| 1905 | *Annus mirabilis* (\"Miracle Year\") | Published four landmark papers while working at the Swiss patent office |\n| 1915 | Completed general relativity | Presented field equations describing gravity as spacetime curvature |\n| 1922 | Awarded 1921 Nobel Prize in Physics | Recognized for the photoelectric effect rather than relativity |\n| 1933 | Emigrated to the United States | Joined the Institute for Advanced Study in Princeton amid Nazi rise to power |\n| 1955 | Died in Princeton, New Jersey | Left behind unfinished work on a unified field theory |\n\n---\n\n## Public Life and Legacy\n\nBeyond theoretical equations, Einstein became a prominent public voice on **pacifism, civil rights, and global politics**. In 1939, concerned that Nazi Germany might pursue nuclear weapons, he signed a letter to U.S. President Franklin D. Roosevelt alerting him to atomic research—a step that helped spur the Manhattan Project, though Einstein himself was excluded from classified work due to security suspicions and later advocated strongly for nuclear non-proliferation and international peace.\n\nExplore general relativity in plain language -> Explain general relativity in plain language with everyday analogies and key predictions.\n\nLearn about Einstein's 1905 miracle year -> Walk through Einstein's four 1905 miracle year papers and why each mattered.\n\nRead about his civil rights and political views -> Summarize Albert Einstein's views on civil rights, Zionism, pacifism, and nuclear weapons.",
+                    "sources": null,
+                    "se_results_count": 0,
+                    "item_types": [
+                        "gemini_text",
+                        "gemini_images",
+                        "gemini_table"
+                    ],
+                    "items_count": 8,
+                    "items": [
+                        {
+                            "type": "gemini_text",
+                            "rank_group": 1,
+                            "rank_absolute": 1,
+                            "markdown": "**Albert Einstein** (1879–1955) was a German-born theoretical physicist who reshaped human understanding of space, time, matter, and energy. Awarded the 1921 Nobel Prize in Physics for his explanation of the photoelectric effect, he is best known for developing the theories of **special** and **general relativity**.",
+                            "original_text": "**Albert Einstein** (1879–1955) was a German-born theoretical physicist who reshaped human understanding of space, time, matter, and energy. Awarded the 1921 Nobel Prize in Physics for his explanation of the photoelectric effect, he is best known for developing the theories of **special** and **general relativity**.",
+                            "sources": null
+                        },
+                        {
+                            "type": "gemini_images",
+                            "rank_group": 1,
+                            "rank_absolute": 2,
+                            "markdown": "![Albert Einstein in later life](https:\/\/upload.wikimedia.org\/wikipedia\/commons\/2\/28\/Albert_Einstein_Head_cleaned.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original)",
+                            "items": [
+                                {
+                                    "type": "gemini_images_element",
+                                    "url": "https:\/\/commons.wikimedia.org\/wiki\/File:Albert_Einstein_Head_cleaned.jpg",
+                                    "alt": "Albert Einstein in later life",
+                                    "image_url": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/2\/28\/Albert_Einstein_Head_cleaned.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+                                    "markdown": "![Albert Einstein in later life](https:\/\/upload.wikimedia.org\/wikipedia\/commons\/2\/28\/Albert_Einstein_Head_cleaned.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original)"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "gemini_text",
+                            "rank_group": 2,
+                            "rank_absolute": 3,
+                            "markdown": "---\n\n## Core Contributions to Physics\n\n* **Special Relativity (1905):** Proposed that the laws of physics are the same for all non-accelerating observers and that the speed of light in a vacuum is constant regardless of motion. This led to time dilation, length contraction, and mass–energy equivalence:\n\n$$E = mc^2$$\n\n* **Photoelectric Effect (1905):** Showed that light behaves not only as a wave but also as discrete packets of energy called **photons**. Ejecting electrons from a metal surface requires light above a threshold frequency, laying foundational groundwork for quantum theory.\n* **Brownian Motion (1905):** Explained the erratic jiggling of microscopic particles suspended in fluid as caused by collisions with fast-moving molecules, providing strong statistical proof for the physical reality of atoms.\n* **General Relativity (1915):** Reimagined gravity not as an invisible pulling force, but as the **curvature of spacetime** caused by mass and energy. Massive objects bend spacetime, and other objects follow curved paths—predicting gravitational lensing, black holes, and gravitational waves, later confirmed by observations such as the 1919 solar eclipse deflection and LIGO detections.\n* **Bose–Einstein Statistics & Condensate (1924–1925):** Building on Satyendra Nath Bose's work, Einstein predicted a new state of matter—the **Bose–Einstein condensate**—where bosonic atoms cooled near absolute zero coalesce into a single quantum state.\n\n---\n\n## Key Milestones",
+                            "original_text": "---\n\n## Core Contributions to Physics\n\n* **Special Relativity (1905):** Proposed that the laws of physics are the same for all non-accelerating observers and that the speed of light in a vacuum is constant regardless of motion. This led to time dilation, length contraction, and mass–energy equivalence:\n\n$$E = mc^2$$\n\n* **Photoelectric Effect (1905):** Showed that light behaves not only as a wave but also as discrete packets of energy called **photons**. Ejecting electrons from a metal surface requires light above a threshold frequency, laying foundational groundwork for quantum theory.\n* **Brownian Motion (1905):** Explained the erratic jiggling of microscopic particles suspended in fluid as caused by collisions with fast-moving molecules, providing strong statistical proof for the physical reality of atoms.\n* **General Relativity (1915):** Reimagined gravity not as an invisible pulling force, but as the **curvature of spacetime** caused by mass and energy. Massive objects bend spacetime, and other objects follow curved paths—predicting gravitational lensing, black holes, and gravitational waves, later confirmed by observations such as the 1919 solar eclipse deflection and LIGO detections.\n* **Bose–Einstein Statistics & Condensate (1924–1925):** Building on Satyendra Nath Bose's work, Einstein predicted a new state of matter—the **Bose–Einstein condensate**—where bosonic atoms cooled near absolute zero coalesce into a single quantum state.\n\n---\n\n## Key Milestones",
+                            "sources": null
+                        },
+                        {
+                            "type": "gemini_table",
+                            "rank_group": 1,
+                            "rank_absolute": 4,
+                            "markdown": "| Year | Event | Significance |\n| :--- | :--- | :--- |\n| 1879 | Born in Ulm, Kingdom of Württemberg | Later raised in Munich and educated in Switzerland (ETH Zurich) |\n| 1905 | *Annus mirabilis* (\"Miracle Year\") | Published four landmark papers while working at the Swiss patent office |\n| 1915 | Completed general relativity | Presented field equations describing gravity as spacetime curvature |\n| 1922 | Awarded 1921 Nobel Prize in Physics | Recognized for the photoelectric effect rather than relativity |\n| 1933 | Emigrated to the United States | Joined the Institute for Advanced Study in Princeton amid Nazi rise to power |\n| 1955 | Died in Princeton, New Jersey | Left behind unfinished work on a unified field theory |",
+                            "original_text": "Year\tEvent\tSignificance\n1879\tBorn in Ulm, Kingdom of Württemberg\tLater raised in Munich and educated in Switzerland (ETH Zurich)\n1905\t*Annus mirabilis* (\"Miracle Year\")\tPublished four landmark papers while working at the Swiss patent office\n1915\tCompleted general relativity\tPresented field equations describing gravity as spacetime curvature\n1922\tAwarded 1921 Nobel Prize in Physics\tRecognized for the photoelectric effect rather than relativity\n1933\tEmigrated to the United States\tJoined the Institute for Advanced Study in Princeton amid Nazi rise to power\n1955\tDied in Princeton, New Jersey\tLeft behind unfinished work on a unified field theory",
+                            "table": {
+                                "table_header": [
+                                    "Year",
+                                    "Event",
+                                    "Significance"
+                                ],
+                                "table_content": [
+                                    [
+                                        "1879",
+                                        "Born in Ulm, Kingdom of Württemberg",
+                                        "Later raised in Munich and educated in Switzerland (ETH Zurich)"
+                                    ],
+                                    [
+                                        "1905",
+                                        "*Annus mirabilis* (\"Miracle Year\")",
+                                        "Published four landmark papers while working at the Swiss patent office"
+                                    ],
+                                    [
+                                        "1915",
+                                        "Completed general relativity",
+                                        "Presented field equations describing gravity as spacetime curvature"
+                                    ],
+                                    [
+                                        "1922",
+                                        "Awarded 1921 Nobel Prize in Physics",
+                                        "Recognized for the photoelectric effect rather than relativity"
+                                    ],
+                                    [
+                                        "1933",
+                                        "Emigrated to the United States",
+                                        "Joined the Institute for Advanced Study in Princeton amid Nazi rise to power"
+                                    ],
+                                    [
+                                        "1955",
+                                        "Died in Princeton, New Jersey",
+                                        "Left behind unfinished work on a unified field theory"
+                                    ]
+                                ]
+                            }
+                        },
+                        {
+                            "type": "gemini_text",
+                            "rank_group": 3,
+                            "rank_absolute": 5,
+                            "markdown": "---\n\n## Public Life and Legacy\n\nBeyond theoretical equations, Einstein became a prominent public voice on **pacifism, civil rights, and global politics**. In 1939, concerned that Nazi Germany might pursue nuclear weapons, he signed a letter to U.S. President Franklin D. Roosevelt alerting him to atomic research—a step that helped spur the Manhattan Project, though Einstein himself was excluded from classified work due to security suspicions and later advocated strongly for nuclear non-proliferation and international peace.",
+                            "original_text": "---\n\n## Public Life and Legacy\n\nBeyond theoretical equations, Einstein became a prominent public voice on **pacifism, civil rights, and global politics**. In 1939, concerned that Nazi Germany might pursue nuclear weapons, he signed a letter to U.S. President Franklin D. Roosevelt alerting him to atomic research—a step that helped spur the Manhattan Project, though Einstein himself was excluded from classified work due to security suspicions and later advocated strongly for nuclear non-proliferation and international peace.",
+                            "sources": null
+                        },
+                        {
+                            "type": "gemini_text",
+                            "rank_group": 4,
+                            "rank_absolute": 6,
+                            "markdown": "Explore general relativity in plain language -> Explain general relativity in plain language with everyday analogies and key predictions.",
+                            "original_text": "Explore general relativity in plain language -> Explain general relativity in plain language with everyday analogies and key predictions.",
+                            "sources": null
+                        },
+                        {
+                            "type": "gemini_text",
+                            "rank_group": 5,
+                            "rank_absolute": 7,
+                            "markdown": "Learn about Einstein's 1905 miracle year -> Walk through Einstein's four 1905 miracle year papers and why each mattered.",
+                            "original_text": "Learn about Einstein's 1905 miracle year -> Walk through Einstein's four 1905 miracle year papers and why each mattered.",
+                            "sources": null
+                        },
+                        {
+                            "type": "gemini_text",
+                            "rank_group": 6,
+                            "rank_absolute": 8,
+                            "markdown": "Read about his civil rights and political views -> Summarize Albert Einstein's views on civil rights, Zionism, pacifism, and nuclear weapons.",
+                            "original_text": "Read about his civil rights and political views -> Summarize Albert Einstein's views on civil rights, Zionism, pacifism, and nuclear weapons.",
+                            "sources": null
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

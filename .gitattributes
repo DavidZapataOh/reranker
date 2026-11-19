@@ -1,0 +1,2 @@
+# Provider wire bytes: no line-ending conversion, so tests read them exactly as they arrived.
+packages/*/test/fixtures/recorded/** -text
