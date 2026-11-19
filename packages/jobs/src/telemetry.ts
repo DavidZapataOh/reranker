@@ -49,7 +49,8 @@ function sink(): JobsTelemetry | undefined {
   return Reflect.get(globalThis, SINK);
 }
 
-function report(what: string, error: unknown): void {
+/** Logs a failure by its type only; the message may carry personal data. */
+export function report(what: string, error: unknown): void {
   console.error(`[jobs] ${what} failed`, {
     name: error instanceof Error ? error.name : typeof error,
   });

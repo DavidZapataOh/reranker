@@ -116,14 +116,16 @@ async function attempt<T>(
       estimate: estimateOf(model, inputTokens, call.maxOutputTokens),
       ...opts.spend,
     });
+    let result: StructuredResult<T>;
     try {
-      const result = await withDeadline(caller, call, opts.timeoutMs);
-      const actual = costOfUsage(model, result.usage);
-      await settleSpend(reservation, actual);
-      return { result, error: null, cost: actual };
+      result = await withDeadline(caller, call, opts.timeoutMs);
     } catch (error) {
       return { result: null, error, cost: await settleFailure(reservation, model, error) };
     }
+    // The answer was billed: a settle that fails leaves the reservation standing, never released.
+    const actual = costOfUsage(model, result.usage);
+    await settleSpend(reservation, actual);
+    return { result, error: null, cost: actual };
   } finally {
     await slot.release();
   }

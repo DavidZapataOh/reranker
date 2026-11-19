@@ -2,7 +2,7 @@ import { withSystem } from "@reranker/db";
 import { sql } from "drizzle-orm";
 import { loadJobsConfig } from "./config";
 import type { PaidProvider } from "./providers";
-import { breakerChecked, emit } from "./telemetry";
+import { breakerChecked, emit, report } from "./telemetry";
 
 export type BreakerState = "closed" | "open" | "half_open";
 
@@ -34,21 +34,30 @@ export async function breakerCheck(
   return { state: row.state, retryAfterMs: row.retry_after_ms };
 }
 
-/** Counts one outcome. The adapter decides which provider errors count as failures. */
+/**
+ * Counts one outcome. The adapter decides which provider errors count as failures. It never
+ * throws: callers record right after a paid call, and a lost count must not turn a call the
+ * provider billed into a failure that releases its spend. A failure is logged; one missed outcome
+ * only delays the breaker, and a probe that never reports is handed out again after its window.
+ */
 export async function breakerRecord(
   provider: PaidProvider,
   outcome: "success" | "failure",
   account = "default",
 ): Promise<void> {
-  const { minCalls, failureRatio, openMs } = loadJobsConfig().breaker;
-  const { rows } = await withSystem("jobs.breaker", (tx) =>
-    tx.execute<RecordRow>(
-      sql`select * from ops.breaker_record_transition(${provider}, ${account}, ${outcome === "failure"}, ${minCalls}::int, ${failureRatio}::float8, ${openMs}::int)`,
-    ),
-  );
-  const row = rows[0];
-  if (!row) throw new Error("breaker_record_transition returned no row");
-  if (row.state !== row.previous) {
-    emit({ name: "jobs.breaker.state", props: { provider, state: row.state } });
+  try {
+    const { minCalls, failureRatio, openMs } = loadJobsConfig().breaker;
+    const { rows } = await withSystem("jobs.breaker", (tx) =>
+      tx.execute<RecordRow>(
+        sql`select * from ops.breaker_record_transition(${provider}, ${account}, ${outcome === "failure"}, ${minCalls}::int, ${failureRatio}::float8, ${openMs}::int)`,
+      ),
+    );
+    const row = rows[0];
+    if (!row) throw new Error("breaker_record_transition returned no row");
+    if (row.state !== row.previous) {
+      emit({ name: "jobs.breaker.state", props: { provider, state: row.state } });
+    }
+  } catch (error) {
+    report(`breaker record (${provider}, ${outcome})`, error);
   }
 }

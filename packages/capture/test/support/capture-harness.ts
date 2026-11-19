@@ -33,6 +33,7 @@ export const provider = {
   maxInFlight: 0,
   delayMs: 0,
   r2RefusesWrites: false,
+  afterResponse: null as (() => void) | null,
   r2WriteMs: 0,
 };
 
@@ -73,6 +74,7 @@ async function fakeDataForSeo(request: Request): Promise<Response> {
     await sleep(provider.delayMs + Math.random() * 10);
     const body = provider.next.shift() ?? match[2];
     provider.served.push(body);
+    provider.afterResponse?.();
     return new Response(body, { headers: { "content-type": "application/json" } });
   } finally {
     provider.inFlight -= 1;
@@ -207,6 +209,7 @@ export function installCaptureHarness(opts: { deployedPools?: boolean } = {}): v
       maxInFlight: 0,
       delayMs: 0,
       r2RefusesWrites: false,
+      afterResponse: null,
       r2WriteMs: 0,
     });
     resetPlanCache();

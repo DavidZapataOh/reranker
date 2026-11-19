@@ -111,6 +111,18 @@ test("reserves the estimate, settles the real cost and frees the slot", async ()
   expect(caller.mock.calls[0]?.[0].signal).toBeInstanceOf(AbortSignal);
 });
 
+test("a settle that fails after a billed answer never releases the reservation", async () => {
+  jobs.settleSpend.mockRejectedValueOnce(new Error("pool timeout"));
+  const caller = callerOf(async () => ok());
+  await expect(paidCall(caller, call, { timeoutMs: 6000, retries: 1, spend })).rejects.toThrow(
+    "pool timeout",
+  );
+  expect(jobs.settleSpend).toHaveBeenCalledTimes(1);
+  expect(jobs.releaseSpend).not.toHaveBeenCalled();
+  expect(caller).toHaveBeenCalledTimes(1);
+  expect(jobs.release).toHaveBeenCalledTimes(1);
+});
+
 test("a billed refusal settles its usage and is not retried", async () => {
   const refusal = new ProviderRefusalError("openai", "no", usage);
   const caller = callerOf(async () => {

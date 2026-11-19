@@ -37,6 +37,17 @@ vi.mock("@reranker/flags", async (importOriginal) => {
   };
 });
 
+// System transactions of these reasons fail as an exhausted pool would.
+const failingReasons = vi.hoisted(() => new Set<string>());
+vi.mock("@reranker/db", async (importOriginal) => {
+  const db = await importOriginal<typeof import("@reranker/db")>();
+  const withSystem: typeof db.withSystem = (reason, fn, opts) =>
+    failingReasons.has(reason)
+      ? Promise.reject(new Error("timeout exceeded when trying to connect"))
+      : db.withSystem(reason, fn, opts);
+  return { ...db, withSystem };
+});
+
 installCaptureHarness();
 
 const CYCLE: EngineId[] = ["gemini", "google-ai-overview", "google-ai-mode"];
@@ -48,7 +59,10 @@ const optsFor = (m: string, extra: Partial<CaptureSlotsOptions> = {}): CaptureSl
   ...extra,
 });
 
-beforeEach(() => switchedOff.clear());
+beforeEach(() => {
+  switchedOff.clear();
+  failingReasons.clear();
+});
 
 describe("captureSlots", () => {
   test("captures a slot once, settles its cost and attributes Google's redirects to the site", async () => {
@@ -74,6 +88,27 @@ describe("captureSlots", () => {
     await expect(captureSlots(m, ids, optsFor(m))).resolves.toMatchObject({ succeeded: ids });
     expect(provider.calls).toHaveLength(2);
     expect(await ledger(m)).toEqual({ settled: 2 });
+  });
+
+  test("a breaker that cannot record after the paid response still settles and stores the call", async () => {
+    const { m, ids } = await frozen(["gemini"]);
+    // From the moment the provider answers, breaker transactions get no connection.
+    provider.afterResponse = () => failingReasons.add("jobs.breaker");
+    const logged = vi.spyOn(console, "error").mockImplementation(() => {});
+    try {
+      await expect(captureSlots(m, ids, optsFor(m))).resolves.toEqual({
+        succeeded: ids,
+        failed: [],
+      });
+      expect(logged).toHaveBeenCalledWith("[jobs] breaker record (dataforseo, success) failed", {
+        name: "Error",
+      });
+    } finally {
+      logged.mockRestore();
+    }
+    expect(provider.calls).toHaveLength(1);
+    expect(await ledger(m)).toEqual({ settled: 1 });
+    expect(await rowsOf(m)).toHaveLength(1);
   });
 
   test("retrying a plan with 6 of 9 succeeded slots calls the provider 3 times", async () => {
