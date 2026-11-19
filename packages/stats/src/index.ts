@@ -18,6 +18,6 @@ export { engineStatus, levelDisplay, levelOf, sufficiency } from "./levels";
 export { type Methodology, MethodologySchema, methodology, seedFor } from "./methodology";
 export { buildObservations, type ObservationFrame, type ObservedCapture } from "./observations";
 export { estimateRate, type StratumCounts } from "./rate";
-export { computeFreeReportStats, type FreeReportInput } from "./report";
+export { computeFreeReportStats, type FreeReportInput, toFreeReportSummary } from "./report";
 export { beta, exponential, gamma, type Rng, rngFromSeed, standardNormal } from "./rng";
 export { type EntityObservation, estimateScore, pointScore } from "./score";
