@@ -86,8 +86,9 @@ test("10× load on three system connections: none is held across R2, and none ti
   const pool = systemPool();
   expect(pool.options.max).toBe(3);
   const txMs = await transactionMs();
-  // Longer than a few transactions, so a connection held across a write cannot pass for one.
-  const r2WriteMs = Math.max(R2_WRITE_MS, 3 * txMs);
+  // Longer than the two-statement transaction that stores a row and settles it, so a connection
+  // held across a write cannot pass for one.
+  const r2WriteMs = Math.max(R2_WRITE_MS, 4 * txMs);
   provider.delayMs = 20;
   provider.r2WriteMs = r2WriteMs;
   const reports = await Promise.all([0, 1, 2].map(() => frozen(cycle(200))));
