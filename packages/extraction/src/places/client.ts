@@ -124,10 +124,12 @@ async function rejectionCode(response: Response): Promise<string> {
   return ErrorResponse.safeParse(body).data?.error.status ?? `http_${response.status}`;
 }
 
+// Paths and issue codes only: a value can echo the query text.
 function parsed<T>(schema: z.ZodType<T>, body: unknown): T {
   const result = schema.safeParse(body);
-  if (!result.success) throw new Error("Places returned a response without the requested fields");
-  return result.data;
+  if (result.success) return result.data;
+  const issues = result.error.issues.map((i) => `${i.path.join(".")} ${i.code}`).join(", ");
+  throw new Error(`Places returned a response without the requested fields: ${issues}`);
 }
 
 /**

@@ -269,7 +269,7 @@ test("any other refusal is ProviderRejected with Google's status and none of the
 
   capture(SEARCH_URL, () => HttpResponse.json({ places: [{ displayName: { text: "Sin id" } }] }));
   const malformed = search();
-  await expect(malformed).rejects.toThrow(/Places/);
+  await expect(malformed).rejects.toThrow(/Places.*: places\.0\.id invalid_type/);
   await expect(malformed).rejects.not.toThrow(/Sin id/);
 });
 
