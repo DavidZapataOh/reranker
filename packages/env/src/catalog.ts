@@ -158,8 +158,8 @@ const rows: Row[] = [
   ["R2_LOG_BUCKET", "config", ALL, false, "S02-06"],
   ["R2_INTERNAL_BUCKET", "config", ALL, false, "S02-06"],
   // Bucket-scoped R2 S3 key of the preview buckets, for the nightly storage contract test.
-  ["R2_ACCESS_KEY_ID_CI", "secret", NONE, true, "S02-06"],
-  ["R2_SECRET_ACCESS_KEY_CI", "secret", NONE, true, "S02-06"],
+  ["R2_ACCESS_KEY_ID_CI", "secret", NONE, true, "S02-06", true],
+  ["R2_SECRET_ACCESS_KEY_CI", "secret", NONE, true, "S02-06", true],
   ["CLOUDFLARE_CACHE_PURGE_TOKEN", "secret", ALL, false, "S02-06"],
   // Signing keys live in AWS KMS: the deployment holds ARNs and assumes the role through Vercel
   // OIDC, so no variable ever carries private key material.
