@@ -298,7 +298,7 @@ test("selects the target-like clusters and the top 10 by recommendations only", 
   expect(searches.map((s) => s.textQuery)).toContain("Sonrisa Dental Medellín");
   for (const name of COMPETITORS.slice(0, 4)) {
     expect(byName(r, name)).toMatchObject({
-      entityKey: `name:${normalizeName(name)}@${MEDELLIN.key}`,
+      entityKey: `name:${normalizeName(name, "business")}@${MEDELLIN.key}`,
       resolution: { status: "not_attempted", method: "none", score: null },
     });
   }
@@ -557,4 +557,37 @@ test("professional names are stored only as their hmac", async () => {
   await run([extraction(mention("Dra. Ana Gómez", { kind: "professional" }))]);
   const [row] = doubles.stored as MentionRow[];
   expect(row).toMatchObject({ nameNorm: null, nameHmac: nameHmac("ana gomez") });
+});
+
+test("a professional resolves by rules to a titled listing without calling the judge", async () => {
+  places({
+    "Ana Gómez": [
+      placeJson("ana", "Dra. Ana Gómez - Odontóloga"),
+      placeJson("sonrisas", "Clínica Dental Sonrisas"),
+    ],
+  });
+  const r = await run([extraction(mention("Ana Gómez", { kind: "professional" }))]);
+  expect(doubles.judge).not.toHaveBeenCalled();
+  expect(all(r)[0]).toMatchObject({
+    entityKey: "place:ana",
+    resolution: { status: "resolved", method: "rules" },
+  });
+});
+
+test("a professional listing with another surname still goes to the judge", async () => {
+  places({
+    "Dra. Ana Gómez": [
+      placeJson("ana-pena", "Dra. Ana Gómez Peña - Odontóloga"),
+      placeJson("sonrisas", "Clínica Dental Sonrisas"),
+    ],
+  });
+  await run([extraction(mention("Dra. Ana Gómez", { kind: "professional" }))]);
+  expect(doubles.judge).toHaveBeenCalledOnce();
+});
+
+test("a titled professional target matches its untitled mentions", () => {
+  const t = target({ inputName: "Dra. Ana Gómez - Odontóloga" });
+  expect(matchesTarget(mention("Ana Gómez", { kind: "professional" }), t)).toBe(true);
+  expect(matchesTarget(mention("Doctora Ana Gómez", { kind: "professional" }), t)).toBe(true);
+  expect(matchesTarget(mention("Dr. Andrés Gómez", { kind: "professional" }), t)).toBe(false);
 });

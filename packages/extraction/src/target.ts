@@ -201,9 +201,11 @@ export async function findBusinessCandidates(q: {
     },
     q.spend,
   );
-  const nameNorm = normalizeName(textQuery);
+  // What the owner types is looked up as a business; its candidates must fold the same way.
+  const kind = "business";
+  const nameNorm = normalizeName(textQuery, kind);
   const places = scoreCandidates(
-    { nameNorm, locationHint: null, citedDomains: [] },
+    { nameNorm, kind, locationHint: null, citedDomains: [] },
     hits,
     { categoryTypes: [], websites: new Map() },
     currentExtractorConfig.resolution,
@@ -213,7 +215,9 @@ export async function findBusinessCandidates(q: {
 
   const found =
     domain !== null &&
-    hits.some((hit) => jaroWinkler(nameNorm, normalizeName(hit.displayName)) >= DOMAIN_NAME_MATCH);
+    hits.some(
+      (hit) => jaroWinkler(nameNorm, normalizeName(hit.displayName, kind)) >= DOMAIN_NAME_MATCH,
+    );
   const website = domain === null || found ? null : await websiteCandidate(domain);
   return (website ? [website, ...places] : places).slice(0, MAX_CANDIDATES);
 }

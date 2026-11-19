@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { AppError, z } from "@reranker/schema";
 import canonicalize from "canonicalize";
+import { NAME_RULES, type NameRules } from "./normalize";
 import { PLATFORMS, type PlatformEntry } from "./platforms";
 import { CLASSIFY_PROMPT_V1 } from "./prompts/classify.v1";
 import { EXTRACT_PROMPT_V1 } from "./prompts/extract.v1";
@@ -34,6 +35,7 @@ export interface ExtractorConfig {
     classify: PromptRef<"classify.v1">;
   };
   schemaSha256: string;
+  names: NameRules;
   merge: { nameJw: number };
   targetLikeJw: number;
   liveResolutionTopN: number;
@@ -122,6 +124,7 @@ function buildCurrent(): ExtractorConfig & { configHash: string } {
       classify: { id: "classify.v1", sha256: sha256Hex(CLASSIFY_PROMPT_V1) },
     },
     schemaSha256: SCHEMA_SHA256,
+    names: NAME_RULES,
     merge: { nameJw: 0.92 },
     targetLikeJw: 0.8,
     liveResolutionTopN: 10,

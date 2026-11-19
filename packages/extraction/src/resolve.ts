@@ -20,7 +20,7 @@ import type {
   TargetBusiness,
 } from "@reranker/schema/measurement";
 import { currentExtractorConfig } from "./config";
-import { jaroWinkler, nameHmac, normalizeName } from "./normalize";
+import { jaroWinkler, nameHmac, normalizeName, normalizeText } from "./normalize";
 import {
   type CachedDecision,
   type DecisionKey,
@@ -99,8 +99,9 @@ export function entityKeyOf(
   return d?.outcome === "chain" ? `chain:${labelOf(m)}@${at}` : `name:${labelOf(m)}@${at}`;
 }
 
-const targetNamesOf = (target: TargetBusiness) =>
-  [target.inputName, ...target.aliases].map((name) => normalizeName(name)).filter(Boolean);
+// Folded with the mention's kind so a titled target ("Dra. Ana Gómez") matches its mentions.
+const targetNamesOf = (target: TargetBusiness, kind: EntityKind) =>
+  [target.inputName, ...target.aliases].map((name) => normalizeName(name, kind)).filter(Boolean);
 
 function citesDomain(m: ExtractedMention, domain: string | null): boolean {
   if (domain === null) return false;
@@ -115,7 +116,9 @@ function citesDomain(m: ExtractedMention, domain: string | null): boolean {
 export function matchesTarget(m: ExtractedMention, target: TargetBusiness): boolean {
   if (isPlatformKind(m.entityKind)) return false;
   if (citesDomain(m, target.domain)) return true;
-  return targetNamesOf(target).some((name) => jaroWinkler(m.nameNorm, name) >= config.merge.nameJw);
+  return targetNamesOf(target, m.entityKind).some(
+    (name) => jaroWinkler(m.nameNorm, name) >= config.merge.nameJw,
+  );
 }
 
 interface Cluster {
@@ -134,7 +137,15 @@ function clusterMentions(extractions: ResponseExtraction[], target: TargetBusine
   const of = new Map<ExtractedMention, Cluster>();
   // Names already placed, so a repeated name skips the pairwise comparison.
   const seen = new Map<string, Cluster>();
-  const targetNames = targetNamesOf(target);
+  const targetNames = new Map<EntityKind, string[]>();
+  const targetNamesFor = (kind: EntityKind) => {
+    let names = targetNames.get(kind);
+    if (!names) {
+      names = targetNamesOf(target, kind);
+      targetNames.set(kind, names);
+    }
+    return names;
+  };
   for (const extraction of extractions) {
     for (const m of extraction.mentions) {
       if (!RESOLVABLE.has(m.entityKind)) continue;
@@ -162,7 +173,9 @@ function clusterMentions(extractions: ResponseExtraction[], target: TargetBusine
       if (m.stance === "recommendation") cluster.recommendations++;
       cluster.targetLike ||=
         citesDomain(m, target.domain) ||
-        targetNames.some((name) => jaroWinkler(m.nameNorm, name) >= config.targetLikeJw);
+        targetNamesFor(m.entityKind).some(
+          (name) => jaroWinkler(m.nameNorm, name) >= config.targetLikeJw,
+        );
       of.set(m, cluster);
     }
   }
@@ -224,7 +237,7 @@ function searchRequestOf(
 function locationHintOf(c: Cluster): string | null {
   const hints = new Map<string, string>();
   for (const m of c.members) {
-    if (m.locationHint !== null) hints.set(normalizeName(m.locationHint), m.locationHint);
+    if (m.locationHint !== null) hints.set(normalizeText(m.locationHint), m.locationHint);
   }
   return hints.size === 1 ? ([...hints.values()][0] as string) : null;
 }
@@ -288,6 +301,7 @@ async function resolveCluster(
   const first = c.members[0] as ExtractedMention;
   const m = {
     nameNorm: c.nameNorm,
+    kind: c.kind,
     locationHint: locationHintOf(c),
     citedDomains: citedSitesOf(c),
   };
