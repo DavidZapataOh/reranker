@@ -121,14 +121,7 @@ async function localHashes(treeSize: number) {
 const object = (key: string) => bucket.objects.get(key) as Stored;
 
 beforeAll(() => {
-  for (const name of [
-    "R2_ACCOUNT_ID",
-    "R2_ACCESS_KEY_ID",
-    "R2_SECRET_ACCESS_KEY",
-    "R2_LOG_BUCKET",
-  ] as const) {
-    vi.stubEnv(name, previewEnv[name]);
-  }
+  for (const [name, value] of Object.entries(previewEnv)) vi.stubEnv(name, value);
   resetEvidenceEnv();
   vi.stubGlobal("fetch", (request: Request) => bucket.fetch(request));
 });
