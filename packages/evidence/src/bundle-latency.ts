@@ -1,4 +1,4 @@
-import { generateKeyPairSync, randomBytes, sign } from "node:crypto";
+import { createHash, generateKeyPairSync, randomBytes, sign } from "node:crypto";
 import { type SystemTx, withSystem } from "@reranker/db";
 import { type LatencyStats, summarize } from "@reranker/jobs";
 import { InvalidInputError } from "@reranker/jobs/errors";
@@ -9,6 +9,7 @@ import { ulid } from "ulid";
 import {
   deleteArtifact,
   deleteLogObject,
+  getArtifact,
   getLogObject,
   PROBE_LOG_PREFIX,
   putArtifact,
@@ -48,6 +49,8 @@ export interface BundleLatency {
   envelopeRead: LatencyStats;
   /** One cold level-0 tile read from R2 on its own. */
   tileRead: LatencyStats;
+  /** One tile-sized (8 KiB) object read from the evidence bucket, beside the log bucket's tile. */
+  artifactRead: LatencyStats;
   /** Inclusion and consistency proofs from the tiles, their own level-0 tile cold. */
   proofs: LatencyStats;
   /** getSealSummaries over every capture the probe seeded, as a report asks for them. */
@@ -101,6 +104,8 @@ type Seed = {
   notes: { anchored: string; latest: string };
   tiles: Map<string, Uint8Array<ArrayBuffer>>;
   envelopes: Map<string, Uint8Array>;
+  // One tile-sized object per pass in the evidence bucket, to compare its reads with the log's.
+  blobs: Map<string, Uint8Array>;
 };
 
 async function inBatches<T>(items: T[], fn: (item: T) => Promise<unknown>): Promise<void> {
@@ -178,6 +183,12 @@ async function buildSeed(count: number, firstFreeIndex: number, signer: Signer):
     notes: { anchored: await note(anchored), latest: await note(latest) },
     tiles,
     envelopes,
+    blobs: new Map(
+      Array.from({ length: count }, () => {
+        const bytes = randomBytes(TILE_WIDTH * 32);
+        return [createHash("sha256").update(bytes).digest("hex"), bytes] as const;
+      }),
+    ),
   };
 }
 
@@ -240,7 +251,11 @@ async function timed<T>(samples: number[] | null, fn: () => Promise<T>): Promise
 async function removeAll(seed: Seed | undefined, written: Set<string>): Promise<void> {
   if (!seed) return;
   const removals = [...written].map((key) =>
-    seed.envelopes.has(key) ? deleteArtifact("envelopes", key) : deleteLogObject(key),
+    seed.envelopes.has(key)
+      ? deleteArtifact("envelopes", key)
+      : seed.blobs.has(key)
+        ? deleteArtifact("raw", key)
+        : deleteLogObject(key),
   );
   const settled = await Promise.allSettled(removals);
   const leaked = [...written].filter((_, i) => settled[i]?.status === "rejected");
@@ -261,6 +276,7 @@ async function measure(tx: SystemTx, seed: Seed, n: number): Promise<BundleLaten
     removals: [] as number[],
     envelope: [] as number[],
     tile: [] as number[],
+    artifact: [] as number[],
     proofs: [] as number[],
     summaries: [] as number[],
   };
@@ -287,6 +303,8 @@ async function measure(tx: SystemTx, seed: Seed, n: number): Promise<BundleLaten
     await timed(pick(samples.removals), () =>
       read(removalsQuery([subjectDigest(statement, "raw"), randomHex()])),
     );
+    const blob = [...seed.blobs.keys()][i];
+    if (blob) await timed(pick(samples.artifact), () => getArtifact("raw", blob));
     // One tile GET on its own, so the proofs can be told apart from R2's latency.
     const tileN = Math.floor(parts.index / TILE_WIDTH);
     await timed(pick(samples.tile), () =>
@@ -309,6 +327,7 @@ async function measure(tx: SystemTx, seed: Seed, n: number): Promise<BundleLaten
     removals: summarize(samples.removals),
     envelopeRead: summarize(samples.envelope),
     tileRead: summarize(samples.tile),
+    artifactRead: summarize(samples.artifact),
     proofs: summarize(samples.proofs),
     sealSummaries: summarize(samples.summaries),
   };
@@ -337,6 +356,10 @@ export async function probeBuildBundle(n: number = DEFAULT_BUNDLE_PROBES): Promi
         const current = seed;
         await inBatches([...current.envelopes], async ([sha256, bytes]) => {
           await putArtifact("envelopes", bytes, { contentType: ENVELOPE_CONTENT_TYPE });
+          written.add(sha256);
+        });
+        await inBatches([...current.blobs], async ([sha256, bytes]) => {
+          await putArtifact("raw", bytes, { contentType: OCTETS });
           written.add(sha256);
         });
         await inBatches([...current.tiles], async ([key, bytes]) => {
