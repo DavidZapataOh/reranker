@@ -155,6 +155,13 @@
       "when": 1795112677086,
       "tag": "0021_acquire_slots",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1795117482049,
+      "tag": "0022_breaker_record_outcomes",
+      "breakpoints": true
     }
   ]
 }
