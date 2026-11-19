@@ -33,14 +33,15 @@ type BundleRow = {
   tsr_proofs: Buffer[] | null;
 };
 
+// Drizzle's pg driver returns timestamptz as text, so times are selected as epoch milliseconds.
 type SummaryRow = {
   id: CaptureId;
-  captured_at: Date;
+  saved_ms: number;
   logged: boolean | null;
-  attested_at: Date | null;
+  dated_ms: number | null;
 };
 
-type Removal = { removed_at: Date; reason: RemovalReason };
+type Removal = { removed_ms: number; reason: RemovalReason };
 
 const VERIFY_BASE_URL = "https://reranker.co/verificar/";
 
@@ -106,7 +107,8 @@ export function bundleQuery(captureId: CaptureId, origin: string): SQL {
  */
 export function sealSummariesQuery(captureIds: readonly CaptureId[], origin: string): SQL {
   return sql`
-    select v.id, c.captured_at, f.logged, d.attested_at
+    select v.id, (extract(epoch from c.captured_at) * 1000)::float8 as saved_ms, f.logged,
+      (extract(epoch from d.attested_at) * 1000)::float8 as dated_ms
     from unnest(${sql.param(captureIds)}::text[]) with ordinality as v(id, ord)
     join public_panel.captures c on c.id = v.id
     left join lateral (
@@ -129,7 +131,7 @@ async function removalsOf(digests: string[]): Promise<Map<string, Removal>> {
     "evidence.bundle",
     (tx) =>
       tx.execute<{ sha256: Buffer } & Removal>(sql`
-        select r.sha256, r.removed_at, r.reason
+        select r.sha256, (extract(epoch from r.removed_at) * 1000)::float8 as removed_ms, r.reason
         from unnest(${sql.param(digests)}::text[]) as d(sha256)
         join public_panel.artifact_removals r on r.sha256 = decode(d.sha256, 'hex')`),
     { readOnly: true },
@@ -143,7 +145,7 @@ function artifact(sha256: string, removals: Map<string, Removal>): BundleArtifac
   return {
     sha256,
     status: "removed",
-    removed_at: removal.removed_at.toISOString(),
+    removed_at: new Date(removal.removed_ms).toISOString(),
     reason: removal.reason,
   };
 }
@@ -227,9 +229,9 @@ export async function getSealSummaries(captureIds: readonly CaptureId[]): Promis
   );
   return rows.map((row) => ({
     captureId: row.id,
-    savedAt: row.captured_at,
-    status: row.attested_at ? "dated" : row.logged ? "logged" : "signed",
-    datedBefore: row.attested_at,
+    savedAt: new Date(row.saved_ms),
+    status: row.dated_ms !== null ? "dated" : row.logged ? "logged" : "signed",
+    datedBefore: row.dated_ms === null ? null : new Date(row.dated_ms),
     verifyUrl: verifyUrl(row.id),
   }));
 }

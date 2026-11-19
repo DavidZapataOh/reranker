@@ -353,7 +353,13 @@ test("a removed artifact is marked removed and a capture without a parse has no 
   expect(rootFromInclusion(bundle)).toEqual(parseCheckpoint(bundle.checkpoint).root);
 });
 
-test(`buildBundle p95 under 250 ms against Neon over ${BUILDS} builds`, async () => {
+// A runner pays its own distance to Neon on every round trip (about 30 ms from GitHub's, under
+// 2 ms from iad1), and a bundle opens two read transactions. So CI holds buildBundle to those two
+// transactions, timed from the same runner in the same minutes, plus this for the queries' own
+// work, the proofs and the envelope; the 250 ms production budget sits well above that from iad1.
+const BEYOND_TWO_TRANSACTIONS_MS = 60;
+
+test(`buildBundle p95 stays within two Neon transactions over ${BUILDS} builds`, async () => {
   await seedEntries(500);
   const [capture] = await seal();
   if (!capture) throw new Error("No capture was sealed");
@@ -361,14 +367,23 @@ test(`buildBundle p95 under 250 ms against Neon over ${BUILDS} builds`, async ()
   await integrateBatch();
   await buildBundle(capture.captureId);
 
-  const times: number[] = [];
+  const builds: number[] = [];
+  const transactions: number[] = [];
   for (let i = 0; i < BUILDS; i++) {
-    const start = performance.now();
+    let start = performance.now();
     await buildBundle(capture.captureId);
-    times.push(performance.now() - start);
+    builds.push(performance.now() - start);
+    start = performance.now();
+    await withSystem("evidence.test", (tx) => tx.execute(sql`select 1`), { readOnly: true });
+    transactions.push(performance.now() - start);
   }
-  times.sort((a, b) => a - b);
-  const p95 = times[Math.ceil(0.95 * BUILDS) - 1] ?? Number.NaN;
-  console.info(`buildBundle p50 ${times[BUILDS / 2]?.toFixed(1)} ms, p95 ${p95.toFixed(1)} ms`);
-  expect(p95).toBeLessThan(250);
+  const p = (times: number[], q: number) =>
+    times.sort((a, b) => a - b)[Math.ceil(q * times.length) - 1] ?? Number.NaN;
+  const p95 = p(builds, 0.95);
+  const transaction = p(transactions, 0.5);
+  console.info(
+    `buildBundle p50 ${p(builds, 0.5).toFixed(1)} ms, p95 ${p95.toFixed(1)} ms; ` +
+      `one read transaction p50 ${transaction.toFixed(1)} ms`,
+  );
+  expect(p95 - 2 * transaction).toBeLessThan(BEYOND_TWO_TRANSACTIONS_MS);
 });
