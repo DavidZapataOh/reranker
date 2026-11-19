@@ -20,6 +20,12 @@ export {
   StatementTooLargeError,
 } from "./errors";
 export {
+  DEFAULT_SEAL_PROBES,
+  MAX_SEAL_PROBES,
+  probeSealCapture,
+  type SealLatency,
+} from "./latency";
+export {
   type CapturePredicateInput,
   latestNormalized,
   logOrigin,

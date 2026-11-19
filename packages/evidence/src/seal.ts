@@ -119,7 +119,8 @@ function checkParserVersion(parserVersion: number): void {
   }
 }
 
-async function captureRow(tx: SystemTx, captureId: CaptureId) {
+/** The row a retried seal finds; sealCapture reads it before anything else. */
+export async function captureRow(tx: SystemTx, captureId: CaptureId) {
   const [row] = await tx
     .select({
       envelopeSha256: captures.envelopeSha256,

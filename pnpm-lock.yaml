@@ -875,6 +875,9 @@ importers:
       '@reranker/env':
         specifier: workspace:*
         version: link:../env
+      '@reranker/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@reranker/jobs':
         specifier: workspace:*
         version: link:../jobs
@@ -899,13 +902,13 @@ importers:
       server-only:
         specifier: 'catalog:'
         version: 0.0.1
+      ulid:
+        specifier: 'catalog:'
+        version: 3.0.2
     devDependencies:
       '@noble/curves':
         specifier: 'catalog:'
         version: 2.4.0
-      '@reranker/i18n':
-        specifier: workspace:*
-        version: link:../i18n
       '@reranker/testing':
         specifier: workspace:*
         version: link:../testing

@@ -20,6 +20,7 @@
     "@aws-sdk/client-kms": "catalog:",
     "@reranker/db": "workspace:*",
     "@reranker/env": "workspace:*",
+    "@reranker/i18n": "workspace:*",
     "@reranker/jobs": "workspace:*",
     "@reranker/schema": "workspace:*",
     "@reranker/telemetry": "workspace:*",
@@ -27,11 +28,11 @@
     "@vercel/oidc-aws-credentials-provider": "catalog:",
     "aws4fetch": "catalog:",
     "drizzle-orm": "catalog:",
-    "server-only": "catalog:"
+    "server-only": "catalog:",
+    "ulid": "catalog:"
   },
   "devDependencies": {
     "@noble/curves": "catalog:",
-    "@reranker/i18n": "workspace:*",
     "@reranker/testing": "workspace:*",
     "@reranker/typescript-config": "workspace:*",
     "@types/node": "catalog:",
