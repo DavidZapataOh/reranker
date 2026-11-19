@@ -9,6 +9,7 @@ import { ulid } from "ulid";
 import {
   deleteArtifact,
   deleteLogObject,
+  getLogObject,
   PROBE_LOG_PREFIX,
   putArtifact,
   putLogObject,
@@ -45,6 +46,8 @@ export interface BundleLatency {
   removals: LatencyStats;
   /** The envelope from R2, checked against its digest. */
   envelopeRead: LatencyStats;
+  /** One cold level-0 tile read from R2 on its own. */
+  tileRead: LatencyStats;
   /** Inclusion and consistency proofs from the tiles, their own level-0 tile cold. */
   proofs: LatencyStats;
   /** getSealSummaries over every capture the probe seeded, as a report asks for them. */
@@ -91,6 +94,7 @@ class ProbeDone extends Error {
 
 type Seed = {
   origin: string;
+  prefix: string;
   captures: Array<{ id: CaptureId; index: number; envelopeSha256: string }>;
   anchored: number;
   latest: number;
@@ -167,6 +171,7 @@ async function buildSeed(count: number, firstFreeIndex: number, signer: Signer):
   }
   return {
     origin,
+    prefix,
     captures,
     anchored,
     latest,
@@ -255,6 +260,7 @@ async function measure(tx: SystemTx, seed: Seed, n: number): Promise<BundleLaten
     database: [] as number[],
     removals: [] as number[],
     envelope: [] as number[],
+    tile: [] as number[],
     proofs: [] as number[],
     summaries: [] as number[],
   };
@@ -281,6 +287,13 @@ async function measure(tx: SystemTx, seed: Seed, n: number): Promise<BundleLaten
     await timed(pick(samples.removals), () =>
       read(removalsQuery([subjectDigest(statement, "raw"), randomHex()])),
     );
+    // One tile GET on its own, so the proofs can be told apart from R2's latency.
+    const tileN = Math.floor(parts.index / TILE_WIDTH);
+    await timed(pick(samples.tile), () =>
+      getLogObject(
+        `${seed.prefix}${tilePath({ height: TILE_HEIGHT, level: 0, n: tileN, width: TILE_WIDTH })}`,
+      ),
+    );
     await timed(pick(samples.proofs), () =>
       Promise.all([
         proveRecord(seed.anchored, parts.index, readHashes(seed.origin, seed.anchored)),
@@ -295,6 +308,7 @@ async function measure(tx: SystemTx, seed: Seed, n: number): Promise<BundleLaten
     database: summarize(samples.database),
     removals: summarize(samples.removals),
     envelopeRead: summarize(samples.envelope),
+    tileRead: summarize(samples.tile),
     proofs: summarize(samples.proofs),
     sealSummaries: summarize(samples.summaries),
   };
