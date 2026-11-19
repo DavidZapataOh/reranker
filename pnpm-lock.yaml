@@ -1427,6 +1427,9 @@ importers:
 
   packages/verify:
     dependencies:
+      '@noble/curves':
+        specifier: 'catalog:'
+        version: 2.4.0
       '@noble/hashes':
         specifier: 'catalog:'
         version: 2.4.0
