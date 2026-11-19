@@ -71,6 +71,7 @@ const PRIMARY_KEYS: Record<string, string[]> = {
 
 const FUNCTIONS = [
   "acquire_slot",
+  "acquire_slots",
   "take_tokens",
   "peek_tokens",
   "refund_tokens",
@@ -396,6 +397,87 @@ describe("acquire_slot", () => {
       sql`select max_in_flight from ops.lease_pools where key = ${key}`,
     );
     expect(row.max_in_flight).toBe(7);
+  });
+});
+
+const acquireMany = (
+  key: string,
+  limit: number,
+  count: number,
+  opts: {
+    released?: string[];
+    buckets?: { keys: string[]; caps: number[]; refills: number[] };
+    prices?: number[];
+  } = {},
+) =>
+  system<Slot>(sql`select * from ops.acquire_slots(${key}, ${limit}, 60000, ${count},
+    ${list(opts.released ?? [])}::uuid[], ${list(opts.buckets?.keys ?? [])}::text[],
+    ${list(opts.buckets?.caps ?? [])}::float8[], ${list(opts.buckets?.refills ?? [])}::float8[],
+    ${list(opts.prices ?? [])}::float8[])`);
+const leasesOf = (rows: Slot[]) => rows.flatMap((row) => (row.lease_id ? [row.lease_id] : []));
+
+describe("acquire_slots", () => {
+  test("grants requests in order up to the limit, then reports the earliest expiry once", async () => {
+    const key = unique("pool");
+    const rows = await acquireMany(key, 3, 5);
+    expect(rows.map((row) => row.lease_id === null)).toEqual([false, false, false, true]);
+    expect(rows[3]?.retry_after_ms).toBeGreaterThan(55_000);
+    expect(rows[3]?.retry_after_ms).toBeLessThanOrEqual(60_000);
+    expect(await liveLeases(key)).toBe(3);
+  });
+
+  test("40 concurrent batches never exceed the limit", async () => {
+    const key = unique("pool");
+    const batches = await times(40, () => acquireMany(key, 5, 3));
+    expect(batches.flatMap(leasesOf)).toHaveLength(5);
+    expect(await liveLeases(key)).toBe(5);
+  });
+
+  test("frees the leases released in the same transaction before granting", async () => {
+    const key = unique("pool");
+    const held = leasesOf(await acquireMany(key, 2, 2));
+    const rows = await acquireMany(key, 2, 2, { released: held });
+    expect(leasesOf(rows)).toHaveLength(2);
+    expect(await liveLeases(key)).toBe(2);
+  });
+
+  test("a release alone frees only its own pool's leases and never waits for the pool row", async () => {
+    const key = unique("pool");
+    const other = unique("pool");
+    const [mine] = leasesOf(await acquireMany(key, 2, 1));
+    const [theirs] = leasesOf(await acquireMany(other, 2, 1));
+    await withSystem("test.ops", async (tx) => {
+      await tx.execute(sql`select 1 from ops.lease_pools where key = ${key} for update`);
+      const released = await withSystem(
+        "test.ops",
+        (inner) =>
+          inner.execute(sql`select * from ops.acquire_slots(${key}, 2, 60000, 0,
+            ${list([mine, theirs])}::uuid[], '{}'::text[], '{}'::float8[], '{}'::float8[],
+            '{}'::float8[])`),
+        { lockTimeoutMs: 1 },
+      );
+      expect(released.rows).toEqual([]);
+    });
+    expect(await liveLeases(key)).toBe(0);
+    expect(await liveLeases(other)).toBe(1);
+  });
+
+  test("the first request its buckets deny ends the batch without a lease", async () => {
+    const key = unique("pool");
+    const buckets = { keys: [unique("tpm")], caps: [100], refills: [100 / 60] };
+    const rows = await acquireMany(key, 10, 3, { buckets, prices: [60, 50, 10] });
+    expect(leasesOf(rows)).toHaveLength(1);
+    expect(rows.at(-1)?.lease_id).toBeNull();
+    expect(rows.at(-1)?.retry_after_ms).toBeGreaterThan(0);
+    expect(await liveLeases(key)).toBe(1);
+  });
+
+  test("a price list that does not match the requests and buckets is rejected", async () => {
+    const buckets = { keys: [unique("rpm")], caps: [5], refills: [1] };
+    await expect(acquireMany(unique("pool"), 5, 2, { buckets, prices: [1] })).rejects.toMatchObject(
+      pgCode("22023"),
+    );
+    await expect(acquireMany(unique("pool"), 5, -1)).rejects.toMatchObject(pgCode("22023"));
   });
 });
 

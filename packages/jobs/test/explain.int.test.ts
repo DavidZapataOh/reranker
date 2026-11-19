@@ -143,6 +143,7 @@ async function expectIndexed(client: Queryable, c: Case, table: Table, prefix: s
 }
 
 const ACQUIRE = "ops.acquire_slot(text,int,int,text[],float8[],float8[],float8[])";
+const ACQUIRE_MANY = "ops.acquire_slots(text,int,int,int,uuid[],text[],float8[],float8[],float8[])";
 const TAKE = "ops.take_tokens(text[],float8[],float8[],float8[])";
 const RESERVE = "ops.reserve_spend(date,text[],bigint[],text,bigint,bigint,jsonb)";
 const SETTLE = "ops.settle_spend(uuid,bigint)";
@@ -176,6 +177,36 @@ const CASES: [string, Table, Case][] = [
     "concurrency_leases",
     {
       fn: ACQUIRE,
+      start: "select count(*), min(l.expires_at)",
+      vars: { p_key: "text" },
+      values: (p) => [`${p}:0`],
+    },
+  ],
+  [
+    "acquire_slots: released leases",
+    "concurrency_leases",
+    {
+      fn: ACQUIRE_MANY,
+      start: "delete from ops.concurrency_leases l where l.lease_id",
+      vars: { p_released: "uuid[]", p_key: "text" },
+      values: (p) => [[randomUUID(), randomUUID()], `${p}:0`],
+    },
+  ],
+  [
+    "acquire_slots: expired leases",
+    "concurrency_leases",
+    {
+      fn: ACQUIRE_MANY,
+      start: "delete from ops.concurrency_leases l where l.key",
+      vars: { p_key: "text", v_now: "timestamptz" },
+      values: (p) => [`${p}:0`, new Date()],
+    },
+  ],
+  [
+    "acquire_slots: live leases",
+    "concurrency_leases",
+    {
+      fn: ACQUIRE_MANY,
       start: "select count(*), min(l.expires_at)",
       vars: { p_key: "text" },
       values: (p) => [`${p}:0`],
