@@ -3,6 +3,8 @@ import { afterEach, beforeEach, expect, test, vi } from "vitest";
 
 const api = vi.hoisted(() => ({ start: vi.fn() }));
 vi.mock("workflow/api", () => api);
+// Next resolves it to an empty module; the test runner does not.
+vi.mock("server-only", () => ({}));
 const jobs = vi.hoisted(() => ({ startOnce: vi.fn() }));
 vi.mock("@reranker/jobs", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@reranker/jobs")>()),
