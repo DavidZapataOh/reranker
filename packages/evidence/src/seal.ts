@@ -106,8 +106,8 @@ function subjectDigest(statement: Statement, name: string): string {
   return subject.digest.sha256;
 }
 
-// Read before any write, so a deployment without a log signs and stores nothing.
-const logOrigin = () => requireEvidenceEnv("EVIDENCE_LOG_ORIGIN").EVIDENCE_LOG_ORIGIN;
+/** The origin of this deployment's log; read before any write, so one without a log stores nothing. */
+export const logOrigin = () => requireEvidenceEnv("EVIDENCE_LOG_ORIGIN").EVIDENCE_LOG_ORIGIN;
 
 function checkParserVersion(parserVersion: number): void {
   if (!Number.isInteger(parserVersion) || parserVersion < 0 || parserVersion > MAX_SMALLINT) {
