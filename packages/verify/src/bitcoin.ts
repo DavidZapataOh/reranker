@@ -14,7 +14,7 @@ export interface HeaderCache {
 
 export type HeaderLookup =
   | { status: "found"; header: Uint8Array; sources: string[] }
-  | { status: "forged" | "disagree" | "unavailable" };
+  | { status: "forged" | "no_work" | "disagree" | "unavailable" };
 
 const SOURCE_TIMEOUT_MS = 3_000;
 const MAX_RESPONSE_BYTES = 1_024;
@@ -29,6 +29,58 @@ export const sha256d = (bytes: Uint8Array): Uint8Array => sha256(sha256(bytes));
 
 /** The block hash in the byte-reversed hex explorers print. */
 const blockHash = (header: Uint8Array) => bytesToHex(sha256d(header).reverse());
+
+/**
+ * The easiest target any block in each era of 50,000 heights carried, read from the
+ * difficulty adjustments mempool.space lists (`/api/v1/mining/difficulty-adjustments/all`) up to
+ * block 976642 on 2026-11-19. Rows are `[first height, nBits of the easiest retarget]`.
+ */
+const WORK_FLOOR: ReadonlyArray<readonly [number, number]> = [
+  [350_000, 0x181788f2], // block 348768
+  [400_000, 0x1806f0a8], // block 401184
+  [450_000, 0x1802cc47], // block 449568
+  [500_000, 0x18009645], // block 499968
+  [550_000, 0x17371ef4], // block 554400
+  [600_000, 0x171620d1], // block 602784
+  [650_000, 0x17149624], // block 691488
+  [700_000, 0x170f48e4], // block 699552
+  [750_000, 0x1709ed88], // block 749952
+  [800_000, 0x17056102], // block 800352
+  [850_000, 0x17038a6d], // block 850752
+  [900_000, 0x17026816], // block 903168
+  [950_000, 0x170240c3], // block 953568
+];
+const FLOOR_MEASURED_THROUGH = 976_642;
+// Consensus lets difficulty fall at most 4× per retarget; past the measured height the floor
+// allows one such fall, so only a lasting collapse of three quarters of the hash rate trips it.
+const UNMEASURED_MARGIN = 4n;
+
+/** The target a compact nBits encodes, or null for a negative or zero one (Bitcoin's SetCompact). */
+function targetFromBits(bits: number): bigint | null {
+  const exponent = bits >>> 24;
+  const mantissa = bits & 0x007fffff;
+  if (bits & 0x00800000 || mantissa === 0) return null;
+  return exponent <= 3
+    ? BigInt(mantissa >>> (8 * (3 - exponent)))
+    : BigInt(mantissa) << BigInt(8 * (exponent - 3));
+}
+
+/**
+ * Whether the header's double SHA-256, read as a little-endian number, meets the target in its
+ * nBits, and that target is no easier than any real block of that era carried. Hash linkage alone
+ * proves nothing when one explorer answers: it can make up a header and its hash together, but not
+ * the work, which at these floors costs more than any proof is worth.
+ */
+export function hasProofOfWork(header: Uint8Array, height: number): boolean {
+  const era = WORK_FLOOR.findLast(([from]) => from <= height);
+  if (!era || header.length !== 80) return false;
+  const floor = targetFromBits(era[1]) as bigint;
+  const target = targetFromBits(
+    new DataView(header.buffer, header.byteOffset, header.length).getUint32(72, true),
+  );
+  const limit = height > FLOOR_MEASURED_THROUGH ? floor * UNMEASURED_MARGIN : floor;
+  return target !== null && target <= limit && BigInt(`0x${blockHash(header)}`) <= target;
+}
 
 // Explorer answers are a hash or a header; anything longer is cut off before it is buffered.
 async function readText(fetchImpl: typeof fetch, url: string, signal: AbortSignal) {
@@ -116,7 +168,9 @@ export async function fetchHeader(
   opts: { cache: HeaderCache; signal?: AbortSignal | undefined },
 ): Promise<HeaderLookup> {
   const cached = opts.cache.get(height);
-  if (cached) return { status: "found", header: cached, sources: [] };
+  if (cached && hasProofOfWork(cached, height)) {
+    return { status: "found", header: cached, sources: [] };
+  }
   if (opts.signal?.aborted) return { status: "unavailable" };
 
   const answers = await Promise.allSettled(
@@ -129,9 +183,11 @@ export async function fetchHeader(
       }
     }),
   );
-  const headers = answers.flatMap((a) => (a.status === "fulfilled" ? [a.value] : []));
+  const linked = answers.flatMap((a) => (a.status === "fulfilled" ? [a.value] : []));
+  const headers = linked.filter((h) => hasProofOfWork(h.header, height));
   const [first] = headers;
   if (!first) {
+    if (linked.length > 0) return { status: "no_work" };
     const forged = answers.some(
       (a) => a.status === "rejected" && a.reason instanceof ForgedHeaderError,
     );
