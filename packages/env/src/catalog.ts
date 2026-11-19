@@ -142,9 +142,14 @@ const rows: Row[] = [
   ["OPENAI_CONTROL_API_KEY", "secret", PROD, false, "S02-03", true],
   ["GEMINI_API_KEY", "secret", ALL, false, "S02-04 / S02-01", true],
   ["GEMINI_API_KEY_CI", "secret", NONE, true, "S02-04"],
-  ["BRIGHTDATA_API_KEY", "secret", PROD, false, "S02-08"],
-  ["BRIGHTDATA_API_KEY_CI", "secret", NONE, true, "S02-08"],
+  ["BRIGHTDATA_API_KEY", "secret", PROD, false, "S02-08", true],
+  ["BRIGHTDATA_API_KEY_CI", "secret", NONE, true, "S02-08", true],
+  // Finance permission: the only role that reads the account's free tier and balance.
+  ["BRIGHTDATA_BILLING_API_KEY", "secret", PROD, false, "S02-08", true],
+  ["BRIGHTDATA_BILLING_API_KEY_CI", "secret", NONE, true, "S02-08", true],
+  // Unset unless Bright Data replaces a scraper: the defaults are its published dataset ids.
   ["BRIGHTDATA_PERPLEXITY_DATASET_ID", "config", PROD, false, "S02-08"],
+  ["BRIGHTDATA_CHATGPT_DATASET_ID", "config", PROD, false, "S02-08"],
   // Inactive until a Claude model wins an extraction role in the extractor benchmark.
   ["ANTHROPIC_API_KEY", "secret", ALL, false, "S02-04"],
   ["ANTHROPIC_API_KEY_CI", "secret", NONE, true, "B0-01"],
