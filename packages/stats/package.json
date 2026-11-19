@@ -14,11 +14,14 @@
     "test:integration": "vitest run --project integration --passWithNoTests"
   },
   "dependencies": {
+    "@reranker/capture": "workspace:*",
     "@reranker/schema": "workspace:*",
     "@stdlib/stats-base-dists-beta-quantile": "catalog:",
     "canonicalize": "catalog:"
   },
   "devDependencies": {
+    "@reranker/extraction": "workspace:*",
+    "@reranker/i18n": "workspace:*",
     "@reranker/typescript-config": "workspace:*",
     "@stdlib/stats-base-dists-beta-cdf": "catalog:",
     "@types/node": "catalog:",
