@@ -587,6 +587,9 @@ importers:
       '@reranker/schema':
         specifier: workspace:*
         version: link:../schema
+      '@reranker/verify':
+        specifier: workspace:*
+        version: link:../verify
     devDependencies:
       '@reranker/typescript-config':
         specifier: workspace:*
