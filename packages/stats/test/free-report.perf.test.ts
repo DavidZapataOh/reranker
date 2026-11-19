@@ -1,9 +1,16 @@
 import { performance } from "node:perf_hooks";
+import { trace } from "@opentelemetry/api";
+import {
+  InMemorySpanExporter,
+  SimpleSpanProcessor,
+  TracerProvider,
+} from "@opentelemetry/sdk-trace";
 import { expect, test } from "vitest";
 import { type CaptureFrame, type EntityColumn, pairedCompare, rankWithTies } from "../src/compare";
 import { seedFor } from "../src/methodology";
 import { computeFreeReportStats, type FreeReportInput } from "../src/report";
 import { type EntityObservation, estimateScore } from "../src/score";
+import { runFreeReportStats } from "../src/telemetry";
 import { fixture, mention, TARGET } from "./fixtures/report-200";
 
 const RUNS = 30;
@@ -139,4 +146,29 @@ test("10x: ten reports back to back keep p95 ≤ 1 s each and memory flat", () =
   });
   expect(percentile(samples, 95)).toBeLessThanOrEqual(1000);
   expect(process.memoryUsage().heapUsed - heapBefore).toBeLessThanOrEqual(64 * 1024 * 1024);
+}, 120_000);
+
+// The step the report runs: the same computation inside its span, with its event and the Wilson
+// check, against a recording tracer so the span's own cost is measured too.
+test("runFreeReportStats end to end, 200 answers and 100 entities: p50 ≤ 300 ms, p95 ≤ 1 s", async () => {
+  const exporter = new InMemorySpanExporter();
+  const provider = new TracerProvider({ spanProcessors: [new SimpleSpanProcessor({ exporter })] });
+  trace.setGlobalTracerProvider(provider);
+  try {
+    runFreeReportStats(report200);
+    const samples = Array.from({ length: RUNS }, () => {
+      const start = performance.now();
+      runFreeReportStats(report200);
+      return performance.now() - start;
+    });
+    const p50 = percentile(samples, 50);
+    const p95 = percentile(samples, 95);
+    console.info(`runFreeReportStats p50 ${p50.toFixed(1)} ms, p95 ${p95.toFixed(1)} ms`);
+    expect(exporter.getFinishedSpans()).toHaveLength(RUNS + 1);
+    expect(p50).toBeLessThanOrEqual(300);
+    expect(p95).toBeLessThanOrEqual(1000);
+  } finally {
+    await provider.shutdown();
+    trace.disable();
+  }
 }, 120_000);

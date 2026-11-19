@@ -1,5 +1,5 @@
 import type { AppEnv, CaptureChannel, CountryCode, EngineId, ErrorCode } from "@reranker/schema";
-import type { LevelKey } from "@reranker/schema/measurement";
+import type { LevelKey, Sufficiency } from "@reranker/schema/measurement";
 
 type VerificationReason =
   | "connection_limit"
@@ -129,6 +129,15 @@ export interface ServerEventMap {
     to: string;
     first_capture_id: string;
   };
+  stats_computed: {
+    methodology_hash: string;
+    compute_ms: number;
+    target_level: LevelKey | null;
+    target_sufficiency: Sufficiency | null;
+    /** Published rates whose Wilson bounds differ from Jeffreys' by more than the methodology allows. */
+    wilson_divergences: number;
+    engines_included: number;
+  };
 }
 
 export interface ClientEventMap {
@@ -250,6 +259,14 @@ export const SERVER_EVENT_KEYS = {
   "jobs.step.retry": ["workflow", "step", "error"],
   "jobs.step.fatal": ["workflow", "step", "error"],
   regime_opened: ["engine", "channel", "from", "to", "first_capture_id"],
+  stats_computed: [
+    "methodology_hash",
+    "compute_ms",
+    "target_level",
+    "target_sufficiency",
+    "wilson_divergences",
+    "engines_included",
+  ],
 } as const satisfies { [N in ServerEventName]: readonly (keyof ServerEventMap[N])[] };
 
 export const CLIENT_EVENT_KEYS = {

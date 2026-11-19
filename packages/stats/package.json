@@ -6,7 +6,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./methodology": "./src/methodology.ts",
-    "./persist": "./src/persist.ts"
+    "./persist": "./src/persist.ts",
+    "./telemetry": "./src/telemetry.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -15,13 +16,16 @@
     "test:integration": "vitest run --project integration --passWithNoTests"
   },
   "dependencies": {
+    "@opentelemetry/api": "catalog:",
     "@reranker/db": "workspace:*",
     "@reranker/schema": "workspace:*",
+    "@reranker/telemetry": "workspace:*",
     "@stdlib/stats-base-dists-beta-quantile": "catalog:",
     "canonicalize": "catalog:",
     "drizzle-orm": "catalog:"
   },
   "devDependencies": {
+    "@opentelemetry/sdk-trace": "catalog:",
     "@reranker/i18n": "workspace:*",
     "@reranker/typescript-config": "workspace:*",
     "@stdlib/stats-base-dists-beta-cdf": "catalog:",
