@@ -21,6 +21,7 @@
     "@reranker/db": "workspace:*",
     "@reranker/env": "workspace:*",
     "@reranker/evidence": "workspace:*",
+    "@reranker/flags": "workspace:*",
     "@reranker/i18n": "workspace:*",
     "@reranker/jobs": "workspace:*",
     "@reranker/schema": "workspace:*",

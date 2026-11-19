@@ -73,6 +73,11 @@
       "env": ["DATABASE_URL", "DATABASE_URL_SYSTEM", "DATABASE_URL_MIGRATIONS"],
       "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/packages/db/migrations/**"]
     },
+    "@reranker/capture#test:integration": {
+      "dependsOn": ["^typecheck", "@reranker/evidence#test:integration"],
+      "env": ["DATABASE_URL", "DATABASE_URL_SYSTEM", "DATABASE_URL_MIGRATIONS"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/packages/db/migrations/**"]
+    },
     "@reranker/db#test:integration": {
       "dependsOn": ["^typecheck"],
       "env": [
