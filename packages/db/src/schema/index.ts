@@ -6,6 +6,7 @@ export { opsTable, sameTenant, sharedTable, tenantTable } from "./_tables";
 export * from "./auth";
 export * from "./capture";
 export * from "./catalog";
+export * from "./estimates";
 export * from "./evidence";
 export * from "./extraction";
 export * from "./ops";
