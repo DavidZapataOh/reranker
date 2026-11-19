@@ -46,6 +46,43 @@ describe("breakerRecord", () => {
     expect(execute).toHaveBeenCalledTimes(1);
   });
 
+  test("outcomes arriving while a record is in flight go together in the next one", async () => {
+    let release = () => {};
+    execute.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          release = () => resolve({ rows: [{ state: "closed", previous: "closed" }] });
+        }),
+    );
+    execute.mockResolvedValue({ rows: [{ state: "closed", previous: "closed" }] });
+    const first = breakerRecord("dataforseo", "success");
+    const rest = [
+      ...Array.from({ length: 6 }, () => breakerRecord("dataforseo", "success")),
+      ...Array.from({ length: 3 }, () => breakerRecord("dataforseo", "failure")),
+    ];
+    await vi.waitFor(() => expect(execute).toHaveBeenCalledTimes(1));
+    release();
+    await Promise.all([first, ...rest]);
+    expect(withSystem).toHaveBeenCalledTimes(2);
+    // provider, account, successes, failures, then the configured thresholds.
+    const counts = execute.mock.calls.map(([query]) =>
+      (query as { queryChunks: unknown[] }).queryChunks
+        .filter((chunk) => typeof chunk !== "object")
+        .slice(0, 4),
+    );
+    expect(counts).toEqual([
+      ["dataforseo", "default", 1, 0],
+      ["dataforseo", "default", 6, 3],
+    ]);
+  });
+
+  test("another breaker is recorded on its own, never behind this one", async () => {
+    execute.mockImplementationOnce(() => new Promise(() => {}));
+    execute.mockResolvedValue({ rows: [{ state: "closed", previous: "closed" }] });
+    void breakerRecord("gemini", "success", "stalled");
+    await expect(breakerRecord("gemini", "success", "other")).resolves.toBeUndefined();
+  });
+
   test.each([
     ["closed", "open"],
     ["half_open", "open"],
@@ -71,7 +108,7 @@ describe("breakerRecord", () => {
     fail();
     const logged = vi.spyOn(console, "error").mockImplementation(() => {});
     await expect(breakerRecord("openai", "success")).resolves.toBeUndefined();
-    expect(logged).toHaveBeenCalledWith("[jobs] breaker record (openai, success) failed", {
+    expect(logged).toHaveBeenCalledWith("[jobs] breaker record (openai) failed", {
       name: "Error",
     });
     logged.mockRestore();

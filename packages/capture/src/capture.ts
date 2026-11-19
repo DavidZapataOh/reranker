@@ -1,4 +1,4 @@
-import { withSystem } from "@reranker/db";
+import { type SystemTx, withSystem } from "@reranker/db";
 import { captures } from "@reranker/db/schema";
 import { assertCaptureAllowed } from "@reranker/flags";
 import {
@@ -62,10 +62,10 @@ function outcomeOf(record: CaptureRecord): Outcome {
 }
 
 // A call that reported no cost may still have been billed, so its reservation stands.
-function settle(reservation: SpendReservation, charged: ProviderCost | null) {
-  if (charged === null) return settleSpend(reservation, reservation.reserved);
-  if (charged.amount_micros === 0) return releaseSpend(reservation);
-  return settleSpend(reservation, charged);
+function settle(reservation: SpendReservation, charged: ProviderCost | null, tx?: SystemTx) {
+  if (charged === null) return settleSpend(reservation, reservation.reserved, { tx });
+  if (charged.amount_micros === 0) return releaseSpend(reservation, { tx });
+  return settleSpend(reservation, charged, { tx });
 }
 
 /** Admission, spend and the call; the reservation comes back open for the caller to settle. */
@@ -117,17 +117,23 @@ async function captureOne(
     return { ok: false, error: err, retryable };
   }
   const { record, reservation } = called;
+  let settled = false;
   try {
     // Google wraps the cited sites in its own redirects; attribution needs where they lead.
     const answer = record.answer && (await resolveRedirects(record.answer));
     const late = opts.deadlineAt !== undefined && Date.now() > opts.deadlineAt;
-    await persistCapture({ ...record, answer }, { attempt, late });
+    // The cost settles in the row's own transaction: one round trip fewer, and the ledger and
+    // the stored capture never disagree.
+    ({ transacted: settled } = await persistCapture(
+      { ...record, answer },
+      { attempt, late, inTransaction: (tx) => settle(reservation, record.cost, tx) },
+    ));
   } catch (error) {
     // The provider was paid: calling again in this run would pay twice. The step's own retry
     // finds no stored capture for the slot and captures it then.
     return { ok: false, error: asError(error), retryable: false };
   } finally {
-    await settle(reservation, record.cost);
+    if (!settled) await settle(reservation, record.cost);
   }
   return outcomeOf(record);
 }

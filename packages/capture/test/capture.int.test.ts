@@ -100,7 +100,7 @@ describe("captureSlots", () => {
         succeeded: ids,
         failed: [],
       });
-      expect(logged).toHaveBeenCalledWith("[jobs] breaker record (dataforseo, success) failed", {
+      expect(logged).toHaveBeenCalledWith("[jobs] breaker record (dataforseo) failed", {
         name: "Error",
       });
     } finally {

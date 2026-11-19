@@ -69,12 +69,26 @@ function recordHolds(pool: ReturnType<typeof systemPool>): { holds: number[]; st
   };
 }
 
+test("a capture alone takes seven system transactions, its settle riding the insert of its row", async () => {
+  const { m, ids } = await frozen(cycle(2));
+  const spend = { purpose: "contract-test" as const, refType: "capture-test", refId: m };
+  await captureSlots(m, ids.slice(0, 1), { mode: "live", spend });
+  const { holds, stop } = recordHolds(systemPool());
+  await captureSlots(m, ids.slice(1), { mode: "live", spend }).finally(stop);
+  // Besides the capture, the run reads which slots already succeeded. The capture: breaker
+  // check, lease, reservation, breaker record, lease release, retry check, row and settle.
+  console.info(`one capture: ${holds.length - 1} system transactions`);
+  expect(holds.length - 1).toBeLessThanOrEqual(7);
+  expect(await ledger(m)).toEqual({ settled: 2 });
+});
+
 test("10× load on three system connections: none is held across R2, and none times out at iad1 distance", async () => {
   const pool = systemPool();
   expect(pool.options.max).toBe(3);
   const txMs = await transactionMs();
-  // Longer than a few transactions, so a connection held across a write cannot pass for one.
-  const r2WriteMs = Math.max(R2_WRITE_MS, 3 * txMs);
+  // Longer than the two-statement transaction that stores a row and settles it, so a connection
+  // held across a write cannot pass for one.
+  const r2WriteMs = Math.max(R2_WRITE_MS, 4 * txMs);
   provider.delayMs = 20;
   provider.r2WriteMs = r2WriteMs;
   const reports = await Promise.all([0, 1, 2].map(() => frozen(cycle(200))));
@@ -100,7 +114,7 @@ test("10× load on three system connections: none is held across R2, and none ti
       `${holds.length} checkouts held p50 ${percentile(holds, 50).toFixed(1)} ms, ` +
       `p95 ${percentile(holds, 95).toFixed(1)} ms, p99 ${percentile(holds, 99).toFixed(1)} ms, ` +
       `max ${percentile(holds, 100).toFixed(1)} ms, ` +
-      `${(holds.reduce((sum, ms) => sum + ms, 0) / 600 / txMs).toFixed(1)} transactions per capture`,
+      `${(holds.length / Math.max(1, provider.calls.length)).toFixed(2)} checkouts per call`,
   );
   // Every capture writes to R2 once; were a connection held across that, one checkout of each
   // capture's few would last longer than the write.

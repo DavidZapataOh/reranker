@@ -1,4 +1,4 @@
-import { withSystem } from "@reranker/db";
+import { type SystemTx, withSystem } from "@reranker/db";
 import { appEnv } from "@reranker/env";
 import { type CountryCode, DEFAULT_COUNTRY_CODE } from "@reranker/i18n/countries";
 import {
@@ -201,8 +201,9 @@ export async function reserveSpend(req: SpendRequest): Promise<SpendReservation>
   return reservation;
 }
 
-async function applied(query: SQL, fn: string): Promise<{ applied: boolean }> {
-  const { rows } = await system((tx) => tx.execute<{ applied: boolean }>(query));
+async function applied(query: SQL, fn: string, tx?: SystemTx): Promise<{ applied: boolean }> {
+  const run = (t: SystemTx) => t.execute<{ applied: boolean }>(query);
+  const { rows } = await (tx ? run(tx) : system(run));
   const row = rows[0];
   if (!row) throw new Error(`${fn} returned no row`);
   return { applied: row.applied };
@@ -217,16 +218,21 @@ async function applied(query: SQL, fn: string): Promise<{ applied: boolean }> {
  *
  * `applied` is false when the reservation was already settled or released: a retried step changes
  * nothing, and a false on the first settle means the actual cost went unrecorded.
+ *
+ * With `tx` the settle commits or rolls back with the caller's own writes, such as the row that
+ * stores what the call returned, and takes no connection of its own.
  */
 export async function settleSpend(
   r: SpendReservation,
   actual: ProviderCost,
+  opts: { tx?: SystemTx | undefined } = {},
 ): Promise<{ applied: boolean }> {
   assertReservation(r);
   assertAmount(actual, currencyOf());
   const result = await applied(
     sql`select ops.settle_spend(${r.id}::uuid, ${actual.amount_micros}::bigint) as applied`,
     "settle_spend",
+    opts.tx,
   );
   if (result.applied) {
     emit({
@@ -238,9 +244,12 @@ export async function settleSpend(
 }
 
 /** Gives the whole reservation back when the provider charged nothing; idempotent like settle. */
-export async function releaseSpend(r: SpendReservation): Promise<{ applied: boolean }> {
+export async function releaseSpend(
+  r: SpendReservation,
+  opts: { tx?: SystemTx | undefined } = {},
+): Promise<{ applied: boolean }> {
   assertReservation(r);
-  return applied(sql`select ops.release_spend(${r.id}::uuid) as applied`, "release_spend");
+  return applied(sql`select ops.release_spend(${r.id}::uuid) as applied`, "release_spend", opts.tx);
 }
 
 /**
