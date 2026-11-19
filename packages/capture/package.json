@@ -12,21 +12,24 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run --project unit --coverage --passWithNoTests",
     "test:contract": "vitest run --project contract",
+    "test:integration": "vitest run --project integration --no-file-parallelism",
     "record:live": "tsx --conditions=react-server scripts/record-live.ts"
   },
   "dependencies": {
     "@reranker/catalog": "workspace:*",
+    "@reranker/db": "workspace:*",
     "@reranker/env": "workspace:*",
+    "@reranker/evidence": "workspace:*",
     "@reranker/i18n": "workspace:*",
     "@reranker/jobs": "workspace:*",
     "@reranker/schema": "workspace:*",
     "@reranker/verify": "workspace:*",
     "dataforseo-client": "catalog:",
+    "drizzle-orm": "catalog:",
     "server-only": "catalog:",
     "ulid": "catalog:"
   },
   "devDependencies": {
-    "@reranker/db": "workspace:*",
     "@reranker/testing": "workspace:*",
     "@reranker/typescript-config": "workspace:*",
     "@types/node": "catalog:",

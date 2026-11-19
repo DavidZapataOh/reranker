@@ -30,7 +30,11 @@ export const captureStatus = publicPanelSchema.enum("capture_status", [
   "timeout",
 ]);
 
-/** One measurement; its id is the measurementId and its slots live in the sealed plan artifact. */
+/**
+ * One measurement; its id is the measurementId and its slots live in the sealed plan artifact.
+ * The row exists before its plan is chosen, so digest, envelope and slot count arrive together
+ * when the plan is frozen.
+ */
 export const measurementPlans = sharedTable(
   "measurement_plans",
   {
@@ -38,9 +42,9 @@ export const measurementPlans = sharedTable(
     purpose: text().notNull(),
     refType: text().notNull(),
     refId: text().notNull(),
-    digest: bytea().notNull(),
+    digest: bytea(),
     planEnvelopeSha256: bytea(),
-    slotCount: smallint().notNull(),
+    slotCount: smallint(),
     createdAt: at().notNull().defaultNow(),
     frozenAt: at(),
   },
@@ -54,6 +58,10 @@ export const measurementPlans = sharedTable(
     check(
       "measurement_plans_plan_envelope_sha256_length",
       sql`octet_length(${t.planEnvelopeSha256}) = 32`,
+    ),
+    check(
+      "measurement_plans_frozen_sealed",
+      sql`${t.frozenAt} is null or (${t.digest} is not null and ${t.planEnvelopeSha256} is not null and ${t.slotCount} is not null)`,
     ),
   ],
 );

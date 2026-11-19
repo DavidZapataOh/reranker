@@ -688,9 +688,15 @@ importers:
       '@reranker/catalog':
         specifier: workspace:*
         version: link:../catalog
+      '@reranker/db':
+        specifier: workspace:*
+        version: link:../db
       '@reranker/env':
         specifier: workspace:*
         version: link:../env
+      '@reranker/evidence':
+        specifier: workspace:*
+        version: link:../evidence
       '@reranker/i18n':
         specifier: workspace:*
         version: link:../i18n
@@ -706,6 +712,9 @@ importers:
       dataforseo-client:
         specifier: 'catalog:'
         version: 2.1.13
+      drizzle-orm:
+        specifier: 'catalog:'
+        version: 0.45.4(@opentelemetry/api@1.10.0)(@types/pg@8.23.1)(kysely@0.29.9)(pg@8.23.1)
       server-only:
         specifier: 'catalog:'
         version: 0.0.1
@@ -713,9 +722,6 @@ importers:
         specifier: 'catalog:'
         version: 3.0.2
     devDependencies:
-      '@reranker/db':
-        specifier: workspace:*
-        version: link:../db
       '@reranker/testing':
         specifier: workspace:*
         version: link:../testing
