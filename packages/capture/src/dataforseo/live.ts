@@ -18,7 +18,7 @@ type Clients = ReturnType<typeof createDataForSeo>;
 type LiveCall = (clients: Clients, request: DataForSeoRequest) => Promise<unknown>;
 
 // buildRequest returns the request class of the engine's endpoint, so each cast only names it.
-const LIVE: Partial<Record<EngineId, LiveCall>> = {
+export const LIVE: Partial<Record<EngineId, LiveCall>> = {
   gemini: (c, r) =>
     c.ai.geminiLlmScraperLiveAdvanced([r as AiOptimizationGeminiLlmScraperLiveAdvancedRequestInfo]),
   chatgpt: (c, r) =>
