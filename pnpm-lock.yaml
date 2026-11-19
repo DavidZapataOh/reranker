@@ -1193,6 +1193,12 @@ importers:
 
   packages/stats:
     dependencies:
+      '@reranker/capture':
+        specifier: workspace:*
+        version: link:../capture
+      '@reranker/extraction':
+        specifier: workspace:*
+        version: link:../extraction
       '@reranker/schema':
         specifier: workspace:*
         version: link:../schema
@@ -1203,6 +1209,9 @@ importers:
         specifier: 'catalog:'
         version: 5.1.0
     devDependencies:
+      '@reranker/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@reranker/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
