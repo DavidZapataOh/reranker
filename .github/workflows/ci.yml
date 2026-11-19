@@ -68,7 +68,7 @@ jobs:
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version: "1.27"
-          cache-dependency-path: packages/evidence/test/go/go.sum
+          cache-dependency-path: packages/*/test/go/go.sum
       # The log's hashes, proofs and tile paths are pinned to golang.org/x/mod/sumdb/tlog.
       - name: Check the transparency log fixtures match the Go reference
         working-directory: packages/evidence/test/go
@@ -78,6 +78,10 @@ jobs:
         run: |
           pnpm --filter @reranker/evidence exec tsx test/go/emit-checkpoint.ts |
             (cd packages/evidence/test/go && go run . note-verify)
+      # The verifier's inclusion and consistency checks are pinned to sumdb/tlog and transparency-dev/merkle.
+      - name: Check the Merkle proof fixtures match the Go references
+        working-directory: packages/verify/test/go
+        run: go run . --check
       # --affected never selects this package when only the root Biome config changes.
       - name: Test Biome plugins against the current configuration
         run: pnpm --filter @reranker/biome-plugins test
