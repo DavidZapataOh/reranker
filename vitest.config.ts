@@ -24,6 +24,12 @@ export const serverOnlyAlias = {
 // Globs are relative to the package that re-exports this config.
 export default defineConfig({
   test: {
+    // Vitest's defaults plus the cause of every attempt a retry hid.
+    reporters: [
+      "default",
+      ...(process.env.GITHUB_ACTIONS === "true" ? ["github-actions"] : []),
+      fileURLToPath(new URL("./packages/testing/src/vitest/retry-reporter.ts", import.meta.url)),
+    ],
     coverage: {
       provider: "v8",
       include: ["src/**"],
