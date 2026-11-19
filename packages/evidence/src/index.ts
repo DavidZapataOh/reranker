@@ -32,6 +32,7 @@ export {
   probeSealCapture,
   type SealLatency,
 } from "./latency";
+export { type RemovableKind, removeArtifact } from "./removal";
 export {
   type CapturePredicateInput,
   captureRow,
