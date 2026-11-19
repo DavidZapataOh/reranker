@@ -42,7 +42,7 @@ Required. Update the "Last rotation" cell of the row in this file in the same pu
 
 ## Inventory
 
-`Where it lives`: Prod, Prev and Dev are Vercel environments; GH is a GitHub repository secret (a CI value, never a production credential); GH env `<name>` is a secret of that GitHub Environment, readable only by the jobs that reference it. Rows marked "not active yet" belong to a plan that has not shipped; they are rotated from the day they exist.
+`Where it lives`: Prod, Prev and Dev are Vercel environments; GH is a GitHub repository secret (a CI value, never a production credential); GH env `<name>` is a secret of that GitHub Environment, readable only by the jobs that reference it. Rows marked "not active yet" belong to code that has not shipped; they are rotated from the day they exist.
 
 | Secret | Where it lives | Last rotation | Cadence |
 |---|---|---|---|

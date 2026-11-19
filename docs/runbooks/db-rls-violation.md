@@ -34,9 +34,9 @@ A table listed has row-level security switched off, and a migration did not reac
 
 ## Mitigate
 
-1. If the cause is a code bug on one route, turn that route off with its PostHog flag (Feature flags, set the flag to 0 %). Flags are defined by the plan that ships each route; until a route has one, use Vercel instant rollback: Deployments, open the previous production deployment, "Instant Rollback".
+1. If the cause is a code bug on one route, turn that route off with its PostHog flag (Feature flags, set the flag to 0 %). Each route ships with its own flag; until a route has one, use Vercel instant rollback: Deployments, open the previous production deployment, "Instant Rollback".
 2. If a migration is missing in the database, re-run the `migrate` job of the latest `ci` run on `main` (`gh run rerun <id> --job <job id>`): it applies pending migrations from the GitHub Environment `production`. Do not run `db:migrate` by hand against production.
-3. If it is probing, leave the routes on and do nothing else here; rate limiting for public routes belongs to the plan that ships them and is not available yet.
+3. If it is probing, leave the routes on and do nothing else here; rate limiting for public routes ships with each route and is not available yet.
 4. Fix the code path with a test that reproduces the rejected statement, and ship it through the normal pull request.
 
 ## Verify

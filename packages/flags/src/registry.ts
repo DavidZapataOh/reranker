@@ -7,6 +7,7 @@ export type FlagKind = "kill-switch" | "release";
 export type RegistryEntry = {
   key: FlagKey;
   kind: FlagKind;
+  /** The workspace package or area the flag gates; PostHog gets it as a tag. */
   owner: string;
   description: string;
   expires?: string;

@@ -116,7 +116,7 @@ export const externalAlerts = {
   }
 >;
 
-/** Runbooks for procedures nobody is alerted about; each owning plan adds its own. */
+/** Runbooks for procedures nobody is alerted about; each area adds its own. */
 export const procedures = [
   "rotate-secret.md",
   "neon-setup.md",

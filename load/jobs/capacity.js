@@ -12,7 +12,7 @@ const CALLS_PER_REPORT = 120;
 const HOLD_MS = 500;
 const SCENARIO = __ENV.SCENARIO || "nominal";
 
-// The plan's budget is p95 < 25 ms per primitive from iad1, read from the timings the
+// The budget is p95 < 25 ms per primitive from iad1, read from the timings the
 // deployment reports; the HTTP budget only adds the hold and the function around it.
 const PRIMITIVE_P95_MS = 25;
 const slotMs = new Trend("jobs_acquire_slot_ms", true);

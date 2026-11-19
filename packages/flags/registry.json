@@ -2,145 +2,145 @@
   {
     "key": "capture-channel-ui-vendor",
     "kind": "kill-switch",
-    "owner": "S02-02",
+    "owner": "capture",
     "description": "Answer-engine UI captured through a vendor (DataForSEO and Bright Data)"
   },
   {
     "key": "capture-channel-ui-own",
     "kind": "kill-switch",
-    "owner": "S02-02",
+    "owner": "capture",
     "description": "Answer-engine UI captured by our own browsers; closed in code whatever its value"
   },
   {
     "key": "capture-channel-api",
     "kind": "kill-switch",
-    "owner": "S02-03",
+    "owner": "capture",
     "description": "Official model APIs (OpenAI)"
   },
   {
     "key": "capture-provider-dataforseo",
     "kind": "kill-switch",
-    "owner": "S02-02",
+    "owner": "capture",
     "description": "DataForSEO capture provider",
     "productionOnly": true
   },
   {
     "key": "capture-provider-openai",
     "kind": "kill-switch",
-    "owner": "S02-03",
+    "owner": "capture",
     "description": "OpenAI capture provider",
     "productionOnly": true
   },
   {
     "key": "capture-provider-brightdata",
     "kind": "kill-switch",
-    "owner": "S02-08",
+    "owner": "capture",
     "description": "Bright Data capture provider for the Perplexity UI",
     "productionOnly": true
   },
   {
     "key": "capture-engine-chatgpt",
     "kind": "kill-switch",
-    "owner": "S02-02",
+    "owner": "capture",
     "description": "Capture of ChatGPT answers"
   },
   {
     "key": "capture-engine-gemini",
     "kind": "kill-switch",
-    "owner": "S02-02",
+    "owner": "capture",
     "description": "Capture of Gemini answers"
   },
   {
     "key": "capture-engine-google-ai-overview",
     "kind": "kill-switch",
-    "owner": "S02-02",
+    "owner": "capture",
     "description": "Capture of Google AI Overviews"
   },
   {
     "key": "capture-engine-google-ai-mode",
     "kind": "kill-switch",
-    "owner": "S02-02",
+    "owner": "capture",
     "description": "Capture of Google AI Mode"
   },
   {
     "key": "capture-engine-perplexity",
     "kind": "kill-switch",
-    "owner": "S02-08",
+    "owner": "capture",
     "description": "Capture of Perplexity answers"
   },
   {
     "key": "intent-generation",
     "kind": "kill-switch",
-    "owner": "S02-01",
+    "owner": "intents",
     "description": "LLM intent generation; off leaves seeds, stored sets and templates only",
     "productionOnly": true
   },
   {
     "key": "places-resolution",
     "kind": "kill-switch",
-    "owner": "S02-04",
+    "owner": "extraction",
     "description": "Google Places resolution provider",
     "productionOnly": true
   },
   {
     "key": "extraction-secondary",
     "kind": "kill-switch",
-    "owner": "S02-04",
+    "owner": "extraction",
     "description": "Gemini as the secondary extractor",
     "productionOnly": true
   },
   {
     "key": "control-canary",
     "kind": "release",
-    "owner": "S02-03",
+    "owner": "capture",
     "description": "Control canary measurement",
     "expires": "2027-02-05"
   },
   {
     "key": "evidence-public-tiles",
     "kind": "release",
-    "owner": "S02-06",
+    "owner": "evidence",
     "description": "Publication of the evidence log tiles",
     "expires": "2027-02-05"
   },
   {
     "key": "verify-page",
     "kind": "release",
-    "owner": "S02-07",
+    "owner": "verify",
     "description": "Public verification page",
     "expires": "2027-02-05"
   },
   {
     "key": "free-report-live",
     "kind": "release",
-    "owner": "S03-01",
+    "owner": "reports",
     "description": "Free report API and form",
     "expires": "2027-02-05"
   },
   {
     "key": "free-report-anonymous",
     "kind": "kill-switch",
-    "owner": "S03-01",
+    "owner": "reports",
     "description": "Anonymous free report path; off sends every request through email confirmation"
   },
   {
     "key": "lead-capture",
     "kind": "release",
-    "owner": "S03-03",
+    "owner": "email",
     "description": "Lead card and report email",
     "expires": "2027-02-05"
   },
   {
     "key": "free-report-remeasure",
     "kind": "release",
-    "owner": "S03-03",
+    "owner": "reports",
     "description": "New measurement by email 30 days after the report",
     "expires": "2027-02-05"
   },
   {
     "key": "accounts",
     "kind": "release",
-    "owner": "S01-04",
+    "owner": "auth",
     "description": "User accounts",
     "expires": "2027-02-05"
   }
