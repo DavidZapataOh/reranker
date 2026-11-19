@@ -1,7 +1,7 @@
 import { endPools, withSystem } from "@reranker/db";
 import { users, verifications } from "@reranker/db/schema/auth";
 import { eq, inArray, sql } from "drizzle-orm";
-import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, test, vi } from "vitest";
 import { readSignInCode } from "../test/sign-in-code";
 
 // Outside production captureServerEvent sends nothing, so the test watches the calls instead.
@@ -13,6 +13,25 @@ vi.mock("@reranker/telemetry", async (importOriginal) => ({
 
 const mail = vi.hoisted(() => ({ sendAuthEmail: vi.fn() }));
 vi.mock("./send-auth-email", () => mail);
+
+// Better Auth hands each sign-in's velocity record to waitUntil, after the response. Holding the
+// tasks lets a test wait for exactly those records instead of polling the window, so no record of
+// one test can land after the next one has reset it.
+const background = vi.hoisted(() => ({ tasks: [] as Promise<unknown>[] }));
+vi.mock("@vercel/functions", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@vercel/functions")>()),
+  waitUntil: (task: Promise<unknown>) => {
+    background.tasks.push(task);
+  },
+}));
+
+async function settleBackground(): Promise<void> {
+  while (background.tasks.length > 0) {
+    const outcomes = await Promise.allSettled(background.tasks.splice(0));
+    const reasons = outcomes.flatMap((o) => (o.status === "rejected" ? [o.reason] : []));
+    if (reasons.length > 0) throw new AggregateError(reasons, "A background task failed");
+  }
+}
 
 const secret = () => `${crypto.randomUUID()}${crypto.randomUUID()}`;
 vi.stubEnv("APP_ENV", "development");
@@ -49,6 +68,8 @@ async function attemptsRecorded(): Promise<number> {
 }
 
 beforeAll(resetSignInWindow);
+
+afterEach(settleBackground);
 
 afterAll(async () => {
   const addresses = [...emails];
@@ -129,9 +150,8 @@ describe("sign-in failure alert", () => {
       name: "auth_sign_in_failed",
       props: { reason: "invalid_otp" },
     });
-    // Each attempt is recorded in the background, after its response.
-    await vi.waitFor(async () => expect(await attemptsRecorded()).toBe(21), { timeout: 10_000 });
-    await vi.waitFor(() => expect(telemetry.sendOpsAlert).toHaveBeenCalled());
+    await settleBackground();
+    expect(await attemptsRecorded()).toBe(21);
     expect(telemetry.sendOpsAlert).toHaveBeenCalledExactlyOnceWith("auth-sign-in-failure-spike", {
       attempts_10m: 20,
       failed_10m: 20,
