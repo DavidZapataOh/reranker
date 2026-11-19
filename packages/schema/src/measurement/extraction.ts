@@ -84,6 +84,16 @@ export interface ResponseExtraction {
   latencyMs: number;
 }
 
+/** The business a report is about: its place, or its domain when it has no Places listing. */
+export interface TargetBusiness {
+  placeId: string | null;
+  domain: string | null;
+  inputName: string;
+  geo: GeoTarget;
+  category: BusinessCategory;
+  aliases: string[];
+}
+
 /** A business the owner may mean, found by name in Places or by the domain they typed. */
 export interface BusinessCandidate {
   kind: "place" | "website";

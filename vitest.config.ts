@@ -39,7 +39,7 @@ export default defineConfig({
           alias: serverOnlyAlias,
           environment: "node",
           include: ["**/{src,test}/**/*.test.ts"],
-          exclude: [...ignored, "**/*.{int,contract,browser,workflow,perf,heavy}.test.*"],
+          exclude: [...ignored, "**/*.{int,contract,measure,browser,workflow,perf,heavy}.test.*"],
         },
       },
       // CPU-heavy checks, such as sampler validation or every Merkle tree size, run without
@@ -103,6 +103,16 @@ export default defineConfig({
           exclude: ignored,
           retry: 1,
           testTimeout: 60_000,
+        },
+      },
+      // Rates measured on live providers, weekly. A retry would keep the run that happens to pass.
+      {
+        test: {
+          name: "measure",
+          alias: serverOnlyAlias,
+          include: ["**/{src,test}/**/*.measure.test.ts"],
+          exclude: ignored,
+          testTimeout: 300_000,
         },
       },
     ],

@@ -127,6 +127,13 @@
       "when": 1795034218875,
       "tag": "0017_extraction",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1795101202266,
+      "tag": "0018_measurement_plan_frozen",
+      "breakpoints": true
     }
   ]
 }

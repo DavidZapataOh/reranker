@@ -236,6 +236,26 @@ test("digests are exactly 32 bytes", async () => {
   });
 });
 
+test("a measurement exists before its plan, and only a sealed plan can be frozen", async () => {
+  const { rows } = await sys(
+    `insert into public_panel.measurement_plans (purpose, ref_type, ref_id)
+     values ('free-report', 'report', $1) returning id`,
+    [randomUUID()],
+  );
+  const id = rows[0]?.id as string;
+  await expect(
+    sys(`update public_panel.measurement_plans set digest = $1, frozen_at = now() where id = $2`, [
+      sha(id),
+      id,
+    ]),
+  ).rejects.toMatchObject({ code: "23514" });
+  await sys(
+    `update public_panel.measurement_plans
+     set digest = $1, plan_envelope_sha256 = $2, slot_count = 9, frozen_at = now() where id = $3`,
+    [sha(id), other32, id],
+  );
+});
+
 test("the pending log queue uses its partial index with 10,000 rows", async () => {
   // Rolled back so the rows never count toward the other tests; the owner can ANALYZE them.
   await owner.query("begin");

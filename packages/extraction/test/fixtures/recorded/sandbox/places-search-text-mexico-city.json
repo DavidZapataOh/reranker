@@ -1,0 +1,107 @@
+{
+  "places": [
+    {
+      "id": "x",
+      "types": [
+        "seafood_restaurant",
+        "mexican_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "formattedAddress": "x",
+      "addressComponents": [
+        {
+          "longText": "x",
+          "shortText": "x",
+          "types": [
+            "street_number"
+          ],
+          "languageCode": "es"
+        },
+        {
+          "longText": "x",
+          "shortText": "x",
+          "types": [
+            "route"
+          ],
+          "languageCode": "es"
+        },
+        {
+          "longText": "x",
+          "shortText": "x",
+          "types": [
+            "sublocality_level_1",
+            "sublocality",
+            "political"
+          ],
+          "languageCode": "es"
+        },
+        {
+          "longText": "x",
+          "shortText": "x",
+          "types": [
+            "locality",
+            "political"
+          ],
+          "languageCode": "es"
+        },
+        {
+          "longText": "x",
+          "shortText": "x",
+          "types": [
+            "administrative_area_level_3",
+            "political"
+          ],
+          "languageCode": "es"
+        },
+        {
+          "longText": "x",
+          "shortText": "x",
+          "types": [
+            "administrative_area_level_1",
+            "political"
+          ],
+          "languageCode": "es"
+        },
+        {
+          "longText": "x",
+          "shortText": "MX",
+          "types": [
+            "country",
+            "political"
+          ],
+          "languageCode": "es"
+        },
+        {
+          "longText": "x",
+          "shortText": "x",
+          "types": [
+            "postal_code"
+          ],
+          "languageCode": "es"
+        }
+      ],
+      "location": {
+        "latitude": 0,
+        "longitude": 0
+      },
+      "businessStatus": "OPERATIONAL",
+      "displayName": {
+        "text": "x",
+        "languageCode": "es"
+      },
+      "primaryTypeDisplayName": {
+        "text": "x",
+        "languageCode": "es"
+      },
+      "primaryType": "seafood_restaurant",
+      "pureServiceAreaBusiness": false,
+      "googleMapsTypeLabel": {
+        "text": "x",
+        "languageCode": "es"
+      }
+    }
+  ]
+}

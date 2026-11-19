@@ -1,0 +1,52 @@
+name: dns
+# Brings the reranker.co records the web project serves to the state declared in
+# apps/web/scripts/provision-dns.ts. Every run is idempotent and ends by checking each hostname.
+on:
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Report the changes without making them
+        type: boolean
+        default: false
+permissions: {}
+concurrency:
+  group: dns
+  cancel-in-progress: false
+jobs:
+  provision:
+    # The infrastructure token edits the production zone, so only main's declaration is applied.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    # Vercel issues the certificate of a new hostname within minutes of its record.
+    timeout-minutes: 15
+    permissions: { contents: read }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      # Only the Node runtime: the script uses nothing beyond fetch.
+      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
+        with: { install: false }
+      - name: Provision the DNS records
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
+          DRY_RUN: ${{ inputs.dry-run }}
+        run: |
+          if [ "$DRY_RUN" = true ]; then
+            node apps/web/scripts/provision-dns.ts --dry-run
+          else
+            node apps/web/scripts/provision-dns.ts
+          fi
+      - if: ${{ !inputs.dry-run }}
+        name: Check that every hostname serves over TLS
+        run: |
+          for host in tienda-ejemplo.reranker.co; do
+            for attempt in $(seq 1 20); do
+              code=$(curl -sS --tlsv1.2 -o /dev/null -w '%{http_code}' "https://$host/") || code=failed
+              echo "https://$host/ answered $code (attempt $attempt)"
+              if [ "$code" = 200 ]; then continue 2; fi
+              sleep 30
+            done
+            echo "::error::https://$host/ never answered 200"
+            exit 1
+          done
