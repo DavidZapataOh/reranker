@@ -6,12 +6,14 @@ afterEach(async () => {
   vi.unstubAllEnvs();
 });
 
+// The first import transforms the whole schema and Drizzle under coverage: about 2 s alone, past
+// 5 s on a runner shared with every other package's tests.
 test("importing the adapter reads no environment and opens no pool", async () => {
   vi.stubEnv("DATABASE_URL", undefined);
   vi.stubEnv("DATABASE_URL_SYSTEM", undefined);
   const { authDb } = await import("./auth-adapter");
   expect(authDb).toBeDefined();
-});
+}, 30_000);
 
 test("authDb runs on the shared system pool once used", async () => {
   vi.stubEnv(
