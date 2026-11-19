@@ -2,7 +2,9 @@ import { performance } from "node:perf_hooks";
 import { expect, test } from "vitest";
 import { type CaptureFrame, type EntityColumn, pairedCompare, rankWithTies } from "../src/compare";
 import { seedFor } from "../src/methodology";
+import { computeFreeReportStats, type FreeReportInput } from "../src/report";
 import { type EntityObservation, estimateScore } from "../src/score";
+import { fixture, mention, TARGET } from "./fixtures/report-200";
 
 const RUNS = 30;
 const CAPTURES = 200;
@@ -85,3 +87,56 @@ test("free report scores, comparisons and ranking: p50 ≤ 150 ms, p95 ≤ 300 m
   expect(p50).toBeLessThanOrEqual(150);
   expect(p95).toBeLessThanOrEqual(300);
 }, 60_000);
+
+// The full step on a realistic report: 200 answers naming 100 distinct businesses, from a few
+// leaders recommended across engines to a long tail named once, at mixed ranks.
+const ENTITIES = 100;
+const named = (slot: number) =>
+  Array.from({ length: ENTITIES }, (_, j) => j).filter((j) => (slot + j * 7) % (j + 3) === 0);
+const report200: FreeReportInput = {
+  reportId: "fr_perf",
+  asOf: new Date("2026-11-19T15:00:00.000Z"),
+  target: { entityKey: TARGET, displayName: "Clínica Sonrisas", entityKind: "business" },
+  ...fixture({
+    mentions: (slot) => [
+      ...(slot % 3 === 0 ? [mention({ entityKey: TARGET, ordinal: 1 + (slot % 4) })] : []),
+      ...named(slot).map((j, rank) =>
+        mention({ entityKey: `place:e${j}`, ordinal: rank % 3 === 2 ? null : rank + 2 }),
+      ),
+    ],
+  }),
+};
+
+test("computeFreeReportStats, 200 answers and 100 entities: p50 ≤ 300 ms, p95 ≤ 1 s, ≤ 64 MB", () => {
+  const distinct = new Set(
+    report200.extractions.flatMap((e) => e.mentions.map((m) => m.entityKey)),
+  );
+  expect(distinct.size).toBeGreaterThanOrEqual(ENTITIES);
+  computeFreeReportStats(report200);
+  const heapBefore = process.memoryUsage().heapUsed;
+  const samples = Array.from({ length: RUNS }, () => {
+    const start = performance.now();
+    computeFreeReportStats(report200);
+    return performance.now() - start;
+  });
+  const p50 = percentile(samples, 50);
+  const p95 = percentile(samples, 95);
+  console.info(`computeFreeReportStats p50 ${p50.toFixed(1)} ms, p95 ${p95.toFixed(1)} ms`);
+  expect(p50).toBeLessThanOrEqual(300);
+  expect(p95).toBeLessThanOrEqual(1000);
+  expect(process.memoryUsage().heapUsed - heapBefore).toBeLessThanOrEqual(64 * 1024 * 1024);
+}, 120_000);
+
+// Under 10x load each report runs its own step and Fluid compute may share an instance between
+// them: ten reports back to back must not get slower nor keep memory.
+test("10x: ten reports back to back keep p95 ≤ 1 s each and memory flat", () => {
+  computeFreeReportStats(report200);
+  const heapBefore = process.memoryUsage().heapUsed;
+  const samples = Array.from({ length: 10 }, (_, k) => {
+    const start = performance.now();
+    computeFreeReportStats({ ...report200, reportId: `fr_perf_${k}` });
+    return performance.now() - start;
+  });
+  expect(percentile(samples, 95)).toBeLessThanOrEqual(1000);
+  expect(process.memoryUsage().heapUsed - heapBefore).toBeLessThanOrEqual(64 * 1024 * 1024);
+}, 120_000);
