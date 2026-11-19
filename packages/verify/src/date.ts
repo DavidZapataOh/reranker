@@ -11,8 +11,9 @@ import { bitcoinAttestations, parseDetachedOts } from "./format/index";
 
 export type DateCheck = Check & { datedBefore?: string; bitcoinHeight?: number; source?: string };
 
-const LOOKUP_FAILURE: Record<"forged" | "disagree" | "unavailable", DateCheck> = {
+const LOOKUP_FAILURE: Record<"forged" | "no_work" | "disagree" | "unavailable", DateCheck> = {
   forged: { status: "fail", detail: "header_mismatch" },
+  no_work: { status: "fail", detail: "insufficient_work" },
   disagree: { status: "unavailable", detail: "explorers_disagree" },
   unavailable: { status: "unavailable", detail: "explorers_unavailable" },
 };

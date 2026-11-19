@@ -2,7 +2,13 @@ import { readFileSync } from "node:fs";
 import { sha256 } from "@noble/hashes/sha2.js";
 import { bytesToHex, hexToBytes } from "@noble/hashes/utils.js";
 import { afterEach, describe, expect, test, vi } from "vitest";
-import { blockstreamInfo, type HeaderCache, mempoolSpace, sha256d } from "../src/bitcoin";
+import {
+  blockstreamInfo,
+  type HeaderCache,
+  hasProofOfWork,
+  mempoolSpace,
+  sha256d,
+} from "../src/bitcoin";
 import { verifyOtsDate } from "../src/date";
 import { mergeOtsTimestamps, parseDetachedOts, serializeDetachedOts } from "../src/format/index";
 
@@ -76,6 +82,35 @@ function attestedDirectly(height: number, digest = checkpointDigest) {
   };
 }
 
+// The easiest target the compact encoding allows (regtest's limit): about one hash in two meets it.
+const EASIEST_BITS = 0x207fffff;
+
+/**
+ * Block 358391's header rewritten to commit to the checkpoint digest itself. With `bits`, it
+ * claims that target and its nonce is ground until the header meets it.
+ */
+function forgedHeader(bits?: number): Uint8Array {
+  const header = hexToBytes(block(358_391).header);
+  header.set(checkpointDigest, 36);
+  if (bits === undefined) return header;
+  const view = new DataView(header.buffer);
+  view.setUint32(72, bits, true);
+  for (let nonce = 0; (sha256d(header)[31] as number) >= 0x7f; nonce++) {
+    view.setUint32(76, nonce, true);
+  }
+  return header;
+}
+
+/** One explorer serving `header` as block `height`, under the hash it does have; the other down. */
+function soleExplorer(height: number, header: Uint8Array) {
+  const hash = bytesToHex(sha256d(header).reverse());
+  return explorers({
+    [`${MEMPOOL}/block-height/${height}`]: hash,
+    [`${MEMPOOL}/block/${hash}/header`]: bytesToHex(header),
+    [`${BLOCKSTREAM}/block-height/${height}`]: new TypeError("Failed to fetch"),
+  });
+}
+
 afterEach(() => {
   vi.useRealTimers();
   vi.unstubAllGlobals();
@@ -85,6 +120,26 @@ test("sha256d is double SHA-256, the hash Bitcoin names blocks by", () => {
   const header = hexToBytes(block(358_391).header);
   expect(sha256d(header)).toEqual(sha256(sha256(header)));
   expect(bytesToHex(sha256d(header).reverse())).toBe(block(358_391).hash);
+});
+
+describe("proof of work", () => {
+  test.each(Object.keys(HEADERS).map(Number))("real block %i carries enough work", (height) => {
+    expect(hasProofOfWork(hexToBytes(block(height).header), height)).toBe(true);
+  });
+
+  test("the floor follows the height: an old block's work is too little for a recent height", () => {
+    expect(hasProofOfWork(hexToBytes(block(358_391).header), 975_744)).toBe(false);
+  });
+
+  test("heights before the first pinned era are refused", () => {
+    expect(hasProofOfWork(hexToBytes(block(358_391).header), 349_999)).toBe(false);
+  });
+
+  test("a target with the compact sign bit set is refused", () => {
+    const header = hexToBytes(block(358_391).header);
+    new DataView(header.buffer).setUint32(72, 0x18800000, true);
+    expect(hasProofOfWork(header, 358_391)).toBe(false);
+  });
 });
 
 describe("confirmed proofs", () => {
@@ -114,6 +169,25 @@ describe("confirmed proofs", () => {
     const forged = `${header.slice(0, 72)}${"00".repeat(32)}${header.slice(136)}`;
     const f = explorers({ [`${MEMPOOL}/block/${hash}/header`]: forged });
     expect(await verify(f)).toMatchObject({ status: "pass", source: "blockstream.info" });
+  });
+
+  test.each([358_391, 975_744])(
+    "a lone explorer cannot fabricate block %i: linkage without work fails",
+    async (height) => {
+      const ots = serializeDetachedOts(checkpointDigest, attestedDirectly(height));
+      for (const header of [forgedHeader(), forgedHeader(EASIEST_BITS)]) {
+        expect(await verify(soleExplorer(height, header), { ots })).toEqual({
+          status: "fail",
+          detail: "insufficient_work",
+        });
+      }
+    },
+  );
+
+  test("a cached header without work is ignored", async () => {
+    const cache = memoryCache({ 358391: forgedHeader(EASIEST_BITS) });
+    expect(await verify(explorers(), { cache })).toMatchObject({ status: "pass" });
+    expect(bytesToHex(cache.map.get(358_391) as Uint8Array)).toBe(block(358_391).header);
   });
 
   test("explorers naming different blocks confirm nothing", async () => {
