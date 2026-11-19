@@ -82,7 +82,7 @@ function declaredGeo(record: CaptureRecord): CapturePredicateInput["geo"]["decla
   };
 }
 
-const versionOf = (answer: EngineAnswer) => Number(answer.parserVersion.split("@")[1]);
+export const versionOf = (answer: EngineAnswer) => Number(answer.parserVersion.split("@")[1]);
 
 /**
  * Seals a capture, then stores its row: a row exists only once its signed evidence does, and a

@@ -1,5 +1,5 @@
 import { InvalidInputError } from "@reranker/jobs/errors";
-import type { CaptureChannel, CaptureProvider, ProviderCost } from "@reranker/schema";
+import type { CaptureChannel, CaptureProvider, EngineId, ProviderCost } from "@reranker/schema";
 import type { CaptureId } from "@reranker/verify/format";
 import type { EngineAnswer } from "./answer";
 import type { FrozenSlot } from "./slot";
@@ -32,6 +32,8 @@ export interface CaptureAdapter {
   channel: CaptureChannel;
   /** Calls and parses only; capacity, spend and persistence belong to the caller. */
   captureLive(slot: FrozenSlot): Promise<CaptureRecord>;
+  /** The current parser of an engine's responses, which re-derives answers from sealed bytes. */
+  parse?(engine: EngineId, bytes: Uint8Array): EngineAnswer;
 }
 
 const adapters = new Map<CaptureProvider, CaptureAdapter>();
