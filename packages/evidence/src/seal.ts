@@ -94,17 +94,18 @@ async function signAndStore(
   return { envelopeSha256: signed.envelopeSha256, keyid: keyidOf(signed.envelope) };
 }
 
-async function readStatement(
+/** A stored envelope, checked against its digest, with the statement it signs. */
+export async function readStatement(
   envelopeSha256: string,
-): Promise<{ keyid: string; statement: Statement }> {
+): Promise<{ envelope: DsseEnvelope; keyid: string; statement: Statement }> {
   const bytes = await getArtifact("envelopes", envelopeSha256);
   if (bytes === null) throw new NotFoundError(`Envelope ${envelopeSha256} is missing or altered`);
   const envelope = DsseEnvelopeSchema.parse(JSON.parse(new TextDecoder().decode(bytes)));
   const statement: Statement = JSON.parse(Buffer.from(envelope.payload, "base64").toString("utf8"));
-  return { keyid: keyidOf(envelope), statement };
+  return { envelope, keyid: keyidOf(envelope), statement };
 }
 
-function subjectDigest(statement: Statement, name: string): string {
+export function subjectDigest(statement: Statement, name: string): string {
   const subject = statement.subject.find((s: ResourceDescriptor) => s.name === name);
   if (!subject) throw new Error(`Signed statement has no ${name} subject`);
   return subject.digest.sha256;

@@ -22,6 +22,7 @@ import {
 import { loadSigner } from "../src/signer";
 import { previewEnv } from "./support/evidence-env";
 import { localSigner } from "./support/local-signer";
+import { publishedLogTiles } from "./support/log-tiles";
 
 vi.mock("../src/signer", () => ({ loadSigner: vi.fn() }));
 vi.mock("@reranker/telemetry", async (importOriginal) => ({
@@ -30,7 +31,8 @@ vi.mock("@reranker/telemetry", async (importOriginal) => ({
 }));
 
 // The log is one index space, so the evidence suites run one file at a time (see package.json)
-// and this one integrates and publishes alone. The fake bucket starts empty, as on a fresh branch.
+// and this one integrates and publishes alone. The fake bucket starts with the tiles a suite that
+// ran before it published, as the real bucket would hold them.
 const ORIGIN = "log-preview.reranker.co/captures/2026";
 const PREFIX = "captures/2026/";
 const CHECKPOINT = `${PREFIX}checkpoint`;
@@ -120,12 +122,15 @@ async function localHashes(treeSize: number) {
 
 const object = (key: string) => bucket.objects.get(key) as Stored;
 
-beforeAll(() => {
+beforeAll(async () => {
   for (const [name, value] of Object.entries(previewEnv)) vi.stubEnv(name, value);
   resetEvidenceEnv();
   vi.stubGlobal("fetch", (input: RequestInfo | URL, init?: RequestInit) =>
     bucket.fetch(new Request(input, init)),
   );
+  for (const [key, body] of await publishedLogTiles(ORIGIN)) {
+    bucket.objects.set(key, { body: new Uint8Array(body), headers: {} });
+  }
 });
 
 afterAll(async () => {
