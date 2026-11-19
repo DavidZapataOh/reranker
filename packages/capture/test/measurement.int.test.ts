@@ -262,6 +262,9 @@ describe("loadPlan", () => {
     await freezeMeasurementPlan(measurementId, slots);
     const plan = await loadPlan(measurementId);
     expect(plan).toMatchObject({ purpose: "control-canary", refType: "canary", refId });
+    expect(plan.planEnvelopeSha256).toBe(
+      (await row(measurementId))?.plan_envelope_sha256?.toString("hex"),
+    );
     expect(plan.slots).toEqual(
       slots.map((s, slotIndex) => ({
         ...s,

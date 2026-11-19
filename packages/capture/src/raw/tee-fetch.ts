@@ -34,7 +34,8 @@ export function recordingFetch(
 ): Fetch {
   const timeoutMs = opts.timeoutMs ?? DEFAULT_TIMEOUT_MS;
   return async (url, init) => {
-    sink.recordRequest(await requestBody(url, init));
+    const href = typeof url === "string" ? url : url instanceof URL ? url.href : url.url;
+    sink.recordRequest(href, await requestBody(url, init));
     const headers = new Headers(init?.headers);
     for (const [name, value] of Object.entries(opts.headers ?? {})) headers.set(name, value);
     const timeout = AbortSignal.timeout(timeoutMs);

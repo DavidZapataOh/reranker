@@ -27,6 +27,7 @@ export {
   type LoadedPlan,
   loadPlan,
 } from "./measurement";
+export { persistCapture } from "./persist";
 export { RawSink } from "./raw/raw-sink";
 export { type Fetch, recordingFetch, teeFetch } from "./raw/tee-fetch";
 export { resolveRedirects } from "./resolve-redirects";

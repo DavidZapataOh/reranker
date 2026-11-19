@@ -3,12 +3,17 @@
  * bytes, never from a re-serialized response.
  */
 export class RawSink {
+  #url: string | null = null;
   #request: Uint8Array | null = null;
   #response: Uint8Array | null = null;
   #status: number | null = null;
   #contentType: string | null = null;
   #headers: Headers | null = null;
   #calls = 0;
+
+  get url(): string | null {
+    return this.#url;
+  }
 
   get request(): Uint8Array | null {
     return this.#request;
@@ -35,8 +40,9 @@ export class RawSink {
   }
 
   /** Starts a call: whatever an earlier call left behind must never pass for this one's response. */
-  recordRequest(body: Uint8Array | null): void {
+  recordRequest(url: string, body: Uint8Array | null): void {
     this.#calls += 1;
+    this.#url = url;
     this.#request = body;
     this.#response = null;
     this.#status = null;

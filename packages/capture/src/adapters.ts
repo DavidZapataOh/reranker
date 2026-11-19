@@ -14,6 +14,10 @@ export interface CaptureRecord {
   request: Uint8Array;
   response: Uint8Array;
   responseContentType: string;
+  /** The URL called, as the signed statement names it. */
+  endpoint: string;
+  /** The provider's id for the task, when it reports one. */
+  providerTaskId: string | null;
   answer: EngineAnswer | null;
   parseError: string | null;
   modelReported: string | null;

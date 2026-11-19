@@ -224,6 +224,10 @@ describe("captureLive", () => {
       httpStatus: 200,
       cost: { amount_micros: 4000, currency: "USD" },
       modelReported: "Fast",
+      providerTaskId: "11181400-1535-0558-0000-6b0e2a1b2c3d",
+      endpoint: expect.stringMatching(
+        /\/v3\/ai_optimization\/gemini\/llm_scraper\/live\/advanced$/,
+      ),
       responseContentType: "application/json",
       parseError: null,
       mode: "live",

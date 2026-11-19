@@ -28,6 +28,8 @@ export interface LoadedPlan {
   purpose: SpendPurpose;
   refType: string;
   refId: string;
+  /** Digest of the plan's signed envelope, which every capture statement of the plan names. */
+  planEnvelopeSha256: string;
   slots: FrozenSlot[];
 }
 
@@ -157,13 +159,14 @@ export async function loadPlan(measurementId: string): Promise<LoadedPlan> {
         refType: measurementPlans.refType,
         refId: measurementPlans.refId,
         digest: measurementPlans.digest,
+        planEnvelopeSha256: measurementPlans.planEnvelopeSha256,
         frozenAt: measurementPlans.frozenAt,
       })
       .from(measurementPlans)
       .where(eq(measurementPlans.id, measurementId)),
   );
   if (!row) throw new NotFoundError(`Measurement ${measurementId} does not exist`);
-  if (!row.frozenAt || !row.digest) {
+  if (!row.frozenAt || !row.digest || !row.planEnvelopeSha256) {
     throw new InvalidInputError(`Measurement ${measurementId} has no frozen plan`);
   }
   const digest = row.digest.toString("hex");
@@ -180,6 +183,7 @@ export async function loadPlan(measurementId: string): Promise<LoadedPlan> {
     purpose: row.purpose as SpendPurpose,
     refType: row.refType,
     refId: row.refId,
+    planEnvelopeSha256: row.planEnvelopeSha256.toString("hex"),
     slots: sealed.data.slots.map((slot, slotIndex) => ({
       ...slot,
       measurementId,
