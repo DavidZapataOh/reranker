@@ -2,7 +2,7 @@
 
 ## Trigger
 
-An open issue labeled `nightly-failure`, or Better Stack reports the nightly heartbeat missing. Each failing contract package (`Nightly contract: @reranker/<package>#test:contract`) or full-suite gate (`Nightly full: <gate>`) has its own issue; a job that was cancelled or timed out opens `Nightly <job>: job <result>`. Every red night after the first adds a comment to the issue of the same failure. Only scheduled or dispatched runs on `main` touch issues; a run on another branch writes its failures to the run summary.
+An open issue labeled `nightly-failure`, or Better Stack reports the nightly heartbeat missing. Each failing contract package (`Nightly contract: @reranker/<package>#test:contract`) or full-suite gate (`Nightly full: <gate>`) has its own issue; a job that was cancelled or timed out opens `Nightly <job>: job <result>`. The weekly `measure` workflow files `Weekly measure: places region bias` under the same label when searching without a region code finds businesses 5 or more points less often than with it; rerun it with `gh workflow run measure.yml`. Every red night after the first adds a comment to the issue of the same failure. Only scheduled or dispatched runs on `main` touch issues; a run on another branch writes its failures to the run summary.
 
 ## Impact
 

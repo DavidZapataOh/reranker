@@ -34,6 +34,8 @@ const PURPOSE_CAPS: Record<SpendPurpose, string> = {
   "control-canary": "70",
   "quality-canary": "6",
   benchmark: "40",
+  // A night of contract tests reserves about 0.17 (five Text Search Pro calls and three short LLM
+  // extractions), 0.35 when every one is retried. Weekly measurements raise it for their own run.
   "contract-test": "0.5",
 };
 

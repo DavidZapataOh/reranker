@@ -1,33 +1,48 @@
 import { randomUUID } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { endPools } from "@reranker/db";
 import type { SpendContext } from "@reranker/jobs";
 import { requireEnv } from "@reranker/testing/env";
 import { afterAll, beforeAll, expect, test, vi } from "vitest";
-import { searchText } from "../src/places/client";
 import { findBusinessCandidates } from "../src/target";
-
-interface BiasCase {
-  country: string;
-  query: string;
-  /** Name and full address: its top hit is the business, whatever id Google gives it today. */
-  anchor: string;
-}
+import { shapeOf } from "./places/shape";
 
 const spend: SpendContext = {
   purpose: "contract-test",
   refType: "target-contract",
   refId: randomUUID(),
 };
-const BIAS_CASES: BiasCase[] = JSON.parse(
-  readFileSync(new URL("fixtures/places-country-bias.json", import.meta.url), "utf8"),
-);
+
+// Each run rewrites the shapes of these searches, which the client unit tests parse.
+const RECORDED = new URL("fixtures/recorded/sandbox/", import.meta.url);
+const CITIES = {
+  "Contramar Ciudad de México": "places-search-text-mexico-city",
+  "Sobrino de Botín Madrid": "places-search-text-madrid",
+  "Hotel Nacional de Cuba La Habana": "places-search-text-havana",
+} as const;
+const answers = new Map<string, unknown>();
 
 beforeAll(() => {
   vi.stubEnv("APP_ENV", process.env.APP_ENV || "development");
   vi.stubEnv("GOOGLE_PLACES_API_KEY", requireEnv("GOOGLE_PLACES_API_KEY_CI"));
+  const realFetch = globalThis.fetch;
+  vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
+    const response = await realFetch(input, init);
+    if (String(input).endsWith("/places:searchText") && response.ok) {
+      const { textQuery } = JSON.parse(String(init?.body)) as { textQuery: string };
+      answers.set(textQuery, await response.clone().json());
+    }
+    return response;
+  });
 });
 afterAll(async () => {
+  mkdirSync(RECORDED, { recursive: true });
+  for (const [query, name] of Object.entries(CITIES)) {
+    if (!answers.has(query)) continue;
+    const shape = `${JSON.stringify(shapeOf(answers.get(query)), null, 2)}\n`;
+    writeFileSync(new URL(`${name}.json`, RECORDED), shape);
+  }
+  vi.restoreAllMocks();
   vi.unstubAllEnvs();
   await endPools();
 });
@@ -35,11 +50,7 @@ afterAll(async () => {
 // Three Text Search Pro requests (0.096 USD).
 test("businesses in Mexico City and Madrid come with their country; one in Havana does not", async () => {
   const [mexico, madrid, havana] = await Promise.all(
-    [
-      "Contramar Ciudad de México",
-      "Sobrino de Botín Madrid",
-      "Hotel Nacional de Cuba La Habana",
-    ].map((query) => findBusinessCandidates({ query, country: null, spend })),
+    Object.keys(CITIES).map((query) => findBusinessCandidates({ query, country: null, spend })),
   );
   expect(mexico?.[0]).toMatchObject({ kind: "place", attribution: "Google Maps" });
   expect(mexico?.[0]?.geo?.country).toBe("MX");
@@ -60,31 +71,3 @@ test("the test domain of the web project is a website candidate in Colombia", as
     geo: { level: "country", country: "CO" },
   });
 }, 30_000);
-
-// Sixty Text Search Pro requests (1.92 USD): each business by its bare name, with and without its
-// country's region code. GitHub runners, like production, sit in the United States, so without a
-// region code Places biases by a US address. The search omits the region code when the request
-// brings no measurable country; that holds only while doing so costs under 5 points of top-5 hits.
-test("searching without a region code finds the business about as often as with it", async () => {
-  const found = { withRegion: 0, withoutRegion: 0 };
-  for (const c of BIAS_CASES) {
-    const regionCode = c.country.toLowerCase();
-    const [anchor, withRegion, withoutRegion] = await Promise.all([
-      searchText({ textQuery: c.anchor, mask: "target", regionCode }, spend),
-      searchText({ textQuery: c.query, mask: "target", regionCode }, spend),
-      searchText({ textQuery: c.query, mask: "target" }, spend),
-    ]);
-    const expected = anchor[0]?.id;
-    expect(expected, c.anchor).toBeDefined();
-    const inWith = withRegion.some((hit) => hit.id === expected);
-    const inWithout = withoutRegion.some((hit) => hit.id === expected);
-    found.withRegion += Number(inWith);
-    found.withoutRegion += Number(inWithout);
-    console.log(JSON.stringify({ query: c.query, country: c.country, inWith, inWithout }));
-  }
-  const rate = (hits: number) => hits / BIAS_CASES.length;
-  console.log(
-    `places-country-bias with=${rate(found.withRegion)} without=${rate(found.withoutRegion)}`,
-  );
-  expect(rate(found.withRegion) - rate(found.withoutRegion)).toBeLessThan(0.05);
-}, 180_000);

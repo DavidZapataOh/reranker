@@ -13,7 +13,7 @@ import {
   settleSpend,
 } from "@reranker/jobs";
 import { type ProviderCost, z } from "@reranker/schema";
-import { PlacesAddressComponent } from "@reranker/schema/measurement";
+import type { PlacesAddressComponent } from "@reranker/schema/measurement";
 import { extractionEnv } from "../env";
 import { PLACES_SKU_PRICES } from "../prices";
 
@@ -73,7 +73,15 @@ const DETAIL_PRICES = {
   findings: PLACES_SKU_PRICES.placeDetailsEnterprise,
 } as const;
 
-const LocalizedText = z.object({ text: z.string() });
+// Proto3 JSON leaves out empty fields: a Havana hotel came with an address component that has
+// neither a short name nor types.
+const LocalizedText = z.object({ text: z.string().default("") });
+const AddressComponent = z.object({
+  longText: z.string().default(""),
+  shortText: z.string().default(""),
+  types: z.array(z.string()).default([]),
+  languageCode: z.string().optional(),
+});
 
 const PlaceSchema = z.object({
   id: z.string().min(1),
@@ -82,7 +90,7 @@ const PlaceSchema = z.object({
   types: z.array(z.string()).optional(),
   primaryType: z.string().optional(),
   businessStatus: z.string().optional(),
-  addressComponents: z.array(PlacesAddressComponent).optional(),
+  addressComponents: z.array(AddressComponent).optional(),
   location: z.object({ latitude: z.number(), longitude: z.number() }).optional(),
   primaryTypeDisplayName: LocalizedText.optional(),
   googleMapsTypeLabel: LocalizedText.optional(),
@@ -124,10 +132,12 @@ async function rejectionCode(response: Response): Promise<string> {
   return ErrorResponse.safeParse(body).data?.error.status ?? `http_${response.status}`;
 }
 
+// Paths and issue codes only: a value can echo the query text.
 function parsed<T>(schema: z.ZodType<T>, body: unknown): T {
   const result = schema.safeParse(body);
-  if (!result.success) throw new Error("Places returned a response without the requested fields");
-  return result.data;
+  if (result.success) return result.data;
+  const issues = result.error.issues.map((i) => `${i.path.join(".")} ${i.code}`).join(", ");
+  throw new Error(`Places returned a response without the requested fields: ${issues}`);
 }
 
 /**

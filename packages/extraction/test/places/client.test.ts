@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import {
   ProviderRejectedError,
   ProviderUnavailableError,
@@ -195,6 +196,46 @@ test("a target hit adds address components, location and the type labels", async
   expect(second).not.toHaveProperty("location");
 });
 
+test.each(["mexico-city", "madrid", "havana"])(
+  "the recorded %s search parses, empty fields included",
+  async (city) => {
+    const body = readFileSync(
+      new URL(`../fixtures/recorded/sandbox/places-search-text-${city}.json`, import.meta.url),
+      "utf8",
+    );
+    capture(
+      SEARCH_URL,
+      () => new HttpResponse(body, { headers: { "Content-Type": "application/json" } }),
+    );
+    const hits = await searchText({ textQuery: "a", mask: "target" }, spend);
+    expect(hits.length).toBeGreaterThan(0);
+    for (const component of hits.flatMap((hit) => hit.addressComponents ?? [])) {
+      expect(component).toMatchObject({ shortText: expect.any(String), types: expect.any(Array) });
+    }
+  },
+);
+
+test("an address component without a short name or types keeps empty ones", async () => {
+  capture(SEARCH_URL, () =>
+    HttpResponse.json({
+      places: [
+        {
+          id: "ChIJa",
+          addressComponents: [
+            { longText: "Vedado", languageCode: "es" },
+            { longText: "Cuba", shortText: "CU", types: ["country", "political"] },
+          ],
+        },
+      ],
+    }),
+  );
+  const [hit] = await searchText({ textQuery: "a", mask: "target" }, spend);
+  expect(hit?.addressComponents).toEqual([
+    { longText: "Vedado", shortText: "", types: [], languageCode: "es" },
+    { longText: "Cuba", shortText: "CU", types: ["country", "political"] },
+  ]);
+});
+
 test("details masks are the IDs-only and the two Enterprise ones", async () => {
   const hours = { periods: [{ open: { day: 1, hour: 8, minute: 0 } }] };
   // Enterprise masks do not ask for the id, so those responses carry none.
@@ -269,7 +310,7 @@ test("any other refusal is ProviderRejected with Google's status and none of the
 
   capture(SEARCH_URL, () => HttpResponse.json({ places: [{ displayName: { text: "Sin id" } }] }));
   const malformed = search();
-  await expect(malformed).rejects.toThrow(/Places/);
+  await expect(malformed).rejects.toThrow(/Places.*: places\.0\.id invalid_type/);
   await expect(malformed).rejects.not.toThrow(/Sin id/);
 });
 
