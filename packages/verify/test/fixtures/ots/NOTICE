@@ -1,0 +1,5 @@
+The *.ots files in this directory are copied unchanged from
+https://github.com/opentimestamps/opentimestamps-client/tree/f3a9e92e4dcb89ed93396d71ec808b3290a438c4/examples
+and are licensed under the GNU Lesser General Public License, version 3 or later
+(https://github.com/opentimestamps/opentimestamps-client/blob/master/LICENSE).
+They are test data only and are not shipped with any package.
