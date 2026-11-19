@@ -10,7 +10,7 @@ import {
   type InTotoStatement,
   type ResourceDescriptor,
 } from "@reranker/verify/format";
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, type SQL, sql } from "drizzle-orm";
 import { getArtifact, putArtifact } from "./artifacts";
 import { signEnvelope } from "./dsse";
 import { requireEvidenceEnv } from "./env";
@@ -348,6 +348,21 @@ export async function readRaw(captureId: CaptureId): Promise<Uint8Array> {
   return raw;
 }
 
+/** A capture's original parse beside its highest reparse, if any. */
+export function latestNormalizedQuery(captureId: CaptureId): SQL {
+  return sql`
+    select c.normalized_sha256, c.parser_version, r.normalized_sha256 as reparse_sha256, r.revision
+    from public_panel.captures c
+    left join lateral (
+      select e.normalized_sha256, e.revision
+      from public_panel.evidence_entries e
+      where e.ref = c.id and e.kind = 'reparse'
+      order by e.revision desc
+      limit 1
+    ) r on true
+    where c.id = ${captureId}`;
+}
+
 /** The newest normalized reading of a capture: its highest reparse, else its original parse. */
 export async function latestNormalized(
   captureId: CaptureId,
@@ -360,17 +375,7 @@ export async function latestNormalized(
         parser_version: number | null;
         reparse_sha256: Buffer | null;
         revision: number | null;
-      }>(sql`
-        select c.normalized_sha256, c.parser_version, r.normalized_sha256 as reparse_sha256, r.revision
-        from public_panel.captures c
-        left join lateral (
-          select e.normalized_sha256, e.revision
-          from public_panel.evidence_entries e
-          where e.ref = c.id and e.kind = 'reparse'
-          order by e.revision desc
-          limit 1
-        ) r on true
-        where c.id = ${captureId}`),
+      }>(latestNormalizedQuery(captureId)),
     { readOnly: true },
   );
   const row = rows[0];
