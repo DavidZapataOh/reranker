@@ -16,6 +16,10 @@ vi.mock("@reranker/jobs", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@reranker/jobs")>()),
   enqueue: vi.fn(async () => ({ jobId: "evidence:test", created: true })),
 }));
+// Publication to R2 has its own suite; here the batches stay unpublished.
+vi.mock("../src/log/tiles", () => ({
+  publishPendingBatches: vi.fn(async () => ({ published: [] })),
+}));
 
 // Other suites share this database and leave entries pending, so every check is made on the whole
 // log of this origin rather than on the rows a test inserted.

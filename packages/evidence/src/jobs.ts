@@ -1,5 +1,6 @@
 import { defineJob, enqueue } from "@reranker/jobs";
 import { integrate, MAX_BATCH_ENTRIES } from "./log/integrate";
+import { publishPendingBatches } from "./log/tiles";
 
 type LogPayload = { origin: string };
 
@@ -45,9 +46,7 @@ export const integrateJob = defineJob<LogPayload>({
 /** Publishes the tiles and checkpoint of every integrated batch of `origin` not yet public. */
 export const publishJob = defineJob<LogPayload>({
   name: "evidence.publish",
-  // Integrated batches stay unpublished until the publisher ships; its first run publishes them
-  // all, oldest first.
-  handler: async () => {
-    throw new Error("The transparency log publisher is not available in this deployment");
+  handler: async ({ origin }) => {
+    await publishPendingBatches(origin);
   },
 });
