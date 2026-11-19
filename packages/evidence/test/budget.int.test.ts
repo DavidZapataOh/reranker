@@ -58,7 +58,10 @@ beforeAll(async () => {
   for (const [name, value] of Object.entries(previewEnv)) vi.stubEnv(name, value);
   vi.stubEnv("VERCEL_REGION", "iad1");
   vi.stubEnv("VERCEL_GIT_COMMIT_SHA", "fedcba9876543210fedcba9876543210fedcba98");
-  vi.stubGlobal("fetch", vi.fn(memoryR2));
+  vi.stubGlobal(
+    "fetch",
+    vi.fn((input: RequestInfo | URL, init?: RequestInit) => memoryR2(new Request(input, init))),
+  );
   resetEvidenceEnv();
   vi.mocked(loadSigner).mockImplementation(async (purpose) => signers[purpose]);
   owner = new pg.Client({ connectionString: getTestDatabaseUrl("migrations") });

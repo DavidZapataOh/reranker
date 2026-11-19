@@ -123,7 +123,9 @@ const object = (key: string) => bucket.objects.get(key) as Stored;
 beforeAll(() => {
   for (const [name, value] of Object.entries(previewEnv)) vi.stubEnv(name, value);
   resetEvidenceEnv();
-  vi.stubGlobal("fetch", (request: Request) => bucket.fetch(request));
+  vi.stubGlobal("fetch", (input: RequestInfo | URL, init?: RequestInit) =>
+    bucket.fetch(new Request(input, init)),
+  );
 });
 
 afterAll(async () => {

@@ -19,6 +19,7 @@
 | `web/landing.js` | The landing page | p95 < 800 ms; 10×: served or 429 |
 | `jobs/capacity.js` | 10 free reports at once: 1,200 DataForSEO slots, each with a contract-test reservation settled at zero | p95 < 25 ms per primitive; 10×: admitted or 429 with `Retry-After`, never a 5xx |
 | `jobs/network.js` | 1,000 datacenter and VPN lookups in a row, timed inside the deployment | p95 < 10 ms per lookup over the live lists; 10×: ten probes at once hold the same budget |
+| `evidence/seal.js` | 100 capture seals in a row against the preview's R2 buckets, database and KMS key, timed inside the deployment; every object written is deleted | `sealCapture` p95 < 400 ms; while the preview has no capture key, R2 write round + transaction + envelope p95 < 360 ms, leaving KMS Sign its 40 ms; 10×: ten probes at once hold the same budget |
 
 ## Run in CI
 
@@ -36,6 +37,7 @@ The job refuses any URL that is not a preview of this project before k6 starts. 
 TARGET_URL=<preview URL> VERCEL_AUTOMATION_BYPASS_SECRET=<secret> k6 run load/web/landing.js
 TARGET_URL=<preview URL> VERCEL_AUTOMATION_BYPASS_SECRET=<secret> CRON_SECRET=<preview secret> k6 run load/jobs/capacity.js
 TARGET_URL=<preview URL> VERCEL_AUTOMATION_BYPASS_SECRET=<secret> CRON_SECRET=<preview secret> k6 run load/jobs/network.js
+TARGET_URL=<preview URL> VERCEL_AUTOMATION_BYPASS_SECRET=<secret> CRON_SECRET=<preview secret> k6 run load/evidence/seal.js
 ```
 
 Use a preview URL or a local `next start`. Never point it at reranker.co: the load lands on real users.

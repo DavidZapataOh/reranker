@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { setTimeout as delay } from "node:timers/promises";
 import { gzipSync } from "node:zlib";
 import { InvalidInputError } from "@reranker/jobs/errors";
 import { log } from "@reranker/telemetry";
@@ -19,9 +20,10 @@ export type ArtifactKind =
 export const PRIVATE_ARTIFACT_KINDS: ReadonlySet<ArtifactKind> = new Set(["extractions"]);
 
 const TIMEOUT_MS = 5_000;
-// aws4fetch retries 5xx and 429 itself; three jittered retries fit inside the timeout, and the
-// job that called us retries the whole step after that.
+// 5xx and 429 are retried as aws4fetch would: three jittered retries fit inside the timeout, and
+// the job that called us retries the whole step after that.
 const RETRIES = 3;
+const RETRY_BASE_MS = 50;
 const YEAR = "max-age=31536000, immutable";
 const SHA256_HEX = /^[0-9a-f]{64}$/;
 // Slash-separated segments that never start with a dot, so a key cannot climb out of the bucket.
@@ -45,7 +47,6 @@ function r2() {
         secretAccessKey: R2_SECRET_ACCESS_KEY,
         service: "s3",
         region: "auto",
-        retries: RETRIES,
       }),
     };
   }
@@ -76,13 +77,23 @@ async function send(
 ): Promise<Response> {
   const { client, endpoint } = r2();
   const target = `${bucket}/${key}`;
+  const signal = AbortSignal.timeout(TIMEOUT_MS);
   let response: Response;
   try {
-    response = await client.fetch(`${endpoint}/${target}`, {
-      method,
-      ...init,
-      signal: AbortSignal.timeout(TIMEOUT_MS),
-    });
+    for (let attempt = 0; ; attempt++) {
+      const signed = await client.sign(`${endpoint}/${target}`, { method, ...init });
+      // The bytes go to fetch as they are, never inside a Request: Next.js rebuilds a Request
+      // input from its body stream, which drops Content-Length, and R2 refuses a PUT without it.
+      response = await fetch(signed.url, {
+        method,
+        headers: signed.headers,
+        ...(init.body ? { body: init.body } : {}),
+        signal,
+      });
+      if (attempt === RETRIES || (response.status < 500 && response.status !== 429)) break;
+      await response.body?.cancel();
+      await delay(RETRY_BASE_MS * Math.random() * 2 ** attempt, undefined, { signal });
+    }
   } catch (error) {
     throw new EvidenceStorageUnavailableError(`R2 ${method} ${target} failed`, { cause: error });
   }

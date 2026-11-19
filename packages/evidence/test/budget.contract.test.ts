@@ -28,7 +28,8 @@ const RESPONSE_BYTES = 24 * 1024;
 // A runner pays its own distance to the bucket on every R2 write (a GitHub runner in centralus
 // waits ~250 ms for one), so CI cannot hold the 400 ms production budget. It holds a seal to one
 // round of R2 writes measured from the same runner in the same minutes, plus this for the retry
-// check in Postgres and the KMS-like signature that precedes the envelope write.
+// check in Postgres and the KMS-like signature that precedes the envelope write. The 400 ms budget
+// itself is held from iad1, next to production, by load/evidence/seal.js.
 const BEYOND_ONE_WRITE_ROUND_MS = 150;
 
 const local = localSigner("rr-capture-preview-1-ed25519");

@@ -1,5 +1,11 @@
 import { appEnv } from "@reranker/env";
 import {
+  DEFAULT_SEAL_PROBES,
+  EvidenceStorageUnavailableError,
+  probeSealCapture,
+  SigningUnavailableError,
+} from "@reranker/evidence";
+import {
   InvalidInputError,
   MAX_PROBE_CALLS,
   type ProbeOptions,
@@ -36,13 +42,17 @@ async function readBody(req: Request): Promise<Body | undefined> {
 }
 
 function run(body: Body) {
+  if (body.probe === "seal") {
+    if (body.holdMs !== undefined) throw new InvalidInputError("A seal probe holds nothing");
+    return probeSealCapture((body.n ?? DEFAULT_SEAL_PROBES) as number);
+  }
   const n = (body.n ?? MAX_PROBE_CALLS) as number;
   if (body.probe === "network") {
     if (body.holdMs !== undefined) throw new InvalidInputError("A network probe holds nothing");
     return probeNetworkLookup(n);
   }
   if (body.probe !== undefined && body.probe !== "spend") {
-    throw new InvalidInputError("Probe is spend or network");
+    throw new InvalidInputError("Probe is spend, network or seal");
   }
   const opts: ProbeOptions = body.holdMs === undefined ? {} : { holdMs: body.holdMs as number };
   return probeSpendPath(n, opts);
@@ -51,7 +61,8 @@ function run(body: Body) {
 /**
  * Measures primitives from where the functions run (iad1, next to Neon us-east-1): `{ probe?,
  * n?, holdMs? }` in, p50 and p95 per primitive out, nothing spent. The default `spend` probe times
- * the admission path of a provider call; `network` times the datacenter and VPN lookup. It exists
+ * the admission path of a provider call; `network` times the datacenter and VPN lookup; `seal`
+ * times capture sealing against the preview's R2 buckets and KMS key, deleting all it writes. It exists
  * only on previews, answers only to the cron bearer, and with `n: 1` and a hold it is the request
  * the capacity load test sends, so a denial answers the way a step would be told to retry.
  */
@@ -71,6 +82,12 @@ export async function POST(req: Request): Promise<Response> {
       return empty(429, error.resetsAt.getTime() - Date.now());
     }
     if (error instanceof ProviderUnavailableError) return empty(503, error.retryAfterMs);
+    if (
+      error instanceof EvidenceStorageUnavailableError ||
+      error instanceof SigningUnavailableError
+    ) {
+      return empty(503);
+    }
     // A step retries these after the wait they carry, so the probe answers that wait too.
     if (isAppError(error) && error.retryAfterSeconds !== undefined) {
       return empty(error.status, error.retryAfterSeconds * 1000);

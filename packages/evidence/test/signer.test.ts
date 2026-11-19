@@ -9,7 +9,13 @@ import { resetAppEnv } from "@reranker/env";
 import type { TrustedKey } from "@reranker/verify/trust";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { SigningKeyMismatchError, SigningUnavailableError } from "../src/errors";
-import { connectKmsSigner, kmsSigner, loadSigner, resetSigners } from "../src/signer";
+import {
+  connectKmsSigner,
+  kmsSigner,
+  loadSigner,
+  resetSigners,
+  signingProvisioned,
+} from "../src/signer";
 import { productionEnv } from "./support/evidence-env";
 
 const registry = vi.hoisted(() => ({
@@ -203,4 +209,41 @@ describe("loadSigner", () => {
     );
     expect(send).not.toHaveBeenCalled();
   });
+});
+
+describe("signingProvisioned", () => {
+  beforeEach(() => {
+    resetAppEnv();
+    resetSigners();
+    vi.stubEnv("APP_ENV", "preview");
+    vi.stubEnv("AWS_REGION", "us-east-1");
+    vi.stubEnv("AWS_ROLE_ARN", "arn:aws:iam::111122223333:role/reranker-evidence-preview");
+    vi.stubEnv("EVIDENCE_CAPTURE_KMS_KEY_ARN", arn);
+    registry.preview = [trusted()];
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    resetAppEnv();
+    resetSigners();
+  });
+
+  test("needs a current key in this environment's registry and the variables that reach KMS", () => {
+    expect(signingProvisioned("capture")).toBe(true);
+    expect(signingProvisioned("log")).toBe(false);
+  });
+
+  test("is false without a current key, as a registry without preview keys leaves previews", () => {
+    registry.preview = [trusted({ validTo: "2026-06-01T00:00:00Z" })];
+    expect(signingProvisioned("capture")).toBe(false);
+  });
+
+  test.each(["AWS_REGION", "AWS_ROLE_ARN", "EVIDENCE_CAPTURE_KMS_KEY_ARN"])(
+    "is false without %s",
+    (name) => {
+      vi.stubEnv(name, undefined);
+      resetSigners();
+      expect(signingProvisioned("capture")).toBe(false);
+    },
+  );
 });

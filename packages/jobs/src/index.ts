@@ -41,6 +41,7 @@ export {
   probeNetworkLookup,
   probeSpendPath,
   type SpendPathLatency,
+  summarize,
 } from "./latency";
 export {
   type AcquireOptions,
