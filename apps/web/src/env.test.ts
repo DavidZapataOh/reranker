@@ -24,8 +24,13 @@ const posthog = {
   POSTHOG_HOST: "https://us.i.posthog.com",
 };
 
-const withKey = (APP_ENV: string, extra: Record<string, string> = {}) =>
+const dataforseo = { DATAFORSEO_LOGIN: "login", DATAFORSEO_PASSWORD: "password" };
+
+const withoutDataforseo = (APP_ENV: string, extra: Record<string, string> = {}) =>
   defineEnv(fragments, { APP_ENV, ...authVars, ...origin(APP_ENV), ...posthog, ...extra });
+
+const withKey = (APP_ENV: string, extra: Record<string, string> = {}) =>
+  withoutDataforseo(APP_ENV, { ...dataforseo, ...extra });
 
 describe("web environment", () => {
   test("development needs nothing beyond APP_ENV and the auth variables", () => {
@@ -83,8 +88,6 @@ describe("web environment", () => {
     const flags = {
       POSTHOG_FEATURE_FLAGS_KEY: "phs_test",
       CRON_SECRET: "cron-secret-with-enough-length",
-      DATAFORSEO_LOGIN: "login",
-      DATAFORSEO_PASSWORD: "password",
     };
     expect(withKey("production", { ...flags, ...ids })).toMatchObject(ids);
     for (const APP_ENV of ["preview", "development"]) {
@@ -104,11 +107,13 @@ describe("web environment", () => {
     );
   });
 
-  test("production needs the DataForSEO credentials to capture answers", () => {
-    expect(() => withKey("production")).toThrowError(
-      /DATAFORSEO_LOGIN \(missing\), DATAFORSEO_PASSWORD \(missing\)/,
-    );
-    expect(withKey("preview").DATAFORSEO_LOGIN).toBeUndefined();
+  test("preview and production need the DataForSEO credentials to capture answers", () => {
+    for (const APP_ENV of ["preview", "production"]) {
+      expect(() => withoutDataforseo(APP_ENV)).toThrowError(
+        /DATAFORSEO_LOGIN \(missing\), DATAFORSEO_PASSWORD \(missing\)/,
+      );
+    }
+    expect(withoutDataforseo("development").DATAFORSEO_LOGIN).toBeUndefined();
   });
 
   test("the PostHog region defaults to us and rejects unknown values", () => {
