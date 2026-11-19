@@ -1,5 +1,6 @@
 import type { AppEnv, CaptureChannel, CountryCode, EngineId, ErrorCode } from "@reranker/schema";
 import type { LevelKey, Sufficiency } from "@reranker/schema/measurement";
+import type { Verdict } from "@reranker/verify";
 
 type VerificationReason =
   | "connection_limit"
@@ -14,14 +15,6 @@ type Spend = { provider: string; purpose: string; micro_usd: number };
 // `error` is an error class or code, never a message.
 type Step = { workflow: string; step: string; error: string };
 type Db = { pool: "app" | "system"; pg_code?: string; reason?: string };
-type Verdict =
-  | "intact_dated"
-  | "intact_dating"
-  | "valid_content_removed"
-  | "mismatch"
-  | "untrusted_signature"
-  | "not_found"
-  | "incomplete";
 
 export interface ServerEventMap {
   report_requested: {

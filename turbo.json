@@ -116,7 +116,9 @@
         "R2_ACCESS_KEY_ID_CI",
         "R2_SECRET_ACCESS_KEY_CI",
         "CLOUDFLARE_ACCOUNT_ID",
-        "CLOUDFLARE_API_TOKEN"
+        "CLOUDFLARE_API_TOKEN",
+        "VERIFY_CONTRACT_*",
+        "VERCEL_AUTOMATION_BYPASS_SECRET"
       ],
       "passThroughEnv": ["HOME", "GOROOT", "GOPATH", "GOMODCACHE", "GOCACHE", "GOTOOLCHAIN"]
     },

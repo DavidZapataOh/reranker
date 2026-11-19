@@ -178,6 +178,9 @@ const rows: Row[] = [
   ["QTSA_PACKAGE_*", "config", PROD, false, "evidence"],
   ["EVIDENCE_LOG_ORIGIN", "config", ALL, false, "evidence"],
   ["EVIDENCE_*_BASE_URL", "config", ALL, false, "evidence"],
+  // A capture sealed by a long-lived preview (its origin, log origin and id) that the nightly
+  // verifier contract test checks end to end.
+  ["VERIFY_CONTRACT_*", "config", NONE, true, "verify"],
   ["TURBO_TEAM", "config", NONE, true, "ci", true],
   ["TURBO_REMOTE_CACHE_SIGNATURE_KEY", "secret", ALL, true, "ci", true],
   ["ENABLE_EXPERIMENTAL_COREPACK", "config", ALL, false, "ci", true],

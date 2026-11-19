@@ -144,7 +144,7 @@ export const defaultHeaderSources = (fetchImpl?: typeof fetch): readonly HeaderS
     : [mempoolSpace, blockstreamInfo];
 
 // AbortSignal.any and AbortSignal.timeout are missing from the older Safari versions still on phones.
-function withTimeout(parent: AbortSignal | undefined, ms: number) {
+export function withTimeout(parent: AbortSignal | undefined, ms: number) {
   const controller = new AbortController();
   const abort = () => controller.abort(parent?.reason);
   parent?.addEventListener("abort", abort, { once: true });
