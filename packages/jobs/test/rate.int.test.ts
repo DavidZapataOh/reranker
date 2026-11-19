@@ -3,7 +3,14 @@ import { endPools, withSystem } from "@reranker/db";
 import { sql } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { InvalidInputError } from "../src/errors";
-import { type BucketLimits, peekTokens, refundTokens, takeTokens } from "../src/rate";
+import {
+  type BucketLimits,
+  peekTokens,
+  refundAllTokens,
+  refundTokens,
+  takeAllTokens,
+  takeTokens,
+} from "../src/rate";
 
 // Concurrency is real only with more connections than the default three of the system pool.
 beforeAll(() => {
@@ -75,6 +82,68 @@ describe("takeTokens", () => {
     { capacity: Number.NaN, refillPerSecond: 1 },
   ])("rejects limits %j", async (limits) => {
     await expect(takeTokens(key("limits"), limits)).rejects.toBeInstanceOf(InvalidInputError);
+  });
+});
+
+describe("takeAllTokens and refundAllTokens", () => {
+  const perDay: BucketLimits = { capacity: 5, refillPerSecond: 5 / 86_400 };
+
+  test("takes from every bucket or from none, with the wait of the short one", async () => {
+    const hour = key("all-hour");
+    const day = key("all-day");
+    const both = [
+      { key: hour, limits: perHour },
+      { key: day, limits: perDay },
+    ];
+    for (let i = 0; i < 3; i++) expect((await takeAllTokens(both)).ok).toBe(true);
+    const denied = await takeAllTokens(both);
+    expect(denied.ok).toBe(false);
+    expect(denied.retryAfterMs).toBeGreaterThan(1_190_000);
+    expect(denied.retryAfterMs).toBeLessThanOrEqual(1_200_000);
+    // The denial took nothing from the bucket that still had tokens.
+    expect((await peekTokens(day, perDay)).remaining).toBeCloseTo(2, 2);
+  });
+
+  test("50 concurrent sends over shared buckets never over-grant", async () => {
+    const shared = key("all-shared");
+    const queue = Array.from(
+      { length: 50 },
+      (_, i) => () =>
+        takeAllTokens([
+          { key: key(`all-own-${i}`), limits: perHour },
+          { key: shared, limits: perHour },
+        ]),
+    );
+    const results: Awaited<ReturnType<typeof takeAllTokens>>[] = [];
+    await Promise.all(
+      Array.from({ length: 20 }, async () => {
+        for (let next = queue.shift(); next; next = queue.shift()) results.push(await next());
+      }),
+    );
+    expect(results.filter((r) => r.ok)).toHaveLength(3);
+  });
+
+  test("a refund gives every bucket its token back", async () => {
+    const hour = { key: key("all-refund-hour"), limits: perHour };
+    const day = { key: key("all-refund-day"), limits: perDay };
+    await takeAllTokens([hour, day]);
+    await refundAllTokens([hour, day]);
+    expect((await peekTokens(hour.key, perHour)).remaining).toBeCloseTo(3, 2);
+    expect((await peekTokens(day.key, perDay)).remaining).toBeCloseTo(5, 2);
+  });
+
+  test("concurrent refunds over the same buckets in opposite orders all land", async () => {
+    const a = { key: key("all-order-a"), limits: perDay };
+    const b = { key: key("all-order-b"), limits: perDay };
+    await takeAllTokens([
+      { ...a, cost: 5 },
+      { ...b, cost: 5 },
+    ]);
+    await Promise.all(
+      Array.from({ length: 10 }, (_, i) => refundAllTokens(i % 2 ? [a, b] : [b, a])),
+    );
+    expect((await peekTokens(a.key, perDay)).remaining).toBeCloseTo(5, 2);
+    expect((await peekTokens(b.key, perDay)).remaining).toBeCloseTo(5, 2);
   });
 });
 

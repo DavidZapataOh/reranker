@@ -76,7 +76,15 @@ export type {
   SpendRegionPool,
 } from "./providers";
 export { consumeQuota, quotaStatus } from "./quota";
-export { type BucketLimits, peekTokens, refundTokens, takeTokens } from "./rate";
+export {
+  type BucketLimits,
+  peekTokens,
+  refundAllTokens,
+  refundTokens,
+  type TokenBucket,
+  takeAllTokens,
+  takeTokens,
+} from "./rate";
 export {
   costOf,
   releaseSpend,

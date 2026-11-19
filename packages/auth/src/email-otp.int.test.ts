@@ -129,9 +129,9 @@ describe("sending a sign-in code", () => {
     const responses = await Promise.all(
       Array.from({ length: 10 }, (_, i) => sendCode(`delivered+burst${i}@resend.dev`, { ip })),
     );
-    const statuses = responses.map((response) => response.status);
-    expect(statuses.filter((status) => status === 200)).toHaveLength(3);
-    expect(statuses.filter((status) => status === 429)).toHaveLength(7);
+    // Compared whole, so a failure shows what every other send answered.
+    const statuses = responses.map((response) => response.status).sort((a, b) => a - b);
+    expect(statuses).toEqual([200, 200, 200, 429, 429, 429, 429, 429, 429, 429]);
   });
 
   test("guard rejection (disposable domain) is returned before sending", async () => {
