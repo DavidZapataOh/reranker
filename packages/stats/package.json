@@ -5,7 +5,8 @@
   "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
-    "./methodology": "./src/methodology.ts"
+    "./methodology": "./src/methodology.ts",
+    "./persist": "./src/persist.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -14,9 +15,11 @@
     "test:integration": "vitest run --project integration --passWithNoTests"
   },
   "dependencies": {
+    "@reranker/db": "workspace:*",
     "@reranker/schema": "workspace:*",
     "@stdlib/stats-base-dists-beta-quantile": "catalog:",
-    "canonicalize": "catalog:"
+    "canonicalize": "catalog:",
+    "drizzle-orm": "catalog:"
   },
   "devDependencies": {
     "@reranker/i18n": "workspace:*",
