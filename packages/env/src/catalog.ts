@@ -139,6 +139,7 @@ const rows: Row[] = [
   ["OPENAI_API_KEY", "secret", ALL, false, "S02-03 / S02-04", true],
   ["OPENAI_API_KEY_CI", "secret", NONE, true, "S02-03 / S02-04"],
   ["OPENAI_CONTROL_MODEL", "config", ALL, false, "S02-03 / S02-04"],
+  ["OPENAI_CONTROL_API_KEY", "secret", PROD, false, "S02-03", true],
   ["GEMINI_API_KEY", "secret", ALL, false, "S02-04 / S02-01", true],
   ["GEMINI_API_KEY_CI", "secret", NONE, true, "S02-04"],
   ["BRIGHTDATA_API_KEY", "secret", PROD, false, "S02-08"],
