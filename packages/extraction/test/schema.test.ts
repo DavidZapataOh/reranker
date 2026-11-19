@@ -1,5 +1,5 @@
 import { z } from "@reranker/schema";
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import {
   ClassifierSchema,
   JudgeSchema,
@@ -8,6 +8,8 @@ import {
   ProviderRefusalError,
   ResolveJudgeSchema,
 } from "../src/index";
+
+vi.mock("server-only", () => ({}));
 
 type JsonSchema = {
   type?: string | string[];

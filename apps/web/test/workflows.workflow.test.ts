@@ -1,11 +1,14 @@
 import { randomUUID } from "node:crypto";
 import { listWorkflowRefs } from "@workflow/vitest";
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
 import { start } from "workflow/api";
 import { pingWorkflow } from "@/workflows/diagnostics/ping";
 import { DAILY_STEPS } from "@/workflows/maintenance/daily";
 import { batchResumeWorkflow, dailyStepsWorkflow, retryTimingWorkflow } from "./workflows/fixtures";
 import { attemptsOf, callCount, entriesOf } from "./workflows/ledger";
+
+// Next and the workflow bundler resolve it to an empty module; the test runner does not.
+vi.mock("server-only", () => ({}));
 
 const unique = () => `run-${randomUUID()}`;
 
