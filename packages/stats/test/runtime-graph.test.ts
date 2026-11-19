@@ -50,7 +50,9 @@ test("the package root loads in plain Node and reaches only schema and i18n", ()
     loaded.flatMap((url) => /\/packages\/([^/]+)\/src\//.exec(url)?.[1] ?? []),
   );
   expect([...workspace].sort()).toEqual(["i18n", "schema", "stats"]);
-});
+  // A cold child Node that transpiles the package graph: ~1.3 s alone, up to 7.9 s measured with
+  // two coverage runs of this suite in parallel, past Vitest's 5 s default.
+}, 20_000);
 
 type Manifest = {
   name: string;
