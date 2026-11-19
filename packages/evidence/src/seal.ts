@@ -74,19 +74,23 @@ function keyidOf(envelope: DsseEnvelope): string {
   return first.keyid;
 }
 
-// Signs and stores the envelope only after the artifacts it names are stored, so every public
-// envelope resolves; artifacts orphaned by a later failure are harmless, being content-addressed.
+// An R2 write costs a few hundred milliseconds, so the envelope goes out in the same round as the
+// artifacts it names instead of after them. Nothing points at an envelope (a capture row, a log
+// entry) until every write has succeeded, so each one referenced resolves; one orphaned by a
+// failed write is unreachable, being addressed by its own digest.
 async function signAndStore(
   statement: InTotoStatement<string, unknown>,
   artifacts: Promise<unknown>[],
 ): Promise<{ envelopeSha256: string; keyid: string }> {
-  // Settles every write before failing, so no request outlives the call that started it.
   const signing = signStatement(statement);
-  const settled = await Promise.allSettled([signing, ...artifacts]);
+  const envelope = signing.then((signed) =>
+    putArtifact("envelopes", signed.envelopeBytes, { contentType: ENVELOPE_CONTENT_TYPE }),
+  );
+  // Settles every write before failing, so no request outlives the call that started it.
+  const settled = await Promise.allSettled([envelope, ...artifacts]);
   const failed = settled.find((r): r is PromiseRejectedResult => r.status === "rejected");
   if (failed) throw failed.reason;
   const signed = await signing;
-  await putArtifact("envelopes", signed.envelopeBytes, { contentType: ENVELOPE_CONTENT_TYPE });
   return { envelopeSha256: signed.envelopeSha256, keyid: keyidOf(signed.envelope) };
 }
 
