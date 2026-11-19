@@ -211,7 +211,10 @@ jobs:
           api_key: ${{ secrets.NEON_NONPROD_API_KEY }}
       # The transparency logs of this pull request's deployments go with their databases. The
       # infrastructure token's R2 permission works as S3 credentials: its id and the SHA-256 of its
-      # value (https://developers.cloudflare.com/r2/api/tokens/).
+      # value (https://developers.cloudflare.com/r2/api/tokens/). A pull request that never published
+      # leaves an empty prefix, which removes nothing and succeeds. The bucket itself is declared
+      # infrastructure, so its absence is drift that would leave every closed pull request's logs
+      # behind: it fails the job, naming the workflow that restores it.
       - name: Delete this pull request's preview transparency logs
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -222,6 +225,13 @@ jobs:
             https://api.cloudflare.com/client/v4/user/tokens/verify | jq -r .result.id)
           secret=$(printf %s "$CLOUDFLARE_API_TOKEN" | sha256sum | cut -d' ' -f1)
           echo "::add-mask::$secret"
+          status=0
           AWS_ACCESS_KEY_ID="$id" AWS_SECRET_ACCESS_KEY="$secret" AWS_REGION=auto \
             aws s3 rm "s3://rr-log-preview/pr-$PR/" --recursive \
-            --endpoint-url "https://$ACCOUNT_ID.r2.cloudflarestorage.com"
+            --endpoint-url "https://$ACCOUNT_ID.r2.cloudflarestorage.com" 2>"$RUNNER_TEMP/rm.err" \
+            || status=$?
+          cat "$RUNNER_TEMP/rm.err" >&2
+          if grep -q NoSuchBucket "$RUNNER_TEMP/rm.err"; then
+            echo "::error::rr-log-preview does not exist: run the r2 workflow on main to provision it"
+          fi
+          exit "$status"
