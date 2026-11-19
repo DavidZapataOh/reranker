@@ -153,7 +153,7 @@ describe("parseAiMode", () => {
     expect(a.markdown.length).toBeGreaterThan(0);
     expect(a.searchQueries).toBe("unavailable");
     expect(a.modelReported).toBeNull();
-    expect(a.sources.every((s) => s.cited && !s.domain.endsWith("google.com"))).toBe(true);
+    expect(a.sources.every((s) => s.cited && s.domain !== "www.google.com")).toBe(true);
   });
 
   test("expanded components and shopping elements follow the documented schema", () => {
