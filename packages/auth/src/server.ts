@@ -1,8 +1,10 @@
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
+import { toDbError } from "@reranker/db";
 import { authDb } from "@reranker/db/auth-adapter";
 import * as authTables from "@reranker/db/schema/auth";
 import { defineEnv } from "@reranker/env";
 import { DEFAULT_LOCALE, type Locale } from "@reranker/i18n";
+import { ERRORS, isAppError } from "@reranker/schema";
 import { waitUntil } from "@vercel/functions";
 import { betterAuth, type GenericEndpointContext } from "better-auth";
 import { createAuthMiddleware } from "better-auth/api";
@@ -15,6 +17,7 @@ import { authEnv } from "./env";
 import { createPrincipalTeam, hierarchyHooks, MEMBER_FIELDS, ORG_FIELDS } from "./organizations";
 import { authOrigins } from "./origins";
 import { ac, roles } from "./permissions";
+import { rateLimitStorage } from "./rate-limit-storage";
 import { AUTH_RATE_RULES, EMAIL_SENDING_PATHS } from "./rate-limits";
 import { sendAuthEmail } from "./send-auth-email";
 import { SIGN_IN_CODE_TTL_SECONDS } from "./sign-in-code";
@@ -116,6 +119,9 @@ export const auth = betterAuth({
     usePlural: true,
     schemaName: "auth",
   }),
+  // Errors that are not an APIError reach handleAuthRequest, which answers a busy database with a
+  // 503 instead of Better Auth's bare 500.
+  onAPIError: { throw: true },
   advanced: {
     database: { generateId: "uuid", joins: true },
     cookiePrefix: COOKIE_PREFIX,
@@ -169,7 +175,10 @@ export const auth = betterAuth({
   },
   rateLimit: {
     enabled: true,
+    // customStorage decides every request; "database" keeps auth.rate_limits in the generated
+    // schema, where the storage writes and the purge reads.
     storage: "database",
+    customStorage: rateLimitStorage,
     window: 60,
     max: 100,
     customRules: AUTH_RATE_RULES,
@@ -215,3 +224,24 @@ export const auth = betterAuth({
     nextCookies(),
   ],
 });
+
+/**
+ * Better Auth's HTTP handler. The rate limiter runs before Better Auth catches anything, so a
+ * database that cannot answer in time (a pool still full past its checkout timeout, a dropped
+ * connection) would leave as a raw exception; it answers 503 with the wait instead, in the shape
+ * guardOtpSend uses. Any other failure is a bug and propagates.
+ */
+export async function handleAuthRequest(request: Request): Promise<Response> {
+  try {
+    return await auth.handler(request);
+  } catch (error) {
+    const translated = toDbError(error, { pool: "system" });
+    if (!isAppError(translated) || !translated.retryable) throw error;
+    const definition: { status: number; retryAfterSeconds?: number } = ERRORS[translated.code];
+    const wait = String(translated.retryAfterSeconds ?? definition.retryAfterSeconds ?? 1);
+    return Response.json(
+      { code: "SERVICE_UNAVAILABLE", message: "Service unavailable: retry", reason: "unavailable" },
+      { status: 503, headers: { "Retry-After": wait, "X-Retry-After": wait } },
+    );
+  }
+}

@@ -15,8 +15,9 @@ vi.stubEnv("TURNSTILE_SECRET_KEY", "turnstile-secret");
 vi.stubEnv("NEXT_PUBLIC_TURNSTILE_SITE_KEY", "turnstile-site");
 vi.stubEnv("CAPACITY_HMAC_KEY", "h".repeat(32));
 
-const { auth, trustedOrigins } = await import("./server");
+const { auth, handleAuthRequest, trustedOrigins } = await import("./server");
 const { AUTH_RATE_RULES } = await import("./rate-limits");
+const { rateLimitStorage } = await import("./rate-limit-storage");
 const { waitUntil } = await import("@vercel/functions");
 
 afterEach(() => {
@@ -60,7 +61,9 @@ describe("auth configuration", () => {
       window: 60,
       max: 100,
       customRules: AUTH_RATE_RULES,
+      customStorage: rateLimitStorage,
     });
+    expect(auth.options.onAPIError).toEqual({ throw: true });
     expect(AUTH_RATE_RULES).toEqual({
       "/email-otp/send-verification-otp": { window: 600, max: 3 },
       "/email-otp/request-password-reset": { window: 600, max: 3 },
@@ -335,5 +338,41 @@ describe("sending the sign-in code", () => {
     email.sendAuthEmail.mockRejectedValue(failure);
     const { ctx } = fakeContext({});
     await expect(send()(data, ctx)).rejects.toBe(failure);
+  });
+});
+
+describe("handleAuthRequest", () => {
+  const request = () =>
+    new Request("http://localhost:3000/api/auth/sign-in/email-otp", { method: "POST" });
+
+  test("passes Better Auth's response through", async () => {
+    const answered = new Response("{}", { status: 200 });
+    vi.spyOn(auth, "handler").mockResolvedValueOnce(answered);
+    await expect(handleAuthRequest(request())).resolves.toBe(answered);
+  });
+
+  test.each([
+    [
+      "a pool still full past its checkout timeout",
+      new Error("timeout exceeded when trying to connect"),
+    ],
+    ["a dropped connection", new Error("Connection terminated unexpectedly")],
+  ])("%s is a 503 with the wait", async (_label, failure) => {
+    vi.spyOn(auth, "handler").mockRejectedValueOnce(failure);
+    const response = await handleAuthRequest(request());
+    expect(response.status).toBe(503);
+    expect(response.headers.get("Retry-After")).toBe("2");
+    expect(response.headers.get("X-Retry-After")).toBe("2");
+    expect(await response.json()).toEqual({
+      code: "SERVICE_UNAVAILABLE",
+      message: "Service unavailable: retry",
+      reason: "unavailable",
+    });
+  });
+
+  test("any other failure propagates", async () => {
+    const failure = new Error("bug");
+    vi.spyOn(auth, "handler").mockRejectedValueOnce(failure);
+    await expect(handleAuthRequest(request())).rejects.toBe(failure);
   });
 });
