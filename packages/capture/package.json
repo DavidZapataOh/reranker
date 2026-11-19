@@ -6,15 +6,15 @@
   "exports": {
     ".": "./src/index.ts",
     "./env": "./src/env.ts",
-    "./brightdata/env": "./src/brightdata/env.ts",
-    "./slot": "./src/slot.ts"
+    "./brightdata/env": "./src/brightdata/env.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run --project unit --coverage --passWithNoTests",
     "test:contract": "vitest run --project contract",
     "test:integration": "vitest run --project integration --no-file-parallelism",
-    "record:live": "tsx --conditions=react-server scripts/record-live.ts"
+    "record:live": "tsx --conditions=react-server scripts/record-live.ts",
+    "record:phrasing": "tsx --conditions=react-server scripts/record-phrasing.ts"
   },
   "dependencies": {
     "@reranker/catalog": "workspace:*",

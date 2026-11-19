@@ -111,31 +111,95 @@ describe("putArtifact", () => {
     expect(() => artifactUrl("extractions", "ab".repeat(32))).toThrow(InvalidInputError);
   });
 
-  test("a 5xx after the client's own retries is a retryable storage failure", async () => {
-    const fetchSpy = recordingFetch(503);
-    await expect(
-      putArtifact("raw", utf8("x"), { contentType: "text/plain" }),
-    ).rejects.toBeInstanceOf(EvidenceStorageUnavailableError);
-    expect(fetchSpy.requests.length).toBeGreaterThan(1);
-  });
+  describe("retries", () => {
+    // setImmediate stays real so signing and the recorded requests finish between pauses.
+    beforeEach(() => {
+      vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout", "performance"] });
+    });
+    afterEach(() => {
+      vi.useRealTimers();
+    });
 
-  test("a 429 that clears on retry succeeds", async () => {
-    const fetchSpy = recordingFetch(429, 200);
-    await expect(
-      putArtifact("plans", utf8("p"), { contentType: "application/json" }),
-    ).resolves.toMatchObject({ created: true });
-    expect(fetchSpy.requests).toHaveLength(2);
-  });
+    /** Settles the write, moving the fake clock only while it waits, and times it on that clock. */
+    async function timed<T>(
+      write: Promise<T>,
+    ): Promise<{ outcome: PromiseSettledResult<T>; ms: number }> {
+      const start = performance.now();
+      let outcome: PromiseSettledResult<T> | undefined;
+      void Promise.allSettled([write]).then(([settled]) => {
+        outcome = settled;
+      });
+      while (!outcome) {
+        await new Promise((resolve) => setImmediate(resolve));
+        if (!outcome && vi.getTimerCount() > 0) vi.advanceTimersToNextTimer();
+      }
+      return { outcome, ms: performance.now() - start };
+    }
 
-  test("a network failure or timeout is a retryable storage failure", async () => {
-    recordingFetch(new TypeError("fetch failed"));
-    await expect(
-      putArtifact("raw", utf8("x"), { contentType: "text/plain" }),
-    ).rejects.toBeInstanceOf(EvidenceStorageUnavailableError);
-    recordingFetch(new DOMException("The operation timed out.", "TimeoutError"));
-    await expect(
-      putArtifact("raw", utf8("x"), { contentType: "text/plain" }),
-    ).rejects.toBeInstanceOf(EvidenceStorageUnavailableError);
+    test("a 503 that lasts for seconds is retried with backoff until it clears", async () => {
+      const fetchSpy = recordingFetch(503, 503, 503, 503, 503, 503, 200);
+      const { outcome } = await timed(
+        putArtifact("envelopes", utf8("e"), { contentType: "application/json" }),
+      );
+      expect(outcome).toMatchObject({ status: "fulfilled", value: { created: true } });
+      expect(fetchSpy.requests).toHaveLength(7);
+    });
+
+    test("a 5xx that outlasts the timeout is a retryable storage failure, raised in time", async () => {
+      const fetchSpy = recordingFetch(503);
+      const { outcome, ms } = await timed(
+        putArtifact("raw", utf8("x"), { contentType: "text/plain" }),
+      );
+      expect(outcome.status).toBe("rejected");
+      const { reason } = outcome as PromiseRejectedResult;
+      expect(reason).toBeInstanceOf(EvidenceStorageUnavailableError);
+      expect(reason.message).toMatch(/: 503$/);
+      expect(fetchSpy.requests.length).toBeGreaterThan(4);
+      expect(ms).toBeLessThanOrEqual(5_000);
+    });
+
+    test("a 429 that clears on retry succeeds", async () => {
+      const fetchSpy = recordingFetch(429, 200);
+      const { outcome } = await timed(
+        putArtifact("plans", utf8("p"), { contentType: "application/json" }),
+      );
+      expect(outcome).toMatchObject({ status: "fulfilled", value: { created: true } });
+      expect(fetchSpy.requests).toHaveLength(2);
+    });
+
+    test("Retry-After is waited out when it fits before the timeout", async () => {
+      const fetchSpy = recordingFetch(
+        new Response(null, { status: 503, headers: { "Retry-After": "2" } }),
+        200,
+      );
+      const { outcome, ms } = await timed(
+        putArtifact("raw", utf8("r"), { contentType: "text/plain" }),
+      );
+      expect(outcome.status).toBe("fulfilled");
+      expect(fetchSpy.requests).toHaveLength(2);
+      expect(ms).toBeGreaterThanOrEqual(2_000);
+    });
+
+    test("a dropped connection is retried, and one that persists is a storage failure", async () => {
+      const dropped = recordingFetch(new TypeError("fetch failed"), 200);
+      const { outcome } = await timed(putArtifact("raw", utf8("d"), { contentType: "text/plain" }));
+      expect(outcome.status).toBe("fulfilled");
+      expect(dropped.requests).toHaveLength(2);
+
+      recordingFetch(new TypeError("fetch failed"));
+      const down = await timed(putArtifact("raw", utf8("x"), { contentType: "text/plain" }));
+      expect((down.outcome as PromiseRejectedResult).reason).toBeInstanceOf(
+        EvidenceStorageUnavailableError,
+      );
+    });
+
+    test("the request timing out is a retryable storage failure", async () => {
+      recordingFetch(new DOMException("The operation timed out.", "TimeoutError"));
+      const { outcome } = await timed(putArtifact("raw", utf8("x"), { contentType: "text/plain" }));
+      expect((outcome as PromiseRejectedResult).reason).toBeInstanceOf(
+        EvidenceStorageUnavailableError,
+      );
+    });
   });
 
   test("a rejected request (bad credentials) is not a storage outage", async () => {

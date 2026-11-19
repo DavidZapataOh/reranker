@@ -4,19 +4,12 @@ import type { EngineAnswer } from "@reranker/capture";
 import { getArtifact, putArtifact } from "@reranker/evidence";
 import { isEnabled } from "@reranker/flags";
 import { ProviderUnavailableError, RateLimitedError, type SpendContext } from "@reranker/jobs";
-import {
-  AppError,
-  addCost,
-  type CaptureChannel,
-  cost,
-  type EngineId,
-  type ProviderCost,
-  sumCosts,
-} from "@reranker/schema";
+import { AppError, addCost, cost, type ProviderCost, sumCosts } from "@reranker/schema";
 import type {
   Agreement,
   AnswerKind,
   ExtractedMention,
+  RawCaptureOf,
   ResolvedMention,
   ResponseExtraction,
 } from "@reranker/schema/measurement";
@@ -32,17 +25,7 @@ import { locateQuote, toExtractedMentions } from "./quote";
 import { JudgeSchema, type MentionsOutput, MentionsSchema } from "./schema";
 import { findExtraction, insertExtraction } from "./store";
 
-export interface RawCapture {
-  capture: {
-    id: string;
-    engine: EngineId;
-    channel: CaptureChannel;
-    status: "succeeded" | "provider_error" | "timeout";
-    modelReported: string | null;
-    slotId: string;
-  };
-  answer: EngineAnswer | null;
-}
+export type RawCapture = RawCaptureOf<EngineAnswer>;
 
 const MAX_OUTPUT_TOKENS = 4096;
 const ARTIFACT_KIND = "extractions";

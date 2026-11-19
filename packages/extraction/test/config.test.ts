@@ -88,6 +88,12 @@ describe("configHashOf", () => {
       },
     ],
     [
+      "name rules",
+      (c) => {
+        c.names = { ...c.names, professionalTitles: [...c.names.professionalTitles, "sr"] };
+      },
+    ],
+    [
       "pin",
       (c) => {
         c.pinnedFrom = "bench-2026-12-01";

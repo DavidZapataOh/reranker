@@ -1,3 +1,4 @@
+import type { EntityKind } from "@reranker/schema/measurement";
 import { describe, expect, test } from "vitest";
 import { currentExtractorConfig } from "../../src/config";
 import { normalizeName } from "../../src/normalize";
@@ -20,8 +21,12 @@ const hit = (
   businessStatus: over.status === undefined ? "OPERATIONAL" : over.status,
 });
 
-const mention = (name: string, over: { locationHint?: string; citedDomains?: string[] } = {}) => ({
-  nameNorm: normalizeName(name),
+const mention = (
+  name: string,
+  over: { kind?: EntityKind; locationHint?: string; citedDomains?: string[] } = {},
+) => ({
+  nameNorm: normalizeName(name, over.kind ?? "business"),
+  kind: over.kind ?? "business",
   locationHint: over.locationHint ?? null,
   citedDomains: over.citedDomains ?? [],
 });
@@ -229,4 +234,73 @@ describe("decide", () => {
       score: null,
       method: "rules",
     }));
+});
+
+describe("Places-style names", () => {
+  const DISTRACTOR = "Clínica Dental Sonrisas";
+  const DENTAL_CTX = { categoryTypes: ["dental_clinic"] };
+  const decideFor = (m: ReturnType<typeof mention>, names: string[]) => {
+    const hits = names.map((name) => hit(name));
+    return { hits, decision: decide(scoreCandidates(m, hits, DENTAL_CTX, cfg), m, cfg) };
+  };
+
+  test.each([
+    ["Dra. Ana Gómez", "Dra. Ana Gómez - Odontóloga"],
+    ["Ana Gómez", "Dra. Ana Gómez"],
+    ["Ana Gómez", "Odontóloga Ana Gómez"],
+    ["Doctora Ana Gómez", "Dra. Ana Gómez | Ortodoncia y Estética Dental"],
+    ["Dr. Juan Pérez", "Dr. Juan Pérez, Cirujano Plástico"],
+    ["Juan Pérez", "Doctor Juan Pérez MD"],
+  ])("the professional %s matches the listing %s by rules", (name, listing) => {
+    const { hits, decision } = decideFor(mention(name, { kind: "professional" }), [
+      listing,
+      DISTRACTOR,
+    ]);
+    expect(decision).toMatchObject({ outcome: "place", placeId: hits[0]?.id, method: "rules" });
+  });
+
+  test("folding the listing without the mention's kind loses the match", () => {
+    const m = mention("Dra. Ana Gómez", { kind: "professional" });
+    const asBusiness = { ...m, kind: "business" as const };
+    const hits = [hit("Dra. Ana Gómez - Odontóloga"), hit(DISTRACTOR)];
+    expect(decide(scoreCandidates(asBusiness, hits, DENTAL_CTX, cfg), m, cfg)).toMatchObject({
+      outcome: "needs_judge",
+    });
+  });
+
+  test.each([
+    ["another surname", "Dra. Ana Gómez Peña - Odontóloga"],
+    ["a one-letter typo", "Dra. Ana Gámez"],
+  ])("a professional listing with %s still goes to the judge", (_, listing) =>
+    expect(
+      decideFor(mention("Dra. Ana Gómez", { kind: "professional" }), [listing, DISTRACTOR])
+        .decision,
+    ).toMatchObject({ outcome: "needs_judge" }),
+  );
+
+  test.each([
+    ["Clínica Dental Sonrisas", "Clínica Dental Sonrisas S. A. S."],
+    ["Ferretería Pérez", "Ferretería Pérez & Cía. Ltda."],
+    ["Farmacias del Ahorro", "Farmacias del Ahorro S.A. de C.V."],
+  ])("the business %s matches the listing %s by rules", (name, listing) => {
+    const { hits, decision } = decideFor(mention(name), [listing, "Dra. Ana Gómez"]);
+    expect(decision).toMatchObject({ outcome: "place", placeId: hits[0]?.id, method: "rules" });
+  });
+
+  test("a business listing with another name and a legal form still goes to the judge", () =>
+    expect(
+      decideFor(mention("Clínica Dental Sonrisas"), [
+        "Clínica Dental Sonrisa Feliz S.A.S.",
+        "Dra. Ana Gómez",
+      ]).decision,
+    ).toMatchObject({ outcome: "needs_judge" }));
+
+  test("branches listed with and without a legal form are one chain", () =>
+    expect(
+      decideFor(mention("Cruz Verde", { kind: "chain" }), [
+        "Cruz Verde",
+        "CRUZ VERDE S. A. S.",
+        "Droguería Cruz Verde",
+      ]).decision,
+    ).toMatchObject({ outcome: "chain" }));
 });
