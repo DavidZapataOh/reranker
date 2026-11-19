@@ -79,7 +79,7 @@ test("without a capture key, times every part but the signature and leaves nothi
 
   expect(report.sealCapture).toBeNull();
   expect(report.sign).toBeNull();
-  for (const part of [report.r2WriteRound, report.database, report.envelope]) {
+  for (const part of [report.r2WriteRound, report.database, report.hold, report.envelope]) {
     expect(part).toEqual({ p50: expect.any(Number), p95: expect.any(Number), n: 3 });
   }
   expect(loadSigner).not.toHaveBeenCalled();

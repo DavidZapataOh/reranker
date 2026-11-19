@@ -1,7 +1,7 @@
 import { getGeo, jcs } from "@reranker/catalog";
 import { withSystem } from "@reranker/db";
 import { captures, intentSets } from "@reranker/db/schema";
-import { type CapturePredicateInput, sealCapture } from "@reranker/evidence";
+import { type CapturePredicateInput, captureRow, sealCapture } from "@reranker/evidence";
 import { getCountry } from "@reranker/i18n/countries";
 import { InvalidInputError } from "@reranker/jobs/errors";
 import type { EngineId } from "@reranker/schema";
@@ -85,8 +85,8 @@ function declaredGeo(record: CaptureRecord): CapturePredicateInput["geo"]["decla
 const versionOf = (answer: EngineAnswer) => Number(answer.parserVersion.split("@")[1]);
 
 /**
- * Seals a capture and stores its row in one transaction, so no row exists without its signed
- * evidence. Persisting the same capture again stores nothing new.
+ * Seals a capture, then stores its row: a row exists only once its signed evidence does, and a
+ * seal that fails stores nothing. Persisting the same capture again stores nothing new.
  */
 export async function persistCapture(
   record: CaptureRecord,
@@ -139,18 +139,20 @@ export async function persistCapture(
   // Without a reported cost the reservation is what the ledger keeps, so the row says the same.
   const charged = record.cost ?? ENGINES[slot.engine].estimate.live;
 
+  const existing = await withSystem("capture", (tx) => captureRow(tx, record.captureId), {
+    readOnly: true,
+  });
+  if (existing) return { captureId: record.captureId, stored: false };
+  // Signed and written before any connection is taken: a capture holds one only for the insert.
+  const sealed = await sealCapture({
+    captureId: record.captureId,
+    responseBytes: record.response,
+    responseContentType: record.responseContentType,
+    requestBytes: record.request,
+    normalized: answer && parserVersion !== null ? { json: jcs(answer), parserVersion } : null,
+    predicate,
+  });
   return withSystem("capture", async (tx) => {
-    const sealed = await sealCapture(
-      {
-        captureId: record.captureId,
-        responseBytes: record.response,
-        responseContentType: record.responseContentType,
-        requestBytes: record.request,
-        normalized: answer && parserVersion !== null ? { json: jcs(answer), parserVersion } : null,
-        predicate,
-      },
-      { tx },
-    );
     // No target: a retried capture conflicts on its id, a second success for the slot on
     // captures_one_success, and neither may store another row.
     const [inserted] = await tx

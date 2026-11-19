@@ -120,7 +120,7 @@ function checkParserVersion(parserVersion: number): void {
   }
 }
 
-/** The row a retried seal finds; sealCapture reads it before anything else. */
+/** The stored row of a capture, if any; a retried persist reads it before sealing again. */
 export async function captureRow(tx: SystemTx, captureId: CaptureId) {
   const [row] = await tx
     .select({
@@ -133,28 +133,13 @@ export async function captureRow(tx: SystemTx, captureId: CaptureId) {
 }
 
 /**
- * Stores a capture's artifacts and signs its statement. It inserts no row: the caller writes the
- * capture with the returned digests in the same `tx`, so a capture never exists unsealed. A retry
- * whose capture row is already visible returns that row's seal instead of signing again.
+ * Stores a capture's artifacts, signs its statement and schedules its integration while holding no
+ * database connection: the writes and the signature take hundreds of milliseconds, and a connection
+ * held across them is one every other caller of its pool waits for. It inserts no row. The caller
+ * stores the capture with the returned digests once this resolves, so a row only ever names an
+ * envelope whose writes succeeded.
  */
-export async function sealCapture(
-  input: SealCaptureInput,
-  opts: { tx: SystemTx },
-): Promise<SealedCapture> {
-  const existing = await captureRow(opts.tx, input.captureId);
-  if (existing) {
-    const envelopeSha256 = toHex(existing.envelopeSha256);
-    const { keyid, statement } = await readStatement(envelopeSha256);
-    return {
-      captureId: input.captureId,
-      envelopeSha256,
-      rawSha256: subjectDigest(statement, "raw"),
-      requestSha256: subjectDigest(statement, "request"),
-      normalizedSha256: existing.normalizedSha256 ? toHex(existing.normalizedSha256) : null,
-      keyid,
-      signedAt: new Date(statement.predicate.time.worker_utc),
-    };
-  }
+export async function sealCapture(input: SealCaptureInput): Promise<SealedCapture> {
   if (input.normalized) checkParserVersion(input.normalized.parserVersion);
   const origin = logOrigin();
   const signedAt = new Date();

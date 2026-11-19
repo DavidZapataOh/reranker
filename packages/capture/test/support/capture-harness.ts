@@ -33,11 +33,13 @@ export const provider = {
   maxInFlight: 0,
   delayMs: 0,
   r2RefusesWrites: false,
+  r2WriteMs: 0,
 };
 
 async function fakeR2(request: Request): Promise<Response> {
   const key = new URL(request.url).pathname.split("/").slice(2).join("/");
   if (request.method === "PUT") {
+    if (provider.r2WriteMs > 0) await sleep(provider.r2WriteMs);
     if (provider.r2RefusesWrites) return new Response(null, { status: 503 });
     r2.set(key, new Uint8Array(gunzipSync(new Uint8Array(await request.arrayBuffer()))));
     return new Response(null, { status: 200 });
@@ -157,10 +159,12 @@ export function statementOf(envelopeSha256: Buffer) {
   return JSON.parse(Buffer.from(envelope.payload, "base64").toString("utf8"));
 }
 
-export function installCaptureHarness(): void {
+/** `deployedPools` keeps the pool sizes a deployed function has instead of twelve connections. */
+export function installCaptureHarness(opts: { deployedPools?: boolean } = {}): void {
   const signer = localSigner("rr-capture-preview-1-ed25519");
   beforeAll(async () => {
-    process.env.DB_POOL_MAX = "12";
+    if (opts.deployedPools) delete process.env.DB_POOL_MAX;
+    else process.env.DB_POOL_MAX = "12";
     // Three reports of 200 calls reserve 2.40 USD, past the nightly contract-test cap.
     process.env.SPEND_CAP_DAILY_CONTRACT_TEST_USD = "10";
     await withSystem("capture.test", (tx) =>
@@ -203,6 +207,7 @@ export function installCaptureHarness(): void {
       maxInFlight: 0,
       delayMs: 0,
       r2RefusesWrites: false,
+      r2WriteMs: 0,
     });
     resetPlanCache();
   });

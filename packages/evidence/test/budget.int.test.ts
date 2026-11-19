@@ -95,7 +95,7 @@ async function sealAndPersistReport(n: number): Promise<Report> {
     await sealPlan({ measurementId: plan.id, planBytes }, { tx });
     const seals = [];
     for (let slot = 0; slot < n; slot++) {
-      seals.push(await sealCapture(sealInputFor(newCaptureId()), { tx }));
+      seals.push(await sealCapture(sealInputFor(newCaptureId())));
     }
     await tx.execute(sql`
       insert into public_panel.captures (id, measurement_id, slot_index, attempt, intent_set_id,

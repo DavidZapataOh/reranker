@@ -34,6 +34,7 @@ const sealReport = {
   sealCapture: null,
   r2WriteRound: stats,
   database: stats,
+  hold: stats,
   envelope: stats,
   sign: null,
 };

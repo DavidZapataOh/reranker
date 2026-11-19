@@ -34,6 +34,7 @@ export {
 } from "./latency";
 export {
   type CapturePredicateInput,
+  captureRow,
   latestNormalized,
   logOrigin,
   readRaw,
