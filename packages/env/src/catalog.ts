@@ -141,7 +141,7 @@ const rows: Row[] = [
   ["OPENAI_CONTROL_MODEL", "config", ALL, false, "capture"],
   ["OPENAI_CONTROL_API_KEY", "secret", PROD, false, "capture", true],
   ["GEMINI_API_KEY", "secret", ALL, false, "extraction", true],
-  ["GEMINI_API_KEY_CI", "secret", NONE, true, "extraction"],
+  ["GEMINI_API_KEY_CI", "secret", NONE, true, "extraction", true],
   ["BRIGHTDATA_API_KEY", "secret", PROD, false, "capture", true],
   ["BRIGHTDATA_API_KEY_CI", "secret", NONE, true, "capture", true],
   // Finance permission: the only role that reads the account's free tier and balance.
@@ -156,7 +156,7 @@ const rows: Row[] = [
   ["XAI_API_KEY_CI", "secret", NONE, true, "benchmark"],
   ["GOOGLE_PLACES_API_KEY", "secret", ALL, false, "extraction", true],
   ["ENTITY_NAME_HMAC_KEY", "secret", ALL, false, "extraction", true],
-  ["GOOGLE_PLACES_API_KEY_CI", "secret", NONE, true, "extraction"],
+  ["GOOGLE_PLACES_API_KEY_CI", "secret", NONE, true, "extraction", true],
   ["R2_ACCOUNT_ID", "config", ALL, false, "evidence"],
   ["R2_ACCESS_KEY_ID", "secret", ALL, false, "evidence"],
   ["R2_SECRET_ACCESS_KEY", "secret", ALL, false, "evidence"],
