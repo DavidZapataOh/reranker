@@ -49,8 +49,15 @@ export interface SearchTextRequest {
   mask: "resolve" | "target";
   regionCode?: string;
   includedType?: string;
-  locationBias?: { circle: { center: { latitude: number; longitude: number }; radius: number } };
+  locationBias?:
+    | { circle: { center: LatLng; radius: number } }
+    | { rectangle: { low: LatLng; high: LatLng } };
   includePureServiceAreaBusinesses?: boolean;
+}
+
+export interface LatLng {
+  latitude: number;
+  longitude: number;
 }
 
 export interface PlaceDetails {
