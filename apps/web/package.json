@@ -58,6 +58,7 @@
     "@workflow/vitest": "catalog:",
     "posthog-node": "catalog:",
     "puppeteer-core": "catalog:",
+    "server-only": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:",
