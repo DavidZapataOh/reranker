@@ -1,4 +1,7 @@
+import { randomBytes } from "node:crypto";
 import { COUNTRIES, DEFAULT_COUNTRY_CODE } from "@reranker/i18n/countries";
+import type { CaptureId } from "@reranker/verify/format";
+import type { SealCaptureInput } from "../../src/seal";
 import type { CapturePredicateInput } from "../../src/statement";
 
 const country = COUNTRIES[DEFAULT_COUNTRY_CODE];
@@ -42,3 +45,31 @@ export const predicateInput: CapturePredicateInput = {
   tlsn: null,
   c2pa: null,
 };
+
+const CROCKFORD = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+
+/** A fresh capture id in the cap_ + ULID alphabet. */
+export function newCaptureId(): CaptureId {
+  const chars = Array.from(randomBytes(26), (b) => CROCKFORD[b % CROCKFORD.length]);
+  return `cap_${chars.join("")}` as CaptureId;
+}
+
+/**
+ * A capture as the capture step hands it to sealCapture, with a response of about `responseBytes`
+ * bytes, unique to its id so no two seals share an artifact.
+ */
+export function sealInputFor(captureId: CaptureId, responseBytes = 2048): SealCaptureInput {
+  const utf8 = (s: string) => new TextEncoder().encode(s);
+  const markdown = randomBytes(Math.ceil((responseBytes * 3) / 4)).toString("base64");
+  return {
+    captureId,
+    responseBytes: utf8(`{"tasks":[{"id":"${captureId}","result":[{"markdown":"${markdown}"}]}]}`),
+    responseContentType: "application/json",
+    requestBytes: utf8(`[{"user_prompt":"blanqueamiento dental","id":"${captureId}"}]`),
+    normalized: {
+      json: utf8(`{"answer":"Clínica Sonrisa","id":"${captureId}"}`),
+      parserVersion: 1,
+    },
+    predicate: predicateInput,
+  };
+}

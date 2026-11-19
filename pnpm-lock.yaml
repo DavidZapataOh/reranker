@@ -909,9 +909,15 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 26.6.6
+      '@types/pg':
+        specifier: 'catalog:'
+        version: 8.23.1
       '@vitest/coverage-v8':
         specifier: 'catalog:'
         version: 5.1.0(@vitest/browser@5.1.0)(vitest@5.1.0)
+      pg:
+        specifier: 'catalog:'
+        version: 8.23.1
       tsx:
         specifier: 'catalog:'
         version: 4.23.15

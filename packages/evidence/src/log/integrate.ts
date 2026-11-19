@@ -1,6 +1,6 @@
 import { withSystem } from "@reranker/db";
 import { evidenceBatches } from "@reranker/db/schema";
-import { desc, eq, sql } from "drizzle-orm";
+import { desc, eq, type SQL, sql } from "drizzle-orm";
 import { loadSigner } from "../signer";
 import { formatCheckpoint, signCheckpoint } from "./checkpoint";
 import { extendTree } from "./frontier";
@@ -33,6 +33,35 @@ function splitHashes(bytes: Buffer): Uint8Array[] {
 }
 
 /**
+ * The next entries of the log, locked, in envelope order. Each branch walks its partial pending
+ * index in order. The log's lock is per origin, so the row locks are what keep an integrator of
+ * another origin from taking the same entries.
+ */
+export function pendingEntriesQuery(limit = MAX_BATCH_ENTRIES): SQL {
+  return sql`
+    with pending_captures as (
+      select 'capture' as src, id as ref, null::text as kind, 0 as revision, envelope_sha256
+      from public_panel.captures
+      where log_index is null
+      order by envelope_sha256
+      limit ${limit}
+      for update
+    ), pending_entries as (
+      select 'entry' as src, ref, kind::text, revision::int, envelope_sha256
+      from public_panel.evidence_entries
+      where log_index is null
+      order by envelope_sha256
+      limit ${limit}
+      for update
+    )
+    select * from pending_captures
+    union all
+    select * from pending_entries
+    order by envelope_sha256
+    limit ${limit}`;
+}
+
+/**
  * Appends every pending entry of the log, captures and other statements alike, in envelope
  * order, and signs a checkpoint of the new tree. Concurrent calls get `busy` instead of waiting
  * on the log's lock, so two integrators never hand out the same index; one that dies holding the
@@ -53,29 +82,7 @@ export async function integrate(origin: string): Promise<IntegrateResult> {
       );
       if (!lock?.locked) return { status: "busy" };
 
-      // Each branch walks its partial pending index in order. The lock is per origin, so the row
-      // locks are what keep an integrator of another origin from taking the same entries.
-      const { rows: pending } = await tx.execute<Pending>(sql`
-        with pending_captures as (
-          select 'capture' as src, id as ref, null::text as kind, 0 as revision, envelope_sha256
-          from public_panel.captures
-          where log_index is null
-          order by envelope_sha256
-          limit ${MAX_BATCH_ENTRIES}
-          for update
-        ), pending_entries as (
-          select 'entry' as src, ref, kind::text, revision::int, envelope_sha256
-          from public_panel.evidence_entries
-          where log_index is null
-          order by envelope_sha256
-          limit ${MAX_BATCH_ENTRIES}
-          for update
-        )
-        select * from pending_captures
-        union all
-        select * from pending_entries
-        order by envelope_sha256
-        limit ${MAX_BATCH_ENTRIES}`);
+      const { rows: pending } = await tx.execute<Pending>(pendingEntriesQuery());
       if (pending.length === 0) return { status: "empty" };
       // Before any write, so a deployment without its log key fails closed at once.
       const signer = await loadSigner("log");
