@@ -21,6 +21,12 @@ export {
 } from "./dataforseo/request";
 export { type DataForSeoOutcome, mapDataForSeoStatus } from "./dataforseo/status";
 export { ENGINES, type EngineSpec } from "./engines";
+export {
+  createMeasurement,
+  freezeMeasurementPlan,
+  type LoadedPlan,
+  loadPlan,
+} from "./measurement";
 export { RawSink } from "./raw/raw-sink";
 export { type Fetch, recordingFetch, teeFetch } from "./raw/tee-fetch";
 export { resolveRedirects } from "./resolve-redirects";
