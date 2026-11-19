@@ -10,7 +10,8 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run --project unit --coverage --passWithNoTests",
-    "test:contract": "vitest run --project contract"
+    "test:contract": "vitest run --project contract",
+    "record:live": "tsx --conditions=react-server scripts/record-live.ts"
   },
   "dependencies": {
     "@reranker/catalog": "workspace:*",
@@ -24,11 +25,13 @@
     "ulid": "catalog:"
   },
   "devDependencies": {
+    "@reranker/db": "workspace:*",
     "@reranker/testing": "workspace:*",
     "@reranker/typescript-config": "workspace:*",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "msw": "catalog:",
+    "tsx": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }
