@@ -67,8 +67,9 @@ jobs:
           R2_ACCESS_KEY_ID_CI: ${{ secrets.R2_ACCESS_KEY_ID_CI }}
           R2_SECRET_ACCESS_KEY_CI: ${{ secrets.R2_SECRET_ACCESS_KEY_CI }}
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-          # Reads the private bucket's domain settings only.
+          # Reads the private bucket's domain settings and purges removed preview artifacts.
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
         run: |
           status=0
           pnpm exec turbo run test:contract --continue=dependencies-successful --summarize || status=$?
