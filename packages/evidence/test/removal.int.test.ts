@@ -184,8 +184,8 @@ test("removal is idempotent and purges the public URL once", async () => {
   if (!capture) throw new Error("No capture was sealed");
   const sha256 = capture.normalizedSha256 as string;
 
-  await removeArtifact(sha256, "normalized", "legal_order");
-  await removeArtifact(sha256, "normalized", "legal_order");
+  expect(await removeArtifact(sha256, "normalized", "legal_order")).toEqual({ created: true });
+  expect(await removeArtifact(sha256, "normalized", "legal_order")).toEqual({ created: false });
 
   expect(purges).toEqual([
     {

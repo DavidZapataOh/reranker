@@ -17,17 +17,12 @@ The person's name stays public at `ev.reranker.co/raw/<sha256>` (and `normalized
 
 ## Mitigate
 
-1. Pull the production environment and remove each artifact:
-
-   ```bash
-   vercel env pull .env.production.local --environment=production
-   pnpm --filter @reranker/evidence artifact:remove --env-file=.env.production.local \
-     --kind raw --sha256 <hex> --reason personal_data_request
-   ```
-
-   Use `--kind normalized` or `--kind extractions` for the others, and `--reason legal_order` for an order. A rerun of the same command does nothing, so retrying after an error is safe: the removal is recorded only after the object is deleted and its CDN copy purged.
-2. An error naming a missing variable: the variable is not set in Vercel production; add it there (Settings, Environment Variables) and pull again. A purge error with HTTP 403: the token lost the zone's Cache Purge permission; fix it in Cloudflare (My Profile, API Tokens) and rerun. A purge error with HTTP 429: wait a minute and rerun.
-3. Delete `.env.production.local`.
+1. In GitHub, Actions, `evidence-removal`, Run workflow on `main`: enter the `sha256`, pick the `kind` (`raw`, `normalized` or `extractions`) and the `reason` (`personal_data_request`, or `legal_order` for an order). From the terminal: `gh workflow run evidence-removal.yml --ref main -f sha256=<hex> -f kind=raw -f reason=personal_data_request`. Run it once per artifact. The production deployment does the removal with the credentials it already holds; no secret leaves Vercel.
+2. Read the job log. `"created": true` means it was removed now; `"created": false` means it had already been removed. A rerun is always safe: the removal is recorded only after the object is deleted and its CDN copy purged.
+3. If the job fails:
+   - HTTP 401: the `CRON_SECRET` secret of the `production-ops` GitHub environment differs from the one in Vercel production. Copy it again (GitHub, Settings, Environments, `production-ops`) and rerun.
+   - HTTP 503: R2 or the Cloudflare purge did not answer. Rerun after a minute.
+   - HTTP 500: read the function log in Vercel (Logs, path `/api/internal/evidence/remove`). A missing variable is named there; add it in Vercel production (Settings, Environment Variables), redeploy and rerun. A purge refused with 403 means the token lost the zone's Cache Purge permission; fix it in Cloudflare (My Profile, API Tokens) and rerun.
 
 ## Verify
 

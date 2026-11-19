@@ -12,13 +12,13 @@ const PURGE_TIMEOUT_MS = 10_000;
 /**
  * Takes an artifact down for a personal-data request or a legal order. Its digest stays in the
  * signed statement and the log, so signature, inclusion and dating keep verifying; bundles then
- * show it as removed. A second call for the same digest does nothing.
+ * show it as removed. A second call for the same digest does nothing and reports `created: false`.
  */
 export async function removeArtifact(
   sha256: string,
   kind: RemovableKind,
   reason: RemovalReason,
-): Promise<void> {
+): Promise<{ created: boolean }> {
   checkDigest(sha256);
   // Private kinds have no public URL, so no CDN copy to purge.
   const purge = PRIVATE_ARTIFACT_KINDS.has(kind)
@@ -30,15 +30,16 @@ export async function removeArtifact(
 
   // The record commits only once the object is gone from R2 and the CDN, so a failure leaves no
   // record and the retry does it all again; a concurrent call waits on the row and then finds it.
-  await withSystem("evidence.remove_artifact", async (tx) => {
+  return withSystem("evidence.remove_artifact", async (tx) => {
     const [recorded] = await tx
       .insert(artifactRemovals)
       .values({ sha256: Buffer.from(sha256, "hex"), kind, reason })
       .onConflictDoNothing()
       .returning({ sha256: artifactRemovals.sha256 });
-    if (!recorded) return;
+    if (!recorded) return { created: false };
     await deleteArtifact(kind, sha256);
     if (purge) await purgeUrl(purge);
+    return { created: true };
   });
 }
 
