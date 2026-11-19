@@ -1,5 +1,6 @@
 import "server-only";
 
+export { type AnchorResult, anchorLatest, upgradePendingOts } from "./anchors/anchor";
 export {
   type ArtifactKind,
   artifactUrl,
