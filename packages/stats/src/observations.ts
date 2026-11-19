@@ -1,14 +1,14 @@
-import { parseSlotId } from "@reranker/capture/slot";
-import type { RawCapture } from "@reranker/extraction/extract";
 import { AppError, type CaptureChannel, EngineId } from "@reranker/schema";
-import type {
-  EngineGeo,
-  EntityKey,
-  EntityKind,
-  IntentId,
-  MeasurementPlan,
-  PlannedObservation,
-  ResponseExtraction,
+import {
+  type EngineGeo,
+  type EntityKey,
+  type EntityKind,
+  type IntentId,
+  type MeasurementPlan,
+  type PlannedObservation,
+  parseSlotId,
+  type RawCaptureOf,
+  type ResponseExtraction,
 } from "@reranker/schema/measurement";
 import type { CaptureFrame, EntityColumn } from "./compare";
 import { methodology } from "./methodology";
@@ -51,17 +51,15 @@ export interface ObservationFrame extends CaptureFrame {
 // Directories, media and other mentions are neither competitors nor platforms.
 const KEPT_KINDS = new Set<EntityKind>(["business", "professional", "chain", "platform"]);
 
-type Valid = { raw: RawCapture; planned: PlannedObservation; slotIndex: number };
+/** All the statistics read from a capture's answer: whether the AI surface showed. */
+export type ObservedCapture = RawCaptureOf<{ present: boolean }>;
+
+type Valid = { raw: ObservedCapture; planned: PlannedObservation; slotIndex: number };
 type Entity = ObservationFrame["entities"] extends Map<EntityKey, infer E> ? E : never;
 
-function plannedOf(plan: MeasurementPlan, raw: RawCapture): Valid {
+function plannedOf(plan: MeasurementPlan, raw: ObservedCapture): Valid {
   const { capture } = raw;
-  let slotIndex: number;
-  try {
-    ({ slotIndex } = parseSlotId(capture.slotId));
-  } catch (cause) {
-    throw new AppError("validation_failed", { detail: `capture ${capture.id}: bad slot`, cause });
-  }
+  const { slotIndex } = parseSlotId(capture.slotId);
   const planned = plan.observations[slotIndex];
   if (planned === undefined || planned.engine !== capture.engine) {
     throw new AppError("validation_failed", {
@@ -72,7 +70,7 @@ function plannedOf(plan: MeasurementPlan, raw: RawCapture): Valid {
 }
 
 /** One valid capture per slot: the first succeeded attempt by captureId, in plan order. */
-function validCaptures(plan: MeasurementPlan, captures: readonly RawCapture[]): Valid[] {
+function validCaptures(plan: MeasurementPlan, captures: readonly ObservedCapture[]): Valid[] {
   const channels = new Map<EngineId, CaptureChannel>();
   const bySlot = new Map<number, Valid>();
   for (const raw of captures) {
@@ -116,7 +114,7 @@ function demandWeightOf(
 
 export function buildObservations(input: {
   plan: MeasurementPlan;
-  captures: RawCapture[];
+  captures: ObservedCapture[];
   extractions: ResponseExtraction[];
   intentWeights?: Partial<Record<IntentId, number>>;
 }): ObservationFrame {

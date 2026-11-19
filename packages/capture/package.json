@@ -6,8 +6,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./env": "./src/env.ts",
-    "./brightdata/env": "./src/brightdata/env.ts",
-    "./slot": "./src/slot.ts"
+    "./brightdata/env": "./src/brightdata/env.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
