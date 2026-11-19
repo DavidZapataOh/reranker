@@ -15,12 +15,17 @@ const PARSERS: Partial<Record<EngineId, (bytes: Uint8Array) => EngineAnswer>> = 
   "google-ai-mode": parseAiMode,
 };
 
+function parserOf(engine: EngineId): (bytes: Uint8Array) => EngineAnswer {
+  const parse = PARSERS[engine];
+  if (!parse) throw new InvalidInputError(`${engine} is not captured through DataForSEO`);
+  return parse;
+}
+
 export const dataforseoAdapter: CaptureAdapter = {
   provider: "dataforseo",
   channel: "ui-vendor",
   async captureLive(slot) {
-    const parse = PARSERS[slot.engine];
-    if (!parse) throw new InvalidInputError(`${slot.engine} is not captured through DataForSEO`);
-    return captureLive(slot, parse);
+    return captureLive(slot, parserOf(slot.engine));
   },
+  parse: (engine, bytes) => parserOf(engine)(bytes),
 };

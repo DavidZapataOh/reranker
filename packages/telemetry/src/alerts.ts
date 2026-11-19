@@ -122,6 +122,7 @@ export const procedures = [
   "neon-setup.md",
   "db-rotate-password.md",
   "auth-rotate-secrets.md",
+  "evidence-artifact-removal.md",
 ] as const satisfies readonly string[];
 
 /** Sender of every operations email: alerts and the daily digest. */

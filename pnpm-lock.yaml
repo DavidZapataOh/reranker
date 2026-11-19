@@ -587,6 +587,9 @@ importers:
       '@reranker/schema':
         specifier: workspace:*
         version: link:../schema
+      '@reranker/verify':
+        specifier: workspace:*
+        version: link:../verify
     devDependencies:
       '@reranker/typescript-config':
         specifier: workspace:*
@@ -724,6 +727,9 @@ importers:
       drizzle-orm:
         specifier: 'catalog:'
         version: 0.45.4(@opentelemetry/api@1.10.0)(@types/pg@8.23.1)(kysely@0.29.9)(pg@8.23.1)
+      openai:
+        specifier: 'catalog:'
+        version: 7.57.0(@aws-sdk/credential-provider-node@3.972.97)(@smithy/signature-v4@5.7.5)(google-auth-library@10.9.1(supports-color@10.2.2))(undici@7.30.2)(ws@8.23.0)(zod@4.6.7)
       server-only:
         specifier: 'catalog:'
         version: 0.0.1
