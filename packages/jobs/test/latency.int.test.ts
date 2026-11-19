@@ -57,8 +57,8 @@ describe("10x load", () => {
   // lanes in 5 processes) asks 300 times for DataForSEO's 28 slots, while 600 reservations race
   // for a contract-test cap that admits 250 of them. Few processes, many lanes each: booting a
   // process costs a CPU-second that the suites running beside this one on the runner need.
-  // A pool admits one lease per round trip to the database, about 16 a second from a runner 60 ms
-  // away; slots held for 2 s fill all 28 at that rate too, so the ceiling is always reached.
+  // Each process grants its waiting lanes together, a transaction at a time, so slots held for
+  // 2 s fill all 28 and the ceiling is always reached.
   const SLOT_LIMIT = 28;
   const HOLD_MS = 2000;
   const RESERVATIONS = 600;

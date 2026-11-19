@@ -8,7 +8,7 @@ This is the trigger of the Temporal stage: Vercel Workflows is the equivalent du
 
 ## Impact
 
-Nothing fails. Past this volume the per-step batching, the lease waits and the workflow event spend grow together, and priority between paid and free work gets harder to keep inside `acquire_slot`.
+Nothing fails. Past this volume the per-step batching, the lease waits and the workflow event spend grow together, and priority between paid and free work gets harder to keep inside `acquire_slots`.
 
 ## Diagnose
 

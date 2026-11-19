@@ -213,15 +213,6 @@ const CASES: [string, Table, Case][] = [
     },
   ],
   [
-    "acquireProviderSlot: release",
-    "concurrency_leases",
-    {
-      sql: "delete from ops.concurrency_leases where lease_id = $1::uuid",
-      vars: {},
-      values: () => [randomUUID()],
-    },
-  ],
-  [
     "providerCapacity: in flight",
     "concurrency_leases",
     {
