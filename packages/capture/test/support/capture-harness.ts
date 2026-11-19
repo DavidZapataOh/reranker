@@ -79,13 +79,18 @@ async function fakeDataForSeo(request: Request): Promise<Response> {
 
 /** Where every Google redirect leads; the site itself is never contacted. */
 export const SITE = "https://clinica.example/";
+const GOOGLE_REDIRECT_HOSTS = new Set([
+  "google.com",
+  "www.google.com",
+  "vertexaisearch.cloud.google.com",
+]);
 
 function route(input: string | URL | Request, init?: RequestInit): Promise<Response> {
   const request = new Request(input, init);
   const { hostname } = new URL(request.url);
   if (hostname === "sandbox.dataforseo.com") return fakeDataForSeo(request);
   if (hostname.endsWith(".r2.cloudflarestorage.com")) return fakeR2(request);
-  if (hostname.endsWith("google.com")) {
+  if (GOOGLE_REDIRECT_HOSTS.has(hostname)) {
     return Promise.resolve(new Response(null, { status: 302, headers: { location: SITE } }));
   }
   return Promise.resolve(new Response(null, { status: 404 }));

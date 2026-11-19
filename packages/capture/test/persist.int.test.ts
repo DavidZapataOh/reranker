@@ -2,6 +2,7 @@ import { jcs } from "@reranker/catalog";
 import { readRaw } from "@reranker/evidence";
 import { InvalidInputError } from "@reranker/jobs/errors";
 import { describe, expect, test, vi } from "vitest";
+import { registerCaptureAdapter } from "../src/adapters";
 import { captureLive } from "../src/dataforseo/live";
 import { parseAiOverview } from "../src/dataforseo/parse/ai-overview";
 import { loadPlan } from "../src/measurement";
@@ -24,6 +25,12 @@ vi.mock("@reranker/jobs", async (importOriginal) => ({
 }));
 
 installCaptureHarness();
+// The row's channel comes from the provider's adapter; persisting never calls it.
+registerCaptureAdapter({
+  provider: "dataforseo",
+  channel: "ui-vendor",
+  captureLive: (slot) => captureLive(slot, parseAiOverview),
+});
 
 async function aiOverviewCapture() {
   const { m } = await frozen(["google-ai-overview"]);
