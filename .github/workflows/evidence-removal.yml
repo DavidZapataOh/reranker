@@ -1,0 +1,59 @@
+name: evidence-removal
+# Takes one evidence artifact down in production (docs/runbooks/evidence-artifact-removal.md). The
+# app does the removal with the credentials it already holds; this job only sends the cron bearer.
+on:
+  workflow_dispatch:
+    inputs:
+      sha256:
+        description: Digest of the artifact (64 lowercase hex characters)
+        required: true
+        type: string
+      kind:
+        description: Artifact kind
+        required: true
+        type: choice
+        options: [raw, normalized, extractions]
+      reason:
+        description: Why it is removed
+        required: true
+        type: choice
+        options: [personal_data_request, legal_order]
+permissions: {}
+run-name: "evidence-removal · ${{ inputs.kind }} · ${{ inputs.sha256 }}"
+concurrency:
+  group: evidence-removal-${{ inputs.sha256 }}
+  cancel-in-progress: false
+jobs:
+  remove:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    environment: production-ops
+    permissions: {}
+    steps:
+      - name: Remove the artifact
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          SHA256: ${{ inputs.sha256 }}
+          KIND: ${{ inputs.kind }}
+          REASON: ${{ inputs.reason }}
+        run: |
+          if ! [[ "$SHA256" =~ ^[0-9a-f]{64}$ ]]; then
+            echo "::error::sha256 must be 64 lowercase hex characters"
+            exit 1
+          fi
+          if [ -z "$CRON_SECRET" ]; then
+            echo "::error::CRON_SECRET is not set in the production-ops environment"
+            exit 1
+          fi
+          # The bearer goes through a file so it never shows in the process list.
+          headers="$RUNNER_TEMP/headers"
+          printf 'Authorization: Bearer %s\nContent-Type: application/json\n' "$CRON_SECRET" > "$headers"
+          body=$(jq -nc --arg sha256 "$SHA256" --arg kind "$KIND" --arg reason "$REASON" \
+            '{sha256: $sha256, kind: $kind, reason: $reason}')
+          status=0
+          curl -sS --fail-with-body --max-time 60 -X POST -H "@$headers" --data "$body" \
+            https://reranker.co/api/internal/evidence/remove || status=$?
+          rm -f "$headers"
+          echo
+          exit "$status"

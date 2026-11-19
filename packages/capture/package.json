@@ -28,6 +28,7 @@
     "@reranker/verify": "workspace:*",
     "dataforseo-client": "catalog:",
     "drizzle-orm": "catalog:",
+    "openai": "catalog:",
     "server-only": "catalog:",
     "ulid": "catalog:"
   },
