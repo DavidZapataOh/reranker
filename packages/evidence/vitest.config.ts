@@ -19,6 +19,7 @@ export default mergeConfig(
           "src/anchors/anchor.ts",
           "src/bundle.ts",
           "src/bundle-latency.ts",
+          "src/removal.ts",
         ],
       },
     },

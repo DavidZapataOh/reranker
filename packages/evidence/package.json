@@ -14,7 +14,8 @@
     "test": "vitest run --project unit --coverage --passWithNoTests",
     "test:contract": "vitest run --project contract",
     "test:integration": "vitest run --project integration --no-file-parallelism",
-    "r2:provision": "node scripts/provision-r2.ts"
+    "r2:provision": "node scripts/provision-r2.ts",
+    "artifact:remove": "tsx scripts/remove-artifact.ts"
   },
   "dependencies": {
     "@aws-sdk/client-kms": "catalog:",
