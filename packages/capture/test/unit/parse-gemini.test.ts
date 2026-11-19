@@ -100,3 +100,36 @@ describe("parseGemini", () => {
     expect(Buffer.from(bytes).equals(Buffer.from(copy))).toBe(true);
   });
 });
+
+// Production answers to Spanish local questions, recorded byte for byte.
+const live = (name: string) =>
+  new Uint8Array(readFileSync(new URL(`../fixtures/recorded/live/${name}`, import.meta.url)));
+
+describe("parseGemini on production answers", () => {
+  test("a local question yields its cited pages, which arrive without grounding redirects", () => {
+    const a = parseGemini(live("gemini-abogado-laboral-cdmx.json"));
+    expect(EngineAnswer.parse(a)).toEqual(a);
+    expect(a).toMatchObject({ modelReported: "3.5 Flash-Lite", searchQueries: "unavailable" });
+    expect(a.markdown.startsWith("Si buscas un **abogado laboral en la Ciudad de México**")).toBe(
+      true,
+    );
+    expect(a.sources).toHaveLength(15);
+    expect(a.sources[0]).toEqual({
+      url: "https://lexgoapp.com/mx/abogados-laboral-ciudad-de-mexico",
+      domain: "lexgoapp.com",
+      title: "¿Necesitas un abogado laboral en Ciudad de México? - LexGoApp",
+      cited: true,
+    });
+  });
+
+  test.each([
+    ["gemini-dentistas-medellin.json", 27],
+    ["gemini-colchon-bogota.json", 15],
+    ["gemini-pico-y-placa-medellin.json", 12],
+  ])("%s parses with %i distinct cited sources", (name, count) => {
+    const a = parseGemini(live(name));
+    expect(EngineAnswer.parse(a)).toEqual(a);
+    expect(a.sources).toHaveLength(count);
+    expect(a.sources.every((s) => s.cited && !s.url.includes("grounding-api-redirect"))).toBe(true);
+  });
+});

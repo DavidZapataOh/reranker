@@ -104,6 +104,41 @@ describe("resolveRedirects", () => {
     expect(out.sources.at(-1)?.resolvedUrl).toBe("https://site.co/0");
   });
 
+  test("an AI Overview goto link follows Google's own hops and stops at the site", async () => {
+    // As recorded: google.com/goto moves to www.google.com/goto, which names the site.
+    const target = "colchones-spring";
+    server.use(
+      http.get("https://google.com/goto", ({ request }) =>
+        HttpResponse.redirect(`https://www.google.com/goto${new URL(request.url).search}`, 301),
+      ),
+      http.get("https://www.google.com/goto", ({ request }) =>
+        new URL(request.url).searchParams.get("url") === target
+          ? HttpResponse.redirect(
+              "https://www.facebook.com/p/Colchones-Spring-100089949242548/",
+              302,
+            )
+          : new HttpResponse(null, { status: 404 }),
+      ),
+    );
+    const out = await resolveRedirects(answer([`https://google.com/goto?url=${target}`]));
+    expect(out.sources[0]?.resolvedUrl).toBe(
+      "https://www.facebook.com/p/Colchones-Spring-100089949242548/",
+    );
+  });
+
+  test("a redirect loop is given up after a few hops", async () => {
+    let calls = 0;
+    server.use(
+      http.get("https://www.google.com/goto", () => {
+        calls += 1;
+        return HttpResponse.redirect("https://www.google.com/goto?url=again", 302);
+      }),
+    );
+    const out = await resolveRedirects(answer(["https://www.google.com/goto?url=again"]));
+    expect(out.sources[0]).not.toHaveProperty("resolvedUrl");
+    expect(calls).toBe(3);
+  });
+
   test("an answer without grounding redirects makes no request", async () => {
     // Any request would be unhandled and fail the test.
     const input = answer(["https://example.co/", "https://vertexaisearch.cloud.google.com/other"]);
