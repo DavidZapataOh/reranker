@@ -2,6 +2,7 @@ import { defineEnv } from "@reranker/env";
 import { describe, expect, test } from "vitest";
 import { brightdataEnv } from "../../src/brightdata/env";
 import { captureEnv } from "../../src/env";
+import { openaiControlEnv } from "../../src/openai/env";
 
 test.each(["preview", "production"])("missing DataForSEO credentials fail in %s", (APP_ENV) => {
   expect(() => defineEnv([captureEnv], { APP_ENV })).toThrowError(
@@ -14,31 +15,8 @@ test.each(["preview", "production"])("%s accepts the credentials", (APP_ENV) => 
     APP_ENV,
     DATAFORSEO_LOGIN: "login",
     DATAFORSEO_PASSWORD: "password",
-    OPENAI_CONTROL_API_KEY: "sk-control",
   });
   expect(env).toMatchObject({ DATAFORSEO_LOGIN: "login", DATAFORSEO_PASSWORD: "password" });
-});
-
-describe("OpenAI control channel", () => {
-  const dataforseo = { DATAFORSEO_LOGIN: "login", DATAFORSEO_PASSWORD: "password" };
-
-  test("production fails without its key", () => {
-    expect(() => defineEnv([captureEnv], { APP_ENV: "production", ...dataforseo })).toThrowError(
-      /OPENAI_CONTROL_API_KEY \(missing\)/,
-    );
-  });
-
-  test.each(["preview", "development"])("%s runs without the key", (APP_ENV) => {
-    expect(defineEnv([captureEnv], { APP_ENV, ...dataforseo }).OPENAI_CONTROL_API_KEY).toBe(
-      undefined,
-    );
-  });
-
-  test("a value that is not an OpenAI key is rejected", () => {
-    expect(() =>
-      defineEnv([captureEnv], { APP_ENV: "development", OPENAI_CONTROL_API_KEY: "key" }),
-    ).toThrowError(/OPENAI_CONTROL_API_KEY \(invalid\)/);
-  });
 });
 
 test("development runs without them", () => {
@@ -75,5 +53,23 @@ describe("Bright Data", () => {
     expect(() =>
       defineEnv([brightdataEnv], { APP_ENV: "development", BRIGHTDATA_PERPLEXITY_DATASET_ID: "x" }),
     ).toThrowError(/BRIGHTDATA_PERPLEXITY_DATASET_ID \(invalid\)/);
+  });
+});
+
+describe("OpenAI control channel", () => {
+  test("production fails without its key", () => {
+    expect(() => defineEnv([openaiControlEnv], { APP_ENV: "production" })).toThrowError(
+      /OPENAI_CONTROL_API_KEY \(missing\)/,
+    );
+  });
+
+  test.each(["preview", "development"])("%s runs without the key", (APP_ENV) => {
+    expect(defineEnv([openaiControlEnv], { APP_ENV }).OPENAI_CONTROL_API_KEY).toBeUndefined();
+  });
+
+  test("a value that is not an OpenAI key is rejected", () => {
+    expect(() =>
+      defineEnv([openaiControlEnv], { APP_ENV: "production", OPENAI_CONTROL_API_KEY: "key" }),
+    ).toThrowError(/OPENAI_CONTROL_API_KEY \(invalid\)/);
   });
 });

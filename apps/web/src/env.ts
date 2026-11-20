@@ -1,6 +1,7 @@
 import { authEnv } from "@reranker/auth/env";
 import { brightdataEnv } from "@reranker/capture/brightdata/env";
 import { captureEnv } from "@reranker/capture/env";
+import { openaiControlEnv } from "@reranker/capture/openai/env";
 import { config, defineEnv, forbiddenIn, requiredIn, secret } from "@reranker/env";
 import { flagsEnv } from "@reranker/flags/env";
 import { jobsEnv } from "@reranker/jobs/env";
@@ -49,6 +50,7 @@ export const fragments = [
   // declaration wins, so capture makes them mandatory where it runs.
   captureEnv,
   brightdataEnv,
+  openaiControlEnv,
 ] as const;
 
 let validated: ReturnType<typeof compose> | undefined;

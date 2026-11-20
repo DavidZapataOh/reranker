@@ -1,5 +1,6 @@
+import { readFileSync } from "node:fs";
 import { InvalidInputError } from "@reranker/jobs";
-import type { ResponseUsage } from "openai/resources/responses/responses";
+import type { Response, ResponseUsage } from "openai/resources/responses/responses";
 import { expect, test } from "vitest";
 import { CONTROL_RESERVE, costFromUsage } from "../../src/openai/cost";
 import { OPENAI_PRICING } from "../../src/pricing/openai";
@@ -112,5 +113,18 @@ test("usage that cannot be billed is refused", () => {
 test("the reserve per control call is five US cents", () =>
   expect(CONTROL_RESERVE).toEqual({ amount_micros: 50_000, currency: "USD" }));
 
-// Enabled with the recorded contract response of the control client.
-test.todo("the recorded real usage costs between US$0.005 and US$0.08");
+test("the recorded real usage costs between US$0.005 and US$0.08", () => {
+  const recorded = JSON.parse(
+    readFileSync(
+      new URL("../fixtures/recorded/openai/control-medellin.json", import.meta.url),
+      "utf8",
+    ),
+  ) as Response;
+  const searches = recorded.output.filter(
+    (item) => item.type === "web_search_call" && item.action?.type === "search",
+  ).length;
+  if (!recorded.usage) throw new Error("the recording carries no usage");
+  const c = costFromUsage(recorded.usage, searches, recorded.model).amount_micros;
+  expect(c).toBeGreaterThanOrEqual(5_000);
+  expect(c).toBeLessThanOrEqual(80_000);
+});
