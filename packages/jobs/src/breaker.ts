@@ -1,4 +1,4 @@
-import { withSystem } from "@reranker/db";
+import { isCheckoutTimeout, withSystem } from "@reranker/db";
 import { sql } from "drizzle-orm";
 import { loadJobsConfig } from "./config";
 import type { PaidProvider } from "./providers";
@@ -34,14 +34,29 @@ export async function breakerCheck(
   return { state: row.state, retryAfterMs: row.retry_after_ms };
 }
 
-type Outcomes = { successes: number; failures: number; recorded: Array<() => void> };
+type Outcomes = {
+  successes: number;
+  failures: number;
+  recorded: Array<() => void>;
+  queuedAt: number;
+};
 type Recorder = { waiting: Outcomes | null; running: boolean };
 
 // One per breaker on this instance: outcomes that arrive while a record is in flight go together
 // in the next one, so a burst of calls takes one connection at a time instead of one each.
 const recorders = new Map<string, Recorder>();
 
-async function recordOutcomes(provider: PaidProvider, account: string, outcomes: Outcomes) {
+// A burst that keeps the pool full past its checkout timeout is when a provider outage costs the
+// most, so those outcomes wait for a connection instead of being lost. Callers wait with them,
+// holding their provider lease, which bounds the wait well below a report's deadline.
+const MAX_WAIT_MS = 10_000;
+
+/** False when the checkout timed out: nothing reached the database and the batch can run again. */
+async function recordOutcomes(
+  provider: PaidProvider,
+  account: string,
+  outcomes: Outcomes,
+): Promise<boolean> {
   try {
     const { minCalls, failureRatio, openMs } = loadJobsConfig().breaker;
     const { rows } = await withSystem("jobs.breaker", (tx) =>
@@ -55,8 +70,12 @@ async function recordOutcomes(provider: PaidProvider, account: string, outcomes:
       emit({ name: "jobs.breaker.state", props: { provider, state: row.state } });
     }
   } catch (error) {
+    if (isCheckoutTimeout(error) && performance.now() - outcomes.queuedAt < MAX_WAIT_MS) {
+      return false;
+    }
     report(`breaker record (${provider})`, error);
   }
+  return true;
 }
 
 async function drain(provider: PaidProvider, account: string, recorder: Recorder) {
@@ -64,7 +83,19 @@ async function drain(provider: PaidProvider, account: string, recorder: Recorder
   while (recorder.waiting) {
     const outcomes = recorder.waiting;
     recorder.waiting = null;
-    await recordOutcomes(provider, account, outcomes);
+    if (!(await recordOutcomes(provider, account, outcomes))) {
+      // Outcomes that arrived meanwhile join the retry, which keeps the oldest caller's deadline.
+      const later = recorder.waiting as Outcomes | null;
+      recorder.waiting = later
+        ? {
+            successes: outcomes.successes + later.successes,
+            failures: outcomes.failures + later.failures,
+            recorded: [...outcomes.recorded, ...later.recorded],
+            queuedAt: outcomes.queuedAt,
+          }
+        : outcomes;
+      continue;
+    }
     for (const recorded of outcomes.recorded) recorded();
   }
   recorder.running = false;
@@ -75,8 +106,8 @@ async function drain(provider: PaidProvider, account: string, recorder: Recorder
  * the outcome is stored, alone when nothing else is being recorded for the breaker, else with the
  * others that arrived meanwhile. It never throws: callers record right after a paid call, and a
  * lost count must not turn a call the provider billed into a failure that releases its spend. A
- * failure is logged; missed outcomes only delay the breaker, and a probe that never reports is
- * handed out again after its window.
+ * full pool is waited out for up to MAX_WAIT_MS; any other failure is logged. Missed outcomes only
+ * delay the breaker, and a probe that never reports is handed out again after its window.
  */
 export function breakerRecord(
   provider: PaidProvider,
@@ -89,7 +120,7 @@ export function breakerRecord(
     recorder = { waiting: null, running: false };
     recorders.set(key, recorder);
   }
-  recorder.waiting ??= { successes: 0, failures: 0, recorded: [] };
+  recorder.waiting ??= { successes: 0, failures: 0, recorded: [], queuedAt: performance.now() };
   const outcomes = recorder.waiting;
   if (outcome === "failure") outcomes.failures += 1;
   else outcomes.successes += 1;
