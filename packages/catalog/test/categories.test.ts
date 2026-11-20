@@ -65,6 +65,22 @@ describe("seed categories", () => {
     }
   });
 
+  test("German nouns follow German searches, capitalized and with their gender", () => {
+    const de = (key: string) => seedCategories().find((c) => c.key === key)?.languages.de;
+    expect(de("dental_clinic")?.noun).toEqual({ text: "Zahnarzt", gender: "m" });
+    expect(de("car_repair")?.noun).toEqual({ text: "Autowerkstatt", gender: "f" });
+    expect(de("hotel")?.noun).toEqual({ text: "Hotel", gender: "n" });
+    expect(de("online_store")?.noun).toBeNull();
+    for (const c of seedCategories()) {
+      const { noun, synonyms } = c.languages.de;
+      if (noun !== null) {
+        expect(noun.text).toMatch(/^\p{Lu}/u);
+        expect(synonyms).not.toContain(noun.text);
+      }
+      for (const s of synonyms) expect(s).toMatch(/^\p{Lu}/u);
+    }
+  });
+
   test("the noun is the business people search for, not the professional", () => {
     const dental = seedCategories().find((c) => c.key === "dental_clinic");
     expect(dental?.noun).toBe("clínica odontológica");
