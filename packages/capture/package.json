@@ -6,7 +6,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./env": "./src/env.ts",
-    "./brightdata/env": "./src/brightdata/env.ts"
+    "./brightdata/env": "./src/brightdata/env.ts",
+    "./openai/env": "./src/openai/env.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

@@ -1,0 +1,298 @@
+{
+  "id": "resp_01a577405ba9400c016b007f4ccde487d1b26f10b384a27dc9",
+  "object": "response",
+  "created_at": 1795194701,
+  "status": "completed",
+  "access_programs": {
+    "cyber": "standard"
+  },
+  "background": false,
+  "billing": {
+    "payer": "developer"
+  },
+  "completed_at": 1795194711,
+  "error": null,
+  "frequency_penalty": 0.0,
+  "image": {
+    "context_compression": "disabled"
+  },
+  "incomplete_details": null,
+  "input_transformations": [],
+  "instructions": null,
+  "max_output_tokens": 1200,
+  "max_tool_calls": null,
+  "model": "gpt-6.1-terra",
+  "moderation": null,
+  "output": [
+    {
+      "id": "rs_01a577405ba9400c016b007f4efe6487d180393c20bef3ff0e",
+      "type": "reasoning",
+      "content": [],
+      "encrypted_content": "gAAAAABrAH9Xl2ELzNHqYRjbVPRfun1YHjICjSKvlEtS7QbE67PWVlwaxTmF424rlzOJrpRoW158EM81rNfAwZAxxObr_srLuaDAJGBcrcViisD5n8rPc5UnqgP9gCMcioRbBlGGtlb5OBIRCmb7-GtSqOE2wb7wfm-aJtqFvkG0NilhwQ6s41QOf5mKkKYGv3fZqDR72i98EKIBQC8q8BiAJBdIAn98cdEfEk7_afKcYpNH70bWhJUSEIBwiPt8Nm99RDHd-qj0pUmM6LucGOEZ7qGH0KLy-QFJ9byfCYfdtfjpeyVwlz_yQcbASO2XhckwW-Ud_kiYCDoT2bJWDzFzlSN9uBJUcsGRQeMehGRCLNAOvjXU1QpEl9uisfQWrQ0pRshXpdDSAxzW1QJECExp6SNVAHhmnfTSnEfF4lbKzKZIqAKsG_KR7fc2OWlWNS-wFkr9f7Szo2O85qVuaTF3fvpx4kOW9uznQ2Wo3xsLm-nrntj35cqGMpvgDUXeS-TZYxsnamH-KT-WpRlmT1W3Ixne2Nmsaf9rY__7ZOhD6XjiAwKs9rcK3gzLTpp26NOtxCoAVLkttR0RcmnQKy3K78O5QXJFzpMUZ2tCQZ9nNPt95_Wlar7Q23RCgRvyN0-BmuXg-wR2Wu5oxzuH_taJZu86Urm1BEfTDjhy-bgpQbe5qEUCv_Dd5LgL7EZCjGLu18iUQJ5hwxbl0LgiygkoRjOyK0qbM0yFdEIj6939bI5VeFPzMLXRGTKmUPRGmm4bMJ3DGPFZrU7IstVFA134UOPOK8VquQJ4ju0UcEmIT6E92tgPE_fMV6XklGRJMBiZ62kCHnkm0sbOpeKVOb5jVlyEk38hxXypuYUY3SQju8RQPv97tH2BTIG4SHUEjjFhFu1-j8SbdcBuH6tIfiivKajjBBHyhNsc_qxt2IWZGmpLr7ecBvY9XfV2yZd6bszKjf7A9QflUyVRpvN-fE6HgWfyLbUGhyBhEN1b2Dy2HctGeE1gqbxwzx1MMgA_Tfg7_kfMv871BAOomODlW5m2Ybzio6K-2prS0C3ddXYQPsFn1DqNXPMbWSa7-UQ5llBUGXpxlwNmE4CUqPk9Gl_H05rX7eSmjs0cU8SXz8FC5GzDr3uTgpZrbSJYmLcdZAd4QLj9PC41AnBY3SA8lgkvsSI4aWxv_HVolhqaiQ8BBuVm2652yk51k3JOwgEOggZUijNT0FfFgoifCXY5Nu7kjaQyqWiTtNOdtlLlPF_ekZyM8VniYzwW7RzQ5znD1TcM09NRjFCIhMuV9o_mTC4HnxUIokfMkm_w3zAX2tn3-XKbkUXK3cZj7exOx2MYMQbtqaHCR44VVi_vMp93Nf91ic2y5mEW2Prof-z6SM7Cz-ZRJb0VClYssSkBVivY9l8uYRBd2-2QrWHASLXEC5fyzSMHD6U9gS5dGm2_nlg-jHpUgVmrWp6GOPxdHmDxGZrTNlCkRX-hZWy0PxVxoqHbHzloQ4KI_fRadxgFeYVKvlWkWEUe80lzVxrPqvAXp2nhCUku3vEvj1JxQNrrbqGs-iCb3C0AzWERTZqgFnnApXyhuBH6AbHMSwH0-6E9xoS8e-gK2_YRJ-KBJKi8vcE-coDt_e6-0taN2NK4PU1jJGK6-A8GD84TNBPjadBOOAYON3devc-PQSJZuGeTKtbGplTLlzlYtaEfSS_KiwdL45FAmvYJ0nrseJjfx_et03R1hsdJDDYN4qtJnO7s81AqjKHpsLDXwpTe3IhIdigELaC7EjqL4QirTzabxVJzEP-VU7Syj4yd",
+      "summary": []
+    },
+    {
+      "id": "ws_01a577405ba9400c016b007f4f606c87d1bac215878295866a",
+      "type": "web_search_call",
+      "status": "completed",
+      "action": {
+        "type": "search",
+        "queries": [
+          "odontolog\u00eda universidad de antioquia cl\u00ednicas odontol\u00f3gicas Medell\u00edn atenci\u00f3n pacientes citas",
+          "odont\u00f3logo Medell\u00edn odontolog\u00eda general cl\u00ednica Medell\u00edn citas cl\u00ednica odontol\u00f3gica"
+        ],
+        "query": "odontolog\u00eda universidad de antioquia cl\u00ednicas odontol\u00f3gicas Medell\u00edn atenci\u00f3n pacientes citas",
+        "sources": [
+          {
+            "type": "url",
+            "url": "https://www.doctoralia.co/odontologo/medellin"
+          },
+          {
+            "type": "url",
+            "url": "https://programadesalud.udea.edu.co/donde-recibir-atencion/facultad-de-odontologia-udea"
+          },
+          {
+            "type": "url",
+            "url": "https://www.doctoralia.co/tratamientos-servicios/consulta-odontologia/medellin"
+          },
+          {
+            "type": "url",
+            "url": "https://static1.squarespace.com/static/66d877eafe9c701b49f72709/t/699f84d46fafa1449ef6d923/1772061908214/CARTA%2BDE%2BDESEMPE%C3%91O.pdf"
+          },
+          {
+            "type": "url",
+            "url": "https://www.doctoralia.co/tratamientos-servicios/visita-odontologia/medellin"
+          },
+          {
+            "type": "url",
+            "url": "https://www.udea.edu.co/wps/portal/udea/web/inicio/unidades-academicas/odontologia/servicios-extension/servicios-odontologicos/%21ut/p/z0/04_Sj9CPykssy0xPLMnMz0vMAfIjo8zi_QJNXQ2NnA18DII9zQwCHY1CAt39zZxcDAz0C7IdFQHVBG2e/?1dmy=&urile=wcm%3Apath%3A%2FPortalUdeA%2FasPortalUdeA%2FasHomeUdeA%2FUnidades+Acad%21c3%21a9micas%2FOdontolog%21c3%21ada%2FServicios+de+extensi%21c3%21b3n%2FServicios+Odontol%21c3%21b3gicos%2FContenido%2FasMenuLateral%2Fpreguntas%2C+frecuentes"
+          },
+          {
+            "type": "url",
+            "url": "https://www.udea.edu.co/wps/portal/udea/web/inicio/unidades-academicas/odontologia/estudiar-facultad/pregrado/odontologia/%21ut/p/z1/1ZVLc5swFIX_irPwkpFA4rUkDmODUwxO7AQ2nVtJOHR4BYTb6a-v7HbTNMHpZFiUjZDmu-fM6J65Qhl6RFkNx-IAsmhqKNU-zazPUWL6urHAt_gusHDiGffJcmNdU5eihzPguAtD96gC1rqJvcSPo_vNIr4JDZS9px6_8Xn4ffUjQDYuv0cZylpWcJR-cR1smQRrFmauRnU711w7J5pNmCUAM4A8P9Gslq18QmnbdBLKgQuYY-j_3D01lfj1P9QFBy76GTDgV4xcgVsVDPo5bnhTy6ZsDudTrljRy4EX0M1EPSthlgMbSgl8jttOHDrgzatVTB0I5dKcjCtRDyVI0UF5LutFLYGpZqqbykYuM9yu7XFg5RgvgWW4XeCEkv0eu24QY_oScAg1cYLXN4bl6kYQ_WWxCYiPEzcyY7IMDGqT38BYoC61NFWRsN-MRGygh2MhvqFd3XSVivjdPyZgddGBfNBhVH69MqeVt6eUpyadVl6fVn7S1tJbPK38R5MTXprG6rkovj4_Z56akqep9F2ix_9sTLbVbrerHGJt_a2ff_IJTcPjj-tIe3XJ0p8Ka3Pa/"
+          },
+          {
+            "type": "url",
+            "url": "https://medicosdoc.com/especialidad/odontologo/medellin"
+          },
+          {
+            "type": "url",
+            "url": "https://www.miespecialista.com/clinicas/medellin/odontoexpertos-medellin-ips"
+          },
+          {
+            "type": "url",
+            "url": "https://www.lugarlatino.com/colombia/medellin/clinica-dental/"
+          },
+          {
+            "type": "url",
+            "url": "https://www.udea.edu.co/wps/wcm/connect/udea/3a34f063-5814-4657-8d08-5f0053cfa2e3/RED%2BDE%2BURGENCIAS%2B2.pdf?CVID=m.E1b03&MOD=AJPERES"
+          },
+          {
+            "type": "url",
+            "url": "https://www.udea.edu.co/wps/portal/udea/web/inicio/unidades-academicas/odontologia/acerca-facultad/atencion-ciudadano"
+          },
+          {
+            "type": "url",
+            "url": "https://www.doctoralia.co/enfermedades/ausencia-dental/medellin"
+          },
+          {
+            "type": "url",
+            "url": "https://dentalarquitec.com/"
+          },
+          {
+            "type": "url",
+            "url": "https://www.udea.edu.co/wps/wcm/connect/udea/5321aab2-042c-4bc2-a67c-ce3c8bf9796c/Res%2B07299%2B25-05-2015%2B-%2BOdontolog%C3%ADa.pdf?CVID=o1RQnwk&MOD=AJPERES"
+          },
+          {
+            "type": "url",
+            "url": "https://www.udea.edu.co/wps/wcm/connect/udea/c5f9e91a-15a9-43da-8a46-9c5d02a63f5f/Acuerdo%2B332.pdf?CVID=nh5rwQM&MOD=AJPERES"
+          },
+          {
+            "type": "url",
+            "url": "https://static1.squarespace.com/static/66d877eafe9c701b49f72709/t/68890058094a34198259ef66/1753808984166/Medicina-GyE-1.pdf"
+          },
+          {
+            "type": "url",
+            "url": "https://www.febancolombia.com.co/src/Frontend/Files/MediaLibrary/13/directorio-salud-con-prevencion-2025.pdf"
+          },
+          {
+            "type": "url",
+            "url": "https://www.youtube.com/watch?v=hFEcY_0G1a4"
+          },
+          {
+            "type": "url",
+            "url": "https://www.reddit.com/r/medellin/comments/1kpx7tm"
+          },
+          {
+            "type": "url",
+            "url": "https://www.youtube.com/watch?v=G9jubbMD008"
+          },
+          {
+            "type": "url",
+            "url": "https://www.reddit.com/r/medellin/comments/1uqzzfh/necesito_sacarme_la_cordales_con_cirug%C3%ADa_saben/"
+          },
+          {
+            "type": "url",
+            "url": "https://www.reddit.com/r/medellin/comments/weesou"
+          },
+          {
+            "type": "url",
+            "url": "https://www.reddit.com/r/medellin/comments/1e41fez"
+          },
+          {
+            "type": "url",
+            "url": "https://es.wikipedia.org/wiki/Facultad_de_Odontolog%C3%ADa_%28Universidad_de_Antioquia%29"
+          },
+          {
+            "type": "url",
+            "url": "https://www.tropicanafm.com/2025/no-es-de-bogota-ni-medellin-ministerio-de-salud-revelo-cual-es-la-mejor-eps-de-colombia-433282.html"
+          },
+          {
+            "type": "url",
+            "url": "https://es.wikipedia.org/wiki/IPS_Universitaria"
+          },
+          {
+            "type": "url",
+            "url": "https://www.reddit.com/r/Colombia/comments/1lsdpjp"
+          },
+          {
+            "type": "url",
+            "url": "https://elpais.com/salud-y-bienestar/2026-06-30/carlos-fajardo-odontologo-hay-un-abuso-colosal-y-una-prescripcion-compulsiva-de-antibioticos.html"
+          },
+          {
+            "type": "url",
+            "url": "https://www.tropicanafm.com/2026/que-tratamientos-odontologicos-cubre-la-eps-en-2026-esto-se-sabe-sobre-ortodoncia-e-implantes-471019.html"
+          },
+          {
+            "type": "url",
+            "url": "https://elpais.com/suscripciones/profesional/guia-empresas/2026-04-15/clinica-odontologica-ahoa-la-revolucion-de-los-implantes-dentales-inmediatos.html"
+          },
+          {
+            "type": "url",
+            "url": "https://www.tropicanafm.com/2025/a-donde-ir-de-urgencias-en-medellin-si-no-tiene-eps-centros-de-salud-autorizados-452908.html"
+          },
+          {
+            "type": "url",
+            "url": "https://elpais.com/america-colombia/2025-11-05/la-universidad-de-antioquia-enfrenta-un-futuro-incierto.html"
+          },
+          {
+            "type": "url",
+            "url": "https://programadesalud.udea.edu.co/donde-recibir-atencion/facultad-de-odontologia-udea?utm_source=openai"
+          },
+          {
+            "type": "url",
+            "url": "https://www.doctoralia.co/odontologo/medellin?utm_source=openai"
+          }
+        ]
+      }
+    },
+    {
+      "id": "msg_01a577405ba9400c016b007f5352f487d1ac763f4584aee4ae",
+      "type": "message",
+      "status": "completed",
+      "content": [
+        {
+          "type": "output_text",
+          "annotations": [
+            {
+              "type": "url_citation",
+              "end_index": 454,
+              "start_index": 316,
+              "title": "Facultad de Odontolog\u00eda UdeA \u2014 Programa de Salud - Universidad de Antiquia",
+              "url": "https://programadesalud.udea.edu.co/donde-recibir-atencion/facultad-de-odontologia-udea?utm_source=openai"
+            },
+            {
+              "type": "url_citation",
+              "end_index": 892,
+              "start_index": 810,
+              "title": "Los 20 Odont\u00f3logos m\u00e1s recomendados en Medell\u00edn - Doctoralia",
+              "url": "https://www.doctoralia.co/odontologo/medellin?utm_source=openai"
+            }
+          ],
+          "logprobs": [],
+          "text": "Para empezar, te recomendar\u00eda la **Facultad de Odontolog\u00eda de la Universidad de Antioquia**, en **calle 64 # 52-59**. Ofrece odontolog\u00eda general y especializada, as\u00ed que es una buena opci\u00f3n si todav\u00eda necesitas una valoraci\u00f3n para saber qu\u00e9 tratamiento requieres. Consulta directamente por disponibilidad y tarifas. ([programadesalud.udea.edu.co](https://programadesalud.udea.edu.co/donde-recibir-atencion/facultad-de-odontologia-udea?utm_source=openai))\n\nSi prefieres un consultorio particular en El Poblado, una opci\u00f3n para considerar es la **Dra. Mar\u00eda Camila Pati\u00f1o Zuluaga**, en la Torre M\u00e9dica 2 de El Tesoro. Su perfil en Doctoralia registra opiniones de pacientes y una tarifa orientativa para la consulta; conviene confirmar ambos detalles al agendar. No puedo garantizar el resultado de su atenci\u00f3n. ([doctoralia.co](https://www.doctoralia.co/odontologo/medellin?utm_source=openai))\n\n\u00bfQu\u00e9 necesitas: limpieza y revisi\u00f3n, ortodoncia, una endodoncia o atenci\u00f3n por dolor? \u00bfEn qu\u00e9 zona de Medell\u00edn te queda mejor? Con eso puedo afinarte la recomendaci\u00f3n."
+        }
+      ],
+      "phase": "final_answer",
+      "role": "assistant"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "presence_penalty": 0.0,
+  "previous_response_id": null,
+  "prompt_cache_key": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "all_turns",
+    "effort": "low",
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "store": false,
+  "temperature": 1.0,
+  "text": {
+    "format": {
+      "type": "text"
+    },
+    "verbosity": "medium"
+  },
+  "tool_choice": "required",
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 1
+    }
+  },
+  "tools": [
+    {
+      "type": "web_search",
+      "return_token_budget": "default",
+      "search_content_types": [
+        "text"
+      ],
+      "search_context_size": "medium",
+      "user_location": {
+        "type": "approximate",
+        "city": "Medell\u00edn",
+        "country": "CO",
+        "region": "Antioquia",
+        "timezone": "America/Bogota"
+      }
+    }
+  ],
+  "top_logprobs": 0,
+  "top_p": 0.98,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 12633,
+    "input_tokens_details": {
+      "cache_write_tokens": 4338,
+      "cache_write_tokens_details": {
+        "ttl_12h_tokens": 0,
+        "ttl_30m_tokens": 4338
+      },
+      "cached_tokens": 0
+    },
+    "output_tokens": 293,
+    "output_tokens_details": {
+      "reasoning_tokens": 67
+    },
+    "total_tokens": 12926
+  },
+  "user": null,
+  "metadata": {}
+}

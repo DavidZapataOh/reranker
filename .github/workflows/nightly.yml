@@ -76,12 +76,15 @@ jobs:
           failed=$(jq -r '[.tasks[] | select((.execution.exitCode // 0) != 0) | .taskId] | join(" ")' .turbo/runs/*.json)
           echo "failed=$failed" >> "$GITHUB_OUTPUT"
           exit "$status"
-      # The sandbox bytes the parser tests replay; a run's artifact is how they are refreshed.
+      # The sandbox and OpenAI bytes the client and parser tests replay; a run's artifact is how
+      # they are refreshed.
       - if: ${{ !cancelled() }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: contract-recordings
-          path: packages/*/test/fixtures/recorded/sandbox
+          path: |
+            packages/*/test/fixtures/recorded/sandbox
+            packages/*/test/fixtures/recorded/openai
           retention-days: 3
           if-no-files-found: ignore
       - if: always() && steps.branch.outputs.branch-id != ''
