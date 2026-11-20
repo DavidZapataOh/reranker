@@ -48,6 +48,10 @@ catalog:
   "@noble/curves": 2.4.0
   # 3.1170.0 and 3.1171.0 are younger than minimumReleaseAge.
   "@aws-sdk/client-kms": 3.1169.0
+  "@aws-sdk/client-cloudtrail": 3.1169.0
+  "@aws-sdk/client-iam": 3.1169.0
+  "@aws-sdk/client-s3": 3.1169.0
+  "@aws-sdk/client-sts": 3.1169.0
   "@vercel/oidc-aws-credentials-provider": 3.3.21
   aws4fetch: 1.0.20
   server-only: 0.0.1

@@ -32,6 +32,10 @@
     "ulid": "catalog:"
   },
   "devDependencies": {
+    "@aws-sdk/client-cloudtrail": "catalog:",
+    "@aws-sdk/client-iam": "catalog:",
+    "@aws-sdk/client-s3": "catalog:",
+    "@aws-sdk/client-sts": "catalog:",
     "@noble/curves": "catalog:",
     "@reranker/testing": "workspace:*",
     "@reranker/typescript-config": "workspace:*",
