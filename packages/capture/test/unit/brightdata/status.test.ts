@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, test } from "vitest";
 import { classifyResponse } from "../../../src/brightdata/status";
 
@@ -54,6 +55,16 @@ describe("classifyResponse", () => {
       provider: "brightdata",
       providerCode: code,
     });
+  });
+
+  test("a 400 for an account Bright Data has not activated rejects and alerts", () => {
+    const body = readFileSync(
+      new URL("../../fixtures/recorded/brightdata/400-customer-not-active.bin", import.meta.url),
+    );
+    const out = classifyResponse(400, new Uint8Array(body), new Headers());
+    expect(out).toMatchObject({ kind: "error", breaker: "none", alert: "rejected" });
+    if (out.kind !== "error") throw new Error("expected an error");
+    expect(out.error).toMatchObject({ name: "ProviderRejected", providerCode: "account_inactive" });
   });
 
   test.each([

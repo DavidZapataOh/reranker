@@ -119,6 +119,9 @@ function badRequestCode(body: Uint8Array): string {
   return code === "validation_error" || code === "parse_error" ? code : "http_400";
 }
 
+// Undocumented, but what a scrape got back while the account was still awaiting activation.
+const INACTIVE_ACCOUNT = /^customer is not active/i;
+
 /**
  * The outcome of a scrape, a progress poll or a snapshot download. `http` is null when nothing
  * came back (timeout or network). `attempt` drives the 429 backoff when Bright Data sends no
@@ -143,7 +146,12 @@ export function classifyResponse(
   }
   const account = ACCOUNT.get(http);
   if (account) return rejected(account, "rejected");
-  if (http === 400) return rejected(badRequestCode(body));
+  if (http === 400) {
+    if (INACTIVE_ACCOUNT.test(new TextDecoder().decode(body).trim())) {
+      return rejected("account_inactive", "rejected");
+    }
+    return rejected(badRequestCode(body));
+  }
   if (http === 404) return rejected("not_found");
   // Anything else short of a 4xx, a 202 without a snapshot id included, is a broken answer.
   if (http >= 500 || http < 400) return unavailable(retryAfter ?? UNAVAILABLE_MS, "failure");
