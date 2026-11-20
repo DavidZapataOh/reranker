@@ -14,6 +14,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run --project unit --coverage --passWithNoTests",
     "test:contract": "vitest run --project contract",
+    "test:kms": "vitest run --project kms",
     "test:integration": "vitest run --project integration --no-file-parallelism",
     "r2:provision": "node scripts/provision-r2.ts",
     "aws:provision": "node scripts/provision-aws.ts"
