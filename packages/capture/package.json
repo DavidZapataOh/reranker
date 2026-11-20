@@ -15,7 +15,8 @@
     "test:integration": "vitest run --project integration --no-file-parallelism",
     "record:live": "tsx --conditions=react-server scripts/record-live.ts",
     "record:phrasing": "tsx --conditions=react-server scripts/record-phrasing.ts",
-    "record:language": "tsx --conditions=react-server scripts/record-language.ts"
+    "record:language": "tsx --conditions=react-server scripts/record-language.ts",
+    "analyze:language": "tsx --conditions=react-server scripts/analyze-language.ts"
   },
   "dependencies": {
     "@reranker/catalog": "workspace:*",
