@@ -2,6 +2,7 @@ import "server-only";
 
 export { ARCHETYPE_SCOPES, ARCHETYPE_SLATES, registerFor } from "./archetypes";
 export {
+  type CategoryNames,
   placesTypeArchetype,
   placesTypeLabel,
   type SeedCategory,

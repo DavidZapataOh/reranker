@@ -1,0 +1,2386 @@
+{
+  "version": "2026.11.0",
+  "language": "en",
+  "collected": "2026-11-20",
+  "source": "query-phrasing workflow, run 44792452695 (DataForSEO, US and GB markets, en)",
+  "method": "Each text names the observed phrasings it follows. 'observed': people type that form; 'adapted': the form is observed but reworded so the slot works for any noun, a person or a place, without a plural or an article that depends on it; 'unsupported': no query in the data.",
+  "register": "neutral American English",
+  "patterns": {
+    "can_recommend": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "can you recommend a lawyer in chicago",
+          "volume": 54
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "can you recommend a attorney in chicago",
+          "volume": 43
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "can you recommend a attorney in miami",
+          "volume": 17
+        }
+      ],
+      "note": "the article follows the noun ('a dentist', 'an attorney'), so 'a good' carries it"
+    },
+    "recommend_a": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "recommend a lawyer in chicago",
+          "volume": 54
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "recommend a attorney in chicago",
+          "volume": 43
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "recommend a restaurant in chicago",
+          "volume": 41
+        }
+      ],
+      "note": "the article follows the noun, so 'a good' carries it"
+    },
+    "what_best": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "what is the best restaurant in chicago",
+          "volume": 12041
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "what is the best restaurant in miami",
+          "volume": 6316
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "what is the best hotel in miami",
+          "volume": 1649
+        }
+      ]
+    },
+    "which_best": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "which is the best dental clinic in bangalore",
+          "volume": 10
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "which hair salon is best near me",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "which real estate agency is the best to work for",
+          "rank": 1
+        }
+      ]
+    },
+    "where_find": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "where can i find a restaurant in chicago",
+          "volume": 177
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "where can i find a auto repair in chicago",
+          "volume": 74
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "where can i find a lawyer in chicago",
+          "volume": 61
+        }
+      ],
+      "note": "the article follows the noun, so an adjective ('a good', 'a reputable') carries it"
+    },
+    "how_find_good": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "how to find a good barber shop",
+          "volume": 170
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "us",
+          "query": "How do I find a good chartered accountant?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "us",
+          "query": "How do you find a good plumber?"
+        }
+      ]
+    },
+    "list_options": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "us",
+          "query": "What are the top 10 clothing stores?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "us",
+          "query": "What are the top 10 plumbing companies in the USA?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "us",
+          "query": "What are the top 5 clothing brands?"
+        }
+      ],
+      "note": "a plural list needs the noun inflected ('dentists', 'agencies'), so lists ask for '{noun} options'"
+    },
+    "recommended_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "recommended hotel in new york city",
+          "volume": 12100
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "recommended hair salon",
+          "volume": 6600
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "recommended dental clinic near me",
+          "volume": 3600
+        }
+      ]
+    },
+    "kw_in": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "restaurant in chicago",
+          "volume": 69617
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "restaurant in miami",
+          "volume": 31336
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "hotel in miami",
+          "volume": 19459
+        }
+      ]
+    },
+    "kw_bare": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "restaurant chicago",
+          "volume": 69617
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "restaurant miami",
+          "volume": 31336
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "hotel miami",
+          "volume": 19459
+        }
+      ]
+    },
+    "good_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "good real estate agent near me",
+          "volume": 14800
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "good restaurant in chicago",
+          "volume": 3704
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "good dental clinic near me",
+          "volume": 3600
+        }
+      ]
+    },
+    "best_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "best restaurant in chicago",
+          "volume": 12690
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "best restaurant in miami",
+          "volume": 6595
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "best hotel in miami",
+          "volume": 2189
+        }
+      ]
+    },
+    "is_there": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "is there a hardware store near me",
+          "volume": 320
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "is there a free dental clinic near me",
+          "volume": 140
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "is there a garage clothing store near me",
+          "volume": 110
+        }
+      ]
+    },
+    "i_need": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "i need a lawyer and i have no money",
+          "rank": 3
+        }
+      ]
+    },
+    "that_clause": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "florist near me that deliver",
+          "volume": 49500
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "florist near me that delivers",
+          "volume": 49500
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "florist that deliver near me",
+          "volume": 49500
+        }
+      ]
+    },
+    "for_x": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "lawyer for car accident",
+          "volume": 246000
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "lawyer for car accidents",
+          "volume": 246000
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "dentist for kids near me",
+          "volume": 90500
+        }
+      ]
+    },
+    "top_rated": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "top rated hair salon near me",
+          "volume": 27100
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "top-rated hair salon near me",
+          "volume": 27100
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "top rated real estate agent near me",
+          "volume": 14800
+        }
+      ]
+    },
+    "top_n": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "us",
+          "query": "What are the top 10 clothing stores?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "us",
+          "query": "What are the top 10 plumbing companies in the USA?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "us",
+          "query": "What are the top 5 clothing brands?"
+        }
+      ]
+    },
+    "most_trusted": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "us",
+          "query": "What is the most trusted online clothing store?"
+        }
+      ]
+    },
+    "trusted_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "trusted online store",
+          "volume": 3650
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "gb",
+          "query": "trusted online shop",
+          "volume": 322
+        }
+      ]
+    },
+    "reputable": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "us",
+          "query": "How to find a reputable mechanic in your area?"
+        }
+      ]
+    },
+    "reviews": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "real estate agency reviews",
+          "volume": 1900
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "hotel reviews miami",
+          "volume": 60
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "hotel reviews chicago",
+          "volume": 47
+        }
+      ]
+    },
+    "reviews_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "hotel reviews miami",
+          "volume": 60
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "hotel reviews chicago",
+          "volume": 47
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "restaurant reviews miami",
+          "volume": 24
+        }
+      ]
+    },
+    "license": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "license for realtor",
+          "volume": 49500
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "real estate realtor license",
+          "volume": 49500
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "realtor estate license",
+          "volume": 49500
+        }
+      ]
+    },
+    "complaint": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "how to file a complaint against a dental office",
+          "volume": 260
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "us",
+          "query": "How to file a complaint against a lawyer in Illinois?"
+        }
+      ]
+    },
+    "near_zone": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "restaurant near me",
+          "volume": 101000000
+        },
+        {
+          "source": "google_ai_overview_question",
+          "market": "us",
+          "query": "restaurants near me",
+          "volume": 101000000
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "hotel near me",
+          "volume": 11100000
+        }
+      ],
+      "note": "'near me' is the most searched modifier; a measured question names the neighborhood instead of 'me'"
+    },
+    "close_to": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "clothing store close to me",
+          "volume": 1000000
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "clothing store closest to me",
+          "volume": 1000000
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "ihop restaurant closest to me",
+          "volume": 1000000
+        }
+      ],
+      "note": "people type 'close to me'; a measured question names the neighborhood"
+    },
+    "zona_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "rosetta bakery miami beach",
+          "volume": 135000
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "rosetta bakery miami beach fl",
+          "volume": 135000
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "rosetta bakery south beach",
+          "volume": 135000
+        }
+      ]
+    },
+    "open_today": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "what restaurant is open today",
+          "volume": 12100
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "what clothing store is open today",
+          "volume": 590
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "what barber shop is open today",
+          "volume": 480
+        }
+      ]
+    },
+    "open_today_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "what restaurant is open today",
+          "volume": 12100
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "what clothing store is open today",
+          "volume": 590
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "what barber shop is open today",
+          "volume": 480
+        }
+      ]
+    },
+    "open_now": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_ai_overview_question",
+          "market": "us",
+          "query": "restaurant near me open now",
+          "volume": 1220000
+        },
+        {
+          "source": "google_ai_overview_question",
+          "market": "us",
+          "query": "restaurants near me open now",
+          "volume": 1220000
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "open now restaurant near me",
+          "volume": 823000
+        }
+      ]
+    },
+    "emergency": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "nearest emergency dentist to me",
+          "volume": 246000
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "plumber near me emergency",
+          "volume": 165000
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "emergency plumber near me",
+          "volume": 135000
+        }
+      ]
+    },
+    "h24": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "24 hour plumber near me",
+          "volume": 74000
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "24 hour restaurant chicago",
+          "volume": 98
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "24 hour hotel chicago",
+          "volume": 50
+        }
+      ]
+    },
+    "weekend": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "dental office open on saturday",
+          "volume": 3600
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "dental office open on saturdays",
+          "volume": 3600
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "dental office open saturday",
+          "volume": 3600
+        }
+      ]
+    },
+    "walk_in": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_ai_overview_question",
+          "market": "us",
+          "query": "hair salon walk ins near me",
+          "volume": 40500
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "hair salon near me walk in",
+          "volume": 33100
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "hair salon near me walk ins",
+          "volume": 33100
+        }
+      ]
+    },
+    "same_day": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "florist delivery same day",
+          "volume": 110000
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "florist delivery same-day",
+          "volume": 110000
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "same day florist deliveries",
+          "volume": 110000
+        }
+      ]
+    },
+    "mobile": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "mobile auto mechanic near me",
+          "volume": 246000
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "mobile mechanic near me",
+          "volume": 201000
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "mechanic mobile mechanic",
+          "volume": 110000
+        }
+      ]
+    },
+    "takes_insurance": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "dental office accepts medicaid",
+          "volume": 3600
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "dental office that accepts medicaid",
+          "volume": 3600
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "dental office who accepts medicaid",
+          "volume": 3600
+        }
+      ],
+      "note": "people name their plan (Medicaid, Delta Dental); a template for any market says 'insurance'"
+    },
+    "in_network": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "dental office in network with delta dental",
+          "rank": 3
+        }
+      ]
+    },
+    "no_insurance": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "how much is a cleaning at the dentist without insurance",
+          "volume": 6600
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "how much is dentist cleaning without insurance",
+          "volume": 6600
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "no insurance dental clinic",
+          "volume": 6600
+        }
+      ]
+    },
+    "payment_plan": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "dental clinic with payment plans",
+          "volume": 6600
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "car repair that takes payments",
+          "rank": 3
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "plumber that offers financing",
+          "rank": 3
+        }
+      ]
+    },
+    "new_patients": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "dental clinic near me accepting new patients",
+          "rank": 5
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "best dentist near me accepting new patients",
+          "rank": 8
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "dentist near me accepting new patients",
+          "rank": 8
+        }
+      ]
+    },
+    "affordable": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "where to buy affordable clothes online",
+          "volume": 1900
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "buy affordable clothes online",
+          "volume": 210
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "affordable spa in chicago",
+          "volume": 70
+        }
+      ]
+    },
+    "cheap": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "cheap hotel and motel near me",
+          "volume": 135000
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "cheap hotel motel near me",
+          "volume": 135000
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "cheap hotel or motel near me",
+          "volume": 135000
+        }
+      ]
+    },
+    "cheapest": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "which private school is the cheapest",
+          "rank": 3
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "which hardware store is cheapest",
+          "rank": 4
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "which clothing store is the cheapest",
+          "rank": 5
+        }
+      ]
+    },
+    "best_prices": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "which hardware store has the best prices",
+          "rank": 2
+        }
+      ]
+    },
+    "how_much": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "how much does it cost for daycare",
+          "volume": 2400
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "how much should daycare cost",
+          "volume": 2400
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "how much do daycare cost",
+          "volume": 1900
+        }
+      ]
+    },
+    "free_consult": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "plumber near me free estimate",
+          "rank": 4
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "attorney near me free consultation",
+          "rank": 7
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "car repair near me free estimate",
+          "rank": 8
+        }
+      ]
+    },
+    "lowest_commission": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "low commission real estate agency",
+          "volume": 2900
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "which real estate agent has lowest commission",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "which realtor charges the lowest commission",
+          "rank": 1
+        }
+      ]
+    },
+    "specializes": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "daycare that specializes in autism near me",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "hair salon that specializes in curly hair",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "lawyer that specializes in real estate",
+          "rank": 1
+        }
+      ],
+      "note": "people name the specialty (curly hair, trusts, autism); a template shared by every category of the archetype names none"
+    },
+    "kids": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "dentist for pediatric near me",
+          "volume": 201000
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "dentist pediatric near me",
+          "volume": 201000
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "pediatric dentist close to me",
+          "volume": 201000
+        }
+      ]
+    },
+    "small_business": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "best accountant for small business near me",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "best online store platforms for small business",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "accountant near me for small business",
+          "rank": 2
+        }
+      ]
+    },
+    "online_booking": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "hair salon near me with online booking",
+          "rank": 4
+        }
+      ]
+    },
+    "birthday": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "bakery near me for birthday cake",
+          "rank": 3
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "best bakery for birthday cakes near me",
+          "rank": 4
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "which restaurant gives free food on birthday",
+          "rank": 4
+        }
+      ]
+    },
+    "allows_dogs": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "motel that allows dogs near me",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "hotel that allows dogs",
+          "rank": 2
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "motel that accepts dogs",
+          "rank": 2
+        }
+      ]
+    },
+    "sell_house": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "real estate agent for selling a house",
+          "volume": 9900
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "best realtor near me to sell my home",
+          "rank": 3
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "best realtor to sell my house",
+          "rank": 5
+        }
+      ]
+    },
+    "biggest": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "us",
+          "query": "What is the biggest hardware store in the USA?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "us",
+          "query": "What is the biggest online store?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "us",
+          "query": "Where is the largest hardware store?"
+        }
+      ],
+      "note": "people ask for the biggest store; the template asks for the biggest selection"
+    },
+    "delivers": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "florist near me that deliver",
+          "volume": 49500
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "florist near me that delivers",
+          "volume": 49500
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "florist near me that delivery",
+          "volume": 49500
+        }
+      ]
+    },
+    "online_tutor": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "which online tutor is the best",
+          "rank": 8
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "us",
+          "query": "What is the best free online tutoring website?"
+        }
+      ],
+      "note": "observed for tutors; other schools are asked about online classes the same way"
+    },
+    "academic": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "private school rankings nashville",
+          "volume": 0
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "us",
+          "query": "Are Chicago public schools any good?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "us",
+          "query": "What does it mean if a school is a blue ribbon school?"
+        }
+      ],
+      "note": "people ask for rankings and whether schools are any good; the template asks for academic ratings"
+    },
+    "tuition": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "st john's private school tuition",
+          "volume": 0
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "private school near me tuition",
+          "rank": 9
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "us",
+          "query": "How much does daycare cost in Florida per month?"
+        }
+      ]
+    },
+    "infants": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "daycare and infants",
+          "volume": 18100
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "daycare for infant",
+          "volume": 18100
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "daycare for infants",
+          "volume": 18100
+        }
+      ]
+    },
+    "family": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "dental family dentist",
+          "volume": 90500
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "family dentist",
+          "volume": 90500
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "monroe family dental clinic",
+          "volume": 3600
+        }
+      ]
+    },
+    "spanish_speaking": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "spanish speaking lawyer chicago",
+          "volume": 3
+        }
+      ]
+    },
+    "per_night": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "us",
+          "query": "Is $300 a night a lot for a hotel?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "us",
+          "query": "Is staying at a hotel for $400 per night expensive?"
+        }
+      ]
+    },
+    "lunch": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "best restaurant for lunch in tulsa",
+          "rank": 2
+        }
+      ]
+    },
+    "breakfast": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "breakfast breakfast restaurant near me",
+          "volume": 823000
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "breakfast food restaurant near me",
+          "volume": 823000
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "breakfast restaurant near me",
+          "volume": 823000
+        }
+      ]
+    },
+    "first_home": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "best realtor for first time home buyer",
+          "rank": 4
+        }
+      ]
+    },
+    "in_person": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "tutor near me in person",
+          "rank": 2
+        }
+      ]
+    },
+    "paypal": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "which online store accept paypal",
+          "rank": 3
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "online store that accept paypal",
+          "rank": 7
+        }
+      ]
+    },
+    "which_is_best": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "which is the best dental clinic in bangalore",
+          "volume": 10
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "which is the best online shopping site for clothes",
+          "rank": 4
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "which is the best online clothing store",
+          "rank": 5
+        }
+      ]
+    },
+    "best_online_store": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "best online store",
+          "volume": 62085
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "best place to buy clothes online",
+          "volume": 590
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "best place to buy second hand clothes online",
+          "volume": 210
+        }
+      ]
+    },
+    "buy_online": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "buy clothes online",
+          "volume": 20429
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "where can i buy cheap clothes online",
+          "volume": 1900
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "where can i buy clothes cheap online",
+          "volume": 1900
+        }
+      ]
+    },
+    "online_country": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "buy clothes online uk",
+          "rank": 4
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "where to buy clothes online usa",
+          "rank": 8
+        }
+      ]
+    },
+    "which_online": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "which online store delivers the fastest",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "which online store accept paze",
+          "rank": 2
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "us",
+          "query": "which online store accept paypal",
+          "rank": 3
+        }
+      ]
+    },
+    "fastest": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "florist same day delivery",
+          "volume": 22200
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "florist with same day delivery",
+          "volume": 22200
+        },
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "same day delivery florist",
+          "volume": 22200
+        }
+      ]
+    },
+    "online_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "online store",
+          "volume": 159998
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "best online store",
+          "volume": 62085
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "us",
+          "query": "online store best buy",
+          "volume": 11818
+        }
+      ]
+    },
+    "legit": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "us",
+          "query": "is james cress florist legit",
+          "volume": 210
+        },
+        {
+          "source": "google_volume",
+          "market": "gb",
+          "query": "is online home shop legit",
+          "volume": 1000
+        },
+        {
+          "source": "google_volume",
+          "market": "gb",
+          "query": "is the online home shop legit",
+          "volume": 140
+        }
+      ]
+    },
+    "any_good": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "us",
+          "query": "Are Chicago public schools any good?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "us",
+          "query": "Is Superprof good as a tutor?"
+        }
+      ]
+    }
+  },
+  "templates": {
+    "health/local/discovery": [
+      ["can_recommend"],
+      ["where_find"],
+      ["how_find_good"],
+      ["recommend_a", "list_options"],
+      ["good_kw", "list_options"],
+      ["kw_in"],
+      ["recommended_kw"],
+      ["good_kw", "family", "new_patients"],
+      ["i_need", "spanish_speaking"]
+    ],
+    "health/local/specialty": [
+      ["specializes", "kids"],
+      ["what_best", "for_x", "kids"],
+      ["which_best", "specializes"],
+      ["recommend_a", "list_options", "for_x", "kids"],
+      ["list_options", "specializes"],
+      ["kids", "kw_in"],
+      ["for_x", "kids", "kw_bare"],
+      ["that_clause", "specializes", "kids"],
+      ["i_need", "kids"]
+    ],
+    "health/local/zone": [
+      ["can_recommend", "near_zone"],
+      ["what_best", "near_zone"],
+      ["is_there", "near_zone"],
+      ["recommend_a", "list_options", "near_zone"],
+      ["good_kw", "list_options", "close_to"],
+      ["near_zone", "kw_bare"],
+      ["zona_kw", "kw_bare"],
+      ["close_to", "new_patients"],
+      ["i_need", "near_zone"]
+    ],
+    "health/local/urgency": [
+      ["open_today"],
+      ["is_there", "emergency", "open_now"],
+      ["where_find", "h24"],
+      ["recommend_a", "list_options", "open_now"],
+      ["list_options", "emergency"],
+      ["emergency", "kw_bare"],
+      ["h24", "kw_bare"],
+      ["that_clause", "walk_in"],
+      ["i_need", "emergency", "weekend"]
+    ],
+    "health/local/insurance_or_payment": [
+      ["which_best", "takes_insurance"],
+      ["where_find", "that_clause", "takes_insurance"],
+      ["which_best", "payment_plan"],
+      ["recommend_a", "list_options", "takes_insurance"],
+      ["list_options", "no_insurance"],
+      ["that_clause", "takes_insurance"],
+      ["payment_plan", "kw_bare"],
+      ["that_clause", "in_network"],
+      ["i_need", "takes_insurance"]
+    ],
+    "health/local/trust": [
+      ["most_trusted"],
+      ["where_find", "reputable"],
+      ["which_best", "reviews"],
+      ["recommend_a", "list_options", "trusted_kw"],
+      ["list_options", "reputable", "reviews"],
+      ["trusted_kw", "kw_in"],
+      ["reviews_kw"],
+      ["license", "reviews"],
+      ["i_need", "reputable", "complaint"]
+    ],
+    "beauty_wellness/local/discovery": [
+      ["can_recommend"],
+      ["where_find"],
+      ["how_find_good"],
+      ["recommend_a", "list_options"],
+      ["good_kw", "list_options"],
+      ["kw_in"],
+      ["recommended_kw"],
+      ["good_kw", "that_clause", "walk_in"],
+      ["online_booking"]
+    ],
+    "beauty_wellness/local/specialty": [
+      ["which_best", "specializes"],
+      ["what_best", "specializes"],
+      ["where_find", "that_clause", "specializes"],
+      ["recommend_a", "list_options", "specializes"],
+      ["good_kw", "list_options", "specializes"],
+      ["specializes", "kw_in"],
+      ["specializes", "kw_bare"],
+      ["that_clause", "specializes"],
+      ["i_need", "for_x"]
+    ],
+    "beauty_wellness/local/zone": [
+      ["can_recommend", "near_zone"],
+      ["what_best", "near_zone"],
+      ["is_there", "near_zone"],
+      ["recommend_a", "list_options", "near_zone"],
+      ["good_kw", "list_options", "close_to"],
+      ["near_zone", "kw_bare"],
+      ["zona_kw", "kw_bare"],
+      ["close_to", "that_clause", "walk_in"],
+      ["near_zone", "online_booking"]
+    ],
+    "beauty_wellness/local/price": [
+      ["which_best", "best_prices"],
+      ["where_find", "affordable"],
+      ["cheapest"],
+      ["recommend_a", "list_options", "affordable"],
+      ["list_options", "cheap"],
+      ["affordable", "kw_in"],
+      ["cheap", "kw_in"],
+      ["best_prices", "reviews"],
+      ["i_need", "affordable", "walk_in"]
+    ],
+    "beauty_wellness/local/trust": [
+      ["most_trusted"],
+      ["where_find", "reputable"],
+      ["which_best", "reviews"],
+      ["recommend_a", "list_options", "trusted_kw"],
+      ["list_options", "reputable", "reviews"],
+      ["trusted_kw", "kw_in"],
+      ["reviews_kw"],
+      ["license", "reviews"],
+      ["i_need", "reputable", "complaint"]
+    ],
+    "beauty_wellness/local/ranking": [
+      ["what_best"],
+      ["which_best"],
+      ["top_rated"],
+      ["top_n", "list_options"],
+      ["best_kw", "list_options"],
+      ["best_kw"],
+      ["top_rated", "kw_bare"],
+      ["best_kw", "top_rated"],
+      ["i_need", "top_rated"]
+    ],
+    "lodging/local/discovery": [
+      ["can_recommend"],
+      ["where_find"],
+      ["how_find_good"],
+      ["recommend_a", "list_options"],
+      ["good_kw", "list_options"],
+      ["kw_in"],
+      ["recommended_kw"],
+      ["good_kw", "that_clause", "allows_dogs"],
+      ["i_need", "per_night"]
+    ],
+    "lodging/local/specialty": [
+      ["which_best", "allows_dogs"],
+      ["what_best", "that_clause", "allows_dogs"],
+      ["where_find", "that_clause", "allows_dogs"],
+      ["recommend_a", "list_options", "allows_dogs"],
+      ["list_options", "allows_dogs"],
+      ["that_clause", "allows_dogs", "kw_bare"],
+      ["allows_dogs", "kw_in"],
+      ["that_clause", "allows_dogs"],
+      ["i_need", "allows_dogs"]
+    ],
+    "lodging/local/zone": [
+      ["can_recommend", "near_zone"],
+      ["what_best", "near_zone"],
+      ["is_there", "near_zone"],
+      ["recommend_a", "list_options", "near_zone"],
+      ["good_kw", "list_options", "close_to"],
+      ["near_zone", "kw_bare"],
+      ["zona_kw", "kw_bare"],
+      ["close_to", "that_clause", "allows_dogs"],
+      ["i_need", "near_zone", "per_night"]
+    ],
+    "lodging/local/price": [
+      ["which_best", "best_prices", "per_night"],
+      ["where_find", "affordable"],
+      ["cheapest"],
+      ["recommend_a", "list_options", "affordable"],
+      ["list_options", "cheap"],
+      ["affordable", "kw_in"],
+      ["cheap", "kw_in"],
+      ["best_prices", "reviews"],
+      ["i_need", "affordable", "per_night"]
+    ],
+    "lodging/local/trust": [
+      ["most_trusted"],
+      ["where_find", "reputable"],
+      ["which_best", "reviews"],
+      ["recommend_a", "list_options", "trusted_kw"],
+      ["list_options", "reputable", "reviews"],
+      ["trusted_kw", "kw_in"],
+      ["reviews_kw"],
+      ["reputable", "reviews"],
+      ["i_need", "reputable", "complaint"]
+    ],
+    "lodging/local/ranking": [
+      ["what_best"],
+      ["which_best"],
+      ["top_rated"],
+      ["top_n", "list_options"],
+      ["best_kw", "list_options"],
+      ["best_kw"],
+      ["top_rated", "kw_bare"],
+      ["best_kw", "top_rated"],
+      ["i_need", "top_rated"]
+    ],
+    "food/local/discovery": [
+      ["can_recommend"],
+      ["where_find"],
+      ["how_find_good"],
+      ["recommend_a", "list_options"],
+      ["good_kw", "list_options"],
+      ["kw_in"],
+      ["recommended_kw"],
+      ["good_kw", "lunch"],
+      ["i_need", "breakfast"]
+    ],
+    "food/local/specialty": [
+      ["which_best", "birthday"],
+      ["what_best", "for_x", "birthday"],
+      ["where_find", "birthday"],
+      ["recommend_a", "list_options", "for_x", "birthday"],
+      ["list_options", "birthday"],
+      ["for_x", "birthday", "kw_bare"],
+      ["best_kw", "birthday"],
+      ["for_x", "birthday"],
+      ["i_need", "birthday"]
+    ],
+    "food/local/zone": [
+      ["can_recommend", "near_zone"],
+      ["what_best", "near_zone"],
+      ["is_there", "near_zone"],
+      ["recommend_a", "list_options", "near_zone"],
+      ["good_kw", "list_options", "close_to"],
+      ["near_zone", "kw_bare"],
+      ["zona_kw", "kw_bare"],
+      ["close_to", "breakfast"],
+      ["i_need", "near_zone"]
+    ],
+    "food/local/price": [
+      ["which_best", "best_prices"],
+      ["where_find", "affordable"],
+      ["cheapest"],
+      ["recommend_a", "list_options", "affordable"],
+      ["list_options", "cheap"],
+      ["affordable", "kw_in"],
+      ["cheap", "kw_in"],
+      ["best_prices", "reviews"],
+      ["i_need", "affordable", "lunch"]
+    ],
+    "food/local/trust": [
+      ["most_trusted"],
+      ["where_find", "reputable"],
+      ["which_best", "reviews"],
+      ["recommend_a", "list_options", "trusted_kw"],
+      ["list_options", "reputable", "reviews"],
+      ["trusted_kw", "kw_in"],
+      ["reviews_kw"],
+      ["reputable", "reviews"],
+      ["i_need", "reputable", "complaint"]
+    ],
+    "food/local/ranking": [
+      ["what_best"],
+      ["which_best"],
+      ["top_rated"],
+      ["top_n", "list_options"],
+      ["best_kw", "list_options"],
+      ["best_kw"],
+      ["top_rated", "kw_bare"],
+      ["best_kw", "top_rated"],
+      ["i_need", "top_rated"]
+    ],
+    "home_auto_services/local/discovery": [
+      ["can_recommend"],
+      ["where_find"],
+      ["how_find_good"],
+      ["recommend_a", "list_options"],
+      ["good_kw", "list_options"],
+      ["kw_in"],
+      ["recommended_kw"],
+      ["good_kw", "that_clause", "mobile"],
+      ["i_need", "weekend"]
+    ],
+    "home_auto_services/local/specialty": [
+      ["which_best", "specializes"],
+      ["what_best", "specializes"],
+      ["where_find", "that_clause", "specializes"],
+      ["recommend_a", "list_options", "specializes"],
+      ["good_kw", "list_options", "specializes"],
+      ["specializes", "kw_in"],
+      ["specializes", "kw_bare"],
+      ["that_clause", "specializes"],
+      ["i_need", "mobile"]
+    ],
+    "home_auto_services/local/zone": [
+      ["can_recommend", "near_zone"],
+      ["what_best", "near_zone"],
+      ["is_there", "near_zone"],
+      ["recommend_a", "list_options", "near_zone"],
+      ["good_kw", "list_options", "close_to"],
+      ["near_zone", "kw_bare"],
+      ["zona_kw", "kw_bare"],
+      ["close_to", "that_clause", "mobile"],
+      ["i_need", "near_zone"]
+    ],
+    "home_auto_services/local/price": [
+      ["which_best", "best_prices"],
+      ["where_find", "affordable"],
+      ["cheapest"],
+      ["recommend_a", "list_options", "affordable"],
+      ["list_options", "cheap"],
+      ["affordable", "kw_in"],
+      ["cheap", "kw_in"],
+      ["that_clause", "free_consult"],
+      ["i_need", "affordable", "payment_plan"]
+    ],
+    "home_auto_services/local/urgency": [
+      ["open_today"],
+      ["is_there", "emergency", "open_now"],
+      ["where_find", "h24"],
+      ["recommend_a", "list_options", "open_now"],
+      ["list_options", "emergency"],
+      ["emergency", "kw_bare"],
+      ["h24", "kw_bare"],
+      ["that_clause", "mobile"],
+      ["i_need", "emergency", "weekend"]
+    ],
+    "home_auto_services/local/trust": [
+      ["most_trusted"],
+      ["where_find", "reputable"],
+      ["which_best", "reviews"],
+      ["recommend_a", "list_options", "trusted_kw"],
+      ["list_options", "reputable", "reviews"],
+      ["trusted_kw", "kw_in"],
+      ["reviews_kw"],
+      ["license", "reviews"],
+      ["i_need", "reputable", "complaint"]
+    ],
+    "local_retail/local/discovery": [
+      ["can_recommend"],
+      ["where_find"],
+      ["how_find_good"],
+      ["recommend_a", "list_options"],
+      ["good_kw", "list_options"],
+      ["kw_in"],
+      ["recommended_kw"],
+      ["good_kw", "delivers"],
+      ["i_need", "online_kw"]
+    ],
+    "local_retail/local/specialty": [
+      ["which_best", "biggest"],
+      ["biggest"],
+      ["where_find", "biggest"],
+      ["recommend_a", "list_options", "biggest"],
+      ["list_options", "biggest"],
+      ["biggest", "kw_in"],
+      ["biggest", "kw_bare"],
+      ["biggest", "reviews"],
+      ["i_need", "biggest"]
+    ],
+    "local_retail/local/price": [
+      ["which_best", "best_prices"],
+      ["where_find", "affordable"],
+      ["cheapest"],
+      ["recommend_a", "list_options", "affordable"],
+      ["list_options", "cheap"],
+      ["affordable", "kw_in"],
+      ["cheap", "kw_in"],
+      ["best_prices", "reviews"],
+      ["i_need", "affordable", "delivers"]
+    ],
+    "local_retail/local/urgency": [
+      ["open_today"],
+      ["is_there", "open_now"],
+      ["which_best", "weekend"],
+      ["recommend_a", "list_options", "open_now"],
+      ["list_options", "open_today_kw"],
+      ["open_now", "kw_bare"],
+      ["open_today_kw", "kw_bare"],
+      ["delivers", "same_day"],
+      ["i_need", "weekend"]
+    ],
+    "local_retail/local/trust": [
+      ["most_trusted"],
+      ["where_find", "reputable"],
+      ["which_best", "reviews"],
+      ["recommend_a", "list_options", "trusted_kw"],
+      ["list_options", "reputable", "reviews"],
+      ["trusted_kw", "kw_in"],
+      ["reviews_kw"],
+      ["reputable", "reviews"],
+      ["i_need", "reputable", "complaint"]
+    ],
+    "local_retail/local/ranking": [
+      ["what_best"],
+      ["which_best"],
+      ["top_rated"],
+      ["top_n", "list_options"],
+      ["best_kw", "list_options"],
+      ["best_kw"],
+      ["top_rated", "kw_bare"],
+      ["best_kw", "top_rated"],
+      ["i_need", "top_rated"]
+    ],
+    "local_retail/national/discovery": [
+      ["can_recommend", "online_kw"],
+      ["where_find", "online_kw", "delivers"],
+      ["what_best", "best_online_store"],
+      ["recommend_a", "list_options", "online_kw"],
+      ["good_kw", "list_options", "online_kw"],
+      ["online_kw", "online_country"],
+      ["best_online_store", "online_kw"],
+      ["good_kw", "online_kw", "delivers"],
+      ["i_need", "paypal"]
+    ],
+    "local_retail/national/specialty": [
+      ["which_online", "biggest"],
+      ["biggest", "online_kw"],
+      ["where_find", "biggest"],
+      ["recommend_a", "list_options", "biggest"],
+      ["list_options", "biggest"],
+      ["biggest", "online_kw"],
+      ["biggest", "online_country"],
+      ["biggest", "reviews"],
+      ["i_need", "biggest"]
+    ],
+    "local_retail/national/price": [
+      ["which_online", "best_prices"],
+      ["where_find", "affordable"],
+      ["which_online", "cheapest"],
+      ["recommend_a", "list_options", "affordable"],
+      ["list_options", "cheap"],
+      ["affordable", "online_kw"],
+      ["cheap", "online_country"],
+      ["best_prices"],
+      ["i_need", "affordable", "reviews"]
+    ],
+    "local_retail/national/urgency": [
+      ["which_online", "fastest"],
+      ["is_there", "same_day"],
+      ["where_find", "fastest"],
+      ["recommend_a", "list_options", "fastest"],
+      ["list_options", "same_day"],
+      ["same_day", "online_kw"],
+      ["fastest", "online_country"],
+      ["fastest", "reviews"],
+      ["i_need", "fastest"]
+    ],
+    "local_retail/national/trust": [
+      ["most_trusted", "online_kw"],
+      ["where_find", "reputable"],
+      ["which_online", "reviews"],
+      ["recommend_a", "list_options", "trusted_kw"],
+      ["list_options", "reputable", "reviews"],
+      ["trusted_kw", "online_kw"],
+      ["reviews", "online_country"],
+      ["reputable", "paypal"],
+      ["i_need", "reputable", "complaint"]
+    ],
+    "local_retail/national/ranking": [
+      ["which_online", "which_best"],
+      ["top_rated", "online_kw"],
+      ["which_is_best", "online_kw"],
+      ["top_n", "list_options"],
+      ["best_online_store", "list_options"],
+      ["best_online_store", "online_country"],
+      ["top_rated", "online_kw"],
+      ["best_online_store", "top_rated"],
+      ["i_need", "top_rated", "online_kw"]
+    ],
+    "professional_services/local/discovery": [
+      ["can_recommend"],
+      ["where_find"],
+      ["how_find_good"],
+      ["recommend_a", "list_options"],
+      ["good_kw", "list_options"],
+      ["kw_in"],
+      ["recommended_kw"],
+      ["good_kw", "spanish_speaking"],
+      ["i_need", "small_business"]
+    ],
+    "professional_services/local/specialty": [
+      ["which_best", "specializes"],
+      ["what_best", "specializes"],
+      ["where_find", "that_clause", "specializes"],
+      ["recommend_a", "list_options", "specializes"],
+      ["good_kw", "list_options", "specializes"],
+      ["specializes", "kw_in"],
+      ["specializes", "kw_bare"],
+      ["that_clause", "specializes", "small_business"],
+      ["i_need", "that_clause"]
+    ],
+    "professional_services/local/price": [
+      ["which_best", "best_prices"],
+      ["where_find", "affordable"],
+      ["cheapest"],
+      ["recommend_a", "list_options", "affordable"],
+      ["list_options", "cheap"],
+      ["affordable", "kw_in"],
+      ["cheap", "kw_in"],
+      ["that_clause", "free_consult"],
+      ["how_much"]
+    ],
+    "professional_services/local/urgency": [
+      ["open_today"],
+      ["is_there", "emergency", "open_now"],
+      ["where_find", "h24"],
+      ["recommend_a", "list_options", "open_now"],
+      ["list_options", "emergency"],
+      ["emergency", "kw_bare"],
+      ["h24", "kw_bare"],
+      ["that_clause"],
+      ["i_need", "emergency"]
+    ],
+    "professional_services/local/trust": [
+      ["most_trusted"],
+      ["where_find", "reputable"],
+      ["which_best", "reviews"],
+      ["recommend_a", "list_options", "trusted_kw"],
+      ["list_options", "reputable", "reviews"],
+      ["trusted_kw", "kw_in"],
+      ["reviews_kw"],
+      ["license", "reviews"],
+      ["i_need", "reputable", "complaint"]
+    ],
+    "professional_services/local/ranking": [
+      ["what_best"],
+      ["which_best"],
+      ["top_rated"],
+      ["top_n", "list_options"],
+      ["best_kw", "list_options"],
+      ["best_kw"],
+      ["top_rated", "kw_bare"],
+      ["best_kw", "top_rated"],
+      ["i_need", "top_rated"]
+    ],
+    "real_estate/local/discovery": [
+      ["can_recommend"],
+      ["where_find"],
+      ["how_find_good"],
+      ["recommend_a", "list_options"],
+      ["good_kw", "list_options"],
+      ["kw_in"],
+      ["recommended_kw"],
+      ["good_kw", "first_home"],
+      ["i_need"]
+    ],
+    "real_estate/local/specialty": [
+      ["which_best", "sell_house"],
+      ["what_best", "sell_house"],
+      ["where_find", "sell_house"],
+      ["recommend_a", "list_options", "sell_house"],
+      ["list_options", "sell_house"],
+      ["sell_house", "kw_bare"],
+      ["best_kw", "sell_house"],
+      ["that_clause", "sell_house"],
+      ["i_need", "sell_house"]
+    ],
+    "real_estate/local/zone": [
+      ["can_recommend", "near_zone"],
+      ["what_best", "near_zone"],
+      ["is_there", "near_zone"],
+      ["recommend_a", "list_options", "near_zone"],
+      ["good_kw", "list_options", "close_to"],
+      ["near_zone", "kw_bare"],
+      ["zona_kw", "kw_bare"],
+      ["close_to", "first_home"],
+      ["i_need", "near_zone"]
+    ],
+    "real_estate/local/price": [
+      ["lowest_commission"],
+      ["where_find", "lowest_commission"],
+      ["cheapest"],
+      ["recommend_a", "list_options", "lowest_commission"],
+      ["list_options", "affordable"],
+      ["lowest_commission", "kw_bare"],
+      ["affordable", "kw_in"],
+      ["lowest_commission", "reviews"],
+      ["how_much", "lowest_commission"]
+    ],
+    "real_estate/local/trust": [
+      ["most_trusted"],
+      ["where_find", "reputable"],
+      ["which_best", "reviews"],
+      ["recommend_a", "list_options", "trusted_kw"],
+      ["list_options", "reputable", "reviews"],
+      ["trusted_kw", "kw_in"],
+      ["reviews_kw"],
+      ["license", "reviews"],
+      ["i_need", "reputable", "complaint"]
+    ],
+    "real_estate/local/ranking": [
+      ["what_best"],
+      ["which_best"],
+      ["top_rated"],
+      ["top_n", "list_options"],
+      ["best_kw", "list_options"],
+      ["best_kw"],
+      ["top_rated", "kw_bare"],
+      ["best_kw", "top_rated"],
+      ["i_need", "best_kw", "sell_house"]
+    ],
+    "education/local/discovery": [
+      ["can_recommend"],
+      ["where_find"],
+      ["how_find_good"],
+      ["recommend_a", "list_options"],
+      ["good_kw", "list_options"],
+      ["kw_in"],
+      ["recommended_kw"],
+      ["good_kw", "infants"],
+      ["i_need", "kids"]
+    ],
+    "education/local/specialty": [
+      ["which_best", "online_tutor"],
+      ["what_best", "online_tutor"],
+      ["where_find", "that_clause", "online_tutor"],
+      ["recommend_a", "list_options", "online_tutor"],
+      ["list_options", "online_tutor"],
+      ["online_tutor", "kw_in"],
+      ["online_tutor", "kw_bare"],
+      ["that_clause", "online_tutor", "in_person"],
+      ["i_need", "online_tutor", "kids"]
+    ],
+    "education/local/zone": [
+      ["can_recommend", "near_zone"],
+      ["what_best", "near_zone"],
+      ["is_there", "near_zone"],
+      ["recommend_a", "list_options", "near_zone"],
+      ["good_kw", "list_options", "close_to"],
+      ["near_zone", "kw_bare"],
+      ["zona_kw", "kw_bare"],
+      ["close_to", "kids"],
+      ["i_need", "near_zone"]
+    ],
+    "education/local/price": [
+      ["which_best", "affordable", "tuition"],
+      ["where_find", "affordable"],
+      ["cheapest"],
+      ["recommend_a", "list_options", "affordable"],
+      ["list_options", "cheap"],
+      ["affordable", "kw_in"],
+      ["cheap", "kw_in"],
+      ["tuition", "reviews"],
+      ["how_much", "tuition"]
+    ],
+    "education/local/ranking": [
+      ["which_best", "academic"],
+      ["what_best", "academic"],
+      ["which_best"],
+      ["top_n", "list_options"],
+      ["best_kw", "list_options", "academic"],
+      ["best_kw"],
+      ["academic", "kw_bare"],
+      ["top_rated", "academic"],
+      ["i_need", "best_kw", "kids"]
+    ],
+    "education/local/trust": [
+      ["most_trusted"],
+      ["where_find", "reputable"],
+      ["which_best", "reviews"],
+      ["recommend_a", "list_options", "trusted_kw"],
+      ["list_options", "reputable", "reviews"],
+      ["trusted_kw", "kw_in"],
+      ["reviews_kw"],
+      ["license", "reviews"],
+      ["i_need", "reputable", "kids"]
+    ],
+    "online_national/national/discovery": [
+      ["what_best", "best_online_store"],
+      ["can_recommend", "best_online_store"],
+      ["buy_online"],
+      ["recommend_a", "best_online_store"],
+      ["good_kw", "list_options", "best_online_store"],
+      ["buy_online", "online_country"],
+      ["best_online_store"],
+      ["good_kw", "paypal"],
+      ["i_need", "buy_online"]
+    ],
+    "online_national/national/specialty": [
+      ["which_online", "biggest"],
+      ["biggest", "best_online_store"],
+      ["buy_online", "biggest"],
+      ["recommend_a", "biggest"],
+      ["list_options", "biggest"],
+      ["biggest", "best_online_store"],
+      ["buy_online", "biggest", "online_country"],
+      ["biggest", "reviews"],
+      ["i_need", "biggest"]
+    ],
+    "online_national/national/price": [
+      ["buy_online", "cheap"],
+      ["which_online", "best_prices"],
+      ["which_online", "cheapest"],
+      ["recommend_a", "affordable"],
+      ["list_options", "cheap"],
+      ["buy_online", "cheap", "online_country"],
+      ["affordable", "buy_online"],
+      ["best_prices"],
+      ["i_need", "affordable", "reviews"]
+    ],
+    "online_national/national/trust": [
+      ["most_trusted", "best_online_store"],
+      ["buy_online", "reputable"],
+      ["which_online", "reviews"],
+      ["recommend_a", "trusted_kw"],
+      ["list_options", "reputable", "reviews"],
+      ["trusted_kw", "best_online_store"],
+      ["buy_online", "reviews", "online_country"],
+      ["reputable", "paypal"],
+      ["i_need", "reputable", "complaint"]
+    ],
+    "online_national/national/urgency": [
+      ["which_online", "fastest"],
+      ["is_there", "same_day"],
+      ["buy_online", "fastest"],
+      ["recommend_a", "fastest"],
+      ["list_options", "same_day"],
+      ["buy_online", "same_day"],
+      ["buy_online", "fastest", "online_country"],
+      ["fastest", "reviews"],
+      ["i_need", "fastest"]
+    ],
+    "online_national/national/ranking": [
+      ["which_online", "which_best"],
+      ["top_rated", "best_online_store"],
+      ["which_is_best", "best_online_store"],
+      ["top_n", "list_options"],
+      ["best_online_store", "list_options"],
+      ["best_online_store", "online_country"],
+      ["top_rated", "best_online_store"],
+      ["best_online_store", "top_rated"],
+      ["i_need", "best_online_store"]
+    ]
+  },
+  "brand": {
+    "brand.trust": ["legit"],
+    "brand.opinion": ["any_good"]
+  }
+}
