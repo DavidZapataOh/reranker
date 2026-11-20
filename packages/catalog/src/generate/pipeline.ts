@@ -10,7 +10,8 @@ import type {
   QuestionScope,
   RegisterProfile,
 } from "@reranker/schema/measurement";
-import { agree } from "../grammar";
+import { agree, type GenderedLanguage, type GenderedNoun, type Noun, nounText } from "../grammar";
+import { requireNounGender } from "../language";
 import { type FallbackIntent, fallbackTemplates, templatesVersion } from "../templates";
 import { GENERATOR_CONFIG, generatorConfigHash } from "./config";
 import { type PoolReport, selectPool } from "./filter";
@@ -43,15 +44,26 @@ export interface FilterReport extends PoolReport {
   fallback: FallbackReason | null;
 }
 
-export interface GenerateIntentSetInput {
-  /** Its label and noun are in `language`, as people asking in it name the business. */
+interface GenerateIntentSetBase {
+  /** Its label and noun are in the set's language, as people asking in it name the business. */
   category: BusinessCategory;
+  /** Other names the guards accept for the category's noun, in the set's language. */
+  synonyms?: string[];
   scope: QuestionScope;
   registerProfile: RegisterProfile;
-  language: MeasurementLanguage;
   deadlineAt: number;
   spend: SpendContext;
 }
+
+/**
+ * Where templates agree with the noun (pt, fr, de, it) the noun and its gender are required; in
+ * the other languages the category's bare noun is used unless one is given.
+ */
+export type GenerateIntentSetInput = GenerateIntentSetBase &
+  (
+    | { language: Exclude<MeasurementLanguage, GenderedLanguage>; noun?: Noun }
+    | { language: GenderedLanguage; noun: GenderedNoun }
+  );
 
 export interface GeneratedIntentSet {
   set: IntentSetDraft;
@@ -186,13 +198,15 @@ function untilAborted<T>(promise: Promise<T>, signal: AbortSignal): Promise<T> {
  * embedding call and a judge call per intent filter the rest, and the set is kept when at least
  * five intents come out complete. Anything short of that, a kill switch, a language without
  * reviewed prompts or no time left yields the language's own templates; it only throws for a
- * language that has no templates at all.
+ * language that has no templates, or a gendered language given a noun without its gender.
  */
 export async function generateIntentSet(
   input: GenerateIntentSetInput,
 ): Promise<GeneratedIntentSet> {
   const { category, scope, registerProfile, language, deadlineAt } = input;
   const slate = fallbackTemplates(category.archetype, scope, language);
+  // Checked at runtime too: callers outside TypeScript's reach must not get a masculine default.
+  const gendered = requireNounGender(input.noun ?? category.noun, language);
   const fallback = (reason: FallbackReason, report = emptyReport(reason)): GeneratedIntentSet => ({
     set: templateIntentSet(category, scope, registerProfile, language),
     report: { ...report, fallback: reason },
@@ -206,16 +220,22 @@ export async function generateIntentSet(
   if (generationEnd - Date.now() < MIN_GENERATION_MS) return fallback("no_time");
   if (!(await isEnabled("intent-generation", { kind: "system" }))) return fallback("disabled");
 
-  const noun = category.noun;
-  const drafts: DraftIntent[] = slate.map((t) => ({
-    category,
-    scope,
-    kind: t.kind,
-    slug: t.slug,
-    canonicalText: agree(t.canonical, noun, language).replaceAll("{sustantivo}", noun),
-    language,
-    registerProfile,
-  }));
+  const noun = nounText(gendered);
+  const synonyms = input.synonyms ?? [];
+  // requireNounGender holds the noun to its language, which the mapped DraftIntent type cannot see.
+  const drafts = slate.map(
+    (t) =>
+      ({
+        category: { ...category, noun },
+        noun: gendered,
+        scope,
+        kind: t.kind,
+        slug: t.slug,
+        canonicalText: agree(t.canonical, gendered, language).replaceAll("{sustantivo}", noun),
+        language,
+        registerProfile,
+      }) as DraftIntent,
+  );
   const generation = {
     spend: input.spend,
     signal: AbortSignal.timeout(Math.max(0, generationEnd - Date.now())),
@@ -248,7 +268,7 @@ export async function generateIntentSet(
     kind,
     language,
     noun,
-    synonyms: [],
+    synonyms,
     // The set is shared by every country of its profile, so it names none: {país} stands in.
     countryName: "",
     otherPlaceNames: NO_NAMES,

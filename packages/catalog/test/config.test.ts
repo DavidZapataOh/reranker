@@ -28,7 +28,7 @@ test("generator config hash is stable and changes with any field", () => {
 });
 
 test("every language with prompts has its own templates and guard lexicon", () => {
-  expect(GENERATION_LANGUAGES).toEqual(expect.arrayContaining(["es", "en"]));
+  expect(GENERATION_LANGUAGES).toEqual(expect.arrayContaining(["es", "en", "pt"]));
   for (const language of GENERATION_LANGUAGES) {
     expect(TEMPLATE_LANGUAGES).toContain(language);
     expect(Object.keys(lexicons)).toContain(language);

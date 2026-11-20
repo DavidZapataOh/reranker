@@ -2,9 +2,15 @@ import { type CountryCode, getCountry, mainLanguage } from "@reranker/i18n/count
 import { AppError } from "@reranker/schema";
 import { type GeoTarget, MeasurementLanguage } from "@reranker/schema/measurement";
 import { localPlaceName, spokenPlaceName } from "./geo/resolve";
+import { isGendered, type Noun } from "./grammar";
 
 /** What a language lacks for a question to be asked in it. */
-export type LanguageGap = "unsupported" | "no_templates" | "no_place_names" | "no_prompts";
+export type LanguageGap =
+  | "unsupported"
+  | "no_templates"
+  | "no_place_names"
+  | "no_prompts"
+  | "no_noun_gender";
 
 /** A measurement that cannot be asked in a language yet: refused rather than asked in another. */
 export class MeasurementLanguageError extends AppError {
@@ -62,4 +68,19 @@ export function placeName(geo: GeoTarget, language: MeasurementLanguage): string
     "no_place_names",
     `no ${language} name for ${geo.key}`,
   );
+}
+
+/**
+ * Templates in a gendered language agree with their noun, so a set in one needs the noun's
+ * gender; without it the set is refused, never written as if the noun were masculine.
+ */
+export function requireNounGender(noun: Noun, language: MeasurementLanguage): Noun {
+  if (isGendered(language) && typeof noun === "string") {
+    throw new MeasurementLanguageError(
+      language,
+      "no_noun_gender",
+      `the ${language} noun "${noun}" has no gender`,
+    );
+  }
+  return noun;
 }

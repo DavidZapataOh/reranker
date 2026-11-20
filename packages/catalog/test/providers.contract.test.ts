@@ -29,6 +29,7 @@ const bakery: DraftIntent = {
   slug: "discovery",
   canonicalText: "¿Qué panadería me recomiendas en {lugar}?",
   language: "es",
+  noun: "panadería",
   registerProfile: "co",
 };
 
