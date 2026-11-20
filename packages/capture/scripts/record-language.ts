@@ -152,7 +152,13 @@ type Call = {
   run: (c: Clients) => Promise<unknown>;
 };
 
-function slot(engine: Engine, city: City, prompt: string, slotIndex: number): FrozenSlot {
+function slot(
+  engine: Engine,
+  city: City,
+  lang: Lang,
+  prompt: string,
+  slotIndex: number,
+): FrozenSlot {
   const { geoKey } = CITIES[city];
   const geoDeclared = geoForEngine(engine, getGeo(geoKey), "local", { provider: "dataforseo" });
   if (!geoDeclared) throw new Error(`${engine} is not offered in ${geoKey}`);
@@ -166,6 +172,7 @@ function slot(engine: Engine, city: City, prompt: string, slotIndex: number): Fr
     geoDeclared,
     runIndex: 0,
     promptText: prompt,
+    language: lang,
     measurementId: MEASUREMENT,
     slotIndex,
     slotId: slotId(MEASUREMENT, slotIndex),
@@ -181,9 +188,11 @@ function answerCalls(): Call[] {
       for (const [question, text] of Object.entries(QUESTIONS)) {
         for (const lang of LANGS) {
           for (const engine of ENGINE_IDS) {
-            // The production request, asked in another language than the country's default.
-            const request = buildRequest(slot(engine, city, text[lang](city), index++), "live");
-            request.language_code = lang;
+            // The production request, asked in either language from the same place.
+            const request = buildRequest(
+              slot(engine, city, lang, text[lang](city), index++),
+              "live",
+            );
             if (engine === "gemini" && "location_coordinate" in request) {
               request.location_code = undefined;
               request.location_coordinate = `${CITIES[city].center},${GEMINI_RADIUS_MM}`;

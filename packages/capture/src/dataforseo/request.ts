@@ -1,5 +1,5 @@
 import { getGeo } from "@reranker/catalog";
-import { getCountry } from "@reranker/i18n/countries";
+import { mainLanguage } from "@reranker/i18n/countries";
 import { InvalidInputError } from "@reranker/jobs/errors";
 import {
   AiOptimizationChatGptLlmScraperLiveAdvancedRequestInfo,
@@ -42,8 +42,9 @@ export function buildRequest(slot: FrozenSlot, mode: DataForSeoMode): DataForSeo
   const task = {
     keyword: keyword(slot.promptText),
     ...geoFields(slot.engine, target, scope),
-    // Prompts are written in the country's locale.
-    language_code: new Intl.Locale(getCountry(target.country).defaultLocale).language,
+    // The language the prompt is written in; slots frozen before it was recorded were asked in
+    // the country's main language.
+    language_code: slot.language ?? mainLanguage(target.country),
     tag: slot.slotId,
   };
   const live = mode === "live";
