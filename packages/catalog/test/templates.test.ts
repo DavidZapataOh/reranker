@@ -1,17 +1,21 @@
 import {
   CategoryArchetype,
   type IntentKind,
+  MeasurementLanguage,
   ParaphraseFormat,
   type QuestionScope,
 } from "@reranker/schema/measurement";
 import { describe, expect, test } from "vitest";
 import evidence from "../data/templates/2026.11.0.evidence.json" with { type: "json" };
 import { ARCHETYPE_SCOPES, ARCHETYPE_SLATES, registerFor } from "../src/archetypes";
+import { MeasurementLanguageError } from "../src/language";
 import {
-  BRAND_TEMPLATES,
+  brandTemplates,
   canonicalTemplate,
   fallbackTemplates,
   placeholderShape,
+  TEMPLATE_LANGUAGES,
+  templatesVersion,
 } from "../src/templates";
 
 // The audit trail of the templates: which observed query phrasings each text follows.
@@ -25,7 +29,7 @@ const entries = CategoryArchetype.options.flatMap((archetype) =>
 );
 
 function textsOf(archetype: CategoryArchetype, scope: QuestionScope) {
-  return fallbackTemplates(archetype, scope).flatMap((i) => [
+  return fallbackTemplates(archetype, scope, "es").flatMap((i) => [
     { kind: i.kind, text: i.canonical },
     ...i.paraphrases.map((p) => ({ kind: i.kind, text: p.text })),
   ]);
@@ -55,10 +59,11 @@ describe("placeholderShape", () => {
 });
 
 describe("fallback templates", () => {
-  test.each(entries)(
-    "$archetype/$scope covers its slate and passes the guards",
-    ({ archetype, scope }) => {
-      const t = fallbackTemplates(archetype, scope);
+  // Every language's templates, as each lands.
+  test.each(TEMPLATE_LANGUAGES.flatMap((language) => entries.map((e) => ({ ...e, language }))))(
+    "$language $archetype/$scope covers its slate and passes the guards",
+    ({ archetype, scope, language }) => {
+      const t = fallbackTemplates(archetype, scope, language);
       expect(t.map((i) => i.kind)).toEqual([...ARCHETYPE_SLATES[archetype]]);
       expect(new Set(t.map((i) => i.slug)).size).toBe(t.length);
       for (const i of t) {
@@ -86,8 +91,8 @@ describe("fallback templates", () => {
   });
 
   test("a scope the archetype is never asked in is a programming error", () => {
-    expect(() => fallbackTemplates("food", "national")).toThrow();
-    expect(() => fallbackTemplates("online_national", "local")).toThrow();
+    expect(() => fallbackTemplates("food", "national", "es")).toThrow();
+    expect(() => fallbackTemplates("online_national", "local", "es")).toThrow();
   });
 
   test("templates contain no Colombian regionalisms in the neutral register", () => {
@@ -119,7 +124,7 @@ describe("fallback templates", () => {
   test("every text names the observed phrasings it follows", () => {
     const declared = new Set(Object.keys(EVIDENCE.patterns));
     for (const { archetype, scope } of entries) {
-      for (const i of fallbackTemplates(archetype, scope)) {
+      for (const i of fallbackTemplates(archetype, scope, "es")) {
         const keys = EVIDENCE.templates[`${archetype}/${scope}/${i.kind}`];
         expect(keys, `${archetype}/${scope}/${i.kind}`).toHaveLength(1 + i.paraphrases.length);
         for (const k of (keys ?? []).flat()) expect(declared).toContain(k);
@@ -166,32 +171,61 @@ describe("fallback templates", () => {
 describe("canonicalTemplate", () => {
   test("the archetype canonical is the one of its fallback templates", () => {
     for (const { archetype, scope } of entries) {
-      for (const i of fallbackTemplates(archetype, scope)) {
-        expect(canonicalTemplate(archetype, i.kind, scope)).toBe(i.canonical);
+      for (const i of fallbackTemplates(archetype, scope, "es")) {
+        expect(canonicalTemplate(archetype, i.kind, scope, "es")).toBe(i.canonical);
       }
     }
   });
 
   test("canonical questions from the spec", () => {
-    expect(canonicalTemplate("food", "discovery", "local")).toBe(
+    expect(canonicalTemplate("food", "discovery", "local", "es")).toBe(
       "¿Qué {sustantivo} me recomiendas en {lugar}?",
     );
-    expect(canonicalTemplate("online_national", "discovery", "national")).toBe(
+    expect(canonicalTemplate("online_national", "discovery", "national", "es")).toBe(
       "¿Cuál es la mejor tienda online de {sustantivo} en {país}?",
     );
-    expect(canonicalTemplate("health", "discovery", "local")).toBe(
+    expect(canonicalTemplate("health", "discovery", "local", "es")).toBe(
       "¿Qué {sustantivo} me recomiendas en {lugar}?",
     );
   });
 
   test("a kind outside the slate or brand is a programming error", () => {
-    expect(() => canonicalTemplate("food", "insurance_or_payment", "local")).toThrow();
-    expect(() => canonicalTemplate("food", "brand", "local")).toThrow();
+    expect(() => canonicalTemplate("food", "insurance_or_payment", "local", "es")).toThrow();
+    expect(() => canonicalTemplate("food", "brand", "local", "es")).toThrow();
   });
 });
 
+describe("languages without templates", () => {
+  test("Spanish is written; the rest fail closed until theirs land", () => {
+    expect(TEMPLATE_LANGUAGES).toContain("es");
+    expect(templatesVersion("es")).toBe("2026.11.0");
+  });
+
+  test.each(MeasurementLanguage.options.filter((l) => !TEMPLATE_LANGUAGES.includes(l)))(
+    "%s refuses with a typed error instead of asking in another language",
+    (language) => {
+      for (const call of [
+        () => fallbackTemplates("health", "local", language),
+        () => canonicalTemplate("health", "discovery", "local", language),
+        () => templatesVersion(language),
+        () => brandTemplates(language),
+      ]) {
+        const error = (() => {
+          try {
+            call();
+          } catch (e) {
+            return e;
+          }
+        })();
+        expect(error).toBeInstanceOf(MeasurementLanguageError);
+        expect(error).toMatchObject({ language, gap: "no_templates", code: "validation_failed" });
+      }
+    },
+  );
+});
+
 test("brand templates stay outside the score and name the business, never a person", () => {
-  expect(BRAND_TEMPLATES).toEqual({
+  expect(brandTemplates("es")).toEqual({
     "brand.trust": "¿{business} en {lugar} es confiable?",
     "brand.opinion": "¿Qué opinas de {business}?",
   });

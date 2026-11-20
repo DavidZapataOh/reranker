@@ -1,36 +1,51 @@
-import type { IntentSet, Paraphrase, Persona } from "@reranker/schema/measurement";
+import type {
+  CategoryArchetype,
+  IntentSet,
+  MeasurementLanguage,
+  Paraphrase,
+  Persona,
+  QuestionScope,
+} from "@reranker/schema/measurement";
 import { contentHash, intentSetId } from "../../src/hash";
 import { fallbackTemplates } from "../../src/templates";
 
 const PERSONAS = ["parent", "senior", "student", "worker", "newcomer", "athlete"];
 
+type SetShape = {
+  archetype: CategoryArchetype;
+  scope: QuestionScope;
+  category: "dental_clinic" | "online_store";
+  // Labels the Spanish templates as another language: the sampler only reads the label.
+  language: MeasurementLanguage;
+};
+
 /**
- * A dental clinic set shaped like the seed: every template intent with its canonical as p00,
- * the first five in the free report and six personas, so each intent pools 9 × 7 = 63 variants.
+ * A set shaped like the seed: every template intent with its canonical as p00, the first five in
+ * the free report and six personas, so each intent pools 9 × 7 = 63 variants.
  */
-export function dentalSet(): IntentSet {
-  const templates = fallbackTemplates("health", "local");
-  const hash = contentHash(templates);
+export function templateSet({ archetype, scope, category, language }: SetShape): IntentSet {
+  const templates = fallbackTemplates(archetype, scope, "es");
+  const hash = contentHash({ templates, language });
   const id = intentSetId(hash);
   const intents = templates.map((t, index) => ({
-    intentId: `dental_clinic.${t.slug}` as const,
+    intentId: `${category}.${t.slug}` as const,
     intentSetId: id,
-    categoryKey: "dental_clinic" as const,
-    scope: "local" as const,
+    categoryKey: category,
+    scope,
     kind: t.kind,
     slug: t.slug,
     labelKey: null,
     canonicalText: t.canonical,
-    canonicalParaphraseId: `dental_clinic.${t.slug}.p00`,
+    canonicalParaphraseId: `${category}.${t.slug}.p00`,
     demandWeight: 1,
     freeReport: index < 5,
-    language: "es" as const,
+    language,
     registerProfile: "co" as const,
   }));
   const paraphrases: Paraphrase[] = templates.flatMap((t) =>
     [{ text: t.canonical, format: "open_question" as const }, ...t.paraphrases].map((p, i) => ({
-      paraphraseId: `dental_clinic.${t.slug}.p${String(i).padStart(2, "0")}`,
-      intentId: `dental_clinic.${t.slug}` as const,
+      paraphraseId: `${category}.${t.slug}.p${String(i).padStart(2, "0")}`,
+      intentId: `${category}.${t.slug}` as const,
       text: p.text,
       format: p.format,
       generator: "template" as const,
@@ -38,8 +53,8 @@ export function dentalSet(): IntentSet {
     })),
   );
   const personas: Persona[] = PERSONAS.map((p) => ({
-    personaId: `dental_clinic.${p}`,
-    categoryKey: "dental_clinic",
+    personaId: `${category}.${p}`,
+    categoryKey: category,
     preamble: `Pregunto como ${p}.`,
   }));
   return {
@@ -47,8 +62,8 @@ export function dentalSet(): IntentSet {
       id,
       kind: "template",
       version: "2026.11.0",
-      categoryKey: "dental_clinic",
-      scope: "local",
+      categoryKey: category,
+      scope,
       registerProfile: "co",
       contentHash: hash,
       merkleRoot: hash,
@@ -60,4 +75,8 @@ export function dentalSet(): IntentSet {
     paraphrases,
     personas,
   };
+}
+
+export function dentalSet(language: MeasurementLanguage = "es"): IntentSet {
+  return templateSet({ archetype: "health", scope: "local", category: "dental_clinic", language });
 }

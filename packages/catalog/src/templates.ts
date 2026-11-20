@@ -2,11 +2,13 @@ import { AppError, z } from "@reranker/schema";
 import {
   CategoryArchetype,
   IntentKind,
+  MeasurementLanguage,
   ParaphraseFormat,
   QuestionScope,
 } from "@reranker/schema/measurement";
-import data from "../data/templates/2026.11.0.json" with { type: "json" };
+import es from "../data/templates/2026.11.0.json" with { type: "json" };
 import { ARCHETYPE_SCOPES, ARCHETYPE_SLATES } from "./archetypes";
+import { MeasurementLanguageError } from "./language";
 
 export type FallbackIntent = {
   kind: IntentKind;
@@ -23,23 +25,50 @@ const Intent = z.object({
 });
 
 const Templates = z.object({
-  version: z.literal("2026.11.0"),
+  version: z.string().regex(/^\d{4}\.(?:0[1-9]|1[0-2])\.(?:0|[1-9]\d*)$/),
   archetypes: z.record(
     CategoryArchetype,
     z.partialRecord(QuestionScope, z.array(Intent).length(6)),
   ),
 });
+type Templates = z.infer<typeof Templates>;
 
-const TEMPLATES = Templates.parse(data);
+// One file per language, each written from how people asking in it phrase their questions, never
+// translated. Placeholder names are the same in every language.
+const TEMPLATES: Partial<Record<MeasurementLanguage, Templates>> = {
+  es: Templates.parse(es),
+};
 
-export const TEMPLATES_VERSION = TEMPLATES.version;
+/** The languages questions can be asked in today. */
+export const TEMPLATE_LANGUAGES = MeasurementLanguage.options.filter((l) => l in TEMPLATES);
+
+function templatesFor(language: MeasurementLanguage): Templates {
+  const templates = TEMPLATES[language];
+  if (!templates) {
+    throw new MeasurementLanguageError(language, "no_templates", `no ${language} templates`);
+  }
+  return templates;
+}
+
+export function templatesVersion(language: MeasurementLanguage): string {
+  return templatesFor(language).version;
+}
 
 // Brand questions are measured apart and never enter the score.
-export const BRAND_TEMPLATES = Object.freeze({
-  "brand.trust": "¿{business} en {lugar} es confiable?",
-  "brand.opinion": "¿Qué opinas de {business}?",
-});
+const BRAND: Partial<Record<MeasurementLanguage, Readonly<Record<string, string>>>> = {
+  es: Object.freeze({
+    "brand.trust": "¿{business} en {lugar} es confiable?",
+    "brand.opinion": "¿Qué opinas de {business}?",
+  }),
+};
 
+export function brandTemplates(language: MeasurementLanguage): Readonly<Record<string, string>> {
+  const brand = BRAND[language];
+  if (!brand) {
+    throw new MeasurementLanguageError(language, "no_templates", `no ${language} brand templates`);
+  }
+  return brand;
+}
 export type PlaceholderShape = "ok" | "place_count" | "wrong_scope" | "unknown_placeholder";
 
 const KNOWN = new Set(["sustantivo", "lugar", "zona", "país"]);
@@ -64,8 +93,9 @@ export function placeholderShape(text: string, scope: QuestionScope): Placeholde
 export function fallbackTemplates(
   archetype: CategoryArchetype,
   scope: QuestionScope,
+  language: MeasurementLanguage,
 ): FallbackIntent[] {
-  const intents = TEMPLATES.archetypes[archetype][scope];
+  const intents = templatesFor(language).archetypes[archetype][scope];
   if (!intents || !ARCHETYPE_SCOPES[archetype].includes(scope)) {
     throw new AppError("internal", {
       detail: `no ${scope} templates for the ${archetype} archetype`,
@@ -78,8 +108,9 @@ export function canonicalTemplate(
   archetype: CategoryArchetype,
   kind: IntentKind,
   scope: QuestionScope,
+  language: MeasurementLanguage,
 ): string {
-  const intent = TEMPLATES.archetypes[archetype][scope]?.find((i) => i.kind === kind);
+  const intent = templatesFor(language).archetypes[archetype][scope]?.find((i) => i.kind === kind);
   if (!intent || !ARCHETYPE_SLATES[archetype].includes(kind)) {
     throw new AppError("internal", { detail: `${kind} is not in the ${archetype}/${scope} slate` });
   }
