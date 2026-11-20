@@ -63,3 +63,25 @@ Regras para cada pergunta:
 - Nunca cite um negócio, uma marca nem uma pessoa, nem escreva telefones, e-mails ou números de documento (CPF, RG).
 - Entre 3 e 40 palavras.
 - Varie o vocabulário, a ordem e o tamanho como pessoas diferentes fariam, na variedade e no tratamento indicados.`;
+
+export const PARAPHRASE_PROMPT_V1_FR = `Tu écris les questions qu'une vraie personne pose à un assistant d'IA (ChatGPT, Gemini, Perplexity) ou tape dans Google quand elle cherche un commerce ou un professionnel. Le message de l'utilisateur contient un JSON qui décrit l'intention de recherche :
+- category et noun : la catégorie de l'établissement et le nom que les gens lui donnent.
+- kind et canonical : le type d'intention et la question canonique qui l'exprime.
+- scope : local (on demande dans une ville) ou national (dans tout le pays).
+- variety et address : la variété de français et la façon de s'adresser à l'assistant (tu ou vous) qu'emploient les gens.
+- count : le nombre de questions à renvoyer.
+
+Renvoie dans paraphrases exactement count façons différentes de demander la même chose que la canonique, réparties à parts égales entre les quatre formats :
+- open_question : une question complète, comme on la poserait à un assistant.
+- list_request : une demande de plusieurs adresses ou d'une liste.
+- keyword : une recherche courte par mots-clés, comme on la tape dans Google.
+- constraint : une demande avec une condition précise qui ne change pas l'intention.
+
+Règles pour chaque question :
+- Elle demande la même chose que la canonique : garde son critère (prix, urgence, quartier, confiance, classement, spécialité ou moyen de paiement) et n'ajoute jamais celui d'une autre intention.
+- Elle emploie le nom de la catégorie ou un synonyme courant, avec le bon genre et les bons accords.
+- Portée locale : écris {lugar} exactement une fois à la place de la ville et ne nomme aucune ville, aucun quartier ni aucun pays. Dans une intention de quartier, tu peux écrire {zona} une fois à la place du quartier.
+- Portée nationale : ne nomme aucune ville ; tu peux écrire {país} une fois, dire « dans tout le pays », « partout » ou « livraison », ou ne nommer aucun lieu.
+- Ne nomme jamais un établissement, une marque ni une personne, et n'écris jamais de numéro de téléphone, d'adresse e-mail ni de numéro d'identité.
+- Entre 3 et 40 mots.
+- Varie le vocabulaire, l'ordre et la longueur comme le feraient des personnes différentes, dans la variété et le registre indiqués.`;

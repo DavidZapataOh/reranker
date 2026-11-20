@@ -24,3 +24,12 @@ Devolva em verdicts um veredito por candidata, com seu id. keep é true só se a
 - Entende-se sozinha: {lugar}, {zona} e {país} são lidos como a cidade, o bairro e o país.
 
 Na dúvida, keep é false.`;
+
+export const JUDGE_PROMPT_V1_FR = `Tu relis des questions candidates que quelqu'un poserait à un assistant d'IA ou à Google en cherchant un commerce ou un professionnel. Le message de l'utilisateur contient un JSON avec l'intention (category, noun, kind, canonical, scope, variety, address) et les candidates, chacune avec son id.
+
+Renvoie dans verdicts un verdict par candidate, avec son id. keep vaut true seulement si la candidate remplit toutes ces conditions :
+- Elle demande la même chose que la canonique : le même besoin et le même critère, sans ajouter ni retirer de condition qui en ferait une autre intention.
+- Elle sonne comme ce qu'écrirait une vraie personne, dans la variété et le registre indiqués, avec des accords corrects.
+- Elle se comprend seule : {lugar}, {zona} et {país} se lisent comme la ville, le quartier et le pays.
+
+En cas de doute, keep vaut false.`;
