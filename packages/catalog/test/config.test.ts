@@ -1,5 +1,6 @@
 import { cost } from "@reranker/schema";
 import { expect, test } from "vitest";
+import lexicons from "../data/guards/lexicons.json" with { type: "json" };
 import {
   costOf,
   estimateOf,
@@ -7,7 +8,8 @@ import {
   type GeneratorConfig,
   generatorConfigHash,
 } from "../src/generate/config";
-import { jcs, sha256Hex } from "../src/hash";
+import { GENERATION_LANGUAGES, promptsFor } from "../src/generate/prompts";
+import { jcs, promptSha256, sha256Hex } from "../src/hash";
 import { TEMPLATE_LANGUAGES, templatesVersion } from "../src/templates";
 
 const hashOf = (config: GeneratorConfig) => sha256Hex(jcs(config));
@@ -18,8 +20,23 @@ test("generator config hash is stable and changes with any field", () => {
   expect(hashOf({ ...GENERATOR_CONFIG, dedupe: 0.91 } as unknown as GeneratorConfig)).not.toBe(
     generatorConfigHash,
   );
-  const prompts = { ...GENERATOR_CONFIG.prompts, judge: sha256Hex("otro juez") };
-  expect(hashOf({ ...GENERATOR_CONFIG, prompts })).not.toBe(generatorConfigHash);
+  for (const language of GENERATION_LANGUAGES) {
+    const own = { ...GENERATOR_CONFIG.prompts[language], judge: sha256Hex("another judge") };
+    const prompts = { ...GENERATOR_CONFIG.prompts, [language]: own };
+    expect(hashOf({ ...GENERATOR_CONFIG, prompts })).not.toBe(generatorConfigHash);
+  }
+});
+
+test("every language with prompts has its own templates and guard lexicon", () => {
+  expect(GENERATION_LANGUAGES).toEqual(expect.arrayContaining(["es", "en"]));
+  for (const language of GENERATION_LANGUAGES) {
+    expect(TEMPLATE_LANGUAGES).toContain(language);
+    expect(Object.keys(lexicons)).toContain(language);
+    expect(GENERATOR_CONFIG.prompts[language].paraphrase).toBe(
+      promptSha256(promptsFor(language).paraphrase),
+    );
+  }
+  expect(Object.keys(GENERATOR_CONFIG.prompts).sort()).toEqual([...GENERATION_LANGUAGES].sort());
 });
 
 test("the config pins every language's templates, so a new set in any language changes the hash", () => {

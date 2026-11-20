@@ -9,7 +9,6 @@ import {
 import { z } from "@reranker/schema";
 import {
   type BusinessCategory,
-  type Intent,
   type IntentKind,
   ParaphraseFormat,
   type QuestionScope,
@@ -20,16 +19,11 @@ import { zodTextFormat } from "openai/helpers/zod";
 import type { Response } from "openai/resources/responses/responses";
 import { GENERATOR_CONFIG, type TokenUsage } from "./config";
 import { catalogEnv } from "./env";
-import { JUDGE_PROMPT_V1 } from "./prompts/judge.v1";
-import { PARAPHRASE_PROMPT_V1 } from "./prompts/paraphrase.v1";
-import { PERSONA_PROMPT_V1 } from "./prompts/persona.v1";
+import type { Candidate } from "./guards";
+import { type GenerationLanguage, promptsFor } from "./prompts";
 import { BilledFailure, type CallContext, paidCall } from "./spend";
 
-/**
- * The measurement languages with reviewed generation prompts; intents in any other language are
- * asked from their templates, which come from that language's own search data.
- */
-export type GenerationLanguage = Extract<Intent["language"], "es">;
+export type { GenerationLanguage } from "./prompts";
 
 export interface DraftIntent {
   category: BusinessCategory;
@@ -41,26 +35,9 @@ export interface DraftIntent {
   registerProfile: RegisterProfile;
 }
 
-export interface Candidate {
-  text: string;
-  format: ParaphraseFormat;
-  generator: "openai" | "gemini" | "template";
-}
-
-type Prompts = Record<"paraphrase" | "persona" | "judge", string>;
-
-// Keyed by language so a language cannot reach the models without its own prompts.
-const PROMPTS: Readonly<Record<GenerationLanguage, Prompts>> = {
-  es: { paraphrase: PARAPHRASE_PROMPT_V1, persona: PERSONA_PROMPT_V1, judge: JUDGE_PROMPT_V1 },
-};
-
-const VARIETY: Readonly<Record<RegisterProfile, string>> = {
-  co: "español de Colombia",
-  neutral: "español neutro, natural en cualquier país hispanohablante",
-};
-
 const MAX_OUTPUT_TOKENS = { openai: 2048, gemini: 4096, judge: 4096 } as const;
-// Spanish averages over three characters per token; three keeps the reservation above real use.
+// Spanish averages over three characters per token and English about four; three keeps the
+// reservation above real use.
 const CHARS_PER_TOKEN = 3;
 const DEFAULT_RETRY_AFTER_MS = 1000;
 
@@ -260,15 +237,18 @@ const Verdicts = z.object({
   verdicts: z.array(z.object({ id: z.number().int(), keep: z.boolean() })),
 });
 
+// The category's label and noun come in the intent's language: the caller names them as people
+// asking in it do, never translated.
 function intentPayload(intent: DraftIntent) {
+  const { variety, address } = promptsFor(intent.language);
   return {
     category: intent.category.label,
     noun: intent.category.noun,
     kind: intent.kind,
     canonical: intent.canonicalText,
     scope: intent.scope,
-    variety: VARIETY[intent.registerProfile],
-    address: intent.category.register === "tu" ? "tú" : "usted",
+    variety: variety[intent.registerProfile],
+    ...(address && { address: address[intent.category.register] }),
   };
 }
 
@@ -281,7 +261,7 @@ export async function generateParaphrases(
   req: { intent: DraftIntent; register: RegisterProfile; withPersonas: boolean },
   ctx: CallContext,
 ): Promise<{ paraphrases: Candidate[]; personas: string[] }> {
-  const prompts = PROMPTS[req.intent.language];
+  const prompts = promptsFor(req.intent.language);
   const payload = {
     ...intentPayload({ ...req.intent, registerProfile: req.register }),
     count: GENERATOR_CONFIG.perCall,
@@ -354,11 +334,12 @@ export async function judge(
   candidates: Candidate[],
   ctx: CallContext,
 ): Promise<boolean[]> {
+  const prompts = promptsFor(intent.language);
   if (candidates.length === 0) return [];
   const call = {
     schema: Verdicts,
     name: "verdicts",
-    system: PROMPTS[intent.language].judge,
+    system: prompts.judge,
     user: JSON.stringify({
       ...intentPayload(intent),
       candidates: candidates.map((c, id) => ({ id, text: c.text })),
