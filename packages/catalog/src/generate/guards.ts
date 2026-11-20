@@ -8,6 +8,7 @@ import lexicons from "../../data/guards/lexicons.json" with { type: "json" };
 import { normalizePlaceName } from "../geo/normalize";
 import { AGREEMENT } from "../grammar";
 import { placeholderShape } from "../templates";
+import { hasNounList, isCommonNoun } from "./nouns";
 
 export type GuardName =
   | "placeholder"
@@ -26,18 +27,21 @@ export interface Candidate {
 // Qualifiers are phrases that tie a question to an intent kind: a kind that does not list one
 // drifts into another intent by using it. Reviews rank as much as they reassure, so both kinds
 // list them; "mejores"/"best" are left out because people use them to ask for any recommendation.
-// `capitalized` holds words a language writes in capitals mid-sentence that are never a name.
+// `capitalized` holds words a language writes in capitals mid-sentence that are never a name;
+// `businessMarkers` hold the legal forms that only follow a business's name ("GmbH").
 const GuardLanguage = z.enum(["es", "en", "pt", "fr", "de", "it"]);
 export type GuardLanguage = z.infer<typeof GuardLanguage>;
 
 const Lexicon = z.object({
   qualifiers: z.partialRecord(IntentKind, z.array(z.string().min(1)).min(1)),
   capitalized: z.array(z.string().min(1)),
+  businessMarkers: z.array(z.string().min(1)).default([]),
 });
 
 type FoldedLexicon = {
   qualifiers: Array<[kind: string, phrases: string[]]>;
   capitalized: string[];
+  businessMarkers: string[];
 };
 
 // Folded once, so the data can be written as people spell it.
@@ -48,6 +52,7 @@ function fold(lexicon: z.infer<typeof Lexicon>): FoldedLexicon {
       phrases.map(normalizePlaceName),
     ]),
     capitalized: lexicon.capitalized.map(normalizePlaceName),
+    businessMarkers: lexicon.businessMarkers.map(normalizePlaceName),
   };
 }
 
@@ -84,6 +89,7 @@ const LONG_NUMBER = /\d(?:[\s.-]?\d){6,}/u;
 const SENTENCE_END = /[.?!:;]$/u;
 const OPENING = /^[¿¡"'«“(]+/u;
 const LEADING_UPPER = /^\p{Lu}/u;
+const TRAILING_PUNCTUATION = /[^\p{L}\p{N}-]+$/u;
 
 /** Placeholders cut the text into segments, so no phrase is matched across "{lugar}". */
 function segments(text: string): string[] {
@@ -133,18 +139,16 @@ function mentionsAny(segs: readonly string[], raw: ReadonlySet<string>): boolean
 }
 
 // "clínicas odontológicas" names a "clínica odontológica": each noun word, in order, may take a
-// plural ending.
-function mentionsNoun(segs: readonly string[], phrase: string): boolean {
+// plural ending. Where nouns compound, a word that holds the noun names it too
+// ("Zahnarztpraxen", "Kinderzahnarzt").
+function mentionsNoun(segs: readonly string[], phrase: string, compounds: boolean): boolean {
   const target = normalizePlaceName(phrase).split(" ");
+  const names = (w: string, t: string) =>
+    (w.startsWith(t) && w.length - t.length <= 3) || (compounds && w.includes(t));
   return segs.some((seg) => {
     const words = seg.split(" ");
     for (let start = 0; start + target.length <= words.length; start++) {
-      if (
-        target.every((t, k) => {
-          const w = words[start + k] ?? "";
-          return w.startsWith(t) && w.length - t.length <= 3;
-        })
-      ) {
+      if (target.every((t, k) => names(words[start + k] ?? "", t))) {
         return true;
       }
     }
@@ -166,7 +170,9 @@ function hasPersonalData(text: string): boolean {
 
 function hasProperName(text: string, segs: readonly string[], ctx: GuardContext): boolean {
   if (mentionsAny(segs, ctx.blockedNames)) return true;
-  const allowed = new Set<string>(LEXICONS[ctx.language].capitalized);
+  const lexicon = LEXICONS[ctx.language];
+  if (lexicon.businessMarkers.some((m) => containsPhrase(segs, m))) return true;
+  const allowed = new Set<string>(lexicon.capitalized);
   for (const phrase of [ctx.countryName, ctx.noun, ...ctx.synonyms]) {
     for (const word of normalizePlaceName(phrase).split(" ")) allowed.add(word);
   }
@@ -179,7 +185,12 @@ function hasProperName(text: string, segs: readonly string[], ctx: GuardContext)
     sentenceStart = SENTENCE_END.test(token);
     if (startsSentence || !LEADING_UPPER.test(word)) continue;
     const normalized = normalizePlaceName(word);
-    if (normalized && !allowed.has(normalized)) return true;
+    if (!normalized || allowed.has(normalized)) continue;
+    // German capitalizes every noun: a capital there marks a name only when the word lists do
+    // not know the word as a common noun.
+    const bare = word.replace(TRAILING_PUNCTUATION, "");
+    if (hasNounList(ctx.language) && isCommonNoun(bare, ctx.language)) continue;
+    return true;
   }
   return false;
 }
@@ -232,7 +243,7 @@ export function guardParaphrase(candidate: Candidate, ctx: GuardContext): GuardR
   if (hasPersonalData(c.text)) return { ok: false, guard: "personal_data" };
   const named =
     c.text.includes("{sustantivo}") ||
-    [ctx.noun, ...ctx.synonyms].some((p) => mentionsNoun(segs, p));
+    [ctx.noun, ...ctx.synonyms].some((p) => mentionsNoun(segs, p, hasNounList(ctx.language)));
   if (!named) return { ok: false, guard: "category_noun" };
   if (hasProperName(c.text, segs, ctx)) return { ok: false, guard: "proper_name" };
   if (hasForeignQualifier(c.text, segs, ctx)) return { ok: false, guard: "qualifier" };

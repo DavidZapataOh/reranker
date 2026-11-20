@@ -1,0 +1,40 @@
+{
+  "retrievedAt": "2026-11-20",
+  "license": "CC BY-SA 4.0",
+  "minCount": {
+    "nouns": 3,
+    "names": 1
+  },
+  "sources": [
+    {
+      "url": "https://kaikki.org/dictionary/German/pos-noun/kaikki.org-dictionary-German-by-pos-noun.jsonl",
+      "license": "CC BY-SA 4.0 and GFDL (Wiktionary, extracted by wiktextract)",
+      "sha256": "8b16a8547ca356024b120ed13fe50bd4a28ff98e482a43f1c7ce39d26b418c6d"
+    },
+    {
+      "url": "https://kaikki.org/dictionary/German/pos-name/kaikki.org-dictionary-German-by-pos-name.jsonl",
+      "license": "CC BY-SA 4.0 and GFDL (Wiktionary, extracted by wiktextract)",
+      "sha256": "b46c09666e9cfcbba67aaf99848429794a9718ab12331659b083a56e616fb4ae"
+    },
+    {
+      "url": "https://kaikki.org/dictionary/downloads/de/de-extract.jsonl.gz",
+      "license": "CC BY-SA 4.0 and GFDL (Wiktionary, extracted by wiktextract)",
+      "sha256": "39ea559834e4cbcd2f1cc686037fc6ddc4590f29af94fd143292146ad9bf24c5"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/hermitdave/FrequencyWords/master/content/2018/de/de_full.txt",
+      "license": "CC BY-SA 4.0 (FrequencyWords content, from OpenSubtitles 2018)",
+      "sha256": "a5fc13f4efaaf70fd9226d11295fd3cd4c2264852ee1fad22c0abaf64acec8dc"
+    }
+  ],
+  "files": {
+    "de-nouns.txt": {
+      "entries": 94123,
+      "sha256": "08d0a0072b8ef2a3a02f3072e0b00424ad74e84a65a4113ed103986301c7a131"
+    },
+    "de-names.txt": {
+      "entries": 18627,
+      "sha256": "fc6234149e8b2283849fdfa2b44879a24bc590a803390f35a80da168104caf7a"
+    }
+  }
+}
