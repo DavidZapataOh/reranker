@@ -1,5 +1,7 @@
 import { AppError, cost, type ProviderCost } from "@reranker/schema";
+import type { MeasurementLanguage } from "@reranker/schema/measurement";
 import { jcs, promptSha256, sha256Hex } from "../hash";
+import { TEMPLATE_LANGUAGES, templatesVersion } from "../templates";
 import { JUDGE_PROMPT_V1 } from "./prompts/judge.v1";
 import { PARAPHRASE_PROMPT_V1 } from "./prompts/paraphrase.v1";
 import { PERSONA_PROMPT_V1 } from "./prompts/persona.v1";
@@ -25,7 +27,8 @@ export interface GeneratorConfig {
   minVariants: 7;
   /** sha256 of each prompt's text, so any wording change yields a new config hash. */
   prompts: { paraphrase: string; persona: string; judge: string };
-  templatesVersion: "2026.11.0";
+  /** Every language's set is pinned, so a new set in any language yields a new config hash. */
+  templatesVersions: Readonly<Partial<Record<MeasurementLanguage, string>>>;
 }
 
 const deepFreeze = <T extends object>(value: T): Readonly<T> => {
@@ -58,8 +61,7 @@ export const GENERATOR_CONFIG: Readonly<GeneratorConfig> = deepFreeze({
     persona: promptSha256(PERSONA_PROMPT_V1),
     judge: promptSha256(JUDGE_PROMPT_V1),
   },
-  // The Spanish templates' version: the generator writes Spanish paraphrases.
-  templatesVersion: "2026.11.0",
+  templatesVersions: Object.fromEntries(TEMPLATE_LANGUAGES.map((l) => [l, templatesVersion(l)])),
 });
 
 export const generatorConfigHash: string = sha256Hex(jcs(GENERATOR_CONFIG));
