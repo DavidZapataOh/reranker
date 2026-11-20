@@ -13,6 +13,7 @@
     "test": "vitest run --project unit --coverage --passWithNoTests && vitest run --project heavy",
     "test:perf": "vitest run --project perf --passWithNoTests",
     "geo:build": "tsx scripts/build-geo.ts",
+    "record:generation": "tsx scripts/record-generation.ts",
     "freeze": "tsx scripts/freeze.ts",
     "test:contract": "vitest run --project contract --passWithNoTests"
   },
