@@ -105,6 +105,26 @@ jobs:
           project_id: ${{ vars.NEON_PROJECT_ID }}
           branch: ${{ steps.branch.outputs.branch-id }}
           api_key: ${{ secrets.NEON_NONPROD_API_KEY }}
+  # The real preview KMS keys, reached as reranker-ci-kms-preview, whose trust policy admits only
+  # main through GitHub OIDC. No long-lived AWS key exists anywhere in the repository.
+  evidence-kms:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions: { contents: read, id-token: write }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
+        with: { cache: true, require-lockfile: true }
+      - uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/reranker-ci-kms-preview
+          aws-region: us-east-1
+      - name: KMS contract tests
+        env:
+          AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
+        run: pnpm --filter @reranker/evidence test:kms
   full:
     runs-on: ubuntu-24.04
     # Browsers and their system libraries ship in the image, so no step waits on an apt mirror.
@@ -193,7 +213,7 @@ jobs:
           retention-days: 3
           if-no-files-found: ignore
   report:
-    needs: [contract, full]
+    needs: [contract, evidence-kms, full]
     # Also after a cancellation or a timeout: a night that did not pass must never look green.
     if: always()
     runs-on: ubuntu-latest
@@ -201,7 +221,7 @@ jobs:
     permissions: { issues: write }
     steps:
       # Only main reports: a run dispatched on a branch must neither page nor close an issue about main.
-      - if: github.ref == 'refs/heads/main' && needs.contract.result == 'success' && needs.full.result == 'success'
+      - if: github.ref == 'refs/heads/main' && needs.contract.result == 'success' && needs.evidence-kms.result == 'success' && needs.full.result == 'success'
         name: Send the heartbeat
         env:
           HEARTBEAT_URL: ${{ secrets.BETTERSTACK_HEARTBEAT_NIGHTLY_URL }}
@@ -221,6 +241,7 @@ jobs:
           TRACK: ${{ github.ref == 'refs/heads/main' }}
           CONTRACT_RESULT: ${{ needs.contract.result }}
           CONTRACT_FAILED: ${{ needs.contract.outputs.failed }}
+          KMS_RESULT: ${{ needs.evidence-kms.result }}
           FULL_RESULT: ${{ needs.full.result }}
           FULL_TESTS: ${{ needs.full.outputs.tests }}
           FULL_SMOKE: ${{ needs.full.outputs.smoke }}
@@ -237,6 +258,16 @@ jobs:
             for task in $CONTRACT_FAILED; do failing["Nightly contract: $task"]=1; done
           else
             failing["Nightly contract: job $CONTRACT_RESULT"]=1
+          fi
+
+          # Only main may assume the CI role, so a dispatch on a branch skips the job.
+          if [ "$KMS_RESULT" = success ]; then
+            finished+=(evidence-kms)
+          elif [ "$KMS_RESULT" = failure ]; then
+            finished+=(evidence-kms)
+            failing["Nightly evidence-kms: KMS contract tests"]=1
+          elif [ "$KMS_RESULT" != skipped ]; then
+            failing["Nightly evidence-kms: job $KMS_RESULT"]=1
           fi
 
           gates=()
