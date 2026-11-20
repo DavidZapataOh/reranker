@@ -130,7 +130,8 @@ export function agree(template: string, noun: Noun, language: MeasurementLanguag
   const hasGroups = template.search(AGREEMENT) !== -1;
   if (typeof noun === "string") {
     if (hasGroups) throw internal(`a template that agrees with its noun needs its gender`);
-    return template;
+    // A bare French noun (what a web-only store sells) still elides "de": "d'accessoires".
+    return language === "fr" ? joinAll(template, { text: noun, gender: "m" }, language) : template;
   }
   const genders = GENDERS[language];
   if (!genders?.includes(noun.gender)) {
@@ -147,7 +148,11 @@ export function agree(template: string, noun: Noun, language: MeasurementLanguag
     }
     return alternatives[genders.indexOf(noun.gender)] ?? "";
   });
-  return resolved
+  return joinAll(resolved, noun, language);
+}
+
+function joinAll(template: string, noun: GenderedNoun, language: MeasurementLanguage): string {
+  return template
     .split("{sustantivo}")
     .map((part, i, parts) => (i < parts.length - 1 ? joinNoun(part, noun, language) : part))
     .join("{sustantivo}");
