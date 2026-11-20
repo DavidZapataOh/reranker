@@ -84,6 +84,7 @@ catalog:
   "@workflow/vitest": 5.0.8
   "@stdlib/stats-base-dists-beta-cdf": 0.2.3
   "@stdlib/stats-base-dists-beta-quantile": 0.2.3
+  "@stdlib/stats-base-dists-chisquare-cdf": 0.2.2
   dataforseo-client: 2.1.13
   ulid: 3.0.2
   htmlparser2: 12.0.0

@@ -230,6 +230,9 @@ catalogs:
     '@stdlib/stats-base-dists-beta-quantile':
       specifier: 0.2.3
       version: 0.2.3
+    '@stdlib/stats-base-dists-chisquare-cdf':
+      specifier: 0.2.2
+      version: 0.2.2
     '@tailwindcss/turbopack':
       specifier: 4.3.4
       version: 4.3.4
@@ -770,6 +773,9 @@ importers:
       '@reranker/schema':
         specifier: workspace:*
         version: link:../schema
+      '@reranker/stats':
+        specifier: workspace:*
+        version: link:../stats
       '@reranker/verify':
         specifier: workspace:*
         version: link:../verify
@@ -783,6 +789,9 @@ importers:
       '@reranker/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      '@stdlib/stats-base-dists-chisquare-cdf':
+        specifier: 'catalog:'
+        version: 0.2.2(supports-color@10.2.2)
       '@types/node':
         specifier: 'catalog:'
         version: 26.6.6
@@ -792,6 +801,9 @@ importers:
       csv-parse:
         specifier: 'catalog:'
         version: 7.0.3
+      fast-check:
+        specifier: 'catalog:'
+        version: 4.10.2
       fflate:
         specifier: 'catalog:'
         version: 0.8.3
@@ -4232,6 +4244,11 @@ packages:
     engines: {node: '>=0.10.0', npm: '>2.7.0'}
     os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
 
+  '@stdlib/math-base-assert-is-odd@0.2.1':
+    resolution: {integrity: sha512-V4qQuCO6/AA5udqlNatMRZ8R/MgpqD8mPIkFrpSZJdpLcGYSz815uAAf3NBOuWXkE2Izw0/Tg/hTQ+YcOW2g5g==}
+    engines: {node: '>=0.10.0', npm: '>2.7.0'}
+    os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
+
   '@stdlib/math-base-assert-is-odd@0.3.2':
     resolution: {integrity: sha512-AVtda9LMQ7WgracZDygZzh7rBDys8KKn4qzAIVv2hWG3ns8X8btQ46plekP44iRyGjYagXMzLJn2jo/Irkf71Q==}
     engines: {node: '>=0.10.0', npm: '>2.7.0'}
@@ -4302,6 +4319,11 @@ packages:
     engines: {node: '>=0.10.0', npm: '>2.7.0'}
     os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
 
+  '@stdlib/math-base-special-cos@0.2.1':
+    resolution: {integrity: sha512-Yre+ASwsv4pQJk5dqY6488ZfmYDA6vtUTdapAVjCx28NluSFhXw1+S8EmsqnzYnqp/4x7Y1H7V2UPZfw+AdnbQ==}
+    engines: {node: '>=0.10.0', npm: '>2.7.0'}
+    os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
+
   '@stdlib/math-base-special-cos@0.3.1':
     resolution: {integrity: sha512-efthz58G0wf8rXh4+jbYeRuRCagNlYb8AL3es1GxwV9P9/8ZpKAlkQiRPY3AI3ZJMB17aR/KHpVw7Pz+rw4Fhg==}
     engines: {node: '>=0.10.0', npm: '>2.7.0'}
@@ -4352,8 +4374,18 @@ packages:
     engines: {node: '>=0.10.0', npm: '>2.7.0'}
     os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
 
+  '@stdlib/math-base-special-gamma-lanczos-sum-expg-scaled@0.3.0':
+    resolution: {integrity: sha512-hScjKZvueOK5piX84ZLIV3ZiYvtvYtcixN8psxkPIxJlN7Bd5nAmSkEOBL+T+LeW2RjmdEMXFFJMF7FsK1js/Q==}
+    engines: {node: '>=0.10.0', npm: '>2.7.0'}
+    os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
+
   '@stdlib/math-base-special-gamma-lanczos-sum@0.3.2':
     resolution: {integrity: sha512-wIH23KUPBKhu0nCraZ3aY882ICDtLIDxeiiBY4F1hNeBBrMeODcCWJc3+jwXvzjigBXPRFHWJqjOyL57FyoGBQ==}
+    engines: {node: '>=0.10.0', npm: '>2.7.0'}
+    os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
+
+  '@stdlib/math-base-special-gamma1pm1@0.2.2':
+    resolution: {integrity: sha512-lNT1lk0ifK2a/ta3GfR5V8KvfgkgheE44n5AQ/07BBfcVBMiAdqNuyjSMeWqsH/zVGzjU6G8+kLBzmaJXivPXQ==}
     engines: {node: '>=0.10.0', npm: '>2.7.0'}
     os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
 
@@ -4362,8 +4394,18 @@ packages:
     engines: {node: '>=0.10.0', npm: '>2.7.0'}
     os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
 
+  '@stdlib/math-base-special-gamma@0.2.1':
+    resolution: {integrity: sha512-Sfq1HnVoL4kN9EDHH3YparEAF0r7QD5jNFppUTOXmrqkofgImSl5tLttttnr2I7O9zsNhYkBAiTx9q0y25bAiA==}
+    engines: {node: '>=0.10.0', npm: '>2.7.0'}
+    os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
+
   '@stdlib/math-base-special-gamma@0.3.1':
     resolution: {integrity: sha512-WONtgh00BdeBbgvhjjmn4kviBXb2ybFa4IDOhknxvKS3m8mIVJU59tzLHVa9XiGcomq1H7Mm6CeGPmjmkD+Rpw==}
+    engines: {node: '>=0.10.0', npm: '>2.7.0'}
+    os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
+
+  '@stdlib/math-base-special-gammainc@0.2.2':
+    resolution: {integrity: sha512-ffKZFiv/41SXs2Xms7IW3lPnICR898yfWAidq5uKjOLgRb3wrzNjq0sZ6EAVXvdBwyGULvSjyud28PpVhDLv3A==}
     engines: {node: '>=0.10.0', npm: '>2.7.0'}
     os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
 
@@ -4374,6 +4416,11 @@ packages:
 
   '@stdlib/math-base-special-gammaincinv@0.2.3':
     resolution: {integrity: sha512-eH3TCXZdH4WvtgKc+jI3ATeaYq87eKcActfSpV0ZZE6Otc326vmNzhv7dXnjVxgSY81bKgKeBzfaTW/fGyXT7w==}
+    engines: {node: '>=0.10.0', npm: '>2.7.0'}
+    os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
+
+  '@stdlib/math-base-special-gammaln@0.2.2':
+    resolution: {integrity: sha512-opG6HUlspi/GLvQAr4pcwyAevm7BYuymlopgNZ1VulWUvksDpytalaX3zva0idlD2HvniKrDmzHngT1N9p0J1A==}
     engines: {node: '>=0.10.0', npm: '>2.7.0'}
     os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
 
@@ -4447,6 +4494,11 @@ packages:
     engines: {node: '>=0.10.0', npm: '>2.7.0'}
     os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
 
+  '@stdlib/math-base-special-pow@0.2.1':
+    resolution: {integrity: sha512-7SvgVzDkuilZKrHh4tPiXx9fypF/V7PSvAcUVjvcRj5kVEwv/15RpzlmCJlT9B20VPSx4gJ1S0UIA6xgmYFuAg==}
+    engines: {node: '>=0.10.0', npm: '>2.7.0'}
+    os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
+
   '@stdlib/math-base-special-pow@0.3.1':
     resolution: {integrity: sha512-8i5zbz0KfhnNeACMsT+94/iv1/zCNj5JurXvrNHfLg3eLwvKIvwI28G+anpaqGZdPX3aJq66M5+dKDMSWvUvyw==}
     engines: {node: '>=0.10.0', npm: '>2.7.0'}
@@ -4457,8 +4509,18 @@ packages:
     engines: {node: '>=0.10.0', npm: '>2.7.0'}
     os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
 
+  '@stdlib/math-base-special-rempio2@0.2.1':
+    resolution: {integrity: sha512-ErV5EAe3SQCSijg4Pi4Z0sRPOGrODF3jkyCeiLM+iYj2TMOwDaOWQ0xCTME0p9G45TDrbZCLM5arxN83TfzgXQ==}
+    engines: {node: '>=0.10.0', npm: '>2.7.0'}
+    os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
+
   '@stdlib/math-base-special-rempio2@0.3.1':
     resolution: {integrity: sha512-tHqU2T0ewJKOUhlAqV5hc1iQzPC2KoBn88ahOBndQqfJUKUG0vg/sDPfi6LF35RVo+yW03pDMzeZlAmCi4bSzg==}
+    engines: {node: '>=0.10.0', npm: '>2.7.0'}
+    os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
+
+  '@stdlib/math-base-special-round@0.2.1':
+    resolution: {integrity: sha512-ibeKiN9z//6wS4H4uaa+vGnh/t1vJtZYXz+NqRVtwoP+nnE/mtL+fIrBlAnkIWVIH+smQPNNo8qsohjyGLBvUQ==}
     engines: {node: '>=0.10.0', npm: '>2.7.0'}
     os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
 
@@ -4472,8 +4534,18 @@ packages:
     engines: {node: '>=0.10.0', npm: '>2.7.0'}
     os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
 
+  '@stdlib/math-base-special-sin@0.2.1':
+    resolution: {integrity: sha512-IQ6+bzfiZ6/VUn5DIe6iwCsYERE1pwtAOsAWkgNZ1Ih3FzXUxdEOyHtv1zraPrVUb8mR+V5q7OfAGy8TCTnkUg==}
+    engines: {node: '>=0.10.0', npm: '>2.7.0'}
+    os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
+
   '@stdlib/math-base-special-sin@0.3.1':
     resolution: {integrity: sha512-t1mU2N6muFdXaafeYtxB3NQ9udxzL7gwFtKyph+GaMWJKLg1EAZ9G31StMFh5dqxmY0IjHLdkDUhwwh3pXxgPQ==}
+    engines: {node: '>=0.10.0', npm: '>2.7.0'}
+    os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
+
+  '@stdlib/math-base-special-sinpi@0.2.1':
+    resolution: {integrity: sha512-Q3yCp1CoD7gemIILO28bU7iBn8OFiCgXm9vP/9q0tRBxmjtiUnjqbFd+3jRXdAmiCc/B/bPjwGBtVnCnrEMY9g==}
     engines: {node: '>=0.10.0', npm: '>2.7.0'}
     os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
 
@@ -4679,6 +4751,21 @@ packages:
 
   '@stdlib/stats-base-dists-beta-quantile@0.2.3':
     resolution: {integrity: sha512-nrQuVzQDkThbNrY+zd01QjWp/OUfPWvRWh4ClPAxKJdvMleWSKIYVfcxx8Kgc5moW4xk7Q8QgJRJ4wpuugkszg==}
+    engines: {node: '>=0.10.0', npm: '>2.7.0'}
+    os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
+
+  '@stdlib/stats-base-dists-chisquare-cdf@0.2.2':
+    resolution: {integrity: sha512-vfXA+CYFYRcSCizJ8VlaB7VAIX/+LCaq4q4+6vglpzQeCBSAc/zqgFtTYu7XzudD+DgDjxIRUNZvA5xhzblsyw==}
+    engines: {node: '>=0.10.0', npm: '>2.7.0'}
+    os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
+
+  '@stdlib/stats-base-dists-degenerate-cdf@0.2.2':
+    resolution: {integrity: sha512-mjb7ccaRwNPcPe21rhAW4JUTnxGSKs8wbQNF7xPN2vy0qSoQY5t0Tf4zl6C6WvF091skFDZB4bQ1QGOc7brGFw==}
+    engines: {node: '>=0.10.0', npm: '>2.7.0'}
+    os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
+
+  '@stdlib/stats-base-dists-gamma-cdf@0.2.2':
+    resolution: {integrity: sha512-xXu2jkr90niX9VgOXFOcDMi7ET/IWD6v8er6twtigR7xF/PGCNwRxKKCWpwkubCtSIklxehtGp62etrbOGSOjg==}
     engines: {node: '>=0.10.0', npm: '>2.7.0'}
     os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
 
@@ -11448,6 +11535,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@stdlib/math-base-assert-is-odd@0.2.1(supports-color@10.2.2)':
+    dependencies:
+      '@stdlib/math-base-assert-is-even': 0.2.5(supports-color@10.2.2)
+    transitivePeerDependencies:
+      - supports-color
+
   '@stdlib/math-base-assert-is-odd@0.3.2(supports-color@10.2.2)':
     dependencies:
       '@stdlib/math-base-assert-is-even': 0.2.5(supports-color@10.2.2)
@@ -11589,6 +11682,15 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@stdlib/math-base-special-cos@0.2.1(supports-color@10.2.2)':
+    dependencies:
+      '@stdlib/math-base-special-kernel-cos': 0.2.4(supports-color@10.2.2)
+      '@stdlib/math-base-special-kernel-sin': 0.2.4(supports-color@10.2.2)
+      '@stdlib/math-base-special-rempio2': 0.2.1(supports-color@10.2.2)
+      '@stdlib/number-float64-base-get-high-word': 0.2.3(supports-color@10.2.2)
+    transitivePeerDependencies:
+      - supports-color
+
   '@stdlib/math-base-special-cos@0.3.1(supports-color@10.2.2)':
     dependencies:
       '@stdlib/constants-float64-high-word-abs-mask': 0.2.3
@@ -11713,10 +11815,28 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@stdlib/math-base-special-gamma-lanczos-sum-expg-scaled@0.3.0(supports-color@10.2.2)':
+    dependencies:
+      '@stdlib/math-base-napi-unary': 0.2.7(supports-color@10.2.2)
+      '@stdlib/utils-library-manifest': 0.2.4(supports-color@10.2.2)
+    transitivePeerDependencies:
+      - supports-color
+
   '@stdlib/math-base-special-gamma-lanczos-sum@0.3.2(supports-color@10.2.2)':
     dependencies:
       '@stdlib/math-base-napi-unary': 0.2.7(supports-color@10.2.2)
       '@stdlib/utils-library-manifest': 0.2.4(supports-color@10.2.2)
+    transitivePeerDependencies:
+      - supports-color
+
+  '@stdlib/math-base-special-gamma1pm1@0.2.2(supports-color@10.2.2)':
+    dependencies:
+      '@stdlib/constants-float64-eps': 0.2.3
+      '@stdlib/math-base-assert-is-nan': 0.2.3(supports-color@10.2.2)
+      '@stdlib/math-base-special-expm1': 0.2.4(supports-color@10.2.2)
+      '@stdlib/math-base-special-gamma': 0.2.1(supports-color@10.2.2)
+      '@stdlib/math-base-special-ln': 0.2.5(supports-color@10.2.2)
+      '@stdlib/math-base-special-log1p': 0.2.4(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -11730,6 +11850,24 @@ snapshots:
       '@stdlib/math-base-special-ln': 0.2.5(supports-color@10.2.2)
       '@stdlib/math-base-special-log1p': 0.2.4(supports-color@10.2.2)
       '@stdlib/utils-library-manifest': 0.2.4(supports-color@10.2.2)
+    transitivePeerDependencies:
+      - supports-color
+
+  '@stdlib/math-base-special-gamma@0.2.1(supports-color@10.2.2)':
+    dependencies:
+      '@stdlib/constants-float64-eulergamma': 0.2.3
+      '@stdlib/constants-float64-ninf': 0.2.3
+      '@stdlib/constants-float64-pi': 0.2.3
+      '@stdlib/constants-float64-pinf': 0.2.3
+      '@stdlib/constants-float64-sqrt-two-pi': 0.2.3
+      '@stdlib/math-base-assert-is-integer': 0.2.7(supports-color@10.2.2)
+      '@stdlib/math-base-assert-is-nan': 0.2.3(supports-color@10.2.2)
+      '@stdlib/math-base-assert-is-negative-zero': 0.2.3(supports-color@10.2.2)
+      '@stdlib/math-base-special-abs': 0.2.3(supports-color@10.2.2)
+      '@stdlib/math-base-special-exp': 0.2.5(supports-color@10.2.2)
+      '@stdlib/math-base-special-floor': 0.2.4(supports-color@10.2.2)
+      '@stdlib/math-base-special-pow': 0.2.1(supports-color@10.2.2)
+      '@stdlib/math-base-special-sin': 0.2.1(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -11750,6 +11888,40 @@ snapshots:
       '@stdlib/math-base-special-pow': 0.3.1(supports-color@10.2.2)
       '@stdlib/math-base-special-sin': 0.3.1(supports-color@10.2.2)
       '@stdlib/utils-library-manifest': 0.2.4(supports-color@10.2.2)
+    transitivePeerDependencies:
+      - supports-color
+
+  '@stdlib/math-base-special-gammainc@0.2.2(supports-color@10.2.2)':
+    dependencies:
+      '@stdlib/constants-float64-e': 0.2.3
+      '@stdlib/constants-float64-gamma-lanczos-g': 0.2.3
+      '@stdlib/constants-float64-max': 0.2.3
+      '@stdlib/constants-float64-max-ln': 0.2.3
+      '@stdlib/constants-float64-min-ln': 0.2.3
+      '@stdlib/constants-float64-pi': 0.2.3
+      '@stdlib/constants-float64-pinf': 0.2.3
+      '@stdlib/constants-float64-sqrt-eps': 0.2.3
+      '@stdlib/constants-float64-sqrt-two-pi': 0.2.3
+      '@stdlib/constants-float64-two-pi': 0.2.3
+      '@stdlib/math-base-special-abs': 0.2.3(supports-color@10.2.2)
+      '@stdlib/math-base-special-erfc': 0.2.5(supports-color@10.2.2)
+      '@stdlib/math-base-special-exp': 0.2.5(supports-color@10.2.2)
+      '@stdlib/math-base-special-floor': 0.2.4(supports-color@10.2.2)
+      '@stdlib/math-base-special-gamma': 0.3.1(supports-color@10.2.2)
+      '@stdlib/math-base-special-gamma-lanczos-sum-expg-scaled': 0.3.0(supports-color@10.2.2)
+      '@stdlib/math-base-special-gamma1pm1': 0.2.2(supports-color@10.2.2)
+      '@stdlib/math-base-special-gammaln': 0.2.2(supports-color@10.2.2)
+      '@stdlib/math-base-special-ln': 0.2.5(supports-color@10.2.2)
+      '@stdlib/math-base-special-log1p': 0.2.4(supports-color@10.2.2)
+      '@stdlib/math-base-special-log1pmx': 0.2.4(supports-color@10.2.2)
+      '@stdlib/math-base-special-max': 0.3.1(supports-color@10.2.2)
+      '@stdlib/math-base-special-min': 0.2.4(supports-color@10.2.2)
+      '@stdlib/math-base-special-pow': 0.3.1(supports-color@10.2.2)
+      '@stdlib/math-base-special-powm1': 0.3.2(supports-color@10.2.2)
+      '@stdlib/math-base-special-sqrt': 0.2.3(supports-color@10.2.2)
+      '@stdlib/math-base-tools-continued-fraction': 0.2.3(supports-color@10.2.2)
+      '@stdlib/math-base-tools-evalpoly': 0.2.3
+      '@stdlib/math-base-tools-sum-series': 0.2.3(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -11817,6 +11989,19 @@ snapshots:
       '@stdlib/math-base-special-sqrt': 0.2.3(supports-color@10.2.2)
       '@stdlib/math-base-tools-evalpoly': 0.2.3
       debug: 2.6.9(supports-color@10.2.2)
+    transitivePeerDependencies:
+      - supports-color
+
+  '@stdlib/math-base-special-gammaln@0.2.2(supports-color@10.2.2)':
+    dependencies:
+      '@stdlib/constants-float64-pi': 0.2.3
+      '@stdlib/constants-float64-pinf': 0.2.3
+      '@stdlib/math-base-assert-is-infinite': 0.2.3(supports-color@10.2.2)
+      '@stdlib/math-base-assert-is-nan': 0.2.3(supports-color@10.2.2)
+      '@stdlib/math-base-special-abs': 0.2.3(supports-color@10.2.2)
+      '@stdlib/math-base-special-ln': 0.2.5(supports-color@10.2.2)
+      '@stdlib/math-base-special-sinpi': 0.2.1(supports-color@10.2.2)
+      '@stdlib/math-base-special-trunc': 0.2.3(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -12032,6 +12217,30 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@stdlib/math-base-special-pow@0.2.1(supports-color@10.2.2)':
+    dependencies:
+      '@stdlib/constants-float64-exponent-bias': 0.2.3
+      '@stdlib/constants-float64-high-word-abs-mask': 0.2.3
+      '@stdlib/constants-float64-high-word-significand-mask': 0.2.3
+      '@stdlib/constants-float64-ln-two': 0.2.3
+      '@stdlib/constants-float64-ninf': 0.2.3
+      '@stdlib/constants-float64-pinf': 0.2.3
+      '@stdlib/math-base-assert-is-infinite': 0.2.3(supports-color@10.2.2)
+      '@stdlib/math-base-assert-is-integer': 0.2.7(supports-color@10.2.2)
+      '@stdlib/math-base-assert-is-nan': 0.2.3(supports-color@10.2.2)
+      '@stdlib/math-base-assert-is-odd': 0.2.1(supports-color@10.2.2)
+      '@stdlib/math-base-special-abs': 0.2.3(supports-color@10.2.2)
+      '@stdlib/math-base-special-copysign': 0.2.3(supports-color@10.2.2)
+      '@stdlib/math-base-special-ldexp': 0.2.5(supports-color@10.2.2)
+      '@stdlib/math-base-special-sqrt': 0.2.3(supports-color@10.2.2)
+      '@stdlib/number-float64-base-get-high-word': 0.2.3(supports-color@10.2.2)
+      '@stdlib/number-float64-base-set-high-word': 0.2.3(supports-color@10.2.2)
+      '@stdlib/number-float64-base-set-low-word': 0.2.3(supports-color@10.2.2)
+      '@stdlib/number-float64-base-to-words': 0.2.3(supports-color@10.2.2)
+      '@stdlib/number-uint32-base-to-int32': 0.2.3
+    transitivePeerDependencies:
+      - supports-color
+
   '@stdlib/math-base-special-pow@0.3.1(supports-color@10.2.2)':
     dependencies:
       '@stdlib/constants-float64-exponent-bias': 0.2.3
@@ -12074,6 +12283,21 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@stdlib/math-base-special-rempio2@0.2.1(supports-color@10.2.2)':
+    dependencies:
+      '@stdlib/array-base-zeros': 0.2.3
+      '@stdlib/constants-float64-high-word-abs-mask': 0.2.3
+      '@stdlib/constants-float64-high-word-exponent-mask': 0.2.3
+      '@stdlib/constants-float64-high-word-significand-mask': 0.2.3
+      '@stdlib/math-base-special-floor': 0.2.4(supports-color@10.2.2)
+      '@stdlib/math-base-special-ldexp': 0.2.5(supports-color@10.2.2)
+      '@stdlib/math-base-special-round': 0.2.1
+      '@stdlib/number-float64-base-from-words': 0.2.3(supports-color@10.2.2)
+      '@stdlib/number-float64-base-get-high-word': 0.2.3(supports-color@10.2.2)
+      '@stdlib/number-float64-base-get-low-word': 0.2.3(supports-color@10.2.2)
+    transitivePeerDependencies:
+      - supports-color
+
   '@stdlib/math-base-special-rempio2@0.3.1(supports-color@10.2.2)':
     dependencies:
       '@stdlib/array-base-zeros': 0.2.3
@@ -12095,6 +12319,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@stdlib/math-base-special-round@0.2.1': {}
+
   '@stdlib/math-base-special-round@0.3.1(supports-color@10.2.2)':
     dependencies:
       '@stdlib/math-base-assert-is-nan': 0.2.3(supports-color@10.2.2)
@@ -12113,6 +12339,17 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@stdlib/math-base-special-sin@0.2.1(supports-color@10.2.2)':
+    dependencies:
+      '@stdlib/constants-float64-high-word-abs-mask': 0.2.3
+      '@stdlib/constants-float64-high-word-exponent-mask': 0.2.3
+      '@stdlib/math-base-special-kernel-cos': 0.2.4(supports-color@10.2.2)
+      '@stdlib/math-base-special-kernel-sin': 0.2.4(supports-color@10.2.2)
+      '@stdlib/math-base-special-rempio2': 0.2.1(supports-color@10.2.2)
+      '@stdlib/number-float64-base-get-high-word': 0.2.3(supports-color@10.2.2)
+    transitivePeerDependencies:
+      - supports-color
+
   '@stdlib/math-base-special-sin@0.3.1(supports-color@10.2.2)':
     dependencies:
       '@stdlib/constants-float64-high-word-abs-mask': 0.2.3
@@ -12123,6 +12360,18 @@ snapshots:
       '@stdlib/math-base-special-rempio2': 0.3.1(supports-color@10.2.2)
       '@stdlib/number-float64-base-get-high-word': 0.2.3(supports-color@10.2.2)
       '@stdlib/utils-library-manifest': 0.2.4(supports-color@10.2.2)
+    transitivePeerDependencies:
+      - supports-color
+
+  '@stdlib/math-base-special-sinpi@0.2.1(supports-color@10.2.2)':
+    dependencies:
+      '@stdlib/constants-float64-pi': 0.2.3
+      '@stdlib/math-base-assert-is-infinite': 0.2.3(supports-color@10.2.2)
+      '@stdlib/math-base-assert-is-nan': 0.2.3(supports-color@10.2.2)
+      '@stdlib/math-base-special-abs': 0.2.3(supports-color@10.2.2)
+      '@stdlib/math-base-special-copysign': 0.2.3(supports-color@10.2.2)
+      '@stdlib/math-base-special-cos': 0.2.1(supports-color@10.2.2)
+      '@stdlib/math-base-special-sin': 0.2.1(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -12466,6 +12715,32 @@ snapshots:
     dependencies:
       '@stdlib/math-base-assert-is-nan': 0.2.3(supports-color@10.2.2)
       '@stdlib/math-base-special-betaincinv': 0.2.3(supports-color@10.2.2)
+      '@stdlib/utils-constant-function': 0.2.3
+      '@stdlib/utils-define-nonenumerable-read-only-property': 0.2.3
+    transitivePeerDependencies:
+      - supports-color
+
+  '@stdlib/stats-base-dists-chisquare-cdf@0.2.2(supports-color@10.2.2)':
+    dependencies:
+      '@stdlib/stats-base-dists-gamma-cdf': 0.2.2(supports-color@10.2.2)
+      '@stdlib/utils-define-nonenumerable-read-only-property': 0.2.3
+    transitivePeerDependencies:
+      - supports-color
+
+  '@stdlib/stats-base-dists-degenerate-cdf@0.2.2(supports-color@10.2.2)':
+    dependencies:
+      '@stdlib/math-base-assert-is-nan': 0.2.3(supports-color@10.2.2)
+      '@stdlib/utils-constant-function': 0.2.3
+      '@stdlib/utils-define-nonenumerable-read-only-property': 0.2.3
+    transitivePeerDependencies:
+      - supports-color
+
+  '@stdlib/stats-base-dists-gamma-cdf@0.2.2(supports-color@10.2.2)':
+    dependencies:
+      '@stdlib/constants-float64-pinf': 0.2.3
+      '@stdlib/math-base-assert-is-nan': 0.2.3(supports-color@10.2.2)
+      '@stdlib/math-base-special-gammainc': 0.2.2(supports-color@10.2.2)
+      '@stdlib/stats-base-dists-degenerate-cdf': 0.2.2(supports-color@10.2.2)
       '@stdlib/utils-constant-function': 0.2.3
       '@stdlib/utils-define-nonenumerable-read-only-property': 0.2.3
     transitivePeerDependencies:
