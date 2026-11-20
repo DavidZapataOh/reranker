@@ -1,0 +1,3856 @@
+{
+  "language": "en",
+  "recordedAt": "2026-11-20T23:17:49.661Z",
+  "generatorConfigHash": "c6faaa65607fdabd0eef6a056f2613074574ab62100973e90e0f787d7180e360",
+  "intents": [
+    {
+      "categoryKey": "dental_clinic",
+      "noun": "dentist",
+      "synonyms": [
+        "dental clinic",
+        "dental office",
+        "family dentist"
+      ],
+      "kind": "discovery",
+      "slug": "recommended",
+      "canonical": "Can you recommend a good dentist in {lugar}?",
+      "openai": [
+        {
+          "text": "Can you recommend a good dentist in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Where can I find a good dentist in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Who is a good dentist to see in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Give me a list of good dentists in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Could you suggest a few good dentists in {lugar}?",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "What are some good dental practices in {lugar}?",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "good dentist in {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} dentist recommendations",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "recommended dental practices {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Recommend a good dentist with an office in {lugar}.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "I'm looking for a good dentist based in {lugar}.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Suggest a dentist who practises in {lugar} and is good.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "Who is a really good dentist in {lugar} you would recommend?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can someone suggest a reputable dental practitioner in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Where can I find a good dentist around {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Please give me a list of recommended dentists in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Provide several reputable dental clinics in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me a list of good dentists located in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "good dentist {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "recommended dentists {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "dental clinic recommendations {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you recommend a good dentist in {lugar} that is accepting new patients?",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for a well-recommended dentist in {lugar} suitable for adults.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Recommend a reputable dentist in {lugar} that offers general dentistry services.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "dental_clinic",
+      "noun": "dentist",
+      "synonyms": [
+        "dental clinic",
+        "dental office",
+        "family dentist"
+      ],
+      "kind": "specialty",
+      "slug": "specialist",
+      "canonical": "Which dentist in {lugar} specializes in treating kids?",
+      "openai": [],
+      "gemini": [
+        {
+          "text": "Which dentist in {lugar} specializes in treating kids?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you tell me which dental clinic in {lugar} focuses specifically on children?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Who is a good dentist in {lugar} that specializes in pediatric dental care?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me a list of dentists in {lugar} who specialize in treating children.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Please provide options for pediatric dentists in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "List the top dental practices in {lugar} that cater specifically to young kids.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "dentist kids specialist {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "pediatric dentist {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "childrens dental clinic {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "Find me a dentist in {lugar} whose practice specifically focuses on children's oral health.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "I need a dental practice in {lugar} where the practitioners specialize in young patients.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for a family dental clinic in {lugar} that has pediatric specialists on staff.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "dental_clinic",
+      "noun": "dentist",
+      "synonyms": [
+        "dental clinic",
+        "dental office",
+        "family dentist"
+      ],
+      "kind": "zone",
+      "slug": "nearby",
+      "canonical": "Can you recommend a good dentist near {zona} in {lugar}?",
+      "openai": [
+        {
+          "text": "Can you recommend a good dentist near {zona} in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Who is a good dentist around {zona} in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Where can I find a good dentist close to {zona} in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "List some good dentists near {zona} in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "What are some good dental practices around {zona} in {lugar}?",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Give me a few good dentist recommendations close to {zona} in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "good dentist near {zona} {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} good dentists around {zona}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "good dental practice close to {zona} {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Recommend a good dentist in {lugar}, close to {zona}.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "I'm looking for a good dentist in {lugar}; they need to be near {zona}.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Find me a good dental practice in {lugar} that's around {zona}.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "Can you recommend a good dentist near {zona} in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Who is the best dental practitioner around the {zona} area of {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Which dentist would you suggest I visit in {zona}, {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me a list of dental clinics located in {zona} in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me a few dentists around {zona} in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you provide some recommendations for dentists near {zona} in {lugar}?",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "dentist {zona} {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "dental clinic near {zona} in {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "best dentists {zona} area {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for a dentist specifically located around {zona} in {lugar}.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "I need a dental practice that is strictly based in {zona} within {lugar}.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Find me a dental office situated right in the {zona} neighborhood of {lugar}.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "dental_clinic",
+      "noun": "dentist",
+      "synonyms": [
+        "dental clinic",
+        "dental office",
+        "family dentist"
+      ],
+      "kind": "urgency",
+      "slug": "urgent",
+      "canonical": "Which dentist in {lugar} is open today?",
+      "openai": [],
+      "gemini": [
+        {
+          "text": "Which dentist offices in {lugar} are open today?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you tell me what dental clinic is open today in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Are there any dentists open right now today in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "List dentists in {lugar} that are open today.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me a list of dental practices open today in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me dental clinics operating today in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "dentist open today {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "{lugar} dental clinics open today",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "dentists open today in {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "Find me a dentist in {lugar} provided they are open today.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "I need to see a dentist in {lugar} with hours open today.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for a dental clinic in {lugar} that is open today.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "dental_clinic",
+      "noun": "dentist",
+      "synonyms": [
+        "dental clinic",
+        "dental office",
+        "family dentist"
+      ],
+      "kind": "insurance_or_payment",
+      "slug": "insurance",
+      "canonical": "Which dentist in {lugar} accepts my insurance?",
+      "openai": [
+        {
+          "text": "Which dentist in {lugar} accepts my insurance?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Where can I find a dentist in {lugar} who takes my insurance?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Are there any dentists in {lugar} that accept my insurance plan?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "List dentists in {lugar} who accept my insurance.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Give me some dental practices in {lugar} that take my insurance.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Show me dentists who accept my insurance in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "dentist {lugar} accepts my insurance",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "dentists in {lugar} taking my insurance plan",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} dental practices my insurance accepted",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Find a dentist in {lugar} that accepts my insurance.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "I need a dentist in {lugar} who takes my insurance plan.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Find me a dental practice in {lugar}, but only one that accepts my insurance.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "Which dentists in {lugar} accept dental insurance?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you tell me which dental clinics in {lugar} take private insurance?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Who is a good dentist in {lugar} that accepts my insurance coverage?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "List dentists in {lugar} that accept insurance policies.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me a list of dental practices in {lugar} accepting dental insurance plans.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me local dentists in {lugar} who take insurance coverage.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "dentist {lugar} accepts insurance",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "dental clinics {lugar} insurance accepted",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "{lugar} dentists that take insurance",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "Find a dentist in {lugar} who is in-network with insurance providers.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for a dental office in {lugar} with direct insurance billing options.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "I need a reputable dentist located in {lugar} that takes insurance plans.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "dental_clinic",
+      "noun": "dentist",
+      "synonyms": [
+        "dental clinic",
+        "dental office",
+        "family dentist"
+      ],
+      "kind": "trust",
+      "slug": "trusted",
+      "canonical": "What is the most trusted dentist in {lugar}?",
+      "openai": [
+        {
+          "text": "Which dentist in {lugar} is the most trusted?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Who is the most trusted dentist in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Which dental practice do people trust most in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "List the most trusted dentists in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Give me a list of dentists in {lugar} that people trust most.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Show me the most trusted dental practices in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "most trusted dentist {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} dentists most trusted",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "trusted dental practices in {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Find a dentist in {lugar} who is trusted by patients.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Recommend a dentist in {lugar} with a reputation for being trustworthy.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "I'm looking for a dental practice in {lugar} that people trust.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "Who is considered the most trusted dentist in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Which dental clinic in {lugar} has the best reputation among patients?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you tell me what dentist in {lugar} people trust the most?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "List the most reputable and reliable dentists in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me a list of trusted dental practices in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me reputable dentists in {lugar} with reliable patient reviews.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "most trusted dentist {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "{lugar} reputable dental clinics",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "reliable dentists in {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "I need a trusted dentist in {lugar} who has proven patient satisfaction.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Find me a reputable dental surgeon in {lugar} with verified positive feedback.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for the most reliable dentist in {lugar} based on established track record.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "restaurant",
+      "noun": "restaurant",
+      "synonyms": [],
+      "kind": "discovery",
+      "slug": "recommended",
+      "canonical": "Can you recommend a good restaurant in {lugar}?",
+      "openai": [
+        {
+          "text": "Can you recommend a good restaurant in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Where's a good place to eat in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "What are some good restaurants in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Give me a list of good restaurants in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Recommend a few good places to eat in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "I'd like some restaurant recommendations for {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "good restaurants in {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} restaurant recommendations",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "good places to eat {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Recommend a restaurant that's in {lugar}.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "I'm looking for a good restaurant within {lugar}.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Suggest a good place to eat, located in {lugar}.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "What are some good places to eat in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Where is a great restaurant in {lugar} you'd recommend?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can anyone suggest a really nice restaurant in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me a list of the best restaurants in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me a list of top recommended places to eat around {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you provide a few options for great dining spots in {lugar}?",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "good restaurants {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "best places to eat {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "top dining recommendations {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you recommend a good restaurant in {lugar} that is open tonight for dinner?",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for a great restaurant in {lugar} that takes reservations online.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Recommend a quality dining place in {lugar} with outdoor seating available.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "restaurant",
+      "noun": "restaurant",
+      "synonyms": [],
+      "kind": "specialty",
+      "slug": "occasion",
+      "canonical": "Which restaurant in {lugar} is best for a birthday celebration?",
+      "openai": [
+        {
+          "text": "Which restaurant in {lugar} is best for celebrating a birthday?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Where's the best restaurant for a birthday celebration in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "What is the top restaurant in {lugar} for a birthday dinner?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "List the best restaurants in {lugar} for a birthday celebration.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "What are the top restaurants in {lugar} for celebrating a birthday?",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Show me the best birthday celebration restaurants in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "best birthday celebration restaurant {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "top restaurants for birthdays in {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} best birthday dinner restaurant",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Recommend the best restaurant in {lugar} for a birthday celebration.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Find a top-rated restaurant in {lugar} for a birthday meal.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "I need the best restaurant in {lugar} for celebrating someone's birthday.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "What restaurant in {lugar} would you recommend for celebrating a birthday?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Where is the best dining spot in {lugar} to go for a birthday dinner?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Which restaurant in {lugar} has the best setup for a birthday celebration?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me a list of top restaurants in {lugar} for a birthday dinner.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "List the best restaurants in {lugar} to celebrate a birthday party.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you show me a few good dining options in {lugar} for celebrating a birthday?",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "best birthday celebration restaurant {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "restaurants in {lugar} for birthday party",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "birthday dinner restaurants {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "Find me a restaurant in {lugar} that is suitable for a birthday dinner with a large group.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for a restaurant in {lugar} specifically suited for an adult birthday celebration.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "I need a restaurant in {lugar} that is a great fit for celebrating a milestone birthday.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "restaurant",
+      "noun": "restaurant",
+      "synonyms": [],
+      "kind": "zone",
+      "slug": "nearby",
+      "canonical": "Can you recommend a good restaurant near {zona} in {lugar}?",
+      "openai": [
+        {
+          "text": "What's a good restaurant near {zona} in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Where can I find a good place to eat around {zona} in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Can you recommend a good restaurant close to {zona}, {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "List some good restaurants near {zona} in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Give me a few good places to eat around {zona}, {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Show me some good restaurant options close to {zona} in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "good restaurants near {zona} {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} good restaurant around {zona}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "good places to eat close to {zona} {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Recommend a good restaurant in {lugar} that's near {zona}.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Find me a good place to eat in {lugar}, close to {zona}.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "I'd like a good restaurant in {lugar} in the vicinity of {zona}.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "Where is a good place to eat near {zona} in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you recommend any nice restaurants around the {zona} area of {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "What are some good dinner spots located around {zona} in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me a list of great restaurants around {zona} in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me a list of recommended places to eat near {zona} {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Provide some dining options around {zona} in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "restaurants near {zona} {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "good places to eat {zona} area {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "{zona} dining spots {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "Find a good restaurant in {lugar} specifically within walking distance of {zona}.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for a quality place to eat situated strictly around {zona} in {lugar}.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Recommend restaurants in {lugar} only if they are close to {zona}.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "restaurant",
+      "noun": "restaurant",
+      "synonyms": [],
+      "kind": "price",
+      "slug": "price",
+      "canonical": "Which restaurant in {lugar} has the best prices?",
+      "openai": [
+        {
+          "text": "Which restaurant in {lugar} has the best prices?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Where can I find the most affordable restaurant in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "What restaurant has the lowest prices in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "List the restaurants with the best prices in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Show me the most affordable restaurants in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Give me a list of the lowest-priced restaurants in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "cheapest restaurants in {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} restaurants best prices",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "lowest priced restaurant {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Find me a restaurant in {lugar} with the lowest menu prices.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Recommend a restaurant in {lugar} that ranks best for affordability.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "I need a restaurant in {lugar} that offers the best value for money.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "What restaurant in {lugar} offers the most affordable prices?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Which restaurant in {lugar} has the lowest prices for dining out?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Where can I find the restaurant with the best prices in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "List the restaurants in {lugar} with the best prices.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me a list of budget-friendly restaurants in {lugar} with low prices.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me options for the cheapest restaurants in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "best prices restaurant {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "cheapest restaurants in {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "low price dining {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "Find me a restaurant in {lugar} where the prices are under twenty dollars per person.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Recommend a restaurant in {lugar} that offers the best prices for dinner.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for a local restaurant in {lugar} with cheap prices for family meals.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "restaurant",
+      "noun": "restaurant",
+      "synonyms": [],
+      "kind": "trust",
+      "slug": "trusted",
+      "canonical": "What is the most trusted restaurant in {lugar}?",
+      "openai": [
+        {
+          "text": "What is the most trusted restaurant in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Which restaurant in {lugar} do people trust the most?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Where can I find the most trusted place to eat in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "List the most trusted restaurants in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "What are the restaurants people trust most in {lugar}?",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Give me a list of the most trusted places to eat in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "most trusted restaurant {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} restaurants people trust most",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "most trustworthy places to eat {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Recommend a restaurant in {lugar} that people trust the most.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Find me a place to eat in {lugar} with a reputation for being trusted.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Which restaurant in {lugar} has the strongest reputation for trustworthiness?",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "Which restaurant in {lugar} has the absolute best reputation among locals?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "What is considered the most reputable and dependable restaurant in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you tell me which restaurant in {lugar} people trust the most?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me a list of the most trusted and reliable restaurants in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me restaurants in {lugar} that have an established reputation for quality.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Recommend a few trustworthy places to eat in {lugar} with consistently good feedback.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "most trusted restaurant {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "reputable restaurants {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "{lugar} most reliable place to eat",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "Find me a trusted restaurant in {lugar} that has hundreds of genuine positive reviews.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for the most reliable restaurant in {lugar} known for consistent quality over many years.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Where is a dependable place to eat in {lugar} with verified high ratings from diners?",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "restaurant",
+      "noun": "restaurant",
+      "synonyms": [],
+      "kind": "ranking",
+      "slug": "top_rated",
+      "canonical": "What is the best restaurant in {lugar}?",
+      "openai": [
+        {
+          "text": "What's the best restaurant in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Which restaurant in {lugar} is rated the best?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Where is the top restaurant in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "List the best restaurants in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Show me the top-rated restaurants in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Give me a ranking of restaurants in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "best restaurant in {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} top rated restaurants",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "restaurant rankings {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Recommend one top-rated restaurant in {lugar}.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Find the highest-ranked restaurant in {lugar} based on ratings.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Which restaurant in {lugar} comes first in the rankings?",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "What is considered the best restaurant in {lugar} right now?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Which restaurant is rated number one in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Where can I find the absolute best food and dining experience in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you give me a list of the top-rated restaurants in {lugar}?",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me the best restaurants in {lugar} ranked from top to bottom.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Please provide a list of the highest rated eateries across {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "best restaurant {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "top rated restaurants in {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "{lugar} number one dining spot ranking",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "What is the best restaurant in {lugar} with the highest customer review score?",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Which place is the highest ranked restaurant in {lugar} based on recent ratings?",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for the top restaurant in {lugar} that has at least 4.5 stars.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "hotel",
+      "noun": "hotel",
+      "synonyms": [],
+      "kind": "discovery",
+      "slug": "recommended",
+      "canonical": "Can you recommend a good hotel in {lugar}?",
+      "openai": [
+        {
+          "text": "Can you suggest a good hotel in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Where's a good place to stay in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "What hotel would you recommend in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Give me a few good hotel options in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "List some hotels worth staying at in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "I'd like a shortlist of good hotels in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "good hotels in {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} hotel recommendations",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "recommended hotels {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Recommend a hotel located in {lugar}.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Suggest a good place to stay within {lugar}.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Find me a recommended hotel in the city of {lugar}.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "What is a good hotel to stay at in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you recommend a nice place to stay in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Where is a good hotel in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me a list of good hotels in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Provide some recommendations for top-rated hotels in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "List the best options for places to stay in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "good hotels in {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "{lugar} hotel recommendations",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "best accommodation {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for a reputable hotel in {lugar} that offers breakfast.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you suggest a good hotel in {lugar} with free parking?",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "I need a comfortable hotel in {lugar} that has reliable Wi-Fi.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "hotel",
+      "noun": "hotel",
+      "synonyms": [],
+      "kind": "specialty",
+      "slug": "pet_friendly",
+      "canonical": "Which hotel in {lugar} allows dogs?",
+      "openai": [
+        {
+          "text": "Which hotel in {lugar} allows dogs?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Where can I stay with my dog at a hotel in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Are there any hotels in {lugar} that welcome dogs?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "List some dog-friendly hotels in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Show me hotels in {lugar} that allow dogs.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Give me a few options for hotels that welcome dogs in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "dog-friendly hotels {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "hotels allowing dogs in {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} hotels dogs welcome",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Find me a hotel in {lugar} where dogs are allowed.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "I need a hotel in {lugar} that accepts dogs.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Suggest a {lugar} hotel that lets guests bring dogs.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "Which hotels in {lugar} allow guests to bring their dogs?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you recommend a hotel in {lugar} that accepts dogs?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Where can I find a hotel that permits dogs in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "List the best dog-friendly hotels located in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me a list of hotels in {lugar} that take dogs.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me options for hotels in {lugar} welcoming dogs.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "dog friendly hotels {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "{lugar} hotels allowing dogs",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "hotels that accept dogs {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "Find me a hotel in {lugar} where dogs are strictly allowed in the rooms.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "I need a hotel in {lugar} specifically with a dog-friendly policy.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for a hotel stay in {lugar} that accommodates dogs without issue.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "hotel",
+      "noun": "hotel",
+      "synonyms": [],
+      "kind": "zone",
+      "slug": "nearby",
+      "canonical": "Can you recommend a good hotel near {zona} in {lugar}?",
+      "openai": [
+        {
+          "text": "Can you recommend a good hotel near {zona} in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "What's a good place to stay close to {zona} in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Which hotels would you recommend around {zona}, {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "List some good hotels near {zona} in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Give me a few recommended hotels around {zona}, {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Show me some good places to stay close to {zona} in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "good hotels near {zona} {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "recommended accommodation around {zona} {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} hotels close to {zona}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Recommend a good hotel in {lugar} that's close to {zona}.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "I'm looking for a good place to stay in {lugar}, near {zona}.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Find me a recommended hotel in {lugar} located near {zona}.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "Can you recommend any nice hotels located in or near {zona} in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "What are the best hotels to stay at around {zona} in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Where is a good place to stay near {zona} in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "List the top hotels located near {zona} in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me a list of hotels around {zona} in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me some options for hotels in the {zona} neighborhood of {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "hotels near {zona} {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "{lugar} hotels {zona} area",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "places to stay {zona} {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "Find me a hotel in {lugar} that is strictly within walking distance of {zona}.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "I need a hotel in {lugar} situated right in the {zona} district.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Recommend a {lugar} hotel located specifically around the {zona} area.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "hotel",
+      "noun": "hotel",
+      "synonyms": [],
+      "kind": "price",
+      "slug": "price",
+      "canonical": "Which hotel in {lugar} has the best prices per night?",
+      "openai": [
+        {
+          "text": "Which hotel in {lugar} has the lowest nightly rates?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Where can I find a hotel with the best price per night in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "What hotel offers the cheapest rooms per night in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "List hotels in {lugar} with the lowest prices per night.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Show me the cheapest nightly hotel rates in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Give me a list of hotels in {lugar} ranked by nightly price.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "cheapest hotels per night {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} hotel lowest nightly rates",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "best hotel prices per night {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Find a hotel in {lugar} with the lowest rate for one night.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Which hotel in {lugar} costs the least for a one-night stay?",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Show me the lowest-priced hotel in {lugar} for one night.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "Which hotel in {lugar} has the lowest nightly rates?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "What is the cheapest hotel per night in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Where can I find the most affordable hotel rooms per night in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "List the most affordable hotels in {lugar} by nightly price",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me a list of hotels in {lugar} with the best rates per night",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me options for budget-friendly hotels in {lugar} with low nightly costs",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "hotel {lugar} best price per night",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "cheapest hotels {lugar} nightly rate",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "low cost hotel rooms {lugar} per night",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "Find a hotel in {lugar} with the cheapest rates per night available for this weekend",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "I need a hotel room in {lugar} with the lowest nightly price for a solo traveler",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you find hotels in {lugar} with the best nightly prices for a standard double room?",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "hotel",
+      "noun": "hotel",
+      "synonyms": [],
+      "kind": "trust",
+      "slug": "trusted",
+      "canonical": "What is the most trusted hotel in {lugar}?",
+      "openai": [],
+      "gemini": [
+        {
+          "text": "Which hotel in {lugar} has the best reputation for reliability and trust?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "What is considered the most reputable and trusted hotel to stay at in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Where can I find the most dependable and trustworthy hotel in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me a list of the most trusted hotels located in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me several reputable and trustworthy hotel options around {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you provide a list of reliable hotels with trusted guest reviews in {lugar}?",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "most trusted hotel {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "reputable reliable hotels in {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "trusted hotel accommodation {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "I need a hotel in {lugar} that is proven to be completely trustworthy.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Recommend a trusted hotel in {lugar} with a verified track record of guest satisfaction.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for the most reliable hotel in {lugar} that guests consistently depend on.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "hotel",
+      "noun": "hotel",
+      "synonyms": [],
+      "kind": "ranking",
+      "slug": "top_rated",
+      "canonical": "What is the best hotel in {lugar}?",
+      "openai": [
+        {
+          "text": "What is the best hotel in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Which hotel in {lugar} is rated highest?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "What's the top-rated hotel in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "List the best hotels in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Show me the top-rated hotels in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "What are the highest-ranked hotels in {lugar}?",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "best hotel in {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} top rated hotels",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "highest ranked hotel {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Recommend a hotel in {lugar} with the highest rating.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Find the best hotel in {lugar} based on guest ratings.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Show me hotels in {lugar} ranked by rating.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "Which hotel is considered the absolute best in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "What is the top rated hotel to stay at in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "What is the finest hotel available in {lugar} right now?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you give me a list of the best hotels in {lugar}?",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me the top 5 hotels in {lugar} based on rankings.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Provide a list of the highest rated hotels in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "best hotel in {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "top rated hotels {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "{lugar} highest ranked hotel",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "What is the best hotel in {lugar} with guest ratings above 4.5 stars?",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me the best hotel in {lugar} that has won travel awards.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Which is the highest ranked hotel in {lugar} according to verified customer reviews?",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "car_repair",
+      "noun": "mechanic",
+      "synonyms": [
+        "auto repair shop",
+        "car repair shop",
+        "auto repair",
+        "car repair"
+      ],
+      "kind": "discovery",
+      "slug": "recommended",
+      "canonical": "Can you recommend a good mechanic in {lugar}?",
+      "openai": [
+        {
+          "text": "Can you recommend a good mechanic in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Where can I find a good mechanic in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Who is a good mechanic in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Give me a list of good mechanics in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "What are some good mechanics in {lugar}?",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Suggest a few good mechanics around {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "good mechanic in {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} good mechanics",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "good car mechanic near {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Recommend a good mechanic based in {lugar}.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "I'm looking for a good mechanic who works in {lugar}.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Find me a good mechanic with a workshop in {lugar}.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "Who is the best mechanic in {lugar} to get my car looked at?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can anyone suggest a trustworthy auto mechanic in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Where can I find a reliable car mechanic in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me a list of top-rated mechanics in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me a few recommendations for reputable auto mechanics around {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Please provide a list of dependable car repair mechanics in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "best auto mechanic {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "car mechanics {lugar} reviews",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "recommended mechanics {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "I need a reputable mechanic in {lugar} who is open on Saturdays.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you recommend an experienced car mechanic in {lugar} that works on hybrid vehicles?",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for a certified auto mechanic in {lugar} with positive customer reviews.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "car_repair",
+      "noun": "mechanic",
+      "synonyms": [
+        "auto repair shop",
+        "car repair shop",
+        "auto repair",
+        "car repair"
+      ],
+      "kind": "specialty",
+      "slug": "specialist",
+      "canonical": "Which mechanic in {lugar} has the best specialists?",
+      "openai": [
+        {
+          "text": "Which mechanic in {lugar} has the best specialists?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Where in {lugar} can I find a mechanic with the best specialist team?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Who has the best specialists at a mechanic shop in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "List mechanics in {lugar} with the best specialists.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Show me mechanic shops in {lugar} known for having top specialists.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Give me a few options for mechanics with the best specialist teams in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "best mechanic specialists {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} mechanic shops top specialists",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "mechanics with best specialist teams {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Find a mechanic in {lugar} with a team of top specialists.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Which mechanic in {lugar} has specialists who are considered the best?",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "I need a mechanic in {lugar} with the best specialists on staff.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "Which mechanic shop in {lugar} has the most qualified specialists?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Who are the top specialist mechanics working in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you tell me which garage in {lugar} employs the best specialist technicians?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "List the mechanics in {lugar} known for having certified specialists.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me a list of auto repair shops in {lugar} with specialized mechanics.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me garages in {lugar} that feature the best specialist technicians.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "specialist mechanic {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "best auto repair specialists {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "car garage specialist mechanics {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "Find me a mechanic in {lugar} that has dedicated vehicle specialists on staff.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "I need an auto repair shop in {lugar} with technicians specialized in complex repairs.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for a garage in {lugar} where the mechanics are fully certified specialists.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "car_repair",
+      "noun": "mechanic",
+      "synonyms": [
+        "auto repair shop",
+        "car repair shop",
+        "auto repair",
+        "car repair"
+      ],
+      "kind": "zone",
+      "slug": "nearby",
+      "canonical": "Can you recommend a good mechanic near {zona} in {lugar}?",
+      "openai": [
+        {
+          "text": "Can you recommend a good mechanic near {zona} in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Who is a good mechanic around {zona} in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Where can I find a good auto mechanic near {zona} in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "List some good mechanics near {zona} in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Give me a few good mechanic recommendations around {zona} in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "What are some good auto repair shops near {zona} in {lugar}?",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "good mechanic near {zona} {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} {zona} good auto mechanic",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "good car repair shops around {zona} {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Recommend a good mechanic in {lugar}, close to {zona}.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "I'm looking for a good mechanic in {lugar} who is near {zona}.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Suggest a good auto repair shop in {lugar} that's around {zona}.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "Can you recommend a reliable mechanic located around {zona} in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Who is the best auto mechanic near {zona} in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Where can I find a good car repair mechanic around {zona} in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Please give me a list of mechanics near {zona} in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me options for auto repair mechanics around the {zona} area of {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you list good mechanics in {lugar} close to {zona}?",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "mechanics {zona} {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "auto mechanic near {zona} {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "car repair mechanics around {zona} in {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "I need a mechanic specifically situated near {zona} in {lugar}.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for an auto repair mechanic that is based right in {zona} in {lugar}.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Find me a car mechanic only if their garage is around {zona} in {lugar}.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "car_repair",
+      "noun": "mechanic",
+      "synonyms": [
+        "auto repair shop",
+        "car repair shop",
+        "auto repair",
+        "car repair"
+      ],
+      "kind": "price",
+      "slug": "price",
+      "canonical": "Which mechanic in {lugar} has the best prices?",
+      "openai": [
+        {
+          "text": "Which mechanic in {lugar} has the lowest prices?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Where can I find the cheapest mechanic in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Who offers the best mechanic prices in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "List the mechanics with the best prices in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Show me the cheapest mechanics in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Give me a list of low-priced mechanics in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "cheapest mechanic {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "best mechanic prices {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "low cost mechanics in {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Find a mechanic in {lugar} with prices at the lower end.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "I need a mechanic in {lugar} who charges less than most.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Find me a mechanic in {lugar} whose prices are among the lowest.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "Who is the most affordable mechanic in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Which auto repair shop has the lowest rates around {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Where can I find a good mechanic in {lugar} that won't charge me a fortune?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "List the cheapest mechanics located in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me a list of budget-friendly auto mechanics in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me options for low cost mechanics in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "cheapest mechanic {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "affordable auto repair {lugar} low prices",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "best price mechanics in {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "Find me a mechanic in {lugar} that offers the cheapest diagnostic fee.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "I need a mechanic in {lugar} with the lowest hourly labor rates.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for an auto repair shop in {lugar} that provides free price estimates.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "car_repair",
+      "noun": "mechanic",
+      "synonyms": [
+        "auto repair shop",
+        "car repair shop",
+        "auto repair",
+        "car repair"
+      ],
+      "kind": "urgency",
+      "slug": "urgent",
+      "canonical": "Which mechanic in {lugar} is open today?",
+      "openai": [
+        {
+          "text": "Which mechanic in {lugar} is open today?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Is there a mechanic open today in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Where can I find a mechanic in {lugar} who's open today?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "List mechanics in {lugar} that are open today.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Show me auto repair shops open today in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "What are my options for mechanics open today in {lugar}?",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "mechanic open today {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} auto repair shops open today",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "car mechanics {lugar} open today",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Find a mechanic in {lugar} that is open today.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "I'm looking for a car repair shop in {lugar}; it needs to be open today.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Recommend a mechanic in {lugar}, but only if they're open today.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "Which mechanics in {lugar} are open today?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Is there an auto repair shop open right now in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Where can I find a mechanic open today around {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me a list of car repair shops open today in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "List mechanics in {lugar} that are operating today.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me options for auto garages open today in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "mechanic open today {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "auto repair {lugar} open now",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "car mechanics {lugar} open today",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "Find a local mechanic in {lugar} provided they are open today.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "I need an auto repair garage in {lugar} that is open today.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for car repair services in {lugar} with opening hours today.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "car_repair",
+      "noun": "mechanic",
+      "synonyms": [
+        "auto repair shop",
+        "car repair shop",
+        "auto repair",
+        "car repair"
+      ],
+      "kind": "trust",
+      "slug": "trusted",
+      "canonical": "What is the most trusted mechanic in {lugar}?",
+      "openai": [
+        {
+          "text": "Who is the most trusted mechanic in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Which mechanic do people trust most in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "What's the most trustworthy auto repair shop in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "List the most trusted mechanics in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Show me the most trustworthy auto repair shops in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Give me a list of the mechanics people trust most in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "most trusted mechanic {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} most trustworthy car mechanic",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "most trusted auto repair shops {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Recommend one mechanic in {lugar} who's trusted above all others.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Find me the most trusted mechanic in {lugar}, with a brief explanation.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Name the most trusted auto repair shop in {lugar} in one sentence.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "Who is the most reliable and honest mechanic in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Which mechanic has the best reputation for honest work in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "What auto repair shop in {lugar} can I truly trust with my car?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me a list of the most trusted mechanics in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you provide a list of honest auto repair shops around {lugar}?",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me reputable and trusted mechanics located in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "most trusted mechanic {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "reliable auto repair shops {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "honest car mechanic {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "Find me a mechanic in {lugar} that has verified trustworthy reviews from real customers.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for an auto repair shop in {lugar} with a proven track record of honesty.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Recommend a trusted mechanic in {lugar} known specifically for never overcharging or inventing fake repairs.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "real_estate_agency",
+      "noun": "real estate agent",
+      "synonyms": [
+        "realtor",
+        "real estate agency"
+      ],
+      "kind": "discovery",
+      "slug": "recommended",
+      "canonical": "Can you recommend a good real estate agent in {lugar}?",
+      "openai": [
+        {
+          "text": "Who would you recommend as a good real estate agent in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Can anyone suggest a good property agent in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Where can I find a good estate agent in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Give me a few good real estate agent recommendations in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "List some good property agents in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "What are some good estate agents to consider in {lugar}?",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "good real estate agent {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} property agent recommendations",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "recommended estate agents in {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Recommend a real estate agent who works in {lugar}.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Suggest a good property agent based in {lugar}.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "I'm looking for a good estate agent serving {lugar}.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "Who is a good real estate agent to use in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can anyone suggest a reputable property agent in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Which realtor would you recommend for buying or selling a home in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me a list of reliable real estate agents operating in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "List the best local real estate agents in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you provide a few options for good realtors based in {lugar}?",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "real estate agent {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "recommended realtors in {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "best property agent {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you recommend a full-time real estate agent who is based in {lugar}?",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for a good real estate agent in {lugar} with experience in residential properties.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Recommend a qualified realtor in {lugar} who holds an active license.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "real_estate_agency",
+      "noun": "real estate agent",
+      "synonyms": [
+        "realtor",
+        "real estate agency"
+      ],
+      "kind": "specialty",
+      "slug": "specialty",
+      "canonical": "Which real estate agent in {lugar} do you recommend to sell my house?",
+      "openai": [
+        {
+          "text": "Which real estate agent in {lugar} would you recommend for selling my house?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Who is a good estate agent in {lugar} to help me sell my home?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Can you recommend a real estate agent to sell my house in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "List some real estate agents in {lugar} you would recommend for selling a house.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Give me a few recommended estate agents in {lugar} who can sell my home.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "What are some recommended agents for selling a house in {lugar}?",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "recommended real estate agent for selling a house {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} estate agents recommended for selling homes",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "house selling agent recommendations {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Recommend a real estate agent in {lugar} who handles house sales.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "I need a recommended agent in {lugar} who can sell my house.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Find me an estate agent in {lugar} you recommend for selling a home.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "Who is the best real estate agent in {lugar} to hire for selling a house?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Which realtor in {lugar} would you recommend if I want to sell my property?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you recommend a real estate agent in {lugar} who specializes in selling homes?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me a list of real estate agents in {lugar} who focus on home sales.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Provide some listing agents in {lugar} to help sell my house.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me real estate agents in {lugar} recommended for home sellers.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "real estate agent sell house {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "home selling real estate agents {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "seller real estate agent {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "Find a real estate agent in {lugar} who specifically acts as a seller's agent.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "I need a real estate agent in {lugar} dedicated specifically to representing home sellers.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for a real estate agent in {lugar} whose primary service is selling residential property.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "real_estate_agency",
+      "noun": "real estate agent",
+      "synonyms": [
+        "realtor",
+        "real estate agency"
+      ],
+      "kind": "zone",
+      "slug": "nearby",
+      "canonical": "Can you recommend a good real estate agent near {zona} in {lugar}?",
+      "openai": [
+        {
+          "text": "Can you recommend a good real estate agent near {zona} in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Who is a good estate agent around {zona} in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Which real estate agent would you recommend near {zona}, {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "List some good real estate agents near {zona} in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Give me a few recommended estate agents around {zona}, {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Show me real estate agents you'd recommend near {zona} in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "good real estate agent near {zona} {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "recommended estate agents {zona} {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "good property agents around {zona} in {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Recommend a good real estate agent in {lugar} who works near {zona}.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "I'm looking for a good estate agent in {lugar}, specifically around {zona}.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Suggest a reputable property agent serving the {zona} area of {lugar}.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "Can you recommend an experienced real estate agent who works in {zona} in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Who is a reliable real estate agent operating around {zona} in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Which real estate agent should I hire if I want to buy near {zona} in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me a list of real estate agents based in or near {zona} in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me top-rated real estate agents serving the {zona} neighborhood in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Provide names of local property agents who handle sales around {zona} in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "real estate agent {zona} {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "property agents near {zona} in {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "realtors {zona} area {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "I need a real estate agent whose main office is located directly in {zona} in {lugar}.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for a real estate agent specifically specializing in listings around {zona} in {lugar}.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Find me a real estate agent who covers properties strictly within {zona} in {lugar}.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "real_estate_agency",
+      "noun": "real estate agent",
+      "synonyms": [
+        "realtor",
+        "real estate agency"
+      ],
+      "kind": "price",
+      "slug": "price",
+      "canonical": "Which real estate agent in {lugar} charges the lowest commission?",
+      "openai": [
+        {
+          "text": "Which real estate agent in {lugar} charges the lowest commission?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Who is the cheapest real estate agent in {lugar} based on commission?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Which agent has the lowest real estate commission in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "List the real estate agents in {lugar} with the lowest commission rates.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Show me estate agents in {lugar} ranked by commission, lowest first.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Give me a list of agents charging the lowest real estate commission in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "lowest commission real estate agent {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} estate agents cheapest commission",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "real estate agents {lugar} lowest commission rates",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Find a real estate agent in {lugar} whose commission is the lowest.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Recommend an estate agent in {lugar} with the lowest commission rate.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "I need a real estate agent in {lugar} who charges less commission than other agents.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "Which real estate agent in {lugar} has the cheapest commission fees?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Who is the lowest commission realtor in {lugar} to sell a house?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you tell me which estate agent charges the lowest percentage in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me a list of low commission real estate agents in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me the cheapest real estate agents based in {lugar} by commission rate.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Provide a list of discount fee realtors operating in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "lowest commission real estate agent {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "cheapest realtor fees {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "discount commission estate agents {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "Find me a real estate agent in {lugar} whose commission rate is under two percent.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "I need an estate agent in {lugar} with a commission fee capped at a low flat rate.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Looking for a realtor in {lugar} who charges less than standard commission to list a home.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "real_estate_agency",
+      "noun": "real estate agent",
+      "synonyms": [
+        "realtor",
+        "real estate agency"
+      ],
+      "kind": "trust",
+      "slug": "trusted",
+      "canonical": "What is the most trusted real estate agent in {lugar}?",
+      "openai": [
+        {
+          "text": "Who is the most trusted real estate agent in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Which estate agent in {lugar} do people trust the most?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Who would you say is the most trustworthy real estate agent in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "List the most trusted real estate agents in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Show me a list of the most trustworthy estate agents in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Give me several real estate agents in {lugar} who are known for being trustworthy.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "most trusted real estate agent {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} trustworthy estate agents",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "real estate agents {lugar} most trusted",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Find me an estate agent in {lugar} who is widely trusted.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "I need a real estate agent in {lugar} with a reputation for trustworthiness.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Recommend a real estate agent in {lugar}, but only one people consider trustworthy.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "Who is the most trusted real estate agent in {lugar} to help buy a house?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Which realtor has the highest trust rating in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "What is considered the most reputable real estate agent in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me a list of the most trusted real estate agents in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you provide trusted realtors operating in {lugar}?",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me reputable real estate agents in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "most trusted real estate agent {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "reputable realtors {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "trusted estate agent {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "Find a trusted real estate agent in {lugar} who holds a full professional license.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "I need the most trusted realtor in {lugar} with verified positive client feedback.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Recommend reputable real estate agents in {lugar} who have over ten years of market experience.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    },
+    {
+      "categoryKey": "real_estate_agency",
+      "noun": "real estate agent",
+      "synonyms": [
+        "realtor",
+        "real estate agency"
+      ],
+      "kind": "ranking",
+      "slug": "top_rated",
+      "canonical": "What is the best real estate agent in {lugar}?",
+      "openai": [
+        {
+          "text": "Who is the best real estate agent in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "Which estate agent is the best in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "What's the top real estate agency in {lugar}?",
+          "format": "open_question",
+          "generator": "openai"
+        },
+        {
+          "text": "List the best real estate agents in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Can you give me a list of the top estate agents in {lugar}?",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "Show me the highest-ranked real estate agents in {lugar}.",
+          "format": "list_request",
+          "generator": "openai"
+        },
+        {
+          "text": "best real estate agent {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "{lugar} top estate agent",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "highest ranked real estate agents {lugar}",
+          "format": "keyword",
+          "generator": "openai"
+        },
+        {
+          "text": "Recommend only the best real estate agent in {lugar}.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Give me the top three real estate agents in {lugar}.",
+          "format": "constraint",
+          "generator": "openai"
+        },
+        {
+          "text": "Rank the five best estate agents in {lugar}.",
+          "format": "constraint",
+          "generator": "openai"
+        }
+      ],
+      "gemini": [
+        {
+          "text": "Who is considered the number one real estate agent in {lugar} right now?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Which realtor has the absolute best reputation for buying or selling a home in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you tell me who the top real estate agent is in {lugar}?",
+          "format": "open_question",
+          "generator": "gemini"
+        },
+        {
+          "text": "Give me a list of the top-ranked real estate agents working in {lugar}.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me the best real estate agents in {lugar} ranked by performance.",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "Can you provide a ranking of the top realtors in {lugar}?",
+          "format": "list_request",
+          "generator": "gemini"
+        },
+        {
+          "text": "best real estate agent {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "top rated realtors in {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "highest ranked real estate agent {lugar}",
+          "format": "keyword",
+          "generator": "gemini"
+        },
+        {
+          "text": "Who is the best real estate agent in {lugar} specifically for residential properties?",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "I need the top-ranked realtor in {lugar} with the highest client satisfaction scores.",
+          "format": "constraint",
+          "generator": "gemini"
+        },
+        {
+          "text": "Show me the best real estate agent in {lugar} who holds an active local broker license.",
+          "format": "constraint",
+          "generator": "gemini"
+        }
+      ]
+    }
+  ]
+}

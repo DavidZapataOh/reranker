@@ -206,3 +206,42 @@ test("a German compound that holds the category noun names the category", () => 
   expect(outcome("Welche Zahnarztpraxen in {lugar} nehmen neue Patienten?", dentist)).toBe("ok");
   expect(outcome("Kannst du mir einen Kinderzahnarzt in {lugar} empfehlen?", dentist)).toBe("ok");
 });
+
+describe("measured on recorded generations", () => {
+  const ctx = (language: GuardContext["language"], noun: string): GuardContext => ({
+    ...bakeryDiscovery,
+    language,
+    noun,
+    synonyms: [],
+    countryName: "",
+    otherPlaceNames: new Set(),
+    blockedNames: new Set(),
+  });
+  const keyword = (text: string, c: GuardContext) => {
+    const result = guardParaphrase({ text, format: "keyword", generator: "openai" }, c);
+    return result.ok ? "ok" : result.guard;
+  };
+
+  test("a plural that replaces the noun's last letter still names it", () => {
+    expect(outcome("Mi fai una lista di dentisti a {lugar}?", ctx("it", "dentista"))).toBe("ok");
+    expect(outcome("Quais hotéis você recomenda em {lugar}?", ctx("pt", "hotel"))).toBe("ok");
+  });
+
+  test("a proximity word before {lugar} names the city, not a neighborhood", () => {
+    const mechanic = ctx("en", "mechanic");
+    expect(outcome("Who is a good car mechanic near {lugar}?", mechanic)).toBe("ok");
+    expect(outcome("Who is a good car mechanic near the station in {lugar}?", mechanic)).toBe(
+      "qualifier",
+    );
+  });
+
+  test("a keyword search may be just the noun and the city", () => {
+    expect(keyword("dentista {lugar}", ctx("it", "dentista"))).toBe("ok");
+    expect(outcome("dentista {lugar}", ctx("it", "dentista"))).toBe("length");
+  });
+
+  test("the plural of a word written with a capital is not a name", () =>
+    expect(
+      outcome("I need a mechanic in {lugar} who is open on Saturdays.", ctx("en", "mechanic")),
+    ).toBe("ok"));
+});

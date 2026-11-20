@@ -111,6 +111,8 @@ const failing = new Set<Provider>();
 const hanging = new Set<Provider>();
 
 beforeEach(() => {
+  // Deadlines run on a simulated clock: wall time under load must not decide a test.
+  vi.useFakeTimers({ toFake: ["Date", "setTimeout", "clearTimeout"] });
   axes = new Map();
   doubles.enabled = true;
   doubles.promptless.clear();
@@ -132,7 +134,10 @@ beforeEach(() => {
     candidates.map((c) => !c.text.includes("nope")),
   );
 });
-afterEach(() => vi.clearAllMocks());
+afterEach(() => {
+  vi.useRealTimers();
+  vi.clearAllMocks();
+});
 
 const calls = () =>
   doubles.generate.mock.calls.length +
@@ -202,14 +207,23 @@ describe("generateIntentSet", () => {
     expect(r.outcome).toBe("template");
     expect(r.generators).toBe(0);
     expect(r.report.fallback).toBe("incomplete");
-    expect(Date.now() - t0).toBeLessThan(1000);
+    // Settled without waiting on any timer: the clock never had to move.
+    expect(Date.now()).toBe(t0);
   });
 
   test("a provider that never answers is cut at the deadline and the set is built from what arrived", async () => {
     hanging.add("gemini");
     const t0 = Date.now();
-    const r = await generateIntentSet(bakery({ deadlineAt: t0 + 5000 }));
-    expect(Date.now() - t0).toBeLessThan(5000);
+    let settled = false;
+    const run = generateIntentSet(bakery({ deadlineAt: t0 + 5000 })).finally(() => {
+      settled = true;
+    });
+    // Paraphrase calls end 3.25 s before the deadline, leaving the rest for embedding and judging.
+    await vi.advanceTimersByTimeAsync(5000 - 3250 - 1);
+    expect(settled).toBe(false);
+    await vi.advanceTimersByTimeAsync(1);
+    const r = await run;
+    expect(Date.now() - t0).toBe(5000 - 3250);
     expect(r.outcome).toBe("generated");
     expect(r.generators).toBe(1);
   });
@@ -223,7 +237,7 @@ describe("generateIntentSet", () => {
     expect(r.outcome).toBe("template");
     expect(r.report.fallback).toBe("no_time");
     expect(calls()).toBe(0);
-    expect(Date.now() - t0).toBeLessThan(50);
+    expect(Date.now()).toBe(t0);
   });
 
   test("kill switch off: the template and no calls", async () => {
