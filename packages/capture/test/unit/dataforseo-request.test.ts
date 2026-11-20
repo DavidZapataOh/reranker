@@ -148,6 +148,28 @@ describe("geo per engine", () => {
     ).toThrow(InvalidInputError));
 });
 
+describe("language", () => {
+  test.each(["google-ai-overview", "google-ai-mode", "gemini", "chatgpt"] as const)(
+    "%s is asked in the slot's language",
+    (engine) => {
+      const english = { ...slot(engine, MEDELLIN), language: "en" as const };
+      expect(buildRequest(english, "live").language_code).toBe("en");
+      expect(buildRequest(english, "task").language_code).toBe("en");
+    },
+  );
+
+  test("a slot frozen without a language is asked in its country's main one", () => {
+    expect(buildRequest(slot("chatgpt", MEDELLIN), "live").language_code).toBe("es");
+    expect(buildRequest(slot("chatgpt", "us"), "live").language_code).toBe("en");
+    expect(buildRequest(slot("chatgpt", "br"), "live").language_code).toBe("pt");
+  });
+
+  test("the language is part of the exact bytes sent", () => {
+    const portuguese = { ...slot("gemini", MEDELLIN), language: "pt" as const };
+    expect(serialized(portuguese, "live")[0].language_code).toBe("pt");
+  });
+});
+
 describe("request bodies", () => {
   // The fields each endpoint documents (docs.dataforseo.com/v3, read 2026-11-18); a key outside
   // them would be ignored by the API or rejected.
