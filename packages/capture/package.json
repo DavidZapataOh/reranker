@@ -17,6 +17,7 @@
     "record:live": "tsx --conditions=react-server scripts/record-live.ts",
     "record:brightdata": "tsx --conditions=react-server scripts/record-brightdata.ts",
     "record:phrasing": "tsx --conditions=react-server scripts/record-phrasing.ts",
+    "record:term-volume": "tsx --conditions=react-server scripts/record-term-volume.ts",
     "record:language": "tsx --conditions=react-server scripts/record-language.ts",
     "analyze:language": "tsx --conditions=react-server scripts/analyze-language.ts"
   },
