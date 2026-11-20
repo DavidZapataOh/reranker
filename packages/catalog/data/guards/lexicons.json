@@ -484,5 +484,85 @@
       "Wohnung",
       "Zimmer"
     ]
+  },
+  "it": {
+    "qualifiers": {
+      "price": [
+        "economico",
+        "economica",
+        "economici",
+        "economiche",
+        "prezzo",
+        "prezzi",
+        "costa meno",
+        "costa poco",
+        "quanto costa",
+        "quanto prende",
+        "spendere",
+        "poco prezzo",
+        "low cost",
+        "sconto",
+        "sconti",
+        "offerta",
+        "offerte",
+        "preventivo",
+        "listino prezzi",
+        "parcella",
+        "onorario",
+        "provvigione",
+        "provvigioni",
+        "retta"
+      ],
+      "urgency": [
+        "oggi",
+        "adesso",
+        "subito",
+        "urgente",
+        "urgenti",
+        "urgenza",
+        "24 ore",
+        "h24",
+        "pronto intervento",
+        "consegna rapida",
+        "velocemente"
+      ],
+      "zone": ["vicino", "vicina", "vicini", "in zona", "nei dintorni", "quartiere"],
+      "trust": [
+        "affidabile",
+        "affidabili",
+        "di fiducia",
+        "serio",
+        "seria",
+        "recensioni",
+        "sicuro",
+        "sicura"
+      ],
+      "insurance_or_payment": [
+        "convenzionato",
+        "convenzionata",
+        "convenzionati",
+        "asl",
+        "mutua",
+        "assicurazione",
+        "detrazione",
+        "a rate"
+      ],
+      "ranking": [
+        "top",
+        "classifica",
+        "più votato",
+        "più votata",
+        "più votati",
+        "valutazioni migliori",
+        "recensioni",
+        "più famoso",
+        "più famosa",
+        "più bello",
+        "più bella",
+        "più prestigioso",
+        "più prestigiosa"
+      ]
+    },
+    "capitalized": ["ASL", "IVA", "Montessori"]
   }
 }

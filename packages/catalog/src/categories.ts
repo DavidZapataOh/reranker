@@ -49,6 +49,7 @@ export type SeedLanguages = {
   pt: CategoryNames<GenderedNoun>;
   de: CategoryNames<GenderedNoun>;
   fr: CategoryNames<GenderedNoun>;
+  it: CategoryNames<GenderedNoun>;
 };
 
 export type SeedCategory = {
@@ -89,6 +90,7 @@ function seed(
       pt: Object.freeze(languages.pt),
       de: Object.freeze(languages.de),
       fr: Object.freeze(languages.fr),
+      it: Object.freeze(languages.it),
     }),
     archetype,
     defaultScope,
@@ -124,6 +126,12 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
         noun: { text: "Zahnarzt", gender: "m" },
         synonyms: ["Zahnarztpraxis", "Zahnklinik", "Zahnärzte"],
       },
+      // Italian searches: "dentista" 90.5K a month and 9.2K AI searches; "studio dentistico" only
+      // shows up with "vicino a me" (4.4K) and "clinica dentale" with a clinic's name.
+      it: {
+        noun: { text: "dentista", gender: "m" },
+        synonyms: ["studio dentistico", "clinica dentale", "odontoiatra"],
+      },
     },
   ),
   seed(
@@ -140,6 +148,11 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
       fr: { noun: { text: "restaurant", gender: "m" }, synonyms: [] },
       // 321K AI searches a month in Germany.
       de: { noun: { text: "Restaurant", gender: "n" }, synonyms: [] },
+      // "ristorante": 550K a month, 352K AI searches.
+      it: {
+        noun: { text: "ristorante", gender: "m" },
+        synonyms: ["trattoria", "osteria", "pizzeria"],
+      },
     },
   ),
   // Motels are left out: in much of Latin America they are love hotels, a different question set.
@@ -166,6 +179,8 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
       fr: { noun: { text: "hôtel", gender: "m", elides: true }, synonyms: ["chambre d'hôte"] },
       // "hotel" 514K AI searches a month, "pension" 22K.
       de: { noun: { text: "Hotel", gender: "n" }, synonyms: ["Pension"] },
+      // "hotel": 5M a month and 254K AI searches; people say "albergo" far less, B&Bs search apart.
+      it: { noun: { text: "hotel", gender: "m" }, synonyms: ["albergo", "bed and breakfast"] },
     },
   ),
   seed(
@@ -193,6 +208,11 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
         noun: { text: "Autowerkstatt", gender: "f" },
         synonyms: ["Kfz-Werkstatt", "Werkstatt"],
       },
+      // "meccanico": 90.5K a month and 7.3K AI searches, against 18.1K and 595 for "officina meccanica".
+      it: {
+        noun: { text: "meccanico", gender: "m" },
+        synonyms: ["officina meccanica", "officina", "autofficina"],
+      },
     },
   ),
   seed(
@@ -211,6 +231,11 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
       fr: { noun: { text: "agence immobilière", gender: "f" }, synonyms: ["agent immobilier"] },
       // "immobilienmakler" 40.5K a month; "makler" (14.8K) is mostly "ohne makler" and insurance.
       de: { noun: { text: "Immobilienmakler", gender: "m" }, synonyms: ["Makler"] },
+      // "agenzia immobiliare": 74K a month and 11K AI searches, against 5.4K and 1.7K for the agent.
+      it: {
+        noun: { text: "agenzia immobiliare", gender: "f" },
+        synonyms: ["agente immobiliare", "immobiliare"],
+      },
     },
   ),
   // A web-only store has no Places type; its noun comes from the inferred category.
@@ -227,6 +252,7 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
       pt: { noun: null, synonyms: ["loja online", "loja virtual"] },
       fr: { noun: null, synonyms: ["boutique en ligne", "magasin en ligne"] },
       de: { noun: null, synonyms: ["Onlineshop", "Online-Shop"] },
+      it: { noun: null, synonyms: ["negozio online", "shop online", "sito"] },
     },
   ),
 ]);
