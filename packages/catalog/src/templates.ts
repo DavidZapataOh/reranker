@@ -66,6 +66,11 @@ function templatesFor(language: MeasurementLanguage): Templates {
   return templates;
 }
 
+/** Refuses a language whose templates have not landed: it is never asked in another one. */
+export function requireTemplates(language: MeasurementLanguage): void {
+  templatesFor(language);
+}
+
 export function templatesVersion(language: MeasurementLanguage): string {
   return templatesFor(language).version;
 }

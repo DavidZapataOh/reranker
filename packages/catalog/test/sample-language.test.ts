@@ -1,10 +1,11 @@
 import type { EngineId } from "@reranker/schema";
-import { MeasurementPlan } from "@reranker/schema/measurement";
+import { MeasurementLanguage, MeasurementPlan } from "@reranker/schema/measurement";
 import { describe, expect, test } from "vitest";
 import { getGeo } from "../src/geo/resolve";
 import { variantId } from "../src/hash";
 import { MeasurementLanguageError } from "../src/language";
 import { planMeasurement } from "../src/sample";
+import { TEMPLATE_LANGUAGES } from "../src/templates";
 import { dentalSet, templateSet } from "./fixtures/intent-set";
 
 const ENGINES: readonly EngineId[] = ["chatgpt", "gemini", "google-ai-overview"];
@@ -19,7 +20,7 @@ const local = (reportId: string) => ({
   reportId,
 });
 
-const storeSet = (language: "es" | "en" | "pt") =>
+const storeSet = (language: MeasurementLanguage) =>
   templateSet({
     archetype: "online_national",
     scope: "national",
@@ -82,11 +83,25 @@ describe("planMeasurement languages", () => {
     expect(planMeasurement({ ...us, language: "es" }).language).toBe("es");
   });
 
-  test("a country whose main language has no templates fails closed", () => {
-    const error = refusal(() => planMeasurement({ ...alone("r-1"), geo: getGeo("fr") }));
+  test("a country whose main language is not measured fails closed", () => {
+    const error = refusal(() => planMeasurement({ ...alone("r-1"), geo: getGeo("nl") }));
     expect(error).toBeInstanceOf(MeasurementLanguageError);
-    expect(error).toMatchObject({ language: "fr", gap: "unsupported" });
+    expect(error).toMatchObject({ language: "nl", gap: "unsupported" });
   });
+
+  test.each(MeasurementLanguage.options.filter((l) => !TEMPLATE_LANGUAGES.includes(l)))(
+    "a %s measurement fails closed until its templates land",
+    (language) => {
+      for (const input of [
+        { ...alone("r-1"), language },
+        { ...alone("r-1"), secondary: { language, intentSet: storeSet("es"), noun: "x" } },
+      ]) {
+        const error = refusal(() => planMeasurement(input));
+        expect(error).toBeInstanceOf(MeasurementLanguageError);
+        expect(error).toMatchObject({ language, gap: "no_templates" });
+      }
+    },
+  );
 
   test("a city cannot be named in a language the location data has no names in", () => {
     const secondary = { language: "en" as const, intentSet: dentalSet("en"), noun: "dentist" };
