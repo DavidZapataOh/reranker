@@ -131,12 +131,14 @@ describe("planMeasurement", () => {
       }).observations;
       return Object.fromEntries(o.map((x) => [x.engine, [x.provider, x.geoDeclared]]));
     };
-    expect(declared({ chatgpt: "dataforseo" }).chatgpt).toEqual([
-      "dataforseo",
-      { level: "country", label: "Colombia" },
+    // A paid report asks Bright Data, which answers from a coordinate but outlasts the free
+    // report's budget.
+    expect(declared({ chatgpt: "brightdata" }).chatgpt).toEqual([
+      "brightdata",
+      expect.objectContaining({ label: expect.any(String) }),
     ]);
     expect(declared()).toMatchObject({
-      chatgpt: ["brightdata", expect.anything()],
+      chatgpt: ["dataforseo", { level: "country", label: "Colombia" }],
       perplexity: ["brightdata", { level: "country", label: "Colombia" }],
       gemini: ["dataforseo", { level: "city", label: "Bogotá, D.C." }],
       "google-ai-mode": ["dataforseo", { level: "city" }],
