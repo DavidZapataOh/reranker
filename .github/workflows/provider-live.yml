@@ -2,6 +2,12 @@ name: provider-live
 # Spends real money on production provider endpoints, so it only ever runs when dispatched.
 on:
   workflow_dispatch:
+    inputs:
+      provider:
+        description: Provider whose production answers to record
+        type: choice
+        options: [dataforseo, brightdata]
+        default: dataforseo
 permissions: {}
 concurrency:
   group: provider-live
@@ -11,7 +17,8 @@ jobs:
     # Only reviewed code reaches the production credentials.
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
-    # Up to 15 min queueing for a Neon CI branch slot, then about twenty Live calls of up to 2 min.
+    # Up to 15 min queueing for a Neon CI branch slot, then about twenty DataForSEO Live calls of
+    # up to 2 min, or six concurrent Bright Data scrapes of up to 4 min.
     timeout-minutes: 40
     permissions: { contents: read }
     steps:
@@ -31,18 +38,27 @@ jobs:
           db-url: ${{ steps.branch.outputs.db-url }}
           db-host-pooled: ${{ steps.branch.outputs.db-host-pooled }}
       - name: Record DataForSEO production answers
+        if: inputs.provider == 'dataforseo'
         env:
           APP_ENV: development
           DATAFORSEO_LOGIN: ${{ secrets.DATAFORSEO_LOGIN }}
           DATAFORSEO_PASSWORD: ${{ secrets.DATAFORSEO_PASSWORD }}
           OUT_DIR: ${{ runner.temp }}/dataforseo-live
         run: pnpm --filter @reranker/capture record:live "$OUT_DIR"
-      # The exact bytes, for the parser tests under packages/capture/test/fixtures/recorded/live.
+      - name: Record Bright Data production answers
+        if: inputs.provider == 'brightdata'
+        env:
+          APP_ENV: development
+          BRIGHTDATA_API_KEY_CI: ${{ secrets.BRIGHTDATA_API_KEY_CI }}
+          BRIGHTDATA_BILLING_API_KEY_CI: ${{ secrets.BRIGHTDATA_BILLING_API_KEY_CI }}
+          OUT_DIR: ${{ runner.temp }}/brightdata-live
+        run: pnpm --filter @reranker/capture record:brightdata "$OUT_DIR"
+      # The exact bytes, for the parser tests under packages/capture/test/fixtures/recorded.
       - if: ${{ !cancelled() }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: dataforseo-live
-          path: ${{ runner.temp }}/dataforseo-live
+          name: ${{ inputs.provider }}-live
+          path: ${{ runner.temp }}/${{ inputs.provider }}-live
           retention-days: 3
           if-no-files-found: error
       - if: always() && steps.branch.outputs.branch-id != ''
