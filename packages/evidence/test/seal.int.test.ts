@@ -219,14 +219,27 @@ describe("sealCapture", () => {
       release = resolve;
     });
     let held = 0;
+    let holderFailed: unknown;
     const holders = Array.from({ length: 12 }, () =>
       withSystem("evidence.test", async () => {
         held += 1;
         await gate;
+      }).catch((error: unknown) => {
+        holderFailed ??= error;
+        throw error;
       }),
     );
-    await vi.waitUntil(() => held === 12);
+    // The gate opens whatever happens here: twelve connections left held would fail every later
+    // test of the file on a full pool. Opening them on a cold pool can take longer than a second;
+    // each one connects within the pool's connect timeout or fails, and the wait outlasts that.
     try {
+      await vi.waitUntil(
+        () => {
+          if (holderFailed) throw holderFailed;
+          return held === 12;
+        },
+        { timeout: 10_000 },
+      );
       const sealed = await sealCapture(input);
       expect(storedEnvelopes()).toEqual([`envelopes/${sealed.envelopeSha256}`]);
     } finally {
