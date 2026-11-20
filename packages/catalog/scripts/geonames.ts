@@ -44,6 +44,7 @@ export type GeoNamesEntry = {
 };
 
 export type CountryGeoNames = {
+  country?: string;
   spanishSpeaking: boolean;
   /** The languages the country has established, from `countryInfo.txt`, as ISO 639-1 codes. */
   languages?: readonly string[];
@@ -59,6 +60,8 @@ export type Naming = {
   /** The name in each language, and the languages GeoNames itself names the place in. */
   names: Record<PlaceLanguage, string>;
   own: PlaceLanguage[];
+  /** Whether its Italian name is Italian rather than a French or German one Italian uses. */
+  italian: boolean;
 };
 
 export type RegionInput = { code: number; name: string; level: 1 | 2 };
@@ -317,7 +320,7 @@ function naming(
   fallback: string,
   names: readonly string[],
   data: CountryGeoNames,
-): Omit<Naming, "names" | "own"> {
+): Omit<Naming, "names" | "own" | "italian"> {
   const name = spanishName ?? fallback;
   const seen = new Set([normalizePlaceName(name)]);
   const aliases = names.filter((alias) => {
@@ -367,7 +370,7 @@ function localizedNames(
   entry: GeoNamesEntry,
   data: CountryGeoNames,
   display: string,
-): Pick<Naming, "names" | "own"> {
+): Pick<Naming, "names" | "own" | "italian"> {
   const native = nativeName(listed, entry, data, display);
   const names = {} as Record<PlaceLanguage, string>;
   const own: PlaceLanguage[] = [];
@@ -386,7 +389,43 @@ function localizedNames(
     names[language] = chosen ? accented(chosen.name, pool) : native;
     if (chosen) own.push(language);
   }
-  return { names, own };
+  return { names, own, italian: italianName(entry, data, listed, names.it, own.includes("it")) };
+}
+
+// Spanish, French and German words Italian never writes in a name of its own.
+const FOREIGN_FUNCTION_WORDS = / (de|y|el|los|las|du|des|et|von|der|und) /i;
+
+/**
+ * Whether the place's Italian name is an Italian one: GeoNames tags it Italian, and either no
+ * other name of the place, DataForSEO's included, writes it so ("Il Cairo", "L'Aia"), spacing and
+ * accents aside ("LaBelle"), or the place is where Italian names places. The Aosta Valley and
+ * South Tyrol name theirs in French and German too, so there an Italian tag alone does not make
+ * "La Magdeleine" Italian.
+ */
+function italianName(
+  entry: GeoNamesEntry,
+  data: CountryGeoNames,
+  listed: string,
+  name: string,
+  tagged: boolean,
+) {
+  // GeoNames tags some Spanish or French names Italian ("La Cruz de Elota"); Italian writes
+  // none of these words.
+  if (!tagged || FOREIGN_FUNCTION_WORDS.test(name)) return false;
+  const comparable = (written: string) => normalizePlaceName(written).replaceAll(" ", "");
+  const others = [
+    listed,
+    entry.name,
+    ...entry.alternates.filter((a) => a.lang !== "it").map((a) => a.name),
+  ];
+  if (!others.some((other) => comparable(other) === comparable(name))) return true;
+  const bilingual = entry.admin1 === "19" || (entry.admin1 === "17" && entry.admin2 === "BZ");
+  return (
+    data.country === "SM" ||
+    data.country === "VA" ||
+    (data.country === "IT" && !bilingual) ||
+    (data.country === "CH" && entry.admin1 === "TI")
+  );
 }
 
 // Historical, abandoned and destroyed places never locate a city that exists today.
@@ -483,6 +522,7 @@ export function geoNamesCollector(
         list.sort((a, b) => a.id - b.id);
       }
       return (country) => ({
+        country,
         spanishSpeaking: spanishSpeaking.has(country),
         languages: languages.get(country) ?? [],
         entries: byCountry.get(country) ?? [],

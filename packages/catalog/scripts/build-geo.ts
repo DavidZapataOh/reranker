@@ -275,6 +275,7 @@ function buildFromLocations(
           countryLanguages: geonames?.languages ?? [],
           listed: placeName(row),
           ownName: fromGeoNames?.own.includes(language) ?? false,
+          italianName: fromGeoNames?.italian ?? false,
         });
       if (article) articles[language][code] = article;
     }

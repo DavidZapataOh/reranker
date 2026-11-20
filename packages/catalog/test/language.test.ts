@@ -172,6 +172,14 @@ describe("placeTerm", () => {
     ["eg-c1005390", "it", "dentista a {lugar}", "dentista al Cairo"],
     ["it-c9205063", "it", "dentista a {lugar}", "dentista alla Spezia"],
     ["it-c9199385", "it", "dentista a {lugar}", "dentista all'Aquila"],
+    ["nl-c9063489", "it", "dentista a {lugar}", "dentista all'Aia"],
+    ["sa-c1028879", "it", "dentista a {lugar}", "dentista alla Mecca"],
+    // French, Spanish and American names Italian writes as they are.
+    ["it-c9203622", "it", "dentista a {lugar}", "dentista a La Magdeleine"],
+    ["it-c9203848", "it", "dentista a {lugar}", "dentista a La Thuile"],
+    ["ch-c1003082", "it", "dentista a {lugar}", "dentista a La Chaux-de-Fonds"],
+    ["mx-c1031260", "it", "dentista a {lugar}", "dentista a La Cruz de Elota"],
+    ["us-c1015079", "it", "dentista a {lugar}", "dentista a La Belle"],
     ["eg-c1005390", "pt", "dentista em {lugar}", "dentista no Cairo"],
   ] as const)("%s in %s: %s reads %s", (key, language, template, written) =>
     expect(asked(key, language, template)).toBe(written),
