@@ -1,0 +1,2268 @@
+{
+  "version": "2026.11.0",
+  "language": "de",
+  "collected": "2026-11-20",
+  "source": "query-phrasing workflow, run 44815503717 (DataForSEO, DE market, de)",
+  "method": "Each text names the observed phrasings it follows. 'observed': people type that form; 'adapted': the form is observed but reworded so the slot works for any noun of any gender, singular, with the words that agree with it written as {masculine|feminine|neuter} groups; 'unsupported': no query in the data. Search data is lowercase; the texts use standard German spelling.",
+  "register": "du, standard German (Germany)",
+  "patterns": {
+    "kannst_du": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "kannst du mir eine bewerbung schreiben",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "kannst du mir einen gefallen tun",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "kannst du mir eine email schreiben",
+          "rank": 2
+        }
+      ],
+      "note": "people ask assistants 'kannst du mir einen/eine ...' for tasks; the templates ask for a recommendation, with the article agreeing with the noun"
+    },
+    "empfiehl_mir": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "empfiehl mir eine serie",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "empfiehl mir ein buch",
+          "rank": 2
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "empfiehl mir einen film",
+          "rank": 3
+        }
+      ],
+      "note": "observed for films, books and series; the templates ask it of a business"
+    },
+    "wo_finde": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "wo finde ich eine gute friseur in münchen",
+          "volume": 3
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "wo finde ich einen guten friseur in münchen",
+          "volume": 3
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "wo finde ich eine gute friseur in berlin",
+          "volume": 2
+        }
+      ]
+    },
+    "wie_finde_gut": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "wie finde ich einen guten steuerberater",
+          "volume": 1600
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "wie finde ich einen guten immobilienmakler",
+          "volume": 70
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "wie finde ich einen guten makler",
+          "volume": 70
+        }
+      ]
+    },
+    "wie_erkenne": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "de",
+          "query": "Wie erkenne ich einen guten Makler?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "de",
+          "query": "Wie erkennt man eine gute Kita?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "de",
+          "query": "Wie erkennt man gute Zahnärzte?"
+        }
+      ]
+    },
+    "ich_suche": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "ich suche eine person wie kann ich sie finden",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "ich suche einen film weiß aber den titel nicht",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "ich suche eine verstorbene person in österreich",
+          "rank": 2
+        }
+      ],
+      "note": "observed for jobs, films and flats; the templates look for a business"
+    },
+    "welche_beste": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "welcher baumarkt ist der günstigste",
+          "volume": 390
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "welches ist das beste hotel in evrenseki",
+          "volume": 390
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "welches delphin hotel ist das beste",
+          "volume": 260
+        }
+      ]
+    },
+    "welche_hat": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "welche bäckerei hat heute geöffnet",
+          "volume": 2900
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "welches restaurant hat montags geöffnet in der nähe",
+          "volume": 2400
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "welche bäckerei hat am 1 weihnachtstag geöffnet",
+          "volume": 720
+        }
+      ]
+    },
+    "welche_gut": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "welcher restaurant ist gut in münchen",
+          "volume": 7
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "welcher kita ist gut in berlin",
+          "volume": 5
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "welcher restaurant ist gut in berlin",
+          "volume": 5
+        }
+      ]
+    },
+    "welche_gibt": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "welche blumen gibt es im blumenladen",
+          "volume": 70
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "welche blumen gibt es aktuell im blumenladen",
+          "volume": 20
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "welche berufe gibt es in einer zahnarztpraxis",
+          "volume": 10
+        }
+      ],
+      "note": "people ask which businesses there are; a list asks for options so the noun stays singular"
+    },
+    "wer_kennt": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "wer kennt schönes kleines hotel im schwarzwald",
+          "volume": 260
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "wer kennt den besten immobilienmakler",
+          "volume": 50
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "de",
+          "query": "Wer kennt den besten Immobilienmakler in Berlin?"
+        }
+      ]
+    },
+    "gibt_es": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "de",
+          "query": "Gibt es eine Bio-Bäckerei in Berlin?"
+        }
+      ]
+    },
+    "empfehlung": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "restaurant nürnberg innenstadt empfehlung",
+          "volume": 1300
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "empfehlung restaurant",
+          "volume": 880
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "empfehlungen restaurant",
+          "volume": 880
+        }
+      ]
+    },
+    "kw_city": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "hotel berlin",
+          "volume": 10898
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "hotel in berlin",
+          "volume": 10898
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "restaurant berlin",
+          "volume": 5519
+        }
+      ]
+    },
+    "kw_in": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "hotel in berlin",
+          "volume": 10898
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "restaurant in berlin",
+          "volume": 5519
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "hotel in münchen",
+          "volume": 5025
+        }
+      ]
+    },
+    "kw_district": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "zahnarzt köln nippes zentrum für zahnmedizin neusser strasse",
+          "volume": 5400
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "zahnarztpraxis lora schwabing",
+          "volume": 1600
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "restaurant nürnberg innenstadt empfehlung",
+          "volume": 1300
+        }
+      ]
+    },
+    "beste_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "beste friseur münchen",
+          "volume": 635
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "bester friseur münchen",
+          "volume": 635
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "bestes friseur münchen",
+          "volume": 635
+        }
+      ]
+    },
+    "neue_patienten": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "welcher zahnarzt nimmt noch patienten auf",
+          "volume": 390
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "welcher zahnarzt in görlitz nimmt noch patienten",
+          "volume": 210
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "welcher zahnarzt nimmt noch neue patienten auf",
+          "rank": 3
+        }
+      ]
+    },
+    "naehe_von": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "baumarkt in der nähe von meinem standort",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "blumenladen in der nähe von meinem standort",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "friseur in der nähe von meinem standort",
+          "rank": 1
+        }
+      ],
+      "note": "people type 'in der Nähe von meinem Standort'; a measured question names the neighborhood"
+    },
+    "bewertungen": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "hotel bewertungen berlin",
+          "volume": 728
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "restaurant bewertungen münchen",
+          "volume": 674
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "hotel bewertungen münchen",
+          "volume": 530
+        }
+      ]
+    },
+    "bewertungen_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "hotel bewertungen berlin",
+          "volume": 728
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "restaurant bewertungen münchen",
+          "volume": 674
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "hotel bewertungen münchen",
+          "volume": 530
+        }
+      ]
+    },
+    "am_besten": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "welcher baumarkt zahlt am besten",
+          "volume": 40
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "wo am besten kleidung online kaufen",
+          "volume": 0
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "welcher kita träger zahlt am besten",
+          "rank": 2
+        }
+      ]
+    },
+    "top_n": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "top parfümerie mit kosmetikstudio",
+          "volume": 480
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "makler in der nähe top-bewertung",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "klempner in der nähe top-bewertung",
+          "rank": 2
+        }
+      ]
+    },
+    "seriös": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "de",
+          "query": "Wie findet man einen seriösen Makler?"
+        }
+      ]
+    },
+    "erfahrungen": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "onlineshop erfahrungen",
+          "volume": 46
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "was kunden gewinnen für mein kosmetikstudio erfahrungen forum",
+          "volume": 0
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "was kunden gewinnen für mein kosmetikstudio erfahrungen pdf",
+          "volume": 0
+        }
+      ]
+    },
+    "ruf": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "de",
+          "query": "Welches Gymnasium in Berlin hat den besten Ruf?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "de",
+          "query": "Welches Gymnasium in München hat den besten Ruf?"
+        }
+      ]
+    },
+    "meister": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "kfz meister werkstatt",
+          "volume": 1900
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "kfz-meister werkstatt",
+          "volume": 1900
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "hobby werkstatt ladenburg kfz meisterbetrieb tüv",
+          "volume": 1300
+        }
+      ]
+    },
+    "notdienst": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "heute zahnarzt notdienst",
+          "volume": 90500
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "notdienst-zahnarzt heute",
+          "volume": 90500
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "zahnarzt notdienst heute",
+          "volume": 90500
+        }
+      ]
+    },
+    "notdienst_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "klempner notdienst berlin",
+          "volume": 320
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "zahnarzt notdienst berlin",
+          "volume": 18
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "klempner notdienst münchen",
+          "volume": 13
+        }
+      ]
+    },
+    "notfall": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "zahnarzt im notfall",
+          "volume": 6600
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "notfall klempner",
+          "volume": 170
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "zahnklinik in der nähe notfall",
+          "rank": 1
+        }
+      ]
+    },
+    "heute_offen": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "bäckerei in der nähe jetzt geöffnet",
+          "volume": 14800
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "welche bäckerei hat heute geöffnet",
+          "volume": 2900
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "blumenladen in der nähe jetzt geöffnet",
+          "volume": 1600
+        }
+      ]
+    },
+    "sonntags": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "blumenladen sonntags geöffnet",
+          "volume": 2400
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "blumenladen am sonntag geöffnet",
+          "volume": 1900
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "blumenladen sonntag geöffnet",
+          "volume": 1900
+        }
+      ]
+    },
+    "wochenende": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "zahnarzt notdienst wochenende",
+          "volume": 12100
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "welche zahnarztpraxis hat am wochenende notdienst",
+          "volume": 0
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "welcher zahnarzt hat am wochenende notdienst",
+          "rank": 2
+        }
+      ]
+    },
+    "morgen": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "bereitschaftsdienst zahnarzt morgen",
+          "volume": 3600
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "zahnarzt notdienst morgen",
+          "volume": 3600
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "welche bäckerei hat morgen geöffnet",
+          "volume": 260
+        }
+      ]
+    },
+    "ohne_termin": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "barbershop in der nähe ohne termin",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "friseur in der nähe ohne termin",
+          "rank": 2
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "autowerkstatt in der nähe ohne termin",
+          "rank": 4
+        }
+      ]
+    },
+    "schnell": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "welcher onlineshop liefert schnell",
+          "volume": 10
+        }
+      ]
+    },
+    "lieferservice": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "blumenladen mit lieferservice",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "bäckerei mit lieferdienst in der nähe",
+          "rank": 6
+        }
+      ]
+    },
+    "mobil": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "mobile friseur in meiner nähe",
+          "volume": 8100
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "welcher friseur kommt nach hause",
+          "volume": 1900
+        }
+      ]
+    },
+    "krankenkasse": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "was übernimmt die krankenkasse beim zahnarzt",
+          "volume": 260
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "was zahlt die krankenkasse beim zahnarzt",
+          "volume": 170
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "was zahlt die krankenkasse zahnarzt",
+          "volume": 170
+        }
+      ],
+      "note": "people ask what the health insurer covers; the templates ask for a practice that takes statutory patients ('Kassenpatienten')"
+    },
+    "ratenzahlung": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "kfz werkstatt mit ratenzahlung",
+          "rank": 4
+        }
+      ]
+    },
+    "günstig": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "günstige autowerkstatt in der nähe",
+          "volume": 590
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "hotel günstig berlin",
+          "volume": 538
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "welche baumarkt ist am günstigsten",
+          "volume": 390
+        }
+      ]
+    },
+    "günstig_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "hotel günstig berlin",
+          "volume": 538
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "hotel günstig münchen",
+          "volume": 28
+        }
+      ]
+    },
+    "preise": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "hotel preise berlin",
+          "volume": 845
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "hotel preise münchen",
+          "volume": 350
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "restaurant preise berlin",
+          "volume": 150
+        }
+      ]
+    },
+    "preise_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "hotel preise berlin",
+          "volume": 845
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "hotel preise münchen",
+          "volume": 350
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "restaurant preise berlin",
+          "volume": 150
+        }
+      ]
+    },
+    "was_kostet": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "was kostet der steuerberater",
+          "volume": 5013
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "was kostet ein steuerberater",
+          "volume": 5013
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "was kostet steuerberater",
+          "volume": 5013
+        }
+      ]
+    },
+    "provision": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "provision für makler",
+          "volume": 4400
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "provisionen makler",
+          "volume": 4400
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "hausverkauf makler provision",
+          "volume": 880
+        }
+      ]
+    },
+    "gebühren": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "was kostet die privatschule",
+          "volume": 590
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "was kostet eine privatschule",
+          "volume": 590
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "was kostet privatschule",
+          "volume": 590
+        }
+      ]
+    },
+    "erstberatung": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "was kostet eine erstberatung beim anwalt",
+          "volume": 320
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "was kostet erstberatung beim anwalt",
+          "volume": 320
+        }
+      ]
+    },
+    "spezialisiert": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "zahnarzt mit cmd spezialisierung",
+          "rank": 7
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "de",
+          "query": "Welche Friseure in Berlin sind auf dünnes Haar spezialisiert?"
+        }
+      ],
+      "note": "people name the specialty (thin hair, CMD); a template shared by every category of the archetype names none"
+    },
+    "schwerpunkt": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "steuerberater mit schwerpunkt internationales steuerrecht",
+          "rank": 3
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "steuerberater mit schwerpunkt landwirtschaft",
+          "rank": 7
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "steuerberater mit schwerpunkt immobilien",
+          "rank": 9
+        }
+      ]
+    },
+    "angst": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "angstpatienten beim zahnarzt",
+          "volume": 8100
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "zahnarzt für angstpatient",
+          "volume": 8100
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "zahnarzt für angstpatienten",
+          "volume": 8100
+        }
+      ]
+    },
+    "narkose": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "wie gefährlich ist eine vollnarkose beim zahnarzt",
+          "volume": 140
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "zahnarzt mit narkose in der nähe",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "zahnklinik mit narkose",
+          "rank": 1
+        }
+      ]
+    },
+    "kinder": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "zahnarztpraxis are hilliges & kinderzahnarztpraxis trolldent",
+          "volume": 720
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "zahnarztpraxis heike panescu familien und kinderzahnarzt",
+          "volume": 720
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "englischkurs kleinkinder",
+          "volume": 90
+        }
+      ]
+    },
+    "für_männer": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_ai_overview_question",
+          "market": "de",
+          "query": "friseur für männer",
+          "volume": 74000
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "kleidung für männer online kaufen",
+          "volume": 10
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "beste friseur für männer",
+          "rank": 3
+        }
+      ]
+    },
+    "online_termin": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "kosmetikstudio in der nähe online termin",
+          "rank": 3
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "friseur mit online termin",
+          "rank": 4
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "friseur in der nähe online buchen",
+          "rank": 6
+        }
+      ]
+    },
+    "selbstständige": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "was verdient ein selbstständiger zahnarzt",
+          "volume": 210
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "was verdient ein selbstständiger immobilienmakler",
+          "volume": 30
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "de",
+          "query": "Wo finde ich Beratungsangebote für Selbstständige in Berlin?"
+        }
+      ]
+    },
+    "hund": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "pension in der nähe mit hund",
+          "rank": 2
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "pension mit hund",
+          "rank": 6
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "pension mit hund und frühstück",
+          "rank": 7
+        }
+      ]
+    },
+    "frühstück": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "pension auf norderney mit frühstück",
+          "volume": 1900
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "pension frühstück",
+          "volume": 1900
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "bäckerei mit frühstück in der nähe",
+          "rank": 1
+        }
+      ]
+    },
+    "vegan": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "restaurant vegan",
+          "volume": 74000
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "veganes restaurant",
+          "volume": 60500
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "veganer restaurant",
+          "volume": 49500
+        }
+      ]
+    },
+    "größte": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "de",
+          "query": "Was sind die größten Krankenhäuser in München?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "de",
+          "query": "Welcher ist der größte Online-Shop in Deutschland?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "de",
+          "query": "Welches ist das größte Kaufhaus in Berlin?"
+        }
+      ],
+      "note": "people ask for the biggest store; the template also asks for the biggest selection"
+    },
+    "verkaufen": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "haus mit oder ohne makler verkaufen",
+          "volume": 1600
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "haus ohne makler verkaufen",
+          "volume": 1600
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "haus verkaufen mit oder ohne makler",
+          "volume": 1600
+        }
+      ]
+    },
+    "kaufen_haus": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "haus kaufen ohne makler",
+          "volume": 2900
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "ohne makler haus kaufen",
+          "volume": 2900
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "ohne-makler haus kaufen",
+          "volume": 2900
+        }
+      ]
+    },
+    "online_kurs": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "englischkurs online",
+          "volume": 1900
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "online englischkurs",
+          "volume": 1900
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "englischkurs online kostenlos",
+          "volume": 170
+        }
+      ],
+      "note": "observed for English courses; other schools are asked about online classes the same way"
+    },
+    "erwachsene": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "englischkurs anfänger",
+          "volume": 170
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "englischkurs für anfänger",
+          "volume": 170
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "englischkurs für erwachsene",
+          "volume": 170
+        }
+      ]
+    },
+    "online_kaufen": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "kleidung online kaufen",
+          "volume": 880
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "online kaufen kleidung",
+          "volume": 880
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "second hand kleidung online kaufen",
+          "volume": 590
+        }
+      ]
+    },
+    "onlineshop": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "lidl onlineshop",
+          "volume": 201000
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "onlineshop lidl",
+          "volume": 201000
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "onlineshop von lidl",
+          "volume": 201000
+        }
+      ]
+    },
+    "welcher_onlineshop": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "welcher onlineshop ist insolvent",
+          "volume": 30
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "welcher onlineshop ist der beste",
+          "volume": 20
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "welcher onlineshop",
+          "volume": 10
+        }
+      ]
+    },
+    "bester_onlineshop": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "beste onlineshop",
+          "volume": 1349
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "de",
+          "query": "bester onlineshop",
+          "volume": 1349
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "de",
+          "query": "beste onlineshop software",
+          "rank": 2
+        }
+      ]
+    },
+    "onlineshop_land": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "lidl onlineshop deutschland",
+          "volume": 9900
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "temu onlineshop deutschland",
+          "volume": 5400
+        }
+      ]
+    },
+    "auf_rechnung": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "billige kleidung online kaufen auf rechnung",
+          "volume": 70
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "kleidung online auf rechnung kaufen",
+          "volume": 10
+        },
+        {
+          "source": "google_volume",
+          "market": "de",
+          "query": "kleidung online kaufen auf rechnung",
+          "volume": 10
+        }
+      ]
+    },
+    "sicher": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "de",
+          "query": "Ist der Onlineshop sicher?"
+        }
+      ]
+    }
+  },
+  "templates": {
+    "health/local/discovery": [
+      ["kannst_du"],
+      ["wo_finde"],
+      ["wie_finde_gut"],
+      ["empfiehl_mir", "empfehlung"],
+      ["welche_gibt"],
+      ["kw_in"],
+      ["empfehlung", "kw_city"],
+      ["neue_patienten"],
+      ["ich_suche", "kinder"]
+    ],
+    "health/local/specialty": [
+      ["welche_gut", "angst"],
+      ["wo_finde", "angst"],
+      ["kannst_du", "kinder"],
+      ["empfiehl_mir", "spezialisiert", "angst"],
+      ["welche_gibt", "narkose"],
+      ["angst", "kw_city"],
+      ["narkose", "kw_city"],
+      ["ich_suche", "kinder"],
+      ["narkose", "angst"]
+    ],
+    "health/local/zone": [
+      ["kannst_du", "naehe_von"],
+      ["welche_gut", "naehe_von"],
+      ["gibt_es", "naehe_von"],
+      ["empfiehl_mir", "empfehlung", "naehe_von"],
+      ["welche_gibt", "naehe_von"],
+      ["naehe_von", "kw_city"],
+      ["kw_district", "kw_city"],
+      ["naehe_von", "neue_patienten"],
+      ["ich_suche", "naehe_von"]
+    ],
+    "health/local/urgency": [
+      ["welche_hat", "notdienst"],
+      ["wo_finde", "heute_offen"],
+      ["gibt_es", "wochenende", "notdienst"],
+      ["empfiehl_mir", "empfehlung", "notdienst"],
+      ["welche_gibt", "notfall"],
+      ["notdienst_kw"],
+      ["heute_offen", "kw_city"],
+      ["ohne_termin", "heute_offen"],
+      ["ich_suche", "notdienst", "wochenende"]
+    ],
+    "health/local/insurance_or_payment": [
+      ["welche_gut", "neue_patienten", "krankenkasse"],
+      ["wo_finde", "krankenkasse"],
+      ["welche_gut", "ratenzahlung"],
+      ["empfiehl_mir", "neue_patienten", "krankenkasse"],
+      ["welche_gibt", "ratenzahlung"],
+      ["krankenkasse", "kw_city"],
+      ["ratenzahlung", "kw_city"],
+      ["krankenkasse"],
+      ["ich_suche", "neue_patienten", "krankenkasse"]
+    ],
+    "health/local/trust": [
+      ["wo_finde", "seriös"],
+      ["wie_erkenne"],
+      ["welche_hat", "bewertungen"],
+      ["empfiehl_mir", "empfehlung", "seriös"],
+      ["welche_gibt", "seriös", "bewertungen"],
+      ["bewertungen_kw"],
+      ["seriös", "kw_city"],
+      ["seriös", "bewertungen"],
+      ["ich_suche", "seriös", "erfahrungen"]
+    ],
+    "beauty_wellness/local/discovery": [
+      ["kannst_du"],
+      ["wo_finde"],
+      ["wie_finde_gut"],
+      ["empfiehl_mir", "empfehlung"],
+      ["welche_gibt"],
+      ["kw_in"],
+      ["empfehlung", "kw_city"],
+      ["online_termin"],
+      ["ich_suche", "für_männer"]
+    ],
+    "beauty_wellness/local/specialty": [
+      ["welche_hat", "spezialisiert"],
+      ["welche_gut", "spezialisiert"],
+      ["wo_finde", "spezialisiert"],
+      ["empfiehl_mir", "empfehlung", "spezialisiert"],
+      ["welche_gibt", "spezialisiert"],
+      ["spezialisiert", "kw_city"],
+      ["schwerpunkt", "kw_city"],
+      ["spezialisiert"],
+      ["ich_suche", "für_männer"]
+    ],
+    "beauty_wellness/local/zone": [
+      ["kannst_du", "naehe_von"],
+      ["welche_gut", "naehe_von"],
+      ["gibt_es", "naehe_von"],
+      ["empfiehl_mir", "empfehlung", "naehe_von"],
+      ["welche_gibt", "naehe_von"],
+      ["naehe_von", "kw_city"],
+      ["kw_district", "kw_city"],
+      ["naehe_von", "online_termin"],
+      ["ich_suche", "naehe_von"]
+    ],
+    "beauty_wellness/local/price": [
+      ["welche_gut", "günstig"],
+      ["wo_finde", "günstig"],
+      ["welche_hat", "günstig", "preise"],
+      ["empfiehl_mir", "empfehlung", "günstig"],
+      ["welche_gibt", "günstig"],
+      ["günstig_kw"],
+      ["preise_kw"],
+      ["günstig", "online_termin"],
+      ["was_kostet", "günstig"]
+    ],
+    "beauty_wellness/local/trust": [
+      ["wo_finde", "seriös"],
+      ["wie_erkenne"],
+      ["welche_hat", "bewertungen"],
+      ["empfiehl_mir", "empfehlung", "seriös"],
+      ["welche_gibt", "seriös", "bewertungen"],
+      ["bewertungen_kw"],
+      ["seriös", "kw_city"],
+      ["seriös", "bewertungen"],
+      ["ich_suche", "seriös", "erfahrungen"]
+    ],
+    "beauty_wellness/local/ranking": [
+      ["welche_beste"],
+      ["wer_kennt"],
+      ["am_besten", "bewertungen"],
+      ["top_n", "empfehlung"],
+      ["welche_beste", "top_n"],
+      ["beste_kw"],
+      ["top_n", "kw_city"],
+      ["beste_kw", "top_n"],
+      ["ich_suche", "beste_kw"]
+    ],
+    "lodging/local/discovery": [
+      ["kannst_du"],
+      ["wo_finde"],
+      ["wie_finde_gut"],
+      ["empfiehl_mir", "empfehlung"],
+      ["welche_gibt"],
+      ["kw_in"],
+      ["empfehlung", "kw_city"],
+      ["frühstück"],
+      ["ich_suche"]
+    ],
+    "lodging/local/specialty": [
+      ["welche_gut", "hund"],
+      ["wo_finde", "hund"],
+      ["kannst_du", "hund"],
+      ["empfiehl_mir", "hund"],
+      ["welche_gibt", "hund"],
+      ["hund", "kw_city"],
+      ["hund", "kw_city"],
+      ["hund", "frühstück"],
+      ["ich_suche", "hund"]
+    ],
+    "lodging/local/zone": [
+      ["kannst_du", "naehe_von"],
+      ["welche_gut", "naehe_von"],
+      ["gibt_es", "naehe_von"],
+      ["empfiehl_mir", "empfehlung", "naehe_von"],
+      ["welche_gibt", "naehe_von"],
+      ["naehe_von", "kw_city"],
+      ["kw_district", "kw_city"],
+      ["naehe_von", "frühstück"],
+      ["ich_suche", "naehe_von"]
+    ],
+    "lodging/local/price": [
+      ["welche_gut", "günstig"],
+      ["wo_finde", "günstig"],
+      ["welche_hat", "günstig", "preise"],
+      ["empfiehl_mir", "empfehlung", "günstig"],
+      ["welche_gibt", "günstig"],
+      ["günstig_kw"],
+      ["preise_kw"],
+      ["günstig", "frühstück"],
+      ["ich_suche", "günstig"]
+    ],
+    "lodging/local/trust": [
+      ["wo_finde", "seriös"],
+      ["wie_erkenne"],
+      ["welche_hat", "bewertungen"],
+      ["empfiehl_mir", "empfehlung", "seriös"],
+      ["welche_gibt", "seriös", "bewertungen"],
+      ["bewertungen_kw"],
+      ["seriös", "kw_city"],
+      ["seriös", "bewertungen"],
+      ["ich_suche", "seriös", "erfahrungen"]
+    ],
+    "lodging/local/ranking": [
+      ["welche_beste"],
+      ["wer_kennt"],
+      ["am_besten", "bewertungen"],
+      ["top_n", "empfehlung"],
+      ["welche_beste", "top_n"],
+      ["beste_kw"],
+      ["top_n", "kw_city"],
+      ["beste_kw", "top_n"],
+      ["ich_suche", "beste_kw"]
+    ],
+    "food/local/discovery": [
+      ["kannst_du"],
+      ["wo_finde"],
+      ["wie_finde_gut"],
+      ["empfiehl_mir", "empfehlung"],
+      ["welche_gibt"],
+      ["kw_in"],
+      ["empfehlung", "kw_city"],
+      ["frühstück"],
+      ["ich_suche", "lieferservice"]
+    ],
+    "food/local/specialty": [
+      ["welche_hat", "vegan"],
+      ["wo_finde", "vegan"],
+      ["kannst_du", "vegan"],
+      ["empfiehl_mir", "empfehlung", "vegan"],
+      ["welche_gibt", "vegan"],
+      ["vegan", "kw_city"],
+      ["vegan", "kw_city"],
+      ["vegan", "frühstück"],
+      ["ich_suche", "vegan"]
+    ],
+    "food/local/zone": [
+      ["kannst_du", "naehe_von"],
+      ["welche_gut", "naehe_von"],
+      ["gibt_es", "naehe_von"],
+      ["empfiehl_mir", "empfehlung", "naehe_von"],
+      ["welche_gibt", "naehe_von"],
+      ["naehe_von", "kw_city"],
+      ["kw_district", "kw_city"],
+      ["naehe_von", "frühstück"],
+      ["ich_suche", "naehe_von"]
+    ],
+    "food/local/price": [
+      ["welche_gut", "günstig"],
+      ["wo_finde", "günstig"],
+      ["welche_hat", "günstig", "preise"],
+      ["empfiehl_mir", "empfehlung", "günstig"],
+      ["welche_gibt", "günstig"],
+      ["günstig_kw"],
+      ["preise_kw"],
+      ["günstig", "lieferservice"],
+      ["ich_suche", "günstig", "frühstück"]
+    ],
+    "food/local/trust": [
+      ["wo_finde", "seriös"],
+      ["wie_erkenne"],
+      ["welche_hat", "bewertungen"],
+      ["empfiehl_mir", "empfehlung", "seriös"],
+      ["welche_gibt", "seriös", "bewertungen"],
+      ["bewertungen_kw"],
+      ["seriös", "kw_city"],
+      ["seriös", "bewertungen"],
+      ["ich_suche", "erfahrungen"]
+    ],
+    "food/local/ranking": [
+      ["welche_beste"],
+      ["wer_kennt"],
+      ["am_besten", "bewertungen"],
+      ["top_n", "empfehlung"],
+      ["welche_beste", "top_n"],
+      ["beste_kw"],
+      ["top_n", "kw_city"],
+      ["beste_kw", "top_n"],
+      ["ich_suche", "beste_kw"]
+    ],
+    "home_auto_services/local/discovery": [
+      ["kannst_du"],
+      ["wo_finde"],
+      ["wie_finde_gut"],
+      ["empfiehl_mir", "empfehlung"],
+      ["welche_gibt"],
+      ["kw_in"],
+      ["empfehlung", "kw_city"],
+      ["mobil"],
+      ["ich_suche", "meister"]
+    ],
+    "home_auto_services/local/specialty": [
+      ["welche_hat", "spezialisiert"],
+      ["welche_gut", "spezialisiert"],
+      ["wo_finde", "spezialisiert"],
+      ["empfiehl_mir", "empfehlung", "spezialisiert"],
+      ["welche_gibt", "spezialisiert"],
+      ["spezialisiert", "kw_city"],
+      ["schwerpunkt", "kw_city"],
+      ["spezialisiert"],
+      ["ich_suche", "mobil"]
+    ],
+    "home_auto_services/local/zone": [
+      ["kannst_du", "naehe_von"],
+      ["welche_gut", "naehe_von"],
+      ["gibt_es", "naehe_von"],
+      ["empfiehl_mir", "empfehlung", "naehe_von"],
+      ["welche_gibt", "naehe_von"],
+      ["naehe_von", "kw_city"],
+      ["kw_district", "kw_city"],
+      ["naehe_von", "mobil"],
+      ["ich_suche", "naehe_von"]
+    ],
+    "home_auto_services/local/price": [
+      ["welche_gut", "günstig"],
+      ["wo_finde", "günstig"],
+      ["welche_hat", "günstig", "preise"],
+      ["empfiehl_mir", "empfehlung", "günstig"],
+      ["welche_gibt", "günstig"],
+      ["günstig_kw"],
+      ["preise_kw"],
+      ["was_kostet", "günstig"],
+      ["ich_suche", "günstig", "preise"]
+    ],
+    "home_auto_services/local/urgency": [
+      ["welche_hat", "notdienst"],
+      ["wo_finde", "heute_offen"],
+      ["gibt_es", "wochenende", "notdienst"],
+      ["empfiehl_mir", "empfehlung", "notdienst"],
+      ["welche_gibt", "notfall"],
+      ["notdienst_kw"],
+      ["heute_offen", "kw_city"],
+      ["heute_offen", "mobil"],
+      ["ich_suche", "notdienst", "wochenende"]
+    ],
+    "home_auto_services/local/trust": [
+      ["wo_finde", "seriös"],
+      ["wie_erkenne"],
+      ["welche_hat", "bewertungen"],
+      ["empfiehl_mir", "empfehlung", "seriös"],
+      ["welche_gibt", "seriös", "bewertungen"],
+      ["bewertungen_kw"],
+      ["seriös", "kw_city"],
+      ["seriös", "meister", "bewertungen"],
+      ["ich_suche", "seriös", "erfahrungen"]
+    ],
+    "local_retail/local/discovery": [
+      ["kannst_du"],
+      ["wo_finde"],
+      ["wie_finde_gut"],
+      ["empfiehl_mir", "empfehlung"],
+      ["welche_gibt"],
+      ["kw_in"],
+      ["empfehlung", "kw_city"],
+      ["lieferservice"],
+      ["ich_suche", "onlineshop"]
+    ],
+    "local_retail/local/specialty": [
+      ["welche_hat", "größte"],
+      ["welche_beste", "größte"],
+      ["wo_finde", "größte"],
+      ["empfiehl_mir", "größte"],
+      ["welche_gibt", "größte"],
+      ["größte", "kw_city"],
+      ["größte", "kw_city"],
+      ["größte", "lieferservice"],
+      ["ich_suche", "größte"]
+    ],
+    "local_retail/local/price": [
+      ["welche_gut", "günstig"],
+      ["wo_finde", "günstig"],
+      ["welche_hat", "günstig", "preise"],
+      ["empfiehl_mir", "empfehlung", "günstig"],
+      ["welche_gibt", "günstig"],
+      ["günstig_kw"],
+      ["preise_kw"],
+      ["günstig", "lieferservice"],
+      ["welche_beste", "günstig"]
+    ],
+    "local_retail/local/urgency": [
+      ["welche_hat", "heute_offen"],
+      ["welche_hat", "sonntags"],
+      ["wo_finde", "heute_offen"],
+      ["empfiehl_mir", "heute_offen"],
+      ["welche_gibt", "morgen"],
+      ["heute_offen", "kw_city"],
+      ["sonntags", "kw_city"],
+      ["lieferservice", "heute_offen"],
+      ["ich_suche", "sonntags"]
+    ],
+    "local_retail/local/trust": [
+      ["wo_finde", "seriös"],
+      ["wie_erkenne"],
+      ["welche_hat", "bewertungen"],
+      ["empfiehl_mir", "empfehlung", "seriös"],
+      ["welche_gibt", "seriös", "bewertungen"],
+      ["bewertungen_kw"],
+      ["seriös", "kw_city"],
+      ["seriös", "bewertungen"],
+      ["ich_suche", "erfahrungen"]
+    ],
+    "local_retail/local/ranking": [
+      ["welche_beste"],
+      ["wer_kennt"],
+      ["am_besten", "bewertungen"],
+      ["top_n", "empfehlung"],
+      ["welche_beste", "top_n"],
+      ["beste_kw"],
+      ["top_n", "kw_city"],
+      ["beste_kw", "top_n"],
+      ["ich_suche", "beste_kw"]
+    ],
+    "local_retail/national/discovery": [
+      ["kannst_du", "onlineshop"],
+      ["wo_finde", "onlineshop"],
+      ["welche_beste", "bester_onlineshop"],
+      ["empfiehl_mir", "onlineshop"],
+      ["welche_gibt", "onlineshop"],
+      ["onlineshop", "onlineshop_land", "empfehlung"],
+      ["bester_onlineshop", "empfehlung"],
+      ["onlineshop", "lieferservice"],
+      ["ich_suche", "auf_rechnung"]
+    ],
+    "local_retail/national/specialty": [
+      ["welcher_onlineshop", "größte"],
+      ["welche_beste", "größte"],
+      ["wo_finde", "größte"],
+      ["empfiehl_mir", "größte"],
+      ["welche_gibt", "größte"],
+      ["größte", "onlineshop"],
+      ["größte", "onlineshop_land"],
+      ["größte", "auf_rechnung"],
+      ["ich_suche", "größte"]
+    ],
+    "local_retail/national/price": [
+      ["welcher_onlineshop", "günstig", "preise"],
+      ["wo_finde", "günstig"],
+      ["welche_beste", "günstig"],
+      ["empfiehl_mir", "günstig"],
+      ["welche_gibt", "günstig"],
+      ["günstig", "preise"],
+      ["günstig", "onlineshop_land"],
+      ["günstig", "preise"],
+      ["ich_suche", "günstig", "auf_rechnung"]
+    ],
+    "local_retail/national/urgency": [
+      ["welcher_onlineshop", "schnell"],
+      ["gibt_es", "schnell"],
+      ["wo_finde", "schnell"],
+      ["empfiehl_mir", "schnell"],
+      ["welche_gibt", "schnell"],
+      ["schnell", "onlineshop"],
+      ["schnell", "onlineshop_land"],
+      ["schnell", "auf_rechnung"],
+      ["ich_suche", "schnell"]
+    ],
+    "local_retail/national/trust": [
+      ["wo_finde", "seriös"],
+      ["wie_erkenne", "seriös"],
+      ["welcher_onlineshop", "bewertungen"],
+      ["empfiehl_mir", "seriös"],
+      ["welche_gibt", "seriös", "bewertungen"],
+      ["seriös", "bewertungen"],
+      ["erfahrungen", "onlineshop_land"],
+      ["seriös", "auf_rechnung"],
+      ["ich_suche", "erfahrungen"]
+    ],
+    "local_retail/national/ranking": [
+      ["welche_beste", "bester_onlineshop"],
+      ["wer_kennt", "onlineshop"],
+      ["am_besten", "bewertungen"],
+      ["top_n", "onlineshop"],
+      ["welche_beste", "top_n"],
+      ["bester_onlineshop", "onlineshop_land"],
+      ["top_n", "onlineshop"],
+      ["bester_onlineshop", "top_n"],
+      ["ich_suche", "bester_onlineshop"]
+    ],
+    "professional_services/local/discovery": [
+      ["kannst_du"],
+      ["wo_finde"],
+      ["wie_finde_gut"],
+      ["empfiehl_mir", "empfehlung"],
+      ["welche_gibt"],
+      ["kw_in"],
+      ["empfehlung", "kw_city"],
+      ["selbstständige"],
+      ["ich_suche"]
+    ],
+    "professional_services/local/specialty": [
+      ["welche_hat", "spezialisiert"],
+      ["welche_gut", "spezialisiert"],
+      ["wo_finde", "spezialisiert"],
+      ["empfiehl_mir", "empfehlung", "spezialisiert"],
+      ["welche_gibt", "spezialisiert"],
+      ["spezialisiert", "kw_city"],
+      ["schwerpunkt", "kw_city"],
+      ["schwerpunkt"],
+      ["ich_suche", "schwerpunkt"]
+    ],
+    "professional_services/local/price": [
+      ["welche_gut", "günstig"],
+      ["wo_finde", "günstig"],
+      ["welche_hat", "günstig", "preise"],
+      ["empfiehl_mir", "empfehlung", "günstig"],
+      ["welche_gibt", "günstig"],
+      ["günstig_kw"],
+      ["preise_kw"],
+      ["günstig", "erstberatung"],
+      ["was_kostet"]
+    ],
+    "professional_services/local/urgency": [
+      ["welche_hat", "notdienst"],
+      ["wo_finde", "heute_offen"],
+      ["gibt_es", "wochenende", "notdienst"],
+      ["empfiehl_mir", "empfehlung", "notdienst"],
+      ["welche_gibt", "notfall"],
+      ["notdienst_kw"],
+      ["heute_offen", "kw_city"],
+      ["heute_offen"],
+      ["ich_suche", "notfall"]
+    ],
+    "professional_services/local/trust": [
+      ["wo_finde", "seriös"],
+      ["wie_erkenne"],
+      ["welche_hat", "bewertungen"],
+      ["empfiehl_mir", "empfehlung", "seriös"],
+      ["welche_gibt", "seriös", "bewertungen"],
+      ["bewertungen_kw"],
+      ["seriös", "kw_city"],
+      ["seriös", "bewertungen"],
+      ["ich_suche", "seriös", "erfahrungen"]
+    ],
+    "professional_services/local/ranking": [
+      ["welche_beste"],
+      ["wer_kennt"],
+      ["am_besten", "bewertungen"],
+      ["top_n", "empfehlung"],
+      ["welche_beste", "top_n"],
+      ["beste_kw"],
+      ["top_n", "kw_city"],
+      ["beste_kw", "top_n"],
+      ["ich_suche", "beste_kw"]
+    ],
+    "real_estate/local/discovery": [
+      ["kannst_du"],
+      ["wo_finde"],
+      ["wie_finde_gut"],
+      ["empfiehl_mir", "empfehlung"],
+      ["welche_gibt"],
+      ["kw_in"],
+      ["empfehlung", "kw_city"],
+      ["kaufen_haus"],
+      ["ich_suche", "kaufen_haus"]
+    ],
+    "real_estate/local/specialty": [
+      ["welche_gut", "verkaufen"],
+      ["welche_beste", "verkaufen"],
+      ["wo_finde", "verkaufen"],
+      ["empfiehl_mir", "verkaufen"],
+      ["welche_gibt", "verkaufen"],
+      ["verkaufen", "kw_city"],
+      ["beste_kw", "verkaufen"],
+      ["verkaufen"],
+      ["ich_suche", "verkaufen"]
+    ],
+    "real_estate/local/zone": [
+      ["kannst_du", "naehe_von"],
+      ["welche_gut", "naehe_von"],
+      ["gibt_es", "naehe_von"],
+      ["empfiehl_mir", "empfehlung", "naehe_von"],
+      ["welche_gibt", "naehe_von"],
+      ["naehe_von", "kw_city"],
+      ["kw_district", "kw_city"],
+      ["naehe_von", "kaufen_haus"],
+      ["ich_suche", "naehe_von"]
+    ],
+    "real_estate/local/price": [
+      ["welche_gut", "provision"],
+      ["wo_finde", "provision"],
+      ["welche_beste", "günstig"],
+      ["empfiehl_mir", "provision"],
+      ["welche_gibt", "günstig"],
+      ["provision", "kw_city"],
+      ["günstig_kw"],
+      ["provision", "verkaufen"],
+      ["provision", "günstig"]
+    ],
+    "real_estate/local/trust": [
+      ["wo_finde", "seriös"],
+      ["wie_erkenne"],
+      ["welche_hat", "bewertungen"],
+      ["empfiehl_mir", "empfehlung", "seriös"],
+      ["welche_gibt", "seriös", "bewertungen"],
+      ["bewertungen_kw"],
+      ["seriös", "kw_city"],
+      ["seriös", "bewertungen"],
+      ["ich_suche", "seriös", "erfahrungen"]
+    ],
+    "real_estate/local/ranking": [
+      ["welche_beste"],
+      ["wer_kennt"],
+      ["am_besten", "bewertungen"],
+      ["top_n", "empfehlung"],
+      ["welche_beste", "top_n"],
+      ["beste_kw"],
+      ["top_n", "kw_city"],
+      ["beste_kw", "top_n"],
+      ["ich_suche", "beste_kw", "verkaufen"]
+    ],
+    "education/local/discovery": [
+      ["kannst_du"],
+      ["wo_finde"],
+      ["wie_finde_gut"],
+      ["empfiehl_mir", "empfehlung"],
+      ["welche_gibt"],
+      ["kw_in"],
+      ["empfehlung", "kw_city"],
+      ["kinder"],
+      ["ich_suche", "kinder"]
+    ],
+    "education/local/specialty": [
+      ["welche_gut", "online_kurs"],
+      ["welche_beste", "online_kurs"],
+      ["wo_finde", "online_kurs"],
+      ["empfiehl_mir", "online_kurs"],
+      ["welche_gibt", "online_kurs"],
+      ["online_kurs", "kw_city"],
+      ["online_kurs", "kw_city"],
+      ["online_kurs", "erwachsene"],
+      ["ich_suche", "online_kurs", "kinder"]
+    ],
+    "education/local/zone": [
+      ["kannst_du", "naehe_von"],
+      ["welche_gut", "naehe_von"],
+      ["gibt_es", "naehe_von"],
+      ["empfiehl_mir", "empfehlung", "naehe_von"],
+      ["welche_gibt", "naehe_von"],
+      ["naehe_von", "kw_city"],
+      ["kw_district", "kw_city"],
+      ["naehe_von", "kinder"],
+      ["ich_suche", "naehe_von"]
+    ],
+    "education/local/price": [
+      ["welche_hat", "günstig", "gebühren"],
+      ["wo_finde", "günstig"],
+      ["was_kostet", "gebühren"],
+      ["empfiehl_mir", "günstig"],
+      ["welche_gibt", "günstig"],
+      ["günstig_kw"],
+      ["gebühren", "kw_city"],
+      ["gebühren"],
+      ["gebühren", "günstig"]
+    ],
+    "education/local/ranking": [
+      ["welche_hat", "ruf"],
+      ["welche_beste"],
+      ["wer_kennt"],
+      ["top_n", "empfehlung"],
+      ["welche_beste", "top_n", "ruf"],
+      ["beste_kw"],
+      ["top_n", "kw_city"],
+      ["beste_kw", "ruf"],
+      ["ich_suche", "beste_kw", "kinder"]
+    ],
+    "education/local/trust": [
+      ["wo_finde", "seriös"],
+      ["wie_erkenne"],
+      ["welche_hat", "bewertungen"],
+      ["empfiehl_mir", "empfehlung", "seriös"],
+      ["welche_gibt", "seriös", "bewertungen"],
+      ["bewertungen_kw"],
+      ["seriös", "kw_city"],
+      ["seriös", "bewertungen"],
+      ["ich_suche", "seriös", "kinder"]
+    ],
+    "online_national/national/discovery": [
+      ["welche_beste", "bester_onlineshop"],
+      ["kannst_du", "onlineshop"],
+      ["online_kaufen"],
+      ["empfiehl_mir", "onlineshop"],
+      ["welche_gibt", "onlineshop"],
+      ["online_kaufen", "onlineshop_land"],
+      ["onlineshop"],
+      ["onlineshop", "auf_rechnung"],
+      ["ich_suche", "online_kaufen"]
+    ],
+    "online_national/national/specialty": [
+      ["welcher_onlineshop", "größte"],
+      ["welche_beste", "größte"],
+      ["online_kaufen", "größte"],
+      ["empfiehl_mir", "größte"],
+      ["welche_gibt", "größte"],
+      ["größte", "onlineshop"],
+      ["online_kaufen", "größte", "onlineshop_land"],
+      ["größte", "auf_rechnung"],
+      ["ich_suche", "größte"]
+    ],
+    "online_national/national/price": [
+      ["online_kaufen", "günstig"],
+      ["welcher_onlineshop", "günstig", "preise"],
+      ["welche_beste", "günstig"],
+      ["empfiehl_mir", "günstig"],
+      ["welche_gibt", "günstig"],
+      ["online_kaufen", "günstig", "onlineshop_land"],
+      ["günstig", "online_kaufen"],
+      ["günstig", "preise"],
+      ["ich_suche", "günstig", "auf_rechnung"]
+    ],
+    "online_national/national/trust": [
+      ["welcher_onlineshop", "seriös"],
+      ["online_kaufen", "seriös"],
+      ["welcher_onlineshop", "bewertungen"],
+      ["empfiehl_mir", "seriös"],
+      ["welche_gibt", "seriös", "bewertungen"],
+      ["seriös", "onlineshop"],
+      ["online_kaufen", "erfahrungen", "onlineshop_land"],
+      ["seriös", "auf_rechnung"],
+      ["ich_suche", "sicher", "erfahrungen"]
+    ],
+    "online_national/national/urgency": [
+      ["welcher_onlineshop", "schnell"],
+      ["gibt_es", "schnell"],
+      ["online_kaufen", "schnell"],
+      ["empfiehl_mir", "schnell"],
+      ["welche_gibt", "schnell"],
+      ["online_kaufen", "schnell"],
+      ["online_kaufen", "schnell", "onlineshop_land"],
+      ["schnell", "auf_rechnung"],
+      ["ich_suche", "schnell"]
+    ],
+    "online_national/national/ranking": [
+      ["welche_beste", "welcher_onlineshop"],
+      ["welcher_onlineshop", "am_besten"],
+      ["wer_kennt", "bester_onlineshop"],
+      ["top_n", "onlineshop"],
+      ["welche_beste", "top_n"],
+      ["bester_onlineshop", "onlineshop_land"],
+      ["top_n", "onlineshop"],
+      ["bester_onlineshop", "top_n"],
+      ["ich_suche", "bester_onlineshop"]
+    ]
+  },
+  "brand": {
+    "brand.trust": ["seriös"],
+    "brand.opinion": ["erfahrungen"]
+  }
+}

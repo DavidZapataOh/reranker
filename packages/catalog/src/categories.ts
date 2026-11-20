@@ -47,6 +47,7 @@ export type CategoryNames<N extends Noun = string> = { noun: N | null; synonyms:
 export type SeedLanguages = {
   en: CategoryNames;
   pt: CategoryNames<GenderedNoun>;
+  de: CategoryNames<GenderedNoun>;
   fr: CategoryNames<GenderedNoun>;
 };
 
@@ -86,6 +87,7 @@ function seed(
     languages: Object.freeze({
       en: Object.freeze(languages.en),
       pt: Object.freeze(languages.pt),
+      de: Object.freeze(languages.de),
       fr: Object.freeze(languages.fr),
     }),
     archetype,
@@ -117,6 +119,11 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
         noun: { text: "dentiste", gender: "m" },
         synonyms: ["cabinet dentaire", "centre dentaire", "chirurgien-dentiste"],
       },
+      // Germany: "zahnarzt in meiner nähe" 201K a month, "zahnarztpraxis near me" 74K.
+      de: {
+        noun: { text: "Zahnarzt", gender: "m" },
+        synonyms: ["Zahnarztpraxis", "Zahnklinik", "Zahnärzte"],
+      },
     },
   ),
   seed(
@@ -131,6 +138,8 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
       // Brazil: "restaurante" 9.1M a month.
       pt: { noun: { text: "restaurante", gender: "m" }, synonyms: [] },
       fr: { noun: { text: "restaurant", gender: "m" }, synonyms: [] },
+      // 321K AI searches a month in Germany.
+      de: { noun: { text: "Restaurant", gender: "n" }, synonyms: [] },
     },
   ),
   // Motels are left out: in much of Latin America they are love hotels, a different question set.
@@ -155,6 +164,8 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
       pt: { noun: { text: "hotel", gender: "m" }, synonyms: ["pousada"] },
       // The h of "hôtel" is mute: "l'hôtel".
       fr: { noun: { text: "hôtel", gender: "m", elides: true }, synonyms: ["chambre d'hôte"] },
+      // "hotel" 514K AI searches a month, "pension" 22K.
+      de: { noun: { text: "Hotel", gender: "n" }, synonyms: ["Pension"] },
     },
   ),
   seed(
@@ -177,6 +188,11 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
         noun: { text: "garage", gender: "m" },
         synonyms: ["garage automobile", "garage auto", "mécanicien"],
       },
+      // "autowerkstatt" 60.5K a month (5.2K AI), "kfz werkstatt" 40.5K (3.7K AI).
+      de: {
+        noun: { text: "Autowerkstatt", gender: "f" },
+        synonyms: ["Kfz-Werkstatt", "Werkstatt"],
+      },
     },
   ),
   seed(
@@ -193,6 +209,8 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
       pt: { noun: { text: "imobiliária", gender: "f" }, synonyms: ["corretor de imóveis"] },
       // France: "agence immobilière" 201K a month, "agent immobilier" 27.1K.
       fr: { noun: { text: "agence immobilière", gender: "f" }, synonyms: ["agent immobilier"] },
+      // "immobilienmakler" 40.5K a month; "makler" (14.8K) is mostly "ohne makler" and insurance.
+      de: { noun: { text: "Immobilienmakler", gender: "m" }, synonyms: ["Makler"] },
     },
   ),
   // A web-only store has no Places type; its noun comes from the inferred category.
@@ -208,6 +226,7 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
       // Brazil: "loja online" 12K a month.
       pt: { noun: null, synonyms: ["loja online", "loja virtual"] },
       fr: { noun: null, synonyms: ["boutique en ligne", "magasin en ligne"] },
+      de: { noun: null, synonyms: ["Onlineshop", "Online-Shop"] },
     },
   ),
 ]);

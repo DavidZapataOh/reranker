@@ -6,6 +6,7 @@ import {
   ParaphraseFormat,
   QuestionScope,
 } from "@reranker/schema/measurement";
+import de from "../data/templates/2026.11.0.de.json" with { type: "json" };
 import en from "../data/templates/2026.11.0.en.json" with { type: "json" };
 import fr from "../data/templates/2026.11.0.fr.json" with { type: "json" };
 import es from "../data/templates/2026.11.0.json" with { type: "json" };
@@ -58,6 +59,7 @@ const TEMPLATES: Partial<Record<MeasurementLanguage, Templates>> = {
   en: Templates.parse(en),
   pt: Templates.parse(pt),
   fr: Templates.parse(fr),
+  de: Templates.parse(de),
 };
 
 /** The languages questions can be asked in today. */

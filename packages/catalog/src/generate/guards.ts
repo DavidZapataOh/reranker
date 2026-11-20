@@ -27,7 +27,7 @@ export interface Candidate {
 // drifts into another intent by using it. Reviews rank as much as they reassure, so both kinds
 // list them; "mejores"/"best" are left out because people use them to ask for any recommendation.
 // `capitalized` holds words a language writes in capitals mid-sentence that are never a name.
-const GuardLanguage = z.enum(["es", "en", "pt", "fr"]);
+const GuardLanguage = z.enum(["es", "en", "pt", "fr", "de"]);
 export type GuardLanguage = z.infer<typeof GuardLanguage>;
 
 const Lexicon = z.object({
@@ -57,6 +57,7 @@ const LEXICONS: Record<GuardLanguage, FoldedLexicon> = {
   en: fold(PARSED.en),
   pt: fold(PARSED.pt),
   fr: fold(PARSED.fr),
+  de: fold(PARSED.de),
 };
 
 export interface GuardContext {
