@@ -70,30 +70,64 @@ type Tracked = {
   flaggedLabel: string;
 };
 
-// Only the call that crosses a threshold alerts, so an incident raises one alert instead of one
-// per failed call for as long as it lasts.
-async function track(provider: CaptureProvider, tracked: Tracked[]): Promise<void> {
-  try {
-    const windows = await recordVelocities(
-      tracked.map(({ key, flagged }) => ({ key, flagged, spend: NO_SPEND })),
-    );
-    const alerts = tracked.flatMap(({ flagged, shouldAlert, kind, flaggedLabel }, i) => {
-      const now = windows[i];
-      if (!now) return [];
-      const before = {
-        count10m: now.count10m - 1,
-        flagged10m: now.flagged10m - (flagged ? 1 : 0),
-      };
-      if (!shouldAlert(now) || shouldAlert(before)) return [];
-      return [sendOpsAlert(kind, { calls_10m: now.count10m, [flaggedLabel]: now.flagged10m })];
-    });
-    await Promise.all(alerts);
-  } catch (error) {
-    log.warn("capture.velocity_failed", {
-      provider,
-      error: error instanceof Error ? error.name : "unknown",
-    });
+type Pending = { tracked: Tracked[]; done: (windows: Window[] | null) => void };
+
+// Bounds one statement; a burst larger than this drains in several, one after the other.
+const MAX_BATCH_CALLS = 500;
+
+// One writer per instance: the first call's windows go out alone, and the calls that finish
+// while a write is in flight go together in the next one. A burst then holds one system
+// connection at a time instead of one per call, and its windows are not lost to a pool wait.
+const writer: { waiting: Pending[]; running: boolean } = { waiting: [], running: false };
+
+async function drain(): Promise<void> {
+  writer.running = true;
+  while (writer.waiting.length > 0) {
+    const batch = writer.waiting.splice(0, MAX_BATCH_CALLS);
+    let windows: Window[] | null = null;
+    try {
+      windows = await recordVelocities(
+        batch.flatMap((p) =>
+          p.tracked.map(({ key, flagged }) => ({ key, flagged, spend: NO_SPEND })),
+        ),
+      );
+    } catch (error) {
+      log.warn("capture.velocity_failed", {
+        calls: batch.length,
+        error: error instanceof Error ? error.name : "unknown",
+      });
+    }
+    let next = 0;
+    for (const p of batch) {
+      p.done(windows?.slice(next, next + p.tracked.length) ?? null);
+      next += p.tracked.length;
+    }
   }
+  writer.running = false;
+}
+
+function recordWindows(tracked: Tracked[]): Promise<Window[] | null> {
+  const recorded = new Promise<Window[] | null>((done) => writer.waiting.push({ tracked, done }));
+  if (!writer.running) void drain();
+  return recorded;
+}
+
+// Only the call that crosses a threshold alerts, so an incident raises one alert instead of one
+// per failed call for as long as it lasts. Each call gets the windows right after its own sample.
+async function track(tracked: Tracked[]): Promise<void> {
+  const windows = await recordWindows(tracked);
+  if (!windows) return;
+  const alerts = tracked.flatMap(({ flagged, shouldAlert, kind, flaggedLabel }, i) => {
+    const now = windows[i];
+    if (!now) return [];
+    const before = {
+      count10m: now.count10m - 1,
+      flagged10m: now.flagged10m - (flagged ? 1 : 0),
+    };
+    if (!shouldAlert(now) || shouldAlert(before)) return [];
+    return [sendOpsAlert(kind, { calls_10m: now.count10m, [flaggedLabel]: now.flagged10m })];
+  });
+  await Promise.all(alerts);
 }
 
 /**
@@ -142,7 +176,7 @@ export function recordCaptureCall(call: CaptureCall): void {
   }
   runAfter(async () => {
     await Promise.all([
-      track(provider, tracked),
+      track(tracked),
       call.alert === "balance" &&
         sendOpsAlert("capture-dataforseo-balance", {
           engine: call.engine,

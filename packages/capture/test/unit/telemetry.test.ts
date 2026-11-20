@@ -152,9 +152,36 @@ test("a failing velocity store never reaches the caller", async () => {
   velocity.recordVelocities.mockRejectedValue(new Error("db down"));
   await record([call()]);
   expect(telemetry.log.warn).toHaveBeenCalledWith("capture.velocity_failed", {
-    provider: "dataforseo",
+    calls: 1,
     error: "Error",
   });
+  // The writer recovers: the next call is recorded.
+  velocity.recordVelocities.mockReset().mockResolvedValue([]);
+  await record([call()]);
+  expect(velocity.recordVelocities).toHaveBeenCalledOnce();
+});
+
+test("calls that finish while a write is in flight go together in the next one", async () => {
+  const record = velocity.recordVelocities.getMockImplementation();
+  const gate = Promise.withResolvers<void>();
+  velocity.recordVelocities.mockImplementationOnce(async (samples) => {
+    await gate.promise;
+    return record?.(samples);
+  });
+  const failed = call({ status: "provider_error", providerStatusCode: 50000 });
+  // 15 succeeded calls write first, alone or batched; the alert must still come from the 20th.
+  recordCaptureCall(call());
+  for (let i = 0; i < 14; i++) recordCaptureCall(call());
+  for (let i = 0; i < 7; i++) recordCaptureCall(failed);
+  gate.resolve();
+  await flush();
+  expect(velocity.recordVelocities).toHaveBeenCalledTimes(2);
+  expect(velocity.recordVelocities.mock.calls[0]?.[0]).toHaveLength(2);
+  expect(velocity.recordVelocities.mock.calls[1]?.[0]).toHaveLength(21 * 2);
+  expect(windows.get("capture:dataforseo:errors")).toEqual({ count10m: 22, flagged10m: 7 });
+  expect(alerts("capture-dataforseo-errors")).toEqual([
+    ["capture-dataforseo-errors", { calls_10m: 20, failed_10m: 5 }],
+  ]);
 });
 
 test("captureCallOf reads the outcome off the stored record", () => {

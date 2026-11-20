@@ -136,6 +136,19 @@ describe("recordVelocity", () => {
     expect(wb).toMatchObject({ count10m: 1, flagged10m: 1, spend10m: cost(0, "USD") });
   });
 
+  test("a batch of one key counts each sample in order, as separate records would", async () => {
+    const k = key("batch");
+    const windows = await recordVelocities(
+      Array.from({ length: 300 }, (_, i) => ({
+        key: k,
+        flagged: i % 3 === 0,
+        spend: cost(0, "USD"),
+      })),
+    );
+    expect(windows.map((w) => w.count10m)).toEqual(Array.from({ length: 300 }, (_, i) => i + 1));
+    expect(windows.at(-1)?.flagged10m).toBe(100);
+  });
+
   test("rejects raw addresses, emails, negative or non-USD spend", async () => {
     const ok = { flagged: false, spend: cost(0, "USD") };
     await expect(recordVelocity("203.0.113.9", ok)).rejects.toBeInstanceOf(InvalidInputError);

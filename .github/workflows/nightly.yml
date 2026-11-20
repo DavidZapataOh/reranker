@@ -11,8 +11,9 @@ concurrency:
 jobs:
   contract:
     runs-on: ubuntu-24.04
-    # Up to 15 min queueing for a Neon CI branch slot, then the tests.
-    timeout-minutes: 25
+    # Up to 15 min queueing for a Neon CI branch slot, then the tests; a Bright Data scrape alone
+    # may take up to 9 min.
+    timeout-minutes: 35
     permissions: { contents: read }
     outputs:
       failed: ${{ steps.tests.outputs.failed }}
