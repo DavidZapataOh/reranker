@@ -7,6 +7,7 @@ import {
   GEO_DATA_VERSION,
   type GeoFile,
   type GeoNamesFile,
+  PLACE_LANGUAGES,
 } from "../src/geo/format.ts";
 import { contentHash } from "../src/hash.ts";
 
@@ -45,6 +46,19 @@ describe("generated location data", () => {
     expect(names.names).toEqual(cityNames(cities));
     expect(names.names).toHaveLength(new Set(cities.map((row) => row[1])).size);
     expect(statSync(path(`${code}-names.json`)).size).toBeLessThanOrEqual(MAX_NAMES_BYTES);
+  });
+
+  test.each(codes)("%s names its places in every measurement language", (code) => {
+    const { names, cities, regions } = read<GeoFile>(geoFile(code));
+    expect(Object.keys(names).sort()).toEqual([...PLACE_LANGUAGES].sort());
+    // Only names that differ from the display name are stored, each for a place in the file.
+    const display = new Map([...cities, ...regions].map((row) => [String(row[0]), row[1]]));
+    for (const language of PLACE_LANGUAGES) {
+      const strays = Object.entries(names[language]).filter(
+        ([at, name]) => display.get(at) === name || !display.has(at),
+      );
+      expect(strays).toEqual([]);
+    }
   });
 
   test("Colombia carries all 1,122 DIVIPOLA records with unique keys", () => {

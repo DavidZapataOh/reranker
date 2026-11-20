@@ -1,8 +1,8 @@
-// Spanish names and centroids for DataForSEO's places, from the GeoNames gazetteer (CC BY 4.0,
-// see NOTICE).
+// Names in each language and centroids for DataForSEO's places, from the GeoNames gazetteer
+// (CC BY 4.0, see NOTICE).
 import { createHash } from "node:crypto";
 import { Unzip, UnzipInflate } from "fflate";
-import type { Coordinate } from "../src/geo/format.ts";
+import { type Coordinate, PLACE_LANGUAGES, type PlaceLanguage } from "../src/geo/format.ts";
 import { normalizePlaceName } from "../src/geo/normalize.ts";
 
 const DUMP = "https://download.geonames.org/export/dump/";
@@ -18,7 +18,8 @@ const ALTERNATE_NAMES = { url: `${DUMP}alternateNamesV2.zip`, file: "alternateNa
 export type AlternateName = {
   id: number;
   name: string;
-  lang: "es" | "en" | "";
+  /** ISO 639-1 code; empty for a name GeoNames tags with no language, usually the local one. */
+  lang: string;
   preferred: boolean;
   short: boolean;
 };
@@ -49,7 +50,14 @@ export type CountryGeoNames = {
   minorPlaces: readonly GeoNamesEntry[];
 };
 
-export type Naming = { name: string; aliases: string[]; spanish: boolean };
+export type Naming = {
+  name: string;
+  aliases: string[];
+  spanish: boolean;
+  /** The name in each language, and the languages GeoNames itself names the place in. */
+  names: Record<PlaceLanguage, string>;
+  own: PlaceLanguage[];
+};
 
 export type RegionInput = { code: number; name: string; level: 1 | 2 };
 export type CityInput = { code: number; name: string; region: number | null };
@@ -74,6 +82,11 @@ const SPANISH_PREFIX = new RegExp(
   `^(${Object.values(DESIGNATORS).map(normalizePlaceName).join("|")})( autonoma)?( de| del| de la)? `,
 );
 const LATIN = /^[\p{Script=Latin}\p{M}\p{N}\p{P}\p{Zs}]+$/u;
+// DataForSEO's names pair only through these; names in other languages only name a place.
+const PAIRING = new Set(["es", "en", ""]);
+const NAMED = new Set<string>(PLACE_LANGUAGES);
+const pairing = (entry: GeoNamesEntry) =>
+  entry.alternates.filter((a) => PAIRING.has(a.lang)).map((a) => a.name);
 
 function designated(normalized: string): { designator: string | null; core: string } {
   const match = ENGLISH_PREFIX.exec(normalized) ?? ENGLISH_SUFFIX.exec(normalized);
@@ -114,16 +127,14 @@ export function pairGeoNames(
   const areas = data.entries.filter((entry) => entry.kind !== "place");
   const areaStages = [0, 1, 2, 3].map((stage) =>
     groupByKeys(areas, (entry) =>
-      [entry.name, entry.asciiName, ...entry.alternates.map((a) => a.name)].map(
-        (name) => lookupKeys(name)[stage] ?? "",
-      ),
+      [entry.name, entry.asciiName, ...pairing(entry)].map((name) => lookupKeys(name)[stage] ?? ""),
     ),
   );
   const places = data.entries.filter((entry) => entry.kind === "place");
   // A place's own name outranks its alternates, which include former and nearby names.
   const placeTiers = [
     groupByKeys(places, (entry) => [entry.name, entry.asciiName].map(normalizePlaceName)),
-    groupByKeys(places, (entry) => entry.alternates.map((a) => normalizePlaceName(a.name))),
+    groupByKeys(places, (entry) => pairing(entry).map(normalizePlaceName)),
   ];
 
   // A city name found once in the country tells which areas its DataForSEO region covers.
@@ -242,7 +253,8 @@ function cityNaming(listed: string, entry: GeoNamesEntry, data: CountryGeoNames)
     (data.spanishSpeaking ? sameAs(local(entry), listed) : undefined) ??
     formal(es)?.name ??
     esNames[0];
-  return naming(spanishName, entry.name, [listed, entry.name, ...esNames], data);
+  const named = naming(spanishName, entry.name, [listed, entry.name, ...esNames], data);
+  return { ...named, ...localizedNames(listed, entry, data, named.name) };
 }
 
 function regionNaming(listed: string, entry: GeoNamesEntry, data: CountryGeoNames): Naming {
@@ -272,7 +284,8 @@ function regionNaming(listed: string, entry: GeoNamesEntry, data: CountryGeoName
     ...esNames,
     ...(designatedForm && short ? [designatedForm] : []),
   ];
-  return naming(spanishName, listed, aliases, data);
+  const named = naming(spanishName, listed, aliases, data);
+  return { ...named, ...localizedNames(listed, entry, data, named.name) };
 }
 
 /** The display name and the other names a place is written with, once each. */
@@ -281,7 +294,7 @@ function naming(
   fallback: string,
   names: readonly string[],
   data: CountryGeoNames,
-): Naming {
+): Omit<Naming, "names" | "own"> {
   const name = spanishName ?? fallback;
   const seen = new Set([normalizePlaceName(name)]);
   const aliases = names.filter((alias) => {
@@ -291,6 +304,66 @@ function naming(
     return true;
   });
   return { name, aliases, spanish: spanishName !== undefined || data.spanishSpeaking };
+}
+
+const diacritics = (name: string) => name.normalize("NFD").replace(/\P{M}/gu, "").length;
+
+/** The spelling in `pool` that writes `name` with the most accents: "São Paulo", not "Sao Paulo". */
+function accented(name: string, pool: readonly string[]): string {
+  const key = normalizePlaceName(name);
+  return pool
+    .filter((candidate) => normalizePlaceName(candidate) === key)
+    .reduce(
+      (best, candidate) => (diacritics(candidate) > diacritics(best) ? candidate : best),
+      name,
+    );
+}
+
+/**
+ * The name people in the country write: the Spanish display name where Spanish is spoken;
+ * elsewhere DataForSEO's unaccented name with the accents GeoNames writes ("Zürich" for
+ * "Zurich"), else GeoNames' own name, else DataForSEO's. GeoNames names first-level divisions
+ * in English, so their own name never counts.
+ */
+function nativeName(listed: string, entry: GeoNamesEntry, data: CountryGeoNames, display: string) {
+  if (data.spanishSpeaking) return display;
+  const own = entry.kind === "adm1" ? [] : [entry.name].filter((name) => LATIN.test(name));
+  const pool = [...own, ...local(entry)];
+  if (sameAs(pool, listed)) return accented(listed, pool);
+  return own[0] ?? listed;
+}
+
+/**
+ * The place's name in each language as its speakers write it: GeoNames' preferred name in that
+ * language; else its name there that DataForSEO lists; else any full name GeoNames has in it
+ * ("Monaco di Baviera"); else the native name, which is what speakers of any language write for
+ * most towns. Accents DataForSEO drops are kept.
+ */
+function localizedNames(
+  listed: string,
+  entry: GeoNamesEntry,
+  data: CountryGeoNames,
+  display: string,
+): Pick<Naming, "names" | "own"> {
+  const native = nativeName(listed, entry, data, display);
+  const names = {} as Record<PlaceLanguage, string>;
+  const own: PlaceLanguage[] = [];
+  for (const language of PLACE_LANGUAGES) {
+    // Abbreviations ("Mexico D.F.") are never written in a question.
+    const written = entry.alternates.filter(
+      (a) => a.lang === language && LATIN.test(a.name) && !(a.short && a.name.includes(".")),
+    );
+    const preferred = written.find((a) => a.preferred);
+    const chosen =
+      preferred ??
+      written.find((a) => sameAs([a.name], listed)) ??
+      written.find((a) => !a.short) ??
+      written[0];
+    const pool = preferred ? [listed] : [...written.map((a) => a.name), listed];
+    names[language] = chosen ? accented(chosen.name, pool) : native;
+    if (chosen) own.push(language);
+  }
+  return { names, own };
 }
 
 // Historical, abandoned and destroyed places never locate a city that exists today.
@@ -352,10 +425,10 @@ export function geoNamesCollector(
       list.push(entry);
       minorByCountry.set(f[8] ?? "", list);
     },
-    // English names only pair with DataForSEO's; historic and colloquial ones never count.
+    // Historic and colloquial names never pair or name a place.
     alternate(line: string) {
-      const [id, entry, lang, name, preferred, short, colloquial, historic] = line.split("\t");
-      if ((lang !== "es" && lang !== "en" && lang !== "") || !name) return;
+      const [id, entry, lang = "", name, preferred, short, colloquial, historic] = line.split("\t");
+      if (!(PAIRING.has(lang) || NAMED.has(lang)) || !name) return;
       if (colloquial === "1" || historic === "1") return;
       entries.get(Number(entry))?.alternates.push({
         id: Number(id),

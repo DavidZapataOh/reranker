@@ -146,11 +146,61 @@ describe("pairGeoNames", () => {
     );
 
   test("a city abroad reads in Spanish and keeps its own name as an alias", () =>
-    expect(cities("London").cities.get(1006886)).toEqual({
+    expect(cities("London").cities.get(1006886)).toMatchObject({
       name: "Londres",
       aliases: ["London"],
       spanish: true,
     }));
+
+  test("each language takes its own name, else the native one, never the Spanish exonym", () =>
+    expect(cities("London").cities.get(1006886)).toMatchObject({
+      names: { en: "London", pt: "London", fr: "London", de: "London", it: "London" },
+      own: ["en"],
+    }));
+
+  // Zürich, which DataForSEO lists without its umlaut.
+  const zurich = (alternates: GeoNamesEntry["alternates"]) =>
+    pairGeoNames(
+      { regions: [], cities: [{ code: 1003297, name: "Zurich", region: null }] },
+      {
+        spanishSpeaking: false,
+        entries: [entry({ id: 2657896, admin1: "ZH", name: "Zurich", alternates })],
+        minorPlaces: [],
+      },
+    ).cities.get(1003297)?.names;
+  const name = (id: number, lang: string, written: string, flags: object = {}) => ({
+    id,
+    name: written,
+    lang,
+    preferred: false,
+    short: false,
+    ...flags,
+  });
+
+  test.each([
+    [
+      "the preferred name in the language",
+      [name(1, "de", "Zuerich"), name(2, "de", "Zürich", { preferred: true })],
+      "de",
+      "Zürich",
+    ],
+    [
+      "the name DataForSEO lists, with the accents it drops",
+      [name(1, "fr", "Zürich"), name(2, "fr", "Zurich")],
+      "fr",
+      "Zürich",
+    ],
+    ["any full name in the language", [name(1, "it", "Zurigo")], "it", "Zurigo"],
+    [
+      "no abbreviation",
+      [name(1, "pt", "Z.", { short: true }), name(2, "pt", "Zurique")],
+      "pt",
+      "Zurique",
+    ],
+    ["the local name where the language has none", [name(1, "", "Zürich")], "en", "Zürich"],
+  ] as const)("%s", (_, alternates, language, expected) =>
+    expect(zurich([...alternates])?.[language]).toBe(expected),
+  );
 
   test("a paired city is located at its GeoNames place", () =>
     expect(cities("London").centers.get(1006886)).toEqual([51.50853, -0.12574]));
