@@ -85,3 +85,47 @@ Règles pour chaque question :
 - Ne nomme jamais un établissement, une marque ni une personne, et n'écris jamais de numéro de téléphone, d'adresse e-mail ni de numéro d'identité.
 - Entre 3 et 40 mots.
 - Varie le vocabulaire, l'ordre et la longueur comme le feraient des personnes différentes, dans la variété et le registre indiqués.`;
+
+export const PARAPHRASE_PROMPT_V1_DE = `Du schreibst die Fragen, die ein echter Mensch einem KI-Assistenten (ChatGPT, Gemini, Perplexity) stellt oder bei Google eintippt, wenn er ein Geschäft, einen Betrieb oder eine Praxis sucht. Die Nachricht des Nutzers enthält ein JSON mit der Suchabsicht:
+- category und noun: die Kategorie des Betriebs und das Wort, mit dem die Leute ihn bezeichnen.
+- kind und canonical: die Art der Absicht und die kanonische Frage, die sie ausdrückt.
+- scope: local (gefragt wird in einer Stadt) oder national (im ganzen Land).
+- variety und address: die Sprachvarietät und die Anrede (du oder Sie), die die Leute verwenden.
+- count: wie viele Fragen du zurückgibst.
+
+Gib in paraphrases genau count verschiedene Formulierungen zurück, die dasselbe erfragen wie die kanonische Frage, gleichmäßig auf die vier Formate verteilt:
+- open_question: eine vollständige Frage, wie man sie einem Assistenten stellt.
+- list_request: eine Bitte um mehrere Optionen oder eine Liste.
+- keyword: eine kurze Stichwortsuche, wie man sie bei Google eintippt.
+- constraint: eine Anfrage mit einer konkreten Bedingung, die die Absicht nicht verändert.
+
+Regeln für jede Frage:
+- Sie erfragt dasselbe wie die kanonische Frage: Behalte ihr Kriterium bei (Preis, Dringlichkeit, Viertel, Vertrauen, Ranking, Spezialisierung oder Zahlungsart) und füge nie das Kriterium einer anderen Absicht hinzu.
+- Sie verwendet das Wort der Kategorie oder ein gängiges Synonym, mit richtigem Artikel, Genus und Kasus.
+- Lokaler Bereich: Schreibe {lugar} genau einmal dort, wo die Stadt steht, und nenne keine Stadt, keinen Stadtteil und kein Land. Bei einer Absicht zum Viertel darfst du {zona} einmal dort schreiben, wo der Stadtteil steht.
+- Nationaler Bereich: Nenne keine Städte; du darfst {país} einmal schreiben, „im ganzen Land“ oder „Versand“ sagen oder gar keinen Ort nennen.
+- Nenne nie einen Betrieb, eine Marke oder eine Person und schreibe nie Telefonnummern, E-Mail-Adressen oder Ausweisnummern.
+- Zwischen 3 und 40 Wörtern.
+- Variiere Wortwahl, Reihenfolge und Länge so, wie es verschiedene Menschen tun würden, in der angegebenen Varietät und Anrede.`;
+
+export const PARAPHRASE_PROMPT_V1_IT = `Scrivi le domande che una persona vera fa a un assistente di IA (ChatGPT, Gemini, Perplexity) o digita su Google quando cerca un'attività o un professionista. Il messaggio dell'utente contiene un JSON con l'intento di ricerca:
+- category e noun: la categoria dell'attività e il nome con cui la gente la chiama.
+- kind e canonical: il tipo di intento e la domanda canonica che lo esprime.
+- scope: local (si chiede in una città) o national (in tutto il paese).
+- variety e address: la varietà di italiano e la forma di cortesia (tu o Lei) che usa la gente.
+- count: quante domande restituire.
+
+Restituisci in paraphrases esattamente count modi diversi di chiedere la stessa cosa della canonica, divisi in parti uguali tra i quattro formati:
+- open_question: una domanda completa, come la si farebbe a un assistente.
+- list_request: una richiesta di più opzioni o di una lista.
+- keyword: una ricerca breve per parole chiave, come si digita su Google.
+- constraint: una richiesta con una condizione concreta che non cambia l'intento.
+
+Regole per ogni domanda:
+- Chiede la stessa cosa della canonica: mantieni il suo criterio (prezzo, urgenza, zona, fiducia, classifica, specialità o metodo di pagamento) e non aggiungere mai quello di un altro intento.
+- Usa il nome della categoria o un sinonimo comune, con l'articolo, il genere e le concordanze giusti.
+- Ambito locale: scrivi {lugar} esattamente una volta al posto della città e non nominare nessuna città, nessun quartiere né nessun paese. In un intento di zona puoi scrivere {zona} una volta al posto del quartiere.
+- Ambito nazionale: non nominare città; puoi scrivere {país} una volta, dire "in tutto il paese" o "spedizione", oppure non nominare nessun luogo.
+- Non nominare mai un'attività, un marchio o una persona, e non scrivere mai numeri di telefono, indirizzi email o codici fiscali.
+- Tra 3 e 40 parole.
+- Varia il lessico, l'ordine e la lunghezza come farebbero persone diverse, nella varietà e nella forma di cortesia indicate.`;

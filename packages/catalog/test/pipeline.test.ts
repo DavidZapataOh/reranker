@@ -348,6 +348,47 @@ describe("generateIntentSet", () => {
     expect(r.set.intents.every((i) => i.language === "fr")).toBe(true);
   });
 
+  test.each([
+    {
+      language: "de" as const,
+      noun: "Bäckerei",
+      text: (slug: string, provider: string, i: number) =>
+        `welche Bäckerei ${slug} ${provider} ${i} in {lugar}?`,
+      // "günstig" is a price word only the German lexicon knows.
+      foreign: "günstige Bäckerei in {lugar}",
+      ranking: "Welche ist die beste Bäckerei in {lugar}?",
+    },
+    {
+      language: "it" as const,
+      noun: "panetteria",
+      text: (slug: string, provider: string, i: number) =>
+        `quale panetteria ${slug} ${provider} ${i} a {lugar}?`,
+      // "economica" is a price word only the Italian lexicon knows.
+      foreign: "panetteria economica a {lugar}",
+      ranking: "Qual è la panetteria migliore a {lugar}?",
+    },
+  ])("$language intents agree with the noun's gender and are guarded in $language", async (c) => {
+    paraphrasesOf = (provider, intent) =>
+      lines(provider, (i) =>
+        intent.kind === "discovery" && i === 0
+          ? `${c.foreign} ${provider}`
+          : c.text(intent.slug, provider, i),
+      );
+    const r = await generateIntentSet({
+      ...bakery(),
+      category: category(c.noun, c.noun),
+      noun: { text: c.noun, gender: "f" },
+      language: c.language,
+    });
+
+    expect(r.outcome).toBe("generated");
+    const asked = doubles.generate.mock.calls.map(([, req]) => (req as Req).intent);
+    expect(asked.every((i) => i.language === c.language)).toBe(true);
+    expect(asked.find((i) => i.kind === "ranking")?.canonicalText).toBe(c.ranking);
+    expect(r.report.guards.qualifier).toBe(2);
+    expect(r.set.intents.every((i) => i.language === c.language)).toBe(true);
+  });
+
   test("a language without reviewed prompts gets its own templates, never Spanish ones, and no calls", async () => {
     doubles.promptless.add("en");
     const r = await generateIntentSet(bakery({ language: "en" }));

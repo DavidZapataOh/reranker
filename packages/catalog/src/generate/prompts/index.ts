@@ -3,20 +3,26 @@ import { MeasurementLanguageError } from "../../language";
 import type { GuardLanguage } from "../guards";
 import {
   JUDGE_PROMPT_V1,
+  JUDGE_PROMPT_V1_DE,
   JUDGE_PROMPT_V1_EN,
   JUDGE_PROMPT_V1_FR,
+  JUDGE_PROMPT_V1_IT,
   JUDGE_PROMPT_V1_PT,
 } from "./judge.v1";
 import {
   PARAPHRASE_PROMPT_V1,
+  PARAPHRASE_PROMPT_V1_DE,
   PARAPHRASE_PROMPT_V1_EN,
   PARAPHRASE_PROMPT_V1_FR,
+  PARAPHRASE_PROMPT_V1_IT,
   PARAPHRASE_PROMPT_V1_PT,
 } from "./paraphrase.v1";
 import {
   PERSONA_PROMPT_V1,
+  PERSONA_PROMPT_V1_DE,
   PERSONA_PROMPT_V1_EN,
   PERSONA_PROMPT_V1_FR,
+  PERSONA_PROMPT_V1_IT,
   PERSONA_PROMPT_V1_PT,
 } from "./persona.v1";
 
@@ -74,6 +80,28 @@ const PROMPTS = {
       neutral: "français courant de France, naturel pour n'importe quel francophone",
     },
     address: { tu: "tu", usted: "vous" },
+  },
+  // German as written in Germany, where the templates come from; people say "du" to an assistant.
+  de: {
+    paraphrase: PARAPHRASE_PROMPT_V1_DE,
+    persona: PERSONA_PROMPT_V1_DE,
+    judge: JUDGE_PROMPT_V1_DE,
+    variety: {
+      co: "Alltagsdeutsch, wie es Deutschsprachige schreiben, die Kolumbien besuchen oder dort leben",
+      neutral: "Alltagsdeutsch aus Deutschland, natürlich für alle Deutschsprachigen",
+    },
+    address: { tu: "du", usted: "Sie" },
+  },
+  // Standard Italian, the templates' register: people use "tu" with an assistant, "Lei" is formal.
+  it: {
+    paraphrase: PARAPHRASE_PROMPT_V1_IT,
+    persona: PERSONA_PROMPT_V1_IT,
+    judge: JUDGE_PROMPT_V1_IT,
+    variety: {
+      co: "italiano corrente, come lo scrivono gli italiani che visitano la Colombia o ci vivono",
+      neutral: "italiano corrente, naturale per qualsiasi italiano",
+    },
+    address: { tu: "tu", usted: "Lei" },
   },
 } as const satisfies Partial<Record<GuardLanguage, LanguagePrompts>>;
 
