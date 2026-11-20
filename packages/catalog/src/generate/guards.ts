@@ -193,6 +193,25 @@ function hasForeignQualifier(text: string, segs: readonly string[], ctx: GuardCo
   return false;
 }
 
+const PERSONA_MIN_WORDS = 6;
+const PERSONA_MAX_WORDS = 25;
+
+/**
+ * A generated persona preamble is one first-person sentence of 6–25 words that names no place,
+ * person or business and carries no personal data; it is read before every question it joins.
+ */
+export function guardPersona(text: string, ctx: GuardContext): GuardResult {
+  if (/[{}]/u.test(text)) return { ok: false, guard: "placeholder" };
+  const words = wordCount(text);
+  if (words < PERSONA_MIN_WORDS || words > PERSONA_MAX_WORDS) return { ok: false, guard: "length" };
+  if (hasPersonalData(text)) return { ok: false, guard: "personal_data" };
+  const segs = segments(text);
+  if (mentionsAny(segs, ctx.otherPlaceNames) || hasProperName(text, segs, ctx)) {
+    return { ok: false, guard: "proper_name" };
+  }
+  return { ok: true };
+}
+
 /**
  * Deterministic checks a generated paraphrase must pass before it costs an embedding: the place
  * shape of its scope, the category's own noun, no names, no qualifier of another intent, a

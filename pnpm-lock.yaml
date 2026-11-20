@@ -788,6 +788,9 @@ importers:
       '@reranker/env':
         specifier: workspace:*
         version: link:../env
+      '@reranker/flags':
+        specifier: workspace:*
+        version: link:../flags
       '@reranker/i18n':
         specifier: workspace:*
         version: link:../i18n
