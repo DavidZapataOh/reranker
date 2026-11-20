@@ -24,6 +24,7 @@ export {
   type VariantId,
   variantId,
 } from "./hash";
+export { type PlanMeasurementInput, planMeasurement } from "./sample";
 export {
   BRAND_TEMPLATES,
   canonicalTemplate,

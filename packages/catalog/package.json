@@ -9,22 +9,26 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --project unit --coverage --passWithNoTests",
+    "test": "vitest run --project unit --coverage --passWithNoTests && vitest run --project heavy",
+    "test:perf": "vitest run --project perf --passWithNoTests",
     "geo:build": "tsx scripts/build-geo.ts",
     "freeze": "tsx scripts/freeze.ts"
   },
   "dependencies": {
     "@reranker/i18n": "workspace:*",
     "@reranker/schema": "workspace:*",
+    "@reranker/stats": "workspace:*",
     "@reranker/verify": "workspace:*",
     "canonicalize": "catalog:",
     "server-only": "catalog:"
   },
   "devDependencies": {
     "@reranker/typescript-config": "workspace:*",
+    "@stdlib/stats-base-dists-chisquare-cdf": "catalog:",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "csv-parse": "catalog:",
+    "fast-check": "catalog:",
     "fflate": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:",
