@@ -2,6 +2,7 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { measurableCountries } from "@reranker/i18n/countries";
 import { describe, expect, test } from "vitest";
 import { cityNames } from "../scripts/build-geo.ts";
+import { localDesignated, parseDesignated } from "../scripts/designators.ts";
 import {
   expandGeoFile,
   GEO_DATA_VERSION,
@@ -59,6 +60,23 @@ describe("generated location data", () => {
       );
       expect(strays).toEqual([]);
     }
+  });
+
+  test("no name carries a designator foreign to its language", () => {
+    const foreign: string[] = [];
+    for (const code of codes) {
+      const { cities, regions, names } = read<GeoFile>(geoFile(code));
+      for (const [at, name] of [...regions, ...cities]) {
+        if (parseDesignated(name)?.language === "en") foreign.push(`es ${name}`);
+        for (const language of PLACE_LANGUAGES) {
+          const written = names[language][String(at)] ?? name;
+          if (localDesignated(written, language, code.toUpperCase(), (core) => core) !== written) {
+            foreign.push(`${language} ${written}`);
+          }
+        }
+      }
+    }
+    expect(foreign).toEqual([]);
   });
 
   test("Colombia carries all 1,122 DIVIPOLA records with unique keys", () => {

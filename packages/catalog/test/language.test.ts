@@ -102,8 +102,28 @@ describe("placeName", () => {
     ["es-c9212542", "A Coruña"],
     ["ar-r9246111", "Departamento de San Jerónimo"],
     ["es-r9047060", "Provincia de Córdoba"],
+    ["es-c9212393", "Municipio de Madrid"],
+    ["es-c9220037", "Municipio de Sevilla"],
+    ["ar-r9198775", "Departamento Capital"],
+    ["mx-c9221748", "Municipio de Lerma"],
+    ["ve-c9241472", "Municipio Maneiro"],
+    ["cr-c9221392", "Distrito Mata Redonda"],
+    ["uy-c9212667", "Municipio B"],
+    ["lt-c9251799", "Municipio del distrito de Kaunas"],
   ] as const)("%s reads %s in Spanish, never its English name", (key, name) =>
     expect(placeName(getGeo(key), "es")).toBe(name),
+  );
+
+  test.each([
+    ["es-c9220037", "en", "Seville Municipality"],
+    ["es-c9220037", "fr", "Municipalité de Séville"],
+    ["es-c9220037", "it", "Comune di Siviglia"],
+    ["es-c9220037", "pt", "Município de Sevilha"],
+    ["ar-r9198775", "en", "Capital Department"],
+    ["ar-r9198166", "de", "Partido Morón"],
+    ["ca-c9252584", "fr", "Municipalité régionale de comté de Portneuf"],
+  ] as const)("%s in %s takes the language's own designator: %s", (key, language, name) =>
+    expect(placeName(getGeo(key), language)).toBe(name),
   );
 
   test("a region is named in the language too", () =>
