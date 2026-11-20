@@ -43,6 +43,9 @@ export type SeedCategory = {
   key: SeedCategoryKey;
   labelKey: string;
   placesTypes: string[];
+  /** What fills {sustantivo}; null when the inferred category names it (a web-only store's product). */
+  noun: string | null;
+  /** Other names the paraphrase guard accepts for the same business. */
   synonyms: string[];
   archetype: CategoryArchetype;
   defaultScope: QuestionScope;
@@ -54,12 +57,14 @@ function seed(
   archetype: CategoryArchetype,
   defaultScope: QuestionScope,
   placesTypes: string[],
+  noun: string | null,
   synonyms: string[],
 ): Readonly<SeedCategory> {
   return Object.freeze({
     key,
     labelKey: `catalog.categories.${key}`,
     placesTypes,
+    noun,
     synonyms,
     archetype,
     defaultScope,
@@ -73,16 +78,12 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
     "health",
     "local",
     ["dental_clinic", "dentist"],
-    [
-      "clínica odontológica",
-      "clínica dental",
-      "consultorio odontológico",
-      "odontólogo",
-      "dentista",
-    ],
+    // Customers search "dentista" and "clínica odontológica"; "odontólogo" searches are mostly about
+    // the job, and it names a person, so it is only an accepted synonym.
+    "clínica odontológica",
+    ["dentista", "odontología", "clínica dental", "consultorio odontológico", "odontólogo"],
   ),
-  seed("restaurant", "food", "local", restaurantTypes, [
-    "restaurante",
+  seed("restaurant", "food", "local", restaurantTypes, "restaurante", [
     "sitio para comer",
     "lugar para comer",
     "dónde comer",
@@ -101,30 +102,26 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
       "guest_house",
       "lodging",
     ],
-    ["hotel", "hospedaje", "alojamiento", "dónde quedarse"],
+    "hotel",
+    ["hospedaje", "alojamiento", "dónde quedarse"],
   ),
-  seed(
-    "car_repair",
-    "home_auto_services",
-    "local",
-    ["car_repair"],
-    ["taller mecánico", "taller automotriz", "taller", "mecánico"],
-  ),
-  seed(
-    "real_estate_agency",
-    "real_estate",
-    "local",
-    ["real_estate_agency"],
-    ["inmobiliaria", "agencia inmobiliaria", "agente inmobiliario", "finca raíz"],
-  ),
+  seed("car_repair", "home_auto_services", "local", ["car_repair"], "taller mecánico", [
+    "taller automotriz",
+    "taller",
+    "mecánico",
+  ]),
+  seed("real_estate_agency", "real_estate", "local", ["real_estate_agency"], "inmobiliaria", [
+    "agencia inmobiliaria",
+    "agente inmobiliario",
+    "finca raíz",
+  ]),
   // A web-only store has no Places type; its noun comes from the inferred category.
-  seed(
-    "online_store",
-    "online_national",
-    "national",
-    [],
-    ["tienda online", "tienda en línea", "tienda virtual", "comprar por internet"],
-  ),
+  seed("online_store", "online_national", "national", [], null, [
+    "tienda online",
+    "tienda en línea",
+    "tienda virtual",
+    "comprar por internet",
+  ]),
 ]);
 
 export function seedCategories(): ReadonlyArray<Readonly<SeedCategory>> {

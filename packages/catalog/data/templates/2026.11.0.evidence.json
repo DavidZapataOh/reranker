@@ -1144,11 +1144,6 @@
         }
       ]
     },
-    "none_becas": {
-      "support": "unsupported",
-      "evidence": [],
-      "note": "no scholarship or instalment query showed up for schools or courses; the only education money query is 'gratis' (price)"
-    },
     "register_tu": {
       "support": "observed",
       "evidence": [
@@ -1165,6 +1160,45 @@
           "query": "same, Colombia",
           "tu": 91,
           "usted": 3
+        }
+      ]
+    },
+    "virtual": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "curso de inglés virtual",
+          "volume": 1300
+        },
+        {
+          "source": "google_ai_overview_question",
+          "market": "co",
+          "query": "colegio en linea",
+          "volume": 12100
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "co",
+          "query": "que curso de ingles me recomiendan online",
+          "rank": 5
+        },
+        {
+          "source": "google_volume",
+          "market": "co",
+          "query": "cual es el mejor curso de inglés online",
+          "volume": 20
+        }
+      ]
+    },
+    "cupos": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "co",
+          "query": "¿Cómo puedo encontrar cupos en colegios de Medellín para 2026?"
         }
       ]
     }
@@ -1764,72 +1798,6 @@
       ["busco", "cual_mejor", "vender_casa"],
       ["best_de", "vender_casa"]
     ],
-    "education/local/discovery": [
-      ["rec_tu"],
-      ["rec_imp"],
-      ["donde_encuentro"],
-      ["recomiendame"],
-      ["hay"],
-      ["kw_en"],
-      ["recomendaciones"],
-      ["busco", "ninos"],
-      ["necesito", "en_linea"]
-    ],
-    "education/local/specialty": [
-      ["academico", "es_mejor"],
-      ["academico"],
-      ["rec_imp", "academico"],
-      ["recomiendame", "academico"],
-      ["hay", "bilingue"],
-      ["academico"],
-      ["bilingue"],
-      ["busco", "bilingue"],
-      ["necesito", "que_subj", "academico"]
-    ],
-    "education/local/zone": [
-      ["rec_tu", "cerca"],
-      ["rec_imp", "cerca"],
-      ["donde_encuentro", "zona_kw"],
-      ["recomiendame", "cerca"],
-      ["hay", "zona_kw"],
-      ["cerca"],
-      ["zona_kw"],
-      ["busco", "cerca", "ninos"],
-      ["rec_tu", "zona_kw"]
-    ],
-    "education/local/price": [
-      ["barato", "colegio_costo"],
-      ["cobra_menos"],
-      ["donde_encuentro", "barato"],
-      ["recomiendame", "barato"],
-      ["hay", "barato"],
-      ["precio_kw"],
-      ["precio_kw"],
-      ["busco", "barato", "colegio_costo"],
-      ["necesito", "que_subj", "cobra_menos"]
-    ],
-    "education/local/insurance_or_payment": [
-      ["none_becas"],
-      ["none_becas", "academico"],
-      ["rec_imp", "none_becas"],
-      ["recomiendame", "none_becas"],
-      ["hay", "none_becas"],
-      ["none_becas"],
-      ["none_becas"],
-      ["busco", "que_subj", "none_becas"],
-      ["necesito", "que_subj", "none_becas"]
-    ],
-    "education/local/trust": [
-      ["confiable"],
-      ["saber_bueno"],
-      ["opiniones"],
-      ["recomiendame", "confiable"],
-      ["hay", "confiable"],
-      ["confiable"],
-      ["opiniones"],
-      ["busco", "que_subj", "opiniones"],
-      ["necesito", "confiable", "ninos"]
-    ],
     "online_national/national/discovery": [
       ["on_mejor", "on_tienda_de"],
       ["rec_tu", "on_tienda_de"],
@@ -1895,6 +1863,72 @@
       ["on_mejor"],
       ["busco", "on_mejor"],
       ["on_comprar", "opiniones"]
+    ],
+    "education/local/discovery": [
+      ["rec_tu"],
+      ["rec_imp"],
+      ["donde_encuentro"],
+      ["recomiendame"],
+      ["hay"],
+      ["kw_en"],
+      ["recomendaciones"],
+      ["busco", "ninos"],
+      ["necesito", "que_subj", "cupos"]
+    ],
+    "education/local/specialty": [
+      ["virtual"],
+      ["rec_imp", "virtual"],
+      ["donde_encuentro", "virtual"],
+      ["recomiendame", "virtual"],
+      ["hay", "virtual"],
+      ["virtual"],
+      ["virtual", "kw_bare"],
+      ["busco", "que_subj", "virtual"],
+      ["necesito", "virtual"]
+    ],
+    "education/local/zone": [
+      ["rec_tu", "cerca"],
+      ["rec_imp", "cerca"],
+      ["donde_encuentro", "zona_kw"],
+      ["recomiendame", "cerca"],
+      ["hay", "zona_kw"],
+      ["cerca"],
+      ["zona_kw"],
+      ["busco", "cerca", "ninos"],
+      ["rec_tu", "zona_kw"]
+    ],
+    "education/local/price": [
+      ["barato", "colegio_costo"],
+      ["cobra_menos"],
+      ["donde_encuentro", "barato"],
+      ["recomiendame", "barato"],
+      ["hay", "barato"],
+      ["precio_kw"],
+      ["precio_kw"],
+      ["busco", "barato", "colegio_costo"],
+      ["necesito", "que_subj", "cobra_menos"]
+    ],
+    "education/local/ranking": [
+      ["academico", "es_mejor"],
+      ["academico"],
+      ["rec_imp", "academico"],
+      ["recomiendame", "academico"],
+      ["hay", "bilingue"],
+      ["academico"],
+      ["bilingue"],
+      ["busco", "bilingue"],
+      ["necesito", "que_subj", "academico"]
+    ],
+    "education/local/trust": [
+      ["confiable"],
+      ["saber_bueno"],
+      ["opiniones"],
+      ["recomiendame", "confiable"],
+      ["hay", "confiable"],
+      ["confiable"],
+      ["opiniones"],
+      ["busco", "que_subj", "opiniones"],
+      ["necesito", "confiable", "ninos"]
     ]
   }
 }

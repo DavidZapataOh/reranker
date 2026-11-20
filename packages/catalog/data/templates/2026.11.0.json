@@ -2177,46 +2177,46 @@
               "format": "constraint"
             },
             {
-              "text": "Necesito {sustantivo} en {lugar} con clases virtuales",
+              "text": "Necesito {sustantivo} en {lugar} que tenga cupos para este año",
               "format": "constraint"
             }
           ]
         },
         {
           "kind": "specialty",
-          "slug": "academic",
-          "canonical": "¿Qué {sustantivo} en {lugar} tiene mejor nivel académico?",
+          "slug": "virtual",
+          "canonical": "¿Qué {sustantivo} en {lugar} ofrece clases virtuales?",
           "paraphrases": [
             {
-              "text": "¿Qué {sustantivo} en {lugar} tuvo los mejores resultados académicos?",
+              "text": "¿Qué {sustantivo} me recomiendan en {lugar} con clases virtuales?",
               "format": "open_question"
             },
             {
-              "text": "¿Qué {sustantivo} me recomiendan en {lugar} por su nivel académico?",
+              "text": "¿Dónde encuentro {sustantivo} virtual en {lugar}?",
               "format": "open_question"
             },
             {
-              "text": "Recomiéndame 3 opciones de {sustantivo} en {lugar} con alto nivel académico",
+              "text": "Recomiéndame 3 opciones de {sustantivo} virtual en {lugar}",
               "format": "list_request"
             },
             {
-              "text": "¿Qué opciones de {sustantivo} bilingüe hay en {lugar}?",
+              "text": "¿Qué opciones de {sustantivo} en línea hay en {lugar}?",
               "format": "list_request"
             },
             {
-              "text": "{sustantivo} con mejores resultados académicos en {lugar}",
+              "text": "{sustantivo} virtual en {lugar}",
               "format": "keyword"
             },
             {
-              "text": "{sustantivo} bilingüe {lugar}",
+              "text": "{sustantivo} en línea {lugar}",
               "format": "keyword"
             },
             {
-              "text": "Busco {sustantivo} en {lugar} con buen nivel de inglés",
+              "text": "Busco {sustantivo} en {lugar} que tenga clases virtuales",
               "format": "constraint"
             },
             {
-              "text": "Necesito {sustantivo} en {lugar} que prepare bien para la universidad",
+              "text": "Necesito {sustantivo} en {lugar} con clases presenciales y virtuales",
               "format": "constraint"
             }
           ]
@@ -2300,40 +2300,40 @@
           ]
         },
         {
-          "kind": "insurance_or_payment",
-          "slug": "scholarships",
-          "canonical": "¿Qué {sustantivo} en {lugar} ofrece becas o financiación?",
+          "kind": "ranking",
+          "slug": "academic",
+          "canonical": "¿Qué {sustantivo} en {lugar} tiene mejor nivel académico?",
           "paraphrases": [
             {
-              "text": "¿Qué {sustantivo} en {lugar} da becas por rendimiento académico?",
+              "text": "¿Qué {sustantivo} en {lugar} tuvo los mejores resultados académicos?",
               "format": "open_question"
             },
             {
-              "text": "¿Qué {sustantivo} me recomiendan en {lugar} que permita pagar por cuotas?",
+              "text": "¿Qué {sustantivo} me recomiendan en {lugar} por su nivel académico?",
               "format": "open_question"
             },
             {
-              "text": "Recomiéndame 3 opciones de {sustantivo} en {lugar} con becas",
+              "text": "Recomiéndame 3 opciones de {sustantivo} en {lugar} con alto nivel académico",
               "format": "list_request"
             },
             {
-              "text": "¿Qué opciones de {sustantivo} con financiación hay en {lugar}?",
+              "text": "¿Qué opciones de {sustantivo} bilingüe hay en {lugar}?",
               "format": "list_request"
             },
             {
-              "text": "{sustantivo} con becas en {lugar}",
+              "text": "{sustantivo} con mejores resultados académicos en {lugar}",
               "format": "keyword"
             },
             {
-              "text": "{sustantivo} en {lugar} pago por cuotas",
+              "text": "{sustantivo} bilingüe {lugar}",
               "format": "keyword"
             },
             {
-              "text": "Busco {sustantivo} en {lugar} que ofrezca descuento por hermanos o becas",
+              "text": "Busco {sustantivo} en {lugar} con buen nivel de inglés",
               "format": "constraint"
             },
             {
-              "text": "Necesito {sustantivo} en {lugar} que acepte pagar la matrícula por cuotas",
+              "text": "Necesito {sustantivo} en {lugar} que prepare bien para la universidad",
               "format": "constraint"
             }
           ]

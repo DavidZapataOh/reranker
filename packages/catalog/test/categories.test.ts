@@ -46,6 +46,17 @@ describe("seed categories", () => {
       expect(c.labelKey).toBe(`catalog.categories.${c.key}`);
       expect(c.synonyms.length).toBeGreaterThan(0);
       for (const s of c.synonyms) expect(s).toBe(s.toLowerCase());
+      expect(c.synonyms).not.toContain(c.noun);
+    }
+  });
+
+  test("the noun is the business people search for, not the professional", () => {
+    const dental = seedCategories().find((c) => c.key === "dental_clinic");
+    expect(dental?.noun).toBe("clínica odontológica");
+    expect(dental?.synonyms).toEqual(expect.arrayContaining(["dentista", "odontología"]));
+    expect(seedCategories().find((c) => c.key === "online_store")?.noun).toBeNull();
+    for (const c of seedCategories().filter((s) => s.key !== "online_store")) {
+      expect(c.noun).toBe(c.noun?.toLowerCase());
     }
   });
 });

@@ -13,7 +13,7 @@ export const ARCHETYPE_SLATES: Readonly<Record<CategoryArchetype, Slate>> = {
   local_retail: ["discovery", "specialty", "price", "urgency", "trust", "ranking"],
   professional_services: ["discovery", "specialty", "price", "urgency", "trust", "ranking"],
   real_estate: ["discovery", "specialty", "zone", "price", "trust", "ranking"],
-  education: ["discovery", "specialty", "zone", "price", "insurance_or_payment", "trust"],
+  education: ["discovery", "specialty", "zone", "price", "ranking", "trust"],
   online_national: ["discovery", "specialty", "price", "trust", "urgency", "ranking"],
 };
 
