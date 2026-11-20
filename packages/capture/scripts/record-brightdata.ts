@@ -2,7 +2,9 @@
  * Records real Bright Data Perplexity and ChatGPT answers so their parsers are tested on what the
  * scrapers actually deliver.
  *
- * Usage: pnpm --filter @reranker/capture record:brightdata <empty output dir>
+ * Usage: pnpm --filter @reranker/capture record:brightdata <empty output dir> [snapshot id...]
+ * With snapshot ids it calls nothing new: it saves each snapshot's progress and, once ready, its
+ * download, for scrapes an earlier run left pending.
  * Reads BRIGHTDATA_API_KEY_CI, and BRIGHTDATA_BILLING_API_KEY_CI for the free tier when present.
  * For each call it writes the exact request and response bytes (the snapshot download when the
  * scrape answered 202) and a manifest with status, latency and cost. Every call is charged to the
@@ -162,9 +164,44 @@ async function record(
   return row;
 }
 
-async function main(outDir: string): Promise<boolean> {
+/** Progress and, when ready, the download of snapshots a scrape left running. */
+async function collect(outDir: string, snapshotIds: string[]): Promise<boolean> {
+  const apiKey = process.env.BRIGHTDATA_API_KEY_CI;
+  if (!apiKey) throw new Error("BRIGHTDATA_API_KEY_CI missing");
+  const client = createBrightData(new RawSink(), { apiKey });
+  const rows = ["| snapshot | progress | download |", "|---|---|---|"];
+  let ok = true;
+  for (const snapshotId of snapshotIds) {
+    if (!/^s[a-z]_[a-z0-9]+$/.test(snapshotId)) throw new Error(`Not a snapshot id: ${snapshotId}`);
+    const progress = await client.monitor(`${BRIGHTDATA_API}/datasets/v3/progress/${snapshotId}`);
+    const progressBytes = new Uint8Array(await progress.arrayBuffer());
+    writeFileSync(join(outDir, `${snapshotId}.progress.json`), progressBytes);
+    const { status } = JSON.parse(new TextDecoder().decode(progressBytes)) as { status?: unknown };
+    let download = "";
+    if (status === "ready") {
+      const url = `${BRIGHTDATA_API}/datasets/v3/snapshot/${snapshotId}?format=json`;
+      const snapshot = await client.monitor(url);
+      writeFileSync(
+        join(outDir, `${snapshotId}.json`),
+        new Uint8Array(await snapshot.arrayBuffer()),
+      );
+      download = String(snapshot.status);
+      ok &&= snapshot.status === 200;
+    } else {
+      ok = false;
+    }
+    rows.push(`| ${snapshotId} | ${progress.status} ${String(status)} | ${download} |`);
+  }
+  const table = `${rows.join("\n")}\n`;
+  console.log(table);
+  if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, table);
+  return ok;
+}
+
+async function main(outDir: string, snapshotIds: string[]): Promise<boolean> {
   mkdirSync(outDir, { recursive: true });
   if (readdirSync(outDir).length > 0) throw new Error(`${outDir} is not empty`);
+  if (snapshotIds.length > 0) return collect(outDir, snapshotIds);
   const datasets: BrightDataDataset[] = ["perplexity", "chatgpt"];
   const calls = datasets.flatMap((dataset) => CASES.map((c) => ({ dataset, c })));
   if (calls.length * ESTIMATE.amount_micros > BUDGET_MICROS) {
@@ -200,10 +237,10 @@ async function main(outDir: string): Promise<boolean> {
   return rows.every((r) => r.outcome === "ok");
 }
 
-const outDir = process.argv[2];
-if (!outDir) throw new Error("Usage: record-brightdata.ts <empty output dir>");
+const [outDir, ...snapshotIds] = process.argv.slice(2);
+if (!outDir) throw new Error("Usage: record-brightdata.ts <empty output dir> [snapshot id...]");
 try {
-  process.exitCode = (await main(resolve(outDir))) ? 0 : 1;
+  process.exitCode = (await main(resolve(outDir), snapshotIds)) ? 0 : 1;
 } finally {
   await endPools();
 }
