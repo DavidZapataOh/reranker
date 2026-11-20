@@ -7,6 +7,8 @@ import type { SystemReason } from "./tenancy";
 type Ctx = { pool: "app" | "system"; reason?: SystemReason };
 
 const NETWORK_CODES = new Set(["ECONNREFUSED", "ECONNRESET", "ETIMEDOUT", "ENOTFOUND", "EPIPE"]);
+// pg-pool's message when no connection came free, or none could be opened, within the timeout.
+const CHECKOUT_TIMEOUT = "timeout exceeded when trying to connect";
 
 function event(name: "db_rls_violation" | "db_compute_unavailable", code: string, ctx: Ctx) {
   emitDbEvent({ name, pool: ctx.pool, pgCode: code, ...(ctx.reason && { reason: ctx.reason }) });
@@ -53,7 +55,7 @@ export function toDbError(err: unknown, ctx: Ctx): unknown {
   if (err.message.startsWith("Connection terminated")) {
     return new AppError("service_unavailable", { retryAfterSeconds: 2, cause: err });
   }
-  if (err.message.startsWith("timeout exceeded when trying to connect")) {
+  if (err.message.startsWith(CHECKOUT_TIMEOUT)) {
     emitDbEvent({
       name: "db_pool_exhausted",
       pool: ctx.pool,
@@ -66,4 +68,17 @@ export function toDbError(err: unknown, ctx: Ctx): unknown {
     return new AppError("service_unavailable", { retryAfterSeconds: 2, cause: err });
   }
   return err;
+}
+
+/**
+ * Whether a transaction failed waiting for a connection. It never reached the database, so running
+ * it again cannot apply it twice.
+ */
+export function isCheckoutTimeout(error: unknown): boolean {
+  return (
+    isAppError(error) &&
+    error.code === "service_unavailable" &&
+    error.cause instanceof Error &&
+    error.cause.message.startsWith(CHECKOUT_TIMEOUT)
+  );
 }

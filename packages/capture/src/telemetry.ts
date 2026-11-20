@@ -1,3 +1,4 @@
+import { isCheckoutTimeout } from "@reranker/db";
 import { recordVelocities } from "@reranker/jobs/velocity";
 import {
   type CaptureChannel,
@@ -70,10 +71,19 @@ type Tracked = {
   flaggedLabel: string;
 };
 
-type Pending = { tracked: Tracked[]; done: (windows: Window[] | null) => void };
+type Pending = {
+  tracked: Tracked[];
+  done: (windows: Window[] | null) => void;
+  queuedAt: number;
+};
 
 // Bounds one statement; a burst larger than this drains in several, one after the other.
 const MAX_BATCH_CALLS = 500;
+
+// The windows are written after the response, so they can wait for a connection far longer than a
+// request does: a burst that keeps the pool full past its checkout timeout must not undercount the
+// alerts. A call gives its windows up only once it has waited this long.
+const MAX_WAIT_MS = 30_000;
 
 // One writer per instance: the first call's windows go out alone, and the calls that finish
 // while a write is in flight go together in the next one. A burst then holds one system
@@ -84,7 +94,7 @@ async function drain(): Promise<void> {
   writer.running = true;
   while (writer.waiting.length > 0) {
     const batch = writer.waiting.splice(0, MAX_BATCH_CALLS);
-    let windows: Window[] | null = null;
+    let windows: Window[];
     try {
       windows = await recordVelocities(
         batch.flatMap((p) =>
@@ -92,14 +102,26 @@ async function drain(): Promise<void> {
         ),
       );
     } catch (error) {
-      log.warn("capture.velocity_failed", {
-        calls: batch.length,
-        error: error instanceof Error ? error.name : "unknown",
-      });
+      // A checkout that timed out never reached the database, so the batch goes back to the front
+      // of the queue, joined by the calls that finished meanwhile.
+      const now = performance.now();
+      const retried = isCheckoutTimeout(error)
+        ? batch.filter((p) => now - p.queuedAt < MAX_WAIT_MS)
+        : [];
+      writer.waiting.unshift(...retried);
+      const lost = batch.filter((p) => !retried.includes(p));
+      if (lost.length > 0) {
+        log.warn("capture.velocity_failed", {
+          calls: lost.length,
+          error: error instanceof Error ? error.name : "unknown",
+        });
+      }
+      for (const p of lost) p.done(null);
+      continue;
     }
     let next = 0;
     for (const p of batch) {
-      p.done(windows?.slice(next, next + p.tracked.length) ?? null);
+      p.done(windows.slice(next, next + p.tracked.length));
       next += p.tracked.length;
     }
   }
@@ -107,7 +129,9 @@ async function drain(): Promise<void> {
 }
 
 function recordWindows(tracked: Tracked[]): Promise<Window[] | null> {
-  const recorded = new Promise<Window[] | null>((done) => writer.waiting.push({ tracked, done }));
+  const recorded = new Promise<Window[] | null>((done) =>
+    writer.waiting.push({ tracked, done, queuedAt: performance.now() }),
+  );
   if (!writer.running) void drain();
   return recorded;
 }
