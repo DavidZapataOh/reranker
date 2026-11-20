@@ -4,7 +4,12 @@ import { cost } from "@reranker/schema";
 import { sql } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { InvalidInputError } from "../src/errors";
-import { recordVelocity, refreshVelocityBaselines, velocityBaseline } from "../src/velocity";
+import {
+  recordVelocities,
+  recordVelocity,
+  refreshVelocityBaselines,
+  velocityBaseline,
+} from "../src/velocity";
 
 beforeAll(() => {
   process.env.DB_POOL_MAX = "20";
@@ -117,6 +122,18 @@ describe("recordVelocity", () => {
     const r = await recordVelocity(k, { flagged: false, spend: cost(10, "USD") });
     expect(r.count10m).toBe(41);
     expect(r.spend10m.amount_micros).toBe(410);
+  });
+
+  test("records several keys in one statement, each into its own window", async () => {
+    const a = key("many-a");
+    const b = key("many-b");
+    await recordVelocity(a, { flagged: true, spend: cost(0, "USD") });
+    const [wa, wb] = await recordVelocities([
+      { key: a, flagged: false, spend: cost(5, "USD") },
+      { key: b, flagged: true, spend: cost(0, "USD") },
+    ]);
+    expect(wa).toMatchObject({ count10m: 2, flagged10m: 1, spend10m: cost(5, "USD") });
+    expect(wb).toMatchObject({ count10m: 1, flagged10m: 1, spend10m: cost(0, "USD") });
   });
 
   test("rejects raw addresses, emails, negative or non-USD spend", async () => {

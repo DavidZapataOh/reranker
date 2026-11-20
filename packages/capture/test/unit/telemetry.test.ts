@@ -3,7 +3,7 @@ import { afterEach, beforeEach, expect, test, vi } from "vitest";
 
 // An in-memory stand-in for the ten-minute window that ops.record_velocity keeps in Postgres.
 const windows = new Map<string, { count10m: number; flagged10m: number }>();
-const velocity = vi.hoisted(() => ({ recordVelocity: vi.fn() }));
+const velocity = vi.hoisted(() => ({ recordVelocities: vi.fn() }));
 vi.mock("@reranker/jobs/velocity", () => velocity);
 
 const telemetry = vi.hoisted(() => ({
@@ -20,12 +20,15 @@ const pending: Promise<void>[] = [];
 
 beforeEach(() => {
   windows.clear();
-  velocity.recordVelocity.mockImplementation(async (key: string, sample: { flagged: boolean }) => {
-    const w = windows.get(key) ?? { count10m: 0, flagged10m: 0 };
-    const next = { count10m: w.count10m + 1, flagged10m: w.flagged10m + (sample.flagged ? 1 : 0) };
-    windows.set(key, next);
-    return { ...next, spend10m: cost(0, "USD"), spend60m: cost(0, "USD") };
-  });
+  velocity.recordVelocities.mockImplementation(
+    async (samples: { key: string; flagged: boolean }[]) =>
+      samples.map(({ key, flagged }) => {
+        const w = windows.get(key) ?? { count10m: 0, flagged10m: 0 };
+        const next = { count10m: w.count10m + 1, flagged10m: w.flagged10m + (flagged ? 1 : 0) };
+        windows.set(key, next);
+        return { ...next, spend10m: cost(0, "USD"), spend60m: cost(0, "USD") };
+      }),
+  );
   telemetry.runAfter.mockImplementation((fn: () => Promise<void>) => {
     pending.push(fn());
   });
@@ -136,14 +139,20 @@ test("a call that brought nothing back is an error but no parse failure", async 
 test("providers without DataForSEO alerts only emit the event", async () => {
   await record([call({ provider: "brightdata", engine: "perplexity", status: "provider_error" })]);
   expect(telemetry.captureServerEvent).toHaveBeenCalledOnce();
-  expect(velocity.recordVelocity).not.toHaveBeenCalled();
+  expect(velocity.recordVelocities).not.toHaveBeenCalled();
+});
+
+test("both windows of a call are recorded in one round trip", async () => {
+  await record([call()]);
+  expect(velocity.recordVelocities).toHaveBeenCalledOnce();
+  expect(velocity.recordVelocities.mock.calls[0]?.[0]).toHaveLength(2);
 });
 
 test("a failing velocity store never reaches the caller", async () => {
-  velocity.recordVelocity.mockRejectedValue(new Error("db down"));
+  velocity.recordVelocities.mockRejectedValue(new Error("db down"));
   await record([call()]);
   expect(telemetry.log.warn).toHaveBeenCalledWith("capture.velocity_failed", {
-    key: "capture:dataforseo:errors",
+    provider: "dataforseo",
     error: "Error",
   });
 });

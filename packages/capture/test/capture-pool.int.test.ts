@@ -48,6 +48,16 @@ async function transactionMs(): Promise<number> {
   );
 }
 
+/** DataForSEO calls counted in the error-rate window of the capture alerts. */
+async function alertWindowCalls(): Promise<number> {
+  const { rows } = await withSystem("capture.test", (tx) =>
+    tx.execute<{ n: number }>(
+      sql`select coalesce(sum(count), 0)::int as n from ops.velocity_buckets where key = 'capture:dataforseo:errors'`,
+    ),
+  );
+  return rows[0]?.n ?? 0;
+}
+
 /** How long each system connection checked out from now on is held, in milliseconds. */
 function recordHolds(pool: ReturnType<typeof systemPool>): { holds: number[]; stop: () => void } {
   const holds: number[] = [];
@@ -69,16 +79,29 @@ function recordHolds(pool: ReturnType<typeof systemPool>): { holds: number[]; st
   };
 }
 
-test("a capture alone takes seven system transactions, its settle riding the insert of its row", async () => {
+test("a capture alone takes eight system transactions, its settle riding the insert of its row", async () => {
   const { m, ids } = await frozen(cycle(2));
   const spend = { purpose: "contract-test" as const, refType: "capture-test", refId: m };
+  const before = await alertWindowCalls();
   await captureSlots(m, ids.slice(0, 1), { mode: "live", spend });
+  // The first capture's alert windows are written after it returns; they must not be counted.
+  await vi.waitFor(async () => expect(await alertWindowCalls()).toBe(before + 1));
   const { holds, stop } = recordHolds(systemPool());
-  await captureSlots(m, ids.slice(1), { mode: "live", spend }).finally(stop);
+  await captureSlots(m, ids.slice(1), { mode: "live", spend });
   // Besides the capture, the run reads which slots already succeeded. The capture: breaker
-  // check, lease, reservation, breaker record, lease release, retry check, row and settle.
-  console.info(`one capture: ${holds.length - 1} system transactions`);
-  expect(holds.length - 1).toBeLessThanOrEqual(7);
+  // check, lease, reservation, breaker record, lease release, retry check, row and settle, and
+  // its alert windows, written after the call.
+  // Each probe of the window is one checkout of its own, left out of the count.
+  let probes = 0;
+  await vi
+    .waitFor(async () => {
+      probes += 1;
+      expect(await alertWindowCalls()).toBe(before + 2);
+    })
+    .finally(stop);
+  const transactions = holds.length - 1 - probes;
+  console.info(`one capture: ${transactions} system transactions`);
+  expect(transactions).toBeLessThanOrEqual(8);
   expect(await ledger(m)).toEqual({ settled: 2 });
 });
 

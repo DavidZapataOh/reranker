@@ -63,6 +63,38 @@ export async function recordVelocity(
   };
 }
 
+type VelocityRow = { count10m: number; flagged10m: number; spend10m: string; spend60m: string };
+
+/**
+ * `recordVelocity` for several keys in one statement, so a caller that feeds more than one window
+ * per event takes one connection for all of them. Windows come back in the order of the samples.
+ */
+export async function recordVelocities(
+  samples: ReadonlyArray<{ key: string; flagged: boolean; spend: ProviderCost }>,
+): Promise<VelocityWindows[]> {
+  for (const { key, spend } of samples) {
+    assertOpaqueKey(key);
+    if (!ProviderCostSchema.safeParse(spend).success || spend.currency !== CURRENCY) {
+      throw new InvalidInputError(`Velocity spend must be whole ${CURRENCY} micro-units`);
+    }
+  }
+  if (samples.length === 0) return [];
+  const calls = samples.map(
+    (s, i) =>
+      sql`select ${i}::int as n, * from ops.record_velocity(${s.key}::text, ${s.flagged}::boolean, ${s.spend.amount_micros}::bigint)`,
+  );
+  const { rows } = await system((tx) =>
+    tx.execute<VelocityRow & { n: number }>(sql`${sql.join(calls, sql` union all `)} order by n`),
+  );
+  if (rows.length !== samples.length) throw new Error("record_velocity returned no row");
+  return rows.map((row) => ({
+    count10m: row.count10m,
+    flagged10m: row.flagged10m,
+    spend10m: cost(Number(row.spend10m), CURRENCY),
+    spend60m: cost(Number(row.spend60m), CURRENCY),
+  }));
+}
+
 /** The key's p95 over the last 7 days as of the latest refresh; null for a key never seen. */
 export async function velocityBaseline(key: string): Promise<VelocityBaseline | null> {
   assertOpaqueKey(key);

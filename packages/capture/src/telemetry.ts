@@ -1,4 +1,4 @@
-import { recordVelocity } from "@reranker/jobs/velocity";
+import { recordVelocities } from "@reranker/jobs/velocity";
 import {
   type CaptureChannel,
   type CaptureProvider,
@@ -62,28 +62,39 @@ export function captureCallOf(
   };
 }
 
-// Only the call that crosses the threshold alerts, so an incident raises one alert instead of one
+type Tracked = {
+  key: string;
+  flagged: boolean;
+  shouldAlert: (w: Window) => boolean;
+  kind: OpsAlertKind;
+  flaggedLabel: string;
+};
+
+// Only the call that crosses a threshold alerts, so an incident raises one alert instead of one
 // per failed call for as long as it lasts.
-async function track(
-  key: string,
-  flagged: boolean,
-  shouldAlert: (w: Window) => boolean,
-  alert: (w: Window) => Promise<void>,
-): Promise<void> {
+async function track(provider: CaptureProvider, tracked: Tracked[]): Promise<void> {
   try {
-    const now = await recordVelocity(key, { flagged, spend: NO_SPEND });
-    const before = { count10m: now.count10m - 1, flagged10m: now.flagged10m - (flagged ? 1 : 0) };
-    if (shouldAlert(now) && !shouldAlert(before)) await alert(now);
+    const windows = await recordVelocities(
+      tracked.map(({ key, flagged }) => ({ key, flagged, spend: NO_SPEND })),
+    );
+    const alerts = tracked.flatMap(({ flagged, shouldAlert, kind, flaggedLabel }, i) => {
+      const now = windows[i];
+      if (!now) return [];
+      const before = {
+        count10m: now.count10m - 1,
+        flagged10m: now.flagged10m - (flagged ? 1 : 0),
+      };
+      if (!shouldAlert(now) || shouldAlert(before)) return [];
+      return [sendOpsAlert(kind, { calls_10m: now.count10m, [flaggedLabel]: now.flagged10m })];
+    });
+    await Promise.all(alerts);
   } catch (error) {
     log.warn("capture.velocity_failed", {
-      key,
+      provider,
       error: error instanceof Error ? error.name : "unknown",
     });
   }
 }
-
-const rateAlert = (kind: OpsAlertKind, flaggedKey: string) => (w: Window) =>
-  sendOpsAlert(kind, { calls_10m: w.count10m, [flaggedKey]: w.flagged10m });
 
 /**
  * Emits the call's `capture_call` event and feeds the provider's alert windows. Never throws, and
@@ -110,34 +121,33 @@ export function recordCaptureCall(call: CaptureCall): void {
   );
   if (!ALERTED.has(call.provider)) return;
   const { provider } = call;
+  const tracked: Tracked[] = [
+    {
+      key: `capture:${provider}:errors`,
+      flagged: call.status !== "succeeded",
+      shouldAlert: shouldAlertErrors,
+      kind: "capture-dataforseo-errors",
+      flaggedLabel: "failed_10m",
+    },
+  ];
+  // A call that brought no body back had nothing to parse.
+  if (call.status !== "no_response") {
+    tracked.push({
+      key: `capture:${provider}:parse`,
+      flagged: call.parseFailed,
+      shouldAlert: shouldAlertParse,
+      kind: "capture-parse-failed",
+      flaggedLabel: "parse_failed_10m",
+    });
+  }
   runAfter(async () => {
-    const tracked = [
-      track(
-        `capture:${provider}:errors`,
-        call.status !== "succeeded",
-        shouldAlertErrors,
-        rateAlert("capture-dataforseo-errors", "failed_10m"),
-      ),
-    ];
-    // A call that brought no body back had nothing to parse.
-    if (call.status !== "no_response") {
-      tracked.push(
-        track(
-          `capture:${provider}:parse`,
-          call.parseFailed,
-          shouldAlertParse,
-          rateAlert("capture-parse-failed", "parse_failed_10m"),
-        ),
-      );
-    }
-    if (call.alert === "balance") {
-      tracked.push(
+    await Promise.all([
+      track(provider, tracked),
+      call.alert === "balance" &&
         sendOpsAlert("capture-dataforseo-balance", {
           engine: call.engine,
           provider_status_code: call.providerStatusCode ?? 0,
         }),
-      );
-    }
-    await Promise.all(tracked);
+    ]);
   });
 }
