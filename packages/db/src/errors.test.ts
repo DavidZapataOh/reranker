@@ -2,7 +2,7 @@ import { AppError } from "@reranker/schema";
 import { DrizzleQueryError } from "drizzle-orm";
 import pg from "pg";
 import { afterEach, describe, expect, test, vi } from "vitest";
-import { toDbError } from "./errors";
+import { isCheckoutTimeout, toDbError } from "./errors";
 import { type DbEvent, resetDbEventsForTest, setDbEventSink } from "./events";
 
 function pgError(code: string): pg.DatabaseError {
@@ -108,5 +108,18 @@ describe("toDbError", () => {
       { name: "db_compute_unavailable", pool: "system", pgCode: "53300", reason: "jobs.lease" },
       { name: "db_compute_unavailable", pool: "app", pgCode: "57P03" },
     ]);
+  });
+});
+
+describe("isCheckoutTimeout", () => {
+  test("is true only for a checkout that timed out, which never reached the database", () => {
+    const checkout = new Error("timeout exceeded when trying to connect");
+    expect(isCheckoutTimeout(toDbError(checkout, { pool: "system" }))).toBe(true);
+    expect(
+      isCheckoutTimeout(toDbError(new Error("Connection terminated"), { pool: "system" })),
+    ).toBe(false);
+    expect(isCheckoutTimeout(toDbError(pgError("57P01"), { pool: "system" }))).toBe(false);
+    expect(isCheckoutTimeout(checkout)).toBe(false);
+    expect(isCheckoutTimeout(new AppError("timeout", { cause: checkout }))).toBe(false);
   });
 });
