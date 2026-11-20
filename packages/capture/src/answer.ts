@@ -58,6 +58,7 @@ export type EngineAnswer = z.infer<typeof EngineAnswer>;
 /** Parser versions by parser name; the number is stored with each capture and its seal. */
 export const PARSER_VERSIONS: Record<string, number> = {
   chatgpt: 1,
+  "chatgpt-brightdata": 1,
   gemini: 1,
   "google-ai-overview": 1,
   "google-ai-mode": 1,

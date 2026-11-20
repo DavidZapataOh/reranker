@@ -8,6 +8,10 @@ on:
         type: choice
         options: [dataforseo, brightdata]
         default: dataforseo
+      snapshots:
+        description: Bright Data snapshot ids a run left pending, space-separated, to collect instead
+        type: string
+        default: ""
 permissions: {}
 concurrency:
   group: provider-live
@@ -52,7 +56,11 @@ jobs:
           BRIGHTDATA_API_KEY_CI: ${{ secrets.BRIGHTDATA_API_KEY_CI }}
           BRIGHTDATA_BILLING_API_KEY_CI: ${{ secrets.BRIGHTDATA_BILLING_API_KEY_CI }}
           OUT_DIR: ${{ runner.temp }}/brightdata-live
-        run: pnpm --filter @reranker/capture record:brightdata "$OUT_DIR"
+          SNAPSHOTS: ${{ inputs.snapshots }}
+        # Word splitting is wanted: each id is its own argument, and the script validates them.
+        run: |
+          # shellcheck disable=SC2086
+          pnpm --filter @reranker/capture record:brightdata "$OUT_DIR" $SNAPSHOTS
       # The exact bytes, for the parser tests under packages/capture/test/fixtures/recorded.
       - if: ${{ !cancelled() }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

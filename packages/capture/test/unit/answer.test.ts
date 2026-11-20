@@ -53,6 +53,7 @@ describe("EngineAnswer", () => {
   test("every parser starts at version 1", () => {
     expect(PARSER_VERSIONS).toEqual({
       chatgpt: 1,
+      "chatgpt-brightdata": 1,
       gemini: 1,
       "google-ai-overview": 1,
       "google-ai-mode": 1,
