@@ -1,5 +1,5 @@
 import { appEnv, defineEnv } from "@reranker/env";
-import { AiOptimizationApi, DataforseoLabsApi, SerpApi } from "dataforseo-client";
+import { AiOptimizationApi, DataforseoLabsApi, KeywordsDataApi, SerpApi } from "dataforseo-client";
 import { captureEnv } from "../env";
 import type { RawSink } from "../raw/raw-sink";
 import { teeFetch } from "../raw/tee-fetch";
@@ -15,7 +15,12 @@ const BASE_URLS = {
 export function createDataForSeo(
   sink: RawSink,
   opts: { base?: keyof typeof BASE_URLS; timeoutMs?: number } = {},
-): { ai: AiOptimizationApi; labs: DataforseoLabsApi; serp: SerpApi } {
+): {
+  ai: AiOptimizationApi;
+  keywords: KeywordsDataApi;
+  labs: DataforseoLabsApi;
+  serp: SerpApi;
+} {
   const env = defineEnv([captureEnv]);
   if (!env.DATAFORSEO_LOGIN || !env.DATAFORSEO_PASSWORD) {
     throw new Error("DataForSEO credentials missing: set DATAFORSEO_LOGIN and DATAFORSEO_PASSWORD");
@@ -30,6 +35,7 @@ export function createDataForSeo(
   };
   return {
     ai: new AiOptimizationApi(base, http),
+    keywords: new KeywordsDataApi(base, http),
     labs: new DataforseoLabsApi(base, http),
     serp: new SerpApi(base, http),
   };
