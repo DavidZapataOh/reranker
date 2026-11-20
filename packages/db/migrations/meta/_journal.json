@@ -162,6 +162,13 @@
       "when": 1795117482049,
       "tag": "0022_breaker_record_outcomes",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1795207914300,
+      "tag": "0023_signing_keys_seed",
+      "breakpoints": true
     }
   ]
 }
