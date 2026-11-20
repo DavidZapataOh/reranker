@@ -6,6 +6,7 @@ import {
 } from "@reranker/schema/measurement";
 import data from "../data/places-commercial-types.json" with { type: "json" };
 import { registerFor } from "./archetypes";
+import type { GenderedNoun, Noun } from "./grammar";
 
 const PlacesTypes = z.object({
   source: z.url(),
@@ -39,7 +40,14 @@ const restaurantTypes = [...byType.keys()].filter(
     ["bistro", "diner", "steak_house"].includes(t),
 );
 
-export type CategoryNames = { noun: string | null; synonyms: string[] };
+/** A language's name for a category; gendered languages carry the noun's gender for agreement. */
+export type CategoryNames<N extends Noun = string> = { noun: N | null; synonyms: string[] };
+
+/** Each language's names beside the Spanish ones. */
+export type SeedLanguages = {
+  en: CategoryNames;
+  pt: CategoryNames<GenderedNoun>;
+};
 
 export type SeedCategory = {
   key: SeedCategoryKey;
@@ -53,7 +61,7 @@ export type SeedCategory = {
    * The noun and synonyms in other languages, picked from that language's search data rather than
    * translated: English searches name the dentist, not the clinic.
    */
-  languages: Readonly<{ en: Readonly<CategoryNames> }>;
+  languages: Readonly<{ [L in keyof SeedLanguages]: Readonly<SeedLanguages[L]> }>;
   archetype: CategoryArchetype;
   defaultScope: QuestionScope;
   register: "tu" | "usted";
@@ -66,7 +74,7 @@ function seed(
   placesTypes: string[],
   noun: string | null,
   synonyms: string[],
-  en: CategoryNames,
+  languages: SeedLanguages,
 ): Readonly<SeedCategory> {
   return Object.freeze({
     key,
@@ -74,7 +82,10 @@ function seed(
     placesTypes,
     noun,
     synonyms,
-    languages: Object.freeze({ en: Object.freeze(en) }),
+    languages: Object.freeze({
+      en: Object.freeze(languages.en),
+      pt: Object.freeze(languages.pt),
+    }),
     archetype,
     defaultScope,
     register: registerFor(archetype),
@@ -91,8 +102,15 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
     // the job, and it names a person, so it is only an accepted synonym.
     "clínica odontológica",
     ["dentista", "odontología", "clínica dental", "consultorio odontológico", "odontólogo"],
-    // US searches: "dentist" 1M a month, "dental clinic" 135K, "dental office" 90K.
-    { noun: "dentist", synonyms: ["dental clinic", "dental office", "family dentist"] },
+    {
+      // US searches: "dentist" 1M a month, "dental clinic" 135K, "dental office" 90K.
+      en: { noun: "dentist", synonyms: ["dental clinic", "dental office", "family dentist"] },
+      // Brazil: "dentista" 246K a month (10.5K AI searches), "consultório odontológico" 33K.
+      pt: {
+        noun: { text: "dentista", gender: "m" },
+        synonyms: ["consultório odontológico", "clínica odontológica"],
+      },
+    },
   ),
   seed(
     "restaurant",
@@ -101,7 +119,11 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
     restaurantTypes,
     "restaurante",
     ["sitio para comer", "lugar para comer", "dónde comer"],
-    { noun: "restaurant", synonyms: [] },
+    {
+      en: { noun: "restaurant", synonyms: [] },
+      // Brazil: "restaurante" 9.1M a month.
+      pt: { noun: { text: "restaurante", gender: "m" }, synonyms: [] },
+    },
   ),
   // Motels are left out: in much of Latin America they are love hotels, a different question set.
   seed(
@@ -119,7 +141,11 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
     ],
     "hotel",
     ["hospedaje", "alojamiento", "dónde quedarse"],
-    { noun: "hotel", synonyms: [] },
+    {
+      en: { noun: "hotel", synonyms: [] },
+      // Brazil: "hotel" 2.2M a month; "pousada" (301K) names the inns the category's types cover.
+      pt: { noun: { text: "hotel", gender: "m" }, synonyms: ["pousada"] },
+    },
   ),
   seed(
     "car_repair",
@@ -128,10 +154,14 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
     ["car_repair"],
     "taller mecánico",
     ["taller automotriz", "taller", "mecánico"],
-    // AI search asks for a "mechanic" (293K a month) far more than for "auto repair" (40K).
     {
-      noun: "mechanic",
-      synonyms: ["auto repair shop", "car repair shop", "auto repair", "car repair"],
+      // AI search asks for a "mechanic" (293K a month) far more than for "auto repair" (40K).
+      en: {
+        noun: "mechanic",
+        synonyms: ["auto repair shop", "car repair shop", "auto repair", "car repair"],
+      },
+      // Brazil: "mecânico" 246K a month (13.8K AI searches), "oficina mecânica" 60K (1.2K AI).
+      pt: { noun: { text: "mecânico", gender: "m" }, synonyms: ["oficina mecânica", "oficina"] },
     },
   ),
   seed(
@@ -141,8 +171,12 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
     ["real_estate_agency"],
     "inmobiliaria",
     ["agencia inmobiliaria", "agente inmobiliario", "finca raíz"],
-    // "realtor" leads national volume on realtor.com lookups; within a city AI search asks for an agent.
-    { noun: "real estate agent", synonyms: ["realtor", "real estate agency"] },
+    {
+      // "realtor" leads national volume on realtor.com lookups; within a city AI search asks for an agent.
+      en: { noun: "real estate agent", synonyms: ["realtor", "real estate agency"] },
+      // Brazil: "imobiliária" 246K a month (10.4K AI, 175 in São Paulo), "corretor de imóveis" 50K (7).
+      pt: { noun: { text: "imobiliária", gender: "f" }, synonyms: ["corretor de imóveis"] },
+    },
   ),
   // A web-only store has no Places type; its noun comes from the inferred category.
   seed(
@@ -152,7 +186,11 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
     [],
     null,
     ["tienda online", "tienda en línea", "tienda virtual", "comprar por internet"],
-    { noun: null, synonyms: ["online store", "online shop"] },
+    {
+      en: { noun: null, synonyms: ["online store", "online shop"] },
+      // Brazil: "loja online" 12K a month.
+      pt: { noun: null, synonyms: ["loja online", "loja virtual"] },
+    },
   ),
 ]);
 

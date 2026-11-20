@@ -1,0 +1,2035 @@
+{
+  "version": "2026.11.0",
+  "language": "pt",
+  "collected": "2026-11-20",
+  "source": "query-phrasing workflow, run 44814420665 (DataForSEO, BR market, pt)",
+  "method": "Each text names the observed phrasings it follows. 'observed': people type that form; 'adapted': the form is observed but reworded so the slot works for any noun, masculine or feminine, a person or a place, singular; 'unsupported': no query in the data. Words that agree with the noun are written as groups, masculine first ('{um bom|uma boa}').",
+  "register": "neutral Brazilian Portuguese (você)",
+  "patterns": {
+    "voce_recomenda": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "você recomenda",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "você recomenda alguma coisa em inglês",
+          "rank": 2
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "você me recomenda",
+          "rank": 4
+        }
+      ]
+    },
+    "qual_x": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual dentista faz canal",
+          "volume": 720
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual dentista que faz canal",
+          "volume": 720
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual upa tem dentista 24 horas",
+          "volume": 390
+        }
+      ]
+    },
+    "qual_melhor": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "br",
+          "query": "qual a melhor restaurante em são paulo",
+          "volume": 1156
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "br",
+          "query": "qual o melhor restaurante em são paulo",
+          "volume": 1156
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "br",
+          "query": "qual a melhor padaria em são paulo",
+          "volume": 1109
+        }
+      ]
+    },
+    "onde_encontrar": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "onde aceita o ticket restaurante",
+          "volume": 1600
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "onde aceita ticket restaurante",
+          "volume": 1600
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "onde tem floricultura perto de mim",
+          "volume": 260
+        }
+      ]
+    },
+    "como_achar": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "como achar um advogado pelo nome na oab",
+          "volume": 880
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "como achar um bom encanador",
+          "volume": 10
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "como escolher uma clínica odontológica",
+          "volume": 0
+        }
+      ]
+    },
+    "um_bom": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "como achar um bom encanador",
+          "volume": 10
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "me indique um bom filme de suspense",
+          "rank": 10
+        }
+      ],
+      "note": "people write 'um bom' before a masculine noun; the template writes '{um bom|uma boa}' so it agrees with the noun"
+    },
+    "list_options": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "melhores curso de inglês",
+          "volume": 1300
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "melhores curso de inglês online",
+          "volume": 880
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "melhores lojas online para comprar roupas",
+          "volume": 110
+        }
+      ],
+      "note": "a plural list needs the noun inflected ('padarias', 'hotéis'), so lists ask for 'opções de {sustantivo}'"
+    },
+    "kw_em": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "br",
+          "query": "hotel em são paulo",
+          "volume": 4005
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "br",
+          "query": "restaurante em são paulo",
+          "volume": 3022
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "br",
+          "query": "padaria em são paulo",
+          "volume": 2021
+        }
+      ]
+    },
+    "kw_bare": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "br",
+          "query": "hotel são paulo",
+          "volume": 4005
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "br",
+          "query": "restaurante são paulo",
+          "volume": 3022
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "br",
+          "query": "padaria são paulo",
+          "volume": 2021
+        }
+      ]
+    },
+    "melhor_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "br",
+          "query": "melhor restaurante em são paulo",
+          "volume": 1156
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "br",
+          "query": "melhor restaurante são paulo",
+          "volume": 1156
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "br",
+          "query": "melhor padaria em são paulo",
+          "volume": 1109
+        }
+      ]
+    },
+    "preciso": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "preciso de um prompt para o chatgpt",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "preciso de uma benção não vou desistir",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "preciso de um emprestimo urgente mas estou com o nome sujo",
+          "rank": 2
+        }
+      ],
+      "note": "the opening is observed for other needs (a loan, a card); the templates use it for the business"
+    },
+    "que_clause": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual dentista que faz canal",
+          "volume": 720
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual o dentista que faz canal",
+          "volume": 720
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual a especialidade do dentista que faz canal",
+          "volume": 320
+        }
+      ]
+    },
+    "perto": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "restaurante perto de mim",
+          "volume": 1000000
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "padaria perto de mim",
+          "volume": 550000
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "floricultura perto de mim",
+          "volume": 165000
+        }
+      ],
+      "note": "'perto de mim' is the most searched modifier; a measured question names the neighborhood instead of 'mim'"
+    },
+    "mais_proximo": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "restaurante mais próxima",
+          "volume": 49500
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "restaurante mais próximo",
+          "volume": 49500
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "restaurante mais próximos",
+          "volume": 49500
+        }
+      ],
+      "note": "people ask for the closest one to them; a measured question names the neighborhood"
+    },
+    "bairro": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "padaria real centro",
+          "volume": 8100
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "loja de roupas centro",
+          "volume": 2400
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "salão de beleza centro",
+          "volume": 1900
+        }
+      ],
+      "note": "people name the area ('no centro'); neighborhoods take an article that depends on each name ('na Savassi', 'em Pinheiros'), so the templates say 'bairro {zona}'"
+    },
+    "aberto_agora": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "restaurante aberta agora",
+          "volume": 60500
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "restaurante aberto agora",
+          "volume": 60500
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "restaurante abertos agora",
+          "volume": 60500
+        }
+      ]
+    },
+    "aberto_hoje": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "barbearia aberta hoje",
+          "volume": 2900
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "barbearia abertas hoje",
+          "volume": 2900
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "barbearia abertos hoje",
+          "volume": 2900
+        }
+      ]
+    },
+    "qual_aberto": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual restaurante esta aberto hoje",
+          "volume": 210
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual restaurante está aberto hoje",
+          "volume": 210
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual padaria está aberta agora",
+          "volume": 90
+        }
+      ]
+    },
+    "h24": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "24 horas dentista",
+          "volume": 14800
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "dentista 24 horas",
+          "volume": 14800
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "dentista las 24 horas",
+          "volume": 14800
+        }
+      ]
+    },
+    "emergencia": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "dentista emergência",
+          "volume": 3600
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "barra clínica odontológica urgência",
+          "volume": 260
+        }
+      ]
+    },
+    "domingo": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "salão de beleza que abre aos domingos",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "barbearia que abre domingo perto de mim",
+          "rank": 2
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "qual barbearia abre domingo",
+          "rank": 2
+        }
+      ]
+    },
+    "hoje": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "barbearia aberta hoje",
+          "volume": 2900
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "barbearia abertas hoje",
+          "volume": 2900
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "barbearia abertos hoje",
+          "volume": 2900
+        }
+      ]
+    },
+    "convenio": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual clínica odontológica aceita bradesco",
+          "volume": 20
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual clínica odontológica aceita bradesco dental",
+          "volume": 10
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual clínica odontológica aceita bradesco saúde",
+          "volume": 10
+        }
+      ],
+      "note": "people name their plan (Hapvida, Bradesco); a template for any market says 'convênio'"
+    },
+    "parcela": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "loja de material de construção que parcela no boleto",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "qual loja online aceita boleto parcelado",
+          "rank": 3
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "loja de material de construção que parcela em 24x",
+          "rank": 4
+        }
+      ]
+    },
+    "ticket": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "onde aceita o ticket restaurante",
+          "volume": 1600
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "onde aceita ticket restaurante",
+          "volume": 1600
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "onde aceita ticket restaurante perto de mim",
+          "volume": 210
+        }
+      ]
+    },
+    "barato": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "br",
+          "query": "hotel barata são paulo",
+          "volume": 334
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "br",
+          "query": "hotel barato são paulo",
+          "volume": 334
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "como montar um salão de beleza simples e barato",
+          "volume": 140
+        }
+      ]
+    },
+    "mais_barato": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual o curso de inglês mais barato",
+          "volume": 50
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual loja de material de construção e mais barata",
+          "volume": 40
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual a loja de material de construção mais barata",
+          "volume": 30
+        }
+      ]
+    },
+    "preco": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "curso de inglês preço",
+          "volume": 1300
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "curso de inglês preços",
+          "volume": 1300
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "preço curso de inglês",
+          "volume": 1300
+        }
+      ]
+    },
+    "quanto_custa": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "curso de inglês quanto custa",
+          "volume": 1600
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "quanto custa curso de inglês",
+          "volume": 1600
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "quanto custa o curso de inglês",
+          "volume": 1600
+        }
+      ]
+    },
+    "gratuito": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "curso de inglês grátis",
+          "volume": 14800
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "curso de inglês online gratuitos",
+          "volume": 14800
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "curso de inglês online grátis",
+          "volume": 14800
+        }
+      ]
+    },
+    "comissao": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "comissão corretor de imóveis",
+          "volume": 1300
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "comissão de corretor de imóveis",
+          "volume": 1300
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "comissão do corretor de imóveis",
+          "volume": 1300
+        }
+      ]
+    },
+    "bolsa": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "bolsa em escola particular",
+          "volume": 1300
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "bolsa escola particular",
+          "volume": 1300
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "bolsa para escola particular",
+          "volume": 1300
+        }
+      ]
+    },
+    "confiavel": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "br",
+          "query": "loja online confiável",
+          "volume": 1730
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "br",
+          "query": "loja online é confiável",
+          "volume": 1350
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "como saber se a loja online é confiavel",
+          "volume": 30
+        }
+      ]
+    },
+    "e_confiavel": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "br",
+          "query": "loja online é confiável",
+          "volume": 1350
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "como saber se a loja online é confiavel",
+          "volume": 30
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "qual loja online é confiável",
+          "rank": 10
+        }
+      ]
+    },
+    "bem_avaliado": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "br",
+          "query": "floricultura bem avaliada belo horizonte",
+          "volume": 3
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "br",
+          "query": "floricultura bem avaliado belo horizonte",
+          "volume": 3
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "br",
+          "query": "pousada bem avaliada são paulo",
+          "volume": 2
+        }
+      ]
+    },
+    "avaliacoes": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "avaliações sobre clínica odontológica dr alexandre carvalho",
+          "volume": 260
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "avaliações sobre clean clínica odontológica 24 horas",
+          "volume": 210
+        }
+      ]
+    },
+    "mais_famoso": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "qual a barbearia mais famosa do brasil",
+          "rank": 8
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "qual a barbearia mais famosa do mundo",
+          "rank": 10
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "br",
+          "query": "Qual o salão de beleza mais famoso do Brasil?"
+        }
+      ]
+    },
+    "registro": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "consulta advogado oab",
+          "volume": 14800
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "consulta advogado pela oab",
+          "volume": 14800
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "consulta oab advogado",
+          "volume": 14800
+        }
+      ],
+      "note": "people check a lawyer's OAB or an agent's CRECI; the templates ask for a registered professional without naming the council"
+    },
+    "vale_pena": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "br",
+          "query": "Qual curso de inglês vale a pena?"
+        }
+      ]
+    },
+    "como_saber_bom": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "como saber se a loja online é confiavel",
+          "volume": 30
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "como saber se a clínica odontológica é boa",
+          "volume": 10
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "br",
+          "query": "Como saber se o cabeleireiro é bom?"
+        }
+      ]
+    },
+    "faz_servico": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual dentista faz canal",
+          "volume": 720
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual dentista que faz canal",
+          "volume": 720
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual o dentista que faz canal",
+          "volume": 720
+        }
+      ],
+      "note": "people name the service ('faz canal'); a template shared by every category of the archetype names none"
+    },
+    "infantil": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "loja de roupas infantil",
+          "volume": 14800
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "loja infantil de roupas",
+          "volume": 14800
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "loja de roupas infantil perto de mim",
+          "volume": 8100
+        }
+      ]
+    },
+    "atende_mulher": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "clínica odontológica que atende pelo plano hapvida",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "dentista que atende pelo plano bradesco dental",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "barbearia que atende mulher",
+          "rank": 10
+        }
+      ]
+    },
+    "area": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "advogado trabalhista",
+          "volume": 74000
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "advogado trabalhistas",
+          "volume": 74000
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "advogado criminalista",
+          "volume": 33100
+        }
+      ],
+      "note": "people name the area of law; the template asks for the area of the case without naming one"
+    },
+    "aceita_pet": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "pousada que aceita pet",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "hotel que aceita pet",
+          "rank": 4
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "pousada que aceita pet no interior de sp",
+          "rank": 7
+        }
+      ]
+    },
+    "cafe_manha": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "pousada perto do beto carrero com café da manhã",
+          "rank": 9
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "br",
+          "query": "Quanto custa o café da manhã na Bella Paulista?"
+        }
+      ]
+    },
+    "aniversario": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "padaria que vende bolo de aniversário",
+          "rank": 4
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "br",
+          "query": "Quais restaurantes dão brinde no dia do aniversário?"
+        }
+      ]
+    },
+    "maior": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual a maior imobiliária do brasil",
+          "volume": 90
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual a maior imobiliária do mundo",
+          "volume": 70
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual a maior barbearia do brasil",
+          "volume": 20
+        }
+      ],
+      "note": "people ask for the biggest store; the template asks for the biggest selection"
+    },
+    "online": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "plantas loja online",
+          "volume": 33100
+        },
+        {
+          "source": "google_ai_overview_question",
+          "market": "br",
+          "query": "loja online plantas",
+          "volume": 33100
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "loja online boticário",
+          "volume": 22200
+        }
+      ]
+    },
+    "aluguel": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "como funciona alugar casa pela imobiliária",
+          "volume": 110
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "como funciona aluguel por imobiliária",
+          "volume": 110
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "como declarar aluguel recebido de imobiliária",
+          "volume": 90
+        }
+      ]
+    },
+    "melhor_loja_online": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "br",
+          "query": "melhor loja online",
+          "volume": 3712
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "melhor loja online para comprar roupas",
+          "volume": 110
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "melhores lojas online para comprar roupas",
+          "volume": 110
+        }
+      ]
+    },
+    "comprar_online": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "comprar roupas online",
+          "volume": 320
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "comprar roupas direto da fabrica online",
+          "volume": 140
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "comprar roupas online direto da fabrica",
+          "volume": 140
+        }
+      ]
+    },
+    "qual_loja_online": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual loja online aceita brasil card",
+          "volume": 40
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual loja online entrega mais rapido",
+          "volume": 30
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual loja online entrega mais rápido",
+          "volume": 30
+        }
+      ]
+    },
+    "loja_online_confiavel": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "br",
+          "query": "loja online confiável",
+          "volume": 1730
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "br",
+          "query": "loja online é confiável",
+          "volume": 1350
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "como saber se a loja online é confiavel",
+          "volume": 30
+        }
+      ]
+    },
+    "frete_gratis": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "comprar roupas baratas online frete gratis",
+          "volume": 90
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "comprar roupas baratas online frete grátis",
+          "volume": 70
+        }
+      ]
+    },
+    "entrega_rapida": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual loja online entrega mais rápido",
+          "volume": 30
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "comprar roupas online entrega rapida",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "loja de roupas que entrega no mesmo dia",
+          "rank": 1
+        }
+      ]
+    },
+    "boleto": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "loja de material de construção que parcela no boleto",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "qual loja online aceita boleto parcelado",
+          "rank": 3
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "br",
+          "query": "loja de material de construção que vende no boleto",
+          "rank": 5
+        }
+      ]
+    },
+    "brasil": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual o hotel mais caro do brasil",
+          "volume": 390
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual melhor hotel do brasil",
+          "volume": 320
+        },
+        {
+          "source": "google_volume",
+          "market": "br",
+          "query": "qual o melhor hotel do brasil",
+          "volume": 320
+        }
+      ],
+      "note": "people write 'do Brasil'; a keyword names the country bare, so it never needs the article a preposition would take"
+    }
+  },
+  "templates": {
+    "health/local/discovery": [
+      ["voce_recomenda", "qual_x"],
+      ["onde_encontrar", "um_bom"],
+      ["como_achar", "um_bom"],
+      ["voce_recomenda", "list_options"],
+      ["list_options"],
+      ["kw_em"],
+      ["onde_encontrar", "kw_em"],
+      ["preciso"],
+      ["que_clause", "infantil"]
+    ],
+    "health/local/specialty": [
+      ["qual_x", "infantil"],
+      ["voce_recomenda", "infantil"],
+      ["onde_encontrar", "um_bom", "infantil"],
+      ["voce_recomenda", "list_options", "infantil"],
+      ["list_options", "infantil"],
+      ["infantil", "kw_bare"],
+      ["infantil", "kw_em"],
+      ["que_clause", "infantil"],
+      ["preciso", "infantil"]
+    ],
+    "health/local/zone": [
+      ["voce_recomenda", "perto", "bairro"],
+      ["onde_encontrar", "um_bom", "bairro"],
+      ["qual_x", "mais_proximo", "bairro"],
+      ["voce_recomenda", "list_options", "perto"],
+      ["list_options", "bairro"],
+      ["perto", "kw_bare"],
+      ["bairro", "kw_bare"],
+      ["perto", "que_clause", "infantil"],
+      ["preciso", "perto"]
+    ],
+    "health/local/urgency": [
+      ["qual_aberto", "aberto_agora"],
+      ["onde_encontrar", "h24"],
+      ["qual_x", "emergencia", "hoje"],
+      ["voce_recomenda", "list_options", "aberto_agora"],
+      ["list_options", "h24"],
+      ["aberto_agora", "kw_bare"],
+      ["h24", "kw_bare"],
+      ["que_clause", "emergencia", "domingo"],
+      ["preciso", "emergencia", "hoje"]
+    ],
+    "health/local/insurance_or_payment": [
+      ["qual_x", "convenio"],
+      ["onde_encontrar", "que_clause", "convenio"],
+      ["qual_x", "parcela"],
+      ["voce_recomenda", "list_options", "convenio"],
+      ["list_options", "parcela"],
+      ["que_clause", "convenio"],
+      ["convenio", "kw_bare"],
+      ["que_clause", "atende_mulher", "convenio"],
+      ["preciso", "convenio"]
+    ],
+    "health/local/trust": [
+      ["qual_x", "confiavel"],
+      ["onde_encontrar", "um_bom", "confiavel"],
+      ["qual_x", "avaliacoes"],
+      ["voce_recomenda", "list_options", "confiavel"],
+      ["list_options", "bem_avaliado"],
+      ["confiavel", "kw_bare"],
+      ["bem_avaliado", "kw_em"],
+      ["registro", "avaliacoes"],
+      ["preciso", "confiavel"]
+    ],
+    "beauty_wellness/local/discovery": [
+      ["voce_recomenda", "qual_x"],
+      ["onde_encontrar", "um_bom"],
+      ["como_achar", "um_bom"],
+      ["voce_recomenda", "list_options"],
+      ["list_options"],
+      ["kw_em"],
+      ["onde_encontrar", "kw_em"],
+      ["que_clause", "atende_mulher"],
+      ["preciso"]
+    ],
+    "beauty_wellness/local/specialty": [
+      ["qual_x", "faz_servico"],
+      ["voce_recomenda", "faz_servico"],
+      ["onde_encontrar", "que_clause", "faz_servico"],
+      ["voce_recomenda", "list_options", "faz_servico"],
+      ["list_options", "faz_servico"],
+      ["faz_servico", "kw_em"],
+      ["faz_servico", "kw_bare"],
+      ["faz_servico"],
+      ["preciso", "que_clause", "faz_servico"]
+    ],
+    "beauty_wellness/local/zone": [
+      ["voce_recomenda", "perto", "bairro"],
+      ["onde_encontrar", "um_bom", "bairro"],
+      ["qual_x", "mais_proximo", "bairro"],
+      ["voce_recomenda", "list_options", "perto"],
+      ["list_options", "bairro"],
+      ["perto", "kw_bare"],
+      ["bairro", "kw_bare"],
+      ["perto", "que_clause", "atende_mulher"],
+      ["preciso", "perto"]
+    ],
+    "beauty_wellness/local/price": [
+      ["qual_x", "preco"],
+      ["onde_encontrar", "um_bom", "barato"],
+      ["qual_x", "mais_barato"],
+      ["voce_recomenda", "list_options", "barato"],
+      ["list_options", "preco"],
+      ["barato", "kw_bare"],
+      ["preco", "kw_bare"],
+      ["preco"],
+      ["preciso", "barato"]
+    ],
+    "beauty_wellness/local/trust": [
+      ["qual_x", "confiavel"],
+      ["onde_encontrar", "um_bom", "confiavel"],
+      ["qual_x", "avaliacoes"],
+      ["voce_recomenda", "list_options", "confiavel"],
+      ["list_options", "bem_avaliado"],
+      ["confiavel", "kw_bare"],
+      ["bem_avaliado", "kw_em"],
+      ["avaliacoes"],
+      ["preciso", "confiavel"]
+    ],
+    "beauty_wellness/local/ranking": [
+      ["qual_melhor"],
+      ["qual_melhor"],
+      ["mais_famoso"],
+      ["list_options"],
+      ["list_options"],
+      ["melhor_kw", "kw_em"],
+      ["melhor_kw", "kw_bare"],
+      ["bem_avaliado", "mais_famoso"],
+      ["preciso", "qual_melhor"]
+    ],
+    "lodging/local/discovery": [
+      ["voce_recomenda", "qual_x"],
+      ["onde_encontrar", "um_bom"],
+      ["como_achar", "um_bom"],
+      ["voce_recomenda", "list_options"],
+      ["list_options"],
+      ["kw_em"],
+      ["onde_encontrar", "kw_em"],
+      ["cafe_manha"],
+      ["preciso"]
+    ],
+    "lodging/local/specialty": [
+      ["qual_x", "aceita_pet"],
+      ["voce_recomenda", "que_clause", "aceita_pet"],
+      ["onde_encontrar", "um_bom", "aceita_pet"],
+      ["voce_recomenda", "list_options", "aceita_pet"],
+      ["list_options", "aceita_pet"],
+      ["que_clause", "aceita_pet"],
+      ["aceita_pet", "kw_em"],
+      ["que_clause", "aceita_pet"],
+      ["preciso", "aceita_pet"]
+    ],
+    "lodging/local/zone": [
+      ["voce_recomenda", "perto", "bairro"],
+      ["onde_encontrar", "um_bom", "bairro"],
+      ["qual_x", "mais_proximo", "bairro"],
+      ["voce_recomenda", "list_options", "perto"],
+      ["list_options", "bairro"],
+      ["perto", "kw_bare"],
+      ["bairro", "kw_bare"],
+      ["perto", "cafe_manha"],
+      ["preciso", "perto"]
+    ],
+    "lodging/local/price": [
+      ["qual_x", "preco"],
+      ["onde_encontrar", "um_bom", "barato"],
+      ["qual_x", "mais_barato"],
+      ["voce_recomenda", "list_options", "barato"],
+      ["list_options", "preco"],
+      ["barato", "kw_bare"],
+      ["preco", "kw_bare"],
+      ["preco", "cafe_manha"],
+      ["preciso", "barato"]
+    ],
+    "lodging/local/trust": [
+      ["qual_x", "confiavel"],
+      ["onde_encontrar", "um_bom", "confiavel"],
+      ["qual_x", "avaliacoes"],
+      ["voce_recomenda", "list_options", "confiavel"],
+      ["list_options", "bem_avaliado"],
+      ["confiavel", "kw_bare"],
+      ["bem_avaliado", "kw_em"],
+      ["avaliacoes"],
+      ["preciso", "confiavel"]
+    ],
+    "lodging/local/ranking": [
+      ["qual_melhor"],
+      ["qual_melhor"],
+      ["mais_famoso"],
+      ["list_options"],
+      ["list_options"],
+      ["melhor_kw", "kw_em"],
+      ["melhor_kw", "kw_bare"],
+      ["bem_avaliado", "mais_famoso"],
+      ["preciso", "qual_melhor"]
+    ],
+    "food/local/discovery": [
+      ["voce_recomenda", "qual_x"],
+      ["onde_encontrar", "um_bom"],
+      ["como_achar", "um_bom"],
+      ["voce_recomenda", "list_options"],
+      ["list_options"],
+      ["kw_em"],
+      ["onde_encontrar", "kw_em"],
+      ["cafe_manha"],
+      ["que_clause", "ticket"]
+    ],
+    "food/local/specialty": [
+      ["qual_x", "aniversario"],
+      ["voce_recomenda", "aniversario"],
+      ["onde_encontrar", "um_bom", "aniversario"],
+      ["voce_recomenda", "list_options", "aniversario"],
+      ["list_options", "aniversario"],
+      ["aniversario", "kw_bare"],
+      ["aniversario", "kw_em"],
+      ["que_clause", "aniversario"],
+      ["preciso", "aniversario"]
+    ],
+    "food/local/zone": [
+      ["voce_recomenda", "perto", "bairro"],
+      ["onde_encontrar", "um_bom", "bairro"],
+      ["qual_x", "mais_proximo", "bairro"],
+      ["voce_recomenda", "list_options", "perto"],
+      ["list_options", "bairro"],
+      ["perto", "kw_bare"],
+      ["bairro", "kw_bare"],
+      ["perto", "cafe_manha"],
+      ["preciso", "perto"]
+    ],
+    "food/local/price": [
+      ["qual_x", "preco"],
+      ["onde_encontrar", "um_bom", "barato"],
+      ["qual_x", "mais_barato"],
+      ["voce_recomenda", "list_options", "barato"],
+      ["list_options", "preco"],
+      ["barato", "kw_bare"],
+      ["preco", "kw_bare"],
+      ["preco"],
+      ["preciso", "barato"]
+    ],
+    "food/local/trust": [
+      ["qual_x", "confiavel"],
+      ["onde_encontrar", "um_bom", "confiavel"],
+      ["qual_x", "avaliacoes"],
+      ["voce_recomenda", "list_options", "confiavel"],
+      ["list_options", "bem_avaliado"],
+      ["confiavel", "kw_bare"],
+      ["bem_avaliado", "kw_em"],
+      ["avaliacoes"],
+      ["preciso", "confiavel"]
+    ],
+    "food/local/ranking": [
+      ["qual_melhor"],
+      ["qual_melhor"],
+      ["mais_famoso"],
+      ["list_options"],
+      ["list_options"],
+      ["melhor_kw", "kw_em"],
+      ["melhor_kw", "kw_bare"],
+      ["bem_avaliado", "mais_famoso"],
+      ["preciso", "qual_melhor"]
+    ],
+    "home_auto_services/local/discovery": [
+      ["voce_recomenda", "qual_x"],
+      ["onde_encontrar", "um_bom"],
+      ["como_achar", "um_bom"],
+      ["voce_recomenda", "list_options"],
+      ["list_options"],
+      ["kw_em"],
+      ["onde_encontrar", "kw_em"],
+      ["que_clause"],
+      ["preciso", "que_clause"]
+    ],
+    "home_auto_services/local/specialty": [
+      ["qual_x", "faz_servico"],
+      ["voce_recomenda", "faz_servico"],
+      ["onde_encontrar", "que_clause", "faz_servico"],
+      ["voce_recomenda", "list_options", "faz_servico"],
+      ["list_options", "faz_servico"],
+      ["faz_servico", "kw_em"],
+      ["faz_servico", "kw_bare"],
+      ["faz_servico"],
+      ["preciso", "que_clause"]
+    ],
+    "home_auto_services/local/zone": [
+      ["voce_recomenda", "perto", "bairro"],
+      ["onde_encontrar", "um_bom", "bairro"],
+      ["qual_x", "mais_proximo", "bairro"],
+      ["voce_recomenda", "list_options", "perto"],
+      ["list_options", "bairro"],
+      ["perto", "kw_bare"],
+      ["bairro", "kw_bare"],
+      ["perto", "que_clause"],
+      ["preciso", "perto"]
+    ],
+    "home_auto_services/local/price": [
+      ["qual_x", "preco"],
+      ["onde_encontrar", "um_bom", "barato"],
+      ["qual_x", "mais_barato"],
+      ["voce_recomenda", "list_options", "barato"],
+      ["list_options", "preco"],
+      ["barato", "kw_bare"],
+      ["preco", "kw_bare"],
+      ["que_clause", "gratuito"],
+      ["quanto_custa"]
+    ],
+    "home_auto_services/local/urgency": [
+      ["qual_aberto", "aberto_agora"],
+      ["onde_encontrar", "h24"],
+      ["qual_x", "emergencia", "hoje"],
+      ["voce_recomenda", "list_options", "aberto_agora"],
+      ["list_options", "h24"],
+      ["aberto_agora", "kw_bare"],
+      ["h24", "kw_bare"],
+      ["que_clause", "hoje"],
+      ["preciso", "h24", "domingo"]
+    ],
+    "home_auto_services/local/trust": [
+      ["qual_x", "confiavel"],
+      ["onde_encontrar", "um_bom", "confiavel"],
+      ["qual_x", "avaliacoes"],
+      ["voce_recomenda", "list_options", "confiavel"],
+      ["list_options", "bem_avaliado"],
+      ["confiavel", "kw_bare"],
+      ["bem_avaliado", "kw_em"],
+      ["avaliacoes"],
+      ["preciso", "confiavel"]
+    ],
+    "local_retail/local/discovery": [
+      ["voce_recomenda", "qual_x"],
+      ["onde_encontrar", "um_bom"],
+      ["como_achar", "um_bom"],
+      ["voce_recomenda", "list_options"],
+      ["list_options"],
+      ["kw_em"],
+      ["onde_encontrar", "kw_em"],
+      ["que_clause"],
+      ["preciso", "que_clause", "online"]
+    ],
+    "local_retail/local/specialty": [
+      ["qual_x", "maior"],
+      ["maior"],
+      ["onde_encontrar", "maior"],
+      ["voce_recomenda", "list_options", "maior"],
+      ["list_options", "maior"],
+      ["maior", "kw_em"],
+      ["maior", "kw_bare"],
+      ["que_clause", "maior"],
+      ["preciso", "maior"]
+    ],
+    "local_retail/local/price": [
+      ["qual_x", "preco"],
+      ["onde_encontrar", "um_bom", "barato"],
+      ["qual_x", "mais_barato"],
+      ["voce_recomenda", "list_options", "barato"],
+      ["list_options", "preco"],
+      ["barato", "kw_bare"],
+      ["preco", "kw_bare"],
+      ["preco"],
+      ["preciso", "barato"]
+    ],
+    "local_retail/local/urgency": [
+      ["qual_aberto", "aberto_hoje"],
+      ["qual_x", "domingo"],
+      ["onde_encontrar", "aberto_agora"],
+      ["voce_recomenda", "list_options", "aberto_agora"],
+      ["list_options", "domingo"],
+      ["aberto_agora", "kw_bare"],
+      ["aberto_hoje", "kw_bare"],
+      ["que_clause", "hoje"],
+      ["preciso", "domingo"]
+    ],
+    "local_retail/local/trust": [
+      ["qual_x", "confiavel"],
+      ["onde_encontrar", "um_bom", "confiavel"],
+      ["qual_x", "avaliacoes"],
+      ["voce_recomenda", "list_options", "confiavel"],
+      ["list_options", "bem_avaliado"],
+      ["confiavel", "kw_bare"],
+      ["bem_avaliado", "kw_em"],
+      ["avaliacoes"],
+      ["preciso", "confiavel"]
+    ],
+    "local_retail/local/ranking": [
+      ["qual_melhor"],
+      ["qual_melhor"],
+      ["mais_famoso"],
+      ["list_options"],
+      ["list_options"],
+      ["melhor_kw", "kw_em"],
+      ["melhor_kw", "kw_bare"],
+      ["bem_avaliado", "mais_famoso"],
+      ["preciso", "qual_melhor"]
+    ],
+    "local_retail/national/discovery": [
+      ["voce_recomenda", "online"],
+      ["onde_encontrar", "um_bom", "online"],
+      ["qual_melhor", "online"],
+      ["voce_recomenda", "list_options", "online"],
+      ["list_options", "online"],
+      ["online", "brasil"],
+      ["melhor_loja_online", "online"],
+      ["online", "que_clause"],
+      ["preciso", "boleto"]
+    ],
+    "local_retail/national/specialty": [
+      ["qual_x", "maior", "online"],
+      ["maior", "online"],
+      ["onde_encontrar", "maior"],
+      ["voce_recomenda", "list_options", "maior"],
+      ["list_options", "maior"],
+      ["maior", "online"],
+      ["maior", "brasil"],
+      ["que_clause", "maior"],
+      ["preciso", "maior"]
+    ],
+    "local_retail/national/price": [
+      ["qual_x", "preco", "online"],
+      ["onde_encontrar", "barato"],
+      ["qual_x", "mais_barato"],
+      ["voce_recomenda", "list_options", "barato"],
+      ["list_options", "preco"],
+      ["barato", "online"],
+      ["preco", "brasil"],
+      ["preco", "frete_gratis"],
+      ["preciso", "barato", "frete_gratis"]
+    ],
+    "local_retail/national/urgency": [
+      ["qual_loja_online", "entrega_rapida"],
+      ["qual_x", "entrega_rapida"],
+      ["onde_encontrar", "entrega_rapida"],
+      ["voce_recomenda", "list_options", "entrega_rapida"],
+      ["list_options", "entrega_rapida"],
+      ["entrega_rapida", "online"],
+      ["entrega_rapida", "brasil"],
+      ["que_clause", "entrega_rapida"],
+      ["preciso", "entrega_rapida"]
+    ],
+    "local_retail/national/trust": [
+      ["qual_loja_online", "e_confiavel"],
+      ["onde_encontrar", "confiavel"],
+      ["qual_x", "avaliacoes"],
+      ["voce_recomenda", "list_options", "confiavel"],
+      ["list_options", "bem_avaliado"],
+      ["loja_online_confiavel", "confiavel"],
+      ["confiavel", "brasil"],
+      ["confiavel", "boleto"],
+      ["como_saber_bom", "e_confiavel"]
+    ],
+    "local_retail/national/ranking": [
+      ["qual_melhor", "online"],
+      ["qual_x", "mais_famoso"],
+      ["qual_melhor", "online"],
+      ["list_options", "online"],
+      ["list_options", "online"],
+      ["melhor_loja_online", "brasil"],
+      ["mais_famoso", "online"],
+      ["bem_avaliado", "mais_famoso"],
+      ["preciso", "qual_melhor"]
+    ],
+    "professional_services/local/discovery": [
+      ["voce_recomenda", "qual_x"],
+      ["onde_encontrar", "um_bom"],
+      ["como_achar", "um_bom"],
+      ["voce_recomenda", "list_options"],
+      ["list_options"],
+      ["kw_em"],
+      ["onde_encontrar", "kw_em"],
+      ["que_clause", "online"],
+      ["preciso"]
+    ],
+    "professional_services/local/specialty": [
+      ["qual_x", "faz_servico"],
+      ["voce_recomenda", "faz_servico"],
+      ["onde_encontrar", "que_clause", "faz_servico"],
+      ["voce_recomenda", "list_options", "faz_servico"],
+      ["list_options", "faz_servico"],
+      ["faz_servico", "kw_em"],
+      ["faz_servico", "kw_bare"],
+      ["que_clause"],
+      ["preciso", "area"]
+    ],
+    "professional_services/local/price": [
+      ["qual_x", "preco"],
+      ["onde_encontrar", "um_bom", "barato"],
+      ["qual_x", "mais_barato"],
+      ["voce_recomenda", "list_options", "barato"],
+      ["list_options", "preco"],
+      ["barato", "kw_bare"],
+      ["preco", "kw_bare"],
+      ["gratuito"],
+      ["quanto_custa"]
+    ],
+    "professional_services/local/urgency": [
+      ["qual_aberto", "aberto_agora"],
+      ["onde_encontrar", "h24"],
+      ["qual_x", "emergencia", "hoje"],
+      ["voce_recomenda", "list_options", "aberto_agora"],
+      ["list_options", "h24"],
+      ["aberto_agora", "kw_bare"],
+      ["h24", "kw_bare"],
+      ["que_clause", "hoje"],
+      ["preciso", "emergencia"]
+    ],
+    "professional_services/local/trust": [
+      ["qual_x", "confiavel"],
+      ["onde_encontrar", "um_bom", "confiavel"],
+      ["qual_x", "avaliacoes"],
+      ["voce_recomenda", "list_options", "confiavel"],
+      ["list_options", "bem_avaliado"],
+      ["confiavel", "kw_bare"],
+      ["bem_avaliado", "kw_em"],
+      ["registro", "avaliacoes"],
+      ["preciso", "confiavel"]
+    ],
+    "professional_services/local/ranking": [
+      ["qual_melhor"],
+      ["qual_melhor"],
+      ["mais_famoso"],
+      ["list_options"],
+      ["list_options"],
+      ["melhor_kw", "kw_em"],
+      ["melhor_kw", "kw_bare"],
+      ["bem_avaliado", "mais_famoso"],
+      ["preciso", "qual_melhor"]
+    ],
+    "real_estate/local/discovery": [
+      ["voce_recomenda", "qual_x"],
+      ["onde_encontrar", "um_bom"],
+      ["como_achar", "um_bom"],
+      ["voce_recomenda", "list_options"],
+      ["list_options"],
+      ["kw_em"],
+      ["onde_encontrar", "kw_em"],
+      ["que_clause", "aluguel"],
+      ["preciso"]
+    ],
+    "real_estate/local/specialty": [
+      ["voce_recomenda", "aluguel"],
+      ["qual_melhor", "aluguel"],
+      ["onde_encontrar", "um_bom", "aluguel"],
+      ["voce_recomenda", "list_options", "aluguel"],
+      ["list_options", "aluguel"],
+      ["aluguel", "kw_bare"],
+      ["aluguel", "kw_em"],
+      ["que_clause", "aluguel"],
+      ["preciso", "aluguel"]
+    ],
+    "real_estate/local/zone": [
+      ["voce_recomenda", "perto", "bairro"],
+      ["onde_encontrar", "um_bom", "bairro"],
+      ["qual_x", "mais_proximo", "bairro"],
+      ["voce_recomenda", "list_options", "perto"],
+      ["list_options", "bairro"],
+      ["perto", "kw_bare"],
+      ["bairro", "kw_bare"],
+      ["perto", "aluguel"],
+      ["preciso", "perto"]
+    ],
+    "real_estate/local/price": [
+      ["qual_x", "comissao"],
+      ["onde_encontrar", "um_bom", "comissao"],
+      ["qual_x", "mais_barato"],
+      ["voce_recomenda", "list_options", "comissao"],
+      ["list_options", "preco"],
+      ["comissao", "kw_bare"],
+      ["barato", "kw_em"],
+      ["que_clause", "comissao"],
+      ["comissao"]
+    ],
+    "real_estate/local/trust": [
+      ["qual_x", "confiavel"],
+      ["onde_encontrar", "um_bom", "confiavel"],
+      ["qual_x", "avaliacoes"],
+      ["voce_recomenda", "list_options", "confiavel"],
+      ["list_options", "bem_avaliado"],
+      ["confiavel", "kw_bare"],
+      ["bem_avaliado", "kw_em"],
+      ["registro", "avaliacoes"],
+      ["preciso", "confiavel"]
+    ],
+    "real_estate/local/ranking": [
+      ["qual_melhor"],
+      ["qual_melhor"],
+      ["mais_famoso"],
+      ["list_options"],
+      ["list_options"],
+      ["melhor_kw", "kw_em"],
+      ["melhor_kw", "kw_bare"],
+      ["bem_avaliado", "mais_famoso"],
+      ["preciso", "qual_melhor", "aluguel"]
+    ],
+    "education/local/discovery": [
+      ["voce_recomenda", "qual_x"],
+      ["onde_encontrar", "um_bom"],
+      ["como_achar", "um_bom"],
+      ["voce_recomenda", "list_options"],
+      ["list_options"],
+      ["kw_em"],
+      ["onde_encontrar", "kw_em"],
+      ["infantil", "kw_em"],
+      ["preciso"]
+    ],
+    "education/local/specialty": [
+      ["qual_x", "online"],
+      ["voce_recomenda", "online"],
+      ["onde_encontrar", "que_clause", "online"],
+      ["voce_recomenda", "list_options", "online"],
+      ["list_options", "online"],
+      ["online", "kw_bare"],
+      ["online", "kw_em"],
+      ["online"],
+      ["preciso", "online"]
+    ],
+    "education/local/zone": [
+      ["voce_recomenda", "perto", "bairro"],
+      ["onde_encontrar", "um_bom", "bairro"],
+      ["qual_x", "mais_proximo", "bairro"],
+      ["voce_recomenda", "list_options", "perto"],
+      ["list_options", "bairro"],
+      ["perto", "kw_bare"],
+      ["bairro", "kw_bare"],
+      ["perto"],
+      ["preciso", "perto"]
+    ],
+    "education/local/price": [
+      ["qual_x", "preco"],
+      ["onde_encontrar", "um_bom", "barato"],
+      ["qual_x", "mais_barato"],
+      ["voce_recomenda", "list_options", "barato"],
+      ["list_options", "preco"],
+      ["barato", "kw_bare"],
+      ["preco", "kw_bare"],
+      ["que_clause", "bolsa"],
+      ["quanto_custa"]
+    ],
+    "education/local/ranking": [
+      ["qual_melhor"],
+      ["qual_melhor"],
+      ["mais_famoso"],
+      ["list_options"],
+      ["list_options"],
+      ["melhor_kw", "kw_em"],
+      ["melhor_kw", "kw_bare"],
+      ["avaliacoes"],
+      ["preciso", "qual_melhor"]
+    ],
+    "education/local/trust": [
+      ["qual_x", "confiavel"],
+      ["onde_encontrar", "um_bom", "confiavel"],
+      ["qual_x", "avaliacoes"],
+      ["voce_recomenda", "list_options", "confiavel"],
+      ["list_options", "bem_avaliado"],
+      ["confiavel", "kw_bare"],
+      ["bem_avaliado", "kw_em"],
+      ["avaliacoes"],
+      ["preciso", "confiavel"]
+    ],
+    "online_national/national/discovery": [
+      ["qual_melhor", "melhor_loja_online"],
+      ["qual_loja_online", "voce_recomenda"],
+      ["comprar_online"],
+      ["voce_recomenda", "melhor_loja_online"],
+      ["list_options", "melhor_loja_online"],
+      ["comprar_online", "brasil"],
+      ["melhor_loja_online"],
+      ["que_clause", "melhor_loja_online"],
+      ["preciso", "comprar_online"]
+    ],
+    "online_national/national/specialty": [
+      ["qual_loja_online", "maior"],
+      ["maior", "melhor_loja_online"],
+      ["comprar_online", "maior"],
+      ["voce_recomenda", "maior"],
+      ["list_options", "maior"],
+      ["maior", "melhor_loja_online"],
+      ["comprar_online", "maior", "brasil"],
+      ["que_clause", "maior"],
+      ["preciso", "maior"]
+    ],
+    "online_national/national/price": [
+      ["comprar_online", "preco"],
+      ["qual_loja_online", "preco"],
+      ["qual_loja_online", "mais_barato"],
+      ["voce_recomenda", "barato"],
+      ["list_options", "preco"],
+      ["comprar_online", "barato", "brasil"],
+      ["barato", "melhor_loja_online"],
+      ["preco", "frete_gratis"],
+      ["preciso", "barato", "comprar_online"]
+    ],
+    "online_national/national/trust": [
+      ["qual_loja_online", "e_confiavel"],
+      ["comprar_online", "confiavel"],
+      ["qual_loja_online", "avaliacoes"],
+      ["voce_recomenda", "confiavel"],
+      ["list_options", "bem_avaliado"],
+      ["loja_online_confiavel"],
+      ["comprar_online", "confiavel", "brasil"],
+      ["confiavel", "boleto"],
+      ["como_saber_bom", "loja_online_confiavel"]
+    ],
+    "online_national/national/urgency": [
+      ["qual_loja_online", "entrega_rapida"],
+      ["qual_loja_online", "entrega_rapida"],
+      ["comprar_online", "entrega_rapida"],
+      ["voce_recomenda", "entrega_rapida"],
+      ["list_options", "entrega_rapida"],
+      ["comprar_online", "entrega_rapida"],
+      ["comprar_online", "entrega_rapida", "brasil"],
+      ["que_clause", "entrega_rapida"],
+      ["preciso", "entrega_rapida"]
+    ],
+    "online_national/national/ranking": [
+      ["mais_famoso", "qual_loja_online"],
+      ["qual_melhor", "melhor_loja_online"],
+      ["qual_loja_online", "bem_avaliado"],
+      ["list_options", "melhor_loja_online"],
+      ["list_options", "melhor_loja_online"],
+      ["melhor_loja_online", "brasil"],
+      ["mais_famoso", "melhor_loja_online"],
+      ["bem_avaliado", "mais_famoso"],
+      ["preciso", "melhor_loja_online"]
+    ]
+  },
+  "brand": {
+    "brand.trust": ["e_confiavel"],
+    "brand.opinion": ["vale_pena"]
+  }
+}
