@@ -1,0 +1,14 @@
+[
+  {
+    "timestamp": "2026-11-20T18:48:07.392Z",
+    "input": {
+      "url": "https://www.perplexity.ai",
+      "prompt": "mejores dentistas en Medellín",
+      "country": "CO",
+      "index": 0,
+      "additional_prompt": ""
+    },
+    "error": "Crawler error: waiting for selector \"[data-workflow-final-text]:not([data-stale]) [data-workflow-text-footer] button[aria-label=\"Copy\"]\" failed: timeout 90000ms exceeded",
+    "error_code": "wait_element_timeout"
+  }
+]

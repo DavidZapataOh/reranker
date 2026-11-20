@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { gunzipSync } from "node:zlib";
 import { resetAppEnv } from "@reranker/env";
 import { server } from "@reranker/testing/msw";
 import { HttpResponse, http } from "msw";
@@ -282,4 +284,24 @@ test("an aborted signal stops the scrape before any further call", async () => {
     }),
   ).rejects.toThrowError("step ended");
   expect(calls).toHaveLength(1);
+});
+
+// Real bodies from a scrape that outlasted the synchronous minute: Bright Data sent the prompt
+// 11 minutes after the request, and the progress reports the 708 s the job took in all.
+test("a recorded ready progress body leads to the snapshot download", async () => {
+  const fixture = (name: string) =>
+    new Uint8Array(
+      readFileSync(new URL(`../../fixtures/recorded/brightdata/${name}`, import.meta.url)),
+    );
+  const progressBody = fixture("chatgpt-dentistas-medellin.progress.json");
+  const records = new Uint8Array(gunzipSync(fixture("chatgpt-dentistas-medellin.json.gz")));
+  scripted([
+    [202, { snapshot_id: "sd_mwpb26232aemrsqjjy" }, { "retry-after": "10" }],
+    [200, progressBody],
+    [200, records],
+  ]);
+  const sink = new RawSink();
+  const out = await scrapeOne(createBrightData(sink), "chatgpt", input, opts());
+  expect(out).toMatchObject({ kind: "response", http: 200, snapshotId: "sd_mwpb26232aemrsqjjy" });
+  expect(Buffer.from(sink.response ?? []).equals(Buffer.from(records))).toBe(true);
 });

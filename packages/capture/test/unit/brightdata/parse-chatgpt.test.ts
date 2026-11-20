@@ -94,3 +94,15 @@ describe("parseChatGpt (Bright Data)", () => {
     expect(() => parseChatGpt({ ...NATIONAL, citations: "none" })).toThrow(/citations/);
   });
 });
+
+describe("a map-only answer (Medellín, asked from its centroid)", () => {
+  const MEDELLIN = recorded("chatgpt-dentistas-medellin.json.gz");
+
+  test("keeps every business of the map card and cites nothing it did not cite", () => {
+    const a = parseChatGpt(MEDELLIN);
+    expect(EngineAnswer.parse(a)).toEqual(a);
+    expect(a).toMatchObject({ present: true, sources: [], searchQueries: "unavailable" });
+    expect(a.localBusinesses).toHaveLength(7);
+    expect(a.localBusinesses?.every((b) => b.name !== "")).toBe(true);
+  });
+});
