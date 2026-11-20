@@ -25,14 +25,26 @@ export {
   type VariantId,
   variantId,
 } from "./hash";
-export { type PlanMeasurementInput, planMeasurement } from "./sample";
 export {
-  BRAND_TEMPLATES,
+  countryLanguage,
+  countryName,
+  type LanguageGap,
+  MeasurementLanguageError,
+  placeName,
+} from "./language";
+export {
+  type PlanMeasurementInput,
+  planMeasurement,
+  type SecondaryLanguage,
+} from "./sample";
+export {
+  brandTemplates,
   canonicalTemplate,
   type FallbackIntent,
   fallbackTemplates,
   type PlaceholderShape,
   placeholderShape,
-  TEMPLATES_VERSION,
+  TEMPLATE_LANGUAGES,
+  templatesVersion,
 } from "./templates";
 export { buildVariants, type InstantiateContext, instantiate } from "./variants";

@@ -221,21 +221,21 @@ describe("measurement catalog schemas", () => {
     const asked = (language: string) =>
       IntentSet.safeParse({ ...set, intents: [{ ...set.intents[0], language }] }).success;
     expect(asked("en")).toBe(true);
-    expect(asked("pt")).toBe(true);
-    expect(asked("fr")).toBe(false);
+    for (const language of ["pt", "fr", "de", "it"]) expect(asked(language)).toBe(true);
+    expect(asked("nl")).toBe(false);
   });
 
   test("slots and plans name their language, and older ones without it still parse", () => {
-    expect(MeasurementLanguage.options).toEqual(["es", "en", "pt"]);
+    expect(MeasurementLanguage.options).toEqual(["es", "en", "pt", "fr", "de", "it"]);
     expect(PlannedSlot.parse({ ...observationFixture, language: "en" }).language).toBe("en");
     expect(PlannedSlot.parse(observationFixture).language).toBeUndefined();
-    expect(PlannedSlot.safeParse({ ...observationFixture, language: "fr" }).success).toBe(false);
+    expect(PlannedSlot.safeParse({ ...observationFixture, language: "nl" }).success).toBe(false);
     const secondary = { language: "en", intentSet: manifest, design: planFixture.design };
     expect(MeasurementPlan.safeParse({ ...planFixture, language: "es", secondary }).success).toBe(
       true,
     );
     expect(
-      MeasurementPlan.safeParse({ ...planFixture, secondary: { ...secondary, language: "fr" } })
+      MeasurementPlan.safeParse({ ...planFixture, secondary: { ...secondary, language: "nl" } })
         .success,
     ).toBe(false);
   });
