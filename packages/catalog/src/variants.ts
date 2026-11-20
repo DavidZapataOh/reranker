@@ -10,6 +10,7 @@ import type {
   PromptVariant,
   QuestionScope,
 } from "@reranker/schema/measurement";
+import { agree, type Noun, nounText } from "./grammar";
 import { promptSha256, variantId } from "./hash";
 import { countryName, placeName } from "./language";
 
@@ -17,26 +18,31 @@ export type InstantiateContext = {
   place: string | null;
   zone: string | null;
   country: string;
-  noun: string;
+  noun: Noun;
+  /** The template's language: how its words agree with the noun. */
+  language: MeasurementLanguage;
   business?: string;
 };
 
 const PLACEHOLDER = /\{([^{}]*)\}/g;
 
-/** Fills {lugar}, {zona}, {país}, {sustantivo} and {business}; any placeholder left unfilled is a bug. */
+/**
+ * Fills {lugar}, {zona}, {país}, {sustantivo} and {business}, after the words that agree with the
+ * noun; any placeholder left unfilled is a bug.
+ */
 export function instantiate(template: string, ctx: InstantiateContext): string {
   const values = new Map<string, string | null | undefined>([
     ["lugar", ctx.place],
     ["zona", ctx.zone],
     ["país", ctx.country],
-    ["sustantivo", ctx.noun],
+    ["sustantivo", nounText(ctx.noun)],
     ["business", ctx.business],
   ]);
   const stray = template.replace(PLACEHOLDER, "");
   if (stray.includes("{") || stray.includes("}")) {
     throw new AppError("internal", { detail: `unbalanced braces in template: ${template}` });
   }
-  return template.replace(PLACEHOLDER, (match, name: string) => {
+  return agree(template, ctx.noun, ctx.language).replace(PLACEHOLDER, (match, name: string) => {
     const value = values.get(name);
     if (!value) throw new AppError("internal", { detail: `unfilled placeholder ${match}` });
     return value;
@@ -93,7 +99,7 @@ export function variantContext(
   geo: GeoTarget,
   scope: QuestionScope,
   neighborhood: string | null,
-  noun: string,
+  noun: Noun,
   language: MeasurementLanguage,
 ): InstantiateContext {
   return {
@@ -101,6 +107,7 @@ export function variantContext(
     zone: neighborhood,
     country: countryName(geo.country, language),
     noun,
+    language,
   };
 }
 
@@ -147,7 +154,7 @@ export function buildVariants(
   intentId: IntentId,
   geo: GeoTarget,
   neighborhood: string | null,
-  noun: string,
+  noun: Noun,
 ): PromptVariant[] {
   const intent = findIntent(set, intentId);
   const ctx = variantContext(geo, intent.scope, neighborhood, noun, intent.language);

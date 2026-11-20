@@ -9,6 +9,7 @@ import {
 import en from "../data/templates/2026.11.0.en.json" with { type: "json" };
 import es from "../data/templates/2026.11.0.json" with { type: "json" };
 import { ARCHETYPE_SCOPES, ARCHETYPE_SLATES } from "./archetypes";
+import { isAgreementGroup } from "./grammar";
 import { MeasurementLanguageError } from "./language";
 
 export type FallbackIntent = {
@@ -84,9 +85,12 @@ export type PlaceholderShape = "ok" | "place_count" | "wrong_scope" | "unknown_p
 const KNOWN = new Set(["sustantivo", "lugar", "zona", "país"]);
 
 // Local questions name the city exactly once (and the neighborhood at most once); national ones never
-// name a city, and the country at most once.
+// name a city, and the country at most once. Agreement groups ("{un bon|une bonne}") are words,
+// not places.
 export function placeholderShape(text: string, scope: QuestionScope): PlaceholderShape {
-  const names = [...text.matchAll(/\{([^{}]*)\}/g)].map((m) => m[1] ?? "");
+  const names = [...text.matchAll(/\{([^{}]*)\}/g)]
+    .map((m) => m[1] ?? "")
+    .filter((n) => !isAgreementGroup(n));
   const stray = text.replace(/\{[^{}]*\}/g, "");
   if (stray.includes("{") || stray.includes("}") || names.some((n) => !KNOWN.has(n))) {
     return "unknown_placeholder";
