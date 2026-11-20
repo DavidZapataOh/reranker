@@ -25,6 +25,7 @@
     "@reranker/i18n": "workspace:*",
     "@reranker/jobs": "workspace:*",
     "@reranker/schema": "workspace:*",
+    "@reranker/telemetry": "workspace:*",
     "@reranker/verify": "workspace:*",
     "dataforseo-client": "catalog:",
     "drizzle-orm": "catalog:",

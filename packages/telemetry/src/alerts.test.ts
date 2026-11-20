@@ -270,6 +270,30 @@ describe("opsAlerts", () => {
     });
   });
 
+  test("only an unfunded DataForSEO account is a critical capture alert", () => {
+    expect(
+      Object.fromEntries(
+        Object.entries(opsAlerts).filter(([, alert]) => alert.source === "capture"),
+      ),
+    ).toEqual({
+      "capture-dataforseo-errors": {
+        severity: "warning",
+        runbook: "capture-dataforseo-errors.md",
+        source: "capture",
+      },
+      "capture-dataforseo-balance": {
+        severity: "critical",
+        runbook: "capture-dataforseo-errors.md",
+        source: "capture",
+      },
+      "capture-parse-failed": {
+        severity: "warning",
+        runbook: "capture-dataforseo-errors.md",
+        source: "capture",
+      },
+    });
+  });
+
   test("a gated flag on with a failing launch stage is critical", () => {
     expect(opsAlerts["launch-gate-violated"]).toEqual({
       severity: "critical",

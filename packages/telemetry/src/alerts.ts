@@ -95,6 +95,22 @@ export const opsAlerts = {
     runbook: "evidence-log-fork.md",
     source: "evidence",
   },
+  "capture-dataforseo-errors": {
+    severity: "warning",
+    runbook: "capture-dataforseo-errors.md",
+    source: "capture",
+  },
+  // Out of funds, every DataForSEO capture fails until the account is topped up.
+  "capture-dataforseo-balance": {
+    severity: "critical",
+    runbook: "capture-dataforseo-errors.md",
+    source: "capture",
+  },
+  "capture-parse-failed": {
+    severity: "warning",
+    runbook: "capture-dataforseo-errors.md",
+    source: "capture",
+  },
 } as const satisfies Record<string, OpsAlert>;
 
 export type OpsAlertKind = keyof typeof opsAlerts;
