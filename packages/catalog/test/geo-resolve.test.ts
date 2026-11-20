@@ -167,6 +167,29 @@ describe("resolveGeo", () => {
   });
 });
 
+describe("resolveGeo from an address written in the local language", () => {
+  const address = (locality: string, region: string): PlacesAddressComponent[] => [
+    { longText: locality, shortText: locality, types: ["locality", "political"] },
+    { longText: region, shortText: region, types: ["administrative_area_level_1", "political"] },
+  ];
+
+  test.each([
+    ["DE", "München", "Bayern", "de-c1004234", "Múnich"],
+    ["CH", "Genève", "Genève", "ch-c1002992", "Ginebra"],
+    ["CH", "Neuchâtel", "Neuchâtel", "ch-c1003088", "Neuchâtel"],
+    ["PT", "Lisboa", "Lisboa", "pt-c9198446", "Lisboa"],
+    ["US", "New York", "New York", "us-c1023191", "Nueva York"],
+    ["GB", "London", "England", "gb-c1006886", "Londres"],
+    ["BR", "São Paulo", "São Paulo", "br-c1001773", "São Paulo"],
+  ] as const)("%s %s resolves to its city", (country, locality, region, key, name) =>
+    expect(resolveGeo({ country, addressComponents: address(locality, region) })).toMatchObject({
+      key,
+      level: "city",
+      name,
+    }),
+  );
+});
+
 describe("resolveGeo in Spanish outside Colombia", () => {
   test.each([
     ["ES", "madrid", "es-c1005493", "Madrid", "Comunidad de Madrid"],

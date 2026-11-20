@@ -33,7 +33,12 @@ export function loadCountryGeo(country: CountryCode): CountryGeo {
   const places = expandGeoFile(file);
   const byName = new Map<string, GeoPlace[]>();
   for (const place of places) {
-    const names = new Set([place.normalized, ...(place.aliases ?? []).map(normalizePlaceName)]);
+    // An address written in the country's own language names the place that way ("München").
+    const names = new Set(
+      [place.name, ...(place.aliases ?? []), ...Object.values(place.names ?? {})].map(
+        normalizePlaceName,
+      ),
+    );
     for (const name of names) {
       const named = byName.get(name);
       if (named) named.push(place);
