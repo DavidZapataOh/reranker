@@ -64,9 +64,18 @@ export const launchEnv = z.object({
   ),
   // Read here only to verify the evidence signing setup; @reranker/evidence owns their rules.
   AWS_REGION: config(z.string().min(1).optional(), "AWS region of the evidence KMS keys"),
-  AWS_ROLE_ARN: config(z.string().min(1).optional(), "IAM role assumed through Vercel OIDC"),
-  EVIDENCE_CAPTURE_KMS_KEY_ARN: config(z.string().min(1).optional(), "Capture signing key ARN"),
-  EVIDENCE_LOG_KMS_KEY_ARN: config(z.string().min(1).optional(), "Log signing key ARN"),
+  AWS_ROLE_ARN: config(
+    z.string().min(1).optional(),
+    "IAM role this deployment assumes through Vercel OIDC to sign with KMS",
+  ),
+  EVIDENCE_CAPTURE_KMS_KEY_ARN: config(
+    z.string().min(1).optional(),
+    "KMS key ARN that signs capture statements",
+  ),
+  EVIDENCE_LOG_KMS_KEY_ARN: config(
+    z.string().min(1).optional(),
+    "KMS key ARN that signs log checkpoints",
+  ),
   QTSA_PACKAGE_SIZE: config(
     z.coerce.number().int().positive().optional(),
     "Timestamps in the qtsa.eu package bought",
