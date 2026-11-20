@@ -1,8 +1,10 @@
 import { AppError, type CaptureProvider, type EngineId } from "@reranker/schema";
 import type {
+  EngineGeo,
   GeoTarget,
   Intent,
   IntentSet,
+  MeasurementLanguage,
   MeasurementPlan,
   PlannedObservation,
   QuestionScope,
@@ -10,7 +12,21 @@ import type {
 import { type Rng, rngFromSeed } from "@reranker/stats";
 import { geoForEngine } from "./geo/effects";
 import { sha256Hex } from "./hash";
-import { materialize, type VariantCandidate, variantContext, variantPool } from "./variants";
+import { countryLanguage } from "./language";
+import {
+  materialize,
+  setLanguage,
+  type VariantCandidate,
+  variantContext,
+  variantPool,
+} from "./variants";
+
+/** A second language: its own set, written in it, and the noun as people asking in it say it. */
+export type SecondaryLanguage = {
+  language: MeasurementLanguage;
+  intentSet: IntentSet;
+  noun: string;
+};
 
 export type PlanMeasurementInput = {
   intentSet: IntentSet;
@@ -19,6 +35,10 @@ export type PlanMeasurementInput = {
   neighborhood: string | null;
   /** The business category's noun, which fills {sustantivo}. */
   noun: string;
+  /** The language `intentSet` and `noun` are in; the country's main language by default. */
+  language?: MeasurementLanguage;
+  /** Asked on half the sample of the main language, never less, so its result stands alone. */
+  secondary?: SecondaryLanguage;
   engines: readonly EngineId[];
   reportId: string;
   providers?: Partial<Record<EngineId, CaptureProvider>>;
@@ -92,32 +112,36 @@ function drawVariants(
   return drawn;
 }
 
-/**
- * The free report's paired design: the same drawn variants of each intent go to every engine, one
- * run each, seeded by sha256(reportId) so the plan is reproducible from the report alone.
- */
-export function planMeasurement(input: PlanMeasurementInput): MeasurementPlan {
-  const { intentSet, geo, scope, neighborhood, noun, reportId } = input;
-  const intents = input.intents ?? 5;
-  const variantsPerIntent = input.variantsPerIntent ?? 8;
-  if (intentSet.manifest.scope !== scope) {
-    throw internal(`${intentSet.manifest.id} is a ${intentSet.manifest.scope} set, not ${scope}`);
+type PlannedEngine = { engine: EngineId; provider: CaptureProvider; geoDeclared: EngineGeo };
+
+type LanguageSample = {
+  language: MeasurementLanguage;
+  intentSet: IntentSet;
+  noun: string;
+  design: MeasurementPlan["design"];
+};
+
+function checkSet(set: IntentSet, scope: QuestionScope, language: MeasurementLanguage): void {
+  if (set.manifest.scope !== scope) {
+    throw internal(`${set.manifest.id} is a ${set.manifest.scope} set, not ${scope}`);
   }
+  if (setLanguage(set) !== language) throw internal(`${set.manifest.id} is not in ${language}`);
+}
 
-  const engines = input.engines.flatMap((engine) => {
-    const provider = input.providers?.[engine] ?? DEFAULT_PROVIDERS[engine];
-    const geoDeclared = geoForEngine(engine, geo, scope, { provider });
-    return geoDeclared ? [{ engine, provider, geoDeclared }] : [];
-  });
-  if (engines.length === 0) throw internal(`no planned engine is offered in ${geo.country}`);
-
-  const seed = sha256Hex(reportId);
-  const rng = rngFromSeed(seed);
-  const ctx = variantContext(geo, neighborhood, noun);
-  const observations: PlannedObservation[] = [];
-  for (const intent of pickIntents(intentSet, neighborhood, intents)) {
-    for (const candidate of drawVariants(variantPool(intentSet, intent), variantsPerIntent, rng)) {
-      const v = materialize(intent.intentId, candidate, geo, ctx);
+function observe(
+  sample: LanguageSample,
+  input: PlanMeasurementInput,
+  engines: readonly PlannedEngine[],
+  rng: Rng,
+  observations: PlannedObservation[],
+): void {
+  const { language, intentSet, noun, design } = sample;
+  const { geo, scope, neighborhood } = input;
+  const ctx = variantContext(geo, scope, neighborhood, noun, language);
+  for (const intent of pickIntents(intentSet, neighborhood, design.intents)) {
+    const pool = variantPool(intentSet, intent);
+    for (const candidate of drawVariants(pool, design.variantsPerIntent, rng)) {
+      const v = materialize(intent.intentId, candidate, geo, ctx, language);
       for (const { engine, provider, geoDeclared } of engines) {
         observations.push({
           engine,
@@ -130,6 +154,7 @@ export function planMeasurement(input: PlanMeasurementInput): MeasurementPlan {
           geoDeclared,
           runIndex: 0,
           promptText: v.prompt,
+          language,
           variantId: v.variantId,
           promptSha256: v.promptSha256,
           isCanonical: v.isCanonical,
@@ -137,13 +162,63 @@ export function planMeasurement(input: PlanMeasurementInput): MeasurementPlan {
       }
     }
   }
+}
+
+/**
+ * The free report's paired design: the same drawn variants of each intent go to every engine, one
+ * run each, seeded by sha256(reportId) so the plan is reproducible from the report alone. A second
+ * language draws after the main one, from the same seed, so adding it never changes the main
+ * language's questions.
+ */
+export function planMeasurement(input: PlanMeasurementInput): MeasurementPlan {
+  const { intentSet, geo, scope, noun, reportId, secondary } = input;
+  const language = input.language ?? countryLanguage(geo.country);
+  const design = {
+    intents: input.intents ?? 5,
+    variantsPerIntent: input.variantsPerIntent ?? 8,
+    runsPerVariant: 1 as const,
+  };
+  checkSet(intentSet, scope, language);
+  if (secondary) {
+    if (secondary.language === language) throw internal(`${language} is already the main language`);
+    checkSet(secondary.intentSet, scope, secondary.language);
+  }
+
+  // Declared locations label the report, which is written in Spanish whatever the question's
+  // language.
+  const engines = input.engines.flatMap((engine) => {
+    const provider = input.providers?.[engine] ?? DEFAULT_PROVIDERS[engine];
+    const geoDeclared = geoForEngine(engine, geo, scope, { provider });
+    return geoDeclared ? [{ engine, provider, geoDeclared }] : [];
+  });
+  if (engines.length === 0) throw internal(`no planned engine is offered in ${geo.country}`);
+
+  const seed = sha256Hex(reportId);
+  const rng = rngFromSeed(seed);
+  const observations: PlannedObservation[] = [];
+  observe({ language, intentSet, noun, design }, input, engines, rng, observations);
+  const second = secondary && {
+    ...secondary,
+    design: { ...design, variantsPerIntent: Math.ceil(design.variantsPerIntent / 2) },
+  };
+  if (second) observe(second, input, engines, rng, observations);
 
   return {
     intentSet: intentSet.manifest,
     geo,
     scope,
     seed,
-    design: { intents, variantsPerIntent, runsPerVariant: 1 },
+    design,
+    language,
+    ...(second
+      ? {
+          secondary: {
+            language: second.language,
+            intentSet: second.intentSet.manifest,
+            design: second.design,
+          },
+        }
+      : {}),
     observations,
   };
 }

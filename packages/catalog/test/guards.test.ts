@@ -131,12 +131,13 @@ describe("length and personal data", () => {
   });
 });
 
-// The fallback templates are written per intent, so their own guards must accept every one of them.
+// The Spanish fallback templates are written per intent, so their own guards must accept every one
+// of them; the guards screen Spanish paraphrases.
 test("every fallback template passes the guards of its own intent", () => {
   const rejected: string[] = [];
   for (const archetype of CategoryArchetype.options) {
     for (const scope of ARCHETYPE_SCOPES[archetype]) {
-      for (const intent of fallbackTemplates(archetype, scope)) {
+      for (const intent of fallbackTemplates(archetype, scope, "es")) {
         const ctx: GuardContext = {
           ...bakeryDiscovery,
           scope,

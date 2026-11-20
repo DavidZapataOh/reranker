@@ -1,18 +1,20 @@
-import { getCountry } from "@reranker/i18n/countries";
+import { mainLanguage } from "@reranker/i18n/countries";
 import { AppError } from "@reranker/schema";
 import type {
   GeoTarget,
   Intent,
   IntentId,
   IntentSet,
+  MeasurementLanguage,
   ParaphraseFormat,
   PromptVariant,
+  QuestionScope,
 } from "@reranker/schema/measurement";
-import { spokenPlaceName } from "./geo/resolve";
 import { promptSha256, variantId } from "./hash";
+import { countryName, placeName } from "./language";
 
 export type InstantiateContext = {
-  place: string;
+  place: string | null;
   zone: string | null;
   country: string;
   noun: string;
@@ -86,13 +88,30 @@ export function variantPool(set: IntentSet, intent: Intent): VariantCandidate[] 
   return pool;
 }
 
-export function variantContext(geo: GeoTarget, neighborhood: string | null, noun: string) {
+/** Names in the language asked; a national question names no place, so it needs none. */
+export function variantContext(
+  geo: GeoTarget,
+  scope: QuestionScope,
+  neighborhood: string | null,
+  noun: string,
+  language: MeasurementLanguage,
+): InstantiateContext {
   return {
-    place: spokenPlaceName(geo.name),
+    place: scope === "local" ? placeName(geo, language) : null,
     zone: neighborhood,
-    country: getCountry(geo.country).name,
+    country: countryName(geo.country, language),
     noun,
   };
+}
+
+/** The language every intent of a set is asked in; a set never mixes languages. */
+export function setLanguage(set: IntentSet): MeasurementLanguage {
+  const languages = new Set(set.intents.map((i) => i.language));
+  const [language] = languages;
+  if (languages.size !== 1 || language === undefined) {
+    throw new AppError("internal", { detail: `${set.manifest.id} mixes languages` });
+  }
+  return language;
 }
 
 export function materialize(
@@ -100,12 +119,14 @@ export function materialize(
   candidate: VariantCandidate,
   geo: GeoTarget,
   ctx: InstantiateContext,
+  language: MeasurementLanguage,
 ): PromptVariant {
   const { paraphraseId, personaId, format, isCanonical, text, preamble } = candidate;
   const question = instantiate(text, ctx);
   const prompt = preamble === null ? question : `${instantiate(preamble, ctx)} ${question}`;
+  const named = language === mainLanguage(geo.country) ? {} : { language };
   return {
-    variantId: variantId({ intentId, paraphraseId, personaId, geoKey: geo.key }),
+    variantId: variantId({ intentId, paraphraseId, personaId, geoKey: geo.key, ...named }),
     intentId,
     paraphraseId,
     personaId,
@@ -128,6 +149,7 @@ export function buildVariants(
   neighborhood: string | null,
   noun: string,
 ): PromptVariant[] {
-  const ctx = variantContext(geo, neighborhood, noun);
-  return variantPool(set, findIntent(set, intentId)).map((c) => materialize(intentId, c, geo, ctx));
+  const intent = findIntent(set, intentId);
+  const ctx = variantContext(geo, intent.scope, neighborhood, noun, intent.language);
+  return variantPool(set, intent).map((c) => materialize(intentId, c, geo, ctx, intent.language));
 }
