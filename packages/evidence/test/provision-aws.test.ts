@@ -17,6 +17,9 @@ function fakeAws(opts: { account?: string; invisibleRoles?: number } = {}) {
   const roles = new Map<string, { trust: string; policies: Map<string, string> }>();
   const keys = new Map<string, { policy: string; publicKey: Uint8Array; created: Date }>();
   const aliases = new Map<string, string>();
+  const bucket: Record<string, unknown> & { exists?: boolean } = {};
+  let trail: Record<string, unknown> | undefined;
+  let logging = false;
 
   const meta = (id: string) => ({
     KeyId: id,
@@ -69,6 +72,49 @@ function fakeAws(opts: { account?: string; invisibleRoles?: number } = {}) {
       async ({ RoleName, PolicyName, PolicyDocument }) =>
         (await role(RoleName)).policies.set(PolicyName, PolicyDocument),
     ],
+    ["HeadBucketCommand", () => (bucket.exists ? {} : Promise.reject(missing("NotFound")))],
+    ["CreateBucketCommand", () => (bucket.exists = true)],
+    [
+      "GetPublicAccessBlockCommand",
+      () =>
+        bucket.block
+          ? { PublicAccessBlockConfiguration: bucket.block }
+          : Promise.reject(missing("NoSuchPublicAccessBlockConfiguration")),
+    ],
+    ["PutPublicAccessBlockCommand", (i) => (bucket.block = i.PublicAccessBlockConfiguration)],
+    [
+      "GetBucketPolicyCommand",
+      () =>
+        bucket.policy ? { Policy: bucket.policy } : Promise.reject(missing("NoSuchBucketPolicy")),
+    ],
+    ["PutBucketPolicyCommand", (i) => (bucket.policy = i.Policy)],
+    [
+      "GetBucketLifecycleConfigurationCommand",
+      () =>
+        bucket.rules
+          ? { Rules: bucket.rules }
+          : Promise.reject(missing("NoSuchLifecycleConfiguration")),
+    ],
+    [
+      "PutBucketLifecycleConfigurationCommand",
+      (i) => (bucket.rules = i.LifecycleConfiguration.Rules),
+    ],
+    [
+      "GetTrailCommand",
+      () =>
+        trail
+          ? { Trail: { ...trail, LogFileValidationEnabled: trail.EnableLogFileValidation } }
+          : Promise.reject(missing("TrailNotFoundException")),
+    ],
+    ["CreateTrailCommand", (i) => (trail = i)],
+    [
+      "GetEventSelectorsCommand",
+      () => ({
+        EventSelectors: [{ ReadWriteType: "All", IncludeManagementEvents: true }],
+      }),
+    ],
+    ["GetTrailStatusCommand", () => ({ IsLogging: logging })],
+    ["StartLoggingCommand", () => (logging = true)],
     [
       "DescribeKeyCommand",
       ({ KeyId }) => {
@@ -111,6 +157,8 @@ function fakeAws(opts: { account?: string; invisibleRoles?: number } = {}) {
     sts: client,
     iam: client,
     kms: client,
+    s3: client,
+    cloudtrail: client,
   } as unknown as Clients;
   return { aws, writes, keys, roles };
 }
@@ -121,6 +169,8 @@ test("an empty account converges in one run, and a second run changes nothing", 
   const fake = fakeAws();
   const first = await provision(fake.aws, { account: ACCOUNT, wait: noWait });
   expect(first.changes).toContain("create role reranker-evidence-production");
+  expect(first.changes).toContain("create trail reranker-audit");
+  expect(first.changes).toContain("start logging on reranker-audit");
   expect(first.keys.map((k) => k.alias)).toEqual(KEYS.map((k) => k.alias));
   for (const k of first.keys) expect(Buffer.from(k.publicKey, "base64")).toHaveLength(32);
   expect(fake.roles.get("reranker-evidence-preview")?.policies.has("evidence-kms")).toBe(true);
