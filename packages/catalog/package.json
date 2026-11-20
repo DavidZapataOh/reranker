@@ -19,6 +19,7 @@
   "dependencies": {
     "@google/genai": "catalog:",
     "@reranker/env": "workspace:*",
+    "@reranker/flags": "workspace:*",
     "@reranker/i18n": "workspace:*",
     "@reranker/jobs": "workspace:*",
     "@reranker/schema": "workspace:*",
