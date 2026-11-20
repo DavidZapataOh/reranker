@@ -39,6 +39,8 @@ const restaurantTypes = [...byType.keys()].filter(
     ["bistro", "diner", "steak_house"].includes(t),
 );
 
+export type CategoryNames = { noun: string | null; synonyms: string[] };
+
 export type SeedCategory = {
   key: SeedCategoryKey;
   labelKey: string;
@@ -47,6 +49,11 @@ export type SeedCategory = {
   noun: string | null;
   /** Other names the paraphrase guard accepts for the same business. */
   synonyms: string[];
+  /**
+   * The noun and synonyms in other languages, picked from that language's search data rather than
+   * translated: English searches name the dentist, not the clinic.
+   */
+  languages: Readonly<{ en: Readonly<CategoryNames> }>;
   archetype: CategoryArchetype;
   defaultScope: QuestionScope;
   register: "tu" | "usted";
@@ -59,6 +66,7 @@ function seed(
   placesTypes: string[],
   noun: string | null,
   synonyms: string[],
+  en: CategoryNames,
 ): Readonly<SeedCategory> {
   return Object.freeze({
     key,
@@ -66,6 +74,7 @@ function seed(
     placesTypes,
     noun,
     synonyms,
+    languages: Object.freeze({ en: Object.freeze(en) }),
     archetype,
     defaultScope,
     register: registerFor(archetype),
@@ -82,12 +91,18 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
     // the job, and it names a person, so it is only an accepted synonym.
     "clínica odontológica",
     ["dentista", "odontología", "clínica dental", "consultorio odontológico", "odontólogo"],
+    // US searches: "dentist" 1M a month, "dental clinic" 135K, "dental office" 90K.
+    { noun: "dentist", synonyms: ["dental clinic", "dental office", "family dentist"] },
   ),
-  seed("restaurant", "food", "local", restaurantTypes, "restaurante", [
-    "sitio para comer",
-    "lugar para comer",
-    "dónde comer",
-  ]),
+  seed(
+    "restaurant",
+    "food",
+    "local",
+    restaurantTypes,
+    "restaurante",
+    ["sitio para comer", "lugar para comer", "dónde comer"],
+    { noun: "restaurant", synonyms: [] },
+  ),
   // Motels are left out: in much of Latin America they are love hotels, a different question set.
   seed(
     "hotel",
@@ -104,24 +119,41 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
     ],
     "hotel",
     ["hospedaje", "alojamiento", "dónde quedarse"],
+    { noun: "hotel", synonyms: [] },
   ),
-  seed("car_repair", "home_auto_services", "local", ["car_repair"], "taller mecánico", [
-    "taller automotriz",
-    "taller",
-    "mecánico",
-  ]),
-  seed("real_estate_agency", "real_estate", "local", ["real_estate_agency"], "inmobiliaria", [
-    "agencia inmobiliaria",
-    "agente inmobiliario",
-    "finca raíz",
-  ]),
+  seed(
+    "car_repair",
+    "home_auto_services",
+    "local",
+    ["car_repair"],
+    "taller mecánico",
+    ["taller automotriz", "taller", "mecánico"],
+    // AI search asks for a "mechanic" (293K a month) far more than for "auto repair" (40K).
+    {
+      noun: "mechanic",
+      synonyms: ["auto repair shop", "car repair shop", "auto repair", "car repair"],
+    },
+  ),
+  seed(
+    "real_estate_agency",
+    "real_estate",
+    "local",
+    ["real_estate_agency"],
+    "inmobiliaria",
+    ["agencia inmobiliaria", "agente inmobiliario", "finca raíz"],
+    // "realtor" leads national volume on realtor.com lookups; within a city AI search asks for an agent.
+    { noun: "real estate agent", synonyms: ["realtor", "real estate agency"] },
+  ),
   // A web-only store has no Places type; its noun comes from the inferred category.
-  seed("online_store", "online_national", "national", [], null, [
-    "tienda online",
-    "tienda en línea",
-    "tienda virtual",
-    "comprar por internet",
-  ]),
+  seed(
+    "online_store",
+    "online_national",
+    "national",
+    [],
+    null,
+    ["tienda online", "tienda en línea", "tienda virtual", "comprar por internet"],
+    { noun: null, synonyms: ["online store", "online shop"] },
+  ),
 ]);
 
 export function seedCategories(): ReadonlyArray<Readonly<SeedCategory>> {

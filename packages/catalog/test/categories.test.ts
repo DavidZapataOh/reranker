@@ -50,6 +50,21 @@ describe("seed categories", () => {
     }
   });
 
+  test("English nouns follow English searches, not a translation", () => {
+    const en = (key: string) => seedCategories().find((c) => c.key === key)?.languages.en;
+    expect(en("dental_clinic")?.noun).toBe("dentist");
+    expect(en("car_repair")?.noun).toBe("mechanic");
+    expect(en("real_estate_agency")?.noun).toBe("real estate agent");
+    expect(en("real_estate_agency")?.synonyms).toContain("realtor");
+    expect(en("online_store")?.noun).toBeNull();
+    for (const c of seedCategories()) {
+      const { noun, synonyms } = c.languages.en;
+      expect(noun).toBe(noun?.toLowerCase() ?? null);
+      for (const s of synonyms) expect(s).toBe(s.toLowerCase());
+      expect(synonyms).not.toContain(noun);
+    }
+  });
+
   test("the noun is the business people search for, not the professional", () => {
     const dental = seedCategories().find((c) => c.key === "dental_clinic");
     expect(dental?.noun).toBe("clínica odontológica");
