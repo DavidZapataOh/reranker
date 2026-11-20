@@ -62,6 +62,28 @@ export const launchEnv = z.object({
     z.string().min(1).optional(),
     "Vercel token scoped to the team that reads its plan and block status",
   ),
+  // Read here only to verify the evidence signing setup; @reranker/evidence owns their rules.
+  AWS_REGION: config(z.string().min(1).optional(), "AWS region of the evidence KMS keys"),
+  AWS_ROLE_ARN: config(
+    z.string().min(1).optional(),
+    "IAM role this deployment assumes through Vercel OIDC to sign with KMS",
+  ),
+  EVIDENCE_CAPTURE_KMS_KEY_ARN: config(
+    z.string().min(1).optional(),
+    "KMS key ARN that signs capture statements",
+  ),
+  EVIDENCE_LOG_KMS_KEY_ARN: config(
+    z.string().min(1).optional(),
+    "KMS key ARN that signs log checkpoints",
+  ),
+  QTSA_PACKAGE_SIZE: config(
+    z.coerce.number().int().positive().optional(),
+    "Timestamps in the qtsa.eu package bought",
+  ),
+  QTSA_PACKAGE_PURCHASED_AT: config(
+    z.iso.date().optional(),
+    "Purchase date of the qtsa.eu package (YYYY-MM-DD)",
+  ),
 });
 
 // Credentials the daily digest reads usage with. Each one is optional: a source without its
