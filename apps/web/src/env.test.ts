@@ -28,6 +28,8 @@ const dataforseo = { DATAFORSEO_LOGIN: "login", DATAFORSEO_PASSWORD: "password" 
 
 const brightdata = { BRIGHTDATA_API_KEY: "user-key", BRIGHTDATA_BILLING_API_KEY: "finance-key" };
 
+const openaiControl = { OPENAI_CONTROL_API_KEY: "sk-control" };
+
 const withoutDataforseo = (APP_ENV: string, extra: Record<string, string> = {}) =>
   defineEnv(fragments, { APP_ENV, ...authVars, ...origin(APP_ENV), ...posthog, ...extra });
 
@@ -93,7 +95,9 @@ describe("web environment", () => {
       POSTHOG_FEATURE_FLAGS_KEY: "phs_test",
       CRON_SECRET: "cron-secret-with-enough-length",
     };
-    expect(withKey("production", { ...flags, ...brightdata, ...ids })).toMatchObject(ids);
+    expect(
+      withKey("production", { ...flags, ...brightdata, ...openaiControl, ...ids }),
+    ).toMatchObject(ids);
     for (const APP_ENV of ["preview", "development"]) {
       expect(() => withKey(APP_ENV, ids)).toThrowError(
         /NEXT_PUBLIC_GA_ID \(forbidden\), NEXT_PUBLIC_CLARITY_ID \(forbidden\)/,
@@ -128,8 +132,21 @@ describe("web environment", () => {
     expect(() => withKey("production", flags)).toThrowError(
       /BRIGHTDATA_API_KEY \(missing\), BRIGHTDATA_BILLING_API_KEY \(missing\)/,
     );
-    expect(withKey("production", { ...flags, ...brightdata })).toMatchObject(brightdata);
+    expect(withKey("production", { ...flags, ...brightdata, ...openaiControl })).toMatchObject(
+      brightdata,
+    );
     expect(withKey("preview").BRIGHTDATA_API_KEY).toBeUndefined();
+  });
+
+  test("production needs the OpenAI control key; previews never call the control channel", () => {
+    const flags = {
+      POSTHOG_FEATURE_FLAGS_KEY: "phs_test",
+      CRON_SECRET: "cron-secret-with-enough-length",
+    };
+    expect(() => withKey("production", { ...flags, ...brightdata })).toThrowError(
+      /OPENAI_CONTROL_API_KEY \(missing\)/,
+    );
+    expect(withKey("preview").OPENAI_CONTROL_API_KEY).toBeUndefined();
   });
 
   test("the PostHog region defaults to us and rejects unknown values", () => {
