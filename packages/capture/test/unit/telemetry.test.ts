@@ -1,4 +1,4 @@
-import { cost } from "@reranker/schema";
+import { AppError, cost } from "@reranker/schema";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 
 // An in-memory stand-in for the ten-minute window that ops.record_velocity keeps in Postgres.
@@ -159,6 +159,40 @@ test("a failing velocity store never reaches the caller", async () => {
   velocity.recordVelocities.mockReset().mockResolvedValue([]);
   await record([call()]);
   expect(velocity.recordVelocities).toHaveBeenCalledOnce();
+});
+
+const checkoutTimeout = () =>
+  new AppError("service_unavailable", {
+    retryAfterSeconds: 2,
+    cause: new Error("timeout exceeded when trying to connect"),
+  });
+
+test("a batch whose checkout timed out is written again with the calls that finished meanwhile", async () => {
+  velocity.recordVelocities.mockImplementationOnce(async () => {
+    recordCaptureCall(call({ status: "provider_error", providerStatusCode: 50000 }));
+    throw checkoutTimeout();
+  });
+  recordCaptureCall(call());
+  await flush();
+  expect(velocity.recordVelocities).toHaveBeenCalledTimes(2);
+  expect(velocity.recordVelocities.mock.calls[1]?.[0]).toHaveLength(2 * 2);
+  expect(windows.get("capture:dataforseo:errors")).toEqual({ count10m: 2, flagged10m: 1 });
+  expect(telemetry.log.warn).not.toHaveBeenCalled();
+});
+
+test("a call that has waited 30 s for a connection gives its windows up", async () => {
+  const now = vi.spyOn(performance, "now").mockReturnValue(1_000);
+  velocity.recordVelocities.mockImplementation(async () => {
+    now.mockReturnValue(31_000);
+    throw checkoutTimeout();
+  });
+  await record([call()]);
+  expect(velocity.recordVelocities).toHaveBeenCalledOnce();
+  expect(telemetry.log.warn).toHaveBeenCalledWith("capture.velocity_failed", {
+    calls: 1,
+    error: "AppError",
+  });
+  now.mockRestore();
 });
 
 test("calls that finish while a write is in flight go together in the next one", async () => {

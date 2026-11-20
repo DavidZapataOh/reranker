@@ -17,6 +17,9 @@ const PROVIDER_CHECK_IDS = [
   "github-private-org",
   "traces",
   "smoke-cron",
+  "evidence-signing-key",
+  "evidence-audit-trail",
+  "qtsa-balance",
 ] as const;
 
 // Spend caps are read from the deployment's own configuration, which a repository run cannot

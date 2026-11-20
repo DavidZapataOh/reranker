@@ -22,6 +22,9 @@
     "test:contract": "vitest run --project contract"
   },
   "dependencies": {
+    "@aws-sdk/client-cloudtrail": "catalog:",
+    "@aws-sdk/client-kms": "catalog:",
+    "@aws-sdk/client-s3": "catalog:",
     "@opentelemetry/api": "catalog:",
     "@opentelemetry/exporter-logs-otlp-http": "catalog:",
     "@opentelemetry/resources": "catalog:",
@@ -31,6 +34,8 @@
     "@reranker/env": "workspace:*",
     "@reranker/i18n": "workspace:*",
     "@reranker/schema": "workspace:*",
+    "@reranker/verify": "workspace:*",
+    "@vercel/oidc-aws-credentials-provider": "catalog:",
     "drizzle-orm": "catalog:",
     "next": "catalog:",
     "posthog-node": "catalog:",

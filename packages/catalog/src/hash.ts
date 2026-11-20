@@ -23,14 +23,20 @@ export function contentHash(set: unknown): string {
   return sha256Hex(jcs(set));
 }
 
+/**
+ * The language is named only when it is not the country's main one, so variants asked in the
+ * main language keep the ids they had before languages were recorded.
+ */
 export function variantId(p: {
   intentId: string;
   paraphraseId: string;
   personaId: string | null;
   geoKey: string;
+  language?: string;
 }): VariantId {
-  const { intentId, paraphraseId, personaId, geoKey } = p;
-  return `pv_${contentHash({ intentId, paraphraseId, personaId, geoKey }).slice(0, 16)}`;
+  const { intentId, paraphraseId, personaId, geoKey, language } = p;
+  const named = language === undefined ? {} : { language };
+  return `pv_${contentHash({ intentId, paraphraseId, personaId, geoKey, ...named }).slice(0, 16)}`;
 }
 
 export function intentSetId(contentHash: string): IntentSetId {

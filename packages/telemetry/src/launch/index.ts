@@ -2,6 +2,7 @@ import { fetchWithin } from "../digest";
 import { checkBetterStackReady, checkBetterStackRouting } from "./betterstack";
 import { spendCapsCheck } from "./caps";
 import { checkSmokeCron, checkTraces } from "./deployment";
+import { checkEvidenceAuditTrail, checkEvidenceSigningKey, checkQtsaBalance } from "./evidence";
 import { checkGitHubRepo } from "./github";
 import { checkNeonProduction } from "./neon";
 import { checkPostHogBilling, checkPostHogProjects } from "./posthog";
@@ -12,6 +13,7 @@ import { checkVercelBilling } from "./vercel";
 export { checkBetterStackReady, checkBetterStackRouting } from "./betterstack";
 export { type SpendCaps, spendCapsCheck } from "./caps";
 export { checkSmokeCron, checkTraces, repositoryInputs, tracerRegistered } from "./deployment";
+export { checkEvidenceAuditTrail, checkEvidenceSigningKey, checkQtsaBalance } from "./evidence";
 export { checkGitHubRepo } from "./github";
 export { checkNeonProduction } from "./neon";
 export { checkPostHogBilling, checkPostHogProjects } from "./posthog";
@@ -43,7 +45,19 @@ async function within(
  * provider that does not answer is `unknown` instead of holding the rest. Never rejects.
  */
 export async function runLaunchCheck(inputs: LaunchInputs): Promise<CheckResult[]> {
-  const [vercel, resend, neon, ready, routing, billing, projects, github] = await Promise.all([
+  const [
+    vercel,
+    resend,
+    neon,
+    ready,
+    routing,
+    billing,
+    projects,
+    github,
+    signingKey,
+    auditTrail,
+    qtsa,
+  ] = await Promise.all([
     within("vercel-billing", checkVercelBilling),
     fetchWithin(() => checkResend(inputs.resendHourlyFloor)),
     within("neon-production", checkNeonProduction),
@@ -52,6 +66,9 @@ export async function runLaunchCheck(inputs: LaunchInputs): Promise<CheckResult[
     within("posthog-billing", checkPostHogBilling),
     within("posthog-projects", checkPostHogProjects),
     within("github-private-org", checkGitHubRepo),
+    within("evidence-signing-key", checkEvidenceSigningKey),
+    within("evidence-audit-trail", checkEvidenceAuditTrail),
+    within("qtsa-balance", () => checkQtsaBalance()),
   ]);
   const [plan, key] = resend.ok
     ? resend.value
@@ -69,6 +86,9 @@ export async function runLaunchCheck(inputs: LaunchInputs): Promise<CheckResult[
       billing,
       projects,
       github,
+      signingKey,
+      auditTrail,
+      qtsa,
       checkTraces(inputs.tracing),
       checkSmokeCron(inputs.crons),
       inputs.spendCaps

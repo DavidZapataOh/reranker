@@ -1,7 +1,7 @@
 export { createCapabilityToken, hashCapabilityToken } from "./capability";
 export { endPools } from "./client";
 export { type DbEnv, dbEnv, readDbEnv } from "./env";
-export { toDbError } from "./errors";
+export { isCheckoutTimeout, toDbError } from "./errors";
 export { type DbEvent, setDbEventSink } from "./events";
 export { PERSONAL_DATA, type PersonalDataEntry } from "./personal-data";
 export {
