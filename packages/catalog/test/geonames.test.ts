@@ -224,6 +224,94 @@ describe("pairGeoNames", () => {
     short: false,
   });
 
+  const italianOf = (
+    country: string,
+    fields: Partial<GeoNamesEntry> & Pick<GeoNamesEntry, "id" | "name">,
+    italian: string,
+    french?: string,
+  ) =>
+    pairGeoNames(
+      { regions: [], cities: [{ code: 1, name: fields.name, region: null }] },
+      {
+        country,
+        spanishSpeaking: false,
+        entries: [
+          entry({
+            ...fields,
+            alternates: [
+              { id: 1, name: italian, lang: "it", preferred: true, short: false },
+              ...(french
+                ? [{ id: 2, name: french, lang: "fr", preferred: true, short: false }]
+                : []),
+            ],
+          }),
+        ],
+        minorPlaces: [],
+      },
+    ).cities.get(1)?.italian;
+
+  test.each([
+    [
+      "La Spezia, in Italy",
+      "IT",
+      { id: 1, admin1: "08", name: "La Spezia" },
+      "La Spezia",
+      undefined,
+      true,
+    ],
+    [
+      "Il Cairo, an exonym",
+      "EG",
+      { id: 2, admin1: "11", name: "Cairo" },
+      "Il Cairo",
+      "Le Caire",
+      true,
+    ],
+    [
+      "La Magdeleine, in the Aosta Valley",
+      "IT",
+      { id: 3, admin1: "19", name: "La Magdeleine" },
+      "La Magdeleine",
+      "La Magdeleine",
+      false,
+    ],
+    [
+      "Bolzano, South Tyrol's Italian name",
+      "IT",
+      { id: 4, admin1: "17", admin2: "BZ", name: "Bozen" },
+      "Bolzano",
+      undefined,
+      true,
+    ],
+    [
+      "La Chaux-de-Fonds, in French Switzerland",
+      "CH",
+      { id: 5, admin1: "NE", name: "La Chaux-de-Fonds" },
+      "La Chaux-de-Fonds",
+      undefined,
+      false,
+    ],
+    ["Lugano, in Ticino", "CH", { id: 6, admin1: "TI", name: "Lugano" }, "Lugano", undefined, true],
+    [
+      "La Cruz de Elota, a Spanish name tagged Italian",
+      "MX",
+      { id: 7, admin1: "25", name: "La Cruz" },
+      "La Cruz de Elota",
+      undefined,
+      false,
+    ],
+    [
+      "LaBelle, spaced",
+      "US",
+      { id: 8, admin1: "FL", name: "LaBelle" },
+      "La Belle",
+      undefined,
+      false,
+    ],
+  ] as const)("%s: Italian name is Italian: %s", (_, country, fields, italian, french, expected) =>
+    expect(italianOf(country, { ...fields }, italian, french)).toBe(expected),
+  );
+
   test("an untagged copy of the English name never names a city in Spanish", () => {
     const sevilla = entry({
       id: 2510911,

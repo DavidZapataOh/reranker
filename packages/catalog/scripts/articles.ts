@@ -51,11 +51,11 @@ const LEADING: Partial<Record<PlaceLanguage, RegExp>> = {
 };
 
 /**
- * The article `name` takes in `language`, if any. A French or Italian name keeps the article it
- * starts with only where it is the language's own name for the place: as an exonym ("Il
- * Cairo"), in a country whose first language it is ("Le Havre", "La Spezia"), or in one that
- * also speaks it ("Le Locle", "Les Cèdres"). A foreign name that happens to start like one stays
- * whole ("a La Paz").
+ * The article `name` takes in `language`, if any. A French name keeps the article it starts with
+ * where it is French: as an exonym ("Le Caire"), in a country whose first language is French
+ * ("Le Havre"), or in one that also speaks it ("Le Locle", "Les Cèdres"). An Italian name keeps
+ * it only when the name is Italian (see `italianName` in geonames.ts). A foreign name that
+ * happens to start like one stays whole ("a La Paz").
  */
 export function placeArticle(input: {
   name: string;
@@ -66,8 +66,10 @@ export function placeArticle(input: {
   listed: string;
   /** Whether GeoNames itself names the place in `language`. */
   ownName: boolean;
+  /** Whether the Italian name is Italian, not a French or German name Italian keeps. */
+  italianName: boolean;
 }): string | undefined {
-  const { name, language, level, country, countryLanguages, listed, ownName } = input;
+  const { name, language, level, country, countryLanguages, listed, ownName, italianName } = input;
   if (language === "pt") {
     const table = PORTUGUESE[country]?.[level === "city" ? "cities" : "regions"];
     return table?.[name];
@@ -75,6 +77,9 @@ export function placeArticle(input: {
   const leading = LEADING[language]?.exec(name);
   if (!leading) return undefined;
   const article = (leading[1] ?? leading[2] ?? "").toLowerCase();
+  // Italian fuses only its own names ("alla Spezia", "al Cairo"), never a French or German one it
+  // writes as is ("a La Magdeleine", "a La Chaux-de-Fonds").
+  if (language === "it") return italianName ? article : undefined;
   // DataForSEO writes the local name without accents, spaces or designator ("LaBelle", "La
   // Rioja Province"); only a different name is an exonym.
   const comparable = (written: string) => normalizePlaceName(written).replaceAll(" ", "");
@@ -85,11 +90,6 @@ export function placeArticle(input: {
   // alone ("Le Locle" is French in Switzerland, not Italian).
   const ownLanguage =
     countryLanguages[0] === language ||
-    (countryLanguages.includes(language) && (ownName || DISTINCT[language]?.has(article)));
+    (countryLanguages.includes(language) && (ownName || article === "le" || article === "les"));
   return exonym || ownLanguage ? article : undefined;
 }
-
-const DISTINCT: Partial<Record<PlaceLanguage, ReadonlySet<string>>> = {
-  fr: new Set(["le", "les"]),
-  it: new Set(["il", "lo", "i", "gli"]),
-};

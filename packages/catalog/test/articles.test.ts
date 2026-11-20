@@ -9,9 +9,18 @@ type Case = {
   listed?: string;
   level?: "city" | "region";
   ownName?: boolean;
+  italianName?: boolean;
 };
 const article = ({ name, countryLanguages = [], listed = name, ...rest }: Case) =>
-  placeArticle({ name, listed, countryLanguages, level: "city", ownName: false, ...rest });
+  placeArticle({
+    name,
+    listed,
+    countryLanguages,
+    level: "city",
+    ownName: false,
+    italianName: false,
+    ...rest,
+  });
 
 describe("Portuguese articles the name leaves out", () => {
   test.each([
@@ -42,8 +51,8 @@ describe("French and Italian articles the name starts with", () => {
   test.each([
     [{ name: "Le Havre", language: "fr", country: "FR", countryLanguages: ["fr"] }, "le"],
     [{ name: "Les Ulis", language: "fr", country: "FR", countryLanguages: ["fr"] }, "les"],
-    [{ name: "La Spezia", language: "it", country: "IT", countryLanguages: ["it"] }, "la"],
-    [{ name: "L'Aquila", language: "it", country: "IT", countryLanguages: ["it"] }, "l'"],
+    [{ name: "La Spezia", language: "it", country: "IT", italianName: true }, "la"],
+    [{ name: "L'Aquila", language: "it", country: "IT", italianName: true }, "l'"],
     [
       { name: "Le Locle", language: "fr", country: "CH", countryLanguages: ["de", "fr", "it"] },
       "le",
@@ -54,8 +63,8 @@ describe("French and Italian articles the name starts with", () => {
         name: "Il Cairo",
         language: "it",
         country: "EG",
-        countryLanguages: ["ar"],
         listed: "Cairo",
+        italianName: true,
       },
       "il",
     ],
@@ -104,14 +113,10 @@ describe("French and Italian articles the name starts with", () => {
     { name: "Leipzig", language: "fr", country: "DE", countryLanguages: ["de"] },
   ] satisfies Case[])("%o takes none", (input) => expect(article(input)).toBeUndefined());
 
-  test("an Italian name GeoNames gives in a multilingual country keeps its article", () =>
-    expect(
-      article({
-        name: "La Chaux-de-Fonds",
-        language: "it",
-        country: "CH",
-        countryLanguages: ["de", "fr", "it"],
-        ownName: true,
-      }),
-    ).toBe("la"));
+  test.each([
+    // Italian keeps a French or German name as written: "a La Magdeleine", "a La Chaux-de-Fonds".
+    { name: "La Magdeleine", language: "it", country: "IT", ownName: true },
+    { name: "La Chaux-de-Fonds", language: "it", country: "CH", ownName: true },
+    { name: "La Panne", language: "it", country: "BE", listed: "De Panne" },
+  ] satisfies Case[])("Italian leaves %o whole", (input) => expect(article(input)).toBeUndefined());
 });
