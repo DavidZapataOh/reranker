@@ -1,6 +1,7 @@
 import { TRUSTED_KEYS } from "@reranker/verify/trust";
 
-export const dynamic = "force-static";
+// With Cache Components a handler that reads no request data is prerendered at build time, so
+// the key set is a static file that changes only with a deployment.
 
 const toBase64Url = (base64: string) =>
   base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");

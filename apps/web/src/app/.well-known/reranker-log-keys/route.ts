@@ -1,8 +1,6 @@
 import { LOG_ORIGIN } from "@reranker/verify/format";
 import { noteVerifierKey, TRUSTED_KEYS } from "@reranker/verify/trust";
 
-export const dynamic = "force-static";
-
 /**
  * The c2sp.org/signed-note verifier keys of the production log, one per line, ready for
  * `golang.org/x/mod/sumdb/note` or any checkpoint client. The log signs under its origin, so the
