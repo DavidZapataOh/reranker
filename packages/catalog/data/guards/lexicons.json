@@ -149,7 +149,18 @@
         "desconto",
         "descontos",
         "promoção",
-        "promoções"
+        "promoções",
+        "mais barato",
+        "mais barata",
+        "valor",
+        "quanto custa",
+        "em conta",
+        "comissão",
+        "mensalidade",
+        "diária",
+        "gratuito",
+        "gratuita",
+        "grátis"
       ],
       "urgency": [
         "hoje",
@@ -160,10 +171,37 @@
         "24 horas",
         "agora",
         "sem hora marcada",
-        "imediato"
+        "imediato",
+        "aberto agora",
+        "aberta agora",
+        "abertos agora",
+        "plantão",
+        "domingo",
+        "domingos",
+        "mesmo dia"
       ],
-      "zone": ["perto", "próximo", "próxima", "bairro", "região"],
-      "trust": ["confiável", "confiáveis", "de confiança", "avaliações", "opiniões", "reputação"],
+      "zone": [
+        "perto",
+        "próximo",
+        "próxima",
+        "bairro",
+        "região",
+        "mais perto",
+        "mais próximo",
+        "mais próxima"
+      ],
+      "trust": [
+        "confiável",
+        "confiáveis",
+        "de confiança",
+        "avaliações",
+        "opiniões",
+        "reputação",
+        "bem avaliado",
+        "bem avaliada",
+        "bem avaliados",
+        "bem avaliadas"
+      ],
       "insurance_or_payment": [
         "plano de saúde",
         "convênio",
@@ -179,7 +217,13 @@
         "mais recomendado",
         "mais recomendados",
         "avaliações",
-        "opiniões"
+        "opiniões",
+        "mais famoso",
+        "mais famosa",
+        "bem avaliado",
+        "bem avaliada",
+        "bem avaliados",
+        "bem avaliadas"
       ]
     },
     "capitalized": []

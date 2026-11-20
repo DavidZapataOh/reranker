@@ -8,6 +8,7 @@ import {
 } from "@reranker/schema/measurement";
 import en from "../data/templates/2026.11.0.en.json" with { type: "json" };
 import es from "../data/templates/2026.11.0.json" with { type: "json" };
+import pt from "../data/templates/2026.11.0.pt.json" with { type: "json" };
 import { ARCHETYPE_SCOPES, ARCHETYPE_SLATES } from "./archetypes";
 import { isAgreementGroup } from "./grammar";
 import { MeasurementLanguageError } from "./language";
@@ -54,6 +55,7 @@ const TEMPLATES: Partial<Record<MeasurementLanguage, Templates>> = {
     },
   }),
   en: Templates.parse(en),
+  pt: Templates.parse(pt),
 };
 
 /** The languages questions can be asked in today. */

@@ -1,0 +1,2625 @@
+{
+  "version": "2026.11.0",
+  "archetypes": {
+    "health": {
+      "local": [
+        {
+          "kind": "discovery",
+          "slug": "recommended",
+          "canonical": "Qual {sustantivo} você recomenda em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Como achar {um bom|uma boa} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "onde tem {sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} para uma consulta de rotina",
+              "format": "constraint"
+            },
+            {
+              "text": "{sustantivo} em {lugar} que atende adultos e crianças",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "specialty",
+          "slug": "children",
+          "canonical": "Qual {sustantivo} em {lugar} atende crianças?",
+          "paraphrases": [
+            {
+              "text": "Qual {sustantivo} infantil você recomenda em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} para crianças em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} infantil em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} para crianças em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} infantil {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} para crianças em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} que atende crianças pequenas",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} para o meu filho",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "zone",
+          "slug": "nearby",
+          "canonical": "Qual {sustantivo} você recomenda perto do bairro {zona} em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} no bairro {zona} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} fica mais perto do bairro {zona} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} perto do bairro {zona} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} no bairro {zona} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} perto do bairro {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} bairro {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} perto do bairro {zona} em {lugar} que atende crianças",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} perto do bairro {zona} em {lugar}",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "urgency",
+          "slug": "urgent",
+          "canonical": "Qual {sustantivo} está {aberto|aberta} agora em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {sustantivo} 24 horas em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} em {lugar} atende emergência hoje?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} {aberto|aberta} agora em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} 24 horas em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} {aberto|aberta} agora {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} 24 horas {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} que atende emergência e abre no domingo",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} de emergência hoje em {lugar}",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "insurance_or_payment",
+          "slug": "insurance",
+          "canonical": "Qual {sustantivo} em {lugar} aceita o meu convênio?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} em {lugar} que aceita convênio?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} em {lugar} aceita pagamento parcelado?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} em {lugar} que aceitam convênio?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} em {lugar} que parcelam no cartão?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} que aceita convênio {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} convênio {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} que atende pelo meu plano de saúde",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} que aceite o meu convênio",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "trust",
+          "slug": "trusted",
+          "canonical": "Qual {sustantivo} é confiável em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} confiável em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} em {lugar} tem as melhores avaliações?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} confiável em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} mais bem avaliadas em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} confiável {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {bem avaliado|bem avaliada} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} com registro no conselho e boas avaliações",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} que seja de confiança",
+              "format": "constraint"
+            }
+          ]
+        }
+      ]
+    },
+    "beauty_wellness": {
+      "local": [
+        {
+          "kind": "discovery",
+          "slug": "recommended",
+          "canonical": "Qual {sustantivo} você recomenda em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Como achar {um bom|uma boa} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "onde tem {sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} que atende homens e mulheres",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} para um corte de cabelo",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "specialty",
+          "slug": "specialist",
+          "canonical": "Qual {sustantivo} em {lugar} tem especialistas no que eu preciso?",
+          "paraphrases": [
+            {
+              "text": "Qual {sustantivo} você recomenda em {lugar} para um serviço mais específico?",
+              "format": "open_question"
+            },
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} em {lugar} que faz o serviço que eu preciso?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} em {lugar} com especialistas?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} {especializado|especializada} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} {especializado|especializada} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} com especialista {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} {especializado|especializada} em cabelos cacheados",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} que faz o serviço que eu quero",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "zone",
+          "slug": "nearby",
+          "canonical": "Qual {sustantivo} você recomenda perto do bairro {zona} em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} no bairro {zona} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} fica mais perto do bairro {zona} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} perto do bairro {zona} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} no bairro {zona} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} perto do bairro {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} bairro {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} perto do bairro {zona} em {lugar} que atende homens e mulheres",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} perto do bairro {zona} em {lugar}",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "price",
+          "slug": "price",
+          "canonical": "Qual {sustantivo} em {lugar} tem o melhor preço?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} {barato|barata} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} é {o mais barato|a mais barata} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} {barato|barata} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} com preço bom em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} {barato|barata} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} preço {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} com preço bom e bom atendimento",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} {barato|barata} em {lugar}",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "trust",
+          "slug": "trusted",
+          "canonical": "Qual {sustantivo} é confiável em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} confiável em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} em {lugar} tem as melhores avaliações?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} confiável em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} mais bem avaliadas em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} confiável {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {bem avaliado|bem avaliada} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} com boas avaliações dos clientes",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} que seja de confiança",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "ranking",
+          "slug": "best",
+          "canonical": "Qual {o melhor|a melhor} {sustantivo} em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Qual é {o melhor|a melhor} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {o|a} {sustantivo} mais {famoso|famosa} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Quais são as 5 melhores opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Liste as 5 melhores opções de {sustantivo} em {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "melhor {sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "melhor {sustantivo} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {bem avaliado|bem avaliada} em {lugar} e {o mais famoso|a mais famosa} da cidade",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso {do melhor|da melhor} {sustantivo} em {lugar}",
+              "format": "constraint"
+            }
+          ]
+        }
+      ]
+    },
+    "lodging": {
+      "local": [
+        {
+          "kind": "discovery",
+          "slug": "recommended",
+          "canonical": "Qual {sustantivo} você recomenda em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Como achar {um bom|uma boa} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "onde tem {sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} com café da manhã incluso",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} para um fim de semana",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "specialty",
+          "slug": "pet_friendly",
+          "canonical": "Qual {sustantivo} em {lugar} aceita pet?",
+          "paraphrases": [
+            {
+              "text": "Qual {sustantivo} você recomenda em {lugar} que aceita cachorro?",
+              "format": "open_question"
+            },
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} em {lugar} que aceita pet?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} em {lugar} que aceitam pet?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} pet friendly em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} que aceita pet {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} pet friendly em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} que aceita cachorro no quarto",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} onde o meu cachorro possa ficar comigo",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "zone",
+          "slug": "nearby",
+          "canonical": "Qual {sustantivo} você recomenda perto do bairro {zona} em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} no bairro {zona} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} fica mais perto do bairro {zona} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} perto do bairro {zona} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} no bairro {zona} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} perto do bairro {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} bairro {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} perto do bairro {zona} em {lugar} com café da manhã",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} perto do bairro {zona} em {lugar} para um fim de semana",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "price",
+          "slug": "price",
+          "canonical": "Qual {sustantivo} em {lugar} tem o melhor preço da diária?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} {barato|barata} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} é {o mais barato|a mais barata} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} {barato|barata} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} com preço bom em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} {barato|barata} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} preço {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} com diária em conta e café da manhã",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} {barato|barata} em {lugar} para um fim de semana",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "trust",
+          "slug": "trusted",
+          "canonical": "Qual {sustantivo} é confiável em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} confiável em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} em {lugar} tem as melhores avaliações?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} confiável em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} mais bem avaliadas em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} confiável {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {bem avaliado|bem avaliada} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} com boas avaliações dos hóspedes",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} que seja de confiança",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "ranking",
+          "slug": "best",
+          "canonical": "Qual {o melhor|a melhor} {sustantivo} em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Qual é {o melhor|a melhor} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {o|a} {sustantivo} mais {famoso|famosa} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Quais são as 5 melhores opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Liste as 5 melhores opções de {sustantivo} em {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "melhor {sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "melhor {sustantivo} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {bem avaliado|bem avaliada} em {lugar} e {o mais famoso|a mais famosa} da cidade",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso {do melhor|da melhor} {sustantivo} em {lugar} para um fim de semana",
+              "format": "constraint"
+            }
+          ]
+        }
+      ]
+    },
+    "food": {
+      "local": [
+        {
+          "kind": "discovery",
+          "slug": "recommended",
+          "canonical": "Qual {sustantivo} você recomenda em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Como achar {um bom|uma boa} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "onde tem {sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} com café da manhã",
+              "format": "constraint"
+            },
+            {
+              "text": "{sustantivo} em {lugar} que aceita ticket restaurante",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "specialty",
+          "slug": "occasion",
+          "canonical": "Qual {sustantivo} em {lugar} é {bom|boa} para comemorar um aniversário?",
+          "paraphrases": [
+            {
+              "text": "Qual {sustantivo} você recomenda em {lugar} para um aniversário?",
+              "format": "open_question"
+            },
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} em {lugar} para comemorar um aniversário?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} em {lugar} para um aniversário?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} em {lugar} para comemorar em grupo?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} para aniversário {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} para comemorar aniversário em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} que faz festa de aniversário para um grupo",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} para o meu aniversário",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "zone",
+          "slug": "nearby",
+          "canonical": "Qual {sustantivo} você recomenda perto do bairro {zona} em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} no bairro {zona} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} fica mais perto do bairro {zona} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} perto do bairro {zona} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} no bairro {zona} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} perto do bairro {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} bairro {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} perto do bairro {zona} em {lugar} com café da manhã",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} perto do bairro {zona} em {lugar}",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "price",
+          "slug": "price",
+          "canonical": "Qual {sustantivo} em {lugar} tem o melhor preço?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} {barato|barata} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} é {o mais barato|a mais barata} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} {barato|barata} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} com preço bom em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} {barato|barata} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} preço {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} com preço bom e comida boa",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} {barato|barata} em {lugar} para o dia a dia",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "trust",
+          "slug": "trusted",
+          "canonical": "Qual {sustantivo} é confiável em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} confiável em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} em {lugar} tem as melhores avaliações?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} confiável em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} mais bem avaliadas em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} confiável {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {bem avaliado|bem avaliada} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} com boas avaliações de quem mora na cidade",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} que seja de confiança",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "ranking",
+          "slug": "best",
+          "canonical": "Qual {o melhor|a melhor} {sustantivo} em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Qual é {o melhor|a melhor} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {o|a} {sustantivo} mais {famoso|famosa} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Quais são as 5 melhores opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Liste as 5 melhores opções de {sustantivo} em {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "melhor {sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "melhor {sustantivo} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {bem avaliado|bem avaliada} em {lugar} e {o mais famoso|a mais famosa} da cidade",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso {do melhor|da melhor} {sustantivo} em {lugar}",
+              "format": "constraint"
+            }
+          ]
+        }
+      ]
+    },
+    "home_auto_services": {
+      "local": [
+        {
+          "kind": "discovery",
+          "slug": "recommended",
+          "canonical": "Qual {sustantivo} você recomenda em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Como achar {um bom|uma boa} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "onde tem {sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} que atende em casa",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} que faz o serviço em casa",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "specialty",
+          "slug": "specialist",
+          "canonical": "Qual {sustantivo} em {lugar} tem especialistas no que eu preciso?",
+          "paraphrases": [
+            {
+              "text": "Qual {sustantivo} você recomenda em {lugar} para um serviço mais específico?",
+              "format": "open_question"
+            },
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} em {lugar} que faz o serviço que eu preciso?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} em {lugar} com especialistas?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} {especializado|especializada} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} {especializado|especializada} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} com especialista {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} {especializado|especializada} no meu tipo de serviço",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} que atende em casa",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "zone",
+          "slug": "nearby",
+          "canonical": "Qual {sustantivo} você recomenda perto do bairro {zona} em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} no bairro {zona} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} fica mais perto do bairro {zona} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} perto do bairro {zona} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} no bairro {zona} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} perto do bairro {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} bairro {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} perto do bairro {zona} em {lugar} que atende em casa",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} perto do bairro {zona} em {lugar}",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "price",
+          "slug": "price",
+          "canonical": "Qual {sustantivo} em {lugar} tem o melhor preço?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} {barato|barata} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} é {o mais barato|a mais barata} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} {barato|barata} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} com preço bom em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} {barato|barata} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} preço {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} que faz orçamento gratuito",
+              "format": "constraint"
+            },
+            {
+              "text": "Quanto custa {um bom|uma boa} {sustantivo} em {lugar}?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "urgency",
+          "slug": "urgent",
+          "canonical": "Qual {sustantivo} está {aberto|aberta} agora em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {sustantivo} 24 horas em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} em {lugar} atende emergência hoje?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} {aberto|aberta} agora em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} 24 horas em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} {aberto|aberta} agora {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} 24 horas {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} que atende hoje em casa",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} 24 horas em {lugar} que abre no domingo",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "trust",
+          "slug": "trusted",
+          "canonical": "Qual {sustantivo} é confiável em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} confiável em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} em {lugar} tem as melhores avaliações?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} confiável em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} mais bem avaliadas em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} confiável {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {bem avaliado|bem avaliada} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} com boas avaliações e garantia do serviço",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} que seja de confiança",
+              "format": "constraint"
+            }
+          ]
+        }
+      ]
+    },
+    "local_retail": {
+      "local": [
+        {
+          "kind": "discovery",
+          "slug": "recommended",
+          "canonical": "Qual {sustantivo} você recomenda em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Como achar {um bom|uma boa} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "onde tem {sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} que entrega em casa",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} que também vende online",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "specialty",
+          "slug": "assortment",
+          "canonical": "Qual {sustantivo} em {lugar} tem a maior variedade?",
+          "paraphrases": [
+            {
+              "text": "Qual é {o maior|a maior} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Onde encontrar {sustantivo} com muita variedade em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} com bastante variedade em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} com a maior variedade em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "maior {sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} com variedade {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} que tem de tudo",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} com muita variedade",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "price",
+          "slug": "price",
+          "canonical": "Qual {sustantivo} em {lugar} tem o melhor preço?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} {barato|barata} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} é {o mais barato|a mais barata} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} {barato|barata} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} com preço bom em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} {barato|barata} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} preço {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} com os melhores preços",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} {barato|barata} em {lugar}",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "urgency",
+          "slug": "today",
+          "canonical": "Qual {sustantivo} está {aberto|aberta} hoje em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Qual {sustantivo} em {lugar} abre aos domingos?",
+              "format": "open_question"
+            },
+            {
+              "text": "Onde encontrar {sustantivo} {aberto|aberta} agora em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} {aberto|aberta} agora em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} que abrem no domingo em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} {aberto|aberta} agora {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {aberto|aberta} hoje {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} que entrega hoje",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} que abre no domingo",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "trust",
+          "slug": "trusted",
+          "canonical": "Qual {sustantivo} é confiável em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} confiável em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} em {lugar} tem as melhores avaliações?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} confiável em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} mais bem avaliadas em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} confiável {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {bem avaliado|bem avaliada} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} com boas avaliações dos clientes",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} que seja de confiança",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "ranking",
+          "slug": "best",
+          "canonical": "Qual {o melhor|a melhor} {sustantivo} em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Qual é {o melhor|a melhor} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {o|a} {sustantivo} mais {famoso|famosa} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Quais são as 5 melhores opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Liste as 5 melhores opções de {sustantivo} em {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "melhor {sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "melhor {sustantivo} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {bem avaliado|bem avaliada} em {lugar} e {o mais famoso|a mais famosa} da cidade",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso {do melhor|da melhor} {sustantivo} em {lugar}",
+              "format": "constraint"
+            }
+          ]
+        }
+      ],
+      "national": [
+        {
+          "kind": "discovery",
+          "slug": "recommended",
+          "canonical": "Qual {sustantivo} online você recomenda?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} online que entrega em todo o país?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual é {o melhor|a melhor} {sustantivo} online?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} online?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} online?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} online {país}",
+              "format": "keyword"
+            },
+            {
+              "text": "melhor {sustantivo} online",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} online que entrega em casa em poucos dias",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} online que aceita boleto",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "specialty",
+          "slug": "assortment",
+          "canonical": "Qual {sustantivo} online tem a maior variedade?",
+          "paraphrases": [
+            {
+              "text": "Qual é {o maior|a maior} {sustantivo} online?",
+              "format": "open_question"
+            },
+            {
+              "text": "Onde encontrar {sustantivo} online com muita variedade?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} online com bastante variedade?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} online com a maior variedade?",
+              "format": "list_request"
+            },
+            {
+              "text": "maior {sustantivo} online",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} online com variedade {país}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} online que tem de tudo",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} online com muita variedade",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "price",
+          "slug": "price",
+          "canonical": "Qual {sustantivo} online tem o melhor preço?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} online {barato|barata}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} online é {o mais barato|a mais barata}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} online {barato|barata}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} online com preço bom?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} online {barato|barata}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} online preço {país}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} online com preço bom e frete grátis",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} online {barato|barata} e com frete grátis",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "urgency",
+          "slug": "fast_delivery",
+          "canonical": "Qual {sustantivo} online entrega mais rápido?",
+          "paraphrases": [
+            {
+              "text": "Qual {sustantivo} online entrega no mesmo dia?",
+              "format": "open_question"
+            },
+            {
+              "text": "Onde encontrar {sustantivo} online com entrega rápida?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} online com entrega rápida?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} online que entregam no mesmo dia?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} online entrega rápida",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} online entrega no mesmo dia {país}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} online que entrega rápido em todo o país",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} online que entrega no mesmo dia",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "trust",
+          "slug": "trusted",
+          "canonical": "Qual {sustantivo} online é confiável?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} online confiável?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} online tem as melhores avaliações?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} online confiável?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} online mais bem avaliadas?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} online confiável",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} online confiável {país}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} online confiável que aceita boleto",
+              "format": "constraint"
+            },
+            {
+              "text": "Como saber se {um|uma} {sustantivo} online é confiável?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "ranking",
+          "slug": "best",
+          "canonical": "Qual {o melhor|a melhor} {sustantivo} online?",
+          "paraphrases": [
+            {
+              "text": "Qual {sustantivo} online é {o mais famoso|a mais famosa}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual é {o melhor|a melhor} {sustantivo} online com entrega em todo o país?",
+              "format": "open_question"
+            },
+            {
+              "text": "Quais são as 5 melhores opções de {sustantivo} online?",
+              "format": "list_request"
+            },
+            {
+              "text": "Liste as 5 melhores opções de {sustantivo} online",
+              "format": "list_request"
+            },
+            {
+              "text": "melhor {sustantivo} online {país}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} online mais {famoso|famosa}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} online {bem avaliado|bem avaliada} e {o mais famoso|a mais famosa} do país",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso {do melhor|da melhor} {sustantivo} online",
+              "format": "constraint"
+            }
+          ]
+        }
+      ]
+    },
+    "professional_services": {
+      "local": [
+        {
+          "kind": "discovery",
+          "slug": "recommended",
+          "canonical": "Qual {sustantivo} você recomenda em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Como achar {um bom|uma boa} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "onde tem {sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} que atende online",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} para a minha empresa",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "specialty",
+          "slug": "specialist",
+          "canonical": "Qual {sustantivo} em {lugar} tem especialistas no que eu preciso?",
+          "paraphrases": [
+            {
+              "text": "Qual {sustantivo} você recomenda em {lugar} para um serviço mais específico?",
+              "format": "open_question"
+            },
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} em {lugar} que faz o serviço que eu preciso?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} em {lugar} com especialistas?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} {especializado|especializada} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} {especializado|especializada} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} com especialista {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} que atende pequenas empresas",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} que entende do meu tipo de caso",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "price",
+          "slug": "price",
+          "canonical": "Qual {sustantivo} em {lugar} tem o melhor preço?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} {barato|barata} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} é {o mais barato|a mais barata} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} {barato|barata} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} com preço bom em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} {barato|barata} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} preço {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} com consulta gratuita",
+              "format": "constraint"
+            },
+            {
+              "text": "Quanto custa {um bom|uma boa} {sustantivo} em {lugar}?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "urgency",
+          "slug": "urgent",
+          "canonical": "Qual {sustantivo} está {aberto|aberta} agora em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {sustantivo} 24 horas em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} em {lugar} atende emergência hoje?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} {aberto|aberta} agora em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} 24 horas em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} {aberto|aberta} agora {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} 24 horas {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} que atende hoje",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} com urgência em {lugar}",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "trust",
+          "slug": "trusted",
+          "canonical": "Qual {sustantivo} é confiável em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} confiável em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} em {lugar} tem as melhores avaliações?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} confiável em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} mais bem avaliadas em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} confiável {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {bem avaliado|bem avaliada} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} com registro ativo e boas avaliações",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} que seja de confiança",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "ranking",
+          "slug": "best",
+          "canonical": "Qual {o melhor|a melhor} {sustantivo} em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Qual é {o melhor|a melhor} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {o|a} {sustantivo} mais {famoso|famosa} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Quais são as 5 melhores opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Liste as 5 melhores opções de {sustantivo} em {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "melhor {sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "melhor {sustantivo} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {bem avaliado|bem avaliada} em {lugar} e {o mais famoso|a mais famosa} da cidade",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso {do melhor|da melhor} {sustantivo} em {lugar}",
+              "format": "constraint"
+            }
+          ]
+        }
+      ]
+    },
+    "real_estate": {
+      "local": [
+        {
+          "kind": "discovery",
+          "slug": "recommended",
+          "canonical": "Qual {sustantivo} você recomenda em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Como achar {um bom|uma boa} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "onde tem {sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} que trabalha com aluguel e venda",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} para comprar um apartamento",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "specialty",
+          "slug": "rental",
+          "canonical": "Qual {sustantivo} em {lugar} você recomenda para alugar um imóvel?",
+          "paraphrases": [
+            {
+              "text": "Qual é {o melhor|a melhor} {sustantivo} em {lugar} para alugar um apartamento?",
+              "format": "open_question"
+            },
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} em {lugar} para alugar uma casa?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} em {lugar} para aluguel?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} em {lugar} para alugar um imóvel?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} aluguel {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} para alugar casa em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} que exige poucos documentos para alugar",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} para alugar um apartamento",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "zone",
+          "slug": "nearby",
+          "canonical": "Qual {sustantivo} você recomenda perto do bairro {zona} em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} no bairro {zona} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} fica mais perto do bairro {zona} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} perto do bairro {zona} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} no bairro {zona} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} perto do bairro {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} bairro {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} perto do bairro {zona} em {lugar} para alugar um apartamento",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} perto do bairro {zona} em {lugar}",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "price",
+          "slug": "commission",
+          "canonical": "Qual {sustantivo} em {lugar} cobra a menor comissão?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} em {lugar} com comissão baixa?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} é {o mais barato|a mais barata} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} em {lugar} com comissão baixa?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} com o melhor preço em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} comissão baixa {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {barato|barata} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} que cobra uma comissão justa",
+              "format": "constraint"
+            },
+            {
+              "text": "Qual a comissão de {um bom|uma boa} {sustantivo} em {lugar}?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "trust",
+          "slug": "trusted",
+          "canonical": "Qual {sustantivo} é confiável em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} confiável em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} em {lugar} tem as melhores avaliações?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} confiável em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} mais bem avaliadas em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} confiável {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {bem avaliado|bem avaliada} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} com registro no conselho e boas avaliações",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} que seja de confiança",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "ranking",
+          "slug": "best",
+          "canonical": "Qual {o melhor|a melhor} {sustantivo} em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Qual é {o melhor|a melhor} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {o|a} {sustantivo} mais {famoso|famosa} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Quais são as 5 melhores opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Liste as 5 melhores opções de {sustantivo} em {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "melhor {sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "melhor {sustantivo} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {bem avaliado|bem avaliada} em {lugar} e {o mais famoso|a mais famosa} da cidade",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso {do melhor|da melhor} {sustantivo} em {lugar} para alugar um imóvel",
+              "format": "constraint"
+            }
+          ]
+        }
+      ]
+    },
+    "education": {
+      "local": [
+        {
+          "kind": "discovery",
+          "slug": "recommended",
+          "canonical": "Qual {sustantivo} você recomenda em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Como achar {um bom|uma boa} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "onde tem {sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} para crianças pequenas",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} para o meu filho",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "specialty",
+          "slug": "online",
+          "canonical": "Qual {sustantivo} em {lugar} tem aulas online?",
+          "paraphrases": [
+            {
+              "text": "Qual {sustantivo} você recomenda em {lugar} com aulas online?",
+              "format": "open_question"
+            },
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} em {lugar} que tem aulas online?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} em {lugar} com aulas online?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} online em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} online {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} com aulas online em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} com aulas online e presenciais",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} em {lugar} com aulas online para o meu filho",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "zone",
+          "slug": "nearby",
+          "canonical": "Qual {sustantivo} você recomenda perto do bairro {zona} em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} no bairro {zona} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} fica mais perto do bairro {zona} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} perto do bairro {zona} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores opções de {sustantivo} no bairro {zona} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} perto do bairro {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} bairro {zona} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} perto do bairro {zona} em {lugar} para o meu filho",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} perto do bairro {zona} em {lugar}",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "price",
+          "slug": "price",
+          "canonical": "Qual {sustantivo} em {lugar} tem o melhor preço de mensalidade?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} {barato|barata} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} é {o mais barato|a mais barata} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} {barato|barata} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} com preço bom em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} {barato|barata} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} preço {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} que oferece bolsa de estudo",
+              "format": "constraint"
+            },
+            {
+              "text": "Quanto custa {um bom|uma boa} {sustantivo} em {lugar} por mês?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "ranking",
+          "slug": "best",
+          "canonical": "Qual {o melhor|a melhor} {sustantivo} em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Qual é {o melhor|a melhor} {sustantivo} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {o|a} {sustantivo} mais {famoso|famosa} em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Quais são as 5 melhores opções de {sustantivo} em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Liste as 5 melhores opções de {sustantivo} em {lugar}",
+              "format": "list_request"
+            },
+            {
+              "text": "melhor {sustantivo} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "melhor {sustantivo} {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} com as melhores avaliações dos pais",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso {do melhor|da melhor} {sustantivo} em {lugar} para o meu filho",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "trust",
+          "slug": "trusted",
+          "canonical": "Qual {sustantivo} é confiável em {lugar}?",
+          "paraphrases": [
+            {
+              "text": "Onde encontrar {um bom|uma boa} {sustantivo} confiável em {lugar}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual {sustantivo} em {lugar} tem as melhores avaliações?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 opções de {sustantivo} confiável em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as opções de {sustantivo} mais bem avaliadas em {lugar}?",
+              "format": "list_request"
+            },
+            {
+              "text": "{sustantivo} confiável {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} {bem avaliado|bem avaliada} em {lugar}",
+              "format": "keyword"
+            },
+            {
+              "text": "{sustantivo} em {lugar} com boas avaliações dos pais",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de {um bom|uma boa} {sustantivo} confiável em {lugar} para o meu filho",
+              "format": "constraint"
+            }
+          ]
+        }
+      ]
+    },
+    "online_national": {
+      "national": [
+        {
+          "kind": "discovery",
+          "slug": "recommended",
+          "canonical": "Qual é a melhor loja online de {sustantivo}?",
+          "paraphrases": [
+            {
+              "text": "Qual loja online de {sustantivo} você recomenda?",
+              "format": "open_question"
+            },
+            {
+              "text": "Onde comprar {sustantivo} online?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 lojas online de {sustantivo}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as melhores lojas online de {sustantivo}?",
+              "format": "list_request"
+            },
+            {
+              "text": "comprar {sustantivo} online {país}",
+              "format": "keyword"
+            },
+            {
+              "text": "melhor loja online de {sustantivo}",
+              "format": "keyword"
+            },
+            {
+              "text": "Loja online de {sustantivo} que entrega em todo o país",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de uma loja online para comprar {sustantivo}",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "specialty",
+          "slug": "assortment",
+          "canonical": "Qual loja online tem a maior variedade de {sustantivo}?",
+          "paraphrases": [
+            {
+              "text": "Qual é a maior loja online de {sustantivo}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Onde comprar {sustantivo} online com muita variedade?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 lojas online com bastante variedade de {sustantivo}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as lojas online com a maior variedade de {sustantivo}?",
+              "format": "list_request"
+            },
+            {
+              "text": "maior loja online de {sustantivo}",
+              "format": "keyword"
+            },
+            {
+              "text": "comprar {sustantivo} online com variedade {país}",
+              "format": "keyword"
+            },
+            {
+              "text": "Loja online de {sustantivo} que tem de tudo",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de uma loja online com todo tipo de {sustantivo}",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "price",
+          "slug": "price",
+          "canonical": "Onde comprar {sustantivo} online com preço bom?",
+          "paraphrases": [
+            {
+              "text": "Qual loja online tem o melhor preço de {sustantivo}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual loja online de {sustantivo} é a mais barata?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 lojas online baratas de {sustantivo}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as lojas online de {sustantivo} com os melhores preços?",
+              "format": "list_request"
+            },
+            {
+              "text": "comprar {sustantivo} online barato {país}",
+              "format": "keyword"
+            },
+            {
+              "text": "loja online barata de {sustantivo}",
+              "format": "keyword"
+            },
+            {
+              "text": "Loja online de {sustantivo} com preço bom e frete grátis",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de uma loja online barata para comprar {sustantivo}",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "trust",
+          "slug": "trusted",
+          "canonical": "Qual loja online de {sustantivo} é confiável?",
+          "paraphrases": [
+            {
+              "text": "Onde comprar {sustantivo} online em uma loja confiável?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual loja online de {sustantivo} tem as melhores avaliações?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 lojas online confiáveis de {sustantivo}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as lojas online de {sustantivo} mais bem avaliadas?",
+              "format": "list_request"
+            },
+            {
+              "text": "loja online confiável de {sustantivo}",
+              "format": "keyword"
+            },
+            {
+              "text": "comprar {sustantivo} online confiável {país}",
+              "format": "keyword"
+            },
+            {
+              "text": "Loja online de {sustantivo} confiável que aceita boleto",
+              "format": "constraint"
+            },
+            {
+              "text": "Como saber se uma loja online de {sustantivo} é confiável?",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "urgency",
+          "slug": "fast_delivery",
+          "canonical": "Qual loja online de {sustantivo} entrega mais rápido?",
+          "paraphrases": [
+            {
+              "text": "Qual loja online entrega {sustantivo} no mesmo dia?",
+              "format": "open_question"
+            },
+            {
+              "text": "Onde comprar {sustantivo} online com entrega rápida?",
+              "format": "open_question"
+            },
+            {
+              "text": "Você me recomenda 3 lojas online de {sustantivo} com entrega rápida?",
+              "format": "list_request"
+            },
+            {
+              "text": "Quais são as lojas online que entregam {sustantivo} no mesmo dia?",
+              "format": "list_request"
+            },
+            {
+              "text": "comprar {sustantivo} online entrega rápida",
+              "format": "keyword"
+            },
+            {
+              "text": "comprar {sustantivo} online entrega no mesmo dia {país}",
+              "format": "keyword"
+            },
+            {
+              "text": "Loja online de {sustantivo} que entrega rápido em todo o país",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso de uma loja online que entregue {sustantivo} no mesmo dia",
+              "format": "constraint"
+            }
+          ]
+        },
+        {
+          "kind": "ranking",
+          "slug": "best",
+          "canonical": "Qual é a loja online de {sustantivo} mais famosa?",
+          "paraphrases": [
+            {
+              "text": "Qual a melhor loja online para comprar {sustantivo}?",
+              "format": "open_question"
+            },
+            {
+              "text": "Qual loja online de {sustantivo} é a mais bem avaliada?",
+              "format": "open_question"
+            },
+            {
+              "text": "Quais são as 5 melhores lojas online de {sustantivo}?",
+              "format": "list_request"
+            },
+            {
+              "text": "Liste as 5 melhores lojas online de {sustantivo}",
+              "format": "list_request"
+            },
+            {
+              "text": "melhores lojas online de {sustantivo} {país}",
+              "format": "keyword"
+            },
+            {
+              "text": "loja online de {sustantivo} mais famosa",
+              "format": "keyword"
+            },
+            {
+              "text": "Loja online de {sustantivo} mais bem avaliada e mais famosa do país",
+              "format": "constraint"
+            },
+            {
+              "text": "Preciso da melhor loja online para comprar {sustantivo}",
+              "format": "constraint"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "brand": {
+    "brand.trust": "{business} em {lugar} é confiável?",
+    "brand.opinion": "{business} vale a pena?"
+  }
+}
