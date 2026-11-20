@@ -2,9 +2,7 @@ import { AppError, cost, type ProviderCost } from "@reranker/schema";
 import type { MeasurementLanguage } from "@reranker/schema/measurement";
 import { jcs, promptSha256, sha256Hex } from "../hash";
 import { TEMPLATE_LANGUAGES, templatesVersion } from "../templates";
-import { JUDGE_PROMPT_V1 } from "./prompts/judge.v1";
-import { PARAPHRASE_PROMPT_V1 } from "./prompts/paraphrase.v1";
-import { PERSONA_PROMPT_V1 } from "./prompts/persona.v1";
+import { GENERATION_LANGUAGES, type GenerationLanguage, promptsFor } from "./prompts";
 
 export interface GeneratorConfig {
   version: 1;
@@ -25,10 +23,28 @@ export interface GeneratorConfig {
   intents: 6;
   complete: 5;
   minVariants: 7;
-  /** sha256 of each prompt's text, so any wording change yields a new config hash. */
-  prompts: { paraphrase: string; persona: string; judge: string };
+  /** sha256 of each language's prompts, so any wording change in any language yields a new config hash. */
+  prompts: Readonly<Record<GenerationLanguage, PromptHashes>>;
   /** Every language's set is pinned, so a new set in any language yields a new config hash. */
   templatesVersions: Readonly<Partial<Record<MeasurementLanguage, string>>>;
+}
+
+interface PromptHashes {
+  paraphrase: string;
+  persona: string;
+  judge: string;
+  /** The variety and address words, which reach the model in every payload. */
+  profile: string;
+}
+
+function promptHashes(language: GenerationLanguage): PromptHashes {
+  const { paraphrase, persona, judge, variety, address } = promptsFor(language);
+  return {
+    paraphrase: promptSha256(paraphrase),
+    persona: promptSha256(persona),
+    judge: promptSha256(judge),
+    profile: sha256Hex(jcs({ variety, address: address ?? null })),
+  };
 }
 
 const deepFreeze = <T extends object>(value: T): Readonly<T> => {
@@ -56,11 +72,10 @@ export const GENERATOR_CONFIG: Readonly<GeneratorConfig> = deepFreeze({
   intents: 6,
   complete: 5,
   minVariants: 7,
-  prompts: {
-    paraphrase: promptSha256(PARAPHRASE_PROMPT_V1),
-    persona: promptSha256(PERSONA_PROMPT_V1),
-    judge: promptSha256(JUDGE_PROMPT_V1),
-  },
+  prompts: Object.fromEntries(GENERATION_LANGUAGES.map((l) => [l, promptHashes(l)])) as Record<
+    GenerationLanguage,
+    PromptHashes
+  >,
   templatesVersions: Object.fromEntries(TEMPLATE_LANGUAGES.map((l) => [l, templatesVersion(l)])),
 });
 

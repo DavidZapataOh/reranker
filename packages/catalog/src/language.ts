@@ -4,7 +4,7 @@ import { type GeoTarget, MeasurementLanguage } from "@reranker/schema/measuremen
 import { spokenPlaceName } from "./geo/resolve";
 
 /** What a language lacks for a question to be asked in it. */
-export type LanguageGap = "unsupported" | "no_templates" | "no_place_names";
+export type LanguageGap = "unsupported" | "no_templates" | "no_place_names" | "no_prompts";
 
 /** A measurement that cannot be asked in a language yet: refused rather than asked in another. */
 export class MeasurementLanguageError extends AppError {
