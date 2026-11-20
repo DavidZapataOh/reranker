@@ -110,3 +110,10 @@ export const EURO_TERRITORIES = [
   "TF",
   "YT",
 ] as const;
+
+// GeoNames lists English first for Puerto Rico, where 95.5% of people speak a language other
+// than English at home, Spanish (https://www.census.gov/geographies/island-areas/puerto-rico/quickfacts-puerto-rico.html,
+// 2020-2024, read 2026-11-20).
+export const MAIN_LANGUAGE_OVERRIDES: Readonly<Partial<Record<string, string>>> = {
+  PR: "es",
+};

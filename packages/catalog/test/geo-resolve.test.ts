@@ -82,11 +82,28 @@ describe("resolveGeo", () => {
     });
   });
 
-  test("a city without a centroid in the data takes the business location", () =>
-    expect(resolveFixture("MX", "guadalajara", true).center).toEqual({
-      lat: 20.6707,
-      lng: -103.3685,
+  test("a city is asked from its own centroid, never from the business", () => {
+    const guadalajara = resolveFixture("MX", "guadalajara", true);
+    expect(guadalajara.center).toEqual({
+      lat: 20.67738,
+      lng: -103.34749,
+      level: "city",
+      label: "Guadalajara",
+    });
+    // Captures rebuild the target from its key, so it must not depend on the business.
+    expect(guadalajara).toEqual(getGeo("mx-c9047210"));
+  });
+
+  test("a town no source locates borrows its region's centroid, labelled as the region", () =>
+    expect(getGeo("es-c1005451")).toMatchObject({
+      key: "es-c1005451",
+      level: "city",
+      name: "Corrales del Vino",
+      center: { lat: 41.66667, lng: -4.25, level: "region", label: "Castilla y León" },
     }));
+
+  test("a town no source locates, in no located region, has no centroid", () =>
+    expect(getGeo("ch-c1002840").center).toBeNull());
 
   test("a homonym in another region is never taken: the business region wins", () =>
     expect(
@@ -233,16 +250,42 @@ describe("geoForEngine", () => {
     expect(geoForEngine("gemini", salento, "local")).toEqual({ level: "city", label: "Salento" });
   });
 
-  test("Gemini without a coordinate is declared by country", () =>
-    expect(geoForEngine("gemini", resolveFixture("MX", "guadalajara"), "local")).toEqual({
-      level: "country",
-      label: "México",
+  test.each([
+    ["es-c1005493", "Madrid"],
+    ["es-c9214622", "Barcelona"],
+    ["us-c1015116", "Miami"],
+    ["mx-c1010043", "Ciudad de México"],
+    ["ar-c1000073", "Buenos Aires"],
+    ["pe-c9073192", "Lima"],
+  ])("Gemini in %s is declared by the city, %s", (key, label) =>
+    expect(geoForEngine("gemini", getGeo(key), "local")).toEqual({ level: "city", label }),
+  );
+
+  test("Gemini in a town no source locates is declared by the region it is asked from", () =>
+    expect(geoForEngine("gemini", getGeo("es-c1005451"), "local")).toEqual({
+      level: "region",
+      label: "Castilla y León",
     }));
 
-  test("a region target keeps the region for Gemini when the business has a coordinate", () =>
+  test("Gemini without a coordinate is declared by country", () =>
+    expect(geoForEngine("gemini", getGeo("ch-c1002840"), "local")).toEqual({
+      level: "country",
+      label: getGeo("ch").name,
+    }));
+
+  test("a region target is asked by Gemini from the region's point", () =>
+    expect(geoForEngine("gemini", resolveFixture("MX", "mx-town-without-code"), "local")).toEqual({
+      level: "region",
+      label: "Jalisco",
+    }));
+
+  test("ChatGPT is only ever asked by city from the city's own centroid", () =>
     expect(
-      geoForEngine("gemini", resolveFixture("MX", "mx-town-without-code", true), "local"),
-    ).toEqual({ level: "region", label: "Jalisco" }));
+      geoForEngine("chatgpt", getGeo("es-c1005451"), "local", {
+        provider: "brightdata",
+        chatgptCityEffect: "confirmed",
+      }),
+    ).toEqual({ level: "country", label: "España" }));
 
   test("Venezuela has no chatgpt", () =>
     expect(geoForEngine("chatgpt", resolveFixture("VE", "caracas"), "local")).toBeNull());

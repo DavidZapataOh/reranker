@@ -210,9 +210,10 @@ function boxAround(center: LatLng, halfSideM: number) {
 function locationBiasOf(geo: GeoTarget): SearchTextRequest["locationBias"] | undefined {
   if (geo.center === null) return undefined;
   const center = { latitude: geo.center.lat, longitude: geo.center.lng };
-  if (geo.level === "city") return { circle: { center, radius: CITY_BIAS_RADIUS_M } };
-  if (geo.level === "region") return { rectangle: boxAround(center, REGION_BIAS_HALF_SIDE_M) };
-  return undefined;
+  // The area follows the place the point belongs to: a town located only by its region's
+  // centroid is searched across the region.
+  if (geo.center.level === "city") return { circle: { center, radius: CITY_BIAS_RADIUS_M } };
+  return { rectangle: boxAround(center, REGION_BIAS_HALF_SIDE_M) };
 }
 
 function searchRequestOf(

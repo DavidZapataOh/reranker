@@ -21,8 +21,15 @@ export const GeoTarget = z.object({
   country: CountryCode,
   name: z.string().min(1),
   regionName: z.string().min(1).nullable(),
+  // The most precise centroid: the place's own, else its region's. `level` and `label` name
+  // the place the point belongs to, which is what a coordinate-targeted engine is asked from.
   center: z
-    .object({ lat: z.number().min(-90).max(90), lng: z.number().min(-180).max(180) })
+    .object({
+      lat: z.number().min(-90).max(90),
+      lng: z.number().min(-180).max(180),
+      level: GeoLevel.exclude(["country"]),
+      label: z.string().min(1),
+    })
     .nullable(),
   // The most precise DataForSEO location: the city, else its region, else the country.
   dataforseo: z.object({
@@ -99,6 +106,11 @@ export const BusinessCategory = z.object({
 });
 export type BusinessCategory = z.infer<typeof BusinessCategory>;
 
+// The languages a business can be measured in. Closed, so every one has its own templates and
+// place names checked before a question is asked in it.
+export const MeasurementLanguage = z.enum(["es", "en", "pt"]);
+export type MeasurementLanguage = z.infer<typeof MeasurementLanguage>;
+
 export const IntentKind = z.enum([
   "discovery",
   "specialty",
@@ -158,7 +170,7 @@ export const Intent = z.object({
   canonicalParaphraseId: z.string().min(1),
   demandWeight: z.number().nonnegative(),
   freeReport: z.boolean(),
-  language: z.literal("es"),
+  language: MeasurementLanguage,
   registerProfile: RegisterProfile,
 });
 export type Intent = z.infer<typeof Intent>;
@@ -236,6 +248,8 @@ export const PlannedSlot = z.object({
   geoDeclared: EngineGeo,
   runIndex: z.number().int().min(0),
   promptText: z.string().min(1),
+  // Absent in plans frozen before it was recorded, which asked in the country's main language.
+  language: MeasurementLanguage.optional(),
   variantId: VariantId.optional(),
   promptSha256: Sha256Hex.optional(),
   isCanonical: z.boolean().optional(),
@@ -250,17 +264,29 @@ export const PlannedObservation = PlannedSlot.extend({
 });
 export type PlannedObservation = z.infer<typeof PlannedObservation>;
 
+const MeasurementDesign = z.object({
+  intents: z.number().int().positive(),
+  variantsPerIntent: z.number().int().positive(),
+  runsPerVariant: z.literal(1),
+});
+
 export const MeasurementPlan = z.object({
   intentSet: IntentSetManifest,
   geo: GeoTarget,
   scope: QuestionScope,
   // sha256(reportId) as hex: the sampler seed.
   seed: Sha256Hex,
-  design: z.object({
-    intents: z.number().int().positive(),
-    variantsPerIntent: z.number().int().positive(),
-    runsPerVariant: z.literal(1),
-  }),
+  design: MeasurementDesign,
+  // The language `intentSet` is asked in; absent in plans made before a plan named it.
+  language: MeasurementLanguage.optional(),
+  // A second language, asked with its own set on a smaller sample after the main one.
+  secondary: z
+    .object({
+      language: MeasurementLanguage,
+      intentSet: IntentSetManifest,
+      design: MeasurementDesign,
+    })
+    .optional(),
   observations: z.array(PlannedObservation).min(1),
 });
 export type MeasurementPlan = z.infer<typeof MeasurementPlan>;

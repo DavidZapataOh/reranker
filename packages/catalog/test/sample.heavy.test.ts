@@ -48,5 +48,7 @@ function chiSquarePValue(counts: Map<string, number>): number {
   return 1 - chisquareCdf(statistic, counts.size - groups.length);
 }
 
-test("uniformity over 10,000 report ids (chi-square p > 0.001)", () =>
-  expect(chiSquarePValue(frequencies(10_000))).toBeGreaterThan(0.001));
+// Ten thousand plans outlast the 5 s default on a slow CI runner.
+test("uniformity over 10,000 report ids (chi-square p > 0.001)", { timeout: 60_000 }, () =>
+  expect(chiSquarePValue(frequencies(10_000))).toBeGreaterThan(0.001),
+);

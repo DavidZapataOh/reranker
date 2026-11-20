@@ -1,6 +1,16 @@
 import { appendFile } from "node:fs/promises";
 import { setTimeout as sleep } from "node:timers/promises";
 import {
+  CloudTrailClient,
+  CreateTrailCommand,
+  GetEventSelectorsCommand,
+  GetTrailCommand,
+  GetTrailStatusCommand,
+  PutEventSelectorsCommand,
+  StartLoggingCommand,
+  UpdateTrailCommand,
+} from "@aws-sdk/client-cloudtrail";
+import {
   AddClientIDToOpenIDConnectProviderCommand,
   CreateOpenIDConnectProviderCommand,
   CreateRoleCommand,
@@ -22,12 +32,27 @@ import {
   KeySpec as KmsKeySpec,
   PutKeyPolicyCommand,
 } from "@aws-sdk/client-kms";
+import {
+  CreateBucketCommand,
+  GetBucketLifecycleConfigurationCommand,
+  GetBucketPolicyCommand,
+  GetPublicAccessBlockCommand,
+  HeadBucketCommand,
+  PutBucketLifecycleConfigurationCommand,
+  PutBucketPolicyCommand,
+  PutPublicAccessBlockCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import { GetCallerIdentityCommand, STSClient } from "@aws-sdk/client-sts";
 import {
+  bucketName,
+  bucketPolicy,
   ISSUERS,
   KEYS,
   type KeySpec,
   keyPolicy,
+  LIFECYCLE,
+  PUBLIC_ACCESS_BLOCK,
   providerArn,
   REGION,
   ROLE_POLICY,
@@ -36,6 +61,8 @@ import {
   rolePolicy,
   samePolicy,
   TAGS,
+  TRAIL,
+  trailArn,
   trustPolicy,
 } from "./aws-state.ts";
 
@@ -43,9 +70,19 @@ export interface Clients {
   sts: Pick<STSClient, "send">;
   iam: Pick<IAMClient, "send">;
   kms: Pick<KMSClient, "send">;
+  s3: Pick<S3Client, "send">;
+  cloudtrail: Pick<CloudTrailClient, "send">;
 }
 
-const MISSING = new Set(["NoSuchEntityException", "NotFoundException"]);
+const MISSING = new Set([
+  "NoSuchEntityException",
+  "NotFoundException",
+  "NotFound",
+  "NoSuchBucketPolicy",
+  "NoSuchLifecycleConfiguration",
+  "NoSuchPublicAccessBlockConfiguration",
+  "TrailNotFoundException",
+]);
 
 /** The resource, or undefined when AWS answers that it does not exist. */
 async function find<T>(call: () => Promise<T>): Promise<T | undefined> {
@@ -76,6 +113,7 @@ const VISIBILITY_ATTEMPTS = 8;
 interface Context {
   aws: Clients;
   account: string;
+  dryRun: boolean;
   apply(what: string, write: () => Promise<unknown>): Promise<void>;
   wait(ms: number): Promise<unknown>;
 }
@@ -128,6 +166,99 @@ async function identity({ aws, account, apply }: Context): Promise<void> {
         aws.iam.send(
           new UpdateAssumeRolePolicyCommand({ RoleName: role.name, PolicyDocument: json(trust) }),
         ),
+      );
+    }
+  }
+}
+
+/** The audit bucket and the multi-Region trail that delivers every management event into it. */
+async function auditTrail({ aws, account, dryRun, apply }: Context): Promise<void> {
+  const Bucket = bucketName(account);
+  const bucketExists =
+    (await find(() => aws.s3.send(new HeadBucketCommand({ Bucket })))) !== undefined;
+  if (!bucketExists) {
+    await apply(`create bucket ${Bucket}`, () => aws.s3.send(new CreateBucketCommand({ Bucket })));
+  }
+  // A dry run cannot read the settings of a bucket it did not create.
+  const read = <T>(call: () => Promise<T>) =>
+    bucketExists || !dryRun ? find(call) : Promise.resolve(undefined);
+  const block = (await read(() => aws.s3.send(new GetPublicAccessBlockCommand({ Bucket }))))
+    ?.PublicAccessBlockConfiguration;
+  if (!samePolicy(block && json(block), PUBLIC_ACCESS_BLOCK)) {
+    await apply(`block public access to ${Bucket}`, () =>
+      aws.s3.send(
+        new PutPublicAccessBlockCommand({
+          Bucket,
+          PublicAccessBlockConfiguration: PUBLIC_ACCESS_BLOCK,
+        }),
+      ),
+    );
+  }
+  const policy = await read(() => aws.s3.send(new GetBucketPolicyCommand({ Bucket })));
+  if (!samePolicy(policy?.Policy, bucketPolicy(account))) {
+    await apply(`set the CloudTrail policy of ${Bucket}`, () =>
+      aws.s3.send(new PutBucketPolicyCommand({ Bucket, Policy: json(bucketPolicy(account)) })),
+    );
+  }
+  const lifecycle = await read(() =>
+    aws.s3.send(new GetBucketLifecycleConfigurationCommand({ Bucket })),
+  );
+  if (!samePolicy(lifecycle?.Rules && json(lifecycle.Rules), LIFECYCLE)) {
+    await apply(`set the lifecycle of ${Bucket}`, () =>
+      aws.s3.send(
+        new PutBucketLifecycleConfigurationCommand({
+          Bucket,
+          LifecycleConfiguration: { Rules: LIFECYCLE },
+        }),
+      ),
+    );
+  }
+
+  const trail = {
+    Name: TRAIL,
+    S3BucketName: Bucket,
+    IsMultiRegionTrail: true,
+    IncludeGlobalServiceEvents: true,
+    EnableLogFileValidation: true,
+  };
+  const existing = (await find(() => aws.cloudtrail.send(new GetTrailCommand({ Name: TRAIL }))))
+    ?.Trail;
+  if (!existing) {
+    await apply(`create trail ${TRAIL}`, () =>
+      aws.cloudtrail.send(new CreateTrailCommand({ ...trail, TagsList: TAGS })),
+    );
+  } else if (
+    existing.S3BucketName !== Bucket ||
+    !existing.IsMultiRegionTrail ||
+    !existing.IncludeGlobalServiceEvents ||
+    !existing.LogFileValidationEnabled
+  ) {
+    await apply(`update trail ${TRAIL}`, () => aws.cloudtrail.send(new UpdateTrailCommand(trail)));
+  }
+  if (existing || !dryRun) {
+    const selectors = await aws.cloudtrail.send(new GetEventSelectorsCommand({ TrailName: TRAIL }));
+    const [only, ...others] = selectors.EventSelectors ?? [];
+    const everyManagementEvent =
+      others.length === 0 &&
+      !selectors.AdvancedEventSelectors?.length &&
+      only?.ReadWriteType === "All" &&
+      only.IncludeManagementEvents === true &&
+      !only.ExcludeManagementEventSources?.length;
+    if (!everyManagementEvent) {
+      // Read events included: kms:Sign is a read-only management event.
+      await apply(`log every management event on ${TRAIL}`, () =>
+        aws.cloudtrail.send(
+          new PutEventSelectorsCommand({
+            TrailName: TRAIL,
+            EventSelectors: [{ ReadWriteType: "All", IncludeManagementEvents: true }],
+          }),
+        ),
+      );
+    }
+    const status = await aws.cloudtrail.send(new GetTrailStatusCommand({ Name: TRAIL }));
+    if (!status.IsLogging) {
+      await apply(`start logging on ${TRAIL}`, () =>
+        aws.cloudtrail.send(new StartLoggingCommand({ Name: TRAIL })),
       );
     }
   }
@@ -248,8 +379,9 @@ export async function provision(
   const caller = await aws.sts.send(new GetCallerIdentityCommand({}));
   if (caller.Account !== account) throw new Error("the credentials belong to another account");
 
-  const context: Context = { aws, account, apply, wait };
+  const context: Context = { aws, account, dryRun, apply, wait };
   await identity(context);
+  await auditTrail(context);
   return { changes, keys: await signingKeys(context) };
 }
 
@@ -273,6 +405,7 @@ export function report(account: string, outcome: Outcome): string {
     "",
     ...ROLES.map((r) => `- Role \`${roleArn(account, r.name)}\``),
     ...outcome.keys.map((k) => `- Key \`${k.alias}\`: \`${k.arn}\``),
+    `- Trail \`${trailArn(account)}\` into bucket \`${bucketName(account)}\``,
     "",
     "Registry entries:",
     "",
@@ -293,6 +426,8 @@ async function main(): Promise<void> {
       sts: new STSClient(config),
       iam: new IAMClient(config),
       kms: new KMSClient(config),
+      s3: new S3Client(config),
+      cloudtrail: new CloudTrailClient(config),
     },
     { account, dryRun },
   );

@@ -13,6 +13,7 @@ import {
   DEFAULT_COUNTRY_CODE,
   getCountry,
   isMeasurable,
+  mainLanguage,
   measurableCountries,
   type ProviderCoverage,
 } from "../src/countries";
@@ -230,6 +231,28 @@ describe("billing", () => {
   test("euro territories DataForSEO lists as regions pay Paddle in EUR", () => {
     for (const code of ["GF", "GP", "MQ", "RE", "YT", "XK"]) {
       expect(billingFor(code), code).toEqual({ provider: "paddle", currency: "EUR" });
+    }
+  });
+});
+
+describe("mainLanguage", () => {
+  test("every measurable country has a lowercase ISO 639 language", () => {
+    for (const code of COUNTRY_CODES) expect(mainLanguage(code), code).toMatch(/^[a-z]{2,3}$/);
+  });
+
+  test("a country's main language is the one its people search in", () => {
+    const expected = {
+      CO: "es",
+      MX: "es",
+      ES: "es",
+      PY: "es",
+      PR: "es",
+      US: "en",
+      BR: "pt",
+      FR: "fr",
+    };
+    for (const [code, language] of Object.entries(expected)) {
+      expect(mainLanguage(code as CountryCode), code).toBe(language);
     }
   });
 });

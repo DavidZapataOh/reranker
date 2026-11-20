@@ -40,10 +40,10 @@ export function resolveGeo(input: ResolveGeoInput): GeoTarget {
   ]);
   const cityName = text("locality") ?? text("administrative_area_level_2");
   const city = cityName && findCity(geo, cityName, regions, input.location);
-  if (city) return placeTarget(input.country, geo, city, input.location);
+  if (city) return placeTarget(input.country, geo, city);
 
   const region = regions.length === 1 ? regions[0] : undefined;
-  if (region) return placeTarget(input.country, geo, region, input.location);
+  if (region) return placeTarget(input.country, geo, region);
   return countryTarget(input.country, geo);
 }
 
@@ -89,14 +89,10 @@ function nearest(places: readonly GeoPlace[], { lat, lng }: LatLng): GeoPlace | 
   return best?.place;
 }
 
-function placeTarget(
-  country: CountryCode,
-  geo: CountryGeo,
-  place: GeoPlace,
-  location?: LatLng,
-): GeoTarget {
+// Built from the place alone, never from the business's own coordinate: captures rebuild the
+// target from its key, and must ask from the same point the report declares.
+function placeTarget(country: CountryCode, geo: CountryGeo, place: GeoPlace): GeoTarget {
   const region = place.regionKey === null ? undefined : geo.byKey.get(place.regionKey);
-  const center = place.center ? { lat: place.center[0], lng: place.center[1] } : (location ?? null);
   const declared = place.level === "city" || !region ? place : region;
   return {
     key: place.key,
@@ -104,11 +100,21 @@ function placeTarget(
     country,
     name: place.name,
     regionName: region?.name ?? null,
-    center,
+    center: centerOf(place, region),
     dataforseo: { locationCode: place.locationCode, level: place.level, label: declared.name },
     enrichment: place.divipola ? { divipola: place.divipola } : null,
     geoDataHash: geo.geoDataHash,
   };
+}
+
+/** The place's own centroid, else its region's, named after the place it belongs to. */
+function centerOf(place: GeoPlace, region: GeoPlace | undefined): GeoTarget["center"] {
+  const owner = place.center ? place : region?.center ? region : undefined;
+  if (!owner?.center) return null;
+  const [lat, lng] = owner.center;
+  // A municipality is its own place even where the engines only know its region.
+  const level = owner.key.includes("-c") ? "city" : "region";
+  return { lat, lng, level, label: owner.name };
 }
 
 function countryTarget(code: CountryCode, geo: CountryGeo): GeoTarget {

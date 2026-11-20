@@ -1,6 +1,8 @@
-// Spanish names for DataForSEO's places, from the GeoNames gazetteer (CC BY 4.0, see NOTICE).
+// Spanish names and centroids for DataForSEO's places, from the GeoNames gazetteer (CC BY 4.0,
+// see NOTICE).
 import { createHash } from "node:crypto";
 import { Unzip, UnzipInflate } from "fflate";
+import type { Coordinate } from "../src/geo/format.ts";
 import { normalizePlaceName } from "../src/geo/normalize.ts";
 
 const DUMP = "https://download.geonames.org/export/dump/";
@@ -8,6 +10,9 @@ const ADMIN1 = `${DUMP}admin1CodesASCII.txt`;
 const ADMIN2 = `${DUMP}admin2Codes.txt`;
 const COUNTRIES = `${DUMP}countryInfo.txt`;
 const CITIES = { url: `${DUMP}cities500.zip`, file: "cities500.txt" };
+// The admin code files carry no coordinates and cities500 leaves out places under 500 people;
+// the full gazetteer has both.
+const ALL_COUNTRIES = { url: `${DUMP}allCountries.zip`, file: "allCountries.txt" };
 const ALTERNATE_NAMES = { url: `${DUMP}alternateNamesV2.zip`, file: "alternateNamesV2.txt" };
 
 export type AlternateName = {
@@ -27,10 +32,22 @@ export type GeoNamesEntry = {
   name: string;
   asciiName: string;
   population: number;
+  /** GeoNames' point: a place's centre, an area's representative point. */
+  center: Coordinate | null;
   alternates: AlternateName[];
+  /**
+   * Every name the gazetteer row lists, in any language, normalized: they locate a city
+   * listed under a name `alternates` leaves out ("Elx" for Elche), and never name one.
+   */
+  gazetteerNames: string[];
 };
 
-export type CountryGeoNames = { spanishSpeaking: boolean; entries: readonly GeoNamesEntry[] };
+export type CountryGeoNames = {
+  spanishSpeaking: boolean;
+  entries: readonly GeoNamesEntry[];
+  /** Populated places below `cities500`'s threshold, named like a listed city: points only. */
+  minorPlaces: readonly GeoNamesEntry[];
+};
 
 export type Naming = { name: string; aliases: string[]; spanish: boolean };
 
@@ -82,13 +99,18 @@ const areaKey = (entry: GeoNamesEntry) =>
   entry.kind === "adm1" ? `adm1:${entry.admin1}` : `adm2:${entry.admin1}.${entry.admin2}`;
 
 /**
- * Pairs DataForSEO's regions and cities with GeoNames entries and names them in Spanish.
- * Places without a confident pair are left out and keep DataForSEO's name.
+ * Pairs DataForSEO's regions and cities with GeoNames entries, names them in Spanish and
+ * locates them. Places without a confident pair are left out and keep DataForSEO's name.
  */
-export function spanishNames(
+export function pairGeoNames(
   input: { regions: readonly RegionInput[]; cities: readonly CityInput[] },
   data: CountryGeoNames,
-): { regions: Map<number, Naming>; cities: Map<number, Naming> } {
+): {
+  regions: Map<number, Naming>;
+  cities: Map<number, Naming>;
+  /** GeoNames' point for each located region and city, by DataForSEO code. */
+  centers: Map<number, Coordinate>;
+} {
   const areas = data.entries.filter((entry) => entry.kind !== "place");
   const areaStages = [0, 1, 2, 3].map((stage) =>
     groupByKeys(areas, (entry) =>
@@ -153,6 +175,16 @@ export function spanishNames(
     }
   }
 
+  const centers = new Map<number, Coordinate>();
+  for (const [code, entry] of regions) if (entry.center) centers.set(code, entry.center);
+
+  // Where no place is named after a city, these locate it: any place, smaller ones included,
+  // by its own name and then by a name only the gazetteer lists.
+  const anyPlace = [...places, ...data.minorPlaces];
+  const locatingTiers = [
+    groupByKeys(anyPlace, (entry) => [entry.name, entry.asciiName].map(normalizePlaceName)),
+    groupByKeys(anyPlace, (entry) => entry.gazetteerNames),
+  ];
   const cities = new Map<number, GeoNamesEntry>();
   for (const city of input.cities) {
     const region = city.region === null ? undefined : regions.get(city.region);
@@ -164,15 +196,28 @@ export function spanishNames(
     };
     const key = normalizePlaceName(city.name);
     const found = placeTiers.map((tier) => within(tier.get(key) ?? [])).find((f) => f.length);
-    const [best] = (found ?? []).toSorted((a, b) => b.population - a.population || a.id - b.id);
+    const [best, second] = byPopulation(found ?? []);
     if (best) cities.set(city.code, best);
+    // DataForSEO lists some towns with their designator ("Municipality of Siero").
+    const keys = new Set([key, designated(key).core]);
+    const located = [...keys]
+      .flatMap((k) => locatingTiers.map((tier) => within(tier.get(k) ?? [])))
+      .find((f) => f.length);
+    const [point, rival] = best ? [best, second] : byPopulation(located ?? []);
+    // Same-named places in one area share a name but not a point: only a clear pair locates one.
+    if (point?.center && (!rival || point.population > rival.population)) {
+      centers.set(city.code, point.center);
+    }
   }
 
   const listed = new Map([...input.regions, ...input.cities].map((p) => [p.code, p.name]));
   const name = (pairs: ReadonlyMap<number, GeoNamesEntry>, naming: typeof cityNaming) =>
     new Map([...pairs].map(([code, entry]) => [code, naming(listed.get(code) ?? "", entry, data)]));
-  return { regions: name(regions, regionNaming), cities: name(cities, cityNaming) };
+  return { regions: name(regions, regionNaming), cities: name(cities, cityNaming), centers };
 }
+
+const byPopulation = (found: readonly GeoNamesEntry[]) =>
+  found.toSorted((a, b) => b.population - a.population || a.id - b.id);
 
 const spanish = (entry: GeoNamesEntry) => entry.alternates.filter((a) => a.lang === "es");
 const local = (entry: GeoNamesEntry) => [
@@ -248,13 +293,23 @@ function naming(
   return { name, aliases, spanish: spanishName !== undefined || data.spanishSpeaking };
 }
 
-/** Builds the per-country data from the dump files' lines, alternate names last. */
-export function geoNamesCollector(countries: ReadonlySet<string>) {
+// Historical, abandoned and destroyed places never locate a city that exists today.
+const ABANDONED = new Set(["PPLCH", "PPLH", "PPLQ", "PPLW"]);
+
+/**
+ * Builds the per-country data from the dump files' lines, the alternate names and the full
+ * gazetteer last. `cityNames` holds each country's normalized city names, the only ones a
+ * place outside `cities500` is kept for.
+ */
+export function geoNamesCollector(
+  countries: ReadonlySet<string>,
+  cityNames: ReadonlyMap<string, ReadonlySet<string>> = new Map(),
+) {
   const byCountry = new Map<string, GeoNamesEntry[]>();
+  const minorByCountry = new Map<string, GeoNamesEntry[]>();
   const entries = new Map<number, GeoNamesEntry>();
   const spanishSpeaking = new Set<string>();
   const add = (country: string, entry: GeoNamesEntry) => {
-    if (!countries.has(country)) return;
     const list = byCountry.get(country);
     if (list) list.push(entry);
     else byCountry.set(country, [entry]);
@@ -265,16 +320,37 @@ export function geoNamesCollector(countries: ReadonlySet<string>) {
     area(line: string, kind: "adm1" | "adm2") {
       const [code = "", name = "", asciiName = "", id] = line.split("\t");
       const [country = "", admin1 = "", admin2 = ""] = code.split(".");
+      if (!countries.has(country)) return;
       const entry = { id: Number(id), kind, admin1, admin2, name, asciiName, population: 0 };
-      add(country, { ...entry, alternates: [] });
+      add(country, { ...entry, center: null, alternates: [], gazetteerNames: [] });
     },
     /** A row of the main `geoname` table, as in `cities500.txt`. */
     place(line: string) {
       const f = line.split("\t");
-      const [id, name = "", asciiName = ""] = f;
-      const [admin1 = "", admin2 = ""] = [f[10], f[11]];
-      const entry = { id: Number(id), kind: "place", admin1, admin2, name, asciiName } as const;
-      add(f[8] ?? "", { ...entry, population: Number(f[14] ?? 0), alternates: [] });
+      const country = f[8] ?? "";
+      if (countries.has(country)) add(country, placeEntry(f));
+    },
+    /**
+     * A row of `allCountries.txt`: the point of an area already read, or a populated place
+     * `cities500` leaves out that goes by the name of a listed city.
+     */
+    gazetteer(line: string) {
+      const id = Number(line.slice(0, line.indexOf("\t")));
+      const known = entries.get(id);
+      if (known?.kind === "place") return;
+      const f = line.split("\t", 15);
+      if (known) {
+        known.center = coordinate(f[4], f[5]);
+        return;
+      }
+      const listed = cityNames.get(f[8] ?? "");
+      if (!listed || f[6] !== "P" || ABANDONED.has(f[7] ?? "")) return;
+      const entry = placeEntry(f);
+      const names = [entry.name, entry.asciiName].map(normalizePlaceName);
+      if (![...names, ...entry.gazetteerNames].some((name) => listed.has(name))) return;
+      const list = minorByCountry.get(f[8] ?? "") ?? [];
+      list.push(entry);
+      minorByCountry.set(f[8] ?? "", list);
     },
     // English names only pair with DataForSEO's; historic and colloquial ones never count.
     alternate(line: string) {
@@ -298,13 +374,38 @@ export function geoNamesCollector(countries: ReadonlySet<string>) {
     done(): (country: string) => CountryGeoNames {
       // The dumps promise no row order; ids make every run pick the same names.
       for (const entry of entries.values()) entry.alternates.sort((a, b) => a.id - b.id);
-      for (const list of byCountry.values()) list.sort((a, b) => a.id - b.id);
+      for (const list of [...byCountry.values(), ...minorByCountry.values()]) {
+        list.sort((a, b) => a.id - b.id);
+      }
       return (country) => ({
         spanishSpeaking: spanishSpeaking.has(country),
         entries: byCountry.get(country) ?? [],
+        minorPlaces: minorByCountry.get(country) ?? [],
       });
     },
   };
+}
+
+/** A populated place from the fields of a `geoname` table row. */
+function placeEntry(f: readonly string[]): GeoNamesEntry {
+  return {
+    id: Number(f[0]),
+    kind: "place",
+    admin1: f[10] ?? "",
+    admin2: f[11] ?? "",
+    name: f[1] ?? "",
+    asciiName: f[2] ?? "",
+    population: Number(f[14] ?? 0),
+    center: coordinate(f[4], f[5]),
+    alternates: [],
+    gazetteerNames: [...new Set((f[3] ?? "").split(",").filter(Boolean).map(normalizePlaceName))],
+  };
+}
+
+function coordinate(lat: string | undefined, lng: string | undefined): Coordinate | null {
+  if (!lat || !lng) return null;
+  const point: Coordinate = [Number(lat), Number(lng)];
+  return point.every(Number.isFinite) ? point : null;
 }
 
 export type GeoNamesSource = { url: string; lastModified: string; sha256: string };
@@ -351,17 +452,24 @@ async function readLines(
   return { url, lastModified, sha256: hash.digest("hex") };
 }
 
-/** Areas, populated places and their names for the given countries, and where they came from. */
-export async function readGeoNames(countries: ReadonlySet<string>) {
-  const collector = geoNamesCollector(countries);
+/** Areas, populated places, their names and points for the given countries, and their sources. */
+export async function readGeoNames(
+  countries: ReadonlySet<string>,
+  cityNames: ReadonlyMap<string, ReadonlySet<string>>,
+) {
+  const collector = geoNamesCollector(countries, cityNames);
   const sources = await Promise.all([
     readLines(ADMIN1, (line) => collector.area(line, "adm1")),
     readLines(ADMIN2, (line) => collector.area(line, "adm2")),
     readLines(COUNTRIES, (line) => collector.country(line)),
     readLines(CITIES.url, (line) => collector.place(line), CITIES.file),
   ]);
+  // Both need the entries above: names and area points attach to them; minor places are the rest.
   sources.push(
-    await readLines(ALTERNATE_NAMES.url, (line) => collector.alternate(line), ALTERNATE_NAMES.file),
+    ...(await Promise.all([
+      readLines(ALTERNATE_NAMES.url, (line) => collector.alternate(line), ALTERNATE_NAMES.file),
+      readLines(ALL_COUNTRIES.url, (line) => collector.gazetteer(line), ALL_COUNTRIES.file),
+    ])),
   );
   return { forCountry: collector.done(), sources };
 }
