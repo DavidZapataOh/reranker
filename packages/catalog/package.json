@@ -9,7 +9,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --project unit --coverage --passWithNoTests",
+    "test": "vitest run --project unit --coverage --passWithNoTests && vitest run --project heavy",
     "test:perf": "vitest run --project perf --passWithNoTests",
     "geo:build": "tsx scripts/build-geo.ts",
     "freeze": "tsx scripts/freeze.ts"
