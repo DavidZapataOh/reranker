@@ -1,5 +1,6 @@
 import { withSystem } from "@reranker/db";
 import type { EngineId } from "@reranker/schema";
+import { log } from "@reranker/telemetry";
 import { sql } from "drizzle-orm";
 import { expect, test, vi } from "vitest";
 import { systemPool } from "../../db/src/client";
@@ -48,15 +49,19 @@ async function transactionMs(): Promise<number> {
   );
 }
 
-/** DataForSEO calls counted in the error-rate window of the capture alerts. */
-async function alertWindowCalls(): Promise<number> {
+/** DataForSEO calls counted in the error-rate and parse windows of the capture alerts. */
+async function alertWindows(): Promise<{ errors: number; parse: number }> {
   const { rows } = await withSystem("capture.test", (tx) =>
-    tx.execute<{ n: number }>(
-      sql`select coalesce(sum(count), 0)::int as n from ops.velocity_buckets where key = 'capture:dataforseo:errors'`,
+    tx.execute<{ errors: number; parse: number }>(
+      sql`select coalesce(sum(count) filter (where key = 'capture:dataforseo:errors'), 0)::int as errors,
+                 coalesce(sum(count) filter (where key = 'capture:dataforseo:parse'), 0)::int as parse
+            from ops.velocity_buckets
+           where key in ('capture:dataforseo:errors', 'capture:dataforseo:parse')`,
     ),
   );
-  return rows[0]?.n ?? 0;
+  return rows[0] ?? { errors: 0, parse: 0 };
 }
+const alertWindowCalls = async () => (await alertWindows()).errors;
 
 /** How long each system connection checked out from now on is held, in milliseconds. */
 function recordHolds(pool: ReturnType<typeof systemPool>): { holds: number[]; stop: () => void } {
@@ -115,6 +120,8 @@ test("10× load on three system connections: none is held across R2, and none ti
   provider.delayMs = 20;
   provider.r2WriteMs = r2WriteMs;
   const reports = await Promise.all([0, 1, 2].map(() => frozen(cycle(200))));
+  const windowsBefore = await alertWindows();
+  const warn = vi.spyOn(log, "warn");
   const deadlineAt = Date.now() + 85_000;
   const { holds, stop } = recordHolds(pool);
   const startedAt = performance.now();
@@ -126,9 +133,28 @@ test("10× load on three system connections: none is held across R2, and none ti
         deadlineAt,
       }),
     ),
-  ).finally(stop);
+  );
   const elapsedMs = performance.now() - startedAt;
   const failed = outs.flatMap((o) => o.failed);
+  // The alert windows are written after the calls; every call must reach them, none lost to the
+  // pool. Each probe is a checkout of its own, left out of the count.
+  let probes = 0;
+  const windows = await vi
+    .waitFor(
+      async () => {
+        probes += 1;
+        const now = await alertWindows();
+        expect(now.errors - windowsBefore.errors).toBe(provider.calls.length);
+        return now;
+      },
+      { timeout: 30_000, interval: 250 },
+    )
+    .finally(stop);
+  const velocityFailures = warn.mock.calls.filter(
+    ([message]) => message === "capture.velocity_failed",
+  );
+  warn.mockRestore();
+  const checkoutsPerCall = (holds.length - probes) / Math.max(1, provider.calls.length);
 
   holds.sort((a, b) => a - b);
   console.info(
@@ -137,8 +163,11 @@ test("10× load on three system connections: none is held across R2, and none ti
       `${holds.length} checkouts held p50 ${percentile(holds, 50).toFixed(1)} ms, ` +
       `p95 ${percentile(holds, 95).toFixed(1)} ms, p99 ${percentile(holds, 99).toFixed(1)} ms, ` +
       `max ${percentile(holds, 100).toFixed(1)} ms, ` +
-      `${(holds.length / Math.max(1, provider.calls.length)).toFixed(2)} checkouts per call`,
+      `${checkoutsPerCall.toFixed(2)} checkouts per call, alert windows included`,
   );
+  expect(velocityFailures).toEqual([]);
+  // Batched, the alert windows cost a burst less than one checkout per call.
+  expect(checkoutsPerCall).toBeLessThanOrEqual(7);
   // Every capture writes to R2 once; were a connection held across that, one checkout of each
   // capture's few would last longer than the write.
   expect(percentile(holds, 99)).toBeLessThan(r2WriteMs);
@@ -150,6 +179,7 @@ test("10× load on three system connections: none is held across R2, and none ti
   }
   expect(failed).toEqual([]);
   expect(provider.calls).toHaveLength(600);
+  expect(windows.parse - windowsBefore.parse).toBe(600);
   for (const { m } of reports) {
     expect(await ledger(m)).toEqual({ settled: 200 });
     expect(await rowsOf(m)).toHaveLength(200);
