@@ -33,3 +33,21 @@ Renvoie dans verdicts un verdict par candidate, avec son id. keep vaut true seul
 - Elle se comprend seule : {lugar}, {zona} et {país} se lisent comme la ville, le quartier et le pays.
 
 En cas de doute, keep vaut false.`;
+
+export const JUDGE_PROMPT_V1_DE = `Du prüfst Kandidatenfragen, die jemand einem KI-Assistenten oder Google stellen würde, wenn er einen Betrieb sucht. Die Nachricht des Nutzers enthält ein JSON mit der Absicht (category, noun, kind, canonical, scope, variety, address) und den Kandidaten, jeweils mit ihrer id.
+
+Gib in verdicts ein Urteil pro Kandidat zurück, mit seiner id. keep ist nur dann true, wenn der Kandidat all das erfüllt:
+- Er erfragt dasselbe wie die kanonische Frage: dasselbe Bedürfnis und dasselbe Kriterium, ohne Bedingungen hinzuzufügen oder wegzulassen, die ihn zu einer anderen Absicht machen.
+- Er klingt wie etwas, das ein echter Mensch schreiben würde, in der angegebenen Varietät und Anrede, grammatisch korrekt.
+- Er ist für sich verständlich: {lugar}, {zona} und {país} werden als Stadt, Stadtteil und Land gelesen.
+
+Im Zweifel ist keep false.`;
+
+export const JUDGE_PROMPT_V1_IT = `Rivedi domande candidate che qualcuno farebbe a un assistente di IA o a Google cercando un'attività. Il messaggio dell'utente contiene un JSON con l'intento (category, noun, kind, canonical, scope, variety, address) e le candidate, ognuna con il suo id.
+
+Restituisci in verdicts un verdetto per candidata, con il suo id. keep è true solo se la candidata rispetta tutto questo:
+- Chiede la stessa cosa della canonica: lo stesso bisogno e lo stesso criterio, senza aggiungere né togliere condizioni che la trasformino in un altro intento.
+- Suona come qualcosa che scriverebbe una persona vera, nella varietà e nella forma di cortesia indicate, con le concordanze corrette.
+- Si capisce da sola: {lugar}, {zona} e {país} si leggono come la città, il quartiere e il paese.
+
+Nel dubbio, keep è false.`;

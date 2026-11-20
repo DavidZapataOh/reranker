@@ -10,6 +10,7 @@ import { HttpResponse, http } from "msw";
 import { delay } from "msw/utils/delay";
 import { afterAll, afterEach, beforeAll, expect, test, vi } from "vitest";
 import { costOf } from "../src/generate/config";
+import { promptsFor } from "../src/generate/prompts";
 import {
   PARAPHRASE_PROMPT_V1_EN,
   PARAPHRASE_PROMPT_V1_FR,
@@ -528,3 +529,32 @@ test("a French intent is asked with the French prompts, addressing the assistant
     variety: expect.stringContaining("français"),
   });
 });
+
+test.each([
+  ["de", "Bäckerei", "Kannst du mir eine gute Bäckerei in {lugar} empfehlen?", "du", "Deutsch"],
+  ["it", "panetteria", "Mi consigli una panetteria a {lugar}?", "tu", "italiano"],
+] as const)(
+  "a %s intent is asked with its own prompts and address",
+  async (language, noun, canonicalText, address, variety) => {
+    const bodies = respond(RESPONSES, () =>
+      HttpResponse.json(openaiResponse(outputText({ paraphrases }))),
+    );
+    const intent: DraftIntent = {
+      ...bakery,
+      category: { ...bakery.category, label: noun, noun },
+      noun: { text: noun, gender: "f" },
+      canonicalText,
+      language,
+      registerProfile: "neutral",
+    };
+    await generateParaphrases(
+      "openai",
+      { intent, register: "neutral", withPersonas: false },
+      ctx(),
+    );
+
+    expect(bodies[0]?.instructions).toBe(promptsFor(language).paraphrase);
+    const payload = JSON.parse(String(bodies[0]?.input));
+    expect(payload).toMatchObject({ noun, address, variety: expect.stringContaining(variety) });
+  },
+);
