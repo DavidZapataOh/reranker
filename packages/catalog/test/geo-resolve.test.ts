@@ -7,7 +7,7 @@ import { isAppError } from "@reranker/schema";
 import type { GeoTarget, PlacesAddressComponent } from "@reranker/schema/measurement";
 import { beforeEach, describe, expect, test } from "vitest";
 import { geoForEngine, readChatgptCityEffect } from "../src/geo/effects";
-import { cityDisplayName, getGeo, resolveGeo } from "../src/geo/resolve";
+import { cityDisplayName, getGeo, resolveGeo, spokenPlaceName } from "../src/geo/resolve";
 import { loadedCountries, resetGeoCache } from "../src/testing";
 
 type PlaceFixture = {
@@ -286,6 +286,23 @@ describe("cityDisplayName", () => {
   test("loads only the names index", () => {
     cityDisplayName("CO" as CountryCode, "cali");
     expect(loadedCountries()).toEqual([]);
+  });
+});
+
+describe("spokenPlaceName", () => {
+  test.each([
+    ["Bogotá, D.C.", "Bogotá"],
+    ["Bogotá,  D. C.", "Bogotá"],
+    ["Washington D.C.", "Washington"],
+    ["Medellín", "Medellín"],
+    ["Bogotá,D.C.", "Bogotá,D.C."],
+    ["D.C.", "D.C."],
+  ])("%s → %s", (name, expected) => expect(spokenPlaceName(name)).toBe(expected));
+
+  test("stays linear on long runs of spaces", () => {
+    const start = performance.now();
+    spokenPlaceName(`${" ".repeat(100_000)}D.${" ".repeat(100_000)}x`);
+    expect(performance.now() - start).toBeLessThan(50);
   });
 });
 
