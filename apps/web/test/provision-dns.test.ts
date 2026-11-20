@@ -1,5 +1,13 @@
+import { TRUSTED_KEYS } from "@reranker/verify/trust";
 import { expect, test, vi } from "vitest";
-import { type Call, cloudflare, type DnsRecord, provision } from "../scripts/provision-dns";
+import {
+  type Call,
+  cloudflare,
+  type DnsRecord,
+  KEY_RECORDS,
+  provision,
+  RECORDS,
+} from "../scripts/provision-dns";
 
 const record: DnsRecord = {
   type: "CNAME",
@@ -66,4 +74,43 @@ test("the client sends the token and surfaces Cloudflare's errors without the to
   const [url, init] = fetcher.mock.calls[0] as unknown as [string, RequestInit];
   expect(url).toBe("https://api.cloudflare.com/client/v4/zones/zone1/dns_records?name=a");
   expect(init.headers).toMatchObject({ Authorization: "Bearer secret-token" });
+});
+
+const keys = [
+  { type: "TXT", name: "_rr-keys.reranker.co", content: '"rr-capture-x=AAAA"', proxied: false },
+  { type: "TXT", name: "_rr-keys.reranker.co", content: '"rr-log-x=BBBB"', proxied: false },
+] satisfies DnsRecord[];
+
+test("publishes every declared key TXT and removes one no longer declared", async () => {
+  const { call, writes } = zone([
+    { ...keys[0], id: "t1" },
+    { ...keys[0], id: "t2", content: '"rr-capture-retired=CCCC"' },
+  ]);
+  expect(await provision(call, keys)).toEqual([
+    '_rr-keys.reranker.co: create TXT "rr-log-x=BBBB"',
+    '_rr-keys.reranker.co: remove TXT "rr-capture-retired=CCCC"',
+  ]);
+  expect(writes).toEqual([
+    ["POST", "", keys[1]],
+    ["DELETE", "/t2", undefined],
+  ]);
+});
+
+test("a key TXT name already in the declared state is left alone", async () => {
+  const { call, writes } = zone(keys.map((k, i) => ({ ...k, id: `t${i}` })));
+  expect(await provision(call, keys)).toEqual(["_rr-keys.reranker.co: unchanged"]);
+  expect(writes).toEqual([]);
+});
+
+test("refuses a key TXT name that also holds another record type", async () => {
+  const { call } = zone([{ ...record, id: "c1", name: "_rr-keys.reranker.co" }]);
+  await expect(provision(call, keys)).rejects.toThrow("also holds CNAME records");
+});
+
+test("the published key records are exactly the pinned production keys", () => {
+  expect(TRUSTED_KEYS.length).toBeGreaterThan(0);
+  expect(KEY_RECORDS.map((r) => r.content)).toEqual(
+    TRUSTED_KEYS.map((k) => `"${k.keyid}=${k.publicKey}"`),
+  );
+  expect(RECORDS).toEqual(expect.arrayContaining([...KEY_RECORDS]));
 });
