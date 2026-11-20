@@ -122,6 +122,7 @@ test("10× load on three system connections: none is held across R2, and none ti
   const reports = await Promise.all([0, 1, 2].map(() => frozen(cycle(200))));
   const windowsBefore = await alertWindows();
   const warn = vi.spyOn(log, "warn");
+  const error = vi.spyOn(console, "error");
   const deadlineAt = Date.now() + 85_000;
   const { holds, stop } = recordHolds(pool);
   const startedAt = performance.now();
@@ -154,6 +155,10 @@ test("10× load on three system connections: none is held across R2, and none ti
     ([message]) => message === "capture.velocity_failed",
   );
   warn.mockRestore();
+  const breakerFailures = error.mock.calls.filter(
+    ([message]) => message === "[jobs] breaker record (dataforseo) failed",
+  );
+  error.mockRestore();
   const checkoutsPerCall = (holds.length - probes) / Math.max(1, provider.calls.length);
 
   holds.sort((a, b) => a - b);
@@ -166,6 +171,8 @@ test("10× load on three system connections: none is held across R2, and none ti
       `${checkoutsPerCall.toFixed(2)} checkouts per call, alert windows included`,
   );
   expect(velocityFailures).toEqual([]);
+  // A full pool delays breaker outcomes; none of the burst's is lost.
+  expect(breakerFailures).toEqual([]);
   // Batched, the alert windows cost a burst less than one checkout per call.
   expect(checkoutsPerCall).toBeLessThanOrEqual(7);
   // Every capture writes to R2 once; were a connection held across that, one checkout of each
