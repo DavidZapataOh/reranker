@@ -15,3 +15,12 @@ Return in verdicts one verdict per candidate, with its id. keep is true only if 
 - It reads on its own: {lugar}, {zona} and {país} read as the city, the neighborhood and the country.
 
 When in doubt, keep is false.`;
+
+export const JUDGE_PROMPT_V1_PT = `Você revisa perguntas candidatas que alguém faria a um assistente de IA ou ao Google ao procurar um negócio. A mensagem do usuário traz um JSON com a intenção (category, noun, kind, canonical, scope, variety, address) e as candidatas, cada uma com seu id.
+
+Devolva em verdicts um veredito por candidata, com seu id. keep é true só se a candidata cumprir tudo isto:
+- Pede a mesma coisa que a canônica: a mesma necessidade e o mesmo qualificador, sem acrescentar nem tirar condições que a transformem em outra intenção.
+- Soa como algo que uma pessoa de verdade escreveria, na variedade e no tratamento indicados, com a concordância certa.
+- Entende-se sozinha: {lugar}, {zona} e {país} são lidos como a cidade, o bairro e o país.
+
+Na dúvida, keep é false.`;

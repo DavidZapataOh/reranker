@@ -281,6 +281,48 @@ describe("generateIntentSet", () => {
     expect(r.set.intents.every((i) => i.language === "en")).toBe(true);
   });
 
+  test("Portuguese intents agree with the noun's gender and are guarded in Portuguese", async () => {
+    paraphrasesOf = (provider, intent) =>
+      lines(provider, (i) => {
+        if (intent.kind !== "discovery" || i > 1) {
+          return `qual ${intent.category.noun} ${intent.slug} ${provider} ${i} fica em {lugar}?`;
+        }
+        // "em conta" is a price phrase only the Portuguese lexicon knows; "confeitaria" is a synonym.
+        return i === 0
+          ? `padaria em conta ${provider} em {lugar}`
+          : `alguma confeitaria ${provider} boa em {lugar}?`;
+      });
+    const r = await generateIntentSet({
+      ...bakery(),
+      category: category("padaria", "Padaria"),
+      noun: { text: "padaria", gender: "f" },
+      synonyms: ["confeitaria"],
+      language: "pt",
+    });
+
+    expect(r.outcome).toBe("generated");
+    const asked = doubles.generate.mock.calls.map(([, req]) => (req as Req).intent);
+    expect(asked.every((i) => i.language === "pt" && i.category.noun === "padaria")).toBe(true);
+    expect(asked.find((i) => i.kind === "ranking")?.canonicalText).toBe(
+      "Qual a melhor padaria em {lugar}?",
+    );
+    expect(r.report.guards).toMatchObject({ qualifier: 2, category_noun: 0 });
+    expect(r.set.intents.every((i) => i.language === "pt")).toBe(true);
+  });
+
+  test("a gendered language without the noun's gender is refused, never written as masculine", async () => {
+    const input = { ...bakery(), category: category("padaria", "Padaria"), language: "pt" };
+    await expect(
+      generateIntentSet(input as unknown as Parameters<typeof generateIntentSet>[0]),
+    ).rejects.toEqual(expect.objectContaining({ language: "pt", gap: "no_noun_gender" }));
+    await expect(
+      generateIntentSet({ ...input, noun: "padaria" } as unknown as Parameters<
+        typeof generateIntentSet
+      >[0]),
+    ).rejects.toBeInstanceOf(MeasurementLanguageError);
+    expect(calls()).toBe(0);
+  });
+
   test("a language without reviewed prompts gets its own templates, never Spanish ones, and no calls", async () => {
     doubles.promptless.add("en");
     const r = await generateIntentSet(bakery({ language: "en" }));

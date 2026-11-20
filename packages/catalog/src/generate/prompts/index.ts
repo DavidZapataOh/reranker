@@ -1,9 +1,13 @@
 import type { MeasurementLanguage, RegisterProfile } from "@reranker/schema/measurement";
 import { MeasurementLanguageError } from "../../language";
 import type { GuardLanguage } from "../guards";
-import { JUDGE_PROMPT_V1, JUDGE_PROMPT_V1_EN } from "./judge.v1";
-import { PARAPHRASE_PROMPT_V1, PARAPHRASE_PROMPT_V1_EN } from "./paraphrase.v1";
-import { PERSONA_PROMPT_V1, PERSONA_PROMPT_V1_EN } from "./persona.v1";
+import { JUDGE_PROMPT_V1, JUDGE_PROMPT_V1_EN, JUDGE_PROMPT_V1_PT } from "./judge.v1";
+import {
+  PARAPHRASE_PROMPT_V1,
+  PARAPHRASE_PROMPT_V1_EN,
+  PARAPHRASE_PROMPT_V1_PT,
+} from "./paraphrase.v1";
+import { PERSONA_PROMPT_V1, PERSONA_PROMPT_V1_EN, PERSONA_PROMPT_V1_PT } from "./persona.v1";
 
 export interface LanguagePrompts {
   paraphrase: string;
@@ -36,6 +40,18 @@ const PROMPTS = {
       co: "natural English, as visitors and residents of Colombia write it",
       neutral: "natural English, as people in any English-speaking country write it",
     },
+  },
+  // Brazilian Portuguese, the variety the templates come from. "Você" is how people address an
+  // assistant; "o senhor" is the formal register.
+  pt: {
+    paraphrase: PARAPHRASE_PROMPT_V1_PT,
+    persona: PERSONA_PROMPT_V1_PT,
+    judge: JUDGE_PROMPT_V1_PT,
+    variety: {
+      co: "português do Brasil, como escrevem brasileiros que visitam a Colômbia ou moram lá",
+      neutral: "português do Brasil, natural para qualquer brasileiro",
+    },
+    address: { tu: "você", usted: "o senhor ou a senhora" },
   },
 } as const satisfies Partial<Record<GuardLanguage, LanguagePrompts>>;
 

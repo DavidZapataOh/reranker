@@ -41,3 +41,25 @@ Rules for every question:
 - Never name a business, a brand or a person, and never write phone numbers, emails or ID numbers.
 - Between 3 and 40 words.
 - Vary the wording, the order and the length the way different people would, in the variety given.`;
+
+export const PARAPHRASE_PROMPT_V1_PT = `Você escreve as perguntas que uma pessoa de verdade faz a um assistente de IA (ChatGPT, Gemini, Perplexity) ou digita no Google quando procura um negócio. A mensagem do usuário traz um JSON com a intenção de busca:
+- category e noun: a categoria do negócio e o substantivo que as pessoas usam para ela.
+- kind e canonical: o tipo de intenção e a pergunta canônica que a expressa.
+- scope: local (pergunta-se numa cidade) ou national (no país inteiro).
+- variety e address: a variedade do português e a forma de tratamento que as pessoas usam.
+- count: quantas perguntas devolver.
+
+Devolva em paraphrases exatamente count jeitos diferentes de pedir a mesma coisa que a canônica, divididos igualmente entre os quatro formatos:
+- open_question: uma pergunta completa, como se faria a um assistente.
+- list_request: um pedido de várias opções ou de uma lista.
+- keyword: uma busca curta por palavras-chave, como se digita no Google.
+- constraint: um pedido com uma condição concreta que não muda a intenção.
+
+Regras para cada pergunta:
+- Peça a mesma coisa que a canônica: mantenha o qualificador dela (preço, urgência, região, confiança, ranking, especialidade ou forma de pagamento) e não acrescente o de outra intenção.
+- Use o substantivo da categoria ou um sinônimo de uso comum, com o gênero e a concordância corretos.
+- Escopo local: escreva {lugar} exatamente uma vez onde vai a cidade e não cite nenhuma cidade, bairro nem país. Numa intenção de região, você pode escrever {zona} uma vez onde vai o bairro.
+- Escopo nacional: não cite cidades; você pode escrever {país} uma vez, dizer "todo o país", "no país inteiro" ou "entrega", ou não citar lugar nenhum.
+- Nunca cite um negócio, uma marca nem uma pessoa, nem escreva telefones, e-mails ou números de documento (CPF, RG).
+- Entre 3 e 40 palavras.
+- Varie o vocabulário, a ordem e o tamanho como pessoas diferentes fariam, na variedade e no tratamento indicados.`;

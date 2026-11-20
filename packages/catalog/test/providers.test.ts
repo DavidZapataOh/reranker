@@ -10,7 +10,10 @@ import { HttpResponse, http } from "msw";
 import { delay } from "msw/utils/delay";
 import { afterAll, afterEach, beforeAll, expect, test, vi } from "vitest";
 import { costOf } from "../src/generate/config";
-import { PARAPHRASE_PROMPT_V1_EN } from "../src/generate/prompts/paraphrase.v1";
+import {
+  PARAPHRASE_PROMPT_V1_EN,
+  PARAPHRASE_PROMPT_V1_PT,
+} from "../src/generate/prompts/paraphrase.v1";
 import { type DraftIntent, embed, generateParaphrases, judge } from "../src/generate/providers";
 import { MeasurementLanguageError } from "../src/language";
 
@@ -53,6 +56,7 @@ const bakery: DraftIntent = {
   slug: "discovery",
   canonicalText: "¿Qué panadería me recomiendas en {lugar}?",
   language: "es",
+  noun: "panadería",
   registerProfile: "co",
 };
 
@@ -435,6 +439,7 @@ test("an English intent is asked with the English prompts and no form of address
   const intent: DraftIntent = {
     ...bakery,
     category: { ...bakery.category, label: "Bakery", noun: "bakery" },
+    noun: "bakery",
     canonicalText: "What bakery do you recommend in {lugar}?",
     language: "en",
     registerProfile: "neutral",
@@ -462,4 +467,40 @@ test("a language without reviewed prompts is refused before any slot, reservatio
   expect(bodies).toHaveLength(0);
   expect(jobs.acquireProviderSlot).not.toHaveBeenCalled();
   expect(jobs.reserveSpend).not.toHaveBeenCalled();
+});
+
+test("a Portuguese intent is asked with the Portuguese prompts, addressing people as você", async () => {
+  const bodies = respond(RESPONSES, () =>
+    HttpResponse.json(openaiResponse(outputText({ paraphrases }))),
+  );
+  const intent: DraftIntent = {
+    ...bakery,
+    category: { ...bakery.category, label: "Padaria", noun: "padaria" },
+    noun: { text: "padaria", gender: "f" },
+    canonicalText: "Qual padaria você recomenda em {lugar}?",
+    language: "pt",
+    registerProfile: "neutral",
+  };
+  await generateParaphrases("openai", { intent, register: "neutral", withPersonas: false }, ctx());
+
+  expect(bodies[0]?.instructions).toBe(PARAPHRASE_PROMPT_V1_PT);
+  const payload = JSON.parse(String(bodies[0]?.input));
+  expect(payload).toMatchObject({
+    noun: "padaria",
+    address: "você",
+    variety: expect.stringContaining("português do Brasil"),
+  });
+});
+
+test("a gendered language without the noun's gender is refused before any slot or call", async () => {
+  const bodies = respond(RESPONSES, () => HttpResponse.json({}));
+  const intent = { ...bakery, language: "pt", noun: "padaria" } as unknown as DraftIntent;
+  const refused = expect.objectContaining({ language: "pt", gap: "no_noun_gender" });
+
+  await expect(
+    generateParaphrases("openai", { intent, register: "neutral", withPersonas: false }, ctx()),
+  ).rejects.toEqual(refused);
+  await expect(judge(intent, [], ctx())).rejects.toEqual(refused);
+  expect(bodies).toHaveLength(0);
+  expect(jobs.acquireProviderSlot).not.toHaveBeenCalled();
 });

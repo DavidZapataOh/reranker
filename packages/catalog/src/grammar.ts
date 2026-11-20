@@ -17,12 +17,19 @@ export function nounText(noun: Noun): string {
 }
 
 // The genders an agreement group lists, in order: "{un bon|une bonne}", "{einen|eine|ein}".
-const GENDERS: Partial<Record<MeasurementLanguage, readonly Gender[]>> = {
+const GENDERS = {
   pt: ["m", "f"],
   fr: ["m", "f"],
   it: ["m", "f"],
   de: ["m", "f", "n"],
-};
+} as const satisfies Partial<Record<MeasurementLanguage, readonly Gender[]>>;
+
+/** The languages whose templates agree with the noun: a set in them needs the noun's gender. */
+export type GenderedLanguage = keyof typeof GENDERS;
+
+export function isGendered(language: MeasurementLanguage): language is GenderedLanguage {
+  return Object.hasOwn(GENDERS, language);
+}
 
 /** "{un bon|une bonne}": two or more alternatives, none empty. */
 export const AGREEMENT = /\{([^{}|]+(?:\|[^{}|]+)+)\}/g;
@@ -133,8 +140,8 @@ export function agree(template: string, noun: Noun, language: MeasurementLanguag
     // A bare French noun (what a web-only store sells) still elides "de": "d'accessoires".
     return language === "fr" ? joinAll(template, { text: noun, gender: "m" }, language) : template;
   }
-  const genders = GENDERS[language];
-  if (!genders?.includes(noun.gender)) {
+  const genders: readonly Gender[] = isGendered(language) ? GENDERS[language] : [];
+  if (!genders.includes(noun.gender)) {
     throw internal(`${language} nouns have no ${noun.gender} gender`);
   }
   // German writes every noun with a capital.

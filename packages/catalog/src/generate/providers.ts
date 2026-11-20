@@ -10,6 +10,7 @@ import { z } from "@reranker/schema";
 import {
   type BusinessCategory,
   type IntentKind,
+  type MeasurementLanguage,
   ParaphraseFormat,
   type QuestionScope,
   type RegisterProfile,
@@ -17,6 +18,8 @@ import {
 import OpenAI, { APIError } from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
 import type { Response } from "openai/resources/responses/responses";
+import { type GenderedLanguage, type GenderedNoun, type Noun, nounText } from "../grammar";
+import { requireNounGender } from "../language";
 import { GENERATOR_CONFIG, type TokenUsage } from "./config";
 import { catalogEnv } from "./env";
 import type { Candidate } from "./guards";
@@ -25,15 +28,23 @@ import { BilledFailure, type CallContext, paidCall } from "./spend";
 
 export type { GenerationLanguage } from "./prompts";
 
-export interface DraftIntent {
+interface DraftIntentBase {
   category: BusinessCategory;
   scope: QuestionScope;
   kind: IntentKind;
   slug: string;
   canonicalText: string;
-  language: GenerationLanguage;
   registerProfile: RegisterProfile;
 }
+
+/** The noun as people asking in `L` say it; gendered languages need its gender. */
+export type NounIn<L extends MeasurementLanguage> = L extends GenderedLanguage
+  ? GenderedNoun
+  : Noun;
+
+export type DraftIntent = {
+  [L in GenerationLanguage]: DraftIntentBase & { language: L; noun: NounIn<L> };
+}[GenerationLanguage];
 
 const MAX_OUTPUT_TOKENS = { openai: 2048, gemini: 4096, judge: 4096 } as const;
 // Spanish averages over three characters per token and English about four; three keeps the
@@ -243,7 +254,7 @@ function intentPayload(intent: DraftIntent) {
   const { variety, address } = promptsFor(intent.language);
   return {
     category: intent.category.label,
-    noun: intent.category.noun,
+    noun: nounText(intent.noun),
     kind: intent.kind,
     canonical: intent.canonicalText,
     scope: intent.scope,
@@ -262,6 +273,7 @@ export async function generateParaphrases(
   ctx: CallContext,
 ): Promise<{ paraphrases: Candidate[]; personas: string[] }> {
   const prompts = promptsFor(req.intent.language);
+  requireNounGender(req.intent.noun, req.intent.language);
   const payload = {
     ...intentPayload({ ...req.intent, registerProfile: req.register }),
     count: GENERATOR_CONFIG.perCall,
@@ -335,6 +347,7 @@ export async function judge(
   ctx: CallContext,
 ): Promise<boolean[]> {
   const prompts = promptsFor(intent.language);
+  requireNounGender(intent.noun, intent.language);
   if (candidates.length === 0) return [];
   const call = {
     schema: Verdicts,
