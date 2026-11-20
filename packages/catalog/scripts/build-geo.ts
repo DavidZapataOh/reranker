@@ -22,6 +22,7 @@ import {
 } from "../src/geo/format.ts";
 import { normalizePlaceName } from "../src/geo/normalize.ts";
 import { contentHash } from "../src/hash.ts";
+import { accentedFrom, localDesignated, type Speller, speller } from "./designators.ts";
 import { type CountryGeoNames, type Naming, pairGeoNames, readGeoNames } from "./geonames.ts";
 
 const LOCATIONS_CSV =
@@ -53,6 +54,11 @@ export type CountryTables = Pick<GeoFile, "country" | "regions" | "cities" | "na
 
 const noNames = (): PlaceNames =>
   Object.fromEntries(PLACE_LANGUAGES.map((language) => [language, {}])) as PlaceNames;
+const sameInEvery = (name: string) =>
+  Object.fromEntries(PLACE_LANGUAGES.map((language) => [language, name])) as Record<
+    PlaceLanguage,
+    string
+  >;
 const noCounts = () =>
   Object.fromEntries(PLACE_LANGUAGES.map((language) => [language, 0])) as Record<
     PlaceLanguage,
@@ -203,13 +209,45 @@ function buildFromLocations(
       },
       geonames,
     );
-  const naming = (row: LocationRow, names?: ReadonlyMap<number, Naming>) =>
-    names?.get(Number(row.location_code)) ?? { name: placeName(row), aliases: [] };
+  const places = [...regionRows.values(), ...[...kept.values()].map(({ row }) => row)];
+  const paired = (row: LocationRow): Pick<Naming, "name" | "aliases" | "names"> => {
+    const code = Number(row.location_code);
+    const found = named?.regions.get(code) ?? named?.cities.get(code);
+    if (found) return found;
+    const name = placeName(row);
+    return { name, aliases: [], names: sameInEvery(name) };
+  };
+  const pairs = new Map(places.map((row) => [row.location_code, paired(row)]));
+  const spell = speller(pairs.values());
+  const final = new Map(
+    [...pairs].map(([code, { name, aliases, names }]) => {
+      const own = [name, ...aliases, ...Object.values(names)];
+      const spelled: Speller = (core, language) => {
+        const spelling = spell(core, language);
+        return spelling === core ? accentedFrom(core, own) : spelling;
+      };
+      const display = localDesignated(name, "es", country, spelled);
+      const localized = Object.fromEntries(
+        PLACE_LANGUAGES.map((language) => {
+          const written = names[language] === name ? display : names[language];
+          return [language, localDesignated(written, language, country, spelled)];
+        }),
+      ) as Record<PlaceLanguage, string>;
+      // DataForSEO's English form still finds the place.
+      const all = display === name ? aliases : [name, ...aliases.filter((a) => a !== display)];
+      return [code, { name: display, aliases: all, names: localized }];
+    }),
+  );
+  const naming = (row: LocationRow) => {
+    const found = final.get(row.location_code);
+    if (!found) throw new Error(`${row.location_name} was never named`);
+    return found;
+  };
   const center = (row: LocationRow) => named?.centers.get(Number(row.location_code)) ?? null;
 
   const regions = [...regionRows.values()]
     .map((row): RegionRow => {
-      const { name, aliases } = naming(row, named?.regions);
+      const { name, aliases } = naming(row);
       const code = Number(row.location_code);
       return aliases.length ? [code, name, center(row), aliases] : [code, name, center(row)];
     })
@@ -218,10 +256,12 @@ function buildFromLocations(
 
   const names = noNames();
   const own = noCounts();
-  for (const [code, place] of [...(named?.regions ?? []), ...(named?.cities ?? [])]) {
+  for (const [code, place] of final) {
     for (const language of PLACE_LANGUAGES) {
       if (place.names[language] !== place.name) names[language][code] = place.names[language];
     }
+  }
+  for (const place of [...(named?.regions.values() ?? []), ...(named?.cities.values() ?? [])]) {
     for (const language of place.own) own[language]++;
   }
 
@@ -230,7 +270,7 @@ function buildFromLocations(
     regions,
     cities: [...kept.values()]
       .map(({ row, region }): CityRow => {
-        const { name, aliases } = naming(row, named?.cities);
+        const { name, aliases } = naming(row);
         const at = region ? (regionIndex.get(region.location_code) ?? null) : null;
         const code = Number(row.location_code);
         const point = center(row);
