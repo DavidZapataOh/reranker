@@ -1,6 +1,7 @@
 import "server-only";
 
 export { type AnchorResult, anchorLatest, upgradePendingOts } from "./anchors/anchor";
+export { announceKeys } from "./announce";
 export {
   type ArtifactKind,
   artifactUrl,

@@ -25,6 +25,7 @@ export default mergeConfig(
         thresholds: CRITICAL_COVERAGE,
         exclude: [
           "src/seal.ts",
+          "src/announce.ts",
           "src/latency.ts",
           "src/jobs.ts",
           "src/log/integrate.ts",

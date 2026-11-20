@@ -48,7 +48,7 @@ export interface SealedCapture {
 
 type Statement = InTotoStatement<string, { time: { worker_utc: string } }>;
 
-const ENVELOPE_CONTENT_TYPE = "application/vnd.dsse.envelope.v1+json";
+export const ENVELOPE_CONTENT_TYPE = "application/vnd.dsse.envelope.v1+json";
 // Every provider is called with a JSON body, and plans and parses are JSON documents.
 const JSON_CONTENT_TYPE = "application/json";
 const MAX_SMALLINT = 32_767;

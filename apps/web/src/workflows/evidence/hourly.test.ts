@@ -4,6 +4,7 @@ import { FatalError } from "workflow";
 // Without the workflow compiler steps are plain functions, so the run executes here directly
 // against doubles of the package functions it wraps.
 const evidence = vi.hoisted(() => ({
+  announceKeys: vi.fn(),
   anchorLatest: vi.fn(),
   upgradePendingOts: vi.fn(),
   logOrigin: () => "log.reranker.co/captures/2026",
@@ -30,6 +31,29 @@ beforeEach(() => {
     tsa: { qtsa: "confirmed", digicert: "failed" },
   });
   evidence.upgradePendingOts.mockResolvedValue({ checked: 3, confirmed: 1, overdue: 0 });
+  evidence.announceKeys.mockResolvedValue({ announced: [] });
+});
+
+test("logs the keys it announces, and nothing once they are on the record", async () => {
+  evidence.announceKeys.mockResolvedValueOnce({ announced: ["rr-capture-2026-1-ed25519"] });
+  expect(await hourlyEvidenceWorkflow("2026-11-18T13")).toEqual({ failed: [] });
+  expect(telemetry.log.info).toHaveBeenCalledWith("evidence.hourly.keys_announced", {
+    hour: "2026-11-18T13",
+    keyids: "rr-capture-2026-1-ed25519",
+  });
+  vi.mocked(telemetry.log.info).mockClear();
+  expect(await hourlyEvidenceWorkflow("2026-11-18T14")).toEqual({ failed: [] });
+  expect(telemetry.log.info).not.toHaveBeenCalledWith(
+    "evidence.hourly.keys_announced",
+    expect.anything(),
+  );
+});
+
+test("a failed announcement is reported and anchoring runs anyway", async () => {
+  evidence.announceKeys.mockRejectedValue(new Error("KMS is unreachable"));
+  expect(await hourlyEvidenceWorkflow("2026-11-18T12")).toEqual({ failed: ["announceKeys"] });
+  expect(evidence.anchorLatest).toHaveBeenCalledOnce();
+  expect(evidence.upgradePendingOts).toHaveBeenCalledOnce();
 });
 
 test("anchors this deployment's log, then upgrades waiting proofs", async () => {
