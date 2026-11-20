@@ -26,8 +26,11 @@ export type PlanMeasurementInput = {
   variantsPerIntent?: number;
 };
 
+// The free report's providers. Bright Data's ChatGPT scrapes took 82 s to over 234 s, past the
+// free report's budget, so ChatGPT goes through DataForSEO here; a paid report passes
+// `providers: { chatgpt: "brightdata" }` to ask it from the city's coordinate.
 const DEFAULT_PROVIDERS: Readonly<Record<EngineId, CaptureProvider>> = {
-  chatgpt: "brightdata",
+  chatgpt: "dataforseo",
   perplexity: "brightdata",
   gemini: "dataforseo",
   "google-ai-overview": "dataforseo",
