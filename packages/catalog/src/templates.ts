@@ -6,6 +6,7 @@ import {
   ParaphraseFormat,
   QuestionScope,
 } from "@reranker/schema/measurement";
+import en from "../data/templates/2026.11.0.en.json" with { type: "json" };
 import es from "../data/templates/2026.11.0.json" with { type: "json" };
 import { ARCHETYPE_SCOPES, ARCHETYPE_SLATES } from "./archetypes";
 import { MeasurementLanguageError } from "./language";
@@ -24,19 +25,34 @@ const Intent = z.object({
   paraphrases: z.array(z.object({ text: z.string().min(1), format: ParaphraseFormat })).min(8),
 });
 
+// Brand questions are measured apart and never enter the score.
+const Brand = z.strictObject({
+  "brand.trust": z.string().min(1),
+  "brand.opinion": z.string().min(1),
+});
+
 const Templates = z.object({
   version: z.string().regex(/^\d{4}\.(?:0[1-9]|1[0-2])\.(?:0|[1-9]\d*)$/),
   archetypes: z.record(
     CategoryArchetype,
     z.partialRecord(QuestionScope, z.array(Intent).length(6)),
   ),
+  brand: Brand,
 });
 type Templates = z.infer<typeof Templates>;
 
-// One file per language, each written from how people asking in it phrase their questions, never
-// translated. Placeholder names are the same in every language.
+// One file per language, <version>.<language>.json beside the Spanish <version>.json, each
+// written from how people asking in that language phrase their questions, never translated.
+// Placeholder names are the same in every language.
 const TEMPLATES: Partial<Record<MeasurementLanguage, Templates>> = {
-  es: Templates.parse(es),
+  es: Templates.parse({
+    ...es,
+    brand: {
+      "brand.trust": "¿{business} en {lugar} es confiable?",
+      "brand.opinion": "¿Qué opinas de {business}?",
+    },
+  }),
+  en: Templates.parse(en),
 };
 
 /** The languages questions can be asked in today. */
@@ -54,21 +70,10 @@ export function templatesVersion(language: MeasurementLanguage): string {
   return templatesFor(language).version;
 }
 
-// Brand questions are measured apart and never enter the score.
-const BRAND: Partial<Record<MeasurementLanguage, Readonly<Record<string, string>>>> = {
-  es: Object.freeze({
-    "brand.trust": "¿{business} en {lugar} es confiable?",
-    "brand.opinion": "¿Qué opinas de {business}?",
-  }),
-};
-
-export function brandTemplates(language: MeasurementLanguage): Readonly<Record<string, string>> {
-  const brand = BRAND[language];
-  if (!brand) {
-    throw new MeasurementLanguageError(language, "no_templates", `no ${language} brand templates`);
-  }
-  return brand;
+export function brandTemplates(language: MeasurementLanguage): Readonly<z.infer<typeof Brand>> {
+  return Object.freeze({ ...templatesFor(language).brand });
 }
+
 export type PlaceholderShape = "ok" | "place_count" | "wrong_scope" | "unknown_placeholder";
 
 const KNOWN = new Set(["sustantivo", "lugar", "zona", "país"]);

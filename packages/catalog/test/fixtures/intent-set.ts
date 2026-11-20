@@ -15,7 +15,6 @@ type SetShape = {
   archetype: CategoryArchetype;
   scope: QuestionScope;
   category: "dental_clinic" | "online_store";
-  // Labels the Spanish templates as another language: the sampler only reads the label.
   language: MeasurementLanguage;
 };
 
@@ -24,7 +23,7 @@ type SetShape = {
  * the free report and six personas, so each intent pools 9 × 7 = 63 variants.
  */
 export function templateSet({ archetype, scope, category, language }: SetShape): IntentSet {
-  const templates = fallbackTemplates(archetype, scope, "es");
+  const templates = fallbackTemplates(archetype, scope, language);
   const hash = contentHash({ templates, language });
   const id = intentSetId(hash);
   const intents = templates.map((t, index) => ({
@@ -55,7 +54,7 @@ export function templateSet({ archetype, scope, category, language }: SetShape):
   const personas: Persona[] = PERSONAS.map((p) => ({
     personaId: `${category}.${p}`,
     categoryKey: category,
-    preamble: `Pregunto como ${p}.`,
+    preamble: language === "es" ? `Pregunto como ${p}.` : `Asking as a ${p}.`,
   }));
   return {
     manifest: {

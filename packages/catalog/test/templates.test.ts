@@ -196,9 +196,13 @@ describe("canonicalTemplate", () => {
 });
 
 describe("languages without templates", () => {
-  test("Spanish is written; the rest fail closed until theirs land", () => {
-    expect(TEMPLATE_LANGUAGES).toContain("es");
-    expect(templatesVersion("es")).toBe("2026.11.0");
+  test("Spanish and English are written; the rest fail closed until theirs land", () => {
+    expect(TEMPLATE_LANGUAGES).toEqual(["es", "en"]);
+    expect(templatesVersion("en")).toBe("2026.11.0");
+    expect(canonicalTemplate("health", "discovery", "local", "en")).toBe(
+      "Can you recommend a good {sustantivo} in {lugar}?",
+    );
+    expect(brandTemplates("en")["brand.opinion"]).toBe("Is {business} any good?");
   });
 
   test.each(MeasurementLanguage.options.filter((l) => !TEMPLATE_LANGUAGES.includes(l)))(
