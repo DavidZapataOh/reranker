@@ -1,8 +1,15 @@
+import { createHash } from "node:crypto";
 import { EnvValidationError } from "@reranker/env";
-import { CaptureStatementV1Schema, PREDICATE } from "@reranker/verify/format";
+import {
+  CaptureStatementV1Schema,
+  KeyAnnouncementStatementV1Schema,
+  PREDICATE,
+} from "@reranker/verify/format";
+import { KEYS_BY_ENV } from "@reranker/verify/trust";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import {
   buildCaptureStatement,
+  buildKeyAnnouncementStatement,
   buildNormalizationStatement,
   buildPlanStatement,
   workerIdentity,
@@ -105,4 +112,41 @@ test("a normalization statement keeps the raw digest and points to the capture e
     capture_envelope: { digest: { sha256: sha("9") } },
     parser_version: 2,
   });
+});
+
+test("a key announcement names the raw public key by keyid and states the pinned entry", () => {
+  const [capture, log] = KEYS_BY_ENV.production;
+  if (!capture || !log) throw new Error("the production keys are pinned");
+  const statement = buildKeyAnnouncementStatement({
+    key: capture,
+    previous: log,
+    signedAt: SIGNED_AT,
+  });
+  expect(KeyAnnouncementStatementV1Schema.safeParse(statement).success).toBe(true);
+  expect(statement.subject).toEqual([
+    {
+      name: capture.keyid,
+      digest: {
+        sha256: createHash("sha256").update(Buffer.from(capture.publicKey, "base64")).digest("hex"),
+      },
+    },
+  ]);
+  expect(statement.predicate).toEqual({
+    key: {
+      keyid: capture.keyid,
+      purpose: "capture",
+      env: "production",
+      alg: "Ed25519",
+      public_key: capture.publicKey,
+      custody: "aws-kms-hsm",
+      valid_from: capture.validFrom,
+    },
+    previous: { keyid: log.keyid },
+    time: { worker_utc: SIGNED_AT.toISOString() },
+    worker: { id: "vercel:iad1", image_digest: `git:${COMMIT}` },
+  });
+  expect(
+    buildKeyAnnouncementStatement({ key: log, previous: null, signedAt: SIGNED_AT }).predicate
+      .previous,
+  ).toBeNull();
 });

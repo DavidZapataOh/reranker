@@ -1,4 +1,4 @@
-import { anchorLatest, logOrigin, upgradePendingOts } from "@reranker/evidence";
+import { anchorLatest, announceKeys, logOrigin, upgradePendingOts } from "@reranker/evidence";
 import { reportStepError } from "@reranker/jobs";
 import { toStepError } from "@reranker/jobs/step-errors";
 import { log } from "@reranker/telemetry";
@@ -12,6 +12,17 @@ async function asStep<T>(step: string, work: () => Promise<T>): Promise<T> {
     await reportStepError("evidence-hourly", step, error);
     throw toStepError(error);
   }
+}
+
+// A new key is announced on the first hour a deployment pinning it runs; afterwards this step
+// only reads that its entries exist.
+async function announceKeysStep(hourKey: string): Promise<void> {
+  "use step";
+  await asStep("announceKeys", async () => {
+    const { announced } = await announceKeys();
+    if (announced.length > 0)
+      log.info("evidence.hourly.keys_announced", { hour: hourKey, announced });
+  });
 }
 
 async function anchorLatestStep(hourKey: string): Promise<void> {
@@ -49,14 +60,15 @@ async function reportHourlyStepFailure(
 }
 
 const HOURLY_STEPS = [
+  { name: "announceKeys", run: announceKeysStep },
   { name: "anchorLatest", run: anchorLatestStep },
   { name: "upgradePendingOts", run: upgradePendingOtsStep },
 ] as const;
 
 /**
- * The hourly evidence run for `hourKey` (`YYYY-MM-DDTHH`, UTC): anchors the newest checkpoint,
- * then upgrades waiting OpenTimestamps proofs. Upgrading does not depend on anchoring, so a step
- * that still fails after its retries is logged and the other one runs anyway.
+ * The hourly evidence run for `hourKey` (`YYYY-MM-DDTHH`, UTC): logs any signing key not announced
+ * yet, anchors the newest checkpoint, then upgrades waiting OpenTimestamps proofs. No step depends
+ * on another, so one that still fails after its retries is logged and the others run anyway.
  */
 export async function hourlyEvidenceWorkflow(hourKey: string): Promise<HourlyEvidenceSummary> {
   "use workflow";

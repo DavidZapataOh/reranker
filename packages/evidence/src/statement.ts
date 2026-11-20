@@ -1,13 +1,16 @@
+import { createHash } from "node:crypto";
 import { type EnvIssue, EnvValidationError } from "@reranker/env";
 import {
   type CaptureId,
   type CapturePredicateV1,
   type CaptureStatementV1,
   IN_TOTO_STATEMENT_V1,
+  type KeyAnnouncementStatementV1,
   type MeasurementPlanStatementV1,
   type NormalizationStatementV1,
   PREDICATE,
 } from "@reranker/verify/format";
+import type { TrustedKey } from "@reranker/verify/trust";
 
 /** The capture predicate as the caller knows it; this package adds who signed it and when. */
 export type CapturePredicateInput = Omit<CapturePredicateV1, "capture_id" | "worker" | "time">;
@@ -94,6 +97,37 @@ export function buildNormalizationStatement(input: {
       capture_id: input.captureId,
       capture_envelope: { digest: { sha256: input.captureEnvelopeSha256 } },
       parser_version: input.parserVersion,
+      time: { worker_utc: input.signedAt.toISOString() },
+      worker: workerIdentity(),
+    },
+  };
+}
+
+/** Puts a pinned key on the record; `previous` is the key of the same purpose it succeeds. */
+export function buildKeyAnnouncementStatement(input: {
+  key: TrustedKey;
+  previous: TrustedKey | null;
+  signedAt: Date;
+}): KeyAnnouncementStatementV1 {
+  const { key, previous } = input;
+  const publicKeySha256 = createHash("sha256")
+    .update(Buffer.from(key.publicKey, "base64"))
+    .digest("hex");
+  return {
+    _type: IN_TOTO_STATEMENT_V1,
+    subject: [{ name: key.keyid, digest: { sha256: publicKeySha256 } }],
+    predicateType: PREDICATE.keyAnnouncement,
+    predicate: {
+      key: {
+        keyid: key.keyid,
+        purpose: key.purpose,
+        env: key.env,
+        alg: key.alg,
+        public_key: key.publicKey,
+        custody: key.custody,
+        valid_from: key.validFrom,
+      },
+      previous: previous === null ? null : { keyid: previous.keyid },
       time: { worker_utc: input.signedAt.toISOString() },
       worker: workerIdentity(),
     },
