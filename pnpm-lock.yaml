@@ -782,9 +782,18 @@ importers:
 
   packages/catalog:
     dependencies:
+      '@google/genai':
+        specifier: 'catalog:'
+        version: 3.3.0(supports-color@10.2.2)
+      '@reranker/env':
+        specifier: workspace:*
+        version: link:../env
       '@reranker/i18n':
         specifier: workspace:*
         version: link:../i18n
+      '@reranker/jobs':
+        specifier: workspace:*
+        version: link:../jobs
       '@reranker/schema':
         specifier: workspace:*
         version: link:../schema
@@ -797,10 +806,19 @@ importers:
       canonicalize:
         specifier: 'catalog:'
         version: 5.1.0
+      openai:
+        specifier: 'catalog:'
+        version: 7.57.0(@aws-sdk/credential-provider-node@3.972.97)(@smithy/signature-v4@5.7.5)(google-auth-library@10.9.1(supports-color@10.2.2))(undici@7.30.2)(ws@8.23.0)(zod@4.6.7)
       server-only:
         specifier: 'catalog:'
         version: 0.0.1
     devDependencies:
+      '@reranker/db':
+        specifier: workspace:*
+        version: link:../db
+      '@reranker/testing':
+        specifier: workspace:*
+        version: link:../testing
       '@reranker/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
@@ -822,6 +840,9 @@ importers:
       fflate:
         specifier: 'catalog:'
         version: 0.8.3
+      msw:
+        specifier: 'catalog:'
+        version: 3.0.3(@types/node@26.6.6)(supports-color@10.2.2)(typescript@7.0.2)(vite@8.3.5(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15))
       tsx:
         specifier: 'catalog:'
         version: 4.23.15

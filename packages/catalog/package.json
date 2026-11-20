@@ -5,24 +5,32 @@
   "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
-    "./testing": "./src/testing.ts"
+    "./testing": "./src/testing.ts",
+    "./env": "./src/generate/env.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run --project unit --coverage --passWithNoTests && vitest run --project heavy",
     "test:perf": "vitest run --project perf --passWithNoTests",
     "geo:build": "tsx scripts/build-geo.ts",
-    "freeze": "tsx scripts/freeze.ts"
+    "freeze": "tsx scripts/freeze.ts",
+    "test:contract": "vitest run --project contract --passWithNoTests"
   },
   "dependencies": {
+    "@google/genai": "catalog:",
+    "@reranker/env": "workspace:*",
     "@reranker/i18n": "workspace:*",
+    "@reranker/jobs": "workspace:*",
     "@reranker/schema": "workspace:*",
     "@reranker/stats": "workspace:*",
     "@reranker/verify": "workspace:*",
     "canonicalize": "catalog:",
+    "openai": "catalog:",
     "server-only": "catalog:"
   },
   "devDependencies": {
+    "@reranker/db": "workspace:*",
+    "@reranker/testing": "workspace:*",
     "@reranker/typescript-config": "workspace:*",
     "@stdlib/stats-base-dists-chisquare-cdf": "catalog:",
     "@types/node": "catalog:",
@@ -30,6 +38,7 @@
     "csv-parse": "catalog:",
     "fast-check": "catalog:",
     "fflate": "catalog:",
+    "msw": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
