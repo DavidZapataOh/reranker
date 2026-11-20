@@ -11,7 +11,8 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run --project unit --coverage --passWithNoTests",
-    "generate:countries": "node scripts/generate-countries.ts"
+    "generate:countries": "node scripts/generate-countries.ts",
+    "generate:languages": "node scripts/generate-languages.ts"
   },
   "dependencies": {
     "@formatjs/intl-localematcher": "catalog:",

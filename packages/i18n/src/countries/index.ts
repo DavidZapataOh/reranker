@@ -3,6 +3,7 @@ import { DEFAULT_LOCALE } from "../locales";
 import { co } from "./co";
 import type { CountryCode } from "./codes";
 import { PROVIDER_COVERAGE } from "./generated";
+import { MAIN_LANGUAGES } from "./languages";
 import {
   BILLING_BLOCKED,
   ENGINE_EXCLUSIONS,
@@ -109,4 +110,9 @@ export function measurableCountries(): readonly Country[] {
 export function billingFor(code: string): Billing {
   if ((BILLING_BLOCKED as readonly string[]).includes(code)) return BLOCKED;
   return isMeasurable(code) ? COUNTRIES[code].billing : UNKNOWN;
+}
+
+/** The language most of a country's people search in, as an ISO 639 code. */
+export function mainLanguage(code: CountryCode): string {
+  return MAIN_LANGUAGES[code];
 }

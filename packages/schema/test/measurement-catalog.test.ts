@@ -7,6 +7,7 @@ import {
   IntentId,
   IntentSet,
   IntentSetId,
+  MeasurementLanguage,
   MeasurementPlan,
   PlacesAddressComponent,
   PlannedObservation,
@@ -217,8 +218,25 @@ describe("measurement catalog schemas", () => {
       ],
     };
     expect(IntentSet.parse(set)).toEqual(set);
+    const asked = (language: string) =>
+      IntentSet.safeParse({ ...set, intents: [{ ...set.intents[0], language }] }).success;
+    expect(asked("en")).toBe(true);
+    expect(asked("pt")).toBe(true);
+    expect(asked("fr")).toBe(false);
+  });
+
+  test("slots and plans name their language, and older ones without it still parse", () => {
+    expect(MeasurementLanguage.options).toEqual(["es", "en", "pt"]);
+    expect(PlannedSlot.parse({ ...observationFixture, language: "en" }).language).toBe("en");
+    expect(PlannedSlot.parse(observationFixture).language).toBeUndefined();
+    expect(PlannedSlot.safeParse({ ...observationFixture, language: "fr" }).success).toBe(false);
+    const secondary = { language: "en", intentSet: manifest, design: planFixture.design };
+    expect(MeasurementPlan.safeParse({ ...planFixture, language: "es", secondary }).success).toBe(
+      true,
+    );
     expect(
-      IntentSet.safeParse({ ...set, intents: [{ ...set.intents[0], language: "en" }] }).success,
+      MeasurementPlan.safeParse({ ...planFixture, secondary: { ...secondary, language: "fr" } })
+        .success,
     ).toBe(false);
   });
 
