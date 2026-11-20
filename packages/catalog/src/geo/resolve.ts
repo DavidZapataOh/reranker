@@ -14,8 +14,8 @@ export type ResolveGeoInput = {
 };
 
 // The official name of a capital district carries its legal designation ("Bogotá, D.C."),
-// which people leave out when they name the city.
-const CAPITAL_DISTRICT_SUFFIX = /,?\s+D\.\s*C\.$/;
+// which people leave out when they name the city. Anchored on "D." so the match stays linear.
+const CAPITAL_DISTRICT = /D\.\s*C\.$/;
 
 const isRegionPlace = (place: GeoPlace) => place.key.includes("-r");
 
@@ -147,5 +147,16 @@ const notFound = (key: string) => new AppError("not_found", { detail: `unknown g
 export function cityDisplayName(country: CountryCode, name: string): string | null {
   if (!isMeasurable(country)) return null;
   const found = loadCityNames(country).get(normalizePlaceName(name));
-  return found?.replace(CAPITAL_DISTRICT_SUFFIX, "") ?? null;
+  return found === undefined ? null : spokenPlaceName(found);
+}
+
+/** A place name as people say it, for questions and headings. */
+export function spokenPlaceName(name: string): string {
+  const designation = CAPITAL_DISTRICT.exec(name);
+  if (!designation) return name;
+  const before = name.slice(0, designation.index);
+  const head = before.trimEnd();
+  // "Bogotá, D.C." and "Washington D.C." drop it; a name that merely ends in "D.C." keeps it.
+  if (head.length === before.length) return name;
+  return head.endsWith(",") ? head.slice(0, -1) : head;
 }
