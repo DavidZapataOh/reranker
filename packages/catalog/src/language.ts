@@ -1,8 +1,8 @@
 import { type CountryCode, getCountry, mainLanguage } from "@reranker/i18n/countries";
 import { AppError } from "@reranker/schema";
 import { type GeoTarget, MeasurementLanguage } from "@reranker/schema/measurement";
-import { localPlaceName, spokenPlaceName } from "./geo/resolve";
-import { isGendered, type Noun } from "./grammar";
+import { localPlaceArticle, localPlaceName, spokenPlaceName } from "./geo/resolve";
+import { isGendered, type Noun, type PlaceName } from "./grammar";
 
 /** What a language lacks for a question to be asked in it. */
 export type LanguageGap =
@@ -68,6 +68,14 @@ export function placeName(geo: GeoTarget, language: MeasurementLanguage): string
     "no_place_names",
     `no ${language} name for ${geo.key}`,
   );
+}
+
+/** The place's name with the article it takes, for the slot grammar to fuse with its preposition. */
+export function placeTerm(geo: GeoTarget, language: MeasurementLanguage): PlaceName {
+  const text = placeName(geo, language);
+  if (geo.level === "country" || language === "es") return { text };
+  const article = localPlaceArticle(geo, language);
+  return article ? { text, article } : { text };
 }
 
 /**

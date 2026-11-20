@@ -1,6 +1,6 @@
 import type { MeasurementLanguage } from "@reranker/schema/measurement";
 import { describe, expect, test } from "vitest";
-import { agree, type GenderedNoun } from "../src/grammar";
+import { agree, type GenderedNoun, type PlaceName } from "../src/grammar";
 import { placeholderShape } from "../src/templates";
 import { instantiate } from "../src/variants";
 
@@ -186,4 +186,39 @@ describe("agreement groups", () => {
       "unknown_placeholder",
     );
   });
+});
+
+describe("place articles fuse with the preposition before the place", () => {
+  const noun: GenderedNoun = { text: "dentista", gender: "m" };
+  const asked = (template: string, place: PlaceName, language: MeasurementLanguage) =>
+    instantiate(template, { place, zone: null, country: "-", noun, language });
+
+  test.each([
+    [
+      "pt",
+      "dentista em {lugar}",
+      { text: "Rio de Janeiro", article: "o" },
+      "dentista no Rio de Janeiro",
+    ],
+    ["pt", "dentista em {lugar}", { text: "Bahia", article: "a" }, "dentista na Bahia"],
+    ["pt", "dentista do {lugar}", { text: "Porto", article: "o" }, "dentista do Porto"],
+    ["pt", "perto de {lugar}", { text: "Recife", article: "o" }, "perto do Recife"],
+    ["pt", "dentista em {lugar}", { text: "São Paulo" }, "dentista em São Paulo"],
+    ["fr", "dentista à {lugar}", { text: "Le Havre", article: "le" }, "dentista au Havre"],
+    ["fr", "près de {lugar}", { text: "Le Havre", article: "le" }, "près du Havre"],
+    ["fr", "dentista à {lugar}", { text: "Les Ulis", article: "les" }, "dentista aux Ulis"],
+    ["fr", "dentista à {lugar}", { text: "La Rochelle", article: "la" }, "dentista à La Rochelle"],
+    ["it", "dentista a {lugar}", { text: "Il Cairo", article: "il" }, "dentista al Cairo"],
+    ["it", "dentista in {lugar}", { text: "Il Cairo", article: "il" }, "dentista nel Cairo"],
+    ["it", "dentista a {lugar}", { text: "La Spezia", article: "la" }, "dentista alla Spezia"],
+    ["it", "prezzi di {lugar}", { text: "L'Aquila", article: "l'" }, "prezzi dell'Aquila"],
+    ["it", "dentista a {lugar}", { text: "La Paz" }, "dentista a La Paz"],
+  ] as const)("%s: %s with %o", (language, template, place, written) =>
+    expect(asked(template, place, language)).toBe(written),
+  );
+
+  test("a place that only follows a noun keeps its name whole", () =>
+    expect(asked("dentista {lugar}", { text: "Il Cairo", article: "il" }, "it")).toBe(
+      "dentista Il Cairo",
+    ));
 });

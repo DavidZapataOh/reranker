@@ -164,3 +164,74 @@ function joinAll(template: string, noun: GenderedNoun, language: MeasurementLang
     .map((part, i, parts) => (i < parts.length - 1 ? joinNoun(part, noun, language) : part))
     .join("{sustantivo}");
 }
+
+/**
+ * A place and the article its name takes in the language: in Portuguese one the name leaves out
+ * ("o" for Rio de Janeiro), in French and Italian the one it starts with ("le" for Le Havre,
+ * "il" for Il Cairo).
+ */
+export type PlaceName = { text: string; article?: string };
+
+export function placeText(place: PlaceName | string): string {
+  return typeof place === "string" ? place : place.text;
+}
+
+const articled = (forms: readonly string[], articles: readonly string[]) =>
+  Object.fromEntries(articles.map((article, i) => [article, forms[i] ?? ""]));
+const PORTUGUESE_ARTICLES = ["o", "a", "os", "as"];
+const ITALIAN_ARTICLES = ["il", "lo", "la", "l'", "i", "gli", "le"];
+// a, di, in, da and su fuse alike: al, allo, alla, all', ai, agli, alle.
+const italian = (stem: string) =>
+  articled(
+    ["l", "llo", "lla", "ll'", "i", "gli", "lle"].map((ending) => `${stem}${ending}`),
+    ITALIAN_ARTICLES,
+  );
+
+// The preposition and the article fuse; a pair missing here stays apart ("à La Rochelle").
+const CONTRACTIONS: Partial<Record<MeasurementLanguage, Record<string, Record<string, string>>>> = {
+  pt: {
+    em: articled(["no", "na", "nos", "nas"], PORTUGUESE_ARTICLES),
+    de: articled(["do", "da", "dos", "das"], PORTUGUESE_ARTICLES),
+    a: articled(["ao", "à", "aos", "às"], PORTUGUESE_ARTICLES),
+    por: articled(["pelo", "pela", "pelos", "pelas"], PORTUGUESE_ARTICLES),
+  },
+  fr: { à: { le: "au", les: "aux" }, de: { le: "du", les: "des" } },
+  it: {
+    a: italian("a"),
+    di: italian("de"),
+    in: italian("ne"),
+    da: italian("da"),
+    su: italian("su"),
+  },
+};
+
+/** The name without its leading article, when it starts with it: "Havre", "Aquila". */
+function withoutArticle(text: string, article: string): string | null {
+  const head = text.slice(0, article.length);
+  if (head.toLowerCase() !== article) return null;
+  const rest = text.slice(article.length);
+  if (article.endsWith("'")) return rest;
+  return rest.startsWith(" ") ? rest.slice(1) : null;
+}
+
+/**
+ * Fuses the preposition before {lugar} with the place's article: "em {lugar}" is "no Rio de
+ * Janeiro", "à {lugar}" is "au Havre", "a {lugar}" is "al Cairo" and "all'Aquila". A place
+ * without an article, and a word that fuses with none, keep the template as written.
+ */
+export function joinPlace(
+  template: string,
+  place: PlaceName | string,
+  language: MeasurementLanguage,
+): string {
+  if (typeof place === "string" || !place.article) return template;
+  const { text, article } = place;
+  const fused = CONTRACTIONS[language];
+  if (!fused) return template;
+  return template.replace(/(\S+)(\s+)\{lugar\}/gu, (match, word: string) => {
+    const form = fused[word.toLowerCase()]?.[article];
+    if (!form) return match;
+    const name = withoutArticle(text, article) ?? text;
+    return `${matchCase(word, form)}${form.endsWith("'") ? "" : " "}${name}`;
+  });
+}

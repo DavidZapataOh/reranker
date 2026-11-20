@@ -1,7 +1,14 @@
 import { MeasurementLanguage } from "@reranker/schema/measurement";
 import { describe, expect, test } from "vitest";
 import { getGeo } from "../src/geo/resolve";
-import { countryLanguage, countryName, MeasurementLanguageError, placeName } from "../src/language";
+import {
+  countryLanguage,
+  countryName,
+  MeasurementLanguageError,
+  placeName,
+  placeTerm,
+} from "../src/language";
+import { instantiate } from "../src/variants";
 
 describe("countryLanguage", () => {
   test.each([
@@ -136,5 +143,42 @@ describe("placeName", () => {
         expect.objectContaining({ language, gap: "no_place_names" }),
       );
     }
+  });
+});
+
+describe("placeTerm", () => {
+  const noun = { text: "dentista", gender: "m" } as const;
+  const asked = (key: string, language: "pt" | "fr" | "it", template: string) =>
+    instantiate(template, {
+      place: placeTerm(getGeo(key), language),
+      zone: null,
+      country: "-",
+      noun,
+      language,
+    });
+
+  test.each([
+    ["br-c1001655", "pt", "dentista em {lugar}", "dentista no Rio de Janeiro"],
+    ["br-r20102", "pt", "dentista em {lugar}", "dentista no Rio de Janeiro"],
+    ["br-r20088", "pt", "dentista em {lugar}", "dentista na Bahia"],
+    ["br-c1001625", "pt", "dentista em {lugar}", "dentista no Recife"],
+    ["pt-c1011759", "pt", "dentista em {lugar}", "dentista no Porto"],
+    ["br-c1001773", "pt", "dentista em {lugar}", "dentista em São Paulo"],
+    ["br-r20106", "pt", "dentista em {lugar}", "dentista em São Paulo"],
+    ["fr-c1006262", "fr", "dentista à {lugar}", "dentista au Havre"],
+    ["fr-c1006053", "fr", "dentista à {lugar}", "dentista aux Ulis"],
+    ["ch-c1003084", "fr", "dentista à {lugar}", "dentista au Locle"],
+    ["eg-c1005390", "fr", "dentista à {lugar}", "dentista au Caire"],
+    ["eg-c1005390", "it", "dentista a {lugar}", "dentista al Cairo"],
+    ["it-c9205063", "it", "dentista a {lugar}", "dentista alla Spezia"],
+    ["it-c9199385", "it", "dentista a {lugar}", "dentista all'Aquila"],
+    ["eg-c1005390", "pt", "dentista em {lugar}", "dentista no Cairo"],
+  ] as const)("%s in %s: %s reads %s", (key, language, template, written) =>
+    expect(asked(key, language, template)).toBe(written),
+  );
+
+  test("a country and a Spanish name carry no article", () => {
+    expect(placeTerm(getGeo("br"), "pt")).toEqual({ text: "Brasil" });
+    expect(placeTerm(getGeo("br-c1001655"), "es")).toEqual({ text: "Río de Janeiro" });
   });
 });
