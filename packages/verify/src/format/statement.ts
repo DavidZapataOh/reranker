@@ -104,6 +104,11 @@ const CAPTURE_SUBJECTS = ["raw", "request", "normalized"] as const;
 
 const text = z.string().check(z.minLength(1));
 const count = z.int().check(z.nonnegative());
+const worker = z.strictObject({
+  id: text,
+  // A container image digest, or the git commit a serverless deployment was built from.
+  image_digest: z.string().check(z.regex(/^(sha256:[0-9a-f]{64}|git:[0-9a-f]{40})$/)),
+});
 
 const captureSubject = z
   .array(
@@ -165,11 +170,7 @@ const capturePredicate = z.strictObject({
   provider_signature: z.null(),
   tlsn: z.null(),
   c2pa: z.null(),
-  worker: z.strictObject({
-    id: text,
-    // A container image digest, or the git commit a serverless deployment was built from.
-    image_digest: z.string().check(z.regex(/^(sha256:[0-9a-f]{64}|git:[0-9a-f]{40})$/)),
-  }),
+  worker,
 });
 
 export const CaptureStatementV1Schema: z.ZodMiniType<CaptureStatementV1> = z.strictObject({
@@ -178,3 +179,54 @@ export const CaptureStatementV1Schema: z.ZodMiniType<CaptureStatementV1> = z.str
   predicateType: z.literal(PREDICATE.capture),
   predicate: capturePredicate,
 });
+
+/**
+ * Puts a signing key on the record. The subject is the key's raw public key, named by its keyid.
+ * The envelope carries the announced key's own signature, its predecessor's when it has one, and
+ * a log key's of the same environment, so the announcement is endorsed by the log it enters.
+ */
+export interface KeyAnnouncementPredicateV1 extends SignerContextV1 {
+  key: {
+    keyid: string;
+    purpose: "capture" | "log";
+    env: "production" | "preview";
+    alg: "Ed25519";
+    /** Base64 of the 32-byte RFC 8032 public key. */
+    public_key: string;
+    custody: "aws-kms-hsm" | "gcp-kms-software";
+    valid_from: string;
+  };
+  /** The key of the same purpose and environment this one succeeds. */
+  previous: { keyid: string } | null;
+}
+
+export type KeyAnnouncementStatementV1 = InTotoStatement<
+  typeof PREDICATE.keyAnnouncement,
+  KeyAnnouncementPredicateV1
+>;
+
+// 32 bytes in padded base64: 43 characters, the last of which carries only 4 bits, then "=".
+const ED25519_PUBLIC_KEY_BASE64 = /^[A-Za-z0-9+/]{42}[AEIMQUYcgkosw048]=$/;
+
+export const KeyAnnouncementStatementV1Schema: z.ZodMiniType<KeyAnnouncementStatementV1> =
+  z.strictObject({
+    _type: z.literal(IN_TOTO_STATEMENT_V1),
+    subject: z
+      .array(z.strictObject({ name: text, digest: z.strictObject({ sha256: sha256Hex }) }))
+      .check(z.length(1)),
+    predicateType: z.literal(PREDICATE.keyAnnouncement),
+    predicate: z.strictObject({
+      key: z.strictObject({
+        keyid: text,
+        purpose: z.enum(["capture", "log"]),
+        env: z.enum(["production", "preview"]),
+        alg: z.literal("Ed25519"),
+        public_key: z.string().check(z.regex(ED25519_PUBLIC_KEY_BASE64)),
+        custody: z.enum(["aws-kms-hsm", "gcp-kms-software"]),
+        valid_from: z.iso.datetime(),
+      }),
+      previous: z.nullable(z.strictObject({ keyid: text })),
+      time: z.strictObject({ worker_utc: z.iso.datetime() }),
+      worker,
+    }),
+  });
