@@ -57,6 +57,19 @@ describe("classifyResponse", () => {
     });
   });
 
+  test("a recorded Perplexity snapshot with only an error record is a provider error", () => {
+    const body = readFileSync(
+      new URL(
+        "../../fixtures/recorded/brightdata/perplexity-wait-element-timeout.json",
+        import.meta.url,
+      ),
+    );
+    expect(classifyResponse(200, new Uint8Array(body), new Headers())).toEqual({
+      kind: "provider_error",
+      errorCode: "wait_element_timeout",
+    });
+  });
+
   test("a 400 for an account Bright Data has not activated rejects and alerts", () => {
     const body = readFileSync(
       new URL("../../fixtures/recorded/brightdata/400-customer-not-active.bin", import.meta.url),
