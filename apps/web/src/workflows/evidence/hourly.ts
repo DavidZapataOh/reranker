@@ -21,7 +21,7 @@ async function announceKeysStep(hourKey: string): Promise<void> {
   await asStep("announceKeys", async () => {
     const { announced } = await announceKeys();
     if (announced.length > 0)
-      log.info("evidence.hourly.keys_announced", { hour: hourKey, announced });
+      log.info("evidence.hourly.keys_announced", { hour: hourKey, keyids: announced.join(",") });
   });
 }
 

@@ -39,7 +39,7 @@ test("logs the keys it announces, and nothing once they are on the record", asyn
   expect(await hourlyEvidenceWorkflow("2026-11-18T13")).toEqual({ failed: [] });
   expect(telemetry.log.info).toHaveBeenCalledWith("evidence.hourly.keys_announced", {
     hour: "2026-11-18T13",
-    announced: ["rr-capture-2026-1-ed25519"],
+    keyids: "rr-capture-2026-1-ed25519",
   });
   vi.mocked(telemetry.log.info).mockClear();
   expect(await hourlyEvidenceWorkflow("2026-11-18T14")).toEqual({ failed: [] });
