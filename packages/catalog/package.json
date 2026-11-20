@@ -14,6 +14,7 @@
     "test:perf": "vitest run --project perf --passWithNoTests",
     "geo:build": "tsx scripts/build-geo.ts",
     "record:generation": "tsx scripts/record-generation.ts",
+    "nouns:build": "tsx scripts/build-nouns.ts",
     "freeze": "tsx scripts/freeze.ts",
     "test:contract": "vitest run --project contract --passWithNoTests"
   },

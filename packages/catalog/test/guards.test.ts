@@ -158,3 +158,51 @@ test("every fallback template passes the guards of its own intent", () => {
   }
   expect(rejected).toEqual([]);
 });
+
+describe("German proper names", () => {
+  const dentist: GuardContext = {
+    scope: "local",
+    kind: "discovery",
+    language: "de",
+    noun: "Zahnarzt",
+    synonyms: ["Zahnarztpraxis"],
+    countryName: "",
+    otherPlaceNames: new Set(["Essen"]),
+    blockedNames: new Set(),
+  };
+  const bakery: GuardContext = { ...dentist, noun: "Bäckerei", synonyms: [] };
+
+  test.each([
+    ["Bäckerei mit frischem Brot in {lugar}", "ok"],
+    ["Welche Bäckerei in {lugar} hat am Sonntag Brötchen und Kuchen?", "ok"],
+    // Compounds the lists do not hold whole are known by their head noun.
+    ["Gibt es eine Bio-Bäckerei mit Vollkornbrot in {lugar}?", "ok"],
+  ])("%s → %s", (text, expected) => expect(outcome(text, bakery)).toBe(expected));
+
+  test.each([
+    ["Kannst du mir einen Zahnarzt mit Kinderbehandlungsraum in {lugar} empfehlen?", "ok"],
+    ["Zahnarzt bei Müller GmbH in {lugar}", "proper_name"],
+    // A city the set does not target, and one that is also a common noun ("Essen") when listed.
+    ["Guter Zahnarzt in {lugar} oder in Hamburg?", "proper_name"],
+    ["Guter Zahnarzt in {lugar} oder in Essen?", "placeholder"],
+    // A word neither list knows is taken for a name.
+    ["Ist Zahnarzt Quorvexa in {lugar} gut?", "proper_name"],
+  ])("%s → %s", (text, expected) => expect(outcome(text, dentist)).toBe(expected));
+
+  test("a common noun that is also a surname passes alone", () =>
+    expect(outcome("Zahnarzt in {lugar} für Müller und Bäcker", dentist)).toBe("ok"));
+});
+
+test("a German compound that holds the category noun names the category", () => {
+  const dentist: GuardContext = {
+    ...bakeryDiscovery,
+    language: "de",
+    noun: "Zahnarzt",
+    synonyms: [],
+    countryName: "",
+    otherPlaceNames: new Set(),
+    blockedNames: new Set(),
+  };
+  expect(outcome("Welche Zahnarztpraxen in {lugar} nehmen neue Patienten?", dentist)).toBe("ok");
+  expect(outcome("Kannst du mir einen Kinderzahnarzt in {lugar} empfehlen?", dentist)).toBe("ok");
+});
