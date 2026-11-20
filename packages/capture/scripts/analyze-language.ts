@@ -202,27 +202,39 @@ const mean = (xs: (number | null)[]): number | null => {
 
 type Pairs = { within: [Answer, Answer][]; across: [Answer, Answer][] };
 
+// Words that describe the kind of business; a name made only of them ("Clínica Dental") names
+// no business and would merge every clinic it prefixes.
+const CATEGORY_WORDS = new Set(
+  "clinica clinicas clinic dental dentist dentista dentistry odontologia centro center restaurante restaurant abogados abogado lawyers law firm office offices despacho bufete and y de del la el the of madrid miami group grupo".split(
+    " ",
+  ),
+);
+
+const distinctive = (name: string) => name.split(" ").some((w) => !CATEGORY_WORDS.has(w));
+
 /**
  * One spelling per business across a question's answers: a name whose words start another's
  * ("legalcar" and "legalcar abogados") is the same business. Applied to every run alike, so it
  * moves the within-language and across-language overlaps together.
  */
 export function canonicalize(answers: { names: string[]; structured: string[] }[]): void {
-  const pool = [...new Set(answers.flatMap((a) => [...a.names, ...a.structured]))].sort(
-    (a, b) => a.length - b.length,
-  );
+  const pool = [...new Set(answers.flatMap((a) => [...a.names, ...a.structured]))]
+    .filter(distinctive)
+    .sort((a, b) => a.length - b.length);
   const canonical = new Map<string, string>();
   for (const name of pool) {
     const words = name.split(" ");
     const base = pool.find((shorter) => {
       if (shorter.length >= name.length) return false;
       const head = shorter.split(" ");
-      const distinctive = head.length >= 2 || (head[0]?.length ?? 0) >= 6;
-      return distinctive && head.every((w, i) => words[i] === w);
+      const long = head.length >= 2 || (head[0]?.length ?? 0) >= 6;
+      return long && head.every((w, i) => words[i] === w);
     });
     canonical.set(name, base === undefined ? name : (canonical.get(base) ?? base));
   }
-  const map = (names: string[]) => [...new Set(names.map((n) => canonical.get(n) ?? n))];
+  const map = (names: string[]) => [
+    ...new Set(names.filter(distinctive).map((n) => canonical.get(n) ?? n)),
+  ];
   for (const answer of answers) {
     answer.names = map(answer.names);
     answer.structured = map(answer.structured);
