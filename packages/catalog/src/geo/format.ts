@@ -2,6 +2,8 @@ import { normalizePlaceName } from "./normalize";
 
 export const GEO_DATA_VERSION = "2026.11";
 
+export type Coordinate = [lat: number, lng: number];
+
 export type GeoPlace = {
   key: string;
   level: "city" | "region";
@@ -11,28 +13,39 @@ export type GeoPlace = {
   aliases?: string[];
   regionKey: string | null;
   locationCode: number;
-  center: [lat: number, lng: number] | null;
+  /** The place's own centroid; null when no source locates it confidently. */
+  center: Coordinate | null;
   divipola?: { municipalityCode: string; departmentCode: string };
 };
 
 export type RegionRow =
-  | [locationCode: number, name: string]
-  | [locationCode: number, name: string, aliases: string[]];
+  | [locationCode: number, name: string, center: Coordinate | null]
+  | [locationCode: number, name: string, center: Coordinate | null, aliases: string[]];
 
 /**
  * A null location code marks a municipality the engines cannot target on its own: it is
  * declared as its region while keeping its own name and centroid.
  */
 export type CityRow =
-  | [locationCode: number, name: string, region: number | null]
-  | [locationCode: number, name: string, region: number | null, aliases: string[]]
+  | [locationCode: number, name: string, region: number | null, center: Coordinate | null]
+  | [
+      locationCode: number,
+      name: string,
+      region: number | null,
+      center: Coordinate | null,
+      aliases: string[],
+    ]
   | [
       locationCode: number | null,
       name: string,
       region: number | null,
-      center: [lat: number, lng: number] | null,
+      center: Coordinate | null,
       municipalityCode: string,
     ];
+
+/** The aliases of a city row; DIVIPOLA rows carry a municipality code in their place. */
+export const cityAliases = (row: CityRow): readonly string[] =>
+  Array.isArray(row[4]) ? row[4] : [];
 
 /**
  * Rows instead of GeoPlace objects keep the largest country (21,599 US cities) under the
@@ -63,7 +76,7 @@ export function expandGeoFile(file: Pick<GeoFile, "country" | "regions" | "citie
   const regionKey = (code: number) => `${prefix}-r${code}`;
 
   const regions = file.regions.map(
-    ([locationCode, name, aliases]): GeoPlace => ({
+    ([locationCode, name, center, aliases]): GeoPlace => ({
       key: regionKey(locationCode),
       level: "region",
       name,
@@ -71,14 +84,14 @@ export function expandGeoFile(file: Pick<GeoFile, "country" | "regions" | "citie
       ...(aliases ? { aliases } : {}),
       regionKey: null,
       locationCode,
-      center: null,
+      center,
     }),
   );
 
   const cities = file.cities.map((row): GeoPlace => {
-    const [code, name, regionIndex] = row;
-    const [center, municipalityCode] = row.length === 5 ? [row[3], row[4]] : [null, undefined];
-    const aliases = row.length === 4 ? row[3] : undefined;
+    const [code, name, regionIndex, center, extra] = row;
+    const municipalityCode = typeof extra === "string" ? extra : undefined;
+    const aliases = Array.isArray(extra) ? extra : undefined;
     const region = regionIndex === null ? undefined : file.regions[regionIndex];
     if (regionIndex !== null && region === undefined) {
       throw new RangeError(`${name} points at missing region ${regionIndex}`);

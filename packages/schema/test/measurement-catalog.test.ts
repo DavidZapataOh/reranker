@@ -26,7 +26,7 @@ const medellin = {
   country: "CO",
   name: "Medellín",
   regionName: "Antioquia",
-  center: { lat: 6.2442, lng: -75.5812 },
+  center: { lat: 6.2442, lng: -75.5812, level: "city", label: "Medellín" },
   dataforseo: { locationCode: 1003654, level: "city", label: "Medellin,Antioquia,Colombia" },
   enrichment: { divipola: { municipalityCode: "05001", departmentCode: "05" } },
   geoDataHash: hex("a"),

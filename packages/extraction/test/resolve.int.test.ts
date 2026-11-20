@@ -67,7 +67,7 @@ const MEDELLIN: GeoTarget = {
   country: "CO",
   name: "Medellín",
   regionName: "Antioquia",
-  center: { lat: 6.2442, lng: -75.5812 },
+  center: { lat: 6.2442, lng: -75.5812, level: "city", label: "Medellín" },
   dataforseo: { locationCode: 1000815, level: "city", label: "Medellin,Antioquia,Colombia" },
   enrichment: null,
   geoDataHash: "0".repeat(64),
