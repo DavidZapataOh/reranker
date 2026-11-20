@@ -11,6 +11,7 @@ const ctx = {
   zone: "Chapinero",
   country: "Colombia",
   noun: "clínica odontológica",
+  language: "es" as const,
 };
 
 const internal = (fn: () => unknown) =>

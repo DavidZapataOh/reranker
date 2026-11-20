@@ -11,6 +11,7 @@ import type {
 } from "@reranker/schema/measurement";
 import { type Rng, rngFromSeed } from "@reranker/stats";
 import { geoForEngine } from "./geo/effects";
+import type { Noun } from "./grammar";
 import { sha256Hex } from "./hash";
 import { countryLanguage } from "./language";
 import { requireTemplates } from "./templates";
@@ -26,7 +27,7 @@ import {
 export type SecondaryLanguage = {
   language: MeasurementLanguage;
   intentSet: IntentSet;
-  noun: string;
+  noun: Noun;
 };
 
 export type PlanMeasurementInput = {
@@ -35,7 +36,7 @@ export type PlanMeasurementInput = {
   scope: QuestionScope;
   neighborhood: string | null;
   /** The business category's noun, which fills {sustantivo}. */
-  noun: string;
+  noun: Noun;
   /** The language `intentSet` and `noun` are in; the country's main language by default. */
   language?: MeasurementLanguage;
   /** Asked on half the sample of the main language, never less, so its result stands alone. */
@@ -118,7 +119,7 @@ type PlannedEngine = { engine: EngineId; provider: CaptureProvider; geoDeclared:
 type LanguageSample = {
   language: MeasurementLanguage;
   intentSet: IntentSet;
-  noun: string;
+  noun: Noun;
   design: MeasurementPlan["design"];
 };
 

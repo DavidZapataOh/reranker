@@ -6,6 +6,7 @@ import {
 } from "@reranker/schema/measurement";
 import lexicons from "../../data/guards/lexicons.json" with { type: "json" };
 import { normalizePlaceName } from "../geo/normalize";
+import { AGREEMENT } from "../grammar";
 import { placeholderShape } from "../templates";
 
 export type GuardName =
@@ -196,7 +197,12 @@ function hasForeignQualifier(text: string, segs: readonly string[], ctx: GuardCo
  * shape of its scope, the category's own noun, no names, no qualifier of another intent, a
  * human length and no personal data. Order matters only for which guard gets the blame.
  */
-export function guardParaphrase(c: Candidate, ctx: GuardContext): GuardResult {
+export function guardParaphrase(candidate: Candidate, ctx: GuardContext): GuardResult {
+  // An agreement group is checked as its first form: the qualifier lists hold every form.
+  const c = {
+    ...candidate,
+    text: candidate.text.replace(AGREEMENT, (_, g: string) => g.split("|")[0] ?? ""),
+  };
   const segs = segments(c.text);
   if (!placeOk(c.text, segs, ctx)) return { ok: false, guard: "placeholder" };
   const words = wordCount(c.text);

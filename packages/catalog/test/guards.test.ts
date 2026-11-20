@@ -108,6 +108,9 @@ describe("qualifiers", () => {
     const pt: GuardContext = { ...bakeryDiscovery, language: "pt", noun: "padaria", synonyms: [] };
     expect(outcome("Qual padaria você recomenda em {lugar}?", pt)).toBe("ok");
     expect(outcome("Qual padaria barata você recomenda em {lugar}?", pt)).toBe("qualifier");
+    // Agreement groups are read as their first form, so their words are still screened.
+    expect(outcome("Você me indica {um bom|uma boa} {sustantivo} em {lugar}?", pt)).toBe("ok");
+    expect(outcome("{Um|Uma} {sustantivo} {barato|barata} em {lugar}?", pt)).toBe("qualifier");
     const en: GuardContext = { ...bakeryDiscovery, language: "en", noun: "bakery", synonyms: [] };
     expect(outcome("Which bakery do you recommend in {lugar}?", en)).toBe("ok");
     expect(outcome("Which bakery in {lugar} is open today?", en)).toBe("qualifier");
