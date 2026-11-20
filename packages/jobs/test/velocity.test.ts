@@ -6,9 +6,8 @@ const withSystem = vi.fn(async (_reason: string, fn: (tx: unknown) => unknown) =
 vi.mock("@reranker/db", () => ({ withSystem }));
 
 const { InvalidInputError } = await import("../src/errors");
-const { recordVelocity, refreshVelocityBaselines, velocityBaseline } = await import(
-  "../src/velocity"
-);
+const { recordVelocities, recordVelocity, refreshVelocityBaselines, velocityBaseline } =
+  await import("../src/velocity");
 
 const key = "test:velocity:unit";
 const sample = { flagged: true, spend: cost(900_000, "USD") };
@@ -64,6 +63,40 @@ describe("recordVelocity", () => {
     const failure = new AppError("service_unavailable", { retryAfterSeconds: 2 });
     execute.mockRejectedValue(failure);
     await expect(recordVelocity(key, sample)).rejects.toBe(failure);
+  });
+});
+
+describe("recordVelocities", () => {
+  test("records every key in one system statement and returns their windows in order", async () => {
+    execute.mockResolvedValue({
+      rows: [
+        { count10m: 3, flagged10m: 1, spend10m: "0", spend60m: "0" },
+        { count10m: 7, flagged10m: 0, spend10m: "0", spend60m: "0" },
+      ],
+    });
+    const none = { flagged: false, spend: cost(0, "USD") };
+    const out = await recordVelocities([
+      { key: `${key}:a`, ...none },
+      { key: `${key}:b`, ...none },
+    ]);
+    expect(out.map((w) => w.count10m)).toEqual([3, 7]);
+    expect(withSystem).toHaveBeenCalledTimes(1);
+    expect(execute).toHaveBeenCalledTimes(1);
+  });
+
+  test("checks every sample before any statement", async () => {
+    await expect(
+      recordVelocities([
+        { key, ...sample },
+        { key: "203.0.113.9", ...sample },
+      ]),
+    ).rejects.toBeInstanceOf(InvalidInputError);
+    expect(execute).not.toHaveBeenCalled();
+  });
+
+  test("fails loudly when a window is missing", async () => {
+    execute.mockResolvedValue({ rows: [] });
+    await expect(recordVelocities([{ key, ...sample }])).rejects.toThrow("no row");
   });
 });
 

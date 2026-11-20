@@ -25,6 +25,7 @@ test("server catalog names every event the other packages emit", () => {
     "auth_rate_limited",
     "auth_sign_in",
     "auth_sign_in_failed",
+    "capture_call",
     "commercial_consent_confirmed",
     "confirmation_link_sent",
     "data_policy_accepted",

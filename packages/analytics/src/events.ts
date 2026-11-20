@@ -1,4 +1,11 @@
-import type { AppEnv, CaptureChannel, CountryCode, EngineId, ErrorCode } from "@reranker/schema";
+import type {
+  AppEnv,
+  CaptureChannel,
+  CaptureProvider,
+  CountryCode,
+  EngineId,
+  ErrorCode,
+} from "@reranker/schema";
 import type { LevelKey, Sufficiency } from "@reranker/schema/measurement";
 import type { Verdict } from "@reranker/verify";
 
@@ -115,6 +122,19 @@ export interface ServerEventMap {
   "jobs.breaker.state": { provider: string; state: string };
   "jobs.step.retry": Step;
   "jobs.step.fatal": Step;
+  capture_call: {
+    engine: EngineId;
+    provider: CaptureProvider;
+    channel: CaptureChannel;
+    mode: "live" | "task";
+    status: "succeeded" | "provider_error" | "timeout" | "no_response";
+    latency_ms: number;
+    /** Null when the provider reported no cost, as on a timeout. */
+    cost_micros: number | null;
+    parse_failed: boolean;
+    surface_absent: boolean;
+    late: boolean;
+  };
   regime_opened: {
     engine: EngineId;
     channel: CaptureChannel;
@@ -251,6 +271,18 @@ export const SERVER_EVENT_KEYS = {
   "jobs.breaker.state": ["provider", "state"],
   "jobs.step.retry": ["workflow", "step", "error"],
   "jobs.step.fatal": ["workflow", "step", "error"],
+  capture_call: [
+    "engine",
+    "provider",
+    "channel",
+    "mode",
+    "status",
+    "latency_ms",
+    "cost_micros",
+    "parse_failed",
+    "surface_absent",
+    "late",
+  ],
   regime_opened: ["engine", "channel", "from", "to", "first_capture_id"],
   stats_computed: [
     "methodology_hash",

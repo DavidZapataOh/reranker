@@ -718,6 +718,9 @@ importers:
       '@reranker/schema':
         specifier: workspace:*
         version: link:../schema
+      '@reranker/telemetry':
+        specifier: workspace:*
+        version: link:../telemetry
       '@reranker/verify':
         specifier: workspace:*
         version: link:../verify

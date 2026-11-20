@@ -25,6 +25,7 @@ import { loadPlan } from "./measurement";
 import { loadIntentSets, persistCapture } from "./persist";
 import { resolveRedirects } from "./resolve-redirects";
 import { type FrozenSlot, parseSlotId, type SlotId } from "./slot";
+import { captureCallOf, recordCaptureCall } from "./telemetry";
 
 registerCaptureAdapter(dataforseoAdapter);
 
@@ -36,12 +37,14 @@ export type CaptureSlotsOptions = {
   onProgress?: (p: { slotId: SlotId; ok: boolean }) => Promise<void>;
 };
 
-type Outcome = { ok: true } | { ok: false; error: Error; retryable: boolean };
+type Outcome = { ok: true } | { ok: false; error: Error; retryable: boolean; alert?: "balance" };
 
 const asError = (error: unknown) => (error instanceof Error ? error : new Error(String(error)));
 const codeOf = (error: Error) =>
   isAppError(error) ? error.code : error.name.replace(/Error$/, "");
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const isLate = (opts: CaptureSlotsOptions) =>
+  opts.deadlineAt !== undefined && Date.now() > opts.deadlineAt;
 
 function bodyOf(bytes: Uint8Array): unknown | null {
   try {
@@ -86,11 +89,25 @@ async function call(
   try {
     const estimate = ENGINES[engine].estimate.live;
     const reservation = await reserveSpend({ ...opts.spend, provider, channel, engine, estimate });
+    const started = performance.now();
     try {
       return { record: await adapter.captureLive(slot), reservation };
     } catch (error) {
       // Nothing came back, yet the request may have reached the provider and been billed.
       if (error instanceof ProviderUnavailableError) {
+        recordCaptureCall({
+          engine,
+          provider,
+          channel,
+          mode: "live",
+          status: "no_response",
+          latencyMs: Math.round(performance.now() - started),
+          cost: null,
+          parseFailed: false,
+          surfaceAbsent: false,
+          late: isLate(opts),
+          providerStatusCode: null,
+        });
         await settleSpend(reservation, reservation.reserved);
       } else {
         await releaseSpend(reservation);
@@ -117,11 +134,13 @@ async function captureOne(
     return { ok: false, error: err, retryable };
   }
   const { record, reservation } = called;
+  const outcome = outcomeOf(record);
   let settled = false;
+  let late = isLate(opts);
   try {
     // Google wraps the cited sites in its own redirects; attribution needs where they lead.
     const answer = record.answer && (await resolveRedirects(record.answer));
-    const late = opts.deadlineAt !== undefined && Date.now() > opts.deadlineAt;
+    late = isLate(opts);
     // The cost settles in the row's own transaction: one round trip fewer, and the ledger and
     // the stored capture never disagree.
     ({ transacted: settled } = await persistCapture(
@@ -133,9 +152,16 @@ async function captureOne(
     // finds no stored capture for the slot and captures it then.
     return { ok: false, error: asError(error), retryable: false };
   } finally {
+    recordCaptureCall(
+      captureCallOf(record, {
+        channel: adapterFor(slot.provider).channel,
+        late,
+        alert: outcome.ok ? undefined : outcome.alert,
+      }),
+    );
     if (!settled) await settle(reservation, record.cost);
   }
-  return outcomeOf(record);
+  return outcome;
 }
 
 async function captureWithRetry(slot: FrozenSlot, opts: CaptureSlotsOptions): Promise<void> {
