@@ -7,6 +7,7 @@ import {
   QuestionScope,
 } from "@reranker/schema/measurement";
 import en from "../data/templates/2026.11.0.en.json" with { type: "json" };
+import fr from "../data/templates/2026.11.0.fr.json" with { type: "json" };
 import es from "../data/templates/2026.11.0.json" with { type: "json" };
 import pt from "../data/templates/2026.11.0.pt.json" with { type: "json" };
 import { ARCHETYPE_SCOPES, ARCHETYPE_SLATES } from "./archetypes";
@@ -56,6 +57,7 @@ const TEMPLATES: Partial<Record<MeasurementLanguage, Templates>> = {
   }),
   en: Templates.parse(en),
   pt: Templates.parse(pt),
+  fr: Templates.parse(fr),
 };
 
 /** The languages questions can be asked in today. */

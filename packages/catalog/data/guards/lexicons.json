@@ -227,5 +227,82 @@
       ]
     },
     "capitalized": []
+  },
+  "fr": {
+    "qualifiers": {
+      "price": [
+        "pas cher",
+        "pas chère",
+        "pas chers",
+        "pas chères",
+        "moins cher",
+        "moins chère",
+        "bon marché",
+        "prix",
+        "tarif",
+        "tarifs",
+        "petit prix",
+        "gratuit",
+        "gratuite",
+        "frais",
+        "commission",
+        "honoraires",
+        "promotion",
+        "promo",
+        "réduction",
+        "économique"
+      ],
+      "urgency": [
+        "aujourd'hui",
+        "urgence",
+        "urgences",
+        "en urgence",
+        "urgent",
+        "urgente",
+        "de garde",
+        "24h/24",
+        "24h",
+        "maintenant",
+        "tout de suite",
+        "ce soir",
+        "ouvert actuellement",
+        "ouverte actuellement",
+        "livre vite",
+        "livrent vite",
+        "dès demain"
+      ],
+      "zone": ["près de", "à proximité", "autour de moi", "quartier", "dans le coin"],
+      "trust": [
+        "fiable",
+        "fiables",
+        "sérieux",
+        "sérieuse",
+        "sérieuses",
+        "de confiance",
+        "avis",
+        "réputation"
+      ],
+      "insurance_or_payment": [
+        "mutuelle",
+        "tiers payant",
+        "conventionné",
+        "conventionnée",
+        "plusieurs fois",
+        "carte vitale",
+        "sécurité sociale",
+        "remboursé",
+        "remboursement"
+      ],
+      "ranking": [
+        "top",
+        "classement",
+        "mieux noté",
+        "mieux notée",
+        "mieux notés",
+        "mieux notées",
+        "avis"
+      ]
+    },
+    "capitalized": []
   }
 }

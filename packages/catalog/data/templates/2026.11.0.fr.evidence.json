@@ -1,0 +1,2306 @@
+{
+  "version": "2026.11.0",
+  "language": "fr",
+  "collected": "2026-11-20",
+  "source": "query-phrasing workflow, run 44814883666 (DataForSEO, FR market, fr)",
+  "method": "Each text names the observed phrasings it follows. 'observed': people type that form; 'adapted': the form is observed but reworded so the slot works for any noun of either gender, a person or a place, singular, with the words that agree with it written as groups; 'unsupported': no query in the data. Citations whose words disagree with the noun's gender are skipped.",
+  "register": "standard French, tu",
+  "patterns": {
+    "peux_tu_conseiller": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "peux tu me conseiller un film",
+          "rank": 4
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "peux tu me conseiller un livre",
+          "rank": 5
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "peux tu me conseiller une coupe de cheveux",
+          "rank": 6
+        }
+      ],
+      "note": "observed with a bare article ('un bon restaurant'); the adjective agrees with the noun, so it is a group"
+    },
+    "conseiller": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "tu peux me conseiller",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "tu peux me conseiller en anglais",
+          "rank": 2
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "tu pourrais me conseiller",
+          "rank": 3
+        }
+      ]
+    },
+    "recommande_moi": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "recommande-moi des séries netflix incontournables selon mes genres préférés et le temps disponible",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "recommande-moi des chaises de salle à manger confortables selon différents styles de décoration",
+          "rank": 2
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "recommande-moi les meilleurs programmes tv ce soir selon mon genre cinématographique préféré",
+          "rank": 3
+        }
+      ],
+      "note": "assistant prompts start with 'recommande-moi'; seen for products, applied to businesses"
+    },
+    "ou_trouver": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "où trouver un restaurant à paris",
+          "volume": 7895
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "où trouver un hôtel à paris",
+          "volume": 5022
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "où trouver un hôtel à lyon",
+          "volume": 1123
+        }
+      ]
+    },
+    "comment_trouver_bon": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "comment trouver un bon coiffeur",
+          "volume": 50
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "comment trouver un bon dentiste",
+          "volume": 50
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "comment trouver un bon plombier",
+          "volume": 30
+        }
+      ]
+    },
+    "comment_trouver": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "comment trouver un dentiste de garde",
+          "volume": 170
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "comment trouver un dentiste qui pratique le 100 santé",
+          "volume": 140
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "comment trouver un dentiste qui prend des nouveaux patients",
+          "volume": 90
+        }
+      ]
+    },
+    "comment_choisir": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "comment choisir avocat",
+          "volume": 880
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "comment choisir un avocat",
+          "volume": 880
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "comment choisir une agence immobilière",
+          "volume": 30
+        }
+      ]
+    },
+    "quel_est_meilleur": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quel est le meilleur restaurant du monde",
+          "volume": 210
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quelle est la meilleure agence immobilière",
+          "volume": 110
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quelle est la meilleure agence immobilière pour vendre",
+          "volume": 90
+        }
+      ]
+    },
+    "quel_choisir": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quel agent immobilier choisir",
+          "volume": 140
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quelle agence immobilière choisir",
+          "volume": 140
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quel restaurant choisir sur le costa smeralda",
+          "volume": 90
+        }
+      ]
+    },
+    "quel_x": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quel restaurant prend cheque vacances",
+          "volume": 480
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quel restaurant prend les cheque vacances",
+          "volume": 480
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quel restaurant prend les chèque vacances",
+          "volume": 480
+        }
+      ]
+    },
+    "bonne_adresse": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "bonne adresse bordeaux",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "bonne adresse la rochelle",
+          "rank": 3
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "bonne adresse paris",
+          "rank": 4
+        }
+      ],
+      "note": "'bonne adresse' is how French asks for a recommended place; lists ask for 'adresses de {noun}' so the noun stays singular"
+    },
+    "je_cherche": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "je cherche une femme de ménage urgent",
+          "rank": 2
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "je cherche un médecin généraliste près de chez moi",
+          "rank": 3
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "je cherche un dermatologue autour de moi",
+          "rank": 4
+        }
+      ],
+      "note": "observed for services ('je cherche un dermatologue autour de moi'); the article agrees, so it is a group"
+    },
+    "kw_a": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "restaurant à paris",
+          "volume": 59637
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "hôtel à paris",
+          "volume": 29198
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "restaurant à lyon",
+          "volume": 16281
+        }
+      ]
+    },
+    "kw_bare": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "restaurant paris",
+          "volume": 59637
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "restaurant sur paris",
+          "volume": 59637
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "hôtel paris",
+          "volume": 29198
+        }
+      ]
+    },
+    "bon_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "bon restaurant paris",
+          "volume": 132
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "bon restaurant lyon",
+          "volume": 29
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "bon barbier paris",
+          "volume": 10
+        }
+      ]
+    },
+    "meilleur_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "meilleur restaurant paris",
+          "volume": 7308
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "meilleur restaurant à paris",
+          "volume": 7308
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "meilleur hôtel paris",
+          "volume": 4162
+        }
+      ]
+    },
+    "qui_clause": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "mécanicien qui se déplace à domicile",
+          "volume": 720
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "comment trouver un dentiste qui prend des nouveaux patients",
+          "volume": 90
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "comment s'appelle une personne qui travaille dans une crèche",
+          "volume": 40
+        }
+      ]
+    },
+    "pour_x": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "garage pour une voiture",
+          "volume": 9900
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "magasin de vêtements pour homme",
+          "volume": 2400
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "magasin de vêtements pour hommes",
+          "volume": 2400
+        }
+      ]
+    },
+    "mieux_notes": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "meilleur centre dentaire paris les mieux notés",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "dentiste près de chez moi les mieux notés",
+          "rank": 3
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "plombier près de chez moi les mieux notés",
+          "rank": 3
+        }
+      ],
+      "note": "'les mieux notés' follows a plural noun; the templates rate 'adresses' so the noun stays singular"
+    },
+    "top_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "top garage",
+          "volume": 9900
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "top boutique en ligne",
+          "rank": 10
+        }
+      ]
+    },
+    "avis": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "avis restaurant paris",
+          "volume": 9274
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "avis hôtel paris",
+          "volume": 4216
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "cabinet dentaire avis",
+          "volume": 1600
+        }
+      ]
+    },
+    "avis_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "avis restaurant paris",
+          "volume": 9274
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "avis hôtel paris",
+          "volume": 4216
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "avis restaurant lyon",
+          "volume": 1509
+        }
+      ]
+    },
+    "fiable": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "comment trouver un plombier fiable",
+          "volume": 20
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "comment trouver un plombier sérieux",
+          "volume": 20
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "comment savoir si une boutique en ligne est fiable",
+          "volume": 10
+        }
+      ]
+    },
+    "comment_savoir": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "comment savoir si un cabinet dentaire est conventionné",
+          "volume": 10
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "comment savoir si une boutique en ligne est fiable",
+          "volume": 10
+        }
+      ]
+    },
+    "autour_de_moi": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "restaurant autour de moi",
+          "volume": 823000
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "autour de moi restaurant",
+          "volume": 673000
+        },
+        {
+          "source": "google_ai_overview_question",
+          "market": "fr",
+          "query": "restaurants autour de moi",
+          "volume": 673000
+        }
+      ],
+      "note": "'autour de moi' and 'à proximité' carry the local searches; a measured question names the neighborhood instead"
+    },
+    "a_proximite": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "restaurant à proximité",
+          "volume": 11100000
+        },
+        {
+          "source": "google_ai_overview_question",
+          "market": "fr",
+          "query": "restaurants à proximité",
+          "volume": 11100000
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "boulangerie à proximité",
+          "volume": 4090000
+        }
+      ],
+      "note": "a measured question names the neighborhood: 'quartier {zona}'"
+    },
+    "pres_de": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "restaurant près de chez moi",
+          "volume": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "cabinet dentaire près de chez moi",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "centre dentaire près de chez moi",
+          "rank": 1
+        }
+      ],
+      "note": "observed with 'chez moi' and an arrondissement; the templates write 'quartier {zona}' so a neighborhood with an article never follows 'de'"
+    },
+    "ouvert_aujourdhui": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quelle boulangerie est ouvert aujourd hui",
+          "volume": 140
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quelle boulangerie est ouvert aujourd'hui",
+          "volume": 140
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quelle boulangerie est ouverte aujourd hui",
+          "volume": 140
+        }
+      ]
+    },
+    "ouvert": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "boulangerie ouverte",
+          "volume": 40500
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "boulangerie ouverte actuellement",
+          "volume": 33100
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "boulangerie ouverte à proximité",
+          "volume": 27100
+        }
+      ]
+    },
+    "dimanche": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "fleuriste ouvert dimanche",
+          "volume": 3600
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "magasin de vêtements ouvert le dimanche",
+          "volume": 590
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "coiffeur ouvert dimanche lyon",
+          "volume": 27
+        }
+      ]
+    },
+    "samedi": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "centre dentaire qui travaille le samedi",
+          "rank": 3
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "cabinet dentaire qui ouvre le samedi",
+          "rank": 6
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "plombier qui travaille le samedi",
+          "rank": 6
+        }
+      ]
+    },
+    "de_garde": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "dentiste de garde",
+          "volume": 8100
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "comment trouver dentiste de garde",
+          "volume": 170
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "comment trouver un dentiste de garde",
+          "volume": 170
+        }
+      ]
+    },
+    "urgence": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "dentiste en urgence",
+          "volume": 40500
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "urgences dentiste",
+          "volume": 40500
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "dentiste en urgence lyon",
+          "volume": 9900
+        }
+      ]
+    },
+    "domicile": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "coiffeur à domicile",
+          "volume": 9900
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "coiffeur à domicile autour de moi",
+          "volume": 8100
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "fleuriste livraison à domicile",
+          "volume": 5400
+        }
+      ]
+    },
+    "se_deplace": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "mécanicien qui se déplace à domicile",
+          "volume": 720
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "mécanicien qui se déplace à domicile 974",
+          "rank": 2
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "mécanicien qui se déplace à domicile ouvert actuellement",
+          "rank": 3
+        }
+      ]
+    },
+    "mutuelle": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "centre dentaire qui prend la mutuelle",
+          "rank": 2
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "cabinet dentaire qui prend la mutuelle",
+          "rank": 8
+        }
+      ]
+    },
+    "tiers_payant": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "dentiste qui fait le tiers payant",
+          "rank": 5
+        }
+      ]
+    },
+    "conventionne": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "hôtel conventionné paris",
+          "volume": 10
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "comment savoir si un cabinet dentaire est conventionné",
+          "volume": 10
+        }
+      ]
+    },
+    "plusieurs_fois": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "quel garage peut on payer en plusieurs fois",
+          "rank": 10
+        }
+      ]
+    },
+    "nouveaux_patients": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "comment trouver un dentiste qui prend des nouveaux patients",
+          "volume": 90
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "cabinet dentaire qui prend des nouveaux patients",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "dentiste qui prend des nouveaux patients autour de moi",
+          "rank": 1
+        }
+      ]
+    },
+    "cheques_vacances": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quel restaurant prend cheque vacances",
+          "volume": 480
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quel restaurant prend les cheque vacances",
+          "volume": 480
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quel restaurant prend les chèque vacances",
+          "volume": 480
+        }
+      ]
+    },
+    "aide_juridictionnelle": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "avocat qui accepte l'aide juridictionnelle",
+          "rank": 4
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "avocat qui prend aide juridictionnelle",
+          "rank": 5
+        }
+      ]
+    },
+    "pas_cher": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "hôtel pas cher dans paris",
+          "volume": 40500
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "hôtel pas cher paris",
+          "volume": 40500
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "hôtel sur paris pas cher",
+          "volume": 40500
+        }
+      ]
+    },
+    "moins_cher": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quel est le garage le moins cher",
+          "volume": 110
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quel garage est le moins cher",
+          "volume": 110
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quel est le coiffeur le moins cher",
+          "volume": 20
+        }
+      ]
+    },
+    "prix": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "dentiste implant prix",
+          "volume": 5400
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "prix blanchiment dentiste",
+          "volume": 5400
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "dentiste prix couronne",
+          "volume": 4400
+        }
+      ]
+    },
+    "tarif": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "cours d'anglais tarif horaire",
+          "volume": 70
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quel est le tarif horaire d'un plombier",
+          "volume": 30
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quel est le tarif d un plombier",
+          "volume": 10
+        }
+      ]
+    },
+    "gratuit": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "avocat conseil gratuit",
+          "volume": 2900
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "avocat conseils gratuits",
+          "volume": 2900
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "avocat pour conseil gratuit",
+          "volume": 2400
+        }
+      ]
+    },
+    "frais_agence": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "frais d agence immobilière",
+          "volume": 3600
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quel est la commission d'un agent immobilier",
+          "volume": 90
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quelle est la commission d un agent immobilier",
+          "volume": 90
+        }
+      ]
+    },
+    "specialise": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "expert-comptable spécialisé lmnp",
+          "rank": 6
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "meilleur avocat spécialisé accident de la route",
+          "rank": 7
+        }
+      ],
+      "note": "people name the specialty (LMNP, road accidents); a template shared by the archetype names none"
+    },
+    "homme": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "coiffeur homme",
+          "volume": 90500
+        },
+        {
+          "source": "google_ai_overview_question",
+          "market": "fr",
+          "query": "coiffeurs homme",
+          "volume": 90500
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "coiffeur homme à proximité",
+          "volume": 27100
+        }
+      ]
+    },
+    "chiens": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "chambre d hôte qui accepte les chiens",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "hôtel qui accepte les chiens",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "restaurant qui accepte les chiens autour de moi",
+          "rank": 4
+        }
+      ]
+    },
+    "spa": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "hôtel spa",
+          "volume": 49500
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "meilleur hôtel spa forêt noire",
+          "rank": 8
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "meilleur hôtel spa alsace",
+          "rank": 10
+        }
+      ]
+    },
+    "anniversaire": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "fleuriste anniversaire",
+          "volume": 3600
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "quel restaurant pour feter un anniversaire",
+          "rank": 6
+        }
+      ]
+    },
+    "livre": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "fleuriste livraison à domicile",
+          "volume": 5400
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "fleuriste qui livre",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "boutique en ligne qui livre a la reunion",
+          "rank": 2
+        }
+      ]
+    },
+    "plus_grand": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quel est le plus grand hôtel du monde",
+          "volume": 40
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "fr",
+          "query": "Quel est le plus grand magasin boulanger à Paris ?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "fr",
+          "query": "Quel est le plus grand magasin de bricolage à Paris ?"
+        }
+      ],
+      "note": "people ask for the biggest store; the template asks for the widest choice"
+    },
+    "droit_travail": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "avocat droit du travail",
+          "volume": 14800
+        },
+        {
+          "source": "google_ai_overview_question",
+          "market": "fr",
+          "query": "avocate droit du travail",
+          "volume": 14800
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "avocat du droit du travail",
+          "volume": 8100
+        }
+      ]
+    },
+    "divorce": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "quel avocat pour un divorce",
+          "rank": 3
+        }
+      ]
+    },
+    "vendre": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quelle est la meilleure agence immobilière pour vendre",
+          "volume": 90
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "quelle agence immobilière choisir pour vendre",
+          "volume": 30
+        }
+      ]
+    },
+    "location": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "agence immobilière location",
+          "volume": 3600
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "agent immobilier location",
+          "volume": 3600
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "agent immobilier pour location",
+          "volume": 3600
+        }
+      ]
+    },
+    "adultes": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "cours d'anglais pour adulte",
+          "volume": 720
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "cours d'anglais pour adultes",
+          "volume": 590
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "cours d'anglais intensif pour adultes",
+          "volume": 170
+        }
+      ]
+    },
+    "en_ligne_cours": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "cours d'anglais en ligne",
+          "volume": 1900
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "cours d'anglais gratuits en ligne",
+          "volume": 480
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "cours d'anglais en ligne gratuit",
+          "volume": 390
+        }
+      ]
+    },
+    "enfant": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "cours d'anglais à domicile enfant",
+          "rank": 3
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "magasin de vêtements enfants",
+          "rank": 7
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "quel école pour mon enfant",
+          "rank": 7
+        }
+      ]
+    },
+    "boutique_en_ligne": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "c discounts boutique en ligne",
+          "volume": 9900
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "aroma zone boutique en ligne",
+          "volume": 4400
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "aroma-zone boutique en ligne",
+          "volume": 4400
+        }
+      ]
+    },
+    "meilleure_boutique": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "meilleure boutique en ligne",
+          "volume": 995
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "fr",
+          "query": "Quelles sont les boutiques en ligne les plus fiables ?"
+        }
+      ]
+    },
+    "acheter_en_ligne": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "acheter vêtements en ligne",
+          "volume": 767
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "acheter des vêtements en ligne",
+          "volume": 70
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "où acheter des vêtements pas cher en ligne",
+          "volume": 10
+        }
+      ]
+    },
+    "magasin_en_ligne": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "magasin en ligne de vêtements",
+          "volume": 170
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "magasin en ligne qui accepte paypal",
+          "rank": 8
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "magasin en ligne qui livre a la reunion",
+          "rank": 9
+        }
+      ]
+    },
+    "qui_livre_en_ligne": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "boutique en ligne qui livre a la reunion",
+          "rank": 2
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "magasin en ligne qui livre a la reunion",
+          "rank": 9
+        }
+      ]
+    },
+    "site_fiable": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "comment savoir si une boutique en ligne est fiable",
+          "volume": 10
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "fr",
+          "query": "Quel est le site d'achat en ligne le plus fiable ?"
+        }
+      ]
+    },
+    "top_boutique": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "fr",
+          "query": "top boutique en ligne",
+          "rank": 10
+        }
+      ]
+    },
+    "meilleur_en_ligne": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "meilleure boutique en ligne",
+          "volume": 995
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "fr",
+          "query": "meilleur acheter vêtements en ligne",
+          "volume": 428
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "meilleur cours d'anglais en ligne",
+          "volume": 70
+        }
+      ]
+    },
+    "livraison_rapide": {
+      "support": "unsupported",
+      "evidence": [],
+      "note": "no delivery-speed query in the data; asked because fast delivery is the urgency of a web-only store"
+    },
+    "en_ligne_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "c discounts boutique en ligne",
+          "volume": 9900
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "aroma zone boutique en ligne",
+          "volume": 4400
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "aroma-zone boutique en ligne",
+          "volume": 4400
+        }
+      ]
+    },
+    "c_est_fiable": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "comment savoir si une boutique en ligne est fiable",
+          "volume": 10
+        }
+      ]
+    },
+    "avis_brand": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "cabinet dentaire avis",
+          "volume": 1600
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "institut de beauté bodyminute avis",
+          "volume": 1000
+        },
+        {
+          "source": "google_volume",
+          "market": "fr",
+          "query": "institut de beauté bodyminute nailminute avis",
+          "volume": 590
+        }
+      ]
+    }
+  },
+  "templates": {
+    "health/local/discovery": [
+      ["peux_tu_conseiller", "conseiller"],
+      ["ou_trouver"],
+      ["comment_trouver_bon"],
+      ["recommande_moi", "bonne_adresse"],
+      ["bonne_adresse"],
+      ["kw_a"],
+      ["bon_kw"],
+      ["qui_clause", "nouveaux_patients"],
+      ["je_cherche", "enfant"]
+    ],
+    "health/local/specialty": [
+      ["quel_x", "specialise", "conseiller"],
+      ["ou_trouver", "specialise"],
+      ["comment_choisir", "specialise"],
+      ["recommande_moi", "bonne_adresse", "specialise"],
+      ["bonne_adresse", "specialise"],
+      ["specialise", "kw_bare"],
+      ["specialise", "kw_a"],
+      ["specialise", "enfant"],
+      ["je_cherche", "specialise"]
+    ],
+    "health/local/zone": [
+      ["peux_tu_conseiller", "a_proximite"],
+      ["quel_est_meilleur", "pres_de"],
+      ["ou_trouver", "a_proximite"],
+      ["recommande_moi", "bonne_adresse", "a_proximite"],
+      ["bonne_adresse", "autour_de_moi"],
+      ["kw_bare", "a_proximite"],
+      ["kw_bare", "pres_de"],
+      ["a_proximite", "qui_clause", "nouveaux_patients"],
+      ["je_cherche", "a_proximite"]
+    ],
+    "health/local/urgency": [
+      ["ouvert_aujourdhui"],
+      ["ou_trouver", "urgence"],
+      ["quel_x", "dimanche"],
+      ["recommande_moi", "bonne_adresse", "ouvert"],
+      ["bonne_adresse", "dimanche"],
+      ["urgence", "kw_bare"],
+      ["dimanche", "kw_bare"],
+      ["de_garde", "dimanche"],
+      ["je_cherche", "urgence", "samedi"]
+    ],
+    "health/local/insurance_or_payment": [
+      ["quel_x", "mutuelle"],
+      ["ou_trouver", "tiers_payant"],
+      ["quel_x", "conventionne", "conseiller"],
+      ["recommande_moi", "bonne_adresse", "mutuelle"],
+      ["bonne_adresse", "plusieurs_fois"],
+      ["qui_clause", "mutuelle"],
+      ["conventionne", "kw_bare"],
+      ["qui_clause", "tiers_payant", "nouveaux_patients"],
+      ["je_cherche", "plusieurs_fois"]
+    ],
+    "health/local/trust": [
+      ["comment_trouver", "fiable"],
+      ["quel_x", "fiable", "conseiller"],
+      ["quel_x", "avis"],
+      ["recommande_moi", "bonne_adresse", "fiable"],
+      ["bonne_adresse", "avis"],
+      ["avis_kw"],
+      ["fiable", "kw_bare"],
+      ["fiable", "avis"],
+      ["je_cherche", "comment_savoir", "fiable"]
+    ],
+    "beauty_wellness/local/discovery": [
+      ["peux_tu_conseiller", "conseiller"],
+      ["ou_trouver"],
+      ["comment_trouver_bon"],
+      ["recommande_moi", "bonne_adresse"],
+      ["bonne_adresse"],
+      ["kw_a"],
+      ["bon_kw"],
+      ["homme"],
+      ["je_cherche", "domicile"]
+    ],
+    "beauty_wellness/local/specialty": [
+      ["quel_x", "specialise", "conseiller"],
+      ["ou_trouver", "specialise"],
+      ["comment_choisir", "specialise"],
+      ["recommande_moi", "bonne_adresse", "specialise"],
+      ["bonne_adresse", "specialise"],
+      ["specialise", "kw_bare"],
+      ["specialise", "kw_a"],
+      ["specialise"],
+      ["je_cherche", "homme"]
+    ],
+    "beauty_wellness/local/zone": [
+      ["peux_tu_conseiller", "a_proximite"],
+      ["quel_est_meilleur", "pres_de"],
+      ["ou_trouver", "a_proximite"],
+      ["recommande_moi", "bonne_adresse", "a_proximite"],
+      ["bonne_adresse", "autour_de_moi"],
+      ["kw_bare", "a_proximite"],
+      ["kw_bare", "pres_de"],
+      ["a_proximite", "homme"],
+      ["je_cherche", "a_proximite"]
+    ],
+    "beauty_wellness/local/price": [
+      ["moins_cher"],
+      ["ou_trouver", "pas_cher"],
+      ["quel_x", "prix"],
+      ["recommande_moi", "bonne_adresse", "pas_cher"],
+      ["bonne_adresse", "moins_cher"],
+      ["pas_cher", "kw_bare"],
+      ["prix", "kw_bare"],
+      ["tarif", "homme"],
+      ["je_cherche", "pas_cher", "domicile"]
+    ],
+    "beauty_wellness/local/trust": [
+      ["comment_trouver", "fiable"],
+      ["quel_x", "fiable", "conseiller"],
+      ["quel_x", "avis"],
+      ["recommande_moi", "bonne_adresse", "fiable"],
+      ["bonne_adresse", "avis"],
+      ["avis_kw"],
+      ["fiable", "kw_bare"],
+      ["fiable", "avis"],
+      ["je_cherche", "fiable", "avis"]
+    ],
+    "beauty_wellness/local/ranking": [
+      ["quel_est_meilleur"],
+      ["quel_choisir"],
+      ["quel_x", "mieux_notes"],
+      ["bonne_adresse", "meilleur_kw"],
+      ["top_kw", "bonne_adresse"],
+      ["meilleur_kw"],
+      ["top_kw", "kw_bare"],
+      ["meilleur_kw", "mieux_notes"],
+      ["je_cherche", "mieux_notes"]
+    ],
+    "lodging/local/discovery": [
+      ["peux_tu_conseiller", "conseiller"],
+      ["ou_trouver"],
+      ["comment_trouver_bon"],
+      ["recommande_moi", "bonne_adresse"],
+      ["bonne_adresse"],
+      ["kw_a"],
+      ["bon_kw"],
+      ["qui_clause", "chiens"],
+      ["je_cherche", "spa"]
+    ],
+    "lodging/local/specialty": [
+      ["quel_x", "chiens"],
+      ["ou_trouver", "chiens"],
+      ["quel_est_meilleur", "chiens"],
+      ["recommande_moi", "bonne_adresse", "chiens"],
+      ["bonne_adresse", "chiens"],
+      ["qui_clause", "chiens"],
+      ["qui_clause", "chiens", "kw_bare"],
+      ["qui_clause", "chiens"],
+      ["je_cherche", "chiens"]
+    ],
+    "lodging/local/zone": [
+      ["peux_tu_conseiller", "a_proximite"],
+      ["quel_est_meilleur", "pres_de"],
+      ["ou_trouver", "a_proximite"],
+      ["recommande_moi", "bonne_adresse", "a_proximite"],
+      ["bonne_adresse", "autour_de_moi"],
+      ["kw_bare", "a_proximite"],
+      ["kw_bare", "pres_de"],
+      ["a_proximite", "qui_clause", "chiens"],
+      ["je_cherche", "a_proximite"]
+    ],
+    "lodging/local/price": [
+      ["moins_cher"],
+      ["ou_trouver", "pas_cher"],
+      ["quel_x", "prix"],
+      ["recommande_moi", "bonne_adresse", "pas_cher"],
+      ["bonne_adresse", "moins_cher"],
+      ["pas_cher", "kw_bare"],
+      ["prix", "kw_bare"],
+      ["spa", "prix"],
+      ["je_cherche", "pas_cher", "cheques_vacances"]
+    ],
+    "lodging/local/trust": [
+      ["comment_trouver", "fiable"],
+      ["quel_x", "fiable", "conseiller"],
+      ["quel_x", "avis"],
+      ["recommande_moi", "bonne_adresse", "fiable"],
+      ["bonne_adresse", "avis"],
+      ["avis_kw"],
+      ["fiable", "kw_bare"],
+      ["fiable", "avis"],
+      ["je_cherche", "fiable"]
+    ],
+    "lodging/local/ranking": [
+      ["quel_est_meilleur"],
+      ["quel_choisir"],
+      ["quel_x", "mieux_notes"],
+      ["bonne_adresse", "meilleur_kw"],
+      ["top_kw", "bonne_adresse"],
+      ["meilleur_kw"],
+      ["top_kw", "kw_bare"],
+      ["meilleur_kw", "mieux_notes"],
+      ["je_cherche", "mieux_notes"]
+    ],
+    "food/local/discovery": [
+      ["peux_tu_conseiller", "conseiller"],
+      ["ou_trouver"],
+      ["comment_trouver_bon"],
+      ["recommande_moi", "bonne_adresse"],
+      ["bonne_adresse"],
+      ["kw_a"],
+      ["bon_kw"],
+      ["qui_clause", "cheques_vacances"],
+      ["je_cherche", "livre", "domicile"]
+    ],
+    "food/local/specialty": [
+      ["quel_choisir", "anniversaire", "pour_x"],
+      ["ou_trouver", "anniversaire"],
+      ["quel_est_meilleur", "anniversaire"],
+      ["recommande_moi", "bonne_adresse", "anniversaire"],
+      ["bonne_adresse", "anniversaire"],
+      ["anniversaire", "kw_bare"],
+      ["anniversaire", "kw_a"],
+      ["anniversaire", "pour_x"],
+      ["je_cherche", "anniversaire"]
+    ],
+    "food/local/zone": [
+      ["peux_tu_conseiller", "a_proximite"],
+      ["quel_est_meilleur", "pres_de"],
+      ["ou_trouver", "a_proximite"],
+      ["recommande_moi", "bonne_adresse", "a_proximite"],
+      ["bonne_adresse", "autour_de_moi"],
+      ["kw_bare", "a_proximite"],
+      ["kw_bare", "pres_de"],
+      ["a_proximite", "qui_clause", "cheques_vacances"],
+      ["je_cherche", "a_proximite"]
+    ],
+    "food/local/price": [
+      ["moins_cher"],
+      ["ou_trouver", "pas_cher"],
+      ["quel_x", "prix"],
+      ["recommande_moi", "bonne_adresse", "pas_cher"],
+      ["bonne_adresse", "moins_cher"],
+      ["pas_cher", "kw_bare"],
+      ["prix", "kw_bare"],
+      ["prix"],
+      ["je_cherche", "pas_cher", "cheques_vacances"]
+    ],
+    "food/local/trust": [
+      ["comment_trouver", "fiable"],
+      ["quel_x", "fiable", "conseiller"],
+      ["quel_x", "avis"],
+      ["recommande_moi", "bonne_adresse", "fiable"],
+      ["bonne_adresse", "avis"],
+      ["avis_kw"],
+      ["fiable", "kw_bare"],
+      ["fiable", "avis"],
+      ["je_cherche", "fiable"]
+    ],
+    "food/local/ranking": [
+      ["quel_est_meilleur"],
+      ["quel_choisir"],
+      ["quel_x", "mieux_notes"],
+      ["bonne_adresse", "meilleur_kw"],
+      ["top_kw", "bonne_adresse"],
+      ["meilleur_kw"],
+      ["top_kw", "kw_bare"],
+      ["meilleur_kw", "mieux_notes"],
+      ["je_cherche", "mieux_notes"]
+    ],
+    "home_auto_services/local/discovery": [
+      ["peux_tu_conseiller", "conseiller"],
+      ["ou_trouver"],
+      ["comment_trouver_bon"],
+      ["recommande_moi", "bonne_adresse"],
+      ["bonne_adresse"],
+      ["kw_a"],
+      ["bon_kw"],
+      ["se_deplace", "domicile"],
+      ["je_cherche", "samedi"]
+    ],
+    "home_auto_services/local/specialty": [
+      ["quel_x", "specialise", "conseiller"],
+      ["ou_trouver", "specialise"],
+      ["comment_choisir", "specialise"],
+      ["recommande_moi", "bonne_adresse", "specialise"],
+      ["bonne_adresse", "specialise"],
+      ["specialise", "kw_bare"],
+      ["specialise", "kw_a"],
+      ["specialise"],
+      ["je_cherche", "se_deplace", "domicile"]
+    ],
+    "home_auto_services/local/zone": [
+      ["peux_tu_conseiller", "a_proximite"],
+      ["quel_est_meilleur", "pres_de"],
+      ["ou_trouver", "a_proximite"],
+      ["recommande_moi", "bonne_adresse", "a_proximite"],
+      ["bonne_adresse", "autour_de_moi"],
+      ["kw_bare", "a_proximite"],
+      ["kw_bare", "pres_de"],
+      ["a_proximite", "se_deplace", "domicile"],
+      ["je_cherche", "a_proximite"]
+    ],
+    "home_auto_services/local/price": [
+      ["moins_cher"],
+      ["ou_trouver", "pas_cher"],
+      ["quel_x", "prix"],
+      ["recommande_moi", "bonne_adresse", "pas_cher"],
+      ["bonne_adresse", "moins_cher"],
+      ["pas_cher", "kw_bare"],
+      ["prix", "kw_bare"],
+      ["tarif"],
+      ["je_cherche", "pas_cher", "se_deplace"]
+    ],
+    "home_auto_services/local/urgency": [
+      ["ouvert_aujourdhui"],
+      ["ou_trouver", "urgence"],
+      ["quel_x", "dimanche"],
+      ["recommande_moi", "bonne_adresse", "ouvert"],
+      ["bonne_adresse", "dimanche"],
+      ["urgence", "kw_bare"],
+      ["dimanche", "kw_bare"],
+      ["se_deplace", "urgence"],
+      ["je_cherche", "urgence", "samedi"]
+    ],
+    "home_auto_services/local/trust": [
+      ["comment_trouver", "fiable"],
+      ["quel_x", "fiable", "conseiller"],
+      ["quel_x", "avis"],
+      ["recommande_moi", "bonne_adresse", "fiable"],
+      ["bonne_adresse", "avis"],
+      ["avis_kw"],
+      ["fiable", "kw_bare"],
+      ["fiable", "avis"],
+      ["je_cherche", "fiable"]
+    ],
+    "local_retail/local/discovery": [
+      ["peux_tu_conseiller", "conseiller"],
+      ["ou_trouver"],
+      ["comment_trouver_bon"],
+      ["recommande_moi", "bonne_adresse"],
+      ["bonne_adresse"],
+      ["kw_a"],
+      ["bon_kw"],
+      ["livre", "domicile"],
+      ["je_cherche", "magasin_en_ligne"]
+    ],
+    "local_retail/local/specialty": [
+      ["quel_x", "plus_grand"],
+      ["plus_grand"],
+      ["ou_trouver", "plus_grand"],
+      ["recommande_moi", "bonne_adresse", "plus_grand"],
+      ["bonne_adresse", "plus_grand"],
+      ["plus_grand", "kw_bare"],
+      ["plus_grand", "kw_bare"],
+      ["plus_grand", "livre"],
+      ["je_cherche", "plus_grand"]
+    ],
+    "local_retail/local/price": [
+      ["moins_cher"],
+      ["ou_trouver", "pas_cher"],
+      ["quel_x", "prix"],
+      ["recommande_moi", "bonne_adresse", "pas_cher"],
+      ["bonne_adresse", "moins_cher"],
+      ["pas_cher", "kw_bare"],
+      ["prix", "kw_bare"],
+      ["prix", "livre"],
+      ["je_cherche", "pas_cher", "livre"]
+    ],
+    "local_retail/local/urgency": [
+      ["ouvert_aujourdhui"],
+      ["ou_trouver", "urgence"],
+      ["quel_x", "dimanche"],
+      ["recommande_moi", "bonne_adresse", "ouvert"],
+      ["bonne_adresse", "dimanche"],
+      ["urgence", "kw_bare"],
+      ["dimanche", "kw_bare"],
+      ["livre", "ouvert_aujourdhui"],
+      ["je_cherche", "dimanche"]
+    ],
+    "local_retail/local/trust": [
+      ["comment_trouver", "fiable"],
+      ["quel_x", "fiable", "conseiller"],
+      ["quel_x", "avis"],
+      ["recommande_moi", "bonne_adresse", "fiable"],
+      ["bonne_adresse", "avis"],
+      ["avis_kw"],
+      ["fiable", "kw_bare"],
+      ["fiable", "avis"],
+      ["je_cherche", "fiable", "avis"]
+    ],
+    "local_retail/local/ranking": [
+      ["quel_est_meilleur"],
+      ["quel_choisir"],
+      ["quel_x", "mieux_notes"],
+      ["bonne_adresse", "meilleur_kw"],
+      ["top_kw", "bonne_adresse"],
+      ["meilleur_kw"],
+      ["top_kw", "kw_bare"],
+      ["meilleur_kw", "mieux_notes"],
+      ["je_cherche", "mieux_notes"]
+    ],
+    "local_retail/national/discovery": [
+      ["peux_tu_conseiller", "magasin_en_ligne"],
+      ["ou_trouver", "qui_livre_en_ligne"],
+      ["quel_est_meilleur", "en_ligne_kw"],
+      ["recommande_moi", "bonne_adresse", "magasin_en_ligne"],
+      ["bonne_adresse", "magasin_en_ligne"],
+      ["en_ligne_kw"],
+      ["meilleur_en_ligne"],
+      ["qui_livre_en_ligne", "livre"],
+      ["je_cherche", "qui_livre_en_ligne"]
+    ],
+    "local_retail/national/specialty": [
+      ["quel_x", "plus_grand"],
+      ["plus_grand"],
+      ["ou_trouver", "plus_grand"],
+      ["recommande_moi", "bonne_adresse", "plus_grand"],
+      ["bonne_adresse", "plus_grand"],
+      ["plus_grand", "kw_bare"],
+      ["plus_grand", "kw_bare"],
+      ["plus_grand", "livre"],
+      ["je_cherche", "plus_grand"]
+    ],
+    "local_retail/national/price": [
+      ["moins_cher", "magasin_en_ligne"],
+      ["ou_trouver", "pas_cher"],
+      ["quel_x", "prix"],
+      ["recommande_moi", "bonne_adresse", "pas_cher"],
+      ["bonne_adresse", "moins_cher"],
+      ["pas_cher", "en_ligne_kw"],
+      ["prix", "en_ligne_kw"],
+      ["prix", "livre"],
+      ["je_cherche", "pas_cher", "qui_livre_en_ligne"]
+    ],
+    "local_retail/national/urgency": [
+      ["quel_x", "livraison_rapide"],
+      ["ou_trouver", "urgence", "qui_livre_en_ligne"],
+      ["quel_x", "livraison_rapide"],
+      ["recommande_moi", "bonne_adresse", "livraison_rapide"],
+      ["bonne_adresse", "livraison_rapide"],
+      ["livraison_rapide", "en_ligne_kw"],
+      ["livraison_rapide", "en_ligne_kw"],
+      ["qui_livre_en_ligne", "urgence"],
+      ["je_cherche", "livraison_rapide"]
+    ],
+    "local_retail/national/trust": [
+      ["comment_trouver", "fiable"],
+      ["quel_x", "fiable", "conseiller"],
+      ["quel_x", "avis"],
+      ["recommande_moi", "bonne_adresse", "fiable"],
+      ["bonne_adresse", "avis"],
+      ["avis", "en_ligne_kw"],
+      ["fiable", "en_ligne_kw"],
+      ["fiable", "avis"],
+      ["je_cherche", "comment_savoir", "fiable"]
+    ],
+    "local_retail/national/ranking": [
+      ["quel_est_meilleur", "en_ligne_kw"],
+      ["quel_choisir", "en_ligne_kw"],
+      ["quel_x", "mieux_notes"],
+      ["bonne_adresse", "meilleur_en_ligne"],
+      ["top_kw", "bonne_adresse"],
+      ["top_kw", "en_ligne_kw"],
+      ["meilleur_en_ligne"],
+      ["meilleur_en_ligne", "mieux_notes"],
+      ["je_cherche", "mieux_notes"]
+    ],
+    "professional_services/local/discovery": [
+      ["peux_tu_conseiller", "conseiller"],
+      ["ou_trouver"],
+      ["comment_trouver_bon"],
+      ["recommande_moi", "bonne_adresse"],
+      ["bonne_adresse"],
+      ["kw_a"],
+      ["bon_kw"],
+      ["qui_clause", "aide_juridictionnelle"],
+      ["je_cherche"]
+    ],
+    "professional_services/local/specialty": [
+      ["quel_x", "specialise", "conseiller"],
+      ["ou_trouver", "specialise"],
+      ["comment_choisir", "specialise"],
+      ["recommande_moi", "bonne_adresse", "specialise"],
+      ["bonne_adresse", "specialise"],
+      ["specialise", "kw_bare"],
+      ["specialise", "kw_a"],
+      ["specialise", "droit_travail"],
+      ["je_cherche", "divorce"]
+    ],
+    "professional_services/local/price": [
+      ["quel_x", "tarif"],
+      ["ou_trouver", "pas_cher"],
+      ["quel_x", "prix"],
+      ["recommande_moi", "bonne_adresse", "pas_cher"],
+      ["bonne_adresse", "moins_cher"],
+      ["pas_cher", "kw_bare"],
+      ["prix", "kw_bare"],
+      ["gratuit"],
+      ["je_cherche", "pas_cher"]
+    ],
+    "professional_services/local/urgency": [
+      ["ouvert_aujourdhui"],
+      ["ou_trouver", "urgence"],
+      ["quel_x", "dimanche"],
+      ["recommande_moi", "bonne_adresse", "ouvert"],
+      ["bonne_adresse", "dimanche"],
+      ["urgence", "kw_bare"],
+      ["dimanche", "kw_bare"],
+      ["de_garde"],
+      ["je_cherche", "urgence"]
+    ],
+    "professional_services/local/trust": [
+      ["comment_trouver", "fiable"],
+      ["quel_x", "fiable", "conseiller"],
+      ["quel_x", "avis"],
+      ["recommande_moi", "bonne_adresse", "fiable"],
+      ["bonne_adresse", "avis"],
+      ["avis_kw"],
+      ["fiable", "kw_bare"],
+      ["fiable", "avis"],
+      ["je_cherche", "comment_savoir", "fiable"]
+    ],
+    "professional_services/local/ranking": [
+      ["quel_est_meilleur"],
+      ["quel_choisir"],
+      ["quel_x", "mieux_notes"],
+      ["bonne_adresse", "meilleur_kw"],
+      ["top_kw", "bonne_adresse"],
+      ["meilleur_kw"],
+      ["top_kw", "kw_bare"],
+      ["meilleur_kw", "mieux_notes"],
+      ["je_cherche", "mieux_notes"]
+    ],
+    "real_estate/local/discovery": [
+      ["peux_tu_conseiller", "conseiller"],
+      ["ou_trouver"],
+      ["comment_trouver_bon"],
+      ["recommande_moi", "bonne_adresse"],
+      ["bonne_adresse"],
+      ["kw_a"],
+      ["bon_kw"],
+      ["pour_x", "vendre"],
+      ["je_cherche", "location"]
+    ],
+    "real_estate/local/specialty": [
+      ["quel_choisir", "vendre"],
+      ["quel_est_meilleur", "vendre"],
+      ["quel_choisir", "location"],
+      ["recommande_moi", "bonne_adresse", "vendre"],
+      ["bonne_adresse", "location"],
+      ["location", "kw_bare"],
+      ["vendre", "kw_bare"],
+      ["pour_x", "vendre"],
+      ["je_cherche", "qui_clause", "location"]
+    ],
+    "real_estate/local/zone": [
+      ["peux_tu_conseiller", "a_proximite"],
+      ["quel_est_meilleur", "pres_de"],
+      ["ou_trouver", "a_proximite"],
+      ["recommande_moi", "bonne_adresse", "a_proximite"],
+      ["bonne_adresse", "autour_de_moi"],
+      ["kw_bare", "a_proximite"],
+      ["kw_bare", "pres_de"],
+      ["a_proximite", "vendre"],
+      ["je_cherche", "a_proximite"]
+    ],
+    "real_estate/local/price": [
+      ["quel_x", "frais_agence"],
+      ["ou_trouver", "pas_cher"],
+      ["quel_x", "prix"],
+      ["recommande_moi", "bonne_adresse", "pas_cher"],
+      ["bonne_adresse", "moins_cher"],
+      ["pas_cher", "kw_bare"],
+      ["prix", "kw_bare"],
+      ["frais_agence"],
+      ["je_cherche", "qui_clause", "frais_agence"]
+    ],
+    "real_estate/local/trust": [
+      ["comment_trouver", "fiable"],
+      ["quel_x", "fiable", "conseiller"],
+      ["quel_x", "avis"],
+      ["recommande_moi", "bonne_adresse", "fiable"],
+      ["bonne_adresse", "avis"],
+      ["avis_kw"],
+      ["fiable", "kw_bare"],
+      ["fiable", "avis"],
+      ["je_cherche", "fiable", "vendre"]
+    ],
+    "real_estate/local/ranking": [
+      ["quel_est_meilleur"],
+      ["quel_choisir"],
+      ["quel_x", "mieux_notes"],
+      ["bonne_adresse", "meilleur_kw"],
+      ["top_kw", "bonne_adresse"],
+      ["meilleur_kw"],
+      ["top_kw", "kw_bare"],
+      ["meilleur_kw", "mieux_notes"],
+      ["je_cherche", "mieux_notes"]
+    ],
+    "education/local/discovery": [
+      ["peux_tu_conseiller", "conseiller"],
+      ["ou_trouver"],
+      ["comment_trouver_bon"],
+      ["recommande_moi", "bonne_adresse"],
+      ["bonne_adresse"],
+      ["kw_a"],
+      ["bon_kw"],
+      ["adultes"],
+      ["je_cherche", "enfant"]
+    ],
+    "education/local/specialty": [
+      ["quel_x", "en_ligne_cours"],
+      ["ou_trouver", "en_ligne_cours"],
+      ["quel_est_meilleur", "en_ligne_cours"],
+      ["recommande_moi", "bonne_adresse", "en_ligne_cours"],
+      ["bonne_adresse", "adultes"],
+      ["en_ligne_cours", "kw_bare"],
+      ["adultes", "kw_bare"],
+      ["en_ligne_cours", "adultes"],
+      ["je_cherche", "en_ligne_cours"]
+    ],
+    "education/local/zone": [
+      ["peux_tu_conseiller", "a_proximite"],
+      ["quel_est_meilleur", "pres_de"],
+      ["ou_trouver", "a_proximite"],
+      ["recommande_moi", "bonne_adresse", "a_proximite"],
+      ["bonne_adresse", "autour_de_moi"],
+      ["kw_bare", "a_proximite"],
+      ["kw_bare", "pres_de"],
+      ["a_proximite", "adultes"],
+      ["je_cherche", "a_proximite"]
+    ],
+    "education/local/price": [
+      ["moins_cher"],
+      ["ou_trouver", "pas_cher"],
+      ["quel_x", "prix"],
+      ["recommande_moi", "bonne_adresse", "pas_cher"],
+      ["bonne_adresse", "moins_cher"],
+      ["pas_cher", "kw_bare"],
+      ["prix", "kw_bare"],
+      ["tarif", "adultes"],
+      ["je_cherche", "pas_cher", "enfant"]
+    ],
+    "education/local/ranking": [
+      ["quel_est_meilleur"],
+      ["quel_choisir"],
+      ["quel_x", "mieux_notes"],
+      ["bonne_adresse", "meilleur_kw"],
+      ["top_kw", "bonne_adresse"],
+      ["meilleur_kw"],
+      ["top_kw", "kw_bare"],
+      ["meilleur_kw", "mieux_notes"],
+      ["je_cherche", "mieux_notes"]
+    ],
+    "education/local/trust": [
+      ["comment_trouver", "fiable"],
+      ["quel_x", "fiable", "conseiller"],
+      ["quel_x", "avis"],
+      ["recommande_moi", "bonne_adresse", "fiable"],
+      ["bonne_adresse", "avis"],
+      ["avis_kw"],
+      ["fiable", "kw_bare"],
+      ["fiable", "avis"],
+      ["je_cherche", "fiable", "enfant"]
+    ],
+    "online_national/national/discovery": [
+      ["quel_est_meilleur", "meilleure_boutique"],
+      ["peux_tu_conseiller", "boutique_en_ligne"],
+      ["acheter_en_ligne"],
+      ["recommande_moi", "boutique_en_ligne"],
+      ["meilleure_boutique"],
+      ["acheter_en_ligne"],
+      ["boutique_en_ligne"],
+      ["boutique_en_ligne", "qui_livre_en_ligne"],
+      ["je_cherche", "livre"]
+    ],
+    "online_national/national/specialty": [
+      ["plus_grand", "boutique_en_ligne"],
+      ["plus_grand"],
+      ["acheter_en_ligne", "plus_grand"],
+      ["recommande_moi", "plus_grand"],
+      ["boutique_en_ligne", "plus_grand"],
+      ["boutique_en_ligne", "plus_grand"],
+      ["acheter_en_ligne", "plus_grand"],
+      ["plus_grand", "livre"],
+      ["je_cherche", "plus_grand"]
+    ],
+    "online_national/national/price": [
+      ["moins_cher", "boutique_en_ligne"],
+      ["prix", "boutique_en_ligne"],
+      ["acheter_en_ligne", "pas_cher"],
+      ["recommande_moi", "pas_cher"],
+      ["boutique_en_ligne", "moins_cher"],
+      ["acheter_en_ligne", "pas_cher"],
+      ["boutique_en_ligne", "prix"],
+      ["prix", "livre"],
+      ["je_cherche", "pas_cher", "qui_livre_en_ligne"]
+    ],
+    "online_national/national/trust": [
+      ["site_fiable", "boutique_en_ligne"],
+      ["comment_savoir", "site_fiable"],
+      ["boutique_en_ligne", "avis"],
+      ["recommande_moi", "fiable"],
+      ["meilleure_boutique", "fiable"],
+      ["boutique_en_ligne", "avis"],
+      ["boutique_en_ligne", "fiable"],
+      ["fiable", "avis"],
+      ["je_cherche", "fiable"]
+    ],
+    "online_national/national/urgency": [
+      ["boutique_en_ligne", "livraison_rapide"],
+      ["acheter_en_ligne", "urgence"],
+      ["boutique_en_ligne", "livraison_rapide"],
+      ["recommande_moi", "livraison_rapide"],
+      ["boutique_en_ligne", "livraison_rapide"],
+      ["acheter_en_ligne", "livraison_rapide"],
+      ["boutique_en_ligne", "livraison_rapide"],
+      ["qui_livre_en_ligne", "urgence"],
+      ["je_cherche", "livraison_rapide"]
+    ],
+    "online_national/national/ranking": [
+      ["quel_est_meilleur", "boutique_en_ligne"],
+      ["quel_choisir", "boutique_en_ligne"],
+      ["mieux_notes", "boutique_en_ligne"],
+      ["meilleure_boutique"],
+      ["top_boutique", "top_kw"],
+      ["top_boutique"],
+      ["meilleure_boutique"],
+      ["meilleure_boutique", "avis"],
+      ["je_cherche", "mieux_notes"]
+    ]
+  },
+  "brand": {
+    "brand.trust": ["c_est_fiable"],
+    "brand.opinion": ["avis_brand"]
+  }
+}

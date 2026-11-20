@@ -155,6 +155,13 @@ describe("agreement groups", () => {
     internal(() => agree("{un|una} {sustantivo}", "panadería", "es"));
   });
 
+  test("a bare French noun still elides de, with no gender to agree with", () => {
+    const shop = "Boutique en ligne de {sustantivo}";
+    expect(agree(shop, "accessoires", "fr")).toBe("Boutique en ligne d'{sustantivo}");
+    expect(agree(shop, "vêtements", "fr")).toBe(shop);
+    internal(() => agree("{un|une} {sustantivo}", "vêtements", "fr"));
+  });
+
   test.each([
     [
       "a group with the wrong number of forms",
