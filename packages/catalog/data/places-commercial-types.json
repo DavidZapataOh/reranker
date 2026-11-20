@@ -1,0 +1,3331 @@
+{
+  "source": "https://developers.google.com/maps/documentation/places/web-service/place-types#table-a",
+  "retrievedAt": "2026-11-18",
+  "types": [
+    {
+      "type": "car_dealer",
+      "group": "Automotive",
+      "label": "Concesionario de carros",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "car_rental",
+      "group": "Automotive",
+      "label": "Alquiler de carros",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "car_repair",
+      "group": "Automotive",
+      "label": "Taller mecánico",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "car_wash",
+      "group": "Automotive",
+      "label": "Lavadero de carros",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "ebike_charging_station",
+      "group": "Automotive",
+      "label": "Estación de carga de bicicletas eléctricas",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "electric_vehicle_charging_station",
+      "group": "Automotive",
+      "label": "Estación de carga de vehículos eléctricos",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "gas_station",
+      "group": "Automotive",
+      "label": "Estación de servicio",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "parking",
+      "group": "Automotive",
+      "label": "Parqueadero",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "parking_garage",
+      "group": "Automotive",
+      "label": "Parqueadero cubierto",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "parking_lot",
+      "group": "Automotive",
+      "label": "Parqueadero",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "rest_stop",
+      "group": "Automotive",
+      "label": "Área de descanso",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "tire_shop",
+      "group": "Automotive",
+      "label": "Llantería",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "truck_dealer",
+      "group": "Automotive",
+      "label": "Concesionario de camiones",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "business_center",
+      "group": "Business",
+      "label": "Centro de negocios",
+      "archetype": "professional_services",
+      "commercial": true
+    },
+    {
+      "type": "corporate_office",
+      "group": "Business",
+      "label": "Oficina corporativa",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "coworking_space",
+      "group": "Business",
+      "label": "Coworking",
+      "archetype": "professional_services",
+      "commercial": true
+    },
+    {
+      "type": "farm",
+      "group": "Business",
+      "label": "Finca",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "manufacturer",
+      "group": "Business",
+      "label": "Fabricante",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "ranch",
+      "group": "Business",
+      "label": "Hacienda",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "supplier",
+      "group": "Business",
+      "label": "Proveedor",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "television_studio",
+      "group": "Business",
+      "label": "Estudio de televisión",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "art_gallery",
+      "group": "Culture",
+      "label": "Galería de arte",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "art_museum",
+      "group": "Culture",
+      "label": "Museo de arte",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "art_studio",
+      "group": "Culture",
+      "label": "Taller de arte",
+      "archetype": "education",
+      "commercial": true
+    },
+    {
+      "type": "auditorium",
+      "group": "Culture",
+      "label": "Auditorio",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "castle",
+      "group": "Culture",
+      "label": "Castillo",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "cultural_landmark",
+      "group": "Culture",
+      "label": "Sitio cultural",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "fountain",
+      "group": "Culture",
+      "label": "Fuente",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "historical_place",
+      "group": "Culture",
+      "label": "Lugar histórico",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "history_museum",
+      "group": "Culture",
+      "label": "Museo de historia",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "monument",
+      "group": "Culture",
+      "label": "Monumento",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "museum",
+      "group": "Culture",
+      "label": "Museo",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "performing_arts_theater",
+      "group": "Culture",
+      "label": "Teatro",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "sculpture",
+      "group": "Culture",
+      "label": "Escultura",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "academic_department",
+      "group": "Education",
+      "label": "Departamento académico",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "educational_institution",
+      "group": "Education",
+      "label": "Institución educativa",
+      "archetype": "education",
+      "commercial": true
+    },
+    {
+      "type": "library",
+      "group": "Education",
+      "label": "Biblioteca",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "preschool",
+      "group": "Education",
+      "label": "Jardín infantil",
+      "archetype": "education",
+      "commercial": true
+    },
+    {
+      "type": "primary_school",
+      "group": "Education",
+      "label": "Colegio de primaria",
+      "archetype": "education",
+      "commercial": true
+    },
+    {
+      "type": "research_institute",
+      "group": "Education",
+      "label": "Instituto de investigación",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "school",
+      "group": "Education",
+      "label": "Colegio",
+      "archetype": "education",
+      "commercial": true
+    },
+    {
+      "type": "secondary_school",
+      "group": "Education",
+      "label": "Colegio de bachillerato",
+      "archetype": "education",
+      "commercial": true
+    },
+    {
+      "type": "university",
+      "group": "Education",
+      "label": "Universidad",
+      "archetype": "education",
+      "commercial": true
+    },
+    {
+      "type": "adventure_sports_center",
+      "group": "Entertainment and Recreation",
+      "label": "Centro de deportes de aventura",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "amphitheatre",
+      "group": "Entertainment and Recreation",
+      "label": "Anfiteatro",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "amusement_center",
+      "group": "Entertainment and Recreation",
+      "label": "Centro de entretenimiento",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "amusement_park",
+      "group": "Entertainment and Recreation",
+      "label": "Parque de diversiones",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "aquarium",
+      "group": "Entertainment and Recreation",
+      "label": "Acuario",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "banquet_hall",
+      "group": "Entertainment and Recreation",
+      "label": "Salón de eventos",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "barbecue_area",
+      "group": "Entertainment and Recreation",
+      "label": "Zona de asados",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "botanical_garden",
+      "group": "Entertainment and Recreation",
+      "label": "Jardín botánico",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "bowling_alley",
+      "group": "Entertainment and Recreation",
+      "label": "Bolera",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "casino",
+      "group": "Entertainment and Recreation",
+      "label": "Casino",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "childrens_camp",
+      "group": "Entertainment and Recreation",
+      "label": "Campamento infantil",
+      "archetype": "education",
+      "commercial": true
+    },
+    {
+      "type": "city_park",
+      "group": "Entertainment and Recreation",
+      "label": "Parque urbano",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "comedy_club",
+      "group": "Entertainment and Recreation",
+      "label": "Club de comedia",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "community_center",
+      "group": "Entertainment and Recreation",
+      "label": "Centro comunitario",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "concert_hall",
+      "group": "Entertainment and Recreation",
+      "label": "Sala de conciertos",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "convention_center",
+      "group": "Entertainment and Recreation",
+      "label": "Centro de convenciones",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "cultural_center",
+      "group": "Entertainment and Recreation",
+      "label": "Centro cultural",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "cycling_park",
+      "group": "Entertainment and Recreation",
+      "label": "Parque de ciclismo",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "dance_hall",
+      "group": "Entertainment and Recreation",
+      "label": "Salón de baile",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "dog_park",
+      "group": "Entertainment and Recreation",
+      "label": "Parque para perros",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "event_venue",
+      "group": "Entertainment and Recreation",
+      "label": "Lugar para eventos",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "ferris_wheel",
+      "group": "Entertainment and Recreation",
+      "label": "Rueda de Chicago",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "garden",
+      "group": "Entertainment and Recreation",
+      "label": "Jardín",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "go_karting_venue",
+      "group": "Entertainment and Recreation",
+      "label": "Pista de karts",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "hiking_area",
+      "group": "Entertainment and Recreation",
+      "label": "Zona de senderismo",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "historical_landmark",
+      "group": "Entertainment and Recreation",
+      "label": "Monumento histórico",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "indoor_playground",
+      "group": "Entertainment and Recreation",
+      "label": "Parque infantil cubierto",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "internet_cafe",
+      "group": "Entertainment and Recreation",
+      "label": "Café internet",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "karaoke",
+      "group": "Entertainment and Recreation",
+      "label": "Karaoke",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "live_music_venue",
+      "group": "Entertainment and Recreation",
+      "label": "Lugar de música en vivo",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "marina",
+      "group": "Entertainment and Recreation",
+      "label": "Marina",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "miniature_golf_course",
+      "group": "Entertainment and Recreation",
+      "label": "Minigolf",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "movie_rental",
+      "group": "Entertainment and Recreation",
+      "label": "Alquiler de películas",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "movie_theater",
+      "group": "Entertainment and Recreation",
+      "label": "Cine",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "national_park",
+      "group": "Entertainment and Recreation",
+      "label": "Parque nacional",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "night_club",
+      "group": "Entertainment and Recreation",
+      "label": "Discoteca",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "observation_deck",
+      "group": "Entertainment and Recreation",
+      "label": "Mirador",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "off_roading_area",
+      "group": "Entertainment and Recreation",
+      "label": "Zona de todoterreno",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "opera_house",
+      "group": "Entertainment and Recreation",
+      "label": "Teatro de ópera",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "paintball_center",
+      "group": "Entertainment and Recreation",
+      "label": "Campo de paintball",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "park",
+      "group": "Entertainment and Recreation",
+      "label": "Parque",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "philharmonic_hall",
+      "group": "Entertainment and Recreation",
+      "label": "Sala filarmónica",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "picnic_ground",
+      "group": "Entertainment and Recreation",
+      "label": "Zona de pícnic",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "planetarium",
+      "group": "Entertainment and Recreation",
+      "label": "Planetario",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "plaza",
+      "group": "Entertainment and Recreation",
+      "label": "Plaza",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "roller_coaster",
+      "group": "Entertainment and Recreation",
+      "label": "Montaña rusa",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "skateboard_park",
+      "group": "Entertainment and Recreation",
+      "label": "Parque de patinaje",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "state_park",
+      "group": "Entertainment and Recreation",
+      "label": "Parque regional",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "tourist_attraction",
+      "group": "Entertainment and Recreation",
+      "label": "Atracción turística",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "video_arcade",
+      "group": "Entertainment and Recreation",
+      "label": "Sala de videojuegos",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "vineyard",
+      "group": "Entertainment and Recreation",
+      "label": "Viñedo",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "visitor_center",
+      "group": "Entertainment and Recreation",
+      "label": "Centro de visitantes",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "water_park",
+      "group": "Entertainment and Recreation",
+      "label": "Parque acuático",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "wedding_venue",
+      "group": "Entertainment and Recreation",
+      "label": "Lugar para bodas",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "wildlife_park",
+      "group": "Entertainment and Recreation",
+      "label": "Parque de fauna",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "wildlife_refuge",
+      "group": "Entertainment and Recreation",
+      "label": "Refugio de fauna",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "zoo",
+      "group": "Entertainment and Recreation",
+      "label": "Zoológico",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "public_bath",
+      "group": "Facilities",
+      "label": "Baños termales",
+      "archetype": "beauty_wellness",
+      "commercial": true
+    },
+    {
+      "type": "public_bathroom",
+      "group": "Facilities",
+      "label": "Baño público",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "stable",
+      "group": "Facilities",
+      "label": "Establo",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "accounting",
+      "group": "Finance",
+      "label": "Contador",
+      "archetype": "professional_services",
+      "commercial": true
+    },
+    {
+      "type": "atm",
+      "group": "Finance",
+      "label": "Cajero automático",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "bank",
+      "group": "Finance",
+      "label": "Banco",
+      "archetype": "professional_services",
+      "commercial": true
+    },
+    {
+      "type": "acai_shop",
+      "group": "Food and Drink",
+      "label": "Tienda de açaí",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "afghani_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante afgano",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "african_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante africano",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "american_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante estadounidense",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "argentinian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante argentino",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "asian_fusion_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de fusión asiática",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "asian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante asiático",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "australian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante australiano",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "austrian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante austriaco",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "bagel_shop",
+      "group": "Food and Drink",
+      "label": "Tienda de bagels",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "bakery",
+      "group": "Food and Drink",
+      "label": "Panadería",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "bangladeshi_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante bangladesí",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "bar",
+      "group": "Food and Drink",
+      "label": "Bar",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "bar_and_grill",
+      "group": "Food and Drink",
+      "label": "Bar y parrilla",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "barbecue_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de parrilla",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "basque_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante vasco",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "bavarian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante bávaro",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "beer_garden",
+      "group": "Food and Drink",
+      "label": "Cervecería al aire libre",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "belgian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante belga",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "bistro",
+      "group": "Food and Drink",
+      "label": "Bistró",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "brazilian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante brasileño",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "breakfast_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de desayunos",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "brewery",
+      "group": "Food and Drink",
+      "label": "Cervecería artesanal",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "brewpub",
+      "group": "Food and Drink",
+      "label": "Bar cervecero",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "british_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante británico",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "brunch_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de brunch",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "buffet_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de bufé",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "burmese_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante birmano",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "burrito_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de burritos",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "cafe",
+      "group": "Food and Drink",
+      "label": "Café",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "cafeteria",
+      "group": "Food and Drink",
+      "label": "Cafetería",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "cajun_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante cajún",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "cake_shop",
+      "group": "Food and Drink",
+      "label": "Pastelería de tortas",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "californian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante californiano",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "cambodian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante camboyano",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "candy_store",
+      "group": "Food and Drink",
+      "label": "Tienda de dulces",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "cantonese_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante cantonés",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "caribbean_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante caribeño",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "cat_cafe",
+      "group": "Food and Drink",
+      "label": "Café de gatos",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "chicken_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de pollo",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "chicken_wings_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de alitas",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "chilean_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante chileno",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "chinese_noodle_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de fideos chinos",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "chinese_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante chino",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "chocolate_factory",
+      "group": "Food and Drink",
+      "label": "Fábrica de chocolate",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "chocolate_shop",
+      "group": "Food and Drink",
+      "label": "Chocolatería",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "cocktail_bar",
+      "group": "Food and Drink",
+      "label": "Bar de cócteles",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "coffee_roastery",
+      "group": "Food and Drink",
+      "label": "Tostadora de café",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "coffee_shop",
+      "group": "Food and Drink",
+      "label": "Tienda de café",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "coffee_stand",
+      "group": "Food and Drink",
+      "label": "Puesto de café",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "colombian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante colombiano",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "confectionery",
+      "group": "Food and Drink",
+      "label": "Confitería",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "croatian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante croata",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "cuban_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante cubano",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "czech_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante checo",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "danish_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante danés",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "deli",
+      "group": "Food and Drink",
+      "label": "Charcutería",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "dessert_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de postres",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "dessert_shop",
+      "group": "Food and Drink",
+      "label": "Tienda de postres",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "dim_sum_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de dim sum",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "diner",
+      "group": "Food and Drink",
+      "label": "Restaurante de comida casera",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "dog_cafe",
+      "group": "Food and Drink",
+      "label": "Café de perros",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "donut_shop",
+      "group": "Food and Drink",
+      "label": "Tienda de donas",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "dumpling_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de dumplings",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "dutch_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante neerlandés",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "eastern_european_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de Europa del Este",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "ethiopian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante etíope",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "european_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante europeo",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "falafel_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de falafel",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "family_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante familiar",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "fast_food_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de comida rápida",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "filipino_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante filipino",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "fine_dining_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de alta cocina",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "fish_and_chips_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de fish and chips",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "fondue_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de fondue",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "food_court",
+      "group": "Food and Drink",
+      "label": "Plazoleta de comidas",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "french_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante francés",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "fusion_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de fusión",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "gastropub",
+      "group": "Food and Drink",
+      "label": "Gastrobar",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "german_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante alemán",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "greek_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante griego",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "gyro_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de gyros",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "hamburger_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de hamburguesas",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "hawaiian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante hawaiano",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "hookah_bar",
+      "group": "Food and Drink",
+      "label": "Bar de narguile",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "hot_dog_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de perros calientes",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "hot_dog_stand",
+      "group": "Food and Drink",
+      "label": "Puesto de perros calientes",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "hot_pot_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de hot pot",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "hungarian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante húngaro",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "ice_cream_shop",
+      "group": "Food and Drink",
+      "label": "Heladería",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "indian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante indio",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "indonesian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante indonesio",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "irish_pub",
+      "group": "Food and Drink",
+      "label": "Pub irlandés",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "irish_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante irlandés",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "israeli_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante israelí",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "italian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante italiano",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "japanese_curry_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de curry japonés",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "japanese_izakaya_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante izakaya japonés",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "japanese_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante japonés",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "juice_shop",
+      "group": "Food and Drink",
+      "label": "Juguería",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "kebab_shop",
+      "group": "Food and Drink",
+      "label": "Tienda de kebab",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "korean_barbecue_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de parrilla coreana",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "korean_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante coreano",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "latin_american_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante latinoamericano",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "lebanese_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante libanés",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "lounge_bar",
+      "group": "Food and Drink",
+      "label": "Bar lounge",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "malaysian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante malasio",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "meal_delivery",
+      "group": "Food and Drink",
+      "label": "Comida a domicilio",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "meal_takeaway",
+      "group": "Food and Drink",
+      "label": "Comida para llevar",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "mediterranean_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante mediterráneo",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "mexican_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante mexicano",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "middle_eastern_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de Oriente Medio",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "mongolian_barbecue_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de parrilla mongola",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "moroccan_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante marroquí",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "noodle_shop",
+      "group": "Food and Drink",
+      "label": "Tienda de fideos",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "north_indian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante del norte de la India",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "oyster_bar_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de ostras",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "pakistani_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante pakistaní",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "pastry_shop",
+      "group": "Food and Drink",
+      "label": "Pastelería",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "persian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante persa",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "peruvian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante peruano",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "pizza_delivery",
+      "group": "Food and Drink",
+      "label": "Pizza a domicilio",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "pizza_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de pizza",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "polish_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante polaco",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "portuguese_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante portugués",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "pub",
+      "group": "Food and Drink",
+      "label": "Pub",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "ramen_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de ramen",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "romanian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante rumano",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "russian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante ruso",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "salad_shop",
+      "group": "Food and Drink",
+      "label": "Tienda de ensaladas",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "sandwich_shop",
+      "group": "Food and Drink",
+      "label": "Sanduchería",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "scandinavian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante escandinavo",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "seafood_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de mariscos",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "shawarma_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de shawarma",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "snack_bar",
+      "group": "Food and Drink",
+      "label": "Cafetería de pasabocas",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "soul_food_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de soul food",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "soup_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de sopas",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "south_american_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante suramericano",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "south_indian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante del sur de la India",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "southwestern_us_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante del suroeste de Estados Unidos",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "spanish_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante español",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "sports_bar",
+      "group": "Food and Drink",
+      "label": "Bar deportivo",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "sri_lankan_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante esrilanqués",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "steak_house",
+      "group": "Food and Drink",
+      "label": "Restaurante de carnes",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "sushi_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de sushi",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "swiss_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante suizo",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "taco_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de tacos",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "taiwanese_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante taiwanés",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "tapas_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de tapas",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "tea_house",
+      "group": "Food and Drink",
+      "label": "Casa de té",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "tex_mex_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante tex-mex",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "thai_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante tailandés",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "tibetan_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante tibetano",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "tonkatsu_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de tonkatsu",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "turkish_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante turco",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "ukrainian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante ucraniano",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "vegan_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante vegano",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "vegetarian_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante vegetariano",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "vietnamese_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante vietnamita",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "western_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de comida del oeste",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "wine_bar",
+      "group": "Food and Drink",
+      "label": "Bar de vinos",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "winery",
+      "group": "Food and Drink",
+      "label": "Bodega de vinos",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "yakiniku_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de yakiniku",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "yakitori_restaurant",
+      "group": "Food and Drink",
+      "label": "Restaurante de yakitori",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "country",
+      "group": "Geographical Areas",
+      "label": "País",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "locality",
+      "group": "Geographical Areas",
+      "label": "Localidad",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "postal_code",
+      "group": "Geographical Areas",
+      "label": "Código postal",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "school_district",
+      "group": "Geographical Areas",
+      "label": "Distrito escolar",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "city_hall",
+      "group": "Government",
+      "label": "Alcaldía",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "courthouse",
+      "group": "Government",
+      "label": "Juzgado",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "embassy",
+      "group": "Government",
+      "label": "Embajada",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "fire_station",
+      "group": "Government",
+      "label": "Estación de bomberos",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "government_office",
+      "group": "Government",
+      "label": "Oficina de gobierno",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "local_government_office",
+      "group": "Government",
+      "label": "Oficina de gobierno local",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "neighborhood_police_station",
+      "group": "Government",
+      "label": "Estación de policía de barrio",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "police",
+      "group": "Government",
+      "label": "Policía",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "post_office",
+      "group": "Government",
+      "label": "Oficina de correos",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "chiropractor",
+      "group": "Health and Wellness",
+      "label": "Quiropráctico",
+      "archetype": "health",
+      "commercial": true
+    },
+    {
+      "type": "dental_clinic",
+      "group": "Health and Wellness",
+      "label": "Clínica odontológica",
+      "archetype": "health",
+      "commercial": true
+    },
+    {
+      "type": "dentist",
+      "group": "Health and Wellness",
+      "label": "Odontólogo",
+      "archetype": "health",
+      "commercial": true
+    },
+    {
+      "type": "doctor",
+      "group": "Health and Wellness",
+      "label": "Médico",
+      "archetype": "health",
+      "commercial": true
+    },
+    {
+      "type": "drugstore",
+      "group": "Health and Wellness",
+      "label": "Droguería",
+      "archetype": "health",
+      "commercial": true
+    },
+    {
+      "type": "general_hospital",
+      "group": "Health and Wellness",
+      "label": "Hospital general",
+      "archetype": "health",
+      "commercial": true
+    },
+    {
+      "type": "hospital",
+      "group": "Health and Wellness",
+      "label": "Hospital",
+      "archetype": "health",
+      "commercial": true
+    },
+    {
+      "type": "massage",
+      "group": "Health and Wellness",
+      "label": "Masajes",
+      "archetype": "beauty_wellness",
+      "commercial": true
+    },
+    {
+      "type": "massage_spa",
+      "group": "Health and Wellness",
+      "label": "Spa de masajes",
+      "archetype": "beauty_wellness",
+      "commercial": true
+    },
+    {
+      "type": "medical_center",
+      "group": "Health and Wellness",
+      "label": "Centro médico",
+      "archetype": "health",
+      "commercial": true
+    },
+    {
+      "type": "medical_clinic",
+      "group": "Health and Wellness",
+      "label": "Clínica médica",
+      "archetype": "health",
+      "commercial": true
+    },
+    {
+      "type": "medical_lab",
+      "group": "Health and Wellness",
+      "label": "Laboratorio clínico",
+      "archetype": "health",
+      "commercial": true
+    },
+    {
+      "type": "pharmacy",
+      "group": "Health and Wellness",
+      "label": "Farmacia",
+      "archetype": "health",
+      "commercial": true
+    },
+    {
+      "type": "physiotherapist",
+      "group": "Health and Wellness",
+      "label": "Fisioterapeuta",
+      "archetype": "health",
+      "commercial": true
+    },
+    {
+      "type": "sauna",
+      "group": "Health and Wellness",
+      "label": "Sauna",
+      "archetype": "beauty_wellness",
+      "commercial": true
+    },
+    {
+      "type": "skin_care_clinic",
+      "group": "Health and Wellness",
+      "label": "Clínica de estética",
+      "archetype": "beauty_wellness",
+      "commercial": true
+    },
+    {
+      "type": "spa",
+      "group": "Health and Wellness",
+      "label": "Spa",
+      "archetype": "beauty_wellness",
+      "commercial": true
+    },
+    {
+      "type": "tanning_studio",
+      "group": "Health and Wellness",
+      "label": "Centro de bronceado",
+      "archetype": "beauty_wellness",
+      "commercial": true
+    },
+    {
+      "type": "wellness_center",
+      "group": "Health and Wellness",
+      "label": "Centro de bienestar",
+      "archetype": "beauty_wellness",
+      "commercial": true
+    },
+    {
+      "type": "yoga_studio",
+      "group": "Health and Wellness",
+      "label": "Estudio de yoga",
+      "archetype": "beauty_wellness",
+      "commercial": true
+    },
+    {
+      "type": "apartment_building",
+      "group": "Housing",
+      "label": "Edificio de apartamentos",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "apartment_complex",
+      "group": "Housing",
+      "label": "Conjunto de apartamentos",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "condominium_complex",
+      "group": "Housing",
+      "label": "Condominio",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "housing_complex",
+      "group": "Housing",
+      "label": "Conjunto residencial",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "bed_and_breakfast",
+      "group": "Lodging",
+      "label": "Hospedaje con desayuno",
+      "archetype": "lodging",
+      "commercial": true
+    },
+    {
+      "type": "budget_japanese_inn",
+      "group": "Lodging",
+      "label": "Posada japonesa económica",
+      "archetype": "lodging",
+      "commercial": true
+    },
+    {
+      "type": "campground",
+      "group": "Lodging",
+      "label": "Camping",
+      "archetype": "lodging",
+      "commercial": true
+    },
+    {
+      "type": "camping_cabin",
+      "group": "Lodging",
+      "label": "Cabaña de camping",
+      "archetype": "lodging",
+      "commercial": true
+    },
+    {
+      "type": "cottage",
+      "group": "Lodging",
+      "label": "Cabaña",
+      "archetype": "lodging",
+      "commercial": true
+    },
+    {
+      "type": "extended_stay_hotel",
+      "group": "Lodging",
+      "label": "Hotel de estadías largas",
+      "archetype": "lodging",
+      "commercial": true
+    },
+    {
+      "type": "farmstay",
+      "group": "Lodging",
+      "label": "Finca agroturística",
+      "archetype": "lodging",
+      "commercial": true
+    },
+    {
+      "type": "guest_house",
+      "group": "Lodging",
+      "label": "Casa de huéspedes",
+      "archetype": "lodging",
+      "commercial": true
+    },
+    {
+      "type": "hostel",
+      "group": "Lodging",
+      "label": "Hostal",
+      "archetype": "lodging",
+      "commercial": true
+    },
+    {
+      "type": "hotel",
+      "group": "Lodging",
+      "label": "Hotel",
+      "archetype": "lodging",
+      "commercial": true
+    },
+    {
+      "type": "inn",
+      "group": "Lodging",
+      "label": "Posada",
+      "archetype": "lodging",
+      "commercial": true
+    },
+    {
+      "type": "japanese_inn",
+      "group": "Lodging",
+      "label": "Posada japonesa",
+      "archetype": "lodging",
+      "commercial": true
+    },
+    {
+      "type": "lodging",
+      "group": "Lodging",
+      "label": "Alojamiento",
+      "archetype": "lodging",
+      "commercial": true
+    },
+    {
+      "type": "mobile_home_park",
+      "group": "Lodging",
+      "label": "Parque de casas rodantes",
+      "archetype": "lodging",
+      "commercial": true
+    },
+    {
+      "type": "motel",
+      "group": "Lodging",
+      "label": "Motel",
+      "archetype": "lodging",
+      "commercial": true
+    },
+    {
+      "type": "private_guest_room",
+      "group": "Lodging",
+      "label": "Habitación privada",
+      "archetype": "lodging",
+      "commercial": true
+    },
+    {
+      "type": "resort_hotel",
+      "group": "Lodging",
+      "label": "Hotel resort",
+      "archetype": "lodging",
+      "commercial": true
+    },
+    {
+      "type": "rv_park",
+      "group": "Lodging",
+      "label": "Parque para casas rodantes",
+      "archetype": "lodging",
+      "commercial": true
+    },
+    {
+      "type": "beach",
+      "group": "Natural Features",
+      "label": "Playa",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "island",
+      "group": "Natural Features",
+      "label": "Isla",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "lake",
+      "group": "Natural Features",
+      "label": "Lago",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "mountain_peak",
+      "group": "Natural Features",
+      "label": "Pico de montaña",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "nature_preserve",
+      "group": "Natural Features",
+      "label": "Reserva natural",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "river",
+      "group": "Natural Features",
+      "label": "Río",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "scenic_spot",
+      "group": "Natural Features",
+      "label": "Paisaje",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "woods",
+      "group": "Natural Features",
+      "label": "Bosque",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "buddhist_temple",
+      "group": "Places of Worship",
+      "label": "Templo budista",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "church",
+      "group": "Places of Worship",
+      "label": "Iglesia",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "hindu_temple",
+      "group": "Places of Worship",
+      "label": "Templo hindú",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "mosque",
+      "group": "Places of Worship",
+      "label": "Mezquita",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "shinto_shrine",
+      "group": "Places of Worship",
+      "label": "Santuario sintoísta",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "synagogue",
+      "group": "Places of Worship",
+      "label": "Sinagoga",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "aircraft_rental_service",
+      "group": "Services",
+      "label": "Alquiler de aeronaves",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "association_or_organization",
+      "group": "Services",
+      "label": "Asociación u organización",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "astrologer",
+      "group": "Services",
+      "label": "Astrólogo",
+      "archetype": "professional_services",
+      "commercial": true
+    },
+    {
+      "type": "barber_shop",
+      "group": "Services",
+      "label": "Barbería",
+      "archetype": "beauty_wellness",
+      "commercial": true
+    },
+    {
+      "type": "beautician",
+      "group": "Services",
+      "label": "Esteticista",
+      "archetype": "beauty_wellness",
+      "commercial": true
+    },
+    {
+      "type": "beauty_salon",
+      "group": "Services",
+      "label": "Salón de belleza",
+      "archetype": "beauty_wellness",
+      "commercial": true
+    },
+    {
+      "type": "body_art_service",
+      "group": "Services",
+      "label": "Estudio de tatuajes",
+      "archetype": "beauty_wellness",
+      "commercial": true
+    },
+    {
+      "type": "catering_service",
+      "group": "Services",
+      "label": "Servicio de catering",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "cemetery",
+      "group": "Services",
+      "label": "Cementerio",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "chauffeur_service",
+      "group": "Services",
+      "label": "Servicio de conductor",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "child_care_agency",
+      "group": "Services",
+      "label": "Guardería",
+      "archetype": "education",
+      "commercial": true
+    },
+    {
+      "type": "consultant",
+      "group": "Services",
+      "label": "Consultor",
+      "archetype": "professional_services",
+      "commercial": true
+    },
+    {
+      "type": "courier_service",
+      "group": "Services",
+      "label": "Mensajería",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "electrician",
+      "group": "Services",
+      "label": "Electricista",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "employment_agency",
+      "group": "Services",
+      "label": "Agencia de empleo",
+      "archetype": "professional_services",
+      "commercial": true
+    },
+    {
+      "type": "florist",
+      "group": "Services",
+      "label": "Floristería",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "food_delivery",
+      "group": "Services",
+      "label": "Domicilios de comida",
+      "archetype": "food",
+      "commercial": true
+    },
+    {
+      "type": "foot_care",
+      "group": "Services",
+      "label": "Podólogo",
+      "archetype": "health",
+      "commercial": true
+    },
+    {
+      "type": "funeral_home",
+      "group": "Services",
+      "label": "Funeraria",
+      "archetype": "professional_services",
+      "commercial": true
+    },
+    {
+      "type": "hair_care",
+      "group": "Services",
+      "label": "Cuidado del cabello",
+      "archetype": "beauty_wellness",
+      "commercial": true
+    },
+    {
+      "type": "hair_salon",
+      "group": "Services",
+      "label": "Peluquería",
+      "archetype": "beauty_wellness",
+      "commercial": true
+    },
+    {
+      "type": "insurance_agency",
+      "group": "Services",
+      "label": "Agencia de seguros",
+      "archetype": "professional_services",
+      "commercial": true
+    },
+    {
+      "type": "laundry",
+      "group": "Services",
+      "label": "Lavandería",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "lawyer",
+      "group": "Services",
+      "label": "Abogado",
+      "archetype": "professional_services",
+      "commercial": true
+    },
+    {
+      "type": "locksmith",
+      "group": "Services",
+      "label": "Cerrajero",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "makeup_artist",
+      "group": "Services",
+      "label": "Maquillador",
+      "archetype": "beauty_wellness",
+      "commercial": true
+    },
+    {
+      "type": "marketing_consultant",
+      "group": "Services",
+      "label": "Consultor de mercadeo",
+      "archetype": "professional_services",
+      "commercial": true
+    },
+    {
+      "type": "moving_company",
+      "group": "Services",
+      "label": "Empresa de mudanzas",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "nail_salon",
+      "group": "Services",
+      "label": "Salón de uñas",
+      "archetype": "beauty_wellness",
+      "commercial": true
+    },
+    {
+      "type": "non_profit_organization",
+      "group": "Services",
+      "label": "Organización sin ánimo de lucro",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "painter",
+      "group": "Services",
+      "label": "Pintor",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "pet_boarding_service",
+      "group": "Services",
+      "label": "Hotel para mascotas",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "pet_care",
+      "group": "Services",
+      "label": "Cuidado de mascotas",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "plumber",
+      "group": "Services",
+      "label": "Plomero",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "psychic",
+      "group": "Services",
+      "label": "Vidente",
+      "archetype": "professional_services",
+      "commercial": true
+    },
+    {
+      "type": "real_estate_agency",
+      "group": "Services",
+      "label": "Inmobiliaria",
+      "archetype": "real_estate",
+      "commercial": true
+    },
+    {
+      "type": "roofing_contractor",
+      "group": "Services",
+      "label": "Contratista de techos",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "service",
+      "group": "Services",
+      "label": "Servicio",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "shipping_service",
+      "group": "Services",
+      "label": "Servicio de envíos",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "storage",
+      "group": "Services",
+      "label": "Bodegaje",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "summer_camp_organizer",
+      "group": "Services",
+      "label": "Organizador de campamentos de verano",
+      "archetype": "education",
+      "commercial": true
+    },
+    {
+      "type": "tailor",
+      "group": "Services",
+      "label": "Sastrería",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "telecommunications_service_provider",
+      "group": "Services",
+      "label": "Proveedor de telecomunicaciones",
+      "archetype": "professional_services",
+      "commercial": true
+    },
+    {
+      "type": "tour_agency",
+      "group": "Services",
+      "label": "Agencia de tours",
+      "archetype": "professional_services",
+      "commercial": true
+    },
+    {
+      "type": "tourist_information_center",
+      "group": "Services",
+      "label": "Punto de información turística",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "travel_agency",
+      "group": "Services",
+      "label": "Agencia de viajes",
+      "archetype": "professional_services",
+      "commercial": true
+    },
+    {
+      "type": "veterinary_care",
+      "group": "Services",
+      "label": "Veterinaria",
+      "archetype": "health",
+      "commercial": true
+    },
+    {
+      "type": "asian_grocery_store",
+      "group": "Shopping",
+      "label": "Tienda de productos asiáticos",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "auto_parts_store",
+      "group": "Shopping",
+      "label": "Almacén de repuestos",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "bicycle_store",
+      "group": "Shopping",
+      "label": "Tienda de bicicletas",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "book_store",
+      "group": "Shopping",
+      "label": "Librería",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "building_materials_store",
+      "group": "Shopping",
+      "label": "Depósito de materiales de construcción",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "butcher_shop",
+      "group": "Shopping",
+      "label": "Carnicería",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "cell_phone_store",
+      "group": "Shopping",
+      "label": "Tienda de celulares",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "clothing_store",
+      "group": "Shopping",
+      "label": "Tienda de ropa",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "convenience_store",
+      "group": "Shopping",
+      "label": "Tienda de conveniencia",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "cosmetics_store",
+      "group": "Shopping",
+      "label": "Tienda de cosméticos",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "department_store",
+      "group": "Shopping",
+      "label": "Almacén por departamentos",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "discount_store",
+      "group": "Shopping",
+      "label": "Tienda de descuentos",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "discount_supermarket",
+      "group": "Shopping",
+      "label": "Supermercado de descuento",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "electronics_store",
+      "group": "Shopping",
+      "label": "Tienda de electrónica",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "farmers_market",
+      "group": "Shopping",
+      "label": "Mercado campesino",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "flea_market",
+      "group": "Shopping",
+      "label": "Mercado de pulgas",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "food_store",
+      "group": "Shopping",
+      "label": "Tienda de alimentos",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "furniture_store",
+      "group": "Shopping",
+      "label": "Tienda de muebles",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "garden_center",
+      "group": "Shopping",
+      "label": "Vivero",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "general_store",
+      "group": "Shopping",
+      "label": "Tienda de barrio",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "gift_shop",
+      "group": "Shopping",
+      "label": "Tienda de regalos",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "grocery_store",
+      "group": "Shopping",
+      "label": "Tienda de víveres",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "hardware_store",
+      "group": "Shopping",
+      "label": "Ferretería",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "health_food_store",
+      "group": "Shopping",
+      "label": "Tienda naturista",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "home_goods_store",
+      "group": "Shopping",
+      "label": "Tienda de artículos para el hogar",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "home_improvement_store",
+      "group": "Shopping",
+      "label": "Tienda de mejoras para el hogar",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "hypermarket",
+      "group": "Shopping",
+      "label": "Hipermercado",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "jewelry_store",
+      "group": "Shopping",
+      "label": "Joyería",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "liquor_store",
+      "group": "Shopping",
+      "label": "Licorera",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "market",
+      "group": "Shopping",
+      "label": "Mercado",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "pet_store",
+      "group": "Shopping",
+      "label": "Tienda de mascotas",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "shoe_store",
+      "group": "Shopping",
+      "label": "Tienda de zapatos",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "shopping_mall",
+      "group": "Shopping",
+      "label": "Centro comercial",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "sporting_goods_store",
+      "group": "Shopping",
+      "label": "Tienda de artículos deportivos",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "sportswear_store",
+      "group": "Shopping",
+      "label": "Tienda de ropa deportiva",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "store",
+      "group": "Shopping",
+      "label": "Tienda",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "supermarket",
+      "group": "Shopping",
+      "label": "Supermercado",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "tea_store",
+      "group": "Shopping",
+      "label": "Tienda de té",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "thrift_store",
+      "group": "Shopping",
+      "label": "Tienda de segunda mano",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "toy_store",
+      "group": "Shopping",
+      "label": "Juguetería",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "warehouse_store",
+      "group": "Shopping",
+      "label": "Tienda mayorista de bodega",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "wholesaler",
+      "group": "Shopping",
+      "label": "Mayorista",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "womens_clothing_store",
+      "group": "Shopping",
+      "label": "Tienda de ropa para mujer",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "arena",
+      "group": "Sports",
+      "label": "Coliseo",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "athletic_field",
+      "group": "Sports",
+      "label": "Cancha deportiva",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "fishing_charter",
+      "group": "Sports",
+      "label": "Excursión de pesca",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "fishing_pier",
+      "group": "Sports",
+      "label": "Muelle de pesca",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "fishing_pond",
+      "group": "Sports",
+      "label": "Estanque de pesca",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "fitness_center",
+      "group": "Sports",
+      "label": "Centro de acondicionamiento físico",
+      "archetype": "beauty_wellness",
+      "commercial": true
+    },
+    {
+      "type": "golf_course",
+      "group": "Sports",
+      "label": "Campo de golf",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "gym",
+      "group": "Sports",
+      "label": "Gimnasio",
+      "archetype": "beauty_wellness",
+      "commercial": true
+    },
+    {
+      "type": "ice_skating_rink",
+      "group": "Sports",
+      "label": "Pista de patinaje sobre hielo",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "indoor_golf_course",
+      "group": "Sports",
+      "label": "Golf bajo techo",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "playground",
+      "group": "Sports",
+      "label": "Parque infantil",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "race_course",
+      "group": "Sports",
+      "label": "Hipódromo",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "ski_resort",
+      "group": "Sports",
+      "label": "Estación de esquí",
+      "archetype": "lodging",
+      "commercial": true
+    },
+    {
+      "type": "sports_activity_location",
+      "group": "Sports",
+      "label": "Lugar de actividades deportivas",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "sports_club",
+      "group": "Sports",
+      "label": "Club deportivo",
+      "archetype": "beauty_wellness",
+      "commercial": true
+    },
+    {
+      "type": "sports_coaching",
+      "group": "Sports",
+      "label": "Entrenamiento deportivo",
+      "archetype": "education",
+      "commercial": true
+    },
+    {
+      "type": "sports_complex",
+      "group": "Sports",
+      "label": "Complejo deportivo",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "sports_school",
+      "group": "Sports",
+      "label": "Escuela deportiva",
+      "archetype": "education",
+      "commercial": true
+    },
+    {
+      "type": "stadium",
+      "group": "Sports",
+      "label": "Estadio",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "swimming_pool",
+      "group": "Sports",
+      "label": "Piscina",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "tennis_court",
+      "group": "Sports",
+      "label": "Cancha de tenis",
+      "archetype": "local_retail",
+      "commercial": true
+    },
+    {
+      "type": "airport",
+      "group": "Transportation",
+      "label": "Aeropuerto",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "airstrip",
+      "group": "Transportation",
+      "label": "Pista de aterrizaje",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "bike_sharing_station",
+      "group": "Transportation",
+      "label": "Estación de bicicletas compartidas",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "bridge",
+      "group": "Transportation",
+      "label": "Puente",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "bus_station",
+      "group": "Transportation",
+      "label": "Terminal de buses",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "bus_stop",
+      "group": "Transportation",
+      "label": "Paradero de bus",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "ferry_service",
+      "group": "Transportation",
+      "label": "Servicio de ferri",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "ferry_terminal",
+      "group": "Transportation",
+      "label": "Terminal de ferri",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "heliport",
+      "group": "Transportation",
+      "label": "Helipuerto",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "international_airport",
+      "group": "Transportation",
+      "label": "Aeropuerto internacional",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "light_rail_station",
+      "group": "Transportation",
+      "label": "Estación de tren ligero",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "park_and_ride",
+      "group": "Transportation",
+      "label": "Parqueadero de intercambio",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "subway_station",
+      "group": "Transportation",
+      "label": "Estación de metro",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "taxi_service",
+      "group": "Transportation",
+      "label": "Servicio de taxi",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "taxi_stand",
+      "group": "Transportation",
+      "label": "Parada de taxis",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "toll_station",
+      "group": "Transportation",
+      "label": "Peaje",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "train_station",
+      "group": "Transportation",
+      "label": "Estación de tren",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "train_ticket_office",
+      "group": "Transportation",
+      "label": "Taquilla de tren",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "tram_stop",
+      "group": "Transportation",
+      "label": "Parada de tranvía",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "transit_depot",
+      "group": "Transportation",
+      "label": "Patio de transporte",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "transit_station",
+      "group": "Transportation",
+      "label": "Estación de transporte",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "transit_stop",
+      "group": "Transportation",
+      "label": "Parada de transporte",
+      "archetype": null,
+      "commercial": false
+    },
+    {
+      "type": "transportation_service",
+      "group": "Transportation",
+      "label": "Servicio de transporte",
+      "archetype": "home_auto_services",
+      "commercial": true
+    },
+    {
+      "type": "truck_stop",
+      "group": "Transportation",
+      "label": "Parada de camiones",
+      "archetype": null,
+      "commercial": false
+    }
+  ]
+}
