@@ -1,0 +1,40 @@
+name: aws
+# Brings the AWS infrastructure that signs evidence to the state declared in
+# packages/evidence/scripts/aws-state.ts. Every run is idempotent and ends with the observed state.
+on:
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Report the changes without making them
+        type: boolean
+        default: false
+permissions: {}
+concurrency:
+  group: aws
+  cancel-in-progress: false
+jobs:
+  provision:
+    # The setup credentials administer the account that holds the production keys, so only
+    # main's declaration is applied.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    # A new role can take a minute to become visible to KMS.
+    timeout-minutes: 15
+    permissions: { contents: read }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
+        with: { cache: true, require-lockfile: true }
+      - name: Provision the evidence signing infrastructure
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_SETUP_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SETUP_SECRET_ACCESS_KEY }}
+          AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
+          DRY_RUN: ${{ inputs.dry-run }}
+        run: |
+          if [ "$DRY_RUN" = true ]; then
+            pnpm --filter @reranker/evidence aws:provision --dry-run
+          else
+            pnpm --filter @reranker/evidence aws:provision
+          fi

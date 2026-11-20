@@ -14,7 +14,8 @@
     "test": "vitest run --project unit --coverage --passWithNoTests",
     "test:contract": "vitest run --project contract",
     "test:integration": "vitest run --project integration --no-file-parallelism",
-    "r2:provision": "node scripts/provision-r2.ts"
+    "r2:provision": "node scripts/provision-r2.ts",
+    "aws:provision": "node scripts/provision-aws.ts"
   },
   "dependencies": {
     "@aws-sdk/client-kms": "catalog:",
@@ -32,6 +33,10 @@
     "ulid": "catalog:"
   },
   "devDependencies": {
+    "@aws-sdk/client-cloudtrail": "catalog:",
+    "@aws-sdk/client-iam": "catalog:",
+    "@aws-sdk/client-s3": "catalog:",
+    "@aws-sdk/client-sts": "catalog:",
     "@noble/curves": "catalog:",
     "@reranker/testing": "workspace:*",
     "@reranker/typescript-config": "workspace:*",

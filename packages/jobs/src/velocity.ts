@@ -79,12 +79,20 @@ export async function recordVelocities(
     }
   }
   if (samples.length === 0) return [];
-  const calls = samples.map(
-    (s, i) =>
-      sql`select ${i}::int as n, * from ops.record_velocity(${s.key}::text, ${s.flagged}::boolean, ${s.spend.amount_micros}::bigint)`,
+  // One parameter whatever the batch size. The lateral call runs once per sample in order, and a
+  // volatile function sees the rows of the calls before it, so each window is the one a separate
+  // record would have returned.
+  const batch = JSON.stringify(
+    samples.map((s) => ({ key: s.key, flagged: s.flagged, spend: s.spend.amount_micros })),
   );
   const { rows } = await system((tx) =>
-    tx.execute<VelocityRow & { n: number }>(sql`${sql.join(calls, sql` union all `)} order by n`),
+    tx.execute<VelocityRow>(
+      sql`select v.*
+            from jsonb_array_elements(${batch}::jsonb) with ordinality as s (sample, n)
+           cross join lateral ops.record_velocity(
+                 s.sample ->> 'key', (s.sample ->> 'flagged')::boolean, (s.sample ->> 'spend')::bigint) v
+           order by s.n`,
+    ),
   );
   if (rows.length !== samples.length) throw new Error("record_velocity returned no row");
   return rows.map((row) => ({
