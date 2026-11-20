@@ -147,5 +147,10 @@ const notFound = (key: string) => new AppError("not_found", { detail: `unknown g
 export function cityDisplayName(country: CountryCode, name: string): string | null {
   if (!isMeasurable(country)) return null;
   const found = loadCityNames(country).get(normalizePlaceName(name));
-  return found?.replace(CAPITAL_DISTRICT_SUFFIX, "") ?? null;
+  return found === undefined ? null : spokenPlaceName(found);
+}
+
+/** A place name as people say it, for questions and headings. */
+export function spokenPlaceName(name: string): string {
+  return name.replace(CAPITAL_DISTRICT_SUFFIX, "");
 }

@@ -33,3 +33,4 @@ export {
   placeholderShape,
   TEMPLATES_VERSION,
 } from "./templates";
+export { buildVariants, type InstantiateContext, instantiate } from "./variants";

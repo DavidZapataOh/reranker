@@ -1,0 +1,133 @@
+import { getCountry } from "@reranker/i18n/countries";
+import { AppError } from "@reranker/schema";
+import type {
+  GeoTarget,
+  Intent,
+  IntentId,
+  IntentSet,
+  ParaphraseFormat,
+  PromptVariant,
+} from "@reranker/schema/measurement";
+import { spokenPlaceName } from "./geo/resolve";
+import { promptSha256, variantId } from "./hash";
+
+export type InstantiateContext = {
+  place: string;
+  zone: string | null;
+  country: string;
+  noun: string;
+  business?: string;
+};
+
+const PLACEHOLDER = /\{([^{}]*)\}/g;
+
+/** Fills {lugar}, {zona}, {país}, {sustantivo} and {business}; any placeholder left unfilled is a bug. */
+export function instantiate(template: string, ctx: InstantiateContext): string {
+  const values = new Map<string, string | null | undefined>([
+    ["lugar", ctx.place],
+    ["zona", ctx.zone],
+    ["país", ctx.country],
+    ["sustantivo", ctx.noun],
+    ["business", ctx.business],
+  ]);
+  const stray = template.replace(PLACEHOLDER, "");
+  if (stray.includes("{") || stray.includes("}")) {
+    throw new AppError("internal", { detail: `unbalanced braces in template: ${template}` });
+  }
+  return template.replace(PLACEHOLDER, (match, name: string) => {
+    const value = values.get(name);
+    if (!value) throw new AppError("internal", { detail: `unfilled placeholder ${match}` });
+    return value;
+  });
+}
+
+/** A pool entry before its text is filled: sampling only needs these, so prompts are built for the drawn few. */
+export type VariantCandidate = {
+  paraphraseId: string;
+  personaId: string | null;
+  format: ParaphraseFormat;
+  isCanonical: boolean;
+  text: string;
+  preamble: string | null;
+};
+
+export function findIntent(set: IntentSet, intentId: IntentId): Intent {
+  const intent = set.intents.find((i) => i.intentId === intentId);
+  if (!intent)
+    throw new AppError("internal", { detail: `${intentId} is not in ${set.manifest.id}` });
+  return intent;
+}
+
+export function variantPool(set: IntentSet, intent: Intent): VariantCandidate[] {
+  const personas = set.personas.filter((p) => p.categoryKey === intent.categoryKey);
+  const pool = set.paraphrases
+    .filter((p) => p.intentId === intent.intentId)
+    .flatMap(({ paraphraseId, format, text }) => [
+      {
+        paraphraseId,
+        personaId: null,
+        format,
+        isCanonical: paraphraseId === intent.canonicalParaphraseId,
+        text,
+        preamble: null,
+      },
+      ...personas.map((p) => ({
+        paraphraseId,
+        personaId: p.personaId,
+        format,
+        isCanonical: false,
+        text,
+        preamble: p.preamble,
+      })),
+    ]);
+  if (pool.filter((c) => c.isCanonical).length !== 1) {
+    throw new AppError("internal", { detail: `${intent.intentId} needs exactly one canonical` });
+  }
+  return pool;
+}
+
+export function variantContext(geo: GeoTarget, neighborhood: string | null, noun: string) {
+  return {
+    place: spokenPlaceName(geo.name),
+    zone: neighborhood,
+    country: getCountry(geo.country).name,
+    noun,
+  };
+}
+
+export function materialize(
+  intentId: IntentId,
+  candidate: VariantCandidate,
+  geo: GeoTarget,
+  ctx: InstantiateContext,
+): PromptVariant {
+  const { paraphraseId, personaId, format, isCanonical, text, preamble } = candidate;
+  const question = instantiate(text, ctx);
+  const prompt = preamble === null ? question : `${instantiate(preamble, ctx)} ${question}`;
+  return {
+    variantId: variantId({ intentId, paraphraseId, personaId, geoKey: geo.key }),
+    intentId,
+    paraphraseId,
+    personaId,
+    format,
+    isCanonical,
+    prompt,
+    promptSha256: promptSha256(prompt),
+  };
+}
+
+/**
+ * Every variant of an intent at a place: each paraphrase without persona and with each persona of
+ * its category. The noun fills {sustantivo}: a set is shared by every business of its category,
+ * and a web-only store names what it sells.
+ */
+export function buildVariants(
+  set: IntentSet,
+  intentId: IntentId,
+  geo: GeoTarget,
+  neighborhood: string | null,
+  noun: string,
+): PromptVariant[] {
+  const ctx = variantContext(geo, neighborhood, noun);
+  return variantPool(set, findIntent(set, intentId)).map((c) => materialize(intentId, c, geo, ctx));
+}
