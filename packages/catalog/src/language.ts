@@ -1,7 +1,7 @@
 import { type CountryCode, getCountry, mainLanguage } from "@reranker/i18n/countries";
 import { AppError } from "@reranker/schema";
 import { type GeoTarget, MeasurementLanguage } from "@reranker/schema/measurement";
-import { spokenPlaceName } from "./geo/resolve";
+import { localPlaceName, spokenPlaceName } from "./geo/resolve";
 
 /** What a language lacks for a question to be asked in it. */
 export type LanguageGap = "unsupported" | "no_templates" | "no_place_names";
@@ -47,12 +47,16 @@ export function countryName(country: CountryCode, language: MeasurementLanguage)
 }
 
 /**
- * The place a local question names, in the language it is asked in. The location data names
- * places in Spanish only, so another language can name the country but no city or region yet.
+ * The place a local question names, as people who speak its language write it: "New York" in
+ * English where the display name reads "Nueva York", "München" in German. A town with no name
+ * of its own in the language keeps its local one ("Corrales del Vino"), never a Spanish exonym.
+ * Refused only when the location data was built without the language.
  */
 export function placeName(geo: GeoTarget, language: MeasurementLanguage): string {
   if (geo.level === "country") return countryName(geo.country, language);
   if (language === "es") return spokenPlaceName(geo.name);
+  const name = localPlaceName(geo, language);
+  if (name !== null) return name;
   throw new MeasurementLanguageError(
     language,
     "no_place_names",

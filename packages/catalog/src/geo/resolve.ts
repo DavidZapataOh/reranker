@@ -1,7 +1,7 @@
 import { type CountryCode, getCountry, isMeasurable } from "@reranker/i18n/countries";
 import { AppError } from "@reranker/schema";
 import { GeoKey, type GeoTarget, type PlacesAddressComponent } from "@reranker/schema/measurement";
-import type { GeoPlace } from "./format";
+import type { GeoPlace, PlaceLanguage } from "./format";
 import { type CountryGeo, loadCityNames, loadCountryGeo } from "./load";
 import { normalizePlaceName } from "./normalize";
 
@@ -154,6 +154,14 @@ export function cityDisplayName(country: CountryCode, name: string): string | nu
   if (!isMeasurable(country)) return null;
   const found = loadCityNames(country).get(normalizePlaceName(name));
   return found === undefined ? null : spokenPlaceName(found);
+}
+
+/** The target's city or region as people who speak `language` write it; null without names in it. */
+export function localPlaceName(target: GeoTarget, language: PlaceLanguage): string | null {
+  const geo = loadCountryGeo(target.country);
+  const place = geo.byKey.get(target.key);
+  if (!place || !geo.languages.has(language)) return null;
+  return spokenPlaceName(place.names?.[language] ?? place.name);
 }
 
 /** A place name as people say it, for questions and headings. */

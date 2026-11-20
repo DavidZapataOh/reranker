@@ -6,6 +6,8 @@ import {
   type GeoFile,
   type GeoNamesFile,
   type GeoPlace,
+  PLACE_LANGUAGES,
+  type PlaceLanguage,
 } from "./format";
 import { normalizePlaceName } from "./normalize";
 
@@ -13,6 +15,8 @@ export type CountryGeo = {
   readonly geoDataHash: string;
   readonly byKey: ReadonlyMap<string, GeoPlace>;
   readonly byName: ReadonlyMap<string, readonly GeoPlace[]>;
+  /** The languages the file names places in besides Spanish. */
+  readonly languages: ReadonlySet<PlaceLanguage>;
 };
 
 const dataFile = (name: string) => new URL(`../../data/geo/${name}`, import.meta.url);
@@ -40,6 +44,8 @@ export function loadCountryGeo(country: CountryCode): CountryGeo {
     geoDataHash: file.geoDataHash,
     byKey: new Map(places.map((place) => [place.key, place])),
     byName,
+    // A file built before a language was added has no table for it, and names nothing in it.
+    languages: new Set(PLACE_LANGUAGES.filter((language) => Object.hasOwn(file.names, language))),
   };
   countries.set(country, geo);
   return geo;

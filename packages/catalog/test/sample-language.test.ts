@@ -103,11 +103,12 @@ describe("planMeasurement languages", () => {
     },
   );
 
-  test("a city cannot be named in a language the location data has no names in", () => {
+  test("a local question in a second language names the city as its speakers write it", () => {
     const secondary = { language: "en" as const, intentSet: dentalSet("en"), noun: "dentist" };
-    const error = refusal(() => planMeasurement({ ...local("r-1"), secondary }));
-    expect(error).toBeInstanceOf(MeasurementLanguageError);
-    expect(error).toMatchObject({ language: "en", gap: "no_place_names" });
+    const plan = planMeasurement({ ...local("r-1"), secondary });
+    const added = plan.observations.filter((o) => o.language === "en");
+    expect(added.length).toBeGreaterThan(0);
+    expect(JSON.stringify(added)).toContain("Bogotá");
   });
 
   test("a second language adds half the sample and leaves the main one untouched", () => {

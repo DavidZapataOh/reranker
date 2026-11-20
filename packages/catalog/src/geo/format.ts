@@ -1,8 +1,18 @@
+import { MeasurementLanguage } from "@reranker/schema/measurement";
 import { normalizePlaceName } from "./normalize";
 
 export const GEO_DATA_VERSION = "2026.11";
 
 export type Coordinate = [lat: number, lng: number];
+
+/** Every measurement language but Spanish, the language of display names. */
+export type PlaceLanguage = Exclude<MeasurementLanguage, "es">;
+export const PLACE_LANGUAGES = MeasurementLanguage.options.filter(
+  (language): language is PlaceLanguage => language !== "es",
+);
+
+/** Location code → the place's name in a language, only where it differs from its display name. */
+export type PlaceNames = Record<PlaceLanguage, Record<string, string>>;
 
 export type GeoPlace = {
   key: string;
@@ -11,6 +21,8 @@ export type GeoPlace = {
   normalized: string;
   /** Other names the place goes by: matched like its name, never displayed. */
   aliases?: string[];
+  /** The name in the languages it differs from `name` in. */
+  names?: Partial<Record<PlaceLanguage, string>>;
   regionKey: string | null;
   locationCode: number;
   /** The place's own centroid; null when no source locates it confidently. */
@@ -57,6 +69,7 @@ export type GeoFile = {
   geoDataHash: string;
   regions: RegionRow[];
   cities: CityRow[];
+  names: PlaceNames;
 };
 
 /** A city's display name, alone or followed by its aliases. */
@@ -71,9 +84,18 @@ export type GeoNamesFile = {
 
 const DEPARTMENT_CODE_LENGTH = 2;
 
-export function expandGeoFile(file: Pick<GeoFile, "country" | "regions" | "cities">): GeoPlace[] {
+export function expandGeoFile(
+  file: Pick<GeoFile, "country" | "regions" | "cities"> & { names?: PlaceNames },
+): GeoPlace[] {
   const prefix = file.country.toLowerCase();
   const regionKey = (code: number) => `${prefix}-r${code}`;
+  const namesOf = (code: number | null) => {
+    const found = PLACE_LANGUAGES.flatMap((language) => {
+      const name = code === null ? undefined : file.names?.[language][code];
+      return name === undefined ? [] : [[language, name] as const];
+    });
+    return found.length ? { names: Object.fromEntries(found) } : {};
+  };
 
   const regions = file.regions.map(
     ([locationCode, name, center, aliases]): GeoPlace => ({
@@ -82,6 +104,7 @@ export function expandGeoFile(file: Pick<GeoFile, "country" | "regions" | "citie
       name,
       normalized: normalizePlaceName(name),
       ...(aliases ? { aliases } : {}),
+      ...namesOf(locationCode),
       regionKey: null,
       locationCode,
       center,
@@ -104,6 +127,7 @@ export function expandGeoFile(file: Pick<GeoFile, "country" | "regions" | "citie
       name,
       normalized: normalizePlaceName(name),
       ...(aliases ? { aliases } : {}),
+      ...namesOf(code),
       regionKey: region ? regionKey(region[0]) : null,
       locationCode: ownCode,
       center,

@@ -58,9 +58,51 @@ describe("placeName", () => {
   test("a country is named in every language", () =>
     expect(placeName(getGeo("mx"), "en")).toBe("Mexico"));
 
-  test("a city without a name in the language is refused, never named in Spanish", () => {
+  test.each([
+    ["mx-c1010043", "en", "Mexico City"],
+    ["mx-c1010043", "es", "Ciudad de México"],
+    ["us-c1023191", "en", "New York"],
+    ["us-c1023191", "es", "Nueva York"],
+    ["co-c1003659", "en", "Bogotá"],
+    ["co-c1003659", "pt", "Bogotá"],
+    ["br-c1001773", "pt", "São Paulo"],
+    ["br-c1001773", "en", "São Paulo"],
+    ["br-c1001655", "pt", "Rio de Janeiro"],
+    ["br-c1001655", "en", "Rio de Janeiro"],
+    ["de-c1004234", "en", "Munich"],
+    ["de-c1004234", "de", "München"],
+    ["de-c1004234", "it", "Monaco di Baviera"],
+    ["fr-c1006094", "fr", "Paris"],
+    ["fr-c1006094", "en", "Paris"],
+    ["gb-c1006886", "en", "London"],
+    ["gb-c1006886", "fr", "Londres"],
+    ["pt-c9198446", "pt", "Lisboa"],
+    ["pt-c9198446", "en", "Lisbon"],
+    ["us-c1015116", "en", "Miami"],
+    ["us-c1016367", "en", "Chicago"],
+    ["us-c1016367", "pt", "Chicago"],
+    ["es-c1005451", "en", "Corrales del Vino"],
+    ["es-c1005451", "de", "Corrales del Vino"],
+    // Small Swiss towns: the local name, its accents and its German exonym; never "Entrelagos".
+    ["ch-c1002890", "en", "Interlaken"],
+    ["ch-c1002890", "fr", "Interlaken"],
+    ["ch-c1003036", "en", "Delémont"],
+    ["ch-c1003036", "de", "Delémont"],
+    ["ch-c1003088", "fr", "Neuchâtel"],
+    ["ch-c1003088", "de", "Neuenburg"],
+    ["ch-c1003297", "de", "Zürich"],
+    ["ch-c1003297", "en", "Zurich"],
+  ] as const)("%s in %s is %s", (key, language, name) =>
+    expect(placeName(getGeo(key), language)).toBe(name),
+  );
+
+  test("a region is named in the language too", () =>
+    expect(placeName(getGeo("us-r21167"), "en")).toBe("New York"));
+
+  test("a place the location data does not know is refused, never named in Spanish", () => {
+    const unknown = { ...getGeo("co-c1003659"), key: "co-c9999999" };
     for (const language of ["en", "pt", "fr", "de", "it"] as const) {
-      expect(() => placeName(getGeo("co-c1003659"), language)).toThrow(
+      expect(() => placeName(unknown, language)).toThrow(
         expect.objectContaining({ language, gap: "no_place_names" }),
       );
     }
