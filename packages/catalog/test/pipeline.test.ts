@@ -323,6 +323,31 @@ describe("generateIntentSet", () => {
     expect(calls()).toBe(0);
   });
 
+  test("French intents agree with the noun's gender and are guarded in French", async () => {
+    paraphrasesOf = (provider, intent) =>
+      lines(provider, (i) =>
+        // "pas cher" is a price phrase only the French lexicon knows.
+        intent.kind === "discovery" && i === 0
+          ? `boulangerie pas cher ${provider} à {lugar}`
+          : `quelle ${intent.category.noun} ${intent.slug} ${provider} ${i} à {lugar} ?`,
+      );
+    const r = await generateIntentSet({
+      ...bakery(),
+      category: category("boulangerie", "Boulangerie"),
+      noun: { text: "boulangerie", gender: "f" },
+      language: "fr",
+    });
+
+    expect(r.outcome).toBe("generated");
+    const asked = doubles.generate.mock.calls.map(([, req]) => (req as Req).intent);
+    expect(asked.every((i) => i.language === "fr")).toBe(true);
+    expect(asked.find((i) => i.kind === "ranking")?.canonicalText).toBe(
+      "Quelle est la meilleure boulangerie à {lugar} ?",
+    );
+    expect(r.report.guards.qualifier).toBe(2);
+    expect(r.set.intents.every((i) => i.language === "fr")).toBe(true);
+  });
+
   test("a language without reviewed prompts gets its own templates, never Spanish ones, and no calls", async () => {
     doubles.promptless.add("en");
     const r = await generateIntentSet(bakery({ language: "en" }));

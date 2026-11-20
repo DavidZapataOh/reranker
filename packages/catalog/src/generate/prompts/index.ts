@@ -1,13 +1,24 @@
 import type { MeasurementLanguage, RegisterProfile } from "@reranker/schema/measurement";
 import { MeasurementLanguageError } from "../../language";
 import type { GuardLanguage } from "../guards";
-import { JUDGE_PROMPT_V1, JUDGE_PROMPT_V1_EN, JUDGE_PROMPT_V1_PT } from "./judge.v1";
+import {
+  JUDGE_PROMPT_V1,
+  JUDGE_PROMPT_V1_EN,
+  JUDGE_PROMPT_V1_FR,
+  JUDGE_PROMPT_V1_PT,
+} from "./judge.v1";
 import {
   PARAPHRASE_PROMPT_V1,
   PARAPHRASE_PROMPT_V1_EN,
+  PARAPHRASE_PROMPT_V1_FR,
   PARAPHRASE_PROMPT_V1_PT,
 } from "./paraphrase.v1";
-import { PERSONA_PROMPT_V1, PERSONA_PROMPT_V1_EN, PERSONA_PROMPT_V1_PT } from "./persona.v1";
+import {
+  PERSONA_PROMPT_V1,
+  PERSONA_PROMPT_V1_EN,
+  PERSONA_PROMPT_V1_FR,
+  PERSONA_PROMPT_V1_PT,
+} from "./persona.v1";
 
 export interface LanguagePrompts {
   paraphrase: string;
@@ -52,6 +63,17 @@ const PROMPTS = {
       neutral: "português do Brasil, natural para qualquer brasileiro",
     },
     address: { tu: "você", usted: "o senhor ou a senhora" },
+  },
+  // French as written in France, where the templates come from; people "tutoient" an assistant.
+  fr: {
+    paraphrase: PARAPHRASE_PROMPT_V1_FR,
+    persona: PERSONA_PROMPT_V1_FR,
+    judge: JUDGE_PROMPT_V1_FR,
+    variety: {
+      co: "français courant, tel que l'écrivent les francophones qui visitent la Colombie ou y vivent",
+      neutral: "français courant de France, naturel pour n'importe quel francophone",
+    },
+    address: { tu: "tu", usted: "vous" },
   },
 } as const satisfies Partial<Record<GuardLanguage, LanguagePrompts>>;
 

@@ -12,6 +12,7 @@ import { afterAll, afterEach, beforeAll, expect, test, vi } from "vitest";
 import { costOf } from "../src/generate/config";
 import {
   PARAPHRASE_PROMPT_V1_EN,
+  PARAPHRASE_PROMPT_V1_FR,
   PARAPHRASE_PROMPT_V1_PT,
 } from "../src/generate/prompts/paraphrase.v1";
 import { type DraftIntent, embed, generateParaphrases, judge } from "../src/generate/providers";
@@ -454,8 +455,8 @@ test("an English intent is asked with the English prompts and no form of address
 
 test("a language without reviewed prompts is refused before any slot, reservation or call", async () => {
   const bodies = respond(RESPONSES, () => HttpResponse.json({}));
-  const intent = { ...bakery, language: "fr" } as unknown as DraftIntent;
-  const refused = expect.objectContaining({ language: "fr", gap: "no_prompts" });
+  const intent = { ...bakery, language: "xx" } as unknown as DraftIntent;
+  const refused = expect.objectContaining({ language: "xx", gap: "no_prompts" });
 
   await expect(
     generateParaphrases("openai", { intent, register: "neutral", withPersonas: true }, ctx()),
@@ -503,4 +504,27 @@ test("a gendered language without the noun's gender is refused before any slot o
   await expect(judge(intent, [], ctx())).rejects.toEqual(refused);
   expect(bodies).toHaveLength(0);
   expect(jobs.acquireProviderSlot).not.toHaveBeenCalled();
+});
+
+test("a French intent is asked with the French prompts, addressing the assistant as tu", async () => {
+  const bodies = respond(RESPONSES, () =>
+    HttpResponse.json(openaiResponse(outputText({ paraphrases }))),
+  );
+  const intent: DraftIntent = {
+    ...bakery,
+    category: { ...bakery.category, label: "Boulangerie", noun: "boulangerie" },
+    noun: { text: "boulangerie", gender: "f" },
+    canonicalText: "Tu peux me conseiller une bonne boulangerie à {lugar} ?",
+    language: "fr",
+    registerProfile: "neutral",
+  };
+  await generateParaphrases("openai", { intent, register: "neutral", withPersonas: false }, ctx());
+
+  expect(bodies[0]?.instructions).toBe(PARAPHRASE_PROMPT_V1_FR);
+  const payload = JSON.parse(String(bodies[0]?.input));
+  expect(payload).toMatchObject({
+    noun: "boulangerie",
+    address: "tu",
+    variety: expect.stringContaining("français"),
+  });
 });
