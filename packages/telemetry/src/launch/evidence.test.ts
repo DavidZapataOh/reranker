@@ -73,6 +73,34 @@ describe("evidence-signing-key", () => {
   test("is unknown, not failed, while AWS is not configured", async () => {
     vi.stubEnv("AWS_ROLE_ARN", "");
     await expect(checkEvidenceSigningKey()).resolves.toMatchObject({ status: "unknown" });
+    vi.stubEnv("AWS_ROLE_ARN", "arn:aws:iam::123456789012:user/someone");
+    await expect(checkEvidenceSigningKey()).resolves.toMatchObject({
+      status: "unknown",
+      reason: "AWS_ROLE_ARN no es la ARN de un rol",
+    });
+  });
+
+  test("a key without its ARN fails, and Vercel's variables unread leave it unknown", async () => {
+    vi.stubEnv("EVIDENCE_LOG_KMS_KEY_ARN", "");
+    vercelEnv([]);
+    const client = kms({ [CAPTURE_ARN]: spki(1) });
+    const controller = new AbortController();
+    const missing = await checkEvidenceSigningKey(controller.signal, client as never);
+    expect(missing).toMatchObject({
+      status: "fail",
+      reason: "sin clave de log fijada o sin su ARN",
+    });
+
+    server.use(http.get(ENV_API, () => new HttpResponse(null, { status: 403 })));
+    await expect(checkEvidenceSigningKey(undefined, client as never)).resolves.toMatchObject({
+      status: "unknown",
+      reason: "Vercel respondió 403",
+    });
+    vi.stubEnv("VERCEL_BILLING_READ_TOKEN", "");
+    await expect(checkEvidenceSigningKey(undefined, client as never)).resolves.toMatchObject({
+      status: "unknown",
+      reason: "falta VERCEL_BILLING_READ_TOKEN",
+    });
   });
 });
 
@@ -95,6 +123,23 @@ describe("evidence-audit-trail", () => {
       Prefix: "AWSLogs/123456789012/CloudTrail/us-east-1/2026/11/20/",
       MaxKeys: 1,
     });
+  });
+
+  test("a file from yesterday counts, and the request carries the caller's signal", async () => {
+    const c = clients(healthy, 0);
+    c.s3.send.mockResolvedValueOnce({ KeyCount: 0 }).mockResolvedValueOnce({ KeyCount: 1 });
+    const controller = new AbortController();
+    await expect(
+      checkEvidenceAuditTrail(controller.signal, c as never, now),
+    ).resolves.toMatchObject({ status: "pass" });
+    expect(c.cloudtrail.send).toHaveBeenCalledWith(expect.anything(), {
+      abortSignal: controller.signal,
+    });
+  });
+
+  test("is unknown while AWS is not configured", async () => {
+    vi.stubEnv("AWS_REGION", "");
+    await expect(checkEvidenceAuditTrail()).resolves.toMatchObject({ status: "unknown" });
   });
 
   test("fails when the trail stopped, has a delivery error or nothing reached S3 in 24 h", async () => {
