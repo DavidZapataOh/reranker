@@ -31,7 +31,7 @@ export function verifyEd25519(
 const BASE64 = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
 
 // atob instead of Buffer or Uint8Array.fromBase64: it runs in every browser this page supports.
-function fromBase64(text: string): Uint8Array | null {
+export function fromBase64(text: string): Uint8Array | null {
   if (!BASE64.test(text)) return null;
   return Uint8Array.from(atob(text), (c) => c.charCodeAt(0));
 }

@@ -10,6 +10,7 @@ export {
 export { type DateCheck, verifyOtsDate } from "./date";
 export { type Check, verifyEd25519, verifyEnvelope } from "./dsse";
 export * from "./format/index";
+export { verifyKeyAnnouncement } from "./key-announcement";
 export { acceptsKeyAt, checkKeyConsistency } from "./keys-consistency";
 export { rootFromInclusionProof, verifyConsistency, verifyInclusion } from "./merkle";
 export { type NoteSignature, parseSignedNote, verifyCheckpoint } from "./note";
