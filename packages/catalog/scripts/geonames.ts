@@ -235,6 +235,27 @@ const local = (entry: GeoNamesEntry) => [
   ...(entry.kind === "adm1" ? [] : [entry.name]),
   ...entry.alternates.filter((a) => a.lang === "" && LATIN.test(a.name)).map((a) => a.name),
 ];
+/**
+ * The local names that can be Spanish ones where Spanish is spoken. GeoNames repeats English
+ * names untagged ("Seville" for Sevilla), so an untagged name it also tags as English is
+ * English, unless it tags it as Spanish too ("Madrid").
+ */
+const localSpanish = (entry: GeoNamesEntry) => {
+  const tagged = (lang: string) =>
+    new Set(entry.alternates.filter((a) => a.lang === lang).map((a) => a.name));
+  const english = tagged("en");
+  const spanishNames = tagged("es");
+  // A place's own name is its official local one ("A Coruña"); an area's may be English
+  // ("San Jerónimo Department").
+  const own = entry.kind === "place" ? entry.name : undefined;
+  // Unless GeoNames prefers a Spanish name, the English one may be what people write too:
+  // León's only Spanish names are "León de los Aldama" and a colloquial "León".
+  const prefersSpanish = entry.alternates.some((a) => a.lang === "es" && a.preferred);
+  if (!prefersSpanish && own !== undefined) return local(entry);
+  return local(entry).filter(
+    (name) => name === own || !english.has(name) || spanishNames.has(name),
+  );
+};
 const formal = (names: readonly AlternateName[]) =>
   names.find((a) => a.preferred && !a.short) ?? names.find((a) => !a.short);
 const sameAs = (names: readonly string[], name: string) =>
@@ -250,7 +271,7 @@ function cityNaming(listed: string, entry: GeoNamesEntry, data: CountryGeoNames)
   const spanishName =
     sameAs(esNames, listed) ??
     (capitalOf ? sameAs([...esNames, ...local(entry)], `ciudad de ${capitalOf}`) : undefined) ??
-    (data.spanishSpeaking ? sameAs(local(entry), listed) : undefined) ??
+    (data.spanishSpeaking ? sameAs(localSpanish(entry), listed) : undefined) ??
     formal(es)?.name ??
     esNames[0];
   const named = naming(spanishName, entry.name, [listed, entry.name, ...esNames], data);
@@ -262,7 +283,7 @@ function regionNaming(listed: string, entry: GeoNamesEntry, data: CountryGeoName
   const esNames = es.map((a) => a.name);
   // Where Spanish is the local language, language-less names are Spanish too, except the
   // English copies of DataForSEO's own name ("Community of Madrid").
-  const localNames = data.spanishSpeaking ? local(entry).filter((n) => n !== listed) : [];
+  const localNames = data.spanishSpeaking ? localSpanish(entry).filter((n) => n !== listed) : [];
   const { designator, core } = designated(normalizePlaceName(listed));
   const spanishDesignator = designator ? DESIGNATORS[designator] : undefined;
   // Abbreviations ("Buenos Aires C.F.") are never display names.

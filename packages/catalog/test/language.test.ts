@@ -96,6 +96,16 @@ describe("placeName", () => {
     expect(placeName(getGeo(key), language)).toBe(name),
   );
 
+  test.each([
+    ["es-c1005421", "Sevilla"],
+    ["mx-c1010058", "León"],
+    ["es-c9212542", "A Coruña"],
+    ["ar-r9246111", "Departamento de San Jerónimo"],
+    ["es-r9047060", "Provincia de Córdoba"],
+  ] as const)("%s reads %s in Spanish, never its English name", (key, name) =>
+    expect(placeName(getGeo(key), "es")).toBe(name),
+  );
+
   test("a region is named in the language too", () =>
     expect(placeName(getGeo("us-r21167"), "en")).toBe("New York"));
 

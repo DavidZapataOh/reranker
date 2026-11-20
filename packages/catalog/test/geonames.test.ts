@@ -211,6 +211,53 @@ describe("pairGeoNames", () => {
     expect(pairs.centers.size).toBe(0);
   });
 
+  // GeoNames repeats English names untagged; where Spanish is spoken they never win.
+  const english = (id: number, name: string) => [
+    { id, name, lang: "", preferred: false, short: false },
+    { id: id + 1, name, lang: "en", preferred: true, short: false },
+  ];
+  const spanishName = (id: number, name: string, preferred = false) => ({
+    id,
+    name,
+    lang: "es",
+    preferred,
+    short: false,
+  });
+
+  test("an untagged copy of the English name never names a city in Spanish", () => {
+    const sevilla = entry({
+      id: 2510911,
+      admin1: "AN",
+      name: "Sevilla",
+      alternates: [...english(1, "Seville"), spanishName(3, "Sevilla", true)],
+    });
+    const pairs = pairGeoNames(
+      { regions: [], cities: [{ code: 1005421, name: "Seville", region: null }] },
+      { spanishSpeaking: true, entries: [sevilla], minorPlaces: [] },
+    );
+    expect(pairs.cities.get(1005421)).toMatchObject({ name: "Sevilla", aliases: ["Seville"] });
+  });
+
+  test("an area's English name never names it in Spanish", () => {
+    const department = entry({
+      id: 3837460,
+      kind: "adm2",
+      admin1: "21",
+      admin2: "8435",
+      name: "San Jerónimo Department",
+      alternates: [
+        ...english(1, "San Jerónimo Department"),
+        spanishName(3, "Departamento de San Jerónimo"),
+        spanishName(4, "San Jerónimo"),
+      ],
+    });
+    const pairs = pairGeoNames(
+      { regions: [{ code: 9246111, name: "San Jeronimo Department", level: 2 }], cities: [] },
+      { spanishSpeaking: true, entries: [department], minorPlaces: [] },
+    );
+    expect(pairs.regions.get(9246111)?.name).toBe("Departamento de San Jerónimo");
+  });
+
   // A town DataForSEO lists in Jalisco (state 14), and the GeoNames places that may locate it.
   const JALISCO = 20708;
   const jalisco = entry({ id: 4004156, kind: "adm1", name: "Jalisco", center: [20.3, -103.7] });
