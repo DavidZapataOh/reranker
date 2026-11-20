@@ -6,7 +6,7 @@ on:
       language:
         description: Query language to record
         type: choice
-        options: [es, en]
+        options: [es, en, pt, fr, de, it]
         default: es
 permissions: {}
 concurrency:
