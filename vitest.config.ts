@@ -58,6 +58,9 @@ export default defineConfig({
           environment: "node",
           include: ["**/{src,test}/**/*.heavy.test.ts"],
           exclude: ignored,
+          // Each one runs thousands of cases by design; the 5 s default is sized for a unit test
+          // and fails them on a slower CI runner.
+          testTimeout: 60_000,
         },
       },
       // Timing budgets run on their own: coverage instrumentation and sibling workers would
