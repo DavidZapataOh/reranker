@@ -162,6 +162,12 @@ describe("language", () => {
     expect(buildRequest(slot("chatgpt", MEDELLIN), "live").language_code).toBe("es");
     expect(buildRequest(slot("chatgpt", "us"), "live").language_code).toBe("en");
     expect(buildRequest(slot("chatgpt", "br"), "live").language_code).toBe("pt");
+    expect(buildRequest(slot("chatgpt", "fr"), "live").language_code).toBe("fr");
+  });
+
+  test.each(["fr", "de", "it"] as const)("%s goes out as its ISO 639-1 code", (language) => {
+    const slotIn = { ...slot("chatgpt", MEDELLIN), language };
+    expect(buildRequest(slotIn, "live").language_code).toBe(language);
   });
 
   test("the language is part of the exact bytes sent", () => {

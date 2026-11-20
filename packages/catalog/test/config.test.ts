@@ -8,6 +8,7 @@ import {
   generatorConfigHash,
 } from "../src/generate/config";
 import { jcs, sha256Hex } from "../src/hash";
+import { templatesVersion } from "../src/templates";
 
 const hashOf = (config: GeneratorConfig) => sha256Hex(jcs(config));
 
@@ -19,6 +20,10 @@ test("generator config hash is stable and changes with any field", () => {
   );
   const prompts = { ...GENERATOR_CONFIG.prompts, judge: sha256Hex("otro juez") };
   expect(hashOf({ ...GENERATOR_CONFIG, prompts })).not.toBe(generatorConfigHash);
+});
+
+test("the config pins the Spanish templates the generator writes from", () => {
+  expect(GENERATOR_CONFIG.templatesVersion).toBe(templatesVersion("es"));
 });
 
 test("the config is frozen so the hash cannot drift at runtime", () => {

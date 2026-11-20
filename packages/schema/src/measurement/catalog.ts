@@ -108,7 +108,7 @@ export type BusinessCategory = z.infer<typeof BusinessCategory>;
 
 // The languages a business can be measured in. Closed, so every one has its own templates and
 // place names checked before a question is asked in it.
-export const MeasurementLanguage = z.enum(["es", "en", "pt"]);
+export const MeasurementLanguage = z.enum(["es", "en", "pt", "fr", "de", "it"]);
 export type MeasurementLanguage = z.infer<typeof MeasurementLanguage>;
 
 export const IntentKind = z.enum([
