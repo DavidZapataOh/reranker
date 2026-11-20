@@ -12,7 +12,7 @@ Log keys sign under the log's origin as the signed-note key name. Production has
 
 ## Diagnose
 
-1. `pnpm launch:check --env-file=.env.production.local` (after `vercel env pull .env.production.local --environment=production`): `evidence-signing-key` names the key that differs or the Vercel variable that looks like private key material.
+1. The daily digest email lists `evidence-signing-key`, which names the key that differs or the Vercel variable that looks like private key material. Only a production deployment can run it: `vercel env pull` always hands out a development OIDC token, which the production role refuses, so a local `pnpm launch:check` reports this item and `evidence-audit-trail` as `unknown (AccessDenied)`.
 2. The three public copies agree: `curl -s https://reranker.co/.well-known/jwks.json`, `dig +short TXT _rr-keys.reranker.co @1.1.1.1` and `KEYS_BY_ENV` in `packages/verify/src/trust/keys.ts`.
 3. Who signed: the `reranker-audit` trail delivers every `kms:Sign` to `rr-cloudtrail-<account>` and keeps it seven years (`launch:check` item `evidence-audit-trail`).
 

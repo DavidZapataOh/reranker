@@ -1,8 +1,12 @@
+import { AppError } from "@reranker/schema";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
 const execute = vi.fn();
 const withSystem = vi.fn(async (_reason: string, fn: (tx: unknown) => unknown) => fn({ execute }));
-vi.mock("@reranker/db", () => ({ withSystem }));
+vi.mock("@reranker/db", async () => ({
+  withSystem,
+  isCheckoutTimeout: (await import("../../db/src/errors")).isCheckoutTimeout,
+}));
 
 vi.stubEnv("APP_ENV", "development");
 const { breakerCheck, breakerRecord } = await import("../src/breaker");
@@ -74,6 +78,49 @@ describe("breakerRecord", () => {
       ["dataforseo", "default", 1, 0],
       ["dataforseo", "default", 6, 3],
     ]);
+  });
+
+  const checkoutTimeout = () =>
+    new AppError("service_unavailable", {
+      retryAfterSeconds: 2,
+      cause: new Error("timeout exceeded when trying to connect"),
+    });
+
+  test("outcomes whose checkout timed out are recorded again with those that arrived meanwhile", async () => {
+    const logged = vi.spyOn(console, "error").mockImplementation(() => {});
+    execute.mockImplementationOnce(async () => {
+      void breakerRecord("dataforseo", "failure");
+      throw checkoutTimeout();
+    });
+    execute.mockResolvedValue({ rows: [{ state: "closed", previous: "closed" }] });
+    await breakerRecord("dataforseo", "failure");
+    const counts = execute.mock.calls.map(([query]) =>
+      (query as { queryChunks: unknown[] }).queryChunks
+        .filter((chunk) => typeof chunk !== "object")
+        .slice(0, 4),
+    );
+    expect(counts).toEqual([
+      ["dataforseo", "default", 0, 1],
+      ["dataforseo", "default", 0, 2],
+    ]);
+    expect(logged).not.toHaveBeenCalled();
+    logged.mockRestore();
+  });
+
+  test("gives outcomes up with a log once they have waited 10 s for a connection", async () => {
+    const logged = vi.spyOn(console, "error").mockImplementation(() => {});
+    const now = vi.spyOn(performance, "now").mockReturnValue(1_000);
+    execute.mockImplementation(async () => {
+      now.mockReturnValue(11_000);
+      throw checkoutTimeout();
+    });
+    await expect(breakerRecord("dataforseo", "failure")).resolves.toBeUndefined();
+    expect(execute).toHaveBeenCalledTimes(1);
+    expect(logged).toHaveBeenCalledWith("[jobs] breaker record (dataforseo) failed", {
+      name: "AppError",
+    });
+    now.mockRestore();
+    logged.mockRestore();
   });
 
   test("another breaker is recorded on its own, never behind this one", async () => {

@@ -6,7 +6,10 @@ import type { LifecycleRule } from "@aws-sdk/client-s3";
 export const REGION = "us-east-1";
 const TEAM = "davidzapataohs-projects";
 const PROJECT = "reranker";
-const REPO = "DavidZapataOh/reranker";
+// The repository uses GitHub's immutable OIDC subject, which carries the owner and repository IDs
+// (`GET /repos/{owner}/{repo}/actions/oidc/customization/sub`), so a renamed or recreated
+// repository cannot claim the role.
+const REPO = "DavidZapataOh@37819456/reranker@1446098352";
 export const TRAIL = "reranker-audit";
 
 // https://vercel.com/docs/oidc/aws with the project's issuer mode set to Team.
