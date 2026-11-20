@@ -1,0 +1,2603 @@
+{
+  "version": "2026.11.0",
+  "language": "it",
+  "collected": "2026-11-20",
+  "source": "query-phrasing workflow, run 44816008820 (DataForSEO, Italy market, it; Milano and Roma)",
+  "method": "Each text names the observed phrasings it follows. 'observed': people type that form; 'adapted': the form is observed but reworded so the slot works for any noun, a person or a place, singular, with the words that agree with it written as {masculine|feminine} groups; 'unsupported': no query in the data.",
+  "register": "standard Italian, informal tu",
+  "patterns": {
+    "mi_consigli": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "mi consigli un film da vedere",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "mi consigliate un film horror non troppo horror",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "mi consigli un bel film da vedere su netflix",
+          "rank": 2
+        }
+      ],
+      "note": "the opening is observed for films, books and series; the same request carries over to any business"
+    },
+    "quale": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "quale agenzia immobiliare scegliere",
+          "volume": 20
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "quale corso di inglese scegliere",
+          "volume": 10
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "quale avvocato si occupa di eredità",
+          "rank": 1
+        }
+      ]
+    },
+    "dove_trovare": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "dove trovare un ristorante a roma",
+          "volume": 327
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "dove trovare una ristorante a roma",
+          "volume": 327
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "dove trovare un ristorante a milano",
+          "volume": 243
+        }
+      ]
+    },
+    "dove_comprare": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "dove comprare online vestiti",
+          "volume": 170
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "dove comprare vestiti online",
+          "volume": 170
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "dove comprare specchietto da dentista",
+          "volume": 30
+        }
+      ]
+    },
+    "qual_e": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "qual è il miglior robot aspirapolvere e lavapavimenti",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "qual è la migliore intelligenza artificiale",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "qual è il miglior fondo pensione",
+          "rank": 2
+        }
+      ]
+    },
+    "qual_e_migliore": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Qual è il posto migliore per alloggiare a Milano?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Qual è l'agenzia immobiliare migliore?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Qual è l'hotel migliore di Milano?"
+        }
+      ]
+    },
+    "quali_sono": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "quali sono i migliori tubi per impianto idraulico",
+          "volume": 20
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Quali sono alcune aziende a Milano?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Quali sono alcune aziende a Roma?"
+        }
+      ]
+    },
+    "quali_migliori": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "quali sono i migliori tubi per impianto idraulico",
+          "volume": 20
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Quali sono i migliori avvocati a Milano?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Quali sono i migliori commercialisti a Roma?"
+        }
+      ],
+      "note": "a plural list needs the noun inflected ('dentisti', 'agenzie'), so lists ask for 3 suggestions or names for one business"
+    },
+    "scegliere": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come scegliere dentista",
+          "volume": 30
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come scegliere il dentista",
+          "volume": 30
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come scegliere agenzia immobiliare",
+          "volume": 20
+        }
+      ]
+    },
+    "cerco": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "cerco un centro di gravità permanente",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "cerco una canzone ma non so il titolo",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "cerco un centro di gravità permanente testo",
+          "rank": 2
+        }
+      ]
+    },
+    "kw_a": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "ristorante a milano",
+          "volume": 15083
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "ristorante a roma",
+          "volume": 14117
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "hotel a roma",
+          "volume": 9997
+        }
+      ]
+    },
+    "kw_bare": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "ristorante di milano",
+          "volume": 15083
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "ristorante in milano",
+          "volume": 15083
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "ristorante milano",
+          "volume": 15083
+        }
+      ]
+    },
+    "consigliato": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "hazbin hotel età consigliata",
+          "volume": 140
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "hotel parigi economici consigliati",
+          "volume": 90
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "ristorante consigliato vicino a me",
+          "volume": 70
+        }
+      ]
+    },
+    "che_fa": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come si chiama il dentista che fa gli apparecchi",
+          "volume": 30
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "barbiere che taglia i capelli",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "commercialista che fa",
+          "rank": 1
+        }
+      ]
+    },
+    "si_occupa": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "quale avvocato si occupa di eredità",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "avvocato che si occupa di problemi condominiali",
+          "rank": 2
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "dentista che si occupa di apparecchi",
+          "rank": 2
+        }
+      ]
+    },
+    "specializzato": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come diventare barbiere specializzato",
+          "volume": 0
+        }
+      ]
+    },
+    "orari": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_ai_overview_question",
+          "market": "it",
+          "query": "orari parrucchieri",
+          "volume": 4400
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "orari parrucchiere",
+          "volume": 2900
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "parrucchiere orari",
+          "volume": 2900
+        }
+      ]
+    },
+    "a_domicilio": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "fioraio a domicilio",
+          "volume": 6600
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "barbiere a domicilio",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "dentista a domicilio per anziani roma",
+          "rank": 1
+        }
+      ]
+    },
+    "uomo_donna": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "parrucchiere uomo",
+          "volume": 22200
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "parrucchiere donna",
+          "volume": 9900
+        },
+        {
+          "source": "google_ai_overview_question",
+          "market": "it",
+          "query": "itaglia parrucchieri uomo",
+          "volume": 8100
+        }
+      ]
+    },
+    "online_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "corso di inglese online",
+          "volume": 12100
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "corso online di inglese",
+          "volume": 12100
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "negozio online",
+          "volume": 5756
+        }
+      ]
+    },
+    "paese_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come diventare agente immobiliare in italia",
+          "volume": 50
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come diventare dentista in italia",
+          "volume": 40
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come diventare idraulico in italia",
+          "volume": 30
+        }
+      ]
+    },
+    "vicino_me": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "ristorante vicino a me",
+          "volume": 450000
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "ristorante vicino a.me",
+          "volume": 450000
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "ferramenta vicino a me",
+          "volume": 110000
+        }
+      ],
+      "note": "'vicino a me' is the most searched modifier; a measured question names the neighborhood instead of 'me'"
+    },
+    "in_zona": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "ristorante in zona",
+          "volume": 27100
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "ferramenta in zona",
+          "volume": 3600
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "fioraio in zona",
+          "volume": 1300
+        }
+      ],
+      "note": "people type 'in zona' for their own area; a measured question names the neighborhood ('in zona Brera')"
+    },
+    "zona_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "ristorante piazza duomo",
+          "volume": 135000
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "ristorante piazza duomo alba",
+          "volume": 135000
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "alba ristorante duomo",
+          "volume": 110000
+        }
+      ]
+    },
+    "affidabile": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "negozio online cinese affidabile",
+          "volume": 390
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "negozio online affidabile",
+          "volume": 282
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come capire se un agenzia immobiliare è affidabile",
+          "volume": 10
+        }
+      ]
+    },
+    "e_affidabile": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come capire se un agenzia immobiliare è affidabile",
+          "volume": 10
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come capire se un agenzia immobiliare è seria",
+          "volume": 10
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come capire se un negozio online è sicuro",
+          "volume": 10
+        }
+      ]
+    },
+    "seria": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come capire se un agenzia immobiliare è seria",
+          "volume": 10
+        }
+      ]
+    },
+    "sicuro": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come capire se un negozio online è sicuro",
+          "volume": 10
+        }
+      ]
+    },
+    "come_capire": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come capire se si è portati per fare l avvocato",
+          "volume": 70
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come capire se un meccanico ti vuole fregare",
+          "volume": 40
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come capire se il meccanico ha cambiato l'olio",
+          "volume": 20
+        }
+      ]
+    },
+    "recensioni": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "ristorante recensioni roma",
+          "volume": 870
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "hotel recensioni roma",
+          "volume": 616
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "ristorante recensioni milano",
+          "volume": 559
+        }
+      ]
+    },
+    "recensioni_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "ristorante recensioni roma",
+          "volume": 870
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "hotel recensioni roma",
+          "volume": 616
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "ristorante recensioni milano",
+          "volume": 559
+        }
+      ]
+    },
+    "albo": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "albo avvocato",
+          "volume": 18100
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "avvocato albo",
+          "volume": 18100
+        },
+        {
+          "source": "google_ai_overview_question",
+          "market": "it",
+          "query": "albo degli avvocati",
+          "volume": 18100
+        }
+      ]
+    },
+    "valutazioni": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "commercialista vicino a me valutazioni migliori",
+          "rank": 4
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "officina meccanica vicino a me valutazioni migliori",
+          "rank": 4
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "avvocato vicino a me valutazioni migliori",
+          "rank": 5
+        }
+      ]
+    },
+    "piu_votati": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "migliore clinica dentale in albania i più votati",
+          "volume": 480
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "clinica dentale tirana i più votati",
+          "volume": 40
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "avvocato vicino a me i più votati",
+          "rank": 4
+        }
+      ],
+      "note": "observed as the plural 'i più votati'; the singular agrees with the noun through its group"
+    },
+    "miglior_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "miglior hotel a roma",
+          "volume": 1092
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "miglior hotel roma",
+          "volume": 1092
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "migliore hotel roma",
+          "volume": 1092
+        }
+      ]
+    },
+    "piu_famoso": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "quale la pasticceria più famosa di parigi",
+          "rank": 7
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Chi è il barbiere più famoso d'Italia?"
+        }
+      ]
+    },
+    "piu_bello": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Qual è l'albergo più bello di Roma?"
+        }
+      ]
+    },
+    "prestigioso": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Qual è la scuola più prestigiosa di Roma?"
+        }
+      ]
+    },
+    "miglior_negozio": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "miglior negozio online",
+          "volume": 2838
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "miglior negozio online di pesca",
+          "volume": 590
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "miglior negozio online pesca",
+          "volume": 590
+        }
+      ]
+    },
+    "miglior_sito": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "miglior sito per comprare vestiti online",
+          "volume": 10
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Qual è il miglior sito per comprare online?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Qual è il miglior sito per comprare vestiti?"
+        }
+      ]
+    },
+    "economico": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "bed and breakfast roma economici",
+          "volume": 5400
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "roma bed and breakfast economici",
+          "volume": 5400
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "negozio online animali economico",
+          "volume": 480
+        }
+      ]
+    },
+    "costa_meno": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "quale dentista costa meno",
+          "rank": 1
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "quale agenzia immobiliare costa meno",
+          "rank": 4
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Dove costa di meno farsi i denti?"
+        }
+      ]
+    },
+    "prezzi": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "listino prezzi centro estetico",
+          "volume": 590
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "ristorante prezzi milano",
+          "volume": 287
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "hotel prezzi milano",
+          "volume": 249
+        }
+      ]
+    },
+    "prezzi_kw": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "ristorante prezzi milano",
+          "volume": 287
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "hotel prezzi milano",
+          "volume": 249
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "hotel prezzi roma",
+          "volume": 198
+        }
+      ]
+    },
+    "quanto_costa": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "quanto costa commercialista",
+          "volume": 480
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "quanto costa un commercialista",
+          "volume": 390
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "quanto costa un commercialista all'anno",
+          "volume": 390
+        }
+      ]
+    },
+    "spendere_poco": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Dove comprare vestiti senza spendere troppo?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Dove dormire a Milano per spendere poco?"
+        }
+      ]
+    },
+    "poco_prezzo": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "dove comprare vestiti online a poco prezzo",
+          "volume": 20
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "dove posso comprare vestiti online a poco prezzo",
+          "volume": 20
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "comprare vestiti online a poco prezzo",
+          "volume": 10
+        }
+      ]
+    },
+    "listino": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "listino prezzi centro estetico",
+          "volume": 590
+        }
+      ]
+    },
+    "preventivo": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come scrivere una richiesta preventivo hotel",
+          "volume": 90
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come fare preventivo idraulico",
+          "volume": 20
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come fare un preventivo idraulico",
+          "volume": 20
+        }
+      ]
+    },
+    "parcella": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "calcola compenso avvocato",
+          "volume": 22200
+        },
+        {
+          "source": "google_ai_overview_question",
+          "market": "it",
+          "query": "compenso avvocato",
+          "volume": 18100
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "calcola parcella avvocato",
+          "volume": 9900
+        }
+      ]
+    },
+    "provvigione": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "agenzia immobiliare provvigioni",
+          "volume": 1900
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "agenzia immobiliare provvigione",
+          "volume": 1600
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "provvigione agenzia immobiliare",
+          "volume": 1600
+        }
+      ]
+    },
+    "retta": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come pagare retta asilo nido roma",
+          "volume": 10
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "retta mensile scuola materna privata",
+          "volume": 0
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Quanto costa la retta del liceo De Amicis di Milano?"
+        }
+      ]
+    },
+    "aperto_oggi": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "parrucchiere aperto oggi vicino a me",
+          "volume": 3600
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "parrucchiere aperte oggi",
+          "volume": 2900
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "parrucchiere aperti oggi",
+          "volume": 2900
+        }
+      ]
+    },
+    "aperti_adesso": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "fioraio vicino a me aperti adesso",
+          "volume": 1000
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "negozio di abbigliamento vicino a me aperti adesso",
+          "rank": 3
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "officina meccanica vicino a me aperti adesso",
+          "rank": 3
+        }
+      ],
+      "note": "observed as the plural 'aperti adesso'; the singular agrees with the noun through its group"
+    },
+    "oggi": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "parrucchiere aperto oggi vicino a me",
+          "volume": 3600
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "parrucchiere aperte oggi",
+          "volume": 2900
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "parrucchiere aperti oggi",
+          "volume": 2900
+        }
+      ]
+    },
+    "h24": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "dentista aperto 24 ore su 24 vicino a me",
+          "volume": 1900
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "aci soccorso stradale scaligera assistance officina meccanica veloce h24",
+          "volume": 260
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "dentista 24 ore milano",
+          "volume": 4
+        }
+      ]
+    },
+    "pronto_intervento": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "pronto intervento idraulico",
+          "volume": 5400
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "pronto intervento idraulico milano",
+          "volume": 5400
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "pronto intervento idraulico roma",
+          "volume": 3600
+        }
+      ]
+    },
+    "urgente": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "pasticceria urgente roma",
+          "volume": 30
+        },
+        {
+          "source": "ai_search_volume",
+          "market": "it",
+          "query": "idraulico urgente roma",
+          "volume": 5
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Quanto costa l'urgenza dal dentista?"
+        }
+      ]
+    },
+    "apre": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "fioraio che apre alle 7",
+          "rank": 3
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "parrucchiere che apre alle 8 vicino a me",
+          "rank": 3
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "fioraio che apre alle 8",
+          "rank": 5
+        }
+      ]
+    },
+    "consegna_rapida": {
+      "support": "unsupported",
+      "evidence": [],
+      "note": "no Italian query asks for fast delivery; the online urgency intent keeps it on the slate's shape"
+    },
+    "convenzionato": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "dentista convenzionato asl vicino a me",
+          "volume": 2400
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "dentista convenzionato con unisalute",
+          "volume": 2400
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "dentista convenzionato unisalute",
+          "volume": 2400
+        }
+      ],
+      "note": "people name the fund or insurer (ASL, Unisalute); a template for any business says 'la mia assicurazione' or 'l'ASL'"
+    },
+    "asl": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "dentista convenzionato asl vicino a me",
+          "volume": 2400
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "dentista convenzionato asl catania",
+          "volume": 1600
+        }
+      ]
+    },
+    "mutua": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Come posso curare i miei denti con la mutua?"
+        }
+      ]
+    },
+    "detrazione": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come pagare il dentista per detrazione fiscale",
+          "volume": 50
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come pagare agenzia immobiliare per detrazione fiscale",
+          "volume": 10
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "corso di inglese è detrazione dal 730",
+          "rank": 7
+        }
+      ]
+    },
+    "pagamento_consegna": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "comprare vestiti online con pagamento alla consegna",
+          "volume": 10
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "comprare vestiti online contrassegno",
+          "volume": 10
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "comprare vestiti online e pagare alla consegna",
+          "volume": 10
+        }
+      ]
+    },
+    "bambini": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come organizzare un corso di inglese per bambini",
+          "volume": 0
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "corso di inglese bambini vicino a me",
+          "rank": 3
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "barbiere che taglia i capelli ai bambini",
+          "rank": 4
+        }
+      ]
+    },
+    "apparecchio": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "dentista apparecchio",
+          "volume": 9900
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "dentista per apparecchio",
+          "volume": 9900
+        },
+        {
+          "source": "google_ai_overview_question",
+          "market": "it",
+          "query": "dentista apparecchio invisibile",
+          "volume": 1900
+        }
+      ]
+    },
+    "prima_visita": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Cosa succede durante la prima visita dentistica?"
+        }
+      ]
+    },
+    "extension": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "yoyo nails centro estetico unghie",
+          "volume": 1000
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "chi fa la barba al barbiere",
+          "volume": 10
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come pulire le unghie di un meccanico",
+          "volume": 10
+        }
+      ]
+    },
+    "accetta_cani": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "hotel che accettano i cani",
+          "rank": 3
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "bed and breakfast che accettano cani",
+          "rank": 5
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "hotel che accettano gatti",
+          "rank": 5
+        }
+      ]
+    },
+    "weekend": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Dove è meglio alloggiare a Roma per un weekend?"
+        }
+      ]
+    },
+    "alloggiare": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Dove posso alloggiare a Milano?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Dove è meglio alloggiare a Roma per un weekend?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Qual è il posto migliore per alloggiare a Milano?"
+        }
+      ]
+    },
+    "cena": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come vestirsi per un pranzo al ristorante donna",
+          "volume": 260
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come vestirsi per una cena al ristorante donna",
+          "volume": 210
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come vestirsi per una cena al ristorante con amici",
+          "volume": 90
+        }
+      ]
+    },
+    "con_amici": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come vestirsi per una cena al ristorante con amici",
+          "volume": 90
+        }
+      ]
+    },
+    "tipico": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Quali sono alcuni dolci tipici di Roma?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Quali sono alcuni dolci tipici milanesi?"
+        }
+      ]
+    },
+    "piu_grande": {
+      "support": "adapted",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Qual è il più grande outlet di Roma?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Qual è la ferramenta più grande d'Italia?"
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Qual è la società immobiliare più grande d'Italia?"
+        }
+      ],
+      "note": "people ask for the biggest store; the template also asks for the widest selection"
+    },
+    "spedisce": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "fioraio che spedisce",
+          "rank": 9
+        }
+      ]
+    },
+    "partita_iva": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come chiudere la partita iva senza commercialista",
+          "volume": 170
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come chiudere partita iva senza commercialista",
+          "volume": 30
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come aprire un negozio online senza partita iva",
+          "volume": 20
+        }
+      ]
+    },
+    "eredita": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "quale avvocato si occupa di eredità",
+          "rank": 1
+        },
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Che tipo di avvocato si occupa di eredita?"
+        }
+      ]
+    },
+    "vendere": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come scegliere agenzia immobiliare per vendere",
+          "volume": 10
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come vendere attività parrucchiere",
+          "volume": 10
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come vendere in un negozio di abbigliamento",
+          "volume": 10
+        }
+      ]
+    },
+    "comprare_casa": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_people_also_ask",
+          "market": "it",
+          "query": "Quanti soldi ci vogliono per comprare casa a Milano?"
+        }
+      ]
+    },
+    "affitto": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "chi paga l agenzia immobiliare in caso di affitto",
+          "volume": 40
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "chi paga la provvigione all agenzia immobiliare per affitto",
+          "volume": 20
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "cerco una stanza in affitto roma",
+          "rank": 2
+        }
+      ]
+    },
+    "valutazione": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "valutazione immobiliare agenzia delle entrate",
+          "volume": 1600
+        }
+      ]
+    },
+    "iscrizioni": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "asilo nido iscrizione",
+          "volume": 880
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "asilo nido iscrizioni",
+          "volume": 880
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "iscrizione asilo nido",
+          "volume": 880
+        }
+      ]
+    },
+    "privato": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "asilo nido privato vicino a me",
+          "volume": 2400
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "asilo nido privato",
+          "volume": 1900
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "come aprire asilo nido privato",
+          "volume": 90
+        }
+      ]
+    },
+    "montessori": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "scuola materna privata montessori roma",
+          "volume": 0
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "asilo nido montessori vicino a me",
+          "rank": 9
+        }
+      ]
+    },
+    "certificazione": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "corso di inglese con certificazione",
+          "volume": 1300
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "corso di inglese online con certificazione",
+          "volume": 880
+        },
+        {
+          "source": "google_autocomplete",
+          "market": "it",
+          "query": "corso di inglese con certificazione c1",
+          "rank": 4
+        }
+      ]
+    },
+    "negozio_online_di": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "negozio di pesca online",
+          "volume": 1600
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "negozio online di pesca",
+          "volume": 1600
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "negozio online pesca",
+          "volume": 1600
+        }
+      ]
+    },
+    "comprare_online": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "comprare vestiti online",
+          "volume": 110
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "vestiti online comprare",
+          "volume": 110
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "comprare vestiti economici online",
+          "volume": 10
+        }
+      ]
+    },
+    "siti_per": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "siti dove comprare vestiti online",
+          "volume": 70
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "siti per comprare online vestiti",
+          "volume": 70
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "siti per comprare vestiti online",
+          "volume": 70
+        }
+      ]
+    },
+    "recensioni_di": {
+      "support": "observed",
+      "evidence": [
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "recensioni di clinica dentale cusio",
+          "volume": 90
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "recensioni di barchitta clinica dentale",
+          "volume": 50
+        },
+        {
+          "source": "google_volume",
+          "market": "it",
+          "query": "recensioni di dottor d clinica dentale",
+          "volume": 40
+        }
+      ]
+    }
+  },
+  "templates": {
+    "health/local/discovery": [
+      ["mi_consigli"],
+      ["quale", "mi_consigli"],
+      ["dove_trovare"],
+      ["quali_migliori"],
+      ["quali_migliori", "scegliere"],
+      ["kw_a"],
+      ["consigliato", "kw_bare"],
+      ["cerco", "prima_visita"],
+      ["orari"]
+    ],
+    "health/local/specialty": [
+      ["quale", "bambini"],
+      ["mi_consigli", "specializzato"],
+      ["dove_trovare", "che_fa", "apparecchio"],
+      ["quali_migliori", "specializzato"],
+      ["quali_migliori", "scegliere", "bambini"],
+      ["specializzato", "kw_bare"],
+      ["bambini", "kw_bare"],
+      ["che_fa", "apparecchio"],
+      ["cerco"]
+    ],
+    "health/local/zone": [
+      ["mi_consigli", "in_zona"],
+      ["quale", "mi_consigli", "vicino_me"],
+      ["dove_trovare", "vicino_me"],
+      ["quali_migliori", "in_zona"],
+      ["quali_migliori", "scegliere", "vicino_me"],
+      ["vicino_me", "kw_bare"],
+      ["zona_kw", "kw_bare"],
+      ["cerco", "in_zona"],
+      ["vicino_me", "prima_visita"]
+    ],
+    "health/local/urgency": [
+      ["quale", "aperto_oggi"],
+      ["dove_trovare", "aperti_adesso"],
+      ["mi_consigli", "h24"],
+      ["quali_migliori", "aperto_oggi"],
+      ["quali_migliori", "scegliere", "urgente"],
+      ["aperto_oggi", "kw_bare"],
+      ["h24", "kw_bare"],
+      ["cerco", "urgente", "oggi"],
+      ["aperti_adesso", "urgente"]
+    ],
+    "health/local/insurance_or_payment": [
+      ["quale", "convenzionato", "asl"],
+      ["dove_trovare", "convenzionato"],
+      ["quale", "mutua"],
+      ["quali_migliori", "convenzionato"],
+      ["quali_migliori", "scegliere", "detrazione"],
+      ["convenzionato", "kw_bare"],
+      ["convenzionato", "asl"],
+      ["convenzionato"],
+      ["cerco", "mutua"]
+    ],
+    "health/local/trust": [
+      ["qual_e", "affidabile"],
+      ["dove_trovare", "seria"],
+      ["quale", "recensioni"],
+      ["quali_migliori", "affidabile"],
+      ["quali_migliori", "scegliere", "seria", "recensioni"],
+      ["affidabile", "kw_bare"],
+      ["recensioni_kw"],
+      ["recensioni"],
+      ["cerco", "seria"]
+    ],
+    "beauty_wellness/local/discovery": [
+      ["mi_consigli"],
+      ["quale", "mi_consigli"],
+      ["dove_trovare"],
+      ["quali_migliori"],
+      ["quali_migliori", "scegliere"],
+      ["kw_a"],
+      ["consigliato", "kw_bare"],
+      ["uomo_donna"],
+      ["cerco", "a_domicilio"]
+    ],
+    "beauty_wellness/local/specialty": [
+      ["quale", "che_fa", "extension"],
+      ["mi_consigli", "specializzato"],
+      ["dove_trovare"],
+      ["quali_migliori", "specializzato"],
+      ["quali_migliori", "scegliere"],
+      ["specializzato", "kw_bare"],
+      ["uomo_donna", "kw_bare"],
+      ["che_fa", "extension"],
+      ["cerco"]
+    ],
+    "beauty_wellness/local/zone": [
+      ["mi_consigli", "in_zona"],
+      ["quale", "mi_consigli", "vicino_me"],
+      ["dove_trovare", "vicino_me"],
+      ["quali_migliori", "in_zona"],
+      ["quali_migliori", "scegliere", "vicino_me"],
+      ["vicino_me", "kw_bare"],
+      ["zona_kw", "kw_bare"],
+      ["in_zona", "uomo_donna"],
+      ["cerco", "vicino_me", "orari"]
+    ],
+    "beauty_wellness/local/price": [
+      ["quale", "costa_meno"],
+      ["dove_trovare", "economico"],
+      ["quale", "prezzi"],
+      ["quali_migliori", "economico"],
+      ["quali_migliori", "scegliere", "spendere_poco"],
+      ["economico", "kw_bare"],
+      ["prezzi_kw"],
+      ["listino"],
+      ["cerco", "costa_meno"]
+    ],
+    "beauty_wellness/local/trust": [
+      ["qual_e", "affidabile"],
+      ["dove_trovare", "seria"],
+      ["quale", "recensioni"],
+      ["quali_migliori", "affidabile"],
+      ["quali_migliori", "scegliere", "seria", "recensioni"],
+      ["affidabile", "kw_bare"],
+      ["recensioni_kw"],
+      ["recensioni"],
+      ["cerco", "seria"]
+    ],
+    "beauty_wellness/local/ranking": [
+      ["qual_e_migliore"],
+      ["quale", "qual_e_migliore"],
+      ["qual_e", "piu_votati"],
+      ["quali_migliori"],
+      ["quali_migliori", "valutazioni"],
+      ["miglior_kw"],
+      ["valutazioni", "kw_bare"],
+      ["valutazioni"],
+      ["cerco", "piu_votati"]
+    ],
+    "lodging/local/discovery": [
+      ["mi_consigli"],
+      ["quale", "mi_consigli"],
+      ["dove_trovare"],
+      ["quali_migliori"],
+      ["quali_migliori", "scegliere"],
+      ["kw_a"],
+      ["consigliato", "kw_bare"],
+      ["weekend"],
+      ["cerco", "alloggiare"]
+    ],
+    "lodging/local/specialty": [
+      ["quale", "accetta_cani"],
+      ["mi_consigli", "accetta_cani"],
+      ["dove_trovare", "accetta_cani"],
+      ["quali_migliori", "accetta_cani"],
+      ["quali_migliori", "scegliere", "accetta_cani"],
+      ["accetta_cani", "kw_bare"],
+      ["accetta_cani", "kw_bare"],
+      ["che_fa", "accetta_cani"],
+      ["cerco", "accetta_cani"]
+    ],
+    "lodging/local/zone": [
+      ["mi_consigli", "in_zona"],
+      ["quale", "mi_consigli", "vicino_me"],
+      ["dove_trovare", "vicino_me"],
+      ["quali_migliori", "in_zona"],
+      ["quali_migliori", "scegliere", "vicino_me"],
+      ["vicino_me", "kw_bare"],
+      ["zona_kw", "kw_bare"],
+      ["in_zona", "weekend"],
+      ["cerco", "vicino_me", "alloggiare"]
+    ],
+    "lodging/local/price": [
+      ["quale", "costa_meno"],
+      ["dove_trovare", "economico"],
+      ["quale", "prezzi"],
+      ["quali_migliori", "economico"],
+      ["quali_migliori", "scegliere", "spendere_poco"],
+      ["economico", "kw_bare"],
+      ["prezzi_kw"],
+      ["spendere_poco", "weekend"],
+      ["cerco", "economico"]
+    ],
+    "lodging/local/trust": [
+      ["qual_e", "affidabile"],
+      ["dove_trovare", "seria"],
+      ["quale", "recensioni"],
+      ["quali_migliori", "affidabile"],
+      ["quali_migliori", "scegliere", "seria", "recensioni"],
+      ["affidabile", "kw_bare"],
+      ["recensioni_kw"],
+      ["recensioni"],
+      ["cerco", "seria"]
+    ],
+    "lodging/local/ranking": [
+      ["qual_e_migliore"],
+      ["quale", "qual_e_migliore"],
+      ["qual_e", "piu_votati"],
+      ["quali_migliori"],
+      ["quali_migliori", "valutazioni"],
+      ["miglior_kw"],
+      ["valutazioni", "kw_bare"],
+      ["valutazioni"],
+      ["cerco", "piu_bello"]
+    ],
+    "food/local/discovery": [
+      ["mi_consigli"],
+      ["quale", "mi_consigli"],
+      ["dove_trovare"],
+      ["quali_migliori"],
+      ["quali_migliori", "scegliere"],
+      ["kw_a"],
+      ["consigliato", "kw_bare"],
+      ["cena"],
+      ["cerco", "cena"]
+    ],
+    "food/local/specialty": [
+      ["quale", "tipico"],
+      ["mi_consigli", "tipico"],
+      ["dove_trovare", "che_fa", "tipico"],
+      ["quali_migliori", "tipico"],
+      ["quali_migliori", "scegliere", "cena"],
+      ["tipico", "kw_bare"],
+      ["cena", "kw_bare"],
+      ["che_fa"],
+      ["cerco", "con_amici"]
+    ],
+    "food/local/zone": [
+      ["mi_consigli", "in_zona"],
+      ["quale", "mi_consigli", "vicino_me"],
+      ["dove_trovare", "vicino_me"],
+      ["quali_migliori", "in_zona"],
+      ["quali_migliori", "scegliere", "vicino_me"],
+      ["vicino_me", "kw_bare"],
+      ["zona_kw", "kw_bare"],
+      ["in_zona", "cena"],
+      ["cerco", "vicino_me", "cena"]
+    ],
+    "food/local/price": [
+      ["quale", "costa_meno"],
+      ["dove_trovare", "economico"],
+      ["quale", "prezzi"],
+      ["quali_migliori", "economico"],
+      ["quali_migliori", "scegliere", "spendere_poco"],
+      ["economico", "kw_bare"],
+      ["prezzi_kw"],
+      ["spendere_poco"],
+      ["cerco", "economico", "cena"]
+    ],
+    "food/local/trust": [
+      ["qual_e", "affidabile"],
+      ["dove_trovare", "seria"],
+      ["quale", "recensioni"],
+      ["quali_migliori", "affidabile"],
+      ["quali_migliori", "scegliere", "seria", "recensioni"],
+      ["affidabile", "kw_bare"],
+      ["recensioni_kw"],
+      ["recensioni"],
+      ["cerco", "affidabile", "cena"]
+    ],
+    "food/local/ranking": [
+      ["qual_e_migliore"],
+      ["quale", "qual_e_migliore"],
+      ["qual_e", "piu_votati"],
+      ["quali_migliori"],
+      ["quali_migliori", "valutazioni"],
+      ["miglior_kw"],
+      ["valutazioni", "kw_bare"],
+      ["valutazioni"],
+      ["cerco", "piu_famoso"]
+    ],
+    "home_auto_services/local/discovery": [
+      ["mi_consigli"],
+      ["quale", "mi_consigli"],
+      ["dove_trovare"],
+      ["quali_migliori"],
+      ["quali_migliori", "scegliere"],
+      ["kw_a"],
+      ["consigliato", "kw_bare"],
+      ["a_domicilio"],
+      ["cerco"]
+    ],
+    "home_auto_services/local/specialty": [
+      ["quale", "si_occupa"],
+      ["mi_consigli", "specializzato"],
+      ["dove_trovare", "si_occupa"],
+      ["quali_migliori", "specializzato"],
+      ["quali_migliori", "scegliere"],
+      ["specializzato", "kw_bare"],
+      ["a_domicilio", "kw_bare"],
+      ["che_fa"],
+      ["cerco", "si_occupa"]
+    ],
+    "home_auto_services/local/zone": [
+      ["mi_consigli", "in_zona"],
+      ["quale", "mi_consigli", "vicino_me"],
+      ["dove_trovare", "vicino_me"],
+      ["quali_migliori", "in_zona"],
+      ["quali_migliori", "scegliere", "vicino_me"],
+      ["vicino_me", "kw_bare"],
+      ["zona_kw", "kw_bare"],
+      ["in_zona", "a_domicilio"],
+      ["cerco", "vicino_me"]
+    ],
+    "home_auto_services/local/price": [
+      ["quale", "costa_meno"],
+      ["dove_trovare", "economico"],
+      ["quale", "prezzi"],
+      ["quali_migliori", "economico"],
+      ["quali_migliori", "scegliere", "spendere_poco"],
+      ["economico", "kw_bare"],
+      ["prezzi_kw"],
+      ["preventivo"],
+      ["quanto_costa"]
+    ],
+    "home_auto_services/local/urgency": [
+      ["quale", "aperto_oggi"],
+      ["dove_trovare", "aperti_adesso"],
+      ["mi_consigli", "h24"],
+      ["quali_migliori", "aperto_oggi"],
+      ["quali_migliori", "scegliere", "urgente"],
+      ["aperto_oggi", "kw_bare"],
+      ["h24", "kw_bare"],
+      ["pronto_intervento"],
+      ["cerco", "urgente", "oggi"]
+    ],
+    "home_auto_services/local/trust": [
+      ["qual_e", "affidabile"],
+      ["dove_trovare", "seria"],
+      ["quale", "recensioni"],
+      ["quali_migliori", "affidabile"],
+      ["quali_migliori", "scegliere", "seria", "recensioni"],
+      ["affidabile", "kw_bare"],
+      ["recensioni_kw"],
+      ["recensioni"],
+      ["come_capire", "e_affidabile"]
+    ],
+    "local_retail/local/discovery": [
+      ["mi_consigli"],
+      ["quale", "mi_consigli"],
+      ["dove_trovare"],
+      ["quali_migliori"],
+      ["quali_migliori", "scegliere"],
+      ["kw_a"],
+      ["consigliato", "kw_bare"],
+      ["a_domicilio"],
+      ["cerco", "che_fa", "online_kw"]
+    ],
+    "local_retail/local/specialty": [
+      ["quale", "piu_grande"],
+      ["qual_e", "piu_grande"],
+      ["dove_trovare", "piu_grande"],
+      ["quali_migliori", "piu_grande"],
+      ["quali_migliori", "scegliere", "piu_grande"],
+      ["piu_grande", "kw_bare"],
+      ["piu_grande", "kw_bare"],
+      ["piu_grande"],
+      ["cerco", "piu_grande"]
+    ],
+    "local_retail/local/price": [
+      ["quale", "costa_meno"],
+      ["dove_trovare", "economico"],
+      ["quale", "prezzi"],
+      ["quali_migliori", "economico"],
+      ["quali_migliori", "scegliere", "spendere_poco"],
+      ["economico", "kw_bare"],
+      ["prezzi_kw"],
+      ["prezzi"],
+      ["cerco", "economico", "a_domicilio"]
+    ],
+    "local_retail/local/urgency": [
+      ["quale", "aperto_oggi"],
+      ["dove_trovare", "aperti_adesso"],
+      ["quale", "apre"],
+      ["quali_migliori", "aperto_oggi"],
+      ["quali_migliori", "scegliere", "aperti_adesso"],
+      ["aperto_oggi", "kw_bare"],
+      ["aperti_adesso", "kw_bare"],
+      ["oggi"],
+      ["cerco", "apre"]
+    ],
+    "local_retail/local/trust": [
+      ["qual_e", "affidabile"],
+      ["dove_trovare", "seria"],
+      ["quale", "recensioni"],
+      ["quali_migliori", "affidabile"],
+      ["quali_migliori", "scegliere", "seria", "recensioni"],
+      ["affidabile", "kw_bare"],
+      ["recensioni_kw"],
+      ["recensioni"],
+      ["cerco", "seria"]
+    ],
+    "local_retail/local/ranking": [
+      ["qual_e_migliore"],
+      ["quale", "qual_e_migliore"],
+      ["qual_e", "piu_votati"],
+      ["quali_migliori"],
+      ["quali_migliori", "valutazioni"],
+      ["miglior_kw"],
+      ["valutazioni", "kw_bare"],
+      ["valutazioni"],
+      ["cerco", "piu_famoso"]
+    ],
+    "local_retail/national/discovery": [
+      ["mi_consigli", "online_kw"],
+      ["quale", "mi_consigli", "online_kw"],
+      ["dove_trovare", "spedisce"],
+      ["quali_migliori", "online_kw"],
+      ["quali_migliori", "scegliere", "online_kw"],
+      ["online_kw", "paese_kw"],
+      ["online_kw", "consigliato"],
+      ["online_kw", "spedisce"],
+      ["cerco", "pagamento_consegna"]
+    ],
+    "local_retail/national/specialty": [
+      ["quale", "piu_grande"],
+      ["qual_e", "piu_grande"],
+      ["dove_trovare", "piu_grande"],
+      ["quali_migliori", "piu_grande"],
+      ["quali_migliori", "scegliere", "piu_grande"],
+      ["online_kw", "piu_grande"],
+      ["piu_grande", "paese_kw"],
+      ["online_kw", "piu_grande"],
+      ["cerco", "piu_grande"]
+    ],
+    "local_retail/national/price": [
+      ["quale", "costa_meno"],
+      ["dove_trovare", "economico"],
+      ["quale", "prezzi"],
+      ["quali_migliori", "economico"],
+      ["quali_migliori", "scegliere", "spendere_poco"],
+      ["economico", "paese_kw"],
+      ["online_kw", "prezzi"],
+      ["prezzi", "pagamento_consegna"],
+      ["cerco", "economico", "spedisce"]
+    ],
+    "local_retail/national/urgency": [
+      ["quale", "consegna_rapida"],
+      ["dove_trovare", "h24"],
+      ["mi_consigli", "consegna_rapida"],
+      ["quali_migliori", "h24"],
+      ["quali_migliori", "scegliere", "spedisce"],
+      ["h24", "paese_kw"],
+      ["online_kw", "consegna_rapida"],
+      ["oggi"],
+      ["cerco", "spedisce"]
+    ],
+    "local_retail/national/trust": [
+      ["qual_e", "affidabile"],
+      ["come_capire", "e_affidabile"],
+      ["quale", "recensioni"],
+      ["quali_migliori", "affidabile"],
+      ["quali_migliori", "scegliere", "seria"],
+      ["online_kw", "affidabile"],
+      ["recensioni", "paese_kw"],
+      ["sicuro", "recensioni"],
+      ["cerco", "seria"]
+    ],
+    "local_retail/national/ranking": [
+      ["qual_e_migliore"],
+      ["quale", "qual_e_migliore"],
+      ["qual_e", "piu_votati"],
+      ["quali_migliori"],
+      ["quali_migliori", "valutazioni"],
+      ["miglior_kw", "paese_kw"],
+      ["online_kw", "valutazioni"],
+      ["valutazioni"],
+      ["cerco", "piu_famoso"]
+    ],
+    "professional_services/local/discovery": [
+      ["mi_consigli"],
+      ["quale", "mi_consigli"],
+      ["dove_trovare"],
+      ["quali_migliori"],
+      ["quali_migliori", "scegliere"],
+      ["kw_a"],
+      ["consigliato", "kw_bare"],
+      ["partita_iva"],
+      ["cerco"]
+    ],
+    "professional_services/local/specialty": [
+      ["quale", "si_occupa"],
+      ["mi_consigli", "specializzato"],
+      ["dove_trovare", "si_occupa"],
+      ["quali_migliori", "specializzato"],
+      ["quali_migliori", "scegliere"],
+      ["specializzato", "kw_bare"],
+      ["partita_iva", "kw_bare"],
+      ["si_occupa", "eredita"],
+      ["cerco"]
+    ],
+    "professional_services/local/price": [
+      ["quale", "costa_meno"],
+      ["dove_trovare", "economico"],
+      ["quale", "prezzi"],
+      ["quali_migliori", "economico"],
+      ["quali_migliori", "scegliere", "spendere_poco"],
+      ["economico", "kw_bare"],
+      ["prezzi_kw"],
+      ["parcella"],
+      ["quanto_costa"]
+    ],
+    "professional_services/local/urgency": [
+      ["quale", "aperto_oggi"],
+      ["dove_trovare", "aperti_adesso"],
+      ["mi_consigli", "h24"],
+      ["quali_migliori", "aperto_oggi"],
+      ["quali_migliori", "scegliere", "urgente"],
+      ["aperto_oggi", "kw_bare"],
+      ["h24", "kw_bare"],
+      ["oggi"],
+      ["cerco", "urgente"]
+    ],
+    "professional_services/local/trust": [
+      ["qual_e", "affidabile"],
+      ["dove_trovare", "seria"],
+      ["quale", "recensioni"],
+      ["quali_migliori", "affidabile"],
+      ["quali_migliori", "scegliere", "seria", "recensioni"],
+      ["affidabile", "kw_bare"],
+      ["recensioni_kw"],
+      ["albo", "recensioni"],
+      ["come_capire"]
+    ],
+    "professional_services/local/ranking": [
+      ["qual_e_migliore"],
+      ["quale", "qual_e_migliore"],
+      ["qual_e", "piu_votati"],
+      ["quali_migliori"],
+      ["quali_migliori", "valutazioni"],
+      ["miglior_kw"],
+      ["valutazioni", "kw_bare"],
+      ["valutazioni"],
+      ["cerco", "piu_famoso"]
+    ],
+    "real_estate/local/discovery": [
+      ["mi_consigli"],
+      ["quale", "mi_consigli"],
+      ["dove_trovare"],
+      ["quali_migliori"],
+      ["quali_migliori", "scegliere"],
+      ["kw_a"],
+      ["consigliato", "kw_bare"],
+      ["vendere"],
+      ["cerco", "comprare_casa"]
+    ],
+    "real_estate/local/specialty": [
+      ["quale", "si_occupa", "affitto"],
+      ["mi_consigli", "vendere"],
+      ["dove_trovare", "si_occupa", "affitto"],
+      ["quali_migliori", "vendere"],
+      ["quali_migliori", "scegliere", "affitto"],
+      ["affitto", "kw_bare"],
+      ["vendere", "kw_bare"],
+      ["che_fa", "valutazione"],
+      ["cerco", "affitto"]
+    ],
+    "real_estate/local/zone": [
+      ["mi_consigli", "in_zona"],
+      ["quale", "mi_consigli", "vicino_me"],
+      ["dove_trovare", "vicino_me"],
+      ["quali_migliori", "in_zona"],
+      ["quali_migliori", "scegliere", "vicino_me"],
+      ["vicino_me", "kw_bare"],
+      ["zona_kw", "kw_bare"],
+      ["in_zona", "vendere"],
+      ["cerco", "vicino_me", "comprare_casa"]
+    ],
+    "real_estate/local/price": [
+      ["quale", "costa_meno"],
+      ["dove_trovare", "economico"],
+      ["quale", "prezzi"],
+      ["quali_migliori", "economico"],
+      ["quali_migliori", "scegliere", "spendere_poco"],
+      ["economico", "kw_bare"],
+      ["prezzi_kw"],
+      ["provvigione"],
+      ["quanto_costa", "vendere"]
+    ],
+    "real_estate/local/trust": [
+      ["qual_e", "affidabile"],
+      ["dove_trovare", "seria"],
+      ["quale", "recensioni"],
+      ["quali_migliori", "affidabile"],
+      ["quali_migliori", "scegliere", "seria", "recensioni"],
+      ["affidabile", "kw_bare"],
+      ["recensioni_kw"],
+      ["recensioni"],
+      ["come_capire", "e_affidabile"]
+    ],
+    "real_estate/local/ranking": [
+      ["qual_e_migliore"],
+      ["quale", "qual_e_migliore"],
+      ["qual_e", "piu_votati"],
+      ["quali_migliori"],
+      ["quali_migliori", "valutazioni"],
+      ["miglior_kw"],
+      ["valutazioni", "kw_bare"],
+      ["valutazioni"],
+      ["cerco", "piu_votati"]
+    ],
+    "education/local/discovery": [
+      ["mi_consigli"],
+      ["quale", "mi_consigli"],
+      ["dove_trovare"],
+      ["quali_migliori"],
+      ["quali_migliori", "scegliere"],
+      ["kw_a"],
+      ["consigliato", "kw_bare"],
+      ["iscrizioni"],
+      ["cerco", "bambini"]
+    ],
+    "education/local/specialty": [
+      ["quale", "montessori"],
+      ["mi_consigli", "online_kw"],
+      ["dove_trovare", "privato"],
+      ["quali_migliori", "certificazione"],
+      ["quali_migliori", "scegliere", "privato"],
+      ["privato", "kw_bare"],
+      ["montessori", "kw_bare"],
+      ["certificazione"],
+      ["cerco", "online_kw"]
+    ],
+    "education/local/zone": [
+      ["mi_consigli", "in_zona"],
+      ["quale", "mi_consigli", "vicino_me"],
+      ["dove_trovare", "vicino_me"],
+      ["quali_migliori", "in_zona"],
+      ["quali_migliori", "scegliere", "vicino_me"],
+      ["vicino_me", "kw_bare"],
+      ["zona_kw", "kw_bare"],
+      ["in_zona", "bambini"],
+      ["cerco", "privato", "vicino_me"]
+    ],
+    "education/local/price": [
+      ["quale", "costa_meno"],
+      ["dove_trovare", "economico"],
+      ["quale", "prezzi"],
+      ["quali_migliori", "economico"],
+      ["quali_migliori", "scegliere", "spendere_poco"],
+      ["economico", "kw_bare"],
+      ["prezzi_kw"],
+      ["retta"],
+      ["quanto_costa"]
+    ],
+    "education/local/ranking": [
+      ["qual_e_migliore"],
+      ["quale", "qual_e_migliore"],
+      ["qual_e", "piu_votati"],
+      ["quali_migliori"],
+      ["quali_migliori", "valutazioni"],
+      ["miglior_kw"],
+      ["valutazioni", "kw_bare"],
+      ["valutazioni"],
+      ["cerco", "prestigioso"]
+    ],
+    "education/local/trust": [
+      ["qual_e", "affidabile"],
+      ["dove_trovare", "seria"],
+      ["quale", "recensioni"],
+      ["quali_migliori", "affidabile"],
+      ["quali_migliori", "scegliere", "seria", "recensioni"],
+      ["affidabile", "kw_bare"],
+      ["recensioni_kw"],
+      ["recensioni"],
+      ["come_capire", "e_affidabile"]
+    ],
+    "online_national/national/discovery": [
+      ["mi_consigli", "negozio_online_di"],
+      ["dove_comprare", "online_kw"],
+      ["qual_e", "miglior_sito"],
+      ["quali_migliori", "negozio_online_di"],
+      ["quali_migliori", "siti_per"],
+      ["negozio_online_di", "paese_kw"],
+      ["comprare_online"],
+      ["negozio_online_di", "spedisce"],
+      ["cerco", "siti_per", "pagamento_consegna"]
+    ],
+    "online_national/national/specialty": [
+      ["quale", "piu_grande"],
+      ["qual_e", "piu_grande"],
+      ["dove_comprare", "piu_grande"],
+      ["quali_migliori", "piu_grande"],
+      ["quali_sono", "siti_per", "piu_grande"],
+      ["negozio_online_di", "piu_grande"],
+      ["comprare_online", "piu_grande", "paese_kw"],
+      ["negozio_online_di", "piu_grande"],
+      ["cerco", "piu_grande"]
+    ],
+    "online_national/national/price": [
+      ["dove_comprare", "poco_prezzo"],
+      ["quale", "costa_meno"],
+      ["quale", "prezzi"],
+      ["quali_migliori", "economico"],
+      ["quali_sono", "siti_per", "economico"],
+      ["comprare_online", "poco_prezzo", "paese_kw"],
+      ["negozio_online_di", "economico"],
+      ["negozio_online_di", "prezzi"],
+      ["cerco", "economico"]
+    ],
+    "online_national/national/trust": [
+      ["qual_e", "affidabile"],
+      ["come_capire", "e_affidabile"],
+      ["quale", "siti_per", "recensioni"],
+      ["quali_migliori", "affidabile"],
+      ["quali_sono", "siti_per", "affidabile"],
+      ["negozio_online_di", "affidabile"],
+      ["comprare_online", "recensioni", "paese_kw"],
+      ["sicuro", "recensioni"],
+      ["cerco", "siti_per", "seria"]
+    ],
+    "online_national/national/urgency": [
+      ["quale", "consegna_rapida"],
+      ["dove_comprare", "h24"],
+      ["mi_consigli", "consegna_rapida"],
+      ["quali_migliori", "h24"],
+      ["quali_sono", "consegna_rapida"],
+      ["comprare_online", "h24"],
+      ["negozio_online_di", "consegna_rapida", "paese_kw"],
+      ["negozio_online_di", "oggi"],
+      ["cerco", "spedisce"]
+    ],
+    "online_national/national/ranking": [
+      ["qual_e", "miglior_negozio"],
+      ["quale", "qual_e_migliore"],
+      ["qual_e", "piu_votati"],
+      ["quali_migliori"],
+      ["quali_sono", "siti_per"],
+      ["miglior_negozio", "paese_kw"],
+      ["negozio_online_di", "valutazioni"],
+      ["negozio_online_di", "valutazioni"],
+      ["cerco", "miglior_sito"]
+    ]
+  },
+  "brand": {
+    "brand.trust": ["e_affidabile"],
+    "brand.opinion": ["recensioni_di", "recensioni"]
+  }
+}

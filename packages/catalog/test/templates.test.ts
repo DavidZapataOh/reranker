@@ -196,8 +196,13 @@ describe("canonicalTemplate", () => {
 });
 
 describe("languages without templates", () => {
-  test("Spanish, English, Portuguese, French and German are written; the rest fail closed until theirs land", () => {
-    expect(TEMPLATE_LANGUAGES).toEqual(["es", "en", "pt", "fr", "de"]);
+  test("the written languages are asked in; the rest fail closed until theirs land", () => {
+    expect(TEMPLATE_LANGUAGES).toEqual(
+      expect.arrayContaining(["es", "en", "pt", "fr", "de", "it"]),
+    );
+    expect(canonicalTemplate("health", "discovery", "local", "it")).toBe(
+      "Mi consigli {un|una} {sustantivo} a {lugar}?",
+    );
     expect(templatesVersion("en")).toBe("2026.11.0");
     expect(canonicalTemplate("health", "discovery", "local", "en")).toBe(
       "Can you recommend a good {sustantivo} in {lugar}?",

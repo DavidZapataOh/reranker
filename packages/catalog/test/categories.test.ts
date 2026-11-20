@@ -3,6 +3,7 @@ import { describe, expect, test } from "vitest";
 import placesTypes from "../data/places-commercial-types.json" with { type: "json" };
 import { ARCHETYPE_SCOPES, ARCHETYPE_SLATES, registerFor } from "../src/archetypes";
 import { placesTypeArchetype, placesTypeLabel, seedCategories } from "../src/categories";
+import { nounText } from "../src/grammar";
 
 describe("seed categories", () => {
   test("six seed categories with their Places types and scope", () => {
@@ -59,7 +60,9 @@ describe("seed categories", () => {
     expect(en("online_store")?.noun).toBeNull();
     for (const c of seedCategories()) {
       const { noun, synonyms } = c.languages.en;
-      expect(noun).toBe(noun?.toLowerCase() ?? null);
+      // English templates never agree with the noun, so it stays a bare string.
+      expect(noun === null || typeof noun === "string").toBe(true);
+      expect(noun).toBe(typeof noun === "string" ? noun.toLowerCase() : null);
       for (const s of synonyms) expect(s).toBe(s.toLowerCase());
       expect(synonyms).not.toContain(noun);
     }
@@ -78,6 +81,24 @@ describe("seed categories", () => {
         expect(synonyms).not.toContain(noun.text);
       }
       for (const s of synonyms) expect(s).toMatch(/^\p{Lu}/u);
+    }
+  });
+
+  test("Italian nouns follow Italian searches and carry their gender", () => {
+    const it = (key: string) => seedCategories().find((c) => c.key === key)?.languages.it;
+    expect(it("dental_clinic")?.noun).toEqual({ text: "dentista", gender: "m" });
+    expect(it("car_repair")?.noun).toEqual({ text: "meccanico", gender: "m" });
+    expect(it("real_estate_agency")?.noun).toEqual({ text: "agenzia immobiliare", gender: "f" });
+    expect(it("online_store")?.noun).toBeNull();
+    for (const c of seedCategories()) {
+      const names = c.languages.it;
+      expect(names, c.key).toBeDefined();
+      const noun = names?.noun ?? null;
+      if (noun !== null) {
+        expect(typeof noun).toBe("object");
+        expect(nounText(noun)).toBe(nounText(noun).toLowerCase());
+      }
+      for (const s of names?.synonyms ?? []) expect(s).toBe(s.toLowerCase());
     }
   });
 
