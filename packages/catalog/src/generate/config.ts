@@ -1,6 +1,5 @@
 import { AppError, cost, type ProviderCost } from "@reranker/schema";
 import { jcs, promptSha256, sha256Hex } from "../hash";
-import { TEMPLATES_VERSION } from "../templates";
 import { JUDGE_PROMPT_V1 } from "./prompts/judge.v1";
 import { PARAPHRASE_PROMPT_V1 } from "./prompts/paraphrase.v1";
 import { PERSONA_PROMPT_V1 } from "./prompts/persona.v1";
@@ -59,7 +58,8 @@ export const GENERATOR_CONFIG: Readonly<GeneratorConfig> = deepFreeze({
     persona: promptSha256(PERSONA_PROMPT_V1),
     judge: promptSha256(JUDGE_PROMPT_V1),
   },
-  templatesVersion: TEMPLATES_VERSION,
+  // The Spanish templates' version: the generator writes Spanish paraphrases.
+  templatesVersion: "2026.11.0",
 });
 
 export const generatorConfigHash: string = sha256Hex(jcs(GENERATOR_CONFIG));

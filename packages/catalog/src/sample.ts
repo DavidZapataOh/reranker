@@ -13,6 +13,7 @@ import { type Rng, rngFromSeed } from "@reranker/stats";
 import { geoForEngine } from "./geo/effects";
 import { sha256Hex } from "./hash";
 import { countryLanguage } from "./language";
+import { requireTemplates } from "./templates";
 import {
   materialize,
   setLanguage,
@@ -122,6 +123,8 @@ type LanguageSample = {
 };
 
 function checkSet(set: IntentSet, scope: QuestionScope, language: MeasurementLanguage): void {
+  // A language is measured only once its fallback templates exist, whatever set is passed in.
+  requireTemplates(language);
   if (set.manifest.scope !== scope) {
     throw internal(`${set.manifest.id} is a ${set.manifest.scope} set, not ${scope}`);
   }
