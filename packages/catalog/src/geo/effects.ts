@@ -32,8 +32,6 @@ export function chatgptCityEffect(): ChatgptCityEffect {
   return cityEffect;
 }
 
-const isCityKey = (target: GeoTarget) => target.key.includes("-c");
-
 /**
  * The location the report declares for an engine: only what that engine is actually asked
  * from. `null` when the engine is not offered in the business country.
@@ -55,15 +53,15 @@ export function geoForEngine(
     case "google-ai-overview":
     case "google-ai-mode":
       return { level: target.dataforseo.level, label: target.dataforseo.label };
-    // Gemini is asked from a coordinate, so it can name the municipality itself.
+    // Gemini is asked from a coordinate, so it is declared at the place that point belongs to:
+    // the municipality itself, or the region of a town no source locates.
     case "gemini":
       if (!target.center) return byCountry;
-      return { level: isCityKey(target) ? "city" : target.level, label: target.name };
+      return { level: target.center.level, label: target.center.label };
     case "chatgpt": {
       const byCity =
         opts.provider === "brightdata" &&
-        target.center !== null &&
-        isCityKey(target) &&
+        target.center?.level === "city" &&
         (opts.chatgptCityEffect ?? chatgptCityEffect()) === "confirmed";
       return byCity ? { level: "city", label: target.name } : byCountry;
     }

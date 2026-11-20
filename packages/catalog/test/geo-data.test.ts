@@ -55,6 +55,23 @@ describe("generated location data", () => {
     expect(new Set(places.map((place) => place.key)).size).toBe(places.length);
   });
 
+  test("every centroid is a point on Earth, and most cities have their own", () => {
+    let cities = 0;
+    let located = 0;
+    for (const code of codes) {
+      const places = expandGeoFile(read<GeoFile>(geoFile(code)));
+      const invalid = places.filter(
+        ({ center }) => center !== null && (Math.abs(center[0]) > 90 || Math.abs(center[1]) > 180),
+      );
+      expect(invalid.map((place) => place.key)).toEqual([]);
+      const own = places.filter((place) => place.key.includes("-c"));
+      cities += own.length;
+      located += own.filter((place) => place.center !== null).length;
+    }
+    // 87.7% when GeoNames' 2026-11-20 dumps were read; a drop means the pairing regressed.
+    expect(located / cities).toBeGreaterThan(0.85);
+  });
+
   test("every key is unique and well formed in every country", () => {
     for (const code of codes) {
       const places = expandGeoFile(read<GeoFile>(geoFile(code)));

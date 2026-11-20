@@ -8,7 +8,7 @@ import {
   type LocationRow,
   officialName,
 } from "../scripts/build-geo.ts";
-import { expandGeoFile, type GeoPlace } from "../src/geo/format.ts";
+import { expandGeoFile, type GeoPlace, type RegionRow } from "../src/geo/format.ts";
 import { normalizePlaceName } from "../src/geo/normalize.ts";
 
 const fixture = (name: string) =>
@@ -131,12 +131,32 @@ describe("buildCountry", () => {
 });
 
 describe("expandGeoFile", () => {
-  const regions: [number, string][] = [[21519, "Quindío"]];
+  const regions: RegionRow[] = [[21519, "Quindío", null]];
 
   test("cities without a region keep a null region key", () =>
     expect(
-      expandGeoFile({ country: "WS", regions: [], cities: [[1000001, "Apia", null]] }),
+      expandGeoFile({ country: "WS", regions: [], cities: [[1000001, "Apia", null, null]] }),
     ).toMatchObject([{ key: "ws-c1000001", level: "city", regionKey: null, center: null }]));
+
+  test("cities and regions carry their centroids and aliases", () =>
+    expect(
+      expandGeoFile({
+        country: "ES",
+        regions: [[20282, "Comunidad de Madrid", [40.5, -3.66667], ["Community of Madrid"]]],
+        cities: [[1005493, "Madrid", 0, [40.4165, -3.70256], ["Madrid City"]]],
+      }),
+    ).toEqual([
+      expect.objectContaining({
+        key: "es-c1005493",
+        aliases: ["Madrid City"],
+        center: [40.4165, -3.70256],
+      }),
+      expect.objectContaining({
+        key: "es-r20282",
+        aliases: ["Community of Madrid"],
+        center: [40.5, -3.66667],
+      }),
+    ]));
 
   test("a municipality without its own code is declared as its region", () =>
     expect(
@@ -157,7 +177,7 @@ describe("expandGeoFile", () => {
     }));
 
   test("a row pointing at a missing region is rejected", () =>
-    expect(() => expandGeoFile({ country: "MX", regions, cities: [[1, "X", 3]] })).toThrow(
+    expect(() => expandGeoFile({ country: "MX", regions, cities: [[1, "X", 3, null]] })).toThrow(
       RangeError,
     ));
 

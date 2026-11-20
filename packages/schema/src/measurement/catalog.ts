@@ -21,8 +21,15 @@ export const GeoTarget = z.object({
   country: CountryCode,
   name: z.string().min(1),
   regionName: z.string().min(1).nullable(),
+  // The most precise centroid: the place's own, else its region's. `level` and `label` name
+  // the place the point belongs to, which is what a coordinate-targeted engine is asked from.
   center: z
-    .object({ lat: z.number().min(-90).max(90), lng: z.number().min(-180).max(180) })
+    .object({
+      lat: z.number().min(-90).max(90),
+      lng: z.number().min(-180).max(180),
+      level: GeoLevel.exclude(["country"]),
+      label: z.string().min(1),
+    })
     .nullable(),
   // The most precise DataForSEO location: the city, else its region, else the country.
   dataforseo: z.object({

@@ -109,9 +109,34 @@ describe("geo per engine", () => {
       guadalajara.dataforseo.locationCode,
     );
     expect(buildRequest(slot("chatgpt", GUADALAJARA), "live").location_code).toBe(2484);
-    // Guadalajara has no centroid, so Gemini is asked (and declared) by country.
-    expect(buildRequest(slot("gemini", GUADALAJARA), "live").location_code).toBe(2484);
     expect(geoFields("google-ai-mode", guadalajara, "national").location_code).toBe(2484);
+  });
+
+  test.each([
+    ["es-c1005493", "Madrid", "40.4165000,-3.7025600"],
+    ["es-c9214622", "Barcelona", "41.3887900,2.1589900"],
+    ["us-c1015116", "Miami", "25.7742700,-80.1936600"],
+    ["mx-c1010043", "Ciudad de México", "19.4284700,-99.1276600"],
+    ["ar-c1000073", "Buenos Aires", "-34.6131500,-58.3772300"],
+    ["pe-c9073192", "Lima", "-12.0431800,-77.0282400"],
+  ])("Gemini in %s (%s) is asked from the city's centroid", (key, label, point) => {
+    const s = slot("gemini", key);
+    expect(s.geoDeclared).toEqual({ level: "city", label });
+    const request = buildRequest(s, "live");
+    expect(request.location_coordinate).toBe(`${point},199999`);
+    expect(request.location_code).toBeUndefined();
+  });
+
+  test("Gemini in a town no source locates is asked from its region's centroid", () => {
+    const s = slot("gemini", "es-c1005451");
+    expect(s.geoDeclared).toEqual({ level: "region", label: "Castilla y León" });
+    expect(buildRequest(s, "live").location_coordinate).toBe("41.6666700,-4.2500000,199999");
+  });
+
+  test("Gemini without any centroid is asked by country", () => {
+    const s = slot("gemini", "ch-c1002840");
+    expect(s.geoDeclared.level).toBe("country");
+    expect(buildRequest(s, "live")).toMatchObject({ location_code: 2756 });
   });
 
   test("perplexity is not a DataForSEO engine", () =>
