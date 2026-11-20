@@ -1,0 +1,187 @@
+{
+  "es": {
+    "qualifiers": {
+      "price": [
+        "barato",
+        "barata",
+        "baratos",
+        "baratas",
+        "económico",
+        "económica",
+        "económicos",
+        "económicas",
+        "precio",
+        "precios",
+        "presupuesto",
+        "cobra menos",
+        "cobre menos",
+        "tarifa",
+        "tarifas",
+        "costo",
+        "costos",
+        "cuesta",
+        "descuento",
+        "descuentos",
+        "promoción",
+        "promociones"
+      ],
+      "urgency": [
+        "hoy",
+        "urgente",
+        "urgentes",
+        "urgencia",
+        "urgencias",
+        "emergencia",
+        "emergencias",
+        "ya mismo",
+        "ahora mismo",
+        "24 horas",
+        "sin cita",
+        "de inmediato",
+        "abierto ahora"
+      ],
+      "zone": ["cerca", "cercano", "cercana", "barrio", "esa zona"],
+      "trust": ["confiable", "confiables", "de confianza", "opiniones", "reseñas", "reputación"],
+      "insurance_or_payment": [
+        "seguro médico",
+        "aseguradora",
+        "prepagada",
+        "cuotas",
+        "con tarjeta",
+        "financiación",
+        "medio de pago",
+        "medios de pago"
+      ],
+      "ranking": ["top", "ranking", "más recomendado", "más recomendados", "opiniones", "reseñas"]
+    },
+    "capitalized": []
+  },
+  "en": {
+    "qualifiers": {
+      "price": [
+        "cheap",
+        "cheapest",
+        "affordable",
+        "inexpensive",
+        "budget",
+        "price",
+        "prices",
+        "pricing",
+        "cost",
+        "costs",
+        "low cost",
+        "discount",
+        "discounts",
+        "deals"
+      ],
+      "urgency": [
+        "today",
+        "tonight",
+        "urgent",
+        "emergency",
+        "emergencies",
+        "same day",
+        "24 hours",
+        "24/7",
+        "open now",
+        "right now",
+        "walk-in"
+      ],
+      "zone": ["near", "nearby", "close to", "neighborhood", "neighbourhood"],
+      "trust": ["trustworthy", "reliable", "trusted", "reviews", "reputation"],
+      "insurance_or_payment": [
+        "insurance",
+        "payment plan",
+        "payment plans",
+        "financing",
+        "credit card",
+        "installments"
+      ],
+      "ranking": [
+        "top",
+        "top rated",
+        "top-rated",
+        "highest rated",
+        "ranking",
+        "most recommended",
+        "reviews"
+      ]
+    },
+    "capitalized": [
+      "I",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ]
+  },
+  "pt": {
+    "qualifiers": {
+      "price": [
+        "barato",
+        "barata",
+        "baratos",
+        "baratas",
+        "econômico",
+        "econômica",
+        "econômicos",
+        "econômicas",
+        "preço",
+        "preços",
+        "orçamento",
+        "custo",
+        "custos",
+        "desconto",
+        "descontos",
+        "promoção",
+        "promoções"
+      ],
+      "urgency": [
+        "hoje",
+        "urgente",
+        "urgentes",
+        "urgência",
+        "emergência",
+        "24 horas",
+        "agora",
+        "sem hora marcada",
+        "imediato"
+      ],
+      "zone": ["perto", "próximo", "próxima", "bairro", "região"],
+      "trust": ["confiável", "confiáveis", "de confiança", "avaliações", "opiniões", "reputação"],
+      "insurance_or_payment": [
+        "plano de saúde",
+        "convênio",
+        "convênios",
+        "parcelado",
+        "parcelas",
+        "no cartão",
+        "financiamento"
+      ],
+      "ranking": [
+        "top",
+        "ranking",
+        "mais recomendado",
+        "mais recomendados",
+        "avaliações",
+        "opiniões"
+      ]
+    },
+    "capitalized": []
+  }
+}
