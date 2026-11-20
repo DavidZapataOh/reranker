@@ -3,6 +3,7 @@ import { brightdataEnv } from "@reranker/capture/brightdata/env";
 import { captureEnv } from "@reranker/capture/env";
 import { openaiControlEnv } from "@reranker/capture/openai/env";
 import { config, defineEnv, forbiddenIn, requiredIn, secret } from "@reranker/env";
+import { evidenceEnv } from "@reranker/evidence/env";
 import { flagsEnv } from "@reranker/flags/env";
 import { jobsEnv } from "@reranker/jobs/env";
 import { z } from "@reranker/schema";
@@ -51,6 +52,8 @@ export const fragments = [
   captureEnv,
   brightdataEnv,
   openaiControlEnv,
+  // Last, so its production rules win over the optional copies the launch checks read.
+  evidenceEnv,
 ] as const;
 
 let validated: ReturnType<typeof compose> | undefined;

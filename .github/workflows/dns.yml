@@ -38,6 +38,9 @@ jobs:
             node apps/web/scripts/provision-dns.ts
           fi
       - if: ${{ !inputs.dry-run }}
+        name: Show the published signing keys
+        run: dig +short TXT _rr-keys.reranker.co @1.1.1.1
+      - if: ${{ !inputs.dry-run }}
         name: Check that every hostname serves over TLS
         run: |
           for host in tienda-ejemplo.reranker.co; do

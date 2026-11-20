@@ -139,6 +139,7 @@ export const procedures = [
   "db-rotate-password.md",
   "auth-rotate-secrets.md",
   "evidence-artifact-removal.md",
+  "evidence-signing-key.md",
 ] as const satisfies readonly string[];
 
 /** Sender of every operations email: alerts and the daily digest. */

@@ -30,8 +30,37 @@ const brightdata = { BRIGHTDATA_API_KEY: "user-key", BRIGHTDATA_BILLING_API_KEY:
 
 const openaiControl = { OPENAI_CONTROL_API_KEY: "sk-control" };
 
+const kmsKey = (id: string) => `arn:aws:kms:us-east-1:111122223333:key/${id}`;
+// What production needs to seal evidence; every value is well formed and reaches nothing.
+const evidence = {
+  AWS_REGION: "us-east-1",
+  AWS_ROLE_ARN: "arn:aws:iam::111122223333:role/reranker-evidence-production",
+  EVIDENCE_CAPTURE_KMS_KEY_ARN: kmsKey("1234abcd-12ab-34cd-56ef-1234567890ab"),
+  EVIDENCE_LOG_KMS_KEY_ARN: kmsKey("5678abcd-12ab-34cd-56ef-1234567890ab"),
+  EVIDENCE_CAPTURE_KEY_ID: "rr-capture-2026-1-ed25519",
+  EVIDENCE_LOG_KEY_ID: "rr-log-2026-1",
+  EVIDENCE_LOG_ORIGIN: "log.reranker.co/captures/2026",
+  R2_ACCOUNT_ID: "0123456789abcdef0123456789abcdef",
+  R2_ACCESS_KEY_ID: "fedcba9876543210fedcba9876543210",
+  R2_SECRET_ACCESS_KEY: "ab".repeat(32),
+  R2_EVIDENCE_BUCKET: "rr-evidence-production",
+  R2_LOG_BUCKET: "rr-log-production",
+  R2_INTERNAL_BUCKET: "rr-internal-production",
+  EVIDENCE_ARTIFACTS_BASE_URL: "https://ev.reranker.co",
+  EVIDENCE_LOG_BASE_URL: "https://log.reranker.co",
+  CLOUDFLARE_CACHE_PURGE_TOKEN: "purge-token",
+  CLOUDFLARE_ZONE_ID: "fedcba9876543210fedcba9876543210",
+};
+
 const withoutDataforseo = (APP_ENV: string, extra: Record<string, string> = {}) =>
-  defineEnv(fragments, { APP_ENV, ...authVars, ...origin(APP_ENV), ...posthog, ...extra });
+  defineEnv(fragments, {
+    APP_ENV,
+    ...authVars,
+    ...origin(APP_ENV),
+    ...posthog,
+    ...(APP_ENV === "production" ? evidence : {}),
+    ...extra,
+  });
 
 const withKey = (APP_ENV: string, extra: Record<string, string> = {}) =>
   withoutDataforseo(APP_ENV, { ...dataforseo, ...extra });
@@ -147,6 +176,20 @@ describe("web environment", () => {
       /OPENAI_CONTROL_API_KEY \(missing\)/,
     );
     expect(withKey("preview").OPENAI_CONTROL_API_KEY).toBeUndefined();
+  });
+
+  test("production needs the KMS signing variables; previews may leave them unset", () => {
+    const ready = {
+      POSTHOG_FEATURE_FLAGS_KEY: "phs_test",
+      CRON_SECRET: "cron-secret-with-enough-length",
+      ...brightdata,
+      ...openaiControl,
+    };
+    expect(withKey("production", ready)).toMatchObject({ AWS_ROLE_ARN: evidence.AWS_ROLE_ARN });
+    expect(() => withKey("production", { ...ready, AWS_ROLE_ARN: "" })).toThrowError(
+      /AWS_ROLE_ARN \(missing\)/,
+    );
+    expect(withKey("preview").AWS_ROLE_ARN).toBeUndefined();
   });
 
   test("the PostHog region defaults to us and rejects unknown values", () => {
