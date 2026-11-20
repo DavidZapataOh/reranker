@@ -58,6 +58,9 @@ export default defineConfig({
           environment: "node",
           include: ["**/{src,test}/**/*.heavy.test.ts"],
           exclude: ignored,
+          // Their loops take ~1.5 s alone but 4× that on a CI runner shared with every other
+          // affected package; the default 5 s would fail them for load, not for a regression.
+          testTimeout: 60_000,
         },
       },
       // Timing budgets run on their own: coverage instrumentation and sibling workers would
