@@ -80,7 +80,8 @@ test("each Vercel role trusts exactly its project environments under the team au
   const ci = trustPolicy(ACCOUNT, role("reranker-ci-kms-preview")).Statement[0];
   expect(ci?.Condition.StringEquals).toEqual({
     "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
-    "token.actions.githubusercontent.com:sub": "repo:DavidZapataOh/reranker:ref:refs/heads/main",
+    "token.actions.githubusercontent.com:sub":
+      "repo:DavidZapataOh@37819456/reranker@1446098352:ref:refs/heads/main",
   });
 });
 
