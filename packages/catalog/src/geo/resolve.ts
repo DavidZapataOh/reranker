@@ -164,6 +164,11 @@ export function localPlaceName(target: GeoTarget, language: PlaceLanguage): stri
   return spokenPlaceName(place.names?.[language] ?? place.name);
 }
 
+/** The article the target's name takes in `language`, where it takes one. */
+export function localPlaceArticle(target: GeoTarget, language: PlaceLanguage): string | undefined {
+  return loadCountryGeo(target.country).byKey.get(target.key)?.articles?.[language];
+}
+
 /** A place name as people say it, for questions and headings. */
 export function spokenPlaceName(name: string): string {
   const designation = CAPITAL_DISTRICT.exec(name);

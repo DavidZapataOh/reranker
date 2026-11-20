@@ -32,6 +32,7 @@ export {
   type LanguageGap,
   MeasurementLanguageError,
   placeName,
+  placeTerm,
 } from "./language";
 export {
   type PlanMeasurementInput,

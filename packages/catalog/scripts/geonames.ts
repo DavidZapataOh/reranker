@@ -45,6 +45,8 @@ export type GeoNamesEntry = {
 
 export type CountryGeoNames = {
   spanishSpeaking: boolean;
+  /** The languages the country has established, from `countryInfo.txt`, as ISO 639-1 codes. */
+  languages?: readonly string[];
   entries: readonly GeoNamesEntry[];
   /** Populated places below `cities500`'s threshold, named like a listed city: points only. */
   minorPlaces: readonly GeoNamesEntry[];
@@ -403,6 +405,7 @@ export function geoNamesCollector(
   const minorByCountry = new Map<string, GeoNamesEntry[]>();
   const entries = new Map<number, GeoNamesEntry>();
   const spanishSpeaking = new Set<string>();
+  const languages = new Map<string, string[]>();
   const add = (country: string, entry: GeoNamesEntry) => {
     const list = byCountry.get(country);
     if (list) list.push(entry);
@@ -459,11 +462,19 @@ export function geoNamesCollector(
         short: short === "1",
       });
     },
-    /** `countryInfo.txt`: a country whose first official language is Spanish. */
+    /** `countryInfo.txt`: the languages a country speaks, its first official one first. */
     country(line: string) {
       const f = line.split("\t");
       if (line.startsWith("#") || !f[0]) return;
-      if (f[15]?.split(",")[0]?.split("-")[0] === "es") spanishSpeaking.add(f[0]);
+      const tags = (f[15] ?? "").split(",").filter(Boolean);
+      const code = (tag: string) => tag.split("-")[0] ?? "";
+      // GeoNames tags a country's established languages with its region ("fr-CH", "es-US") and
+      // lists minority ones bare ("fr" in the United States).
+      const established = tags.filter((tag) => tag.includes("-")).map(code);
+      languages.set(f[0], [
+        ...new Set(established.length ? established : tags.slice(0, 1).map(code)),
+      ]);
+      if (tags[0] && code(tags[0]) === "es") spanishSpeaking.add(f[0]);
     },
     done(): (country: string) => CountryGeoNames {
       // The dumps promise no row order; ids make every run pick the same names.
@@ -473,6 +484,7 @@ export function geoNamesCollector(
       }
       return (country) => ({
         spanishSpeaking: spanishSpeaking.has(country),
+        languages: languages.get(country) ?? [],
         entries: byCountry.get(country) ?? [],
         minorPlaces: minorByCountry.get(country) ?? [],
       });

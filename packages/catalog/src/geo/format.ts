@@ -23,6 +23,8 @@ export type GeoPlace = {
   aliases?: string[];
   /** The name in the languages it differs from `name` in. */
   names?: Partial<Record<PlaceLanguage, string>>;
+  /** The definite article the name takes in a language ("o" for Rio de Janeiro in Portuguese). */
+  articles?: Partial<Record<PlaceLanguage, string>>;
   regionKey: string | null;
   locationCode: number;
   /** The place's own centroid; null when no source locates it confidently. */
@@ -70,6 +72,8 @@ export type GeoFile = {
   regions: RegionRow[];
   cities: CityRow[];
   names: PlaceNames;
+  /** Location code → the article the place's name takes, in the languages that write one. */
+  articles: Partial<PlaceNames>;
 };
 
 /** A city's display name, alone or followed by its aliases. */
@@ -85,16 +89,25 @@ export type GeoNamesFile = {
 const DEPARTMENT_CODE_LENGTH = 2;
 
 export function expandGeoFile(
-  file: Pick<GeoFile, "country" | "regions" | "cities"> & { names?: PlaceNames },
+  file: Pick<GeoFile, "country" | "regions" | "cities"> & {
+    names?: PlaceNames;
+    articles?: GeoFile["articles"];
+  },
 ): GeoPlace[] {
   const prefix = file.country.toLowerCase();
   const regionKey = (code: number) => `${prefix}-r${code}`;
-  const namesOf = (code: number | null) => {
-    const found = PLACE_LANGUAGES.flatMap((language) => {
-      const name = code === null ? undefined : file.names?.[language][code];
-      return name === undefined ? [] : [[language, name] as const];
+  const byLanguage = (table: Partial<PlaceNames> | undefined, code: number | null) =>
+    PLACE_LANGUAGES.flatMap((language) => {
+      const value = code === null ? undefined : table?.[language]?.[code];
+      return value === undefined ? [] : [[language, value] as const];
     });
-    return found.length ? { names: Object.fromEntries(found) } : {};
+  const namesOf = (code: number | null) => {
+    const names = byLanguage(file.names, code);
+    const articles = byLanguage(file.articles, code);
+    return {
+      ...(names.length ? { names: Object.fromEntries(names) } : {}),
+      ...(articles.length ? { articles: Object.fromEntries(articles) } : {}),
+    };
   };
 
   const regions = file.regions.map(

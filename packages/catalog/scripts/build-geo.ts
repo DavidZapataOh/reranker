@@ -22,6 +22,7 @@ import {
 } from "../src/geo/format.ts";
 import { normalizePlaceName } from "../src/geo/normalize.ts";
 import { contentHash } from "../src/hash.ts";
+import { placeArticle } from "./articles.ts";
 import { accentedFrom, localDesignated, type Speller, speller } from "./designators.ts";
 import { type CountryGeoNames, type Naming, pairGeoNames, readGeoNames } from "./geonames.ts";
 
@@ -50,7 +51,7 @@ export type DivipolaRecord = {
   longitud: string;
 };
 
-export type CountryTables = Pick<GeoFile, "country" | "regions" | "cities" | "names">;
+export type CountryTables = Pick<GeoFile, "country" | "regions" | "cities" | "names" | "articles">;
 
 const noNames = (): PlaceNames =>
   Object.fromEntries(PLACE_LANGUAGES.map((language) => [language, {}])) as PlaceNames;
@@ -255,10 +256,27 @@ function buildFromLocations(
   const regionIndex = new Map(regions.map(([code], index) => [String(code), index]));
 
   const names = noNames();
+  const articles = noNames();
   const own = noCounts();
+  const listedRows = new Map(places.map((row) => [row.location_code, row]));
   for (const [code, place] of final) {
+    const row = listedRows.get(code);
+    const fromGeoNames = named?.regions.get(Number(code)) ?? named?.cities.get(Number(code));
     for (const language of PLACE_LANGUAGES) {
-      if (place.names[language] !== place.name) names[language][code] = place.names[language];
+      const name = place.names[language];
+      if (name !== place.name) names[language][code] = name;
+      const article =
+        row &&
+        placeArticle({
+          name,
+          language,
+          level: regionRows.has(code) ? "region" : "city",
+          country,
+          countryLanguages: geonames?.languages ?? [],
+          listed: placeName(row),
+          ownName: fromGeoNames?.own.includes(language) ?? false,
+        });
+      if (article) articles[language][code] = article;
     }
   }
   for (const place of [...(named?.regions.values() ?? []), ...(named?.cities.values() ?? [])]) {
@@ -278,6 +296,7 @@ function buildFromLocations(
       })
       .sort((a, b) => compareKeys(String(a[0]), String(b[0]))),
     names,
+    articles,
     ...(named && {
       spanish: {
         regions: [...named.regions.values()].filter((n) => n.spanish).length,
@@ -389,6 +408,7 @@ function buildFromDivipola(
     cities: cityRows.sort((a, b) => compareKeys(String(a[0] ?? a[4]), String(b[0] ?? b[4]))),
     // DIVIPOLA names are the local Spanish ones, which speakers of every language write.
     names: noNames(),
+    articles: noNames(),
   };
 }
 
@@ -501,7 +521,7 @@ async function main(): Promise<void> {
           rows,
           code === divipolaCountry ? { divipola } : { geonames: geonames.forCountry(code) },
         )
-      : { country: code, regions: [], cities: [], names: noNames() };
+      : { country: code, regions: [], cities: [], names: noNames(), articles: noNames() };
     const geoDataHash = contentHash(expandGeoFile(tables));
     const prefix = code.toLowerCase();
     const file = `${prefix}-${GEO_DATA_VERSION}.json`;
