@@ -32,6 +32,7 @@ const vercelEnv = (names: string[]) =>
 
 beforeAll(() => server.listen());
 beforeEach(() => {
+  vi.stubEnv("APP_ENV", "production");
   vi.stubEnv("AWS_REGION", "us-east-1");
   vi.stubEnv("AWS_ROLE_ARN", "arn:aws:iam::123456789012:role/reranker-evidence-production");
   vi.stubEnv("EVIDENCE_CAPTURE_KMS_KEY_ARN", CAPTURE_ARN);
