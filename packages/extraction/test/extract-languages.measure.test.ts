@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { randomBytes, randomUUID } from "node:crypto";
 import { appendFileSync, readdirSync, readFileSync } from "node:fs";
 import type { EngineAnswer } from "@reranker/capture";
 import { endPools } from "@reranker/db";
@@ -62,6 +62,8 @@ beforeAll(() => {
   vi.stubEnv("APP_ENV", process.env.APP_ENV || "development");
   vi.stubEnv("OPENAI_API_KEY", requireEnv("OPENAI_API_KEY_CI"));
   vi.stubEnv("GEMINI_API_KEY", requireEnv("GEMINI_API_KEY_CI"));
+  // Professionals named in the answers are keyed by HMAC; any key scores the same.
+  vi.stubEnv("ENTITY_NAME_HMAC_KEY", randomBytes(32).toString("base64url"));
 });
 afterAll(async () => {
   vi.unstubAllEnvs();
