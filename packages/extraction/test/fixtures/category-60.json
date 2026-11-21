@@ -1,0 +1,1266 @@
+{
+  "recordedAt": "2026-11-21T04:18:43.899Z",
+  "businesses": [
+    {
+      "language": "es",
+      "country": "CO",
+      "query": "clínica odontológica en Medellín",
+      "placeId": "ChIJj_g_Z36CRo4RONzJ5TgTGy8",
+      "displayName": "Urgencias Odontológicas 24 horas las Vegas",
+      "types": ["dental_clinic", "medical_clinic", "health", "point_of_interest", "establishment"],
+      "primaryType": "dental_clinic",
+      "primaryTypeDisplayName": "Clínica dental",
+      "googleMapsTypeLabel": "Clínica dental",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "dental_clinic",
+        "archetype": "health",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "es",
+      "country": "CO",
+      "query": "clínica odontológica en Medellín",
+      "placeId": "ChIJBafM1e8pRI4R4cbwN6O98TI",
+      "displayName": "Odontología la 78 Urgencia las 24 horas",
+      "types": [
+        "dental_clinic",
+        "medical_clinic",
+        "health",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "primaryType": "service",
+      "primaryTypeDisplayName": "Servicios",
+      "googleMapsTypeLabel": "Servicio de urgencias dentales",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "dental_clinic",
+        "archetype": "health",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "es",
+      "country": "CO",
+      "query": "peluquería en Bogotá",
+      "placeId": "ChIJlXHIe_qFP44REGFg-bibotI",
+      "displayName": "La Peluqueria 24/6",
+      "types": [
+        "makeup_artist",
+        "hair_salon",
+        "nail_salon",
+        "beauty_salon",
+        "hair_care",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "primaryType": "hair_salon",
+      "primaryTypeDisplayName": "Peluquería",
+      "googleMapsTypeLabel": "Peluquería",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:hair_salon",
+        "archetype": "beauty_wellness",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "es",
+      "country": "CO",
+      "query": "peluquería en Bogotá",
+      "placeId": "ChIJ8R5o326FP44Rju3xvArawzY",
+      "displayName": "John Navas Studio",
+      "types": [
+        "hair_salon",
+        "hair_care",
+        "point_of_interest",
+        "service",
+        "store",
+        "establishment"
+      ],
+      "primaryType": "hair_salon",
+      "primaryTypeDisplayName": "Peluquería",
+      "googleMapsTypeLabel": "Peluquería",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:hair_salon",
+        "archetype": "beauty_wellness",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "es",
+      "country": "CO",
+      "query": "ferretería en Cali",
+      "placeId": "ChIJ6VqLgEemMI4REpLG6UYTip0",
+      "displayName": "Ferreteria Barbosa",
+      "types": [
+        "hardware_store",
+        "building_materials_store",
+        "point_of_interest",
+        "service",
+        "store",
+        "establishment"
+      ],
+      "primaryType": "hardware_store",
+      "primaryTypeDisplayName": "Ferretería",
+      "googleMapsTypeLabel": "Ferretería",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:hardware_store",
+        "archetype": "local_retail",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "es",
+      "country": "CO",
+      "query": "ferretería en Cali",
+      "placeId": "ChIJFbe_1-KmMI4RMEzS9w0lAdg",
+      "displayName": "Plomeros Cali 24 horas",
+      "types": [
+        "hardware_store",
+        "building_materials_store",
+        "point_of_interest",
+        "service",
+        "store",
+        "establishment"
+      ],
+      "primaryType": "hardware_store",
+      "primaryTypeDisplayName": "Ferretería",
+      "googleMapsTypeLabel": "Ferretería",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:hardware_store",
+        "archetype": "local_retail",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "es",
+      "country": "CO",
+      "query": "inmobiliaria en Medellín",
+      "placeId": "ChIJHbT3s6ApRI4RkKuxwsXjL2M",
+      "displayName": "INMOBILIARIA ANTIOQUIA",
+      "types": ["real_estate_agency", "point_of_interest", "service", "establishment"],
+      "primaryType": "real_estate_agency",
+      "primaryTypeDisplayName": "Agencia inmobiliaria",
+      "googleMapsTypeLabel": "Agencia inmobiliaria",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "real_estate_agency",
+        "archetype": "real_estate",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "es",
+      "country": "CO",
+      "query": "inmobiliaria en Medellín",
+      "placeId": "ChIJE7joXhMpRI4RU9KJexyjseA",
+      "displayName": "Inmobiliaria Santillana sas - Única sede en Medellín",
+      "types": ["real_estate_agency", "point_of_interest", "service", "establishment"],
+      "primaryType": "real_estate_agency",
+      "primaryTypeDisplayName": "Agencia inmobiliaria",
+      "googleMapsTypeLabel": "Agencia de bienes inmuebles comerciales",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "real_estate_agency",
+        "archetype": "real_estate",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "es",
+      "country": "CO",
+      "query": "academia de inglés en Bogotá",
+      "placeId": "ChIJ1ah9sCmaP44RYZDZlCtxqHM",
+      "displayName": "Centro Europeo de Idiomas",
+      "types": ["school", "educational_institution", "point_of_interest", "establishment"],
+      "primaryType": "educational_institution",
+      "primaryTypeDisplayName": "Institución educativa",
+      "googleMapsTypeLabel": "Academia de idiomas",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:educational_institution",
+        "archetype": "education",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "es",
+      "country": "CO",
+      "query": "academia de inglés en Bogotá",
+      "placeId": "ChIJ08lp8l2aP44RRVUMO5EQKGw",
+      "displayName": "British Council Sede Chicó",
+      "types": [
+        "non_profit_organization",
+        "educational_institution",
+        "association_or_organization",
+        "point_of_interest",
+        "establishment"
+      ],
+      "primaryType": "educational_institution",
+      "primaryTypeDisplayName": "Institución educativa",
+      "googleMapsTypeLabel": "Academia de inglés",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:educational_institution",
+        "archetype": "education",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "en",
+      "country": "US",
+      "query": "bakery in Chicago",
+      "placeId": "ChIJsaZzLqUsDogRySpDYhrPm6I",
+      "displayName": "Magnolia Bakery",
+      "types": ["bakery", "food_store", "store", "food", "point_of_interest", "establishment"],
+      "primaryType": "bakery",
+      "primaryTypeDisplayName": "Bakery",
+      "googleMapsTypeLabel": "Cupcake shop",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:bakery",
+        "archetype": "food",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "en",
+      "country": "US",
+      "query": "bakery in Chicago",
+      "placeId": "ChIJR0rGSrstDogRNjMvOZFNtJA",
+      "displayName": "Wake N Bakery Chicago Downtown",
+      "types": [
+        "coffee_shop",
+        "cafe",
+        "bakery",
+        "food_store",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "primaryType": "coffee_shop",
+      "primaryTypeDisplayName": "Coffee shop",
+      "googleMapsTypeLabel": "Coffee shop",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:coffee_shop",
+        "archetype": "food",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "en",
+      "country": "US",
+      "query": "hotel in Miami",
+      "placeId": "ChIJVcPE6ae22YgRtykfX-j50t8",
+      "displayName": "Hilton Miami Downtown",
+      "types": ["hotel", "lodging", "point_of_interest", "establishment"],
+      "primaryType": "hotel",
+      "primaryTypeDisplayName": "Hotel",
+      "googleMapsTypeLabel": "Hotel",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "hotel",
+        "archetype": "lodging",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "en",
+      "country": "US",
+      "query": "hotel in Miami",
+      "placeId": "ChIJq7hgjt652YgRWMO7Dck9geg",
+      "displayName": "Hilton Miami Airport Blue Lagoon",
+      "types": ["hotel", "lodging", "point_of_interest", "establishment"],
+      "primaryType": "hotel",
+      "primaryTypeDisplayName": "Hotel",
+      "googleMapsTypeLabel": "Hotel",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "hotel",
+        "archetype": "lodging",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "en",
+      "country": "US",
+      "query": "accountant in Houston",
+      "placeId": "ChIJayfFXsTBQIYRfl1GbKcLWfg",
+      "displayName": "Hooker CPA Firm, PLLC",
+      "types": [
+        "accounting",
+        "finance",
+        "consultant",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "primaryType": "consultant",
+      "primaryTypeDisplayName": "Consultant",
+      "googleMapsTypeLabel": "Certified public accountant",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:consultant",
+        "archetype": "professional_services",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "en",
+      "country": "US",
+      "query": "accountant in Houston",
+      "placeId": "ChIJd2gBZwbBQIYRzCFEQDNAZuk",
+      "displayName": "AKIF CPA",
+      "types": [
+        "accounting",
+        "finance",
+        "consultant",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "primaryType": "consultant",
+      "primaryTypeDisplayName": "Consultant",
+      "googleMapsTypeLabel": "Certified public accountant",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:consultant",
+        "archetype": "professional_services",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "en",
+      "country": "US",
+      "query": "auto repair in Phoenix",
+      "placeId": "ChIJ649nS71tK4cREVghBO3606U",
+      "displayName": "J’s mobile auto repair",
+      "types": ["car_repair", "service", "point_of_interest", "establishment"],
+      "primaryType": "car_repair",
+      "primaryTypeDisplayName": "Car repair and maintenance service",
+      "googleMapsTypeLabel": "Mechanic",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "car_repair",
+        "archetype": "home_auto_services",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "en",
+      "country": "US",
+      "query": "auto repair in Phoenix",
+      "placeId": "ChIJ2fOlZu4PK4cRuSxGij5zkmk",
+      "displayName": "Louie’s Mobile Auto Repair",
+      "types": ["car_repair", "service", "point_of_interest", "establishment"],
+      "primaryType": "car_repair",
+      "primaryTypeDisplayName": "Car repair and maintenance service",
+      "googleMapsTypeLabel": "Car repair and maintenance service",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "car_repair",
+        "archetype": "home_auto_services",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "en",
+      "country": "US",
+      "query": "florist in Seattle",
+      "placeId": "ChIJWUQUlVkVkFQRxcWfirReahA",
+      "displayName": "Williams Flower & Gift - Seattle Florist",
+      "types": [
+        "florist",
+        "gift_shop",
+        "market",
+        "wholesaler",
+        "point_of_interest",
+        "service",
+        "store",
+        "establishment"
+      ],
+      "primaryType": "florist",
+      "primaryTypeDisplayName": "Florist",
+      "googleMapsTypeLabel": "Florist",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:florist",
+        "archetype": "local_retail",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "en",
+      "country": "US",
+      "query": "florist in Seattle",
+      "placeId": "ChIJhR5jm7pqkFQRmImlXxcYiAQ",
+      "displayName": "Seattle Flowers",
+      "types": [
+        "florist",
+        "gift_shop",
+        "shipping_service",
+        "market",
+        "point_of_interest",
+        "service",
+        "store",
+        "establishment"
+      ],
+      "primaryType": "florist",
+      "primaryTypeDisplayName": "Florist",
+      "googleMapsTypeLabel": "Florist",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:florist",
+        "archetype": "local_retail",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "pt",
+      "country": "BR",
+      "query": "padaria em São Paulo",
+      "placeId": "ChIJPZ_iuTJYzpQRxC3-CJjKL9g",
+      "displayName": "Padaria Bella Paulista",
+      "types": [
+        "bakery",
+        "brunch_restaurant",
+        "hamburger_restaurant",
+        "diner",
+        "coffee_shop",
+        "cafe",
+        "storage",
+        "pizza_restaurant",
+        "brazilian_restaurant",
+        "american_restaurant",
+        "food_store",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "service",
+        "store",
+        "establishment"
+      ],
+      "primaryType": "bakery",
+      "primaryTypeDisplayName": "Padaria",
+      "googleMapsTypeLabel": "Padaria",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:bakery",
+        "archetype": "food",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "pt",
+      "country": "BR",
+      "query": "padaria em São Paulo",
+      "placeId": "ChIJyRb7ENZZzpQR2QbqPYdsNL4",
+      "displayName": "Padaria Galeria dos Pães",
+      "types": [
+        "bakery",
+        "liquor_store",
+        "grocery_store",
+        "food_store",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "store",
+        "establishment"
+      ],
+      "primaryType": "bakery",
+      "primaryTypeDisplayName": "Padaria",
+      "googleMapsTypeLabel": "Padaria",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:bakery",
+        "archetype": "food",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "pt",
+      "country": "BR",
+      "query": "academia de ginástica no Rio de Janeiro",
+      "placeId": "ChIJ3ZtMjfTXmwARK4YFQfw435E",
+      "displayName": "Núcleo Ginástica Tatiana Figueiredo",
+      "types": [
+        "sports_complex",
+        "sports_school",
+        "sports_activity_location",
+        "point_of_interest",
+        "establishment"
+      ],
+      "primaryType": "sports_complex",
+      "primaryTypeDisplayName": "Ginásio poliesportivo",
+      "googleMapsTypeLabel": "Academia de ginástica olímpica",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:sports_complex",
+        "archetype": "local_retail",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "pt",
+      "country": "BR",
+      "query": "academia de ginástica no Rio de Janeiro",
+      "placeId": "ChIJKz1s8j9_mQAR-mRYcd57heI",
+      "displayName": "DS Núcleo de Ginástica",
+      "types": [
+        "sports_complex",
+        "sports_school",
+        "sports_activity_location",
+        "point_of_interest",
+        "establishment"
+      ],
+      "primaryType": "sports_complex",
+      "primaryTypeDisplayName": "Ginásio poliesportivo",
+      "googleMapsTypeLabel": "Academia de ginástica olímpica",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:sports_complex",
+        "archetype": "local_retail",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "pt",
+      "country": "BR",
+      "query": "imobiliária em Belo Horizonte",
+      "placeId": "ChIJ09pKTCSapgARMVXMPkJthe4",
+      "displayName": "Liderar Imóveis BH - Imobiliária Belo Horizonte",
+      "types": [
+        "real_estate_agency",
+        "apartment_building",
+        "travel_agency",
+        "consultant",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "primaryType": "real_estate_agency",
+      "primaryTypeDisplayName": "Imobiliária",
+      "googleMapsTypeLabel": "Imobiliária",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "real_estate_agency",
+        "archetype": "real_estate",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "pt",
+      "country": "BR",
+      "query": "imobiliária em Belo Horizonte",
+      "placeId": "ChIJmboz046ZpgARl0339hSTcCY",
+      "displayName": "Silvio Ximenes | Imobiliária em BH",
+      "types": ["real_estate_agency", "point_of_interest", "service", "establishment"],
+      "primaryType": "real_estate_agency",
+      "primaryTypeDisplayName": "Imobiliária",
+      "googleMapsTypeLabel": "Imobiliária",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "real_estate_agency",
+        "archetype": "real_estate",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "pt",
+      "country": "BR",
+      "query": "escola de idiomas em Curitiba",
+      "placeId": "ChIJpR0GJUHk3JQRD30pXDdhG48",
+      "displayName": "Portella Idiomas",
+      "types": ["educational_institution", "point_of_interest", "establishment"],
+      "primaryType": "educational_institution",
+      "primaryTypeDisplayName": "Instituição educacional",
+      "googleMapsTypeLabel": "Escola de idiomas",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:educational_institution",
+        "archetype": "education",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "pt",
+      "country": "BR",
+      "query": "escola de idiomas em Curitiba",
+      "placeId": "ChIJEZAFqhLk3JQRMzGjTz--wyg",
+      "displayName": "New England Language School",
+      "types": ["educational_institution", "point_of_interest", "establishment"],
+      "primaryType": "educational_institution",
+      "primaryTypeDisplayName": "Instituição educacional",
+      "googleMapsTypeLabel": "Escola de inglês",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:educational_institution",
+        "archetype": "education",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "pt",
+      "country": "BR",
+      "query": "oficina mecânica em Porto Alegre",
+      "placeId": "ChIJT1AkNwecGZUR3IQpUQD9cec",
+      "displayName": "Auto Center Expresso Car",
+      "types": ["car_repair", "service", "point_of_interest", "establishment"],
+      "primaryType": "car_repair",
+      "primaryTypeDisplayName": "Mecânica para carros",
+      "googleMapsTypeLabel": "Oficina mecânica",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "car_repair",
+        "archetype": "home_auto_services",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "pt",
+      "country": "BR",
+      "query": "oficina mecânica em Porto Alegre",
+      "placeId": "ChIJCbIt8mZ5GZURI01J01v2TZs",
+      "displayName": "Top Stop Ipiranga - Centro Automotivo Porto - Porto Alegre",
+      "types": [
+        "auto_parts_store",
+        "car_repair",
+        "store",
+        "service",
+        "point_of_interest",
+        "establishment"
+      ],
+      "primaryType": "car_repair",
+      "primaryTypeDisplayName": "Mecânica para carros",
+      "googleMapsTypeLabel": "Oficina mecânica",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "car_repair",
+        "archetype": "home_auto_services",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "fr",
+      "country": "FR",
+      "query": "boulangerie à Lyon",
+      "placeId": "ChIJ43BpUQDr9EcRu6_bpQMjBB0",
+      "displayName": "Boulangerie Saint Paul",
+      "types": [
+        "bakery",
+        "pastry_shop",
+        "dessert_shop",
+        "confectionery",
+        "food_store",
+        "food",
+        "point_of_interest",
+        "store",
+        "establishment"
+      ],
+      "primaryType": "bakery",
+      "primaryTypeDisplayName": "Boulangerie",
+      "googleMapsTypeLabel": "Boulangerie",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:bakery",
+        "archetype": "food",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "fr",
+      "country": "FR",
+      "query": "boulangerie à Lyon",
+      "placeId": "ChIJG1q4NhHq9EcRlLBHciZYMiM",
+      "displayName": "Boulangerie - Pâtisserie - Traiteur \"Elsa Boulangerie\"",
+      "types": ["bakery", "food_store", "food", "point_of_interest", "store", "establishment"],
+      "primaryType": "bakery",
+      "primaryTypeDisplayName": "Boulangerie",
+      "googleMapsTypeLabel": "Boulangerie",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:bakery",
+        "archetype": "food",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "fr",
+      "country": "FR",
+      "query": "cabinet dentaire à Marseille",
+      "placeId": "ChIJCzEHcbm_yRIR0hqoeMoEjl0",
+      "displayName": "CABINET DENTAIRE SAINT JUST MARSEILLE 13",
+      "types": ["dentist", "health", "point_of_interest", "establishment"],
+      "primaryType": "dentist",
+      "primaryTypeDisplayName": "Dentiste",
+      "googleMapsTypeLabel": "Dentiste",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "dental_clinic",
+        "archetype": "health",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "fr",
+      "country": "FR",
+      "query": "cabinet dentaire à Marseille",
+      "placeId": "ChIJgf11Pg2_yRIRM4biEfmuuII",
+      "displayName": "CENTRE DENTAIRE SAINT JUST MARSEILLE 13",
+      "types": [
+        "dentist",
+        "dental_clinic",
+        "medical_clinic",
+        "doctor",
+        "health",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "primaryType": "dentist",
+      "primaryTypeDisplayName": "Dentiste",
+      "googleMapsTypeLabel": "Dentiste",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "dental_clinic",
+        "archetype": "health",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "fr",
+      "country": "FR",
+      "query": "agence immobilière à Toulouse",
+      "placeId": "ChIJ2xxmGSO7rhIRiM5nCoYeRiM",
+      "displayName": "L'AGENCE Toulouse Immobilier",
+      "types": ["real_estate_agency", "point_of_interest", "service", "establishment"],
+      "primaryType": "real_estate_agency",
+      "primaryTypeDisplayName": "Agence immobilière",
+      "googleMapsTypeLabel": "Agence immobilière",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "real_estate_agency",
+        "archetype": "real_estate",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "fr",
+      "country": "FR",
+      "query": "agence immobilière à Toulouse",
+      "placeId": "ChIJ_Tgkil67rhIRttpzxuoJYqo",
+      "displayName": "Orpi Toulouse Immobilier",
+      "types": [
+        "real_estate_agency",
+        "finance",
+        "consultant",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "primaryType": "real_estate_agency",
+      "primaryTypeDisplayName": "Agence immobilière",
+      "googleMapsTypeLabel": "Agence immobilière",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "real_estate_agency",
+        "archetype": "real_estate",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "fr",
+      "country": "FR",
+      "query": "salon de coiffure à Nantes",
+      "placeId": "ChIJ36DtJyPtBUgRAMKka-EVSiw",
+      "displayName": "Salon Le Labo - Expert cheveux courts - Coiffeur à Nantes",
+      "types": ["hair_salon", "hair_care", "point_of_interest", "service", "establishment"],
+      "primaryType": "hair_salon",
+      "primaryTypeDisplayName": "Salon de coiffure",
+      "googleMapsTypeLabel": "Salon de coiffure",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:hair_salon",
+        "archetype": "beauty_wellness",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "fr",
+      "country": "FR",
+      "query": "salon de coiffure à Nantes",
+      "placeId": "ChIJcQnAz3XtBUgRnLkg9y-1XSs",
+      "displayName": "LE PETIT HÔTEL - Écrin de coiffure",
+      "types": ["hair_salon", "hair_care", "point_of_interest", "service", "establishment"],
+      "primaryType": "hair_salon",
+      "primaryTypeDisplayName": "Salon de coiffure",
+      "googleMapsTypeLabel": "Salon de coiffure",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:hair_salon",
+        "archetype": "beauty_wellness",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "fr",
+      "country": "FR",
+      "query": "pharmacie à Bordeaux",
+      "placeId": "ChIJfZyy5LUnVQ0RqpnSvGbDmzg",
+      "displayName": "La Pharmacie des Capucins 24/24 et 7/7 (y compris jours fériés)",
+      "types": ["pharmacy", "health", "point_of_interest", "store", "establishment"],
+      "primaryType": "pharmacy",
+      "primaryTypeDisplayName": "Pharmacie",
+      "googleMapsTypeLabel": "Pharmacie",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:pharmacy",
+        "archetype": "health",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "fr",
+      "country": "FR",
+      "query": "pharmacie à Bordeaux",
+      "placeId": "ChIJfbG2pgcnVQ0RHHLLMmtNC_Y",
+      "displayName": "Pharmacie Tourny",
+      "types": ["pharmacy", "health", "point_of_interest", "store", "establishment"],
+      "primaryType": "pharmacy",
+      "primaryTypeDisplayName": "Pharmacie",
+      "googleMapsTypeLabel": "Pharmacie",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:pharmacy",
+        "archetype": "health",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "de",
+      "country": "DE",
+      "query": "Bäckerei in München",
+      "placeId": "ChIJAXkyU3p1nkcRbEV9H83USqc",
+      "displayName": "Konditorei Bäckerei Chocolatte",
+      "types": [
+        "bakery",
+        "confectionery",
+        "food_store",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "primaryType": "bakery",
+      "primaryTypeDisplayName": "Bäckerei",
+      "googleMapsTypeLabel": "Bäckerei",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:bakery",
+        "archetype": "food",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "de",
+      "country": "DE",
+      "query": "Bäckerei in München",
+      "placeId": "ChIJhRYsucl1nkcRQl78rW3WlaI",
+      "displayName": "Julius Brantner Brothandwerk",
+      "types": [
+        "bakery",
+        "food_store",
+        "store",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "primaryType": "bakery",
+      "primaryTypeDisplayName": "Bäckerei",
+      "googleMapsTypeLabel": "Bäckerei",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:bakery",
+        "archetype": "food",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "de",
+      "country": "DE",
+      "query": "Steuerberater in Hamburg",
+      "placeId": "ChIJbV6pChmPsUcRJKIaJsIgn4k",
+      "displayName": "ROSE & PARTNER - Rechtsanwälte Steuerberater",
+      "types": [
+        "lawyer",
+        "accounting",
+        "finance",
+        "consultant",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "primaryType": "lawyer",
+      "primaryTypeDisplayName": "Rechtsanwalt",
+      "googleMapsTypeLabel": "Rechtsanwalt",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:lawyer",
+        "archetype": "professional_services",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "de",
+      "country": "DE",
+      "query": "Steuerberater in Hamburg",
+      "placeId": "ChIJoUWIJVOJsUcRvvIluTIfR2Y",
+      "displayName": "Dipl. Kaufm. Claas-Peter Müller Steuerberater Hamburg",
+      "types": [
+        "accounting",
+        "finance",
+        "consultant",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "primaryType": "consultant",
+      "primaryTypeDisplayName": "Berater",
+      "googleMapsTypeLabel": "Steuerberater",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:consultant",
+        "archetype": "professional_services",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "de",
+      "country": "DE",
+      "query": "Hotel in Köln",
+      "placeId": "ChIJxz7zpLQlv0cRFKyS9KLF2AU",
+      "displayName": "Hotel NH Köln Altstadt",
+      "types": ["hotel", "lodging", "point_of_interest", "establishment"],
+      "primaryType": "hotel",
+      "primaryTypeDisplayName": "Hotel",
+      "googleMapsTypeLabel": "Hotel",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "hotel",
+        "archetype": "lodging",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "de",
+      "country": "DE",
+      "query": "Hotel in Köln",
+      "placeId": "ChIJi71KaK4lv0cRk2FvHP_pRkM",
+      "displayName": "Hotel Opera",
+      "types": ["hotel", "lodging", "point_of_interest", "establishment"],
+      "primaryType": "hotel",
+      "primaryTypeDisplayName": "Hotel",
+      "googleMapsTypeLabel": "Hotel",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "hotel",
+        "archetype": "lodging",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "de",
+      "country": "DE",
+      "query": "Fahrschule in Frankfurt",
+      "placeId": "ChIJZz5lgZkOvUcR4wmSCD4u8rE",
+      "displayName": "Fahrschule Butterfly GmbH",
+      "types": ["educational_institution", "point_of_interest", "establishment"],
+      "primaryType": "educational_institution",
+      "primaryTypeDisplayName": "Bildungseinrichtung",
+      "googleMapsTypeLabel": "Fahrschule",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:educational_institution",
+        "archetype": "education",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "de",
+      "country": "DE",
+      "query": "Fahrschule in Frankfurt",
+      "placeId": "ChIJc0DGu90LvUcRyclR4RqCi84",
+      "displayName": "Fahrschule Danzer",
+      "types": ["educational_institution", "point_of_interest", "establishment"],
+      "primaryType": "educational_institution",
+      "primaryTypeDisplayName": "Bildungseinrichtung",
+      "googleMapsTypeLabel": "Fahrschule",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:educational_institution",
+        "archetype": "education",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "de",
+      "country": "DE",
+      "query": "Blumenladen in Stuttgart",
+      "placeId": "ChIJkYgl-rTEmUcRB2kqsb1GzYo",
+      "displayName": "der blumenladen",
+      "types": ["florist", "point_of_interest", "store", "establishment"],
+      "primaryType": "florist",
+      "primaryTypeDisplayName": "Blumengeschäft",
+      "googleMapsTypeLabel": "Blumengeschäft",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:florist",
+        "archetype": "local_retail",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "de",
+      "country": "DE",
+      "query": "Blumenladen in Stuttgart",
+      "placeId": "ChIJjTvZCgDbmUcRmX_v9P2KEhQ",
+      "displayName": "Blumenautomat - jederzeit frische Blumensträuße",
+      "types": ["florist", "point_of_interest", "store", "establishment"],
+      "primaryType": "florist",
+      "primaryTypeDisplayName": "Blumengeschäft",
+      "googleMapsTypeLabel": "Blumengeschäft",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:florist",
+        "archetype": "local_retail",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "it",
+      "country": "IT",
+      "query": "pasticceria a Milano",
+      "placeId": "ChIJ87zdNCjHhkcR2CJUO4Q_Zs0",
+      "displayName": "Pasticceria Martesana Milano Cagliero",
+      "types": [
+        "pastry_shop",
+        "dessert_shop",
+        "bakery",
+        "confectionery",
+        "food_store",
+        "bar",
+        "food",
+        "point_of_interest",
+        "store",
+        "establishment"
+      ],
+      "primaryType": "pastry_shop",
+      "primaryTypeDisplayName": "Pasticceria",
+      "googleMapsTypeLabel": "Pasticceria",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:pastry_shop",
+        "archetype": "food",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "it",
+      "country": "IT",
+      "query": "pasticceria a Milano",
+      "placeId": "ChIJ90fdL8zDhkcRDX2bjKqtOJM",
+      "displayName": "Pasticceria Castelnuovo",
+      "types": [
+        "pastry_shop",
+        "dessert_shop",
+        "bakery",
+        "food_delivery",
+        "cafeteria",
+        "confectionery",
+        "food_store",
+        "bar",
+        "food",
+        "point_of_interest",
+        "store",
+        "establishment"
+      ],
+      "primaryType": "pastry_shop",
+      "primaryTypeDisplayName": "Pasticceria",
+      "googleMapsTypeLabel": "Pasticceria",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:pastry_shop",
+        "archetype": "food",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "it",
+      "country": "IT",
+      "query": "ristorante a Napoli",
+      "placeId": "ChIJYWAFVUEIOxMRuRA2mQnNrKE",
+      "displayName": "La Locanda Gesù Vecchio",
+      "types": [
+        "italian_restaurant",
+        "european_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "primaryType": "italian_restaurant",
+      "primaryTypeDisplayName": "Ristorante italiano",
+      "googleMapsTypeLabel": "Ristorante napoletano",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "restaurant",
+        "archetype": "food",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "it",
+      "country": "IT",
+      "query": "ristorante a Napoli",
+      "placeId": "ChIJ6WQX3rwJOxMRuymSXZOphC8",
+      "displayName": "La Locanda del Monacone. Napoli, Rione Sanità.",
+      "types": [
+        "italian_restaurant",
+        "european_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "primaryType": "italian_restaurant",
+      "primaryTypeDisplayName": "Ristorante italiano",
+      "googleMapsTypeLabel": "Ristorante napoletano",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "restaurant",
+        "archetype": "food",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "it",
+      "country": "IT",
+      "query": "studio legale a Torino",
+      "placeId": "ChIJIY6-mtVtiEcR4eMP5ZJ4Akc",
+      "displayName": "Studio Legale Michela Bonaldi",
+      "types": ["lawyer", "consultant", "point_of_interest", "service", "establishment"],
+      "primaryType": "lawyer",
+      "primaryTypeDisplayName": "Avvocato",
+      "googleMapsTypeLabel": "Avvocato",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:lawyer",
+        "archetype": "professional_services",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "it",
+      "country": "IT",
+      "query": "studio legale a Torino",
+      "placeId": "ChIJaVnHEa1tiEcRfb6RanQinu4",
+      "displayName": "Studio Legale Barbero Massimiliano dal 1997 ORARIO 08/20",
+      "types": ["lawyer", "finance", "consultant", "point_of_interest", "service", "establishment"],
+      "primaryType": "lawyer",
+      "primaryTypeDisplayName": "Avvocato",
+      "googleMapsTypeLabel": "Avvocato civilista",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:lawyer",
+        "archetype": "professional_services",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "it",
+      "country": "IT",
+      "query": "palestra a Bologna",
+      "placeId": "ChIJpZ0d5XHTf0cReQ6Ah1bKDxU",
+      "displayName": "FitActive Bologna Creti",
+      "types": ["gym", "sports_activity_location", "health", "point_of_interest", "establishment"],
+      "primaryType": "gym",
+      "primaryTypeDisplayName": "Palestra",
+      "googleMapsTypeLabel": "Palestra",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:gym",
+        "archetype": "beauty_wellness",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "it",
+      "country": "IT",
+      "query": "palestra a Bologna",
+      "placeId": "ChIJF98mTILUf0cR7LM-31OlUSU",
+      "displayName": "Time4Fit",
+      "types": [
+        "fitness_center",
+        "gym",
+        "sports_activity_location",
+        "health",
+        "point_of_interest",
+        "establishment"
+      ],
+      "primaryType": "fitness_center",
+      "primaryTypeDisplayName": "Centro fitness",
+      "googleMapsTypeLabel": "Centro fitness",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "gen:places:fitness_center",
+        "archetype": "beauty_wellness",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "it",
+      "country": "IT",
+      "query": "agenzia immobiliare a Firenze",
+      "placeId": "ChIJRda7srpWKhMRMc29picTGKU",
+      "displayName": "Granducato Immobiliare Firenze",
+      "types": ["real_estate_agency", "lodging", "point_of_interest", "service", "establishment"],
+      "primaryType": "real_estate_agency",
+      "primaryTypeDisplayName": "Agenzia immobiliare",
+      "googleMapsTypeLabel": "Agenzia immobiliare",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "real_estate_agency",
+        "archetype": "real_estate",
+        "scope": "local"
+      }
+    },
+    {
+      "language": "it",
+      "country": "IT",
+      "query": "agenzia immobiliare a Firenze",
+      "placeId": "ChIJuS8mgK5WKhMRn5UBWuu8CDU",
+      "displayName": "Italiana Immobiliare - Santa Maria Novella",
+      "types": ["real_estate_agency", "point_of_interest", "service", "establishment"],
+      "primaryType": "real_estate_agency",
+      "primaryTypeDisplayName": "Agenzia immobiliare",
+      "googleMapsTypeLabel": "Agenzia immobiliare",
+      "pureServiceAreaBusiness": false,
+      "expected": {
+        "categoryKey": "real_estate_agency",
+        "archetype": "real_estate",
+        "scope": "local"
+      }
+    }
+  ]
+}
