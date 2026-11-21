@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { resetAppEnv } from "@reranker/env";
 import { beforeEach, vi } from "vitest";
 
 export const ADS = "/v3/keywords_data/google_ads/search_volume/live";
@@ -58,6 +59,9 @@ async function fakeDataForSeo(url: string, init?: RequestInit): Promise<Response
 /** Resets the fake before each test and routes every fetch to it. */
 export function installFakeDataForSeo(): void {
   beforeEach(() => {
+    // The sandbox base, whose host the fake answers for like any other.
+    vi.stubEnv("APP_ENV", "development");
+    resetAppEnv();
     vi.stubEnv("DATAFORSEO_LOGIN", "language-mix-test");
     vi.stubEnv("DATAFORSEO_PASSWORD", "language-mix-test-password");
     vi.stubGlobal("fetch", vi.fn(fakeDataForSeo));
