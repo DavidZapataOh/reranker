@@ -10,6 +10,7 @@ import {
 } from "@reranker/schema/measurement";
 import { sql } from "drizzle-orm";
 import {
+  type AnyPgColumn,
   boolean,
   check,
   doublePrecision,
@@ -28,6 +29,15 @@ import { sharedTable } from "./_tables";
 const at = () => timestamp({ withTimezone: true });
 const sha256 = (table: string, column: string) =>
   check(`${table}_${column}_length`, sql`octet_length(${sql.identifier(column)}) = 32`);
+// Two-letter text takes 3 bytes, an enum 4 plus alignment. Rows written before languages were
+// recorded are Spanish.
+const language = () =>
+  text({ enum: enumValues(MeasurementLanguage) })
+    .notNull()
+    .default("es");
+// The MeasurementLanguage values; a schema test keeps the lists equal.
+const languageCheck = (table: string, column: AnyPgColumn) =>
+  check(`${table}_language_check`, sql`${column} in ('es', 'en', 'pt', 'fr', 'de', 'it')`);
 
 export const categoryArchetype = publicPanelSchema.enum(
   "category_archetype",
@@ -88,10 +98,14 @@ export const intents = sharedTable(
     demandWeight: doublePrecision().notNull(),
     freeReport: boolean().notNull(),
     canonicalParaphraseId: text().notNull(),
+    // One seed version holds every language; ids encode it, the mirror states it.
+    registerProfile: registerProfile().notNull().default("co"),
+    language: language(),
   },
   (t) => [
     unique("intents_prompt_set_intent_id_key").on(t.promptSet, t.intentId),
     index("intents_category_idx").on(t.category),
+    languageCheck("intents", t.language),
   ],
 );
 
@@ -106,10 +120,14 @@ export const personas = sharedTable(
       .notNull()
       .references(() => categories.key),
     preamble: text().notNull(),
+    // A persona introduces only the questions asked in its language and profile.
+    registerProfile: registerProfile().notNull().default("co"),
+    language: language(),
   },
   (t) => [
     unique("personas_prompt_set_persona_id_key").on(t.promptSet, t.personaId),
     index("personas_category_idx").on(t.category),
+    languageCheck("personas", t.language),
   ],
 );
 

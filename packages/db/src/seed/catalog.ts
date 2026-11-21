@@ -84,6 +84,8 @@ export async function seedCatalog(input: SeedCatalogInput): Promise<{ inserted: 
           demandWeight: intent.demandWeight,
           freeReport: intent.freeReport,
           canonicalParaphraseId: intent.canonicalParaphraseId,
+          registerProfile: intent.registerProfile,
+          language: intent.language,
         })),
       )
       .onConflictDoNothing()
@@ -100,6 +102,8 @@ export async function seedCatalog(input: SeedCatalogInput): Promise<{ inserted: 
                 personaId: persona.personaId,
                 category: persona.categoryKey,
                 preamble: persona.preamble,
+                registerProfile: persona.registerProfile,
+                language: persona.language,
               })),
             )
             .onConflictDoNothing()

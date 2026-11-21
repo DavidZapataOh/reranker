@@ -74,6 +74,50 @@ test("seeding twice leaves one copy", async () => {
   expect(rows[0]?.n).toBe(catalog.categories.length);
 });
 
+test("intents and personas keep the language and profile they are asked in", async () => {
+  const other = `${version}8`;
+  const [intent] = catalog.intents as [(typeof catalog.intents)[number]];
+  const [persona] = catalog.personas as [(typeof catalog.personas)[number]];
+  const speech = { language: "en", registerProfile: "neutral" } as const;
+  const english = {
+    ...intent,
+    ...speech,
+    intentId: "dental_clinic.en-neutral-recommended",
+    canonicalParaphraseId: "dental_clinic.en-neutral-recommended.p00",
+  } as const;
+  const bilingual = SeedCatalogFile.parse({
+    ...catalog,
+    intents: [...catalog.intents, english],
+    personas: [
+      ...catalog.personas,
+      { ...persona, ...speech, personaId: "dental_clinic.en-parent" },
+    ],
+    paraphrases: [
+      ...catalog.paraphrases,
+      {
+        ...catalog.paraphrases[0],
+        paraphraseId: english.canonicalParaphraseId,
+        intentId: english.intentId,
+      },
+    ],
+  });
+  await seedCatalog({ ...mini, version: other, catalog: bilingual, contentHash: sha(other) });
+  for (const [table, id, wanted] of [
+    ["intents", "intent_id", english.intentId],
+    ["personas", "persona_id", "dental_clinic.en-parent"],
+  ] as const) {
+    const { rows } = await owner.query(
+      `select language, register_profile from public_panel.${table}
+       where prompt_set = $1 and ${id} = any($2) order by language desc`,
+      [other, [wanted, table === "intents" ? intent.intentId : persona.personaId]],
+    );
+    expect(rows).toEqual([
+      { language: "es", register_profile: "co" },
+      { language: "en", register_profile: "neutral" },
+    ]);
+  }
+});
+
 test("the seed row records its hashes and every persona-or-none variant", async () => {
   await seedCatalog(mini);
   const { rows } = await owner.query<{ content: string; root: string; variants: number }>(
