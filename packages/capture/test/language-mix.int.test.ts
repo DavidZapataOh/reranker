@@ -35,6 +35,7 @@ const estimate = (deadlineMs = 10_000, terms: Record<string, string[]> = TERMS) 
     geo: MIAMI,
     categoryKey: category,
     terms,
+    scope: "local",
     deadlineAt: Date.now() + deadlineMs,
   });
 
@@ -50,8 +51,7 @@ const rowOf = () =>
 describe("estimateLanguageMix", () => {
   test("stores a Miami dentist's mix and serves it again without a call", async () => {
     provider.ads.set(1015116, {
-      "dentist near me": 9900,
-      "dentist miami": 500,
+      "dentist near me": 10_400,
       "dentista cerca de mi": 1250,
     });
     const mix = await estimate();

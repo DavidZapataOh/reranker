@@ -9,7 +9,7 @@ import {
 import { withSystem } from "@reranker/db";
 import { languageMixClaims, languageMixes } from "@reranker/db/schema";
 import { SpendCapExceededError } from "@reranker/jobs";
-import type { GeoTarget, MeasurementLanguage } from "@reranker/schema/measurement";
+import type { GeoTarget, MeasurementLanguage, QuestionScope } from "@reranker/schema/measurement";
 import { log } from "@reranker/telemetry";
 import { and, eq, gt, lt, sql } from "drizzle-orm";
 import {
@@ -18,7 +18,7 @@ import {
   fetchLanguageVolumes,
   type LanguageVolumes,
 } from "./fetch";
-import { type CategoryTerms, sharesOf } from "./keywords";
+import { type CategoryTerms, languageKeywords, sharesOf } from "./keywords";
 
 export type { CategoryTerms } from "./keywords";
 
@@ -26,6 +26,8 @@ export interface EstimateLanguageMixInput {
   geo: GeoTarget;
   categoryKey: string;
   terms: CategoryTerms;
+  /** The category's default scope: local categories compare "near me" searches. */
+  scope: QuestionScope;
   /** The caller's cut: past it the main language is returned alone and the fetch goes on. */
   deadlineAt: number;
 }
@@ -34,7 +36,7 @@ export type EstimateOptions = Pick<FetchContext, "base">;
 
 const REASON = "capture.language-mix";
 // Bumped when the keywords or the shares are computed differently, so old rows are refetched.
-const METHOD = 1;
+const METHOD = 2;
 const REUSE_DAYS = 30;
 const REUSE_MS = REUSE_DAYS * 86_400_000;
 const POLL_MS = 250;
@@ -58,12 +60,11 @@ function remember(key: string, mix: LanguageMix): LanguageMix {
   return mix;
 }
 
-function configHash(terms: CategoryTerms): Buffer {
-  const sorted = Object.entries(terms)
-    .filter(([, list]) => list && list.length > 0)
-    .sort(([a], [b]) => a.localeCompare(b));
+// The keywords asked, not the terms, so a change to the lexicon or the phrases refetches too.
+function configHash(keywords: ReadonlyMap<string, MeasurementLanguage>): Buffer {
+  const sorted = [...keywords].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
   return createHash("sha256")
-    .update(JSON.stringify({ method: METHOD, terms: sorted }))
+    .update(JSON.stringify({ method: METHOD, keywords: sorted }))
     .digest();
 }
 
@@ -179,13 +180,14 @@ export async function estimateLanguageMix(
   input: EstimateLanguageMixInput,
   opts: EstimateOptions = {},
 ): Promise<LanguageMix> {
-  const { geo, categoryKey, terms, deadlineAt } = input;
+  const { geo, categoryKey, terms, scope, deadlineAt } = input;
   const main = placeLanguage(geo);
+  const keywords = languageKeywords(terms, scope);
   // With words in one language there is nothing to split, and nothing worth paying for.
-  if (Object.values(terms).filter((list) => list && list.length > 0).length < 2) {
+  if (new Set(keywords.values()).size < 2) {
     return { ...unmeasuredMix("unavailable"), degraded: null };
   }
-  const hash = configHash(terms);
+  const hash = configHash(keywords);
   const name = `${geo.key}|${categoryKey}|${hash.toString("hex")}`;
   const hit = cache.get(name);
   if (hit?.asOf && Date.parse(hit.asOf) > Date.now() - REUSE_MS) return hit;
@@ -205,7 +207,7 @@ export async function estimateLanguageMix(
 
   const fetchClaimed = async (): Promise<LanguageMix> => {
     try {
-      const fetched = await fetchLanguageVolumes(geo, terms, {
+      const fetched = await fetchLanguageVolumes(geo, keywords, {
         refId: hash.toString("hex"),
         base: opts.base,
       });

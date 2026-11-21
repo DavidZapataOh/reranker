@@ -1,0 +1,11 @@
+@reranker/capture
+
+data/common-words.json is derived from Hermit Dave's FrequencyWords
+(https://github.com/hermitdave/FrequencyWords), word frequency lists built from OpenSubtitles
+2018, licensed under the Creative Commons Attribution-ShareAlike 4.0 International License
+(https://creativecommons.org/licenses/by-sa/4.0/). data/common-words.json is distributed under
+the same license.
+
+Changes: scripts/build-common-words.ts keeps, for each word of the category terms and "near me"
+phrases, the languages whose 10,000 most frequent words include it, folded to lowercase without
+accents. The lists used, with their commit and SHA-256, are listed under sources in the file.

@@ -1,60 +1,128 @@
+import { categoryTerms, seedCategories } from "@reranker/catalog";
+import { MeasurementLanguage } from "@reranker/schema/measurement";
 import { describe, expect, test } from "vitest";
-import { languageKeywords, languageVolumes, sharesOf } from "../../src/language-mix/keywords";
+import lexicon from "../../data/common-words.json" with { type: "json" };
+import {
+  distinctive,
+  languageKeywords,
+  languageVolumes,
+  NEAR_ME,
+  sharesOf,
+  words,
+} from "../../src/language-mix/keywords";
 
-const miami = { en: "Miami", es: "Miami" };
+const ALL = MeasurementLanguage.options;
 
 describe("languageKeywords", () => {
-  test("asks each term alone, beside the place and near me, in its own language", () => {
-    const keywords = languageKeywords({ en: ["dentist"], es: ["dentista"] }, miami);
+  test("a local category asks every term followed by its language's near-me phrase", () => {
+    const keywords = languageKeywords({ en: ["dentist"], es: ["dentista"] }, "local");
     expect(Object.fromEntries(keywords)).toEqual({
-      dentist: "en",
-      "dentist miami": "en",
       "dentist near me": "en",
-      dentista: "es",
-      "dentista miami": "es",
       "dentista cerca de mi": "es",
     });
   });
 
-  test("leaves out a keyword written the same in two languages", () => {
-    const keywords = languageKeywords({ en: ["Hotel"], es: ["hotel"], de: ["Hotel"] }, miami);
+  test("a noun shared by several languages still tells them apart near me", () => {
+    // "garage" and "hotel" alone would credit every language that writes them.
+    const keywords = languageKeywords(
+      { en: ["Hotel", "garage"], fr: ["hôtel", "garage"], de: ["Hotel"] },
+      "local",
+    );
     expect(Object.fromEntries(keywords)).toEqual({
       "hotel near me": "en",
-      "hotel cerca de mi": "es",
+      "garage near me": "en",
+      "hôtel près de moi": "fr",
+      "garage près de moi": "fr",
       "hotel in meiner nähe": "de",
     });
   });
 
-  test("sends accents as written and treats them as Google does when comparing", () => {
+  test("a national category asks only the terms that read as one language", () => {
     const keywords = languageKeywords(
-      { fr: ["garagiste"], pt: ["mecânico"], es: ["mecanico"] },
-      {},
+      { en: ["online shop"], es: ["tienda online"], it: ["negozio online", "shop online"] },
+      "national",
     );
-    expect(keywords.get("garagiste près de moi")).toBe("fr");
-    // "mecânico" and "mecanico" fold to one keyword, so both languages lose it.
-    expect([...keywords.keys()].filter((k) => k.startsWith("mec") && !k.includes(" "))).toEqual([]);
+    expect(Object.fromEntries(keywords)).toEqual({
+      "online shop": "en",
+      "tienda online": "es",
+      "negozio online": "it",
+    });
   });
 
   test("skips keywords past Google Ads' 80 characters or 10 words", () => {
-    const long = "a ".repeat(9).trim();
-    const keywords = languageKeywords({ en: [long, "x".repeat(81)] }, { en: "Miami" });
-    expect([...keywords.keys()]).toEqual([long, `${long} miami`]);
+    const long = "a ".repeat(8).trim();
+    const keywords = languageKeywords({ en: [long, "x".repeat(81)] }, "local");
+    expect([...keywords.keys()]).toEqual([`${long} near me`]);
+  });
+
+  test("no seed category asks a keyword in the wrong language or in two", () => {
+    for (const category of seedCategories()) {
+      const terms = categoryTerms(category);
+      const keywords = languageKeywords(terms, category.defaultScope);
+      for (const [keyword, language] of keywords) {
+        const asked =
+          category.defaultScope === "local"
+            ? keyword.endsWith(` ${NEAR_ME[language]}`)
+            : distinctive(keyword, language, ALL);
+        expect(asked, `${category.key}: ${keyword}`).toBe(true);
+      }
+      // Every language of a seed category is measured.
+      expect(new Set(keywords.values()), category.key).toEqual(
+        new Set(Object.keys(terms).filter((l) => (terms[l as keyof typeof terms] ?? []).length)),
+      );
+    }
+  });
+});
+
+describe("distinctive", () => {
+  test.each([
+    ["garage", "fr", false],
+    ["zahnarzt", "de", true],
+    ["taller", "es", false],
+    ["garagiste", "fr", true],
+    ["comprar por internet", "es", false],
+    ["boutique en ligne", "fr", true],
+  ] as const)("%s reads as %s alone: %s", (term, language, expected) => {
+    expect(distinctive(term, language, ALL)).toBe(expected);
+  });
+
+  test("a word the lexicon was not built with never counts", () => {
+    expect(distinctive("zahnarztpraxis berlin", "de", ALL)).toBe(false);
+  });
+
+  test("the lexicon covers every word of every seed term and near-me phrase", () => {
+    const vocabulary = new Set(lexicon.vocabulary);
+    for (const category of seedCategories()) {
+      for (const list of Object.values(categoryTerms(category))) {
+        for (const term of list) {
+          for (const word of words(term)) expect(vocabulary, `${term}: ${word}`).toContain(word);
+        }
+      }
+    }
+    for (const phrase of Object.values(NEAR_ME)) {
+      for (const word of words(phrase)) expect(vocabulary).toContain(word);
+    }
+  });
+
+  test("each near-me phrase differs from every other language's", () => {
+    const phrases = Object.values(NEAR_ME).map((p) => words(p).join(" "));
+    expect(new Set(phrases).size).toBe(phrases.length);
   });
 });
 
 describe("languageVolumes", () => {
   const keywords = languageKeywords(
-    { en: ["dentist", "restaurants"], es: ["dentista", "restaurantes"] },
-    miami,
+    { en: ["dentist", "restaurant"], es: ["dentista", "restaurante"] },
+    "local",
   );
 
   test("adds up each language's searches", () => {
     expect(
       languageVolumes(keywords, [
         { keyword: "dentist near me", volume: 9900 },
-        { keyword: "dentist miami", volume: 500 },
+        { keyword: "restaurant near me", volume: 500 },
         { keyword: "dentista cerca de mí", volume: 880 },
-        { keyword: "dentista miami", volume: 370 },
+        { keyword: "restaurante cerca de mi", volume: 370 },
         { keyword: "dentista", volume: null },
         { keyword: "unrelated", volume: 1000 },
         { keyword: null, volume: 5 },
@@ -63,13 +131,16 @@ describe("languageVolumes", () => {
   });
 
   test("drops close variants Google merged across languages", () => {
+    const merged = new Map([
+      ["restaurants miami", "en"],
+      ["restaurantes miami", "es"],
+      ["restaurant near me", "en"],
+    ] as const);
     expect(
-      languageVolumes(keywords, [
+      languageVolumes(merged, [
         { keyword: "restaurants miami", volume: 14_800 },
         { keyword: "restaurantes miami", volume: 14_800 },
-        { keyword: "dentist", volume: 300 },
-        { keyword: "dentista", volume: 300 },
-        { keyword: "restaurants near me", volume: 550_000 },
+        { keyword: "restaurant near me", volume: 550_000 },
       ]),
     ).toEqual({ en: 550_000 });
   });

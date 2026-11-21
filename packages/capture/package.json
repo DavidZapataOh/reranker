@@ -19,6 +19,7 @@
     "record:phrasing": "tsx --conditions=react-server scripts/record-phrasing.ts",
     "record:term-volume": "tsx --conditions=react-server scripts/record-term-volume.ts",
     "record:language-mix": "tsx --conditions=react-server scripts/record-language-mix.ts",
+    "common-words:build": "tsx --conditions=react-server scripts/build-common-words.ts",
     "record:language": "tsx --conditions=react-server scripts/record-language.ts",
     "analyze:language": "tsx --conditions=react-server scripts/analyze-language.ts"
   },
