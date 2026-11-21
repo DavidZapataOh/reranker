@@ -22,12 +22,14 @@ import { mapDataForSeoStatus } from "./dataforseo/status";
 import { dispatchOrder, retryFits } from "./dispatch";
 import { ENGINES } from "./engines";
 import { loadPlan } from "./measurement";
+import { openaiAdapter } from "./openai/adapter";
 import { loadIntentSets, persistCapture } from "./persist";
 import { resolveRedirects } from "./resolve-redirects";
 import { type FrozenSlot, parseSlotId, type SlotId } from "./slot";
 import { captureCallOf, recordCaptureCall } from "./telemetry";
 
 registerCaptureAdapter(dataforseoAdapter);
+registerCaptureAdapter(openaiAdapter);
 
 export type CaptureSlotsOptions = {
   mode: "live";
@@ -56,6 +58,7 @@ function bodyOf(bytes: Uint8Array): unknown | null {
 
 function outcomeOf(record: CaptureRecord): Outcome {
   if (record.status === "succeeded") return { ok: true };
+  if (record.failure) return { ok: false, ...record.failure };
   const outcome = mapDataForSeoStatus({
     httpStatus: record.httpStatus,
     body: bodyOf(record.response),
@@ -87,7 +90,7 @@ async function call(
     opts.deadlineAt === undefined ? {} : { maxWaitMs: Math.max(0, opts.deadlineAt - Date.now()) },
   );
   try {
-    const estimate = ENGINES[engine].estimate.live;
+    const estimate = adapter.estimate?.(slot) ?? ENGINES[engine].estimate.live;
     const reservation = await reserveSpend({ ...opts.spend, provider, channel, engine, estimate });
     const started = performance.now();
     try {
@@ -241,4 +244,21 @@ export async function captureSlots(
       r.ok ? [] : [{ slotId: r.key as SlotId, code: codeOf(r.error) }],
     ),
   };
+}
+
+/** Captures control slots through the OpenAI API, refusing any slot routed elsewhere. */
+export async function captureControl(
+  measurementId: string,
+  slotIds: SlotId[],
+  opts: { spend: SpendContext },
+): ReturnType<typeof captureSlots> {
+  const plan = await loadPlan(measurementId);
+  for (const id of slotIds) {
+    const { measurementId: owner, slotIndex } = parseSlotId(id);
+    const slot = plan.slots[slotIndex];
+    if (owner === measurementId && slot && slot.provider !== "openai") {
+      throw new InvalidInputError(`Slot ${id} is routed to ${slot.provider}, not the control API`);
+    }
+  }
+  return captureSlots(measurementId, slotIds, { mode: "live", spend: opts.spend });
 }

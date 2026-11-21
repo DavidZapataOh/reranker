@@ -81,6 +81,29 @@ async function fakeDataForSeo(request: Request): Promise<Response> {
   }
 }
 
+const OPENAI_ANSWER = fixture("recorded/openai/control-medellin.json");
+const OPENAI_HEADERS = JSON.parse(
+  new TextDecoder().decode(fixture("recorded/openai/control-medellin.headers.json")),
+) as Record<string, string>;
+
+/** OpenAI's Responses API, answering with the recorded control call unless `next` says otherwise. */
+export const openai = {
+  requests: [] as Uint8Array[],
+  served: [] as Uint8Array[],
+  next: [] as Array<{ status: number; body: unknown; headers?: Record<string, string> }>,
+};
+
+async function fakeOpenAI(request: Request): Promise<Response> {
+  openai.requests.push(new Uint8Array(await request.arrayBuffer()));
+  const reply = openai.next.shift();
+  const body = reply ? new TextEncoder().encode(JSON.stringify(reply.body)) : OPENAI_ANSWER;
+  openai.served.push(body);
+  return new Response(body, {
+    status: reply?.status ?? 200,
+    headers: reply ? { "content-type": "application/json", ...reply.headers } : OPENAI_HEADERS,
+  });
+}
+
 /** Where every Google redirect leads; the site itself is never contacted. */
 export const SITE = "https://clinica.example/";
 const GOOGLE_REDIRECT_HOSTS = new Set([
@@ -93,6 +116,7 @@ function route(input: string | URL | Request, init?: RequestInit): Promise<Respo
   const request = new Request(input, init);
   const { hostname } = new URL(request.url);
   if (hostname === "sandbox.dataforseo.com") return fakeDataForSeo(request);
+  if (hostname === "api.openai.com") return fakeOpenAI(request);
   if (hostname.endsWith(".r2.cloudflarestorage.com")) return fakeR2(request);
   if (GOOGLE_REDIRECT_HOSTS.has(hostname)) {
     return Promise.resolve(new Response(null, { status: 302, headers: { location: SITE } }));
@@ -198,6 +222,7 @@ export function installCaptureHarness(opts: { deployedPools?: boolean } = {}): v
     vi.stubEnv("VERCEL_GIT_COMMIT_SHA", "fedcba9876543210fedcba9876543210fedcba98");
     vi.stubEnv("DATAFORSEO_LOGIN", "capture-test");
     vi.stubEnv("DATAFORSEO_PASSWORD", "capture-test-password");
+    vi.stubEnv("OPENAI_CONTROL_API_KEY", "sk-capture-test");
     vi.stubGlobal("fetch", vi.fn(route));
     vi.mocked(loadSigner).mockResolvedValue(signer);
     r2.clear();
@@ -212,6 +237,7 @@ export function installCaptureHarness(opts: { deployedPools?: boolean } = {}): v
       afterResponse: null,
       r2WriteMs: 0,
     });
+    Object.assign(openai, { requests: [], served: [], next: [] });
     resetPlanCache();
   });
 
