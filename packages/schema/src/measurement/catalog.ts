@@ -111,6 +111,14 @@ export type BusinessCategory = z.infer<typeof BusinessCategory>;
 export const MeasurementLanguage = z.enum(["es", "en", "pt", "fr", "de", "it"]);
 export type MeasurementLanguage = z.infer<typeof MeasurementLanguage>;
 
+// What the owner says on a measurement request. Only a language we measure in can be chosen; one
+// that is already the country's main language changes nothing.
+export const MeasurementLanguageRequest = z.strictObject({
+  /** A language the business also serves customers in, besides its country's main one. */
+  alsoServesIn: MeasurementLanguage.nullable().default(null),
+});
+export type MeasurementLanguageRequest = z.infer<typeof MeasurementLanguageRequest>;
+
 export const IntentKind = z.enum([
   "discovery",
   "specialty",
