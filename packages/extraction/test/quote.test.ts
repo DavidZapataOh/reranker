@@ -47,6 +47,15 @@ describe("locateQuote", () => {
     expect(md.slice(at?.start, at?.end)).toBe("Clínica Sonrisas** — atención *rápida");
   });
 
+  test("markdown escapes inside the answer do not hide a quote", () => {
+    const md = "1\\. **26 Motors dealership group\\:** more than 100 complaints";
+    const at = locateQuote(md, "26 Motors dealership group: more than 100 complaints");
+    expect(md.slice(at?.start, at?.end)).toBe(
+      "26 Motors dealership group\\:** more than 100 complaints",
+    );
+    expect(locateQuote(md, "1. 26 Motors")).not.toBeNull();
+  });
+
   test("letters that change length when lowercased map back to the original", () => {
     const md = "Visita İzmir Kebap hoy.";
     const at = locateQuote(md, "izmir kebap");

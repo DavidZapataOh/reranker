@@ -9,14 +9,37 @@ import { afterAll, beforeAll, expect, test, vi } from "vitest";
 import { currentExtractorConfig, type ExtractorConfig } from "../src/config";
 import { extractResponse, type RawCapture } from "../src/extract";
 import { jaroWinkler, normalizeName, tokenContainment } from "../src/normalize";
+import { EXTRACT_PROMPT_V1 } from "../src/prompts/extract.v1";
+import type { MentionsOutput } from "../src/schema";
 
 // Storage is not what is measured: extractions are neither looked up nor kept.
+type CallRecord = { model: string; output: MentionsOutput | null };
+interface StoredOutputs {
+  captureId: string;
+  primary: CallRecord;
+  secondary: CallRecord | null;
+  judge: CallRecord | null;
+  quoteMisses: { primary: number; secondary: number; judge: number };
+}
+
+// What each extraction would have stored, kept to explain its misses and its token use.
+const stored = vi.hoisted(() => ({
+  outputs: new Map<string, StoredOutputs>(),
+  inputTokens: new Map<string, number>(),
+}));
 vi.mock("../src/store", () => ({
   findExtraction: async () => null,
-  insertExtraction: async () => ({ id: "measured", inserted: true }),
+  insertExtraction: async (row: { captureId: string; inputTokens: number }) => {
+    stored.inputTokens.set(row.captureId, row.inputTokens);
+    return { id: "measured", inserted: true };
+  },
 }));
 vi.mock("@reranker/evidence", () => ({
-  putArtifact: async () => ({ sha256: "0".repeat(64), created: true }),
+  putArtifact: async (_kind: string, bytes: Uint8Array) => {
+    const outputs = JSON.parse(new TextDecoder().decode(bytes)) as StoredOutputs;
+    stored.outputs.set(outputs.captureId, outputs);
+    return { sha256: "0".repeat(64), created: true };
+  },
   getArtifact: async () => null,
 }));
 vi.mock("@reranker/flags", () => ({ isEnabled: async () => true }));
@@ -92,6 +115,8 @@ interface Tally {
   incidentalFound: number;
   failed: number;
   slowestMs: number;
+  /** The fewest characters per input token of an extraction without a judge. */
+  charsPerToken: number;
 }
 
 const empty = (): Tally => ({
@@ -108,7 +133,24 @@ const empty = (): Tally => ({
   incidentalFound: 0,
   failed: 0,
   slowestMs: 0,
+  charsPerToken: Number.POSITIVE_INFINITY,
 });
+
+/** What each call said about a name the score missed, to tell a skipped name from a dropped quote. */
+function trace(outputs: StoredOutputs | undefined, misses: string[]): string[] {
+  if (!outputs) return [];
+  const lines = [`quote misses ${JSON.stringify(outputs.quoteMisses)}`];
+  for (const call of ["primary", "secondary", "judge"] as const) {
+    const said = outputs[call]?.output?.mentions;
+    if (!said) continue;
+    for (const m of said) {
+      if (misses.some((miss) => miss.includes(m.name) || same(miss.split(": ")[1] ?? "", m.name))) {
+        lines.push(`${call}: ${m.name} ${m.stance} ${m.entityKind} «${m.quote}»`);
+      }
+    }
+  }
+  return lines;
+}
 
 /** Scores one answer and returns what it got wrong, for the log. */
 function score(t: Tally, mentions: ExtractedMention[], e: Expected): string[] {
@@ -193,27 +235,35 @@ test("extraction finds, orders and judges entities in every measurement language
     try {
       result = await extractResponse(raw, { spend }, { config });
       t.slowestMs = Math.max(t.slowestMs, result.latencyMs);
+      const outputs = stored.outputs.get(raw.capture.id);
+      const tokens = stored.inputTokens.get(raw.capture.id);
+      if (outputs && tokens && !outputs.judge) {
+        const calls = outputs.secondary ? 2 : 1;
+        const chars = (EXTRACT_PROMPT_V1.length + answer.markdown.length) * calls;
+        t.charsPerToken = Math.min(t.charsPerToken, chars / tokens);
+      }
     } catch (error) {
       t.failed++;
       failure = ` failed: ${error instanceof Error ? error.message : String(error)}`;
     }
     const misses = score(t, result?.mentions ?? [], e);
     if (misses.length > 0 || failure) {
-      console.log(`${id} (${result?.agreement ?? "none"})${failure}\n  ${misses.join("\n  ")}`);
+      const lines = [...misses, ...trace(stored.outputs.get(raw.capture.id), misses)];
+      console.log(`${id} (${result?.agreement ?? "none"})${failure}\n  ${lines.join("\n  ")}`);
     }
   });
 
   const rows = [...tallies.entries()].sort(([a], [b]) => a.localeCompare(b));
   const table = [
-    "| language | answers | recommended recall | recommendation precision | order | negative recall | incidental recall | failed | slowest |",
-    "|---|---|---|---|---|---|---|---|---|",
+    "| language | answers | recommended recall | recommendation precision | order | negative recall | incidental recall | failed | slowest | chars/token |",
+    "|---|---|---|---|---|---|---|---|---|---|",
     ...rows.map(
       ([language, t]) =>
         `| ${language} | ${t.answers} | ${pct(rate(t.recommendedFound, t.recommended))} | ${pct(
           rate(t.recommendationsExpected, t.recommendations),
         )} | ${pct(rate(t.pairsInOrder, t.pairs))} | ${pct(rate(t.negativeFound, t.negative))} | ${pct(
           rate(t.incidentalFound, t.incidental),
-        )} | ${t.failed} | ${(t.slowestMs / 1000).toFixed(1)} s |`,
+        )} | ${t.failed} | ${(t.slowestMs / 1000).toFixed(1)} s | ${t.charsPerToken.toFixed(2)} |`,
     ),
   ].join("\n");
   console.log(table);
