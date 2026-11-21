@@ -1,6 +1,6 @@
 {
-  "methodologyVersion": "2026.11.0",
-  "methodologyHash": "f4ef02b882a6bea95b7ebb77a987b6a4a0abdcea0045a70f4ee7c9f904ec660e",
+  "methodologyVersion": "2026.11.1",
+  "methodologyHash": "f5661011aa4e58a84cd2f84ddef4f80955f11a4fa47a8eea5c989c20bf3bcb44",
   "input": {
     "reportId": "fr_01JDB4Q7W2M8N3P5R6S9T0V1A5",
     "asOf": "2026-11-20T18:00:00.000Z",
@@ -16036,12 +16036,12 @@
     ]
   },
   "output": {
-    "methodologyVersion": "2026.11.0",
-    "methodologyHash": "f4ef02b882a6bea95b7ebb77a987b6a4a0abdcea0045a70f4ee7c9f904ec660e",
+    "methodologyVersion": "2026.11.1",
+    "methodologyHash": "f5661011aa4e58a84cd2f84ddef4f80955f11a4fa47a8eea5c989c20bf3bcb44",
     "intentSetId": "is_0123456789abcdef",
     "intentSetHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
     "extractorConfigHash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-    "seed": "6722b6e0b4f733adca3709d29349ee344112d029f1d9c2de085e6ac4e3b515b7",
+    "seed": "63fb22f986cbbf55bca508281cd883f9e077055eeb281d6b8144b48845edfba7",
     "computedAt": "2026-11-20T18:00:00.000Z",
     "target": {
       "entityKey": "place:target",
@@ -16766,6 +16766,7 @@
         }
       }
     ],
+    "languages": [],
     "canonicalOnly": {
       "target": {
         "value": 0,
@@ -16838,8 +16839,8 @@
           "entityKey": "place:rival0",
           "score": {
             "value": 34,
-            "lower": 19,
-            "upper": 53,
+            "lower": 18,
+            "upper": 52,
             "atMost": null,
             "level": "sometimes",
             "levelDisplay": {

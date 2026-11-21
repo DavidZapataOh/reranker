@@ -8,6 +8,7 @@ import type {
 import { methodology } from "../src/methodology";
 import { computeFreeReportStats, type FreeReportInput } from "../src/report";
 import {
+  bilingualPlan,
   CONFIG,
   ENGINES,
   INTENTS,
@@ -26,6 +27,7 @@ export const VECTOR_NAMES = [
   "template",
   "one-engine",
   "invisible",
+  "second-language",
 ] as const;
 export type VectorName = (typeof VECTOR_NAMES)[number];
 
@@ -217,12 +219,34 @@ function cases(): Record<VectorName, FreeReportInput> {
     },
   );
 
+  // English on the half-sample floor weighing 11 %: the target is rarer there and ranked lower,
+  // and Perplexity loses too many English answers to count in English.
+  const main = plan.observations.length;
+  const secondLanguage = reportInput(
+    {
+      plan: bilingualPlan(),
+      languageShares: { es: 0.89, en: 0.11 },
+      failed: { chatgpt: 2 },
+      secondaryFailed: { perplexity: 11, gemini: 3 },
+      mentions: (slot) =>
+        slot < main
+          ? ladder(slot)
+          : [
+              ...(slot % 4 === 0 ? [mention({ entityKey: TARGET, ordinal: 3 })] : []),
+              mention({ entityKey: rival(0), name: "Rival Dental Care" }),
+              ...(slot % 3 === 0 ? [mention({ entityKey: "place:miami-smiles", ordinal: 2 })] : []),
+            ],
+    },
+    { reportId: "fr_01JDB4Q7W2M8N3P5R6S9T0V1A6", asOf: asOf(19) },
+  );
+
   return {
     "seed-local": seedLocal,
     "generated-national": generatedNational,
     template,
     "one-engine": oneEngine,
     invisible,
+    "second-language": secondLanguage,
   };
 }
 

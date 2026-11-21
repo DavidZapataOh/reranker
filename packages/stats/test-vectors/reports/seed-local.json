@@ -1,6 +1,6 @@
 {
-  "methodologyVersion": "2026.11.0",
-  "methodologyHash": "f4ef02b882a6bea95b7ebb77a987b6a4a0abdcea0045a70f4ee7c9f904ec660e",
+  "methodologyVersion": "2026.11.1",
+  "methodologyHash": "f5661011aa4e58a84cd2f84ddef4f80955f11a4fa47a8eea5c989c20bf3bcb44",
   "input": {
     "reportId": "fr_01JDB4Q7W2M8N3P5R6S9T0V1A1",
     "asOf": "2026-11-20T14:00:00.000Z",
@@ -23838,12 +23838,12 @@
     ]
   },
   "output": {
-    "methodologyVersion": "2026.11.0",
-    "methodologyHash": "f4ef02b882a6bea95b7ebb77a987b6a4a0abdcea0045a70f4ee7c9f904ec660e",
+    "methodologyVersion": "2026.11.1",
+    "methodologyHash": "f5661011aa4e58a84cd2f84ddef4f80955f11a4fa47a8eea5c989c20bf3bcb44",
     "intentSetId": "is_0123456789abcdef",
     "intentSetHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
     "extractorConfigHash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-    "seed": "e295cd6382c61649695710228fca727084b860518dc3ba4e12e2c2d6e4414e73",
+    "seed": "d614b5b664c98e5db7809843c267b4628b8777505d3efa9a26ba9b9d28912200",
     "computedAt": "2026-11-20T14:00:00.000Z",
     "target": {
       "entityKey": "place:target",
@@ -23926,7 +23926,7 @@
         "gemini": {
           "score": {
             "value": 45,
-            "lower": 30,
+            "lower": 29,
             "upper": 61,
             "atMost": null,
             "level": "on_the_list",
@@ -23966,6 +23966,46 @@
         "google-ai-overview": {
           "score": {
             "value": 50,
+            "lower": 34,
+            "upper": 66,
+            "atMost": null,
+            "level": "on_the_list",
+            "levelDisplay": {
+              "kind": "between",
+              "from": "sometimes",
+              "to": "on_the_list"
+            },
+            "sufficiency": "insufficient",
+            "preliminary": true,
+            "components": {
+              "recommendationRate": {
+                "estimate": 0.5,
+                "lower": 0.3496035019208622,
+                "upper": 0.6503964980791378,
+                "successes": 20,
+                "trials": 40,
+                "effectiveTrials": 40,
+                "designEffect": 1,
+                "method": "jeffreys_eff"
+              },
+              "prominence": {
+                "estimate": 1,
+                "lower": 1,
+                "upper": 1,
+                "typicalPosition": 1
+              }
+            }
+          },
+          "counts": {
+            "recommended": 20,
+            "incidental": 0,
+            "negative": 0,
+            "validCaptures": 40
+          }
+        },
+        "google-ai-mode": {
+          "score": {
+            "value": 50,
             "lower": 35,
             "upper": 65,
             "atMost": null,
@@ -24003,50 +24043,10 @@
             "validCaptures": 40
           }
         },
-        "google-ai-mode": {
-          "score": {
-            "value": 50,
-            "lower": 35,
-            "upper": 66,
-            "atMost": null,
-            "level": "on_the_list",
-            "levelDisplay": {
-              "kind": "between",
-              "from": "sometimes",
-              "to": "on_the_list"
-            },
-            "sufficiency": "insufficient",
-            "preliminary": true,
-            "components": {
-              "recommendationRate": {
-                "estimate": 0.5,
-                "lower": 0.3496035019208622,
-                "upper": 0.6503964980791378,
-                "successes": 20,
-                "trials": 40,
-                "effectiveTrials": 40,
-                "designEffect": 1,
-                "method": "jeffreys_eff"
-              },
-              "prominence": {
-                "estimate": 1,
-                "lower": 1,
-                "upper": 1,
-                "typicalPosition": 1
-              }
-            }
-          },
-          "counts": {
-            "recommended": 20,
-            "incidental": 0,
-            "negative": 0,
-            "validCaptures": 40
-          }
-        },
         "perplexity": {
           "score": {
             "value": 50,
-            "lower": 35,
+            "lower": 34,
             "upper": 66,
             "atMost": null,
             "level": "on_the_list",
@@ -24521,7 +24521,7 @@
         "targetScore": {
           "value": 43,
           "lower": 27,
-          "upper": 59,
+          "upper": 60,
           "atMost": null,
           "level": "on_the_list",
           "levelDisplay": {
@@ -24622,7 +24622,7 @@
         },
         "targetScore": {
           "value": 50,
-          "lower": 35,
+          "lower": 34,
           "upper": 66,
           "atMost": null,
           "level": "on_the_list",
@@ -24674,7 +24674,7 @@
         "targetScore": {
           "value": 50,
           "lower": 34,
-          "upper": 66,
+          "upper": 65,
           "atMost": null,
           "level": "on_the_list",
           "levelDisplay": {
@@ -24724,8 +24724,8 @@
         },
         "targetScore": {
           "value": 50,
-          "lower": 35,
-          "upper": 66,
+          "lower": 34,
+          "upper": 65,
           "atMost": null,
           "level": "on_the_list",
           "levelDisplay": {
@@ -24756,6 +24756,7 @@
         }
       }
     ],
+    "languages": [],
     "canonicalOnly": {
       "target": {
         "value": 96,
@@ -24793,7 +24794,7 @@
           "entityKey": "place:rival0",
           "score": {
             "value": 86,
-            "lower": 73,
+            "lower": 74,
             "upper": 90,
             "atMost": null,
             "level": "regular",
@@ -24801,7 +24802,7 @@
               "kind": "single",
               "level": "regular"
             },
-            "sufficiency": "orientative",
+            "sufficiency": "sufficient",
             "preliminary": true,
             "components": {
               "recommendationRate": {
@@ -24862,7 +24863,7 @@
           "entityKey": "place:rival2",
           "score": {
             "value": 86,
-            "lower": 74,
+            "lower": 73,
             "upper": 90,
             "atMost": null,
             "level": "regular",
@@ -24870,7 +24871,7 @@
               "kind": "single",
               "level": "regular"
             },
-            "sufficiency": "sufficient",
+            "sufficiency": "orientative",
             "preliminary": true,
             "components": {
               "recommendationRate": {
@@ -24897,7 +24898,7 @@
           "score": {
             "value": 11,
             "lower": 3,
-            "upper": 28,
+            "upper": 27,
             "atMost": null,
             "level": "sometimes",
             "levelDisplay": {
