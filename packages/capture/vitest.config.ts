@@ -16,6 +16,7 @@ export default mergeConfig(
           "src/persist.ts",
           "src/queue.ts",
           "src/answers.ts",
+          "src/control/plan.ts",
         ],
       },
     },

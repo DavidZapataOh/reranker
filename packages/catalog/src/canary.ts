@@ -1,7 +1,8 @@
 import { AppError } from "@reranker/schema";
-import type { GeoKey, PromptVariant } from "@reranker/schema/measurement";
+import type { GeoKey, PromptVariant, QuestionScope } from "@reranker/schema/measurement";
 import { seedCategories } from "./categories";
 import { getGeo } from "./geo/resolve";
+import { type IntentSetId, intentSetId } from "./hash";
 import { seedIntentSets, seedSetFor } from "./seal";
 import { type FrozenSeed, loadSeed } from "./seed/load";
 import { materialize, variantContext, variantPool } from "./variants";
@@ -16,11 +17,13 @@ export const CANARY_GEOS = ["co-c1003659", "co-c1003654"] as const;
 // Colombians put to AI Overviews most.
 const STORE_NOUN = "ropa";
 
-export type CanaryVariant = PromptVariant & { geoKey: GeoKey };
+export type CanaryVariant = PromptVariant & { geoKey: GeoKey; scope: QuestionScope };
 
 export type CanarySet = {
   id: typeof CANARY_ID;
   version: string;
+  /** The seed version's intent set, which every canary question belongs to. */
+  intentSetId: IntentSetId;
   variants: CanaryVariant[];
   geos: typeof CANARY_GEOS;
 };
@@ -58,10 +61,20 @@ export function canaryFrom(seed: FrozenSeed): CanarySet {
       if (!canonical) throw new AppError("internal", { detail: `${intent.intentId} canonical` });
       const noun = nouns.get(intent.categoryKey) ?? STORE_NOUN;
       const ctx = variantContext(geo, intent.scope, null, noun, "es");
-      return { ...materialize(intent.intentId, canonical, geo, ctx, "es"), geoKey };
+      return {
+        ...materialize(intent.intentId, canonical, geo, ctx, "es"),
+        geoKey,
+        scope: intent.scope,
+      };
     });
   });
-  return { id: CANARY_ID, version: seed.version, variants, geos: CANARY_GEOS };
+  return {
+    id: CANARY_ID,
+    version: seed.version,
+    intentSetId: intentSetId(seed.contentHash),
+    variants,
+    geos: CANARY_GEOS,
+  };
 }
 
 let canary: CanarySet | undefined;
