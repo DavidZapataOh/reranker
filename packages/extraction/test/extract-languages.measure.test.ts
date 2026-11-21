@@ -127,33 +127,46 @@ function score(t: Tally, mentions: ExtractedMention[], e: Expected): void {
   }
 }
 
+// Each extraction holds leases on two providers and the judge's: past a pool's slots a caller
+// waits longer than the inline wait and is turned away.
+const LANES = 4;
+
+async function inLanes<T>(items: readonly T[], work: (item: T, i: number) => Promise<void>) {
+  let next = 0;
+  const lane = async () => {
+    while (next < items.length) {
+      const i = next++;
+      await work(items[i] as T, i);
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(LANES, items.length) }, lane));
+}
+
 const rate = (n: number, d: number) => (d === 0 ? null : n / d);
 const pct = (r: number | null) => (r === null ? "–" : `${(r * 100).toFixed(1)} %`);
 
 // One extraction per recorded answer with the production pair and judge, a few US cents in all.
 test("extraction finds, orders and judges entities in every measurement language", async () => {
   const tallies = new Map<MeasurementLanguage, Tally>();
-  await Promise.all(
-    answers.map(async ({ id, answer }, i) => {
-      const e = expected[id];
-      if (!e) throw new Error(`${id} has no expectation`);
-      const raw: RawCapture = {
-        capture: {
-          id: `cap_measure_${i}`,
-          engine: answer.engine,
-          channel: answer.channel,
-          status: "succeeded",
-          modelReported: answer.modelReported,
-          slotId: `slot-measure-${i}`,
-        },
-        answer,
-      } as RawCapture;
-      const result = await extractResponse(raw, { spend });
-      const t = tallies.get(e.language) ?? empty();
-      tallies.set(e.language, t);
-      score(t, result.mentions, e);
-    }),
-  );
+  await inLanes(answers, async ({ id, answer }, i) => {
+    const e = expected[id];
+    if (!e) throw new Error(`${id} has no expectation`);
+    const raw: RawCapture = {
+      capture: {
+        id: `cap_measure_${i}`,
+        engine: answer.engine,
+        channel: answer.channel,
+        status: "succeeded",
+        modelReported: answer.modelReported,
+        slotId: `slot-measure-${i}`,
+      },
+      answer,
+    } as RawCapture;
+    const result = await extractResponse(raw, { spend });
+    const t = tallies.get(e.language) ?? empty();
+    tallies.set(e.language, t);
+    score(t, result.mentions, e);
+  });
 
   const rows = [...tallies.entries()].sort(([a], [b]) => a.localeCompare(b));
   const table = [
