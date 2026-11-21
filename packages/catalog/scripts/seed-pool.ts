@@ -2,6 +2,7 @@
 // which reviewed sample stands for them.
 import type { ParaphraseFormat } from "@reranker/schema/measurement";
 import { rngFromSeed } from "@reranker/stats";
+import { GENERATOR_CONFIG } from "../src/generate/config";
 import { sha256Hex } from "../src/hash";
 
 /** Paraphrases kept beside the canonical: 30 per intent in all. */
@@ -56,4 +57,22 @@ export function replacementFor<T extends { format: ParaphraseFormat }>(
 ): T | null {
   const free = pool.filter((e) => !taken.has(e));
   return free.find((e) => e.format === format) ?? free[0] ?? null;
+}
+
+/** Below 29 a narrow intent still ships with two of each format; below the sampler's floor it is dropped. */
+export const SHORT_MIN_PER_FORMAT = 2;
+
+export type IntentFit = "full" | "short" | "drop";
+
+/**
+ * Whether the paraphrases that passed review can ship: all 29 with the quotas, fewer that still
+ * cover every format twice and give the sampler its seven distinct draws, or none at all. Weaker
+ * paraphrases are never added to reach 29.
+ */
+export function intentFit(kept: readonly { format: ParaphraseFormat }[]): IntentFit {
+  const count = (f: ParaphraseFormat) =>
+    kept.filter((e) => e.format === f).length + (f === "open_question" ? 1 : 0);
+  if (kept.length >= KEEP && FORMATS.every((f) => count(f) >= MIN_PER_FORMAT)) return "full";
+  const covered = FORMATS.every((f) => count(f) >= SHORT_MIN_PER_FORMAT);
+  return covered && kept.length >= GENERATOR_CONFIG.minVariants ? "short" : "drop";
 }
