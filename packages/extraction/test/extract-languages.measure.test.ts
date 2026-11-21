@@ -90,6 +90,7 @@ interface Tally {
   negativeFound: number;
   incidental: number;
   incidentalFound: number;
+  failed: number;
   slowestMs: number;
 }
 
@@ -105,6 +106,7 @@ const empty = (): Tally => ({
   negativeFound: 0,
   incidental: 0,
   incidentalFound: 0,
+  failed: 0,
   slowestMs: 0,
 });
 
@@ -183,25 +185,35 @@ test("extraction finds, orders and judges entities in every measurement language
       },
       answer,
     } as RawCapture;
-    const result = await extractResponse(raw, { spend }, { config });
     const t = tallies.get(e.language) ?? empty();
     tallies.set(e.language, t);
-    t.slowestMs = Math.max(t.slowestMs, result.latencyMs);
-    const misses = score(t, result.mentions, e);
-    if (misses.length > 0) console.log(`${id} (${result.agreement}):\n  ${misses.join("\n  ")}`);
+    // A failed extraction finds nothing: it counts against the language instead of hiding the rest.
+    let result: Awaited<ReturnType<typeof extractResponse>> | null = null;
+    let failure = "";
+    try {
+      result = await extractResponse(raw, { spend }, { config });
+      t.slowestMs = Math.max(t.slowestMs, result.latencyMs);
+    } catch (error) {
+      t.failed++;
+      failure = ` failed: ${error instanceof Error ? error.message : String(error)}`;
+    }
+    const misses = score(t, result?.mentions ?? [], e);
+    if (misses.length > 0 || failure) {
+      console.log(`${id} (${result?.agreement ?? "none"})${failure}\n  ${misses.join("\n  ")}`);
+    }
   });
 
   const rows = [...tallies.entries()].sort(([a], [b]) => a.localeCompare(b));
   const table = [
-    "| language | answers | recommended recall | recommendation precision | order | negative recall | incidental recall | slowest |",
-    "|---|---|---|---|---|---|---|---|",
+    "| language | answers | recommended recall | recommendation precision | order | negative recall | incidental recall | failed | slowest |",
+    "|---|---|---|---|---|---|---|---|---|",
     ...rows.map(
       ([language, t]) =>
         `| ${language} | ${t.answers} | ${pct(rate(t.recommendedFound, t.recommended))} | ${pct(
           rate(t.recommendationsExpected, t.recommendations),
         )} | ${pct(rate(t.pairsInOrder, t.pairs))} | ${pct(rate(t.negativeFound, t.negative))} | ${pct(
           rate(t.incidentalFound, t.incidental),
-        )} | ${(t.slowestMs / 1000).toFixed(1)} s |`,
+        )} | ${t.failed} | ${(t.slowestMs / 1000).toFixed(1)} s |`,
     ),
   ].join("\n");
   console.log(table);
@@ -209,6 +221,7 @@ test("extraction finds, orders and judges entities in every measurement language
     appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${table}\n`);
 
   for (const [language, t] of rows) {
+    expect(t.failed, `${language} failed extractions`).toBe(0);
     expect(rate(t.recommendedFound, t.recommended), `${language} recall`).toBeGreaterThanOrEqual(
       0.9,
     );
