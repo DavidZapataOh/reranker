@@ -9,7 +9,7 @@ import {
 } from "../scripts/build-seed";
 import { reviewCategory } from "../scripts/review-native";
 import { reviewItems } from "../scripts/review-sample";
-import { KEEP, planKept, replacementFor, sampleOf } from "../scripts/seed-pool";
+import { intentFit, KEEP, planKept, replacementFor, sampleOf } from "../scripts/seed-pool";
 import { seedCategories } from "../src/categories";
 import type { ReviewRequest } from "../src/generate/providers";
 
@@ -96,6 +96,35 @@ const groupPool = (language: "es" | "fr", profile: "co" | "neutral"): GroupPool 
   builtAt: "2026-11-21T00:00:00.000Z",
   costMicros: 0,
   categories: seedCategories().map((c) => categoryPool(c.key, language, profile)),
+});
+
+describe("short intents", () => {
+  const of = (counts: Partial<Record<ParaphraseFormat, number>>) =>
+    FORMATS.flatMap((f) => Array.from({ length: counts[f] ?? 0 }, (_, i) => entry(`${f}${i}`, f)));
+
+  test("29 with the quotas ship in full", () =>
+    expect(intentFit(of({ open_question: 8, list_request: 7, keyword: 7, constraint: 7 }))).toBe(
+      "full",
+    ));
+
+  test("fewer ship when every format has two and the sampler gets seven draws", () => {
+    expect(intentFit(of({ open_question: 2, list_request: 2, keyword: 4, constraint: 2 }))).toBe(
+      "short",
+    );
+    // The canonical is the second open question.
+    expect(intentFit(of({ open_question: 1, list_request: 2, keyword: 2, constraint: 2 }))).toBe(
+      "short",
+    );
+  });
+
+  test("a format with one paraphrase or fewer than seven in all drops the intent", () => {
+    expect(intentFit(of({ open_question: 10, list_request: 10, keyword: 1, constraint: 10 }))).toBe(
+      "drop",
+    );
+    expect(intentFit(of({ open_question: 1, list_request: 2, keyword: 2, constraint: 1 }))).toBe(
+      "drop",
+    );
+  });
 });
 
 describe("native review", () => {
