@@ -5,6 +5,7 @@ import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { currentExtractorConfig, type ExtractorConfig } from "../src/config";
 import { extractResponse, type RawCapture } from "../src/extract";
 import { costOfUsage } from "../src/prices";
+import { JUDGE_PROMPT_V2 } from "../src/prompts/judge.v2";
 import { ProviderRefusalError, type StructuredResult } from "../src/providers/types";
 import type { MentionsOutput } from "../src/schema";
 
@@ -233,7 +234,11 @@ test("a disagreement calls the judge once and cost adds every call", async () =>
     .mockImplementationOnce(reply(out(["Clínica Brillo", "incidental"]), "gpt-6.1-terra", 900));
   const r = await extractResponse(capture({}), ctx);
   expect(doubles.openai).toHaveBeenCalledTimes(2);
-  expect(doubles.openai.mock.calls[1]?.[0].user).toContain('"onlySecondary"');
+  // The judge prompt names these fences, whatever language the answer is in.
+  const judged = doubles.openai.mock.calls[1]?.[0];
+  expect(judged?.system).toBe(JUDGE_PROMPT_V2);
+  expect(judged?.user).toMatch(/^Answer:\n"""\n[\s\S]*\n"""\n\nDisagreement:\n\{/);
+  expect(judged?.user).toContain('"onlySecondary"');
   expect(r).toMatchObject({ agreement: "adjudicated", models: { judge: "gpt-6.1-terra" } });
   expect(r.mentions.map((m) => m.name)).toEqual(["Clínica Sonrisa", "Clínica Brillo"]);
   expect(r.cost.amount_micros).toBe(
