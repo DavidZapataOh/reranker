@@ -15,6 +15,7 @@
     "geo:build": "tsx scripts/build-geo.ts",
     "record:generation": "tsx scripts/record-generation.ts",
     "seed:build": "tsx scripts/build-seed.ts",
+    "seed:rejudge": "tsx scripts/rejudge-seed.ts",
     "seed:review": "tsx scripts/review-sample.ts",
     "seed:review-native": "tsx scripts/review-native.ts",
     "nouns:build": "tsx scripts/build-nouns.ts",
