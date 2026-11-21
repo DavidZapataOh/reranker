@@ -67,17 +67,23 @@
     {
       "personaId": "dental_clinic.parent",
       "categoryKey": "dental_clinic",
-      "preamble": "Tengo dos hijos pequeños."
+      "preamble": "Tengo dos hijos pequeños.",
+      "language": "es",
+      "registerProfile": "co"
     },
     {
       "personaId": "dental_clinic.senior",
       "categoryKey": "dental_clinic",
-      "preamble": "Tengo 68 años y uso prótesis."
+      "preamble": "Tengo 68 años y uso prótesis.",
+      "language": "es",
+      "registerProfile": "co"
     },
     {
       "personaId": "online_store.first_buyer",
       "categoryKey": "online_store",
-      "preamble": "Nunca he comprado por internet."
+      "preamble": "Nunca he comprado por internet.",
+      "language": "es",
+      "registerProfile": "co"
     }
   ],
   "paraphrases": [

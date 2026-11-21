@@ -197,5 +197,15 @@
       "accept": "Aceptar",
       "reject": "Rechazar"
     }
+  },
+  "catalog": {
+    "categories": {
+      "dental_clinic": "Clínica odontológica",
+      "restaurant": "Restaurante",
+      "hotel": "Hotel",
+      "car_repair": "Taller mecánico",
+      "real_estate_agency": "Inmobiliaria",
+      "online_store": "Tienda online"
+    }
   }
 }

@@ -11,21 +11,19 @@ export type SeedCatalogInput = {
   merkleRoot: string;
 };
 
-// Every paraphrase pairs with each persona of its category and with none.
+// Every paraphrase pairs with none and with each persona of its category speaking its language
+// and profile, as the catalog's variant templates do.
 function variantCount(catalog: SeedCatalogFile): number {
-  const personasPerCategory = new Map<string, number>();
+  const speech = (p: { categoryKey: string; language: string; registerProfile: string }) =>
+    `${p.categoryKey}|${p.language}|${p.registerProfile}`;
+  const personasPer = new Map<string, number>();
   for (const persona of catalog.personas) {
-    personasPerCategory.set(
-      persona.categoryKey,
-      (personasPerCategory.get(persona.categoryKey) ?? 0) + 1,
-    );
+    personasPer.set(speech(persona), (personasPer.get(speech(persona)) ?? 0) + 1);
   }
-  const categoryOf = new Map(
-    catalog.intents.map((intent) => [intent.intentId, intent.categoryKey]),
-  );
+  const speechOf = new Map(catalog.intents.map((intent) => [intent.intentId, speech(intent)]));
   return catalog.paraphrases.reduce((sum, paraphrase) => {
-    const category = categoryOf.get(paraphrase.intentId);
-    return sum + (category === undefined ? 0 : (personasPerCategory.get(category) ?? 0) + 1);
+    const key = speechOf.get(paraphrase.intentId);
+    return sum + (key === undefined ? 0 : (personasPer.get(key) ?? 0) + 1);
   }, 0);
 }
 

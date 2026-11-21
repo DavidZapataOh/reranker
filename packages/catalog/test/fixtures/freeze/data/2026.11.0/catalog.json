@@ -30,7 +30,9 @@
     {
       "personaId": "dental_clinic.parent",
       "categoryKey": "dental_clinic",
-      "preamble": "Tengo dos hijos pequeños."
+      "preamble": "Tengo dos hijos pequeños.",
+      "language": "es",
+      "registerProfile": "co"
     }
   ],
   "paraphrases": [

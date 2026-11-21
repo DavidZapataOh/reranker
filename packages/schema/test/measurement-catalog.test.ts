@@ -286,7 +286,13 @@ describe("measurement catalog schemas", () => {
         },
       ],
       personas: [
-        { personaId: "dental_clinic.parent", categoryKey: "dental_clinic", preamble: "Soy mamá." },
+        {
+          personaId: "dental_clinic.parent",
+          categoryKey: "dental_clinic",
+          preamble: "Soy mamá.",
+          language: "es",
+          registerProfile: "co",
+        },
       ],
       paraphrases: [
         {
@@ -304,6 +310,65 @@ describe("measurement catalog schemas", () => {
     expect(SeedCatalogFile.safeParse({ ...file, categories: [generated] }).success).toBe(false);
     const unlabeled = { ...file.intents[0], labelKey: null };
     expect(SeedCatalogFile.safeParse({ ...file, intents: [unlabeled] }).success).toBe(false);
+    const { language, ...anyLanguage } = file.personas[0] as (typeof file.personas)[number];
+    expect(SeedCatalogFile.safeParse({ ...file, personas: [anyLanguage] }).success).toBe(false);
+  });
+
+  test("a seed catalog file never lists an id twice", () => {
+    const intent = {
+      intentId: "hotel.recommended",
+      categoryKey: "hotel",
+      scope: "local",
+      kind: "discovery",
+      slug: "recommended",
+      labelKey: "catalog.intents.hotel.recommended",
+      canonicalText: "¿Qué hotel me recomiendas en {lugar}?",
+      canonicalParaphraseId: "hotel.recommended.p00",
+      demandWeight: 1,
+      freeReport: true,
+      language: "es",
+      registerProfile: "co",
+    };
+    const paraphrase = {
+      paraphraseId: "hotel.recommended.p00",
+      intentId: "hotel.recommended",
+      text: "¿Qué hotel me recomiendas en {lugar}?",
+      format: "open_question",
+      generator: "human",
+      humanReviewed: true,
+    };
+    const persona = {
+      personaId: "hotel.couple",
+      categoryKey: "hotel",
+      preamble: "Viajo con mi pareja.",
+      language: "es",
+      registerProfile: "co",
+    };
+    const file = {
+      categories: [
+        {
+          key: "hotel",
+          labelKey: "catalog.categories.hotel",
+          placesTypes: ["hotel"],
+          synonyms: [],
+          archetype: "lodging",
+          defaultScope: "local",
+          register: "tu",
+        },
+      ],
+      intents: [intent],
+      personas: [persona],
+      paraphrases: [paraphrase],
+    };
+    expect(SeedCatalogFile.safeParse(file).success).toBe(true);
+    // An English intent under the Spanish one's id would pool both languages' paraphrases.
+    const english = { ...intent, language: "en", canonicalText: "Which hotel in {lugar}?" };
+    expect(SeedCatalogFile.safeParse({ ...file, intents: [intent, english] }).success).toBe(false);
+    const twice = { ...file, paraphrases: [paraphrase, paraphrase] };
+    expect(SeedCatalogFile.safeParse(twice).success).toBe(false);
+    expect(SeedCatalogFile.safeParse({ ...file, personas: [persona, persona] }).success).toBe(
+      false,
+    );
   });
 
   test("the measurement entry point exposes the catalog schemas", () => {

@@ -211,16 +211,42 @@ export const SeedCategory = z.object({
 });
 export type SeedCategory = z.infer<typeof SeedCategory>;
 
-// The reviewed seed as committed. Its set id derives from the frozen content hash, so intents
-// carry none; every seed intent has its message key.
-export const SeedCatalogFile = z.object({
-  categories: z.array(SeedCategory).min(1),
-  intents: z
-    .array(Intent.omit({ intentSetId: true }).extend({ labelKey: z.string().min(1) }))
-    .min(1),
-  personas: z.array(Persona),
-  paraphrases: z.array(Paraphrase).min(1),
+// The seed holds every language under one version, so a persona names the language and profile
+// it speaks in, and only intents asked in them pair with it.
+export const SeedPersona = Persona.extend({
+  language: MeasurementLanguage,
+  registerProfile: RegisterProfile,
 });
+export type SeedPersona = z.infer<typeof SeedPersona>;
+
+function repeated(values: readonly string[]): string | undefined {
+  const seen = new Set<string>();
+  return values.find((v) => seen.has(v) || !seen.add(v));
+}
+
+// The reviewed seed as committed. Its set id derives from the frozen content hash, so intents
+// carry none; every seed intent has its message key. All languages share the version's set id,
+// so an id listed twice would merge two intents' questions.
+export const SeedCatalogFile = z
+  .object({
+    categories: z.array(SeedCategory).min(1),
+    intents: z
+      .array(Intent.omit({ intentSetId: true }).extend({ labelKey: z.string().min(1) }))
+      .min(1),
+    personas: z.array(SeedPersona),
+    paraphrases: z.array(Paraphrase).min(1),
+  })
+  .superRefine((file, ctx) => {
+    const ids = {
+      intents: file.intents.map((i) => i.intentId),
+      personas: file.personas.map((p) => p.personaId),
+      paraphrases: file.paraphrases.map((p) => p.paraphraseId),
+    };
+    for (const [path, values] of Object.entries(ids)) {
+      const id = repeated(values);
+      if (id !== undefined) ctx.addIssue({ code: "custom", path: [path], message: `${id} twice` });
+    }
+  });
 export type SeedCatalogFile = z.infer<typeof SeedCatalogFile>;
 
 export const PromptVariant = z.object({
