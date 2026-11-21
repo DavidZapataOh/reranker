@@ -12,10 +12,10 @@ import { afterAll, afterEach, beforeAll, expect, test, vi } from "vitest";
 import { costOf } from "../src/generate/config";
 import { promptsFor } from "../src/generate/prompts";
 import {
-  PARAPHRASE_PROMPT_V1_EN,
-  PARAPHRASE_PROMPT_V1_FR,
-  PARAPHRASE_PROMPT_V1_PT,
-} from "../src/generate/prompts/paraphrase.v1";
+  PARAPHRASE_PROMPT_V2_EN,
+  PARAPHRASE_PROMPT_V2_FR,
+  PARAPHRASE_PROMPT_V2_PT,
+} from "../src/generate/prompts/paraphrase.v2";
 import {
   type DraftIntent,
   embed,
@@ -285,6 +285,20 @@ test("a native review sends the rubric and items, and an item without a verdict 
   });
 });
 
+test("a top-up asks for some formats only and keeps only those", async () => {
+  const bodies = respond(RESPONSES, () =>
+    HttpResponse.json(openaiResponse(outputText({ paraphrases }))),
+  );
+  const out = await generateParaphrases(
+    "openai",
+    { intent: bakery, register: "co", withPersonas: false, count: 12, formats: ["constraint"] },
+    ctx(),
+  );
+  expect(JSON.parse(String(bodies[0]?.input))).toMatchObject({ formats: ["constraint"] });
+  expect(out.paraphrases.length).toBeGreaterThan(0);
+  expect(out.paraphrases.every((p) => p.format === "constraint")).toBe(true);
+});
+
 test("a signal aborted before sending takes no slot and reserves nothing", async () => {
   const controller = new AbortController();
   controller.abort();
@@ -536,7 +550,7 @@ test("an English intent is asked with the English prompts and no form of address
   };
   await generateParaphrases("openai", { intent, register: "neutral", withPersonas: false }, ctx());
 
-  expect(bodies[0]?.instructions).toBe(PARAPHRASE_PROMPT_V1_EN);
+  expect(bodies[0]?.instructions).toBe(PARAPHRASE_PROMPT_V2_EN);
   const payload = JSON.parse(String(bodies[0]?.input));
   expect(payload).toMatchObject({ noun: "bakery", variety: expect.stringContaining("English") });
   expect(payload).not.toHaveProperty("address");
@@ -573,7 +587,7 @@ test("a Portuguese intent is asked with the Portuguese prompts, addressing peopl
   };
   await generateParaphrases("openai", { intent, register: "neutral", withPersonas: false }, ctx());
 
-  expect(bodies[0]?.instructions).toBe(PARAPHRASE_PROMPT_V1_PT);
+  expect(bodies[0]?.instructions).toBe(PARAPHRASE_PROMPT_V2_PT);
   const payload = JSON.parse(String(bodies[0]?.input));
   expect(payload).toMatchObject({
     noun: "padaria",
@@ -609,7 +623,7 @@ test("a French intent is asked with the French prompts, addressing the assistant
   };
   await generateParaphrases("openai", { intent, register: "neutral", withPersonas: false }, ctx());
 
-  expect(bodies[0]?.instructions).toBe(PARAPHRASE_PROMPT_V1_FR);
+  expect(bodies[0]?.instructions).toBe(PARAPHRASE_PROMPT_V2_FR);
   const payload = JSON.parse(String(bodies[0]?.input));
   expect(payload).toMatchObject({
     noun: "boulangerie",

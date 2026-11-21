@@ -123,3 +123,74 @@ test.each(Object.entries(CASES))(
     }
   },
 );
+
+// Hotel discovery: context about who asks is the same intent; a narrowing attribute is not.
+const CONTEXT: Record<
+  GenerationLanguage,
+  { canonical: string; context: string; attribute: string }
+> = {
+  es: {
+    canonical: "¿Qué hotel me recomiendas en {lugar}?",
+    context: "Viajo con mi esposa, ¿qué hotel me recomiendas en {lugar}?",
+    attribute: "¿Qué hotel con estacionamiento me recomiendas en {lugar}?",
+  },
+  en: {
+    canonical: "Which hotel do you recommend in {lugar}?",
+    context: "I'm traveling with my wife, which hotel do you recommend in {lugar}?",
+    attribute: "Which hotel with parking do you recommend in {lugar}?",
+  },
+  pt: {
+    canonical: "Qual hotel você recomenda em {lugar}?",
+    context: "Estou viajando com minha esposa, qual hotel você recomenda em {lugar}?",
+    attribute: "Qual hotel com estacionamento você recomenda em {lugar}?",
+  },
+  fr: {
+    canonical: "Quel hôtel me conseilles-tu à {lugar} ?",
+    context: "Je voyage avec ma femme, quel hôtel me conseilles-tu à {lugar} ?",
+    attribute: "Quel hôtel avec parking me conseilles-tu à {lugar} ?",
+  },
+  de: {
+    canonical: "Welches Hotel empfiehlst du in {lugar}?",
+    context: "Ich reise mit meiner Frau, welches Hotel empfiehlst du in {lugar}?",
+    attribute: "Welches Hotel mit Parkplatz empfiehlst du in {lugar}?",
+  },
+  it: {
+    canonical: "Quale hotel mi consigli a {lugar}?",
+    context: "Viaggio con mia moglie, quale hotel mi consigli a {lugar}?",
+    attribute: "Quale hotel con parcheggio mi consigli a {lugar}?",
+  },
+};
+
+// Six short judge calls: about one US cent.
+test.each(Object.entries(CONTEXT))(
+  "%s: who is asking is the same intent; a parking attribute is not",
+  async (language, c) => {
+    const noun = CASES[language as GenerationLanguage].noun;
+    const text = typeof noun === "string" ? noun : noun.text;
+    const intent = {
+      category: {
+        key: "hotel",
+        source: "seed",
+        label: text,
+        noun: text,
+        archetype: "lodging",
+        scope: "local",
+        register: "tu",
+        placesTypes: ["hotel"],
+      },
+      noun,
+      scope: "local",
+      kind: "discovery",
+      slug: "discovery",
+      canonicalText: c.canonical,
+      language,
+      registerProfile: "neutral",
+    } as DraftIntent;
+    const candidates = [c.context, c.attribute].map((t) => ({
+      text: t,
+      format: "constraint" as const,
+      generator: "openai" as const,
+    }));
+    expect(await judge(intent, candidates, ctx())).toEqual([true, false]);
+  },
+);

@@ -182,6 +182,9 @@ export type IntentPool = SeedIntentPlan & {
     canonicalCloseness: number;
     /** 1 when the canonical is closer to the centroid than every pooled paraphrase. */
     canonicalRank: number;
+    /** Format-only rounds run after a later judge ruled again. */
+    topUpRounds?: number;
+    topUpCandidates?: number;
   };
 };
 
@@ -211,33 +214,59 @@ const callContext = (spend: SpendContext): CallContext => ({
   deadlineAt: Date.now() + CALL_MS,
 });
 
-function formatsShort(pool: readonly Candidate[]): boolean {
-  const counts = new Map<ParaphraseFormat, number>();
-  for (const c of pool) counts.set(c.format, (counts.get(c.format) ?? 0) + 1);
-  return ["open_question", "list_request", "keyword", "constraint"].some(
-    (f) => (counts.get(f as ParaphraseFormat) ?? 0) < MIN_PER_FORMAT,
-  );
+const FORMATS: readonly ParaphraseFormat[] = [
+  "open_question",
+  "list_request",
+  "keyword",
+  "constraint",
+];
+// A top-up asks only for the formats a pool lacks, so it needs fewer per call.
+const TOPUP_PER_CALL = 12;
+const TOPUP_ROUNDS = 2;
+
+function shortFormats(pool: readonly Candidate[]): ParaphraseFormat[] {
+  return FORMATS.filter((f) => pool.filter((c) => c.format === f).length < MIN_PER_FORMAT);
 }
 
-async function buildIntent(
-  plan: SeedIntentPlan,
+type PoolState = {
+  accepted: Candidate[];
+  vectors: Float32Array[];
+  verdicts: boolean[];
+  seen: Set<string>;
+  report: { candidates: number; guards: Record<GuardName, number>; dedupe: number; rounds: number };
+};
+
+const ranked = (state: PoolState) =>
+  selectPool({
+    candidates: state.accepted,
+    embeddings: state.vectors,
+    judged: state.verdicts,
+    keep: Number.MAX_SAFE_INTEGER,
+    minPerFormat: 0,
+  }).kept;
+
+/**
+ * Generation rounds until the pool reaches its target with every format, or `maxRounds`. With
+ * `topUp`, a round asks only for the formats the pool lacks and none runs when no format does.
+ */
+async function grow(
+  state: PoolState,
   draft: DraftIntent,
   guard: GuardContext,
   spend: SpendContext,
   deps: Deps,
   personas: Persona[],
-): Promise<IntentPool> {
-  const report = { candidates: 0, guards: noGuards(), dedupe: 0, rounds: 0 };
-  const seen = new Set([draft.canonicalText]);
-  const accepted: Candidate[] = [];
-  const vectors: Float32Array[] = [];
-  const verdicts: boolean[] = [];
-  const [canonicalVector] = await deps.embed([draft.canonicalText], callContext(spend));
-  let ranked: Candidate[] = [];
-
-  while (report.rounds < MAX_ROUNDS && (ranked.length < POOL_TARGET || formatsShort(ranked))) {
-    const withPersonas = report.rounds === 0 && plan.kind === "discovery";
-    report.rounds++;
+  opts: { maxRounds: number; topUp: boolean; withPersonas: boolean },
+): Promise<void> {
+  let pool = ranked(state);
+  for (let round = 0; round < opts.maxRounds; round++) {
+    const missing = shortFormats(pool);
+    if (opts.topUp ? missing.length === 0 : pool.length >= POOL_TARGET && missing.length === 0) {
+      break;
+    }
+    const formats = opts.topUp || pool.length >= POOL_TARGET ? missing : null;
+    const withPersonas = opts.withPersonas && round === 0;
+    state.report.rounds++;
     const answers = await Promise.allSettled(
       PROVIDERS.map((provider) =>
         deps.generate(
@@ -246,8 +275,9 @@ async function buildIntent(
             intent: draft,
             register: draft.registerProfile,
             withPersonas,
-            count: PER_CALL,
+            count: formats ? TOPUP_PER_CALL : PER_CALL,
             personas: PERSONAS_PER_CALL,
+            ...(formats && { formats }),
           },
           callContext(spend),
         ),
@@ -259,15 +289,15 @@ async function buildIntent(
       const generator = PROVIDERS[i] as Persona["generator"];
       personas.push(...answer.value.personas.map((text) => ({ text, generator })));
       for (const c of answer.value.paraphrases) {
-        report.candidates++;
-        if (seen.has(c.text)) {
-          report.dedupe++;
+        state.report.candidates++;
+        if (state.seen.has(c.text)) {
+          state.report.dedupe++;
           continue;
         }
-        seen.add(c.text);
+        state.seen.add(c.text);
         const verdict = guardParaphrase(c, guard);
         if (verdict.ok) fresh.push(c);
-        else report.guards[verdict.guard]++;
+        else state.report.guards[verdict.guard]++;
       }
     }
     if (fresh.length === 0) continue;
@@ -278,26 +308,45 @@ async function buildIntent(
       ),
       deps.judge(draft, fresh, callContext(spend)),
     ]);
-    accepted.push(...fresh);
-    vectors.push(...embedded);
-    verdicts.push(...judged);
-    const selected = selectPool({
-      candidates: accepted,
-      embeddings: vectors,
-      judged: verdicts,
-      keep: Number.MAX_SAFE_INTEGER,
-      minPerFormat: 0,
-    });
-    ranked = selected.kept;
+    state.accepted.push(...fresh);
+    state.vectors.push(...embedded);
+    state.verdicts.push(...judged);
+    pool = ranked(state);
   }
+}
 
-  const ranking = rankPool(accepted, vectors, verdicts, canonicalVector as Float32Array);
+function result(plan: SeedIntentPlan, state: PoolState, canonicalVector: Float32Array, base = {}) {
+  const ranking = rankPool(state.accepted, state.vectors, state.verdicts, canonicalVector);
   return {
     ...plan,
     pool: ranking.pool,
-    candidates: accepted.map((c, i) => ({ ...c, judged: verdicts[i] === true })),
-    report: { ...report, ...ranking.report },
+    candidates: state.accepted.map((c, i) => ({ ...c, judged: state.verdicts[i] === true })),
+    report: { ...base, ...state.report, ...ranking.report },
   };
+}
+
+async function buildIntent(
+  plan: SeedIntentPlan,
+  draft: DraftIntent,
+  guard: GuardContext,
+  spend: SpendContext,
+  deps: Deps,
+  personas: Persona[],
+): Promise<IntentPool> {
+  const state: PoolState = {
+    accepted: [],
+    vectors: [],
+    verdicts: [],
+    seen: new Set([draft.canonicalText]),
+    report: { candidates: 0, guards: noGuards(), dedupe: 0, rounds: 0 },
+  };
+  const [canonicalVector] = await deps.embed([draft.canonicalText], callContext(spend));
+  await grow(state, draft, guard, spend, deps, personas, {
+    maxRounds: MAX_ROUNDS,
+    topUp: false,
+    withPersonas: plan.kind === "discovery",
+  });
+  return result(plan, state, canonicalVector as Float32Array);
 }
 
 /** The judged candidates ranked by closeness to their centroid, near duplicates and rejects out. */
@@ -360,14 +409,15 @@ async function inBatches<T, R>(
 }
 
 /**
- * Rules again on an intent's archived candidates with the current judge and ranks them anew:
- * the candidates stay identical and nothing is regenerated.
+ * Rules again on an intent's archived candidates with the current judge and ranks them anew,
+ * then tops up only the formats the pool lacks: the archived candidates stay identical.
  */
 export async function rejudgeIntent(
   intent: IntentPool,
   draft: DraftIntent,
+  guard: GuardContext,
   spend: SpendContext,
-  deps: Pick<Deps, "embed" | "judge"> = { embed, judge },
+  deps: Deps = { generate: generateParaphrases, embed, judge },
 ): Promise<IntentPool> {
   const candidates: Candidate[] = intent.candidates.map(({ text, format, generator }) => ({
     text,
@@ -384,12 +434,47 @@ export async function rejudgeIntent(
     inBatches(candidates, JUDGE_BATCH, (batch) => deps.judge(draft, batch, callContext(spend))),
     deps.embed([draft.canonicalText], callContext(spend)),
   ]);
-  const ranking = rankPool(candidates, vectors, verdicts, canonicalVector as Float32Array);
+  const state: PoolState = {
+    accepted: candidates,
+    vectors,
+    verdicts,
+    seen: new Set([draft.canonicalText, ...candidates.map((c) => c.text)]),
+    report: { candidates: 0, guards: noGuards(), dedupe: 0, rounds: 0 },
+  };
+  await grow(state, draft, guard, spend, deps, [], {
+    maxRounds: TOPUP_ROUNDS,
+    topUp: true,
+    withPersonas: false,
+  });
+  const topUp = { topUpRounds: state.report.rounds, topUpCandidates: state.report.candidates };
   return {
-    ...intent,
-    pool: ranking.pool,
-    candidates: candidates.map((c, i) => ({ ...c, judged: verdicts[i] === true })),
-    report: { ...intent.report, ...ranking.report },
+    ...result(intent, state, canonicalVector as Float32Array),
+    report: {
+      ...intent.report,
+      ...rankPool(state.accepted, state.vectors, state.verdicts, canonicalVector as Float32Array)
+        .report,
+      ...topUp,
+    },
+  };
+}
+
+/** The guards an intent's paraphrases pass, in the group's language. */
+export function guardContext(
+  category: Readonly<SeedCategory>,
+  group: SeedGroup,
+  kind: IntentKind,
+): GuardContext {
+  const { noun, synonyms } = namesFor(category, group.language);
+  return {
+    scope: category.defaultScope,
+    kind,
+    language: group.language,
+    noun: nounText(noun),
+    synonyms,
+    // Seed sets are shared by every country of their profile, so they name none.
+    countryName: "",
+    otherPlaceNames: new Set(),
+    blockedNames: new Set(),
   };
 }
 
@@ -429,21 +514,9 @@ export async function buildCategory(
   spend: SpendContext,
   deps: Deps = { generate: generateParaphrases, embed, judge },
 ): Promise<CategoryPool> {
-  const { language } = group;
-  const { noun, synonyms } = namesFor(category, language);
-  const text = nounText(noun);
-  const scope = category.defaultScope;
+  const { noun, synonyms } = namesFor(category, group.language);
   const personas: Persona[] = [];
-  const guardFor = (kind: IntentKind): GuardContext => ({
-    scope,
-    kind,
-    language,
-    noun: text,
-    synonyms,
-    countryName: "",
-    otherPlaceNames: new Set(),
-    blockedNames: new Set(),
-  });
+  const guardFor = (kind: IntentKind) => guardContext(category, group, kind);
   const intents = await Promise.all(
     groupIntents(category, group).map((plan) =>
       buildIntent(
