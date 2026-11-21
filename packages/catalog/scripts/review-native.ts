@@ -44,15 +44,28 @@ const callContext = (spend: SpendContext): CallContext => ({
   deadlineAt: Date.now() + CALL_MS,
 });
 
+/** Why each reviewer's calls failed, counted, so a reviewer that never ruled is seen at once. */
+export type Failures = Record<Reviewer, Record<string, number>>;
+
+const failureOf = (error: unknown) =>
+  error instanceof Error ? `${error.name}: ${error.message}`.slice(0, 160) : String(error);
+
 /** Both reviewers on the same items; a reviewer that failed counts as no verdict for each. */
 async function bothReview(
   req: ReviewRequest,
   spend: SpendContext,
   review: Review,
+  failures: Failures,
 ): Promise<Reviewed[]> {
   const answers = await Promise.allSettled(
     REVIEWERS.map((provider) => review(provider, req, callContext(spend))),
   );
+  answers.forEach((answer, p) => {
+    if (answer.status !== "rejected") return;
+    const provider = REVIEWERS[p] as Reviewer;
+    const reason = failureOf(answer.reason);
+    failures[provider][reason] = (failures[provider][reason] ?? 0) + 1;
+  });
   return req.items.map((item, i) => {
     const verdicts = Object.fromEntries(
       REVIEWERS.map((provider, p) => {
@@ -70,6 +83,7 @@ export async function reviewCategory(
   category: CategoryPool,
   spend: SpendContext,
   review: Review = reviewNative,
+  failures: Failures = { openai: {}, gemini: {} },
 ): Promise<CategoryReview> {
   const { language, registerProfile } = group;
   if (!isGenerationLanguage(language)) throw new Error(`${language} has no prompts`);
@@ -91,6 +105,7 @@ export async function reviewCategory(
       },
       spend,
       review,
+      failures,
     ),
     ...category.intents.map((intent, i) =>
       bothReview(
@@ -101,6 +116,7 @@ export async function reviewCategory(
         },
         spend,
         review,
+        failures,
       ),
     ),
   ]);
@@ -127,8 +143,9 @@ async function main(): Promise<void> {
 
   const spend = { purpose: "benchmark" as const, refType: "seed-review", refId: randomUUID() };
   const categories: CategoryReview[] = [];
+  const failures: Failures = { openai: {}, gemini: {} };
   for (const category of pool.categories) {
-    const reviewed = await reviewCategory(pool, category, spend);
+    const reviewed = await reviewCategory(pool, category, spend, reviewNative, failures);
     categories.push(reviewed);
     const passed = (items: Reviewed[]) => `${items.filter((r) => r.pass).length}/${items.length}`;
     console.log(
@@ -137,7 +154,17 @@ async function main(): Promise<void> {
   }
   const { amount_micros: costMicros } = await ledgerCost(spend.refType, spend.refId);
   const key = groupKey(pool);
-  const file = { group: key, reviewedAt: new Date().toISOString(), costMicros, categories };
+  const file = {
+    group: key,
+    reviewedAt: new Date().toISOString(),
+    costMicros,
+    failures,
+    categories,
+  };
+  for (const [provider, reasons] of Object.entries(failures)) {
+    for (const [reason, n] of Object.entries(reasons))
+      console.log(`${provider} failed ${n}×: ${reason}`);
+  }
   writeFileSync(join(out, `review-${key}.json`), `${JSON.stringify(file, null, 2)}\n`);
   console.log(`${key}: US$${(costMicros / 1e6).toFixed(4)}`);
 }
