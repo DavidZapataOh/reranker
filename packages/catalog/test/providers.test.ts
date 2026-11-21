@@ -16,7 +16,13 @@ import {
   PARAPHRASE_PROMPT_V1_FR,
   PARAPHRASE_PROMPT_V1_PT,
 } from "../src/generate/prompts/paraphrase.v1";
-import { type DraftIntent, embed, generateParaphrases, judge } from "../src/generate/providers";
+import {
+  type DraftIntent,
+  embed,
+  generateParaphrases,
+  judge,
+  reviewNative,
+} from "../src/generate/providers";
 import { MeasurementLanguageError } from "../src/language";
 
 const RESERVED = cost(9000, "USD");
@@ -242,6 +248,41 @@ test("a caller can ask for more paraphrases and personas than a generated set ke
   expect(payload).toMatchObject({ count: 25, personas: 6 });
   expect(out.paraphrases).toHaveLength(25);
   expect(out.personas).toHaveLength(6);
+});
+
+test("a native review sends the rubric and items, and an item without a verdict gets null", async () => {
+  const bodies = respond(RESPONSES, () =>
+    HttpResponse.json(
+      openaiResponse(
+        outputText({ verdicts: [{ id: 0, keep: false, reasons: ["grammar", "naturalness"] }] }),
+      ),
+    ),
+  );
+  const out = await reviewNative(
+    "openai",
+    {
+      language: "fr",
+      registerProfile: "neutral",
+      category: "hotel",
+      noun: "hôtel",
+      items: [
+        { role: "canonical", text: "Quel hôtel me conseilles-tu à {lugar} ?" },
+        { role: "persona", text: "Je voyage souvent pour le travail avec ma collègue." },
+      ],
+    },
+    ctx(),
+  );
+
+  expect(out).toEqual([{ keep: false, reasons: ["grammar", "naturalness"] }, null]);
+  expect(bodies[0]).toMatchObject({ model: "gpt-6.1-terra", store: false });
+  expect(String(bodies[0]?.instructions)).toContain("native speaker");
+  expect(JSON.parse(String(bodies[0]?.input))).toMatchObject({
+    language: "fr",
+    items: [
+      { id: 0, role: "canonical" },
+      { id: 1, role: "persona" },
+    ],
+  });
 });
 
 test("a signal aborted before sending takes no slot and reserves nothing", async () => {

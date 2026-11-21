@@ -40,7 +40,7 @@ export interface ReadyTask {
   slot: FrozenSlot;
   providerTaskId: string;
   /** Fetches the result: one provider call, its bytes ready to seal. */
-  collect(): Promise<CaptureRecord>;
+  collect(): Promise<CaptureRecord | null>;
 }
 
 export interface CaptureAdapter {
@@ -55,6 +55,20 @@ export interface CaptureAdapter {
   postTask?(slot: FrozenSlot): Promise<PostedTask>;
   /** Finished tasks of `slots`; tasks of anything else on the account stay untouched. */
   collectReady?(slots: readonly FrozenSlot[]): Promise<ReadyTask[]>;
+  /** Fetches a task's result by id; null while the provider has not finished it. */
+  collectTask?(slot: FrozenSlot, providerTaskId: string): Promise<CaptureRecord | null>;
+  /**
+   * Tasks of `slots` the provider created within `window`, finished or not, found by their tag:
+   * how a posting whose answer never arrived is settled without posting again.
+   */
+  findTasks?(slots: readonly FrozenSlot[], window: { from: Date; to: Date }): Promise<FoundTask[]>;
+}
+
+/** A task the provider holds for a slot. */
+export interface FoundTask {
+  slot: FrozenSlot;
+  providerTaskId: string;
+  cost: ProviderCost | null;
 }
 
 const adapters = new Map<CaptureProvider, CaptureAdapter>();

@@ -15,6 +15,8 @@
     "geo:build": "tsx scripts/build-geo.ts",
     "record:generation": "tsx scripts/record-generation.ts",
     "seed:build": "tsx scripts/build-seed.ts",
+    "seed:review": "tsx scripts/review-sample.ts",
+    "seed:review-native": "tsx scripts/review-native.ts",
     "nouns:build": "tsx scripts/build-nouns.ts",
     "freeze": "tsx scripts/freeze.ts",
     "test:contract": "vitest run --project contract --passWithNoTests",

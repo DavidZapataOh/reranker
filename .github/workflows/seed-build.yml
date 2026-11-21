@@ -41,8 +41,11 @@ jobs:
           GROUP: ${{ inputs.group }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY_CI }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY_CI }}
-          # A group spends about US$1.50; each run has a ledger of its own, so the cap is per group.
+          # A group spends about US$1.50; each run has a ledger of its own, so the caps are per
+          # group. Outside production every provider is capped at zero unless raised here.
           SPEND_CAP_DAILY_BENCHMARK_USD: "6"
+          SPEND_CAP_DAILY_OPENAI_USD: "6"
+          SPEND_CAP_DAILY_GEMINI_USD: "6"
           OUT_DIR: ${{ runner.temp }}/seed-build
         run: pnpm --filter @reranker/catalog seed:build "${GROUP%-*}" "${GROUP#*-}" "$OUT_DIR"
       - if: ${{ !cancelled() }}

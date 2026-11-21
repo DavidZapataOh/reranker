@@ -5,6 +5,7 @@ export {
   adapterFor,
   type CaptureAdapter,
   type CaptureRecord,
+  type FoundTask,
   type PostedTask,
   type ReadyTask,
   registerCaptureAdapter,

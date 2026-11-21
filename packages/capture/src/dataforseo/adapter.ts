@@ -7,7 +7,7 @@ import { parseAiMode } from "./parse/ai-mode";
 import { parseAiOverview } from "./parse/ai-overview";
 import { parseChatGpt } from "./parse/chatgpt";
 import { parseGemini } from "./parse/gemini";
-import { collectReady, postTask } from "./tasks";
+import { collectReady, collectTask, findTasks, postTask } from "./tasks";
 
 const PARSERS: Partial<Record<EngineId, (bytes: Uint8Array) => EngineAnswer>> = {
   chatgpt: parseChatGpt,
@@ -31,4 +31,6 @@ export const dataforseoAdapter: CaptureAdapter = {
   parse: (engine, bytes) => parserOf(engine)(bytes),
   postTask,
   collectReady: (slots) => collectReady(slots, parserOf),
+  collectTask: (slot, id) => collectTask(slot, id, parserOf(slot.engine)),
+  findTasks,
 };

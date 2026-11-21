@@ -88,7 +88,10 @@ describe("seed intents", () => {
   });
 
   test("a web-only store keeps {sustantivo}, with a gender where the language needs one", () => {
-    expect(namesFor(category("online_store"), "es").noun).toBe("{sustantivo}");
+    expect(namesFor(category("online_store"), "es")).toMatchObject({
+      noun: "{sustantivo}",
+      label: "tienda online",
+    });
     expect(namesFor(category("online_store"), "fr").noun).toEqual({
       text: "{sustantivo}",
       gender: "m",
@@ -160,11 +163,11 @@ describe("building a category's pools", () => {
     ]);
   });
 
-  test("a short pool asks again, at most three rounds", async () => {
-    const { deps } = fakes(() => 5);
+  test("a short pool asks again, at most five rounds", async () => {
+    const { deps } = fakes(() => 3);
     const built = await buildCategory(category("dental_clinic"), group, spend, deps as never);
     for (const intent of built.intents) {
-      expect(intent.report.rounds).toBe(3);
+      expect(intent.report.rounds).toBe(5);
       expect(intent.pool.length).toBeLessThan(POOL_TARGET);
     }
     expect(MIN_PER_FORMAT).toBeGreaterThanOrEqual(5);
