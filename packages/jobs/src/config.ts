@@ -37,6 +37,9 @@ const PURPOSE_CAPS: Record<SpendPurpose, string> = {
   // A night of contract tests reserves about 0.17 (five Text Search Pro calls and three short LLM
   // extractions), 0.35 when every one is retried. Weekly measurements raise it for their own run.
   "contract-test": "0.5",
+  // A place and category's language mix is fetched once a month for every business there: one to
+  // three Google Ads Live calls (US$0.09 each) and at most a few cents of AI-search volume.
+  "language-mix": "10",
 };
 
 const POOL_CAPS: Record<SpendPool | SpendRegionPool, string> = {
@@ -49,14 +52,16 @@ const GLOBAL_CAP = "320";
 
 const EVERY_PURPOSE = Object.keys(PURPOSE_CAPS) as SpendPurpose[];
 const BENCHMARK_ONLY: readonly SpendPurpose[] = ["benchmark", "contract-test"];
+// The language mix only reads DataForSEO's search volumes.
+const NO_LANGUAGE_MIX = EVERY_PURPOSE.filter((p) => p !== "language-mix");
 
 // The purposes that can spend on each provider. Anthropic and xAI only annotate benchmark labels.
 const PROVIDER_PURPOSES: Record<PaidProvider, readonly SpendPurpose[]> = {
   dataforseo: EVERY_PURPOSE,
-  brightdata: EVERY_PURPOSE,
-  openai: EVERY_PURPOSE,
-  gemini: EVERY_PURPOSE,
-  google_places: EVERY_PURPOSE,
+  brightdata: NO_LANGUAGE_MIX,
+  openai: NO_LANGUAGE_MIX,
+  gemini: NO_LANGUAGE_MIX,
+  google_places: NO_LANGUAGE_MIX,
   anthropic: BENCHMARK_ONLY,
   xai: BENCHMARK_ONLY,
 };

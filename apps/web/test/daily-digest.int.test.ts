@@ -99,7 +99,7 @@ test("reports the closed day's spend per provider and its Resend sends", async (
 
   expect(result.sent).toBe(true);
   const text = sources.sendDailyDigest.mock.calls[0]?.[1] ?? "";
-  expect(text).toMatch(/- dataforseo: USD\s0,75 de USD\s379,80 · mes: USD\s0,75/);
+  expect(text).toMatch(/- dataforseo: USD\s0,75 de USD\s391,80 · mes: USD\s0,75/);
   expect(text).toMatch(/- purpose:benchmark: USD\s0,75 de USD\s40,00 · mes: USD\s0,75/);
   expect(text).toMatch(/- Total: USD\s0,75 de USD\s320,00 · mes: USD\s0,75/);
   expect(text).toMatch(/- openai: USD\s0,00 de USD\s379,80/);

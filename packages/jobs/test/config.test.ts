@@ -16,13 +16,16 @@ test("caps follow the demand they cover", () => {
   expect(micros(c, "purpose:quality-canary")).toBe(6_000_000);
   expect(micros(c, "purpose:benchmark")).toBe(40_000_000);
   expect(micros(c, "purpose:contract-test")).toBe(500_000);
+  expect(micros(c, "purpose:language-mix")).toBe(10_000_000);
   expect(c.caps.global.amount_micros).toBe(320_000_000);
 });
 
 test("provider caps are what their purposes can spend plus a fifth", () => {
   const c = loadJobsConfig({ APP_ENV: "production" });
-  // (200 + 70 + 6 + 40 + 0.5) × 1.2 and, for the benchmark-only providers, (40 + 0.5) × 1.2.
-  for (const p of ["dataforseo", "brightdata", "openai", "gemini", "google_places"] as const) {
+  // (200 + 70 + 6 + 40 + 0.5) × 1.2, plus the language mix's 10 × 1.2 on DataForSEO, and, for the
+  // benchmark-only providers, (40 + 0.5) × 1.2.
+  expect(micros(c, "provider:dataforseo")).toBe(391_800_000);
+  for (const p of ["brightdata", "openai", "gemini", "google_places"] as const) {
     expect(micros(c, `provider:${p}`)).toBe(379_800_000);
   }
   expect(micros(c, "provider:anthropic")).toBe(48_600_000);
@@ -40,7 +43,7 @@ test("no provider cap can starve a purpose", () => {
 test("raising a purpose cap raises the provider caps it spends on", () => {
   const c = loadJobsConfig({ APP_ENV: "production", SPEND_CAP_DAILY_BENCHMARK_USD: "100" });
   expect(micros(c, "provider:anthropic")).toBe(120_600_000);
-  expect(micros(c, "provider:dataforseo")).toBe(451_800_000);
+  expect(micros(c, "provider:dataforseo")).toBe(463_800_000);
 });
 
 test("launch check fails when a provider cap could starve a purpose", () => {
