@@ -13,6 +13,7 @@ import { endPools } from "@reranker/db";
 import { costOf as ledgerCost } from "@reranker/jobs";
 import { seedCategories } from "../src/categories";
 import { generatorConfigHash } from "../src/generate/config";
+import { embed, generateParaphrases, judge } from "../src/generate/providers";
 import {
   draftFor,
   type GroupPool,
@@ -21,6 +22,7 @@ import {
   guardContext,
   rejudgeIntent,
 } from "./build-seed";
+import { ProviderHealth } from "./provider-health";
 
 async function main(): Promise<void> {
   const [rawPool, rawOut] = process.argv.slice(2);
@@ -31,6 +33,7 @@ async function main(): Promise<void> {
   if (readdirSync(out).length > 0) throw new Error(`${out} is not empty`);
 
   const spend = { purpose: "benchmark" as const, refType: "seed-rejudge", refId: randomUUID() };
+  const deps = { generate: generateParaphrases, embed, judge, health: new ProviderHealth() };
   const categories = [];
   for (const pool of built.categories) {
     const category = seedCategories().find((c) => c.key === pool.key);
@@ -41,7 +44,7 @@ async function main(): Promise<void> {
         const plan = plans.get(intent.intentId);
         if (!plan) throw new Error(`${intent.intentId} is not in the group's plan`);
         const draft = draftFor(category, built, plan);
-        return rejudgeIntent(intent, draft, guardContext(category, built, plan.kind), spend);
+        return rejudgeIntent(intent, draft, guardContext(category, built, plan.kind), spend, deps);
       }),
     );
     for (const i of intents) console.log(`${i.intentId}: ${i.pool.length} pooled`);
