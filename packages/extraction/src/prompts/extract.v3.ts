@@ -42,6 +42,25 @@ A platform is a "recommendation" only when the answer offers it as the way to ge
 - "no_entities": it answers without naming any (general advice, questions back).
 - "refusal": it refuses to answer or says it cannot help with that.`;
 
+/** The rules for the cases annotators got wrong, shared with the judge. */
+export const HARD_CASES_V3 = `## Hard cases
+
+- Irony and complaints: "they say it's the best, if you don't mind your appointment being cancelled" is "negative".
+- Location: in "two blocks from Hotel Dann", Hotel Dann is "incidental", even though it is a business.
+- Titles: "Dr.", "Dra.", "Prof.", "Dott.", "Maître" stay in the name when the answer uses them; such a person is "professional".
+- Staff: "Zahnzentrum Mitte (Dr. Lena Hoff)" recommends the practice; Dr. Lena Hoff is "incidental". A professional the answer offers on their own is a "recommendation".
+- Chains and branches: "Cruz Verde has branches all over the city" is "chain"; "Cruz Verde de la 70" is "business" with locationHint "de la 70".
+- Platforms: "book on Booking" recommends the platform; "according to Tripadvisor reviews" or "compare dentists on jameda" is "incidental".
+- Guides: businesses the answer brings from a guide or ranking ("the Michelin selection includes X and Y", "secondo Gambero Rosso, X") are offered as options and are "recommendation"; only the guide itself is "incidental".
+- Sections: an answer often ends with "platforms to search", "sources" or "further reading"; what it lists there is "incidental" unless it is offered as the way to get the service.
+- Markdown: the answer may escape punctuation ("1\\.", "\\:") and use emphasis; copy the quote as it appears, the matching tolerates both.
+- Products: a product or listing title ("Colchón Kline Sencillo 100 x 190 cm", "iPhone 17 Pro 256 GB") is not a mention; the shop that sells it is, and a brand the answer names on its own is "other".
+- Shopping centres and buildings that only say where a shop is ("en el Centro Comercial Andino", "in der Mall of Berlin") are "incidental".
+- Images: the text of an image "![…](…)" is the caption of a picture taken from another page; a name that appears only there is not a mention.
+- Several languages: the answer may mix languages; apply the same rules and copy the quote in its original language. Never translate a name or a quote.
+- Do not invent entities the answer does not name, even if you know them.
+- Long answers: list every entity up to the last one; never stop early.`;
+
 /** One per hard case, written by hand so no labeled evaluation answer leaks into the prompt. */
 export const EXTRACT_EXAMPLES_V3: readonly { answer: string; output: MentionsOutput }[] = [
   {
@@ -223,23 +242,7 @@ export const EXTRACT_PROMPT_V3 = `You are an expert annotator of answers in Span
 
 ${MENTION_DEFINITIONS_V3}
 
-## Hard cases
-
-- Irony and complaints: "they say it's the best, if you don't mind your appointment being cancelled" is "negative".
-- Location: in "two blocks from Hotel Dann", Hotel Dann is "incidental", even though it is a business.
-- Titles: "Dr.", "Dra.", "Prof.", "Dott.", "Maître" stay in the name when the answer uses them; such a person is "professional".
-- Staff: "Zahnzentrum Mitte (Dr. Lena Hoff)" recommends the practice; Dr. Lena Hoff is "incidental". A professional the answer offers on their own is a "recommendation".
-- Chains and branches: "Cruz Verde has branches all over the city" is "chain"; "Cruz Verde de la 70" is "business" with locationHint "de la 70".
-- Platforms: "book on Booking" recommends the platform; "according to Tripadvisor reviews" or "compare dentists on jameda" is "incidental".
-- Guides: businesses the answer brings from a guide or ranking ("the Michelin selection includes X and Y", "secondo Gambero Rosso, X") are offered as options and are "recommendation"; only the guide itself is "incidental".
-- Sections: an answer often ends with "platforms to search", "sources" or "further reading"; what it lists there is "incidental" unless it is offered as the way to get the service.
-- Markdown: the answer may escape punctuation ("1\\.", "\\:") and use emphasis; copy the quote as it appears, the matching tolerates both.
-- Products: a product or listing title ("Colchón Kline Sencillo 100 x 190 cm", "iPhone 17 Pro 256 GB") is not a mention; the shop that sells it is, and a brand the answer names on its own is "other".
-- Shopping centres and buildings that only say where a shop is ("en el Centro Comercial Andino", "in der Mall of Berlin") are "incidental".
-- Images: the text of an image "![…](…)" is the caption of a picture taken from another page; a name that appears only there is not a mention.
-- Several languages: the answer may mix languages; apply the same rules and copy the quote in its original language. Never translate a name or a quote.
-- Do not invent entities the answer does not name, even if you know them.
-- Long answers: list every entity up to the last one; never stop early.
+${HARD_CASES_V3}
 
 ## Examples
 

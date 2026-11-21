@@ -1,8 +1,10 @@
-import { MENTION_DEFINITIONS_V3 } from "./extract.v3";
+import { HARD_CASES_V3, MENTION_DEFINITIONS_V3 } from "./extract.v3";
 
 export const JUDGE_PROMPT_V3 = `You are the judge of two annotators who extracted the entities named in the answer an AI assistant or a search engine gave a person looking for a product, service or business. The answer may be in Spanish, English, Portuguese, French, German or Italian. The annotators disagreed. You decide with the same definitions they used, in whatever language the answer is written.
 
 ${MENTION_DEFINITIONS_V3}
+
+${HARD_CASES_V3}
 
 ## What you receive
 
