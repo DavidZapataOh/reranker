@@ -182,6 +182,19 @@ export function templateIntentSet(
   });
 }
 
+// Aborts at an epoch-ms instant. Built on the global timer, unlike AbortSignal.timeout, so the
+// deadline logic runs on the same clock as Date.now and tests can drive both.
+function signalAt(at: number): AbortSignal {
+  const controller = new AbortController();
+  const timer = setTimeout(
+    () => controller.abort(new DOMException("The generation deadline passed", "TimeoutError")),
+    Math.max(0, at - Date.now()),
+  );
+  // A finished generation must not keep the process alive until its deadline.
+  timer.unref?.();
+  return controller.signal;
+}
+
 // Providers honor the signal, but the deadline must hold even for one that does not.
 function untilAborted<T>(promise: Promise<T>, signal: AbortSignal): Promise<T> {
   return new Promise<T>((resolve, reject) => {
@@ -238,7 +251,7 @@ export async function generateIntentSet(
   );
   const generation = {
     spend: input.spend,
-    signal: AbortSignal.timeout(Math.max(0, generationEnd - Date.now())),
+    signal: signalAt(generationEnd),
     deadlineAt: generationEnd,
   };
   const answers = await Promise.allSettled(
@@ -295,7 +308,7 @@ export async function generateIntentSet(
 
   const filtering = {
     spend: input.spend,
-    signal: AbortSignal.timeout(Math.max(0, filterEnd - Date.now())),
+    signal: signalAt(filterEnd),
     deadlineAt: filterEnd,
   };
   let embeddings: Float32Array[];

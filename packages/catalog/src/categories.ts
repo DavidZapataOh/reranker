@@ -107,7 +107,15 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
     // Customers search "dentista" and "clínica odontológica"; "odontólogo" searches are mostly about
     // the job, and it names a person, so it is only an accepted synonym.
     "clínica odontológica",
-    ["dentista", "odontología", "clínica dental", "consultorio odontológico", "odontólogo"],
+    // Colombia: "consultorio dental" 720 a month, a quarter of "clínica odontológica" (2.9K).
+    [
+      "dentista",
+      "odontología",
+      "clínica dental",
+      "consultorio odontológico",
+      "consultorio dental",
+      "odontólogo",
+    ],
     {
       // US searches: "dentist" 1M a month, "dental clinic" 135K, "dental office" 90K.
       en: { noun: "dentist", synonyms: ["dental clinic", "dental office", "family dentist"] },
@@ -142,16 +150,19 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
     "restaurante",
     ["sitio para comer", "lugar para comer", "dónde comer"],
     {
-      en: { noun: "restaurant", synonyms: [] },
-      // Brazil: "restaurante" 9.1M a month.
-      pt: { noun: { text: "restaurante", gender: "m" }, synonyms: [] },
-      fr: { noun: { text: "restaurant", gender: "m" }, synonyms: [] },
-      // 321K AI searches a month in Germany.
-      de: { noun: { text: "Restaurant", gender: "n" }, synonyms: [] },
+      // AI search asks "where to eat" 751K times a month, an eighth of "restaurant" (5.9M).
+      en: { noun: "restaurant", synonyms: ["where to eat"] },
+      // Brazil: "restaurante" 9.1M a month; AI search asks "onde comer" 15K times (18% of 84K).
+      pt: { noun: { text: "restaurante", gender: "m" }, synonyms: ["onde comer"] },
+      // AI search in France asks "où manger" 303K times a month, half as often as "restaurant".
+      fr: { noun: { text: "restaurant", gender: "m" }, synonyms: ["où manger"] },
+      // 321K AI searches a month in Germany; "essen gehen" 108K.
+      de: { noun: { text: "Restaurant", gender: "n" }, synonyms: ["essen gehen"] },
       // "ristorante": 550K a month, 352K AI searches.
       it: {
         noun: { text: "ristorante", gender: "m" },
-        synonyms: ["trattoria", "osteria", "pizzeria"],
+        // AI search asks "dove mangiare" 248K times a month.
+        synonyms: ["trattoria", "osteria", "pizzeria", "dove mangiare"],
       },
     },
   ),
@@ -172,7 +183,8 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
     "hotel",
     ["hospedaje", "alojamiento", "dónde quedarse"],
     {
-      en: { noun: "hotel", synonyms: [] },
+      // AI search asks "where to stay" 364K times a month, 14% of "hotel" (2.6M).
+      en: { noun: "hotel", synonyms: ["where to stay"] },
       // Brazil: "hotel" 2.2M a month; "pousada" (301K) names the inns the category's types cover.
       pt: { noun: { text: "hotel", gender: "m" }, synonyms: ["pousada"] },
       // The h of "hôtel" is mute: "l'hôtel".
@@ -180,7 +192,11 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
       // "hotel" 514K AI searches a month, "pension" 22K.
       de: { noun: { text: "Hotel", gender: "n" }, synonyms: ["Pension"] },
       // "hotel": 5M a month and 254K AI searches; people say "albergo" far less, B&Bs search apart.
-      it: { noun: { text: "hotel", gender: "m" }, synonyms: ["albergo", "bed and breakfast"] },
+      // AI search asks "dove dormire" 43K times a month (17%).
+      it: {
+        noun: { text: "hotel", gender: "m" },
+        synonyms: ["albergo", "bed and breakfast", "dove dormire"],
+      },
     },
   ),
   seed(
@@ -201,12 +217,14 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
       // France: "garage" 301K a month, "mécanicien" 18.1K.
       fr: {
         noun: { text: "garage", gender: "m" },
-        synonyms: ["garage automobile", "garage auto", "mécanicien"],
+        // "garagiste" 301K a month, as many as "garage".
+        synonyms: ["garage automobile", "garage auto", "mécanicien", "garagiste"],
       },
       // "autowerkstatt" 60.5K a month (5.2K AI), "kfz werkstatt" 40.5K (3.7K AI).
       de: {
         noun: { text: "Autowerkstatt", gender: "f" },
-        synonyms: ["Kfz-Werkstatt", "Werkstatt"],
+        // "autoreparatur" 873 AI searches a month, 17% of "autowerkstatt".
+        synonyms: ["Kfz-Werkstatt", "Werkstatt", "Autoreparatur"],
       },
       // "meccanico": 90.5K a month and 7.3K AI searches, against 18.1K and 595 for "officina meccanica".
       it: {
@@ -221,14 +239,23 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
     "local",
     ["real_estate_agency"],
     "inmobiliaria",
-    ["agencia inmobiliaria", "agente inmobiliario", "finca raíz"],
+    // Colombia: "bienes raíces" 1.9K a month, a tenth of "inmobiliaria" (18.1K).
+    ["agencia inmobiliaria", "agente inmobiliario", "finca raíz", "bienes raíces"],
     {
       // "realtor" leads national volume on realtor.com lookups; within a city AI search asks for an agent.
-      en: { noun: "real estate agent", synonyms: ["realtor", "real estate agency"] },
+      // AI search asks for an "estate agent" 72K times a month, as often as a "real estate agent".
+      en: {
+        noun: "real estate agent",
+        synonyms: ["realtor", "real estate agency", "estate agent"],
+      },
       // Brazil: "imobiliária" 246K a month (10.4K AI, 175 in São Paulo), "corretor de imóveis" 50K (7).
       pt: { noun: { text: "imobiliária", gender: "f" }, synonyms: ["corretor de imóveis"] },
       // France: "agence immobilière" 201K a month, "agent immobilier" 27.1K.
-      fr: { noun: { text: "agence immobilière", gender: "f" }, synonyms: ["agent immobilier"] },
+      // "agence immo" 165K a month, the short form people type.
+      fr: {
+        noun: { text: "agence immobilière", gender: "f" },
+        synonyms: ["agent immobilier", "agence immo"],
+      },
       // "immobilienmakler" 40.5K a month; "makler" (14.8K) is mostly "ohne makler" and insurance.
       de: { noun: { text: "Immobilienmakler", gender: "m" }, synonyms: ["Makler"] },
       // "agenzia immobiliare": 74K a month and 11K AI searches, against 5.4K and 1.7K for the agent.

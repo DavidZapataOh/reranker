@@ -10,12 +10,20 @@ const recorded = (language: string) =>
     ),
   ) as Recording;
 
-// Real output of both providers for the five local seed categories (generation-record workflow).
-// Before the German word lists, 291 of 660 paraphrases failed as names and two of five sets fell
-// back to templates.
-test("recorded German paraphrases lose none to the name guard and no set falls back", () => {
-  const result = guardFallback(recorded("de"));
-  expect(result.paraphrases).toBe(660);
-  expect(result.rejected.proper_name ?? 0).toBe(0);
+// Real output of both providers for the six intents of the five local seed categories, recorded
+// with the generation-record workflow. What the guards still reject is listed so any change to
+// them shows up here: the remaining category-noun rejections name the business by a word search
+// volume does not back as a synonym, and the qualifier ones drift into another intent.
+test.each([
+  ["es", 696, { qualifier: 13, category_noun: 8 }],
+  ["en", 684, { category_noun: 85, qualifier: 25, proper_name: 1 }],
+  ["pt", 612, { qualifier: 22, category_noun: 13, proper_name: 1 }],
+  ["fr", 638, { qualifier: 19, category_noun: 64, placeholder: 2, proper_name: 1 }],
+  ["it", 672, { qualifier: 9, category_noun: 16, proper_name: 1 }],
+  ["de", 660, { qualifier: 7, category_noun: 26 }],
+])("recorded %s paraphrases: no set falls back to templates", (language, paraphrases, rejected) => {
+  const result = guardFallback(recorded(language));
+  expect(result.paraphrases).toBe(paraphrases);
+  expect(result.rejected).toEqual(rejected);
   expect(result.fallbacks).toBe(0);
 });

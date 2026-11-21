@@ -7,6 +7,7 @@ import type {
   MeasurementLanguage,
   ParaphraseFormat,
 } from "@reranker/schema/measurement";
+import { seedCategories } from "../src/categories.ts";
 import { type GuardLanguage, type GuardName, guardParaphrase } from "../src/generate/guards.ts";
 
 type Recorded = Array<{ text: string; format: ParaphraseFormat }> | { error: string };
@@ -28,6 +29,12 @@ export type Recording = {
 const MIN_PARAPHRASES = 7;
 const MIN_INTENTS = 5;
 
+function currentSynonyms(key: string, language: MeasurementLanguage): string[] | undefined {
+  const category = seedCategories().find((c) => c.key === key);
+  if (!category) return undefined;
+  return language === "es" ? category.synonyms : category.languages[language].synonyms;
+}
+
 export function guardFallback(recording: Recording) {
   const rejected: Partial<Record<GuardName, number>> = {};
   let paraphrases = 0;
@@ -39,7 +46,8 @@ export function guardFallback(recording: Recording) {
       kind: intent.kind,
       language: recording.language as GuardLanguage,
       noun,
-      synonyms: intent.synonyms,
+      // Today's synonyms, not those of the day it was recorded: the guards are what is measured.
+      synonyms: currentSynonyms(intent.categoryKey, recording.language) ?? intent.synonyms,
       countryName: "",
       otherPlaceNames: new Set<string>(),
       blockedNames: new Set<string>(),

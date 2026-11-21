@@ -81,6 +81,9 @@ export type GuardResult = { ok: true } | { ok: false; guard: GuardName };
 
 const PLACEHOLDER = /\{[^{}]*\}/g;
 const MIN_WORDS = 3;
+// A keyword search is often just the noun and the city ("zahnarzt berlin"), as common as the
+// same search with a preposition in the query-phrasing data.
+const MIN_KEYWORD_WORDS = 2;
 const MAX_WORDS = 40;
 const EMAIL = /[^\s@]+@[^\s@]+\.[^\s@]+/u;
 // Seven or more digits, spaced or dotted as people write phones and id numbers ("300 123 4567",
@@ -139,12 +142,20 @@ function mentionsAny(segs: readonly string[], raw: ReadonlySet<string>): boolean
 }
 
 // "clínicas odontológicas" names a "clínica odontológica": each noun word, in order, may take a
-// plural ending. Where nouns compound, a word that holds the noun names it too
+// plural ending, which may replace its last letter ("dentista" → "dentisti", "hotel" → "hotéis",
+// "hôpital" → "hôpitaux"). Where nouns compound, a word that holds the noun names it too
 // ("Zahnarztpraxen", "Kinderzahnarzt").
+const PLURAL_TAIL = 3;
+const MIN_STEMMED = 4;
+
+function namesWord(w: string, t: string, compounds: boolean): boolean {
+  const stem = t.length > MIN_STEMMED ? t.slice(0, -1) : t;
+  return (w.startsWith(stem) && w.length - t.length <= PLURAL_TAIL) || (compounds && w.includes(t));
+}
+
 function mentionsNoun(segs: readonly string[], phrase: string, compounds: boolean): boolean {
   const target = normalizePlaceName(phrase).split(" ");
-  const names = (w: string, t: string) =>
-    (w.startsWith(t) && w.length - t.length <= 3) || (compounds && w.includes(t));
+  const names = (w: string, t: string) => namesWord(w, t, compounds);
   return segs.some((seg) => {
     const words = seg.split(" ");
     for (let start = 0; start + target.length <= words.length; start++) {
@@ -185,7 +196,10 @@ function hasProperName(text: string, segs: readonly string[], ctx: GuardContext)
     sentenceStart = SENTENCE_END.test(token);
     if (startsSentence || !LEADING_UPPER.test(word)) continue;
     const normalized = normalizePlaceName(word);
-    if (!normalized || allowed.has(normalized)) continue;
+    // A plural of an allowed word is allowed too ("Saturdays").
+    if (!normalized || allowed.has(normalized) || allowed.has(normalized.replace(/s$/u, ""))) {
+      continue;
+    }
     // German capitalizes every noun: a capital there marks a name only when the word lists do
     // not know the word as a common noun.
     const bare = word.replace(TRAILING_PUNCTUATION, "");
@@ -195,13 +209,29 @@ function hasProperName(text: string, segs: readonly string[], ctx: GuardContext)
   return false;
 }
 
+// "near {lugar}" places the business in the city, which every local question does; only a
+// proximity word that points elsewhere asks for a neighborhood.
+function withoutCityProximity(text: string, phrases: readonly string[]): string[] {
+  const parts = text.split(/(\{[^{}]*\})/u);
+  return parts.flatMap((part, i) => {
+    if (part.startsWith("{")) return [];
+    let seg = normalizePlaceName(part);
+    if (parts[i + 1] === "{lugar}") {
+      const tail = phrases.find((p) => seg === p || seg.endsWith(` ${p}`));
+      if (tail) seg = seg.slice(0, seg.length - tail.length).trim();
+    }
+    return seg ? [seg] : [];
+  });
+}
+
 function hasForeignQualifier(text: string, segs: readonly string[], ctx: GuardContext): boolean {
   const table = LEXICONS[ctx.language].qualifiers;
   const own = new Set(table.find(([kind]) => kind === ctx.kind)?.[1]);
   for (const [kind, phrases] of table) {
     if (kind === ctx.kind) continue;
     if (kind === "zone" && text.includes("{zona}")) return true;
-    if (phrases.some((p) => !own.has(p) && containsPhrase(segs, p))) return true;
+    const inText = kind === "zone" ? withoutCityProximity(text, phrases) : segs;
+    if (phrases.some((p) => !own.has(p) && containsPhrase(inText, p))) return true;
   }
   return false;
 }
@@ -239,7 +269,8 @@ export function guardParaphrase(candidate: Candidate, ctx: GuardContext): GuardR
   const segs = segments(c.text);
   if (!placeOk(c.text, segs, ctx)) return { ok: false, guard: "placeholder" };
   const words = wordCount(c.text);
-  if (words < MIN_WORDS || words > MAX_WORDS) return { ok: false, guard: "length" };
+  const minWords = c.format === "keyword" ? MIN_KEYWORD_WORDS : MIN_WORDS;
+  if (words < minWords || words > MAX_WORDS) return { ok: false, guard: "length" };
   if (hasPersonalData(c.text)) return { ok: false, guard: "personal_data" };
   const named =
     c.text.includes("{sustantivo}") ||

@@ -80,7 +80,8 @@ describe("seed categories", () => {
         expect(noun.text).toMatch(/^\p{Lu}/u);
         expect(synonyms).not.toContain(noun.text);
       }
-      for (const s of synonyms) expect(s).toMatch(/^\p{Lu}/u);
+      // A noun is capitalized; a search phrase ("essen gehen") is written as people type it.
+      for (const s of synonyms) if (!s.includes(" ")) expect(s).toMatch(/^\p{Lu}/u);
     }
   });
 
