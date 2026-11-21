@@ -1,6 +1,13 @@
 import { SeedCatalogFile } from "@reranker/schema/measurement";
 import { describe, expect, test } from "vitest";
-import { assemble, type Decision, founderJudge, nativeJudge } from "../scripts/assemble-seed";
+import {
+  assemble,
+  type Decision,
+  founderJudge,
+  nativeJudge,
+  reasonClusters,
+  rejectionReasons,
+} from "../scripts/assemble-seed";
 import type { GroupPool } from "../scripts/build-seed";
 import { fillCanonical } from "../scripts/build-seed";
 import type { CategoryReview, Reviewed } from "../scripts/review-native";
@@ -140,4 +147,41 @@ describe("the founder's decisions", () => {
     const reviewedSample = catalog.paraphrases.find((p) => p.text === sample.reserves[0]);
     expect(reviewedSample?.humanReviewed).toBe(true);
   });
+});
+
+describe("rejection reasons", () => {
+  const pools = [groupPool("es", "co"), groupPool("es", "neutral")];
+  const items = reviewItems(pools);
+  const samples = items.filter((i) => i.kind === "paraphrase").slice(0, 4);
+  const decided: Decision[] = [
+    ...samples.map((i) => ({
+      item: i.id,
+      step: 0,
+      text: i.text,
+      verdict: "reject" as const,
+      reason: "changes_question" as const,
+    })),
+    { item: items[0]?.id ?? "", step: 0, text: items[0]?.text ?? "", verdict: "reject" },
+    {
+      item: items[1]?.id ?? "",
+      step: 0,
+      text: items[1]?.text ?? "",
+      verdict: "reject",
+      reason: "other",
+      note: "usa ustedeo",
+    },
+  ];
+
+  test("rejections are counted by reason, per intent and per intent kind", () => {
+    const report = rejectionReasons(pools, decided);
+    expect(report.byReason).toEqual({ changes_question: 4, none: 1, other: 1 });
+    expect(report.byKind.discovery).toEqual({ changes_question: 3 });
+    expect(report.byKind.canonical).toEqual({ none: 1, other: 1 });
+    expect(report.notes).toEqual([{ item: items[1]?.id, note: "usa ustedeo" }]);
+  });
+
+  test("a reason that dominates a kind is reported as a cluster", () =>
+    expect(reasonClusters(rejectionReasons(pools, decided))).toEqual([
+      { kind: "discovery", reason: "changes_question", count: 3 },
+    ]));
 });
