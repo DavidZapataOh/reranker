@@ -150,9 +150,11 @@ test("an intent_sets row stays under 256 bytes", async () => {
   await owner.query("begin");
   try {
     await owner.query(SEED_INTENT_SETS);
+    // Only the rows seeded here: other packages' integration tests write test-sized rows to the
+    // same branch concurrently, and their committed rows are visible to this transaction.
     const { rows } = await owner.query<{ avg: number; max: number }>(
       `select avg(pg_column_size(t.*))::int as avg, max(pg_column_size(t.*))::int as max
-       from public_panel.intent_sets t`,
+       from public_panel.intent_sets t where t.category_key ~ '^gen:places:type[0-9]+$'`,
     );
     console.info(`intent_sets row bytes: ${JSON.stringify(rows[0])}`);
     expect(rows[0]?.max).toBeLessThan(256);

@@ -70,6 +70,8 @@ export interface GeneratedIntentSet {
   report: FilterReport;
   outcome: "generated" | "template";
   generators: 0 | 1 | 2;
+  /** What the provider calls settled, in USD micros; a fallback after spending keeps its cost. */
+  costMicros: number;
 }
 
 const PROVIDERS = ["openai", "gemini"] as const;
@@ -220,11 +222,13 @@ export async function generateIntentSet(
   const slate = fallbackTemplates(category.archetype, scope, language);
   // Checked at runtime too: callers outside TypeScript's reach must not get a masculine default.
   const gendered = requireNounGender(input.noun ?? category.noun, language);
+  const spent = { micros: 0 };
   const fallback = (reason: FallbackReason, report = emptyReport(reason)): GeneratedIntentSet => ({
     set: templateIntentSet(category, scope, registerProfile, language),
     report: { ...report, fallback: reason },
     outcome: "template",
     generators: 0,
+    costMicros: spent.micros,
   });
 
   if (!isGenerationLanguage(language)) return fallback("no_prompts");
@@ -253,6 +257,7 @@ export async function generateIntentSet(
     spend: input.spend,
     signal: signalAt(generationEnd),
     deadlineAt: generationEnd,
+    spent,
   };
   const answers = await Promise.allSettled(
     drafts.flatMap((intent) =>
@@ -310,6 +315,7 @@ export async function generateIntentSet(
     spend: input.spend,
     signal: signalAt(filterEnd),
     deadlineAt: filterEnd,
+    spent,
   };
   let embeddings: Float32Array[];
   try {
@@ -363,5 +369,5 @@ export async function generateIntentSet(
     generatorConfigHash: languageConfigHash(language),
     generators,
   });
-  return { set, report, outcome: "generated", generators };
+  return { set, report, outcome: "generated", generators, costMicros: spent.micros };
 }

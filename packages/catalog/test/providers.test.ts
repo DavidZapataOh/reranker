@@ -299,6 +299,32 @@ test("a rate limit releases the reservation; an outage settles it and trips the 
   expect(jobs.release).toHaveBeenCalledTimes(2);
 });
 
+test("what each call settles adds up on the context's meter", async () => {
+  respond(RESPONSES, () => HttpResponse.json(openaiResponse(outputText({ paraphrases }))));
+  respond(EMBEDDINGS, () =>
+    HttpResponse.json({
+      object: "list",
+      model: "text-embedding-3-small",
+      data: [{ object: "embedding", index: 0, embedding: [1, 0] }],
+      usage: { prompt_tokens: 30, total_tokens: 30 },
+    }),
+  );
+  const spent = { micros: 0 };
+  await generateParaphrases(
+    "openai",
+    { intent: bakery, register: "co", withPersonas: false },
+    { ...ctx(), spent },
+  );
+  await embed(["uno"], { ...ctx(), spent });
+  const paraphraseCost = costOf("gpt-6.1-terra", {
+    inputTokens: 900,
+    cachedInputTokens: 0,
+    cacheWriteTokens: 0,
+    outputTokens: 400,
+  });
+  expect(spent.micros).toBe(paraphraseCost.amount_micros + 1);
+});
+
 test("embed returns one vector per text in input order and settles the tokens", async () => {
   const bodies = respond(EMBEDDINGS, () =>
     HttpResponse.json({

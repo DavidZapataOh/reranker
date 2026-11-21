@@ -6,7 +6,7 @@ import type {
   EngineId,
   ErrorCode,
 } from "@reranker/schema";
-import type { LevelKey, Sufficiency } from "@reranker/schema/measurement";
+import type { LevelKey, MeasurementLanguage, Sufficiency } from "@reranker/schema/measurement";
 import type { Verdict } from "@reranker/verify";
 
 type VerificationReason =
@@ -151,6 +151,18 @@ export interface ServerEventMap {
     wilson_divergences: number;
     engines_included: number;
   };
+  intent_set_resolved: {
+    outcome: "seed" | "reused" | "generated" | "template";
+    language: MeasurementLanguage;
+    /** Why a template was served; `shared` when a concurrent caller's generation fell back. */
+    fallback: "disabled" | "no_prompts" | "no_time" | "incomplete" | "shared" | null;
+    category_key: string;
+    generation_ms: number;
+    cost_micros: number;
+    generators: 0 | 1 | 2;
+    guard_rejects: number;
+    judge_rejects: number;
+  };
 }
 
 export interface ClientEventMap {
@@ -291,6 +303,17 @@ export const SERVER_EVENT_KEYS = {
     "target_sufficiency",
     "wilson_divergences",
     "engines_included",
+  ],
+  intent_set_resolved: [
+    "outcome",
+    "language",
+    "fallback",
+    "category_key",
+    "generation_ms",
+    "cost_micros",
+    "generators",
+    "guard_rejects",
+    "judge_rejects",
   ],
 } as const satisfies { [N in ServerEventName]: readonly (keyof ServerEventMap[N])[] };
 

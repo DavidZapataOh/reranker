@@ -111,6 +111,13 @@ export const opsAlerts = {
     runbook: "capture-dataforseo-errors.md",
     source: "capture",
   },
+  // Templates keep reports flowing, so a high share of them only warns; the payload names the
+  // language that regressed, or `all` when the rise is spread across languages.
+  "intent-generation-template-rate": {
+    severity: "warning",
+    runbook: "intent-generation.md",
+    source: "catalog",
+  },
 } as const satisfies Record<string, OpsAlert>;
 
 export type OpsAlertKind = keyof typeof opsAlerts;
