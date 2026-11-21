@@ -17,8 +17,8 @@ import { configHashOf, currentExtractorConfig, type ExtractorConfig, jcs } from 
 import { type DisputeSet, mergeExtractions } from "./merge";
 import { jaroWinkler, nameHmac, normalizeName, tokenContainment } from "./normalize";
 import { platformFor, tagPlatforms } from "./platforms";
-import { EXTRACT_PROMPT_V2 } from "./prompts/extract.v2";
-import { JUDGE_PROMPT_V2 } from "./prompts/judge.v2";
+import { EXTRACT_PROMPT_V3 } from "./prompts/extract.v3";
+import { JUDGE_PROMPT_V3 } from "./prompts/judge.v3";
 import { callerFor, type PaidResult, paidCall, settledCostOf } from "./providers/call";
 import { type ModelRef, ProviderIncompleteError, ProviderRefusalError } from "./providers/types";
 import { locateQuote, toExtractedMentions } from "./quote";
@@ -188,7 +188,7 @@ export async function extractResponse(
       callerFor(model),
       {
         model,
-        system: EXTRACT_PROMPT_V2,
+        system: EXTRACT_PROMPT_V3,
         user: markdown,
         schema: MentionsSchema,
         schemaName: "mentions",
@@ -247,7 +247,7 @@ export async function extractResponse(
           callerFor(config.models.judge),
           {
             model: config.models.judge,
-            system: JUDGE_PROMPT_V2,
+            system: JUDGE_PROMPT_V3,
             user: judgeMessage(markdown, disputed),
             schema: JudgeSchema,
             schemaName: "mentions",

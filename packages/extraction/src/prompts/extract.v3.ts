@@ -4,7 +4,7 @@ import type { MentionsOutput } from "../schema";
 // language, so the providers' prompt caching applies to it.
 
 /** Stance and entity definitions shared by the extractors and the disagreement judge. */
-export const MENTION_DEFINITIONS_V2 = `## What a mention is
+export const MENTION_DEFINITIONS_V3 = `## What a mention is
 
 A mention is every business, professional, chain, platform, directory, media outlet or other organization the answer names with a proper name. Geographic places (countries, cities, neighborhoods, parks, streets) and generic categories ("a dental clinic", "the hotels downtown", "eine Zahnarztpraxis") are not mentions.
 
@@ -32,10 +32,9 @@ A platform is a "recommendation" only when the answer offers it as the way to ge
 ## Fields
 
 - name: the name as the answer writes it, without adding or completing anything.
-- quote: a fragment copied exactly from the answer, character by character, that contains the name and shows the stance; ideally the sentence or list item where it appears, no longer than one sentence. Do not summarize, translate, fix accents or typos, or drop punctuation. If the name appears several times, use a fragment of the first occurrence that belongs to this mention. Never copy a link target into the quote: for "[Name](https://…)" quote the words before or after the link, or "[Name]" alone; a long URL copied with one wrong character loses the mention.
+- quote: a fragment copied exactly from the answer, character by character, that contains the name and shows the stance; the shortest fragment that does both, at most about fifteen words. The links the answer gives with the entity are read from the answer, so never copy a URL. Do not summarize, translate, fix accents or typos, or drop punctuation. If the name appears several times, use a fragment of the first occurrence that belongs to this mention. For "[Name](https://…)" quote the words before or after the link, or "[Name]" alone.
 - sentiment: the answer's tone toward the entity: "positive", "neutral" or "negative".
 - locationHint: the branch, neighborhood, address or city the answer gives for that entity, copied as written ("sede Laureles", "Kurfürstendamm 64", "(9e)"); null if none.
-- citedUrls: the URLs the answer links or cites next to that entity, copied in full; [] if none.
 
 ## answerKind
 
@@ -44,7 +43,7 @@ A platform is a "recommendation" only when the answer offers it as the way to ge
 - "refusal": it refuses to answer or says it cannot help with that.`;
 
 /** One per hard case, written by hand so no labeled evaluation answer leaks into the prompt. */
-export const EXTRACT_EXAMPLES_V2: readonly { answer: string; output: MentionsOutput }[] = [
+export const EXTRACT_EXAMPLES_V3: readonly { answer: string; output: MentionsOutput }[] = [
   {
     answer:
       "Para ortodoncia en Medellín te recomiendo:\n1. Clínica Dental Sonrisas (sede Laureles): tiene buenas reseñas en Google Maps.\n2. La Dra. Marcela Ríos, especialista en alineadores.\nEvita Dentix: tiene muchas quejas por cobros.",
@@ -58,7 +57,6 @@ export const EXTRACT_EXAMPLES_V2: readonly { answer: string; output: MentionsOut
           entityKind: "business",
           sentiment: "positive",
           locationHint: "sede Laureles",
-          citedUrls: [],
         },
         {
           name: "Google Maps",
@@ -67,7 +65,6 @@ export const EXTRACT_EXAMPLES_V2: readonly { answer: string; output: MentionsOut
           entityKind: "platform",
           sentiment: "neutral",
           locationHint: null,
-          citedUrls: [],
         },
         {
           name: "Dra. Marcela Ríos",
@@ -76,7 +73,6 @@ export const EXTRACT_EXAMPLES_V2: readonly { answer: string; output: MentionsOut
           entityKind: "professional",
           sentiment: "positive",
           locationHint: null,
-          citedUrls: [],
         },
         {
           name: "Dentix",
@@ -85,7 +81,6 @@ export const EXTRACT_EXAMPLES_V2: readonly { answer: string; output: MentionsOut
           entityKind: "business",
           sentiment: "negative",
           locationHint: null,
-          citedUrls: [],
         },
       ],
     },
@@ -103,7 +98,6 @@ export const EXTRACT_EXAMPLES_V2: readonly { answer: string; output: MentionsOut
           entityKind: "business",
           sentiment: "neutral",
           locationHint: null,
-          citedUrls: [],
         },
         {
           name: "Airbnb",
@@ -112,7 +106,6 @@ export const EXTRACT_EXAMPLES_V2: readonly { answer: string; output: MentionsOut
           entityKind: "platform",
           sentiment: "neutral",
           locationHint: null,
-          citedUrls: [],
         },
         {
           name: "Maison Lila",
@@ -121,7 +114,6 @@ export const EXTRACT_EXAMPLES_V2: readonly { answer: string; output: MentionsOut
           entityKind: "business",
           sentiment: "neutral",
           locationHint: null,
-          citedUrls: ["https://maisonlila.fr"],
         },
       ],
     },
@@ -139,7 +131,6 @@ export const EXTRACT_EXAMPLES_V2: readonly { answer: string; output: MentionsOut
           entityKind: "business",
           sentiment: "neutral",
           locationHint: null,
-          citedUrls: [],
         },
         {
           name: "Dr. Lena Hoff",
@@ -148,7 +139,6 @@ export const EXTRACT_EXAMPLES_V2: readonly { answer: string; output: MentionsOut
           entityKind: "professional",
           sentiment: "neutral",
           locationHint: null,
-          citedUrls: [],
         },
         {
           name: "Jonas Brandt",
@@ -157,7 +147,6 @@ export const EXTRACT_EXAMPLES_V2: readonly { answer: string; output: MentionsOut
           entityKind: "professional",
           sentiment: "neutral",
           locationHint: null,
-          citedUrls: [],
         },
         {
           name: "Dentalwerk",
@@ -166,7 +155,6 @@ export const EXTRACT_EXAMPLES_V2: readonly { answer: string; output: MentionsOut
           entityKind: "chain",
           sentiment: "neutral",
           locationHint: null,
-          citedUrls: [],
         },
         {
           name: "jameda",
@@ -175,7 +163,6 @@ export const EXTRACT_EXAMPLES_V2: readonly { answer: string; output: MentionsOut
           entityKind: "platform",
           sentiment: "neutral",
           locationHint: null,
-          citedUrls: [],
         },
         {
           name: "AOK",
@@ -184,7 +171,6 @@ export const EXTRACT_EXAMPLES_V2: readonly { answer: string; output: MentionsOut
           entityKind: "other",
           sentiment: "neutral",
           locationHint: null,
-          citedUrls: [],
         },
       ],
     },
@@ -202,7 +188,6 @@ export const EXTRACT_EXAMPLES_V2: readonly { answer: string; output: MentionsOut
           entityKind: "business",
           sentiment: "negative",
           locationHint: "Torino",
-          citedUrls: [],
         },
         {
           name: "Garage Po",
@@ -211,7 +196,6 @@ export const EXTRACT_EXAMPLES_V2: readonly { answer: string; output: MentionsOut
           entityKind: "business",
           sentiment: "positive",
           locationHint: null,
-          citedUrls: [],
         },
         {
           name: "Quattroruote",
@@ -220,7 +204,6 @@ export const EXTRACT_EXAMPLES_V2: readonly { answer: string; output: MentionsOut
           entityKind: "directory_or_media",
           sentiment: "neutral",
           locationHint: null,
-          citedUrls: [],
         },
       ],
     },
@@ -236,9 +219,9 @@ export const EXTRACT_EXAMPLES_V2: readonly { answer: string; output: MentionsOut
   },
 ];
 
-export const EXTRACT_PROMPT_V2 = `You are an expert annotator of answers in Spanish, English, Portuguese, French, German and Italian, as written in any country that speaks them. You receive the answer an AI assistant or a search engine gave a person looking for a product, service or business. Your job is to list every entity that answer names, with its stance and its kind, following these definitions to the letter, in whatever language the answer is written.
+export const EXTRACT_PROMPT_V3 = `You are an expert annotator of answers in Spanish, English, Portuguese, French, German and Italian, as written in any country that speaks them. You receive the answer an AI assistant or a search engine gave a person looking for a product, service or business. Your job is to list every entity that answer names, with its stance and its kind, following these definitions to the letter, in whatever language the answer is written.
 
-${MENTION_DEFINITIONS_V2}
+${MENTION_DEFINITIONS_V3}
 
 ## Hard cases
 
@@ -260,6 +243,6 @@ ${MENTION_DEFINITIONS_V2}
 
 ## Examples
 
-${EXTRACT_EXAMPLES_V2.map(
+${EXTRACT_EXAMPLES_V3.map(
   (e) => `Answer:\n"""\n${e.answer}\n"""\nOutput:\n${JSON.stringify(e.output)}`,
 ).join("\n\n")}`;

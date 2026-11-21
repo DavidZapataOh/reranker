@@ -17,7 +17,6 @@ const Mention = z.strictObject({
   ]),
   sentiment: z.enum(["positive", "neutral", "negative"]),
   locationHint: z.string().nullable(),
-  citedUrls: z.array(z.string()),
 });
 
 // 'capture_failed' is never the model's call: it comes from the capture status.

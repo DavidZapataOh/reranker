@@ -5,7 +5,7 @@ import { releaseSpend, reserveSpend, type SpendContext, settleSpend } from "@rer
 import { requireEnv } from "@reranker/testing/env";
 import { afterAll, beforeAll, expect, test, vi } from "vitest";
 import { costOfUsage, estimateOf } from "../../src/prices";
-import { EXTRACT_PROMPT_V2 } from "../../src/prompts/extract.v2";
+import { EXTRACT_PROMPT_V3 } from "../../src/prompts/extract.v3";
 import { callAnthropic } from "../../src/providers/anthropic";
 import { MentionsSchema } from "../../src/schema";
 
@@ -41,7 +41,7 @@ test("a real answer comes back as valid mentions JSON from claude-haiku-5-5", as
   });
   const result = await callAnthropic({
     model: { provider: "anthropic", model: MODEL, reasoning: "low" },
-    system: EXTRACT_PROMPT_V2,
+    system: EXTRACT_PROMPT_V3,
     user: answer,
     schema: MentionsSchema,
     schemaName: "mentions",

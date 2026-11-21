@@ -9,7 +9,7 @@ import { afterAll, beforeAll, expect, test, vi } from "vitest";
 import { currentExtractorConfig, type ExtractorConfig } from "../src/config";
 import { extractResponse, type RawCapture } from "../src/extract";
 import { jaroWinkler, normalizeName, tokenContainment } from "../src/normalize";
-import { EXTRACT_PROMPT_V2 } from "../src/prompts/extract.v2";
+import { EXTRACT_PROMPT_V3 } from "../src/prompts/extract.v3";
 import type { MentionsOutput } from "../src/schema";
 
 // Storage is not what is measured: extractions are neither looked up nor kept.
@@ -304,7 +304,7 @@ test("extraction finds, orders and judges entities in every measurement language
       const tokens = stored.inputTokens.get(raw.capture.id);
       if (outputs && tokens && !outputs.judge) {
         const calls = outputs.secondary ? 2 : 1;
-        const chars = (EXTRACT_PROMPT_V2.length + answer.markdown.length) * calls;
+        const chars = (EXTRACT_PROMPT_V3.length + answer.markdown.length) * calls;
         t.charsPerToken = Math.min(t.charsPerToken, chars / tokens);
       }
     } catch (error) {
