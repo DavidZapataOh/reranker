@@ -7,7 +7,13 @@ import { isAppError } from "@reranker/schema";
 import type { GeoTarget, PlacesAddressComponent } from "@reranker/schema/measurement";
 import { beforeEach, describe, expect, test } from "vitest";
 import { geoForEngine, readChatgptCityEffect } from "../src/geo/effects";
-import { cityDisplayName, getGeo, resolveGeo, spokenPlaceName } from "../src/geo/resolve";
+import {
+  cityDisplayName,
+  getGeo,
+  resolveGeo,
+  spokenPlaceName,
+  widerGeos,
+} from "../src/geo/resolve";
 import { loadedCountries, resetGeoCache } from "../src/testing";
 
 type PlaceFixture = {
@@ -405,4 +411,19 @@ describe("chatgptCityEffect", () => {
 
   test("a missing baseline is not shown", () =>
     expect(readChatgptCityEffect(new URL("file:///nonexistent/baseline.json"))).toBe("not_shown"));
+});
+
+describe("widerGeos", () => {
+  test("a city falls back to its region, then its country", () =>
+    expect(
+      widerGeos(getGeo("us-c1015116")).map((g) => [g.level, g.name, g.dataforseo.locationCode]),
+    ).toEqual([
+      ["region", "Florida", 21142],
+      ["country", "Estados Unidos", 2840],
+    ]));
+
+  test("a region falls back to its country, and a country to nothing", () => {
+    expect(widerGeos(getGeo("mx-r20708")).map((g) => g.key)).toEqual(["mx"]);
+    expect(widerGeos(getGeo("mx"))).toEqual([]);
+  });
 });

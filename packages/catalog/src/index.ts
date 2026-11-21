@@ -21,6 +21,7 @@ export {
   type ResolveGeoInput,
   resolveGeo,
   spokenPlaceName,
+  widerGeos,
 } from "./geo/resolve";
 export {
   agree,
