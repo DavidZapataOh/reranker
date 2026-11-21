@@ -27,6 +27,13 @@ export {
   variantId,
 } from "./hash";
 export {
+  currentSeedCatalog,
+  getIntent,
+  getVariant,
+  type ResolveIntentSetInput,
+  resolveIntentSet,
+} from "./intent-sets";
+export {
   countryLanguage,
   countryName,
   type LanguageGap,
