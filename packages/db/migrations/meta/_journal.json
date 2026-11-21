@@ -225,6 +225,13 @@
       "when": 1795234986100,
       "tag": "0031_estimate_citation_metrics",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1795237301882,
+      "tag": "0032_capture_task_batches",
+      "breakpoints": true
     }
   ]
 }

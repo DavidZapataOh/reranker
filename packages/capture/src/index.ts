@@ -7,6 +7,7 @@ export {
   type CaptureRecord,
   type FoundTask,
   type PostedTask,
+  type PostedTasks,
   type ReadyTask,
   registerCaptureAdapter,
 } from "./adapters";

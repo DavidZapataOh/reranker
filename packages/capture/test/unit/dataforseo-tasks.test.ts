@@ -1,14 +1,13 @@
 import { readFileSync } from "node:fs";
 import { geoForEngine, getGeo } from "@reranker/catalog";
 import { resetAppEnv } from "@reranker/env";
-import { InvalidInputError, ProviderRejectedError } from "@reranker/jobs";
+import { InvalidInputError, ProviderRejectedError, ProviderUnavailableError } from "@reranker/jobs";
 import type { EngineId } from "@reranker/schema";
 import { server } from "@reranker/testing/msw";
 import { HttpResponse, http } from "msw";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
 import { dataforseoAdapter } from "../../src/dataforseo/adapter";
-import { requestBytes } from "../../src/dataforseo/request";
-import { postTask } from "../../src/dataforseo/tasks";
+import { batchRequestBytes, postTasks } from "../../src/dataforseo/tasks";
 import { type FrozenSlot, slotId } from "../../src/slot";
 
 vi.mock("@reranker/jobs", async (importOriginal) => ({
@@ -43,15 +42,6 @@ function slot(engine: EngineId, slotIndex: number): FrozenSlot {
   };
 }
 
-/** The sandbox's task_post answer, with the id, tag and cost of a production task. */
-function posted(id: string, tag: string, statusCode = 20100): string {
-  const body = JSON.parse(recorded("ai-mode-task-post"));
-  body.cost = 0.0012;
-  Object.assign(body.tasks[0], { id, status_code: statusCode, cost: 0.0012 });
-  body.tasks[0].data.tag = tag;
-  return JSON.stringify(body);
-}
-
 /** The sandbox's tasks_ready answer, listing the given tasks. */
 function ready(tasks: Array<{ id: string; tag: string }>): string {
   const body = JSON.parse(recorded("ai-mode-tasks-ready"));
@@ -79,36 +69,123 @@ afterEach(() => {
 });
 afterAll(() => server.close());
 
-describe("postTask", () => {
-  test("posts the slot as one tagged task and returns its id and billed cost", async () => {
-    const target = slot("google-ai-mode", 2);
+describe("postTasks", () => {
+  type Answer = { tag: string; id: string; status: number };
+  /** The sandbox's task_post answer, one task per entry, with production ids, tags and costs. */
+  function postedMany(tasks: Answer[], envelope = 20000): string {
+    const body = JSON.parse(recorded("ai-mode-task-post"));
+    const [template] = body.tasks;
+    body.status_code = envelope;
+    body.cost = 0.0012 * tasks.length;
+    body.tasks = tasks.map(({ tag, id, status }) => ({
+      ...template,
+      id,
+      status_code: status,
+      cost: status === 20100 ? 0.0012 : 0,
+      data: { ...template.data, tag },
+    }));
+    return JSON.stringify(body);
+  }
+
+  test("posts up to 100 slots in one call and reads each task by its tag", async () => {
+    const slots = [0, 1, 2].map((i) => slot("google-ai-mode", i));
     const bodies: Uint8Array[] = [];
     server.use(
       http.post(`${AI_MODE}/task_post`, async ({ request }) => {
         bodies.push(new Uint8Array(await request.arrayBuffer()));
-        return json(posted("task-1", target.slotId));
+        // Answered out of order: the tag, not the position, names the slot.
+        return json(
+          postedMany([
+            { tag: slots[2]?.slotId ?? "", id: "t-2", status: 20100 },
+            { tag: slots[0]?.slotId ?? "", id: "t-0", status: 20100 },
+            { tag: slots[1]?.slotId ?? "", id: "", status: 40501 },
+          ]),
+        );
       }),
     );
-    const out = await postTask(target);
-    expect(out).toEqual({
-      providerTaskId: "task-1",
-      cost: { amount_micros: 1200, currency: "USD" },
-      error: null,
-    });
+    const { tasks } = await postTasks(slots);
     expect(bodies).toHaveLength(1);
-    expect(Buffer.from(bodies[0] as Uint8Array).equals(requestBytes(target, "task"))).toBe(true);
-    expect(JSON.parse(new TextDecoder().decode(bodies[0]))[0].tag).toBe(target.slotId);
+    expect(Buffer.from(bodies[0] as Uint8Array).equals(batchRequestBytes(slots))).toBe(true);
+    expect(
+      tasks.map((t) => [t.slot.slotId, t.status, t.providerTaskId, t.cost?.amount_micros]),
+    ).toEqual([
+      [slots[0]?.slotId, "accepted", "t-0", 1200],
+      [slots[1]?.slotId, "refused", null, 0],
+      [slots[2]?.slotId, "accepted", "t-2", 1200],
+    ]);
+    expect(tasks[1]?.error).toBeInstanceOf(ProviderRejectedError);
   });
 
-  test("a refused task returns the provider's error and no id", async () => {
-    server.use(http.post(`${AI_MODE}/task_post`, () => json(posted("", "x", 40210))));
-    const out = await postTask(slot("google-ai-mode", 0));
-    expect(out.providerTaskId).toBeNull();
-    expect(out.error).toBeInstanceOf(ProviderRejectedError);
+  test("a call refused whole refuses every task", async () => {
+    server.use(http.post(`${AI_MODE}/task_post`, () => json(postedMany([], 40210))));
+    const { tasks } = await postTasks([slot("google-ai-mode", 0), slot("google-ai-mode", 1)]);
+    expect(tasks.map((t) => t.status)).toEqual(["refused", "refused"]);
+    expect(tasks[0]?.error).toBeInstanceOf(ProviderRejectedError);
   });
 
-  test("an engine without task endpoints is an input error", async () => {
-    await expect(postTask(slot("perplexity", 0))).rejects.toBeInstanceOf(InvalidInputError);
+  test("an answer that does not tell whether the tasks exist throws ProviderUnavailable", async () => {
+    server.use(http.post(`${AI_MODE}/task_post`, () => json(postedMany([], 50000))));
+    await expect(postTasks([slot("google-ai-mode", 0)])).rejects.toBeInstanceOf(
+      ProviderUnavailableError,
+    );
+    server.use(http.post(`${AI_MODE}/task_post`, () => new HttpResponse("<html>502</html>")));
+    await expect(postTasks([slot("google-ai-mode", 0)])).rejects.toBeInstanceOf(
+      ProviderUnavailableError,
+    );
+  });
+
+  test.each([
+    ["gemini", "*/v3/ai_optimization/gemini/llm_scraper"],
+    ["chatgpt", "*/v3/ai_optimization/chat_gpt/llm_scraper"],
+    ["google-ai-overview", "*/v3/serp/google/organic"],
+  ] as const)("%s posts, lists and fetches on its own endpoints", async (engine, base) => {
+    const target = slot(engine, 0);
+    server.use(
+      http.post(`${base}/task_post`, () =>
+        json(postedMany([{ tag: target.slotId, id: "t-0", status: 20100 }])),
+      ),
+      http.get(`${base}/tasks_ready`, () => json(ready([{ id: "t-0", tag: target.slotId }]))),
+      http.get(`${base}/task_get/advanced/:id`, () =>
+        json(JSON.stringify({ status_code: 20000, tasks: [{ id: "t-0", status_code: 40602 }] })),
+      ),
+    );
+    const { tasks } = await postTasks([target]);
+    expect(tasks[0]).toMatchObject({ status: "accepted", providerTaskId: "t-0" });
+    const ready_ = await dataforseoAdapter.collectReady?.([target]);
+    expect(ready_?.map((t) => t.providerTaskId)).toEqual(["t-0"]);
+    await expect(dataforseoAdapter.collectTask?.(target, "t-0", [target])).resolves.toBeNull();
+  });
+
+  test("a task answered with a server error is unknown", async () => {
+    const target = slot("google-ai-mode", 0);
+    server.use(
+      http.post(`${AI_MODE}/task_post`, () =>
+        json(postedMany([{ tag: target.slotId, id: "", status: 50000 }])),
+      ),
+    );
+    const { tasks } = await postTasks([target]);
+    expect(tasks[0]?.status).toBe("unknown");
+  });
+
+  test("a task missing from the answer is unknown", async () => {
+    const slots = [slot("google-ai-mode", 0), slot("google-ai-mode", 1)];
+    server.use(
+      http.post(`${AI_MODE}/task_post`, () =>
+        json(postedMany([{ tag: slots[0]?.slotId ?? "", id: "t-0", status: 20100 }])),
+      ),
+    );
+    const { tasks } = await postTasks(slots);
+    expect(tasks.map((t) => t.status)).toEqual(["accepted", "unknown"]);
+  });
+
+  test("a call carries 1 to 100 tasks of one engine", async () => {
+    await expect(postTasks([])).rejects.toBeInstanceOf(InvalidInputError);
+    const many = Array.from({ length: 101 }, (_, i) => slot("google-ai-mode", i));
+    await expect(postTasks(many)).rejects.toBeInstanceOf(InvalidInputError);
+    await expect(postTasks([slot("google-ai-mode", 0), slot("gemini", 1)])).rejects.toBeInstanceOf(
+      InvalidInputError,
+    );
+    await expect(postTasks([slot("perplexity", 0)])).rejects.toBeInstanceOf(InvalidInputError);
   });
 });
 
@@ -137,17 +214,16 @@ describe("collectReady", () => {
     ]);
   });
 
-  test("collect fetches the result and seals the task as it was posted", async () => {
+  test("collectTask fetches the result and seals the task_post that created it", async () => {
     const target = mine[0] as FrozenSlot;
+    const batch = [mine[1] as FrozenSlot, target];
     const got = recorded("ai-mode-task-get");
     server.use(
-      http.get(`${AI_MODE}/tasks_ready`, () => json(ready([{ id: "t-0", tag: target.slotId }]))),
       http.get(`${AI_MODE}/task_get/advanced/:id`, ({ params }) =>
         params.id === "t-0" ? json(got) : new HttpResponse(null, { status: 404 }),
       ),
     );
-    const [task] = (await dataforseoAdapter.collectReady?.([target])) ?? [];
-    const record = await task?.collect();
+    const record = await dataforseoAdapter.collectTask?.(target, "t-0", batch);
     expect(record).toMatchObject({
       slot: target,
       status: "succeeded",
@@ -157,7 +233,7 @@ describe("collectReady", () => {
       parseError: null,
     });
     expect(record?.endpoint).toMatch(/\/v3\/serp\/google\/ai_mode\/task_get\/advanced\/t-0$/);
-    expect(Buffer.from(record?.request ?? []).equals(requestBytes(target, "task"))).toBe(true);
+    expect(Buffer.from(record?.request ?? []).equals(batchRequestBytes(batch))).toBe(true);
     expect(Buffer.from(record?.response ?? []).equals(Buffer.from(got))).toBe(true);
     expect(record?.answer?.engine).toBe("google-ai-mode");
   });
@@ -179,16 +255,16 @@ describe("collectTask", () => {
         json(JSON.stringify({ status_code: 20000, tasks: [{ id: "t-0", status_code: code }] })),
       ),
     );
-    await expect(dataforseoAdapter.collectTask?.(slot("google-ai-mode", 0), "t-0")).resolves.toBe(
-      null,
-    );
+    const target = slot("google-ai-mode", 0);
+    await expect(dataforseoAdapter.collectTask?.(target, "t-0", [target])).resolves.toBe(null);
   });
 
   test("a finished task is fetched by id", async () => {
     server.use(
       http.get(`${AI_MODE}/task_get/advanced/:id`, () => json(recorded("ai-mode-task-get"))),
     );
-    const record = await dataforseoAdapter.collectTask?.(slot("google-ai-mode", 0), "t-0");
+    const target = slot("google-ai-mode", 0);
+    const record = await dataforseoAdapter.collectTask?.(target, "t-0", [target]);
     expect(record).toMatchObject({ status: "succeeded", mode: "task" });
   });
 });

@@ -71,6 +71,8 @@ export const captureTasks = opsTable(
     // Set before each fetch: a task fetched and not stored is no longer listed as ready.
     fetchingAt: at(),
     collectedAt: at(),
+    // The task_post call that carried the slot, whose exact body each capture seals.
+    batchId: uuid(),
   },
   (t) => [
     index("capture_tasks_measurement_id_open_idx")
@@ -78,6 +80,19 @@ export const captureTasks = opsTable(
       .where(sql`${t.collectedAt} is null`),
   ],
 );
+
+/**
+ * One task_post call of up to 100 tasks: its slots in the order they were sent, from which the
+ * exact request body is rebuilt for every capture it produced.
+ */
+export const captureTaskBatches = opsTable("capture_task_batches", {
+  id: uuid().primaryKey().default(sql`uuidv7()`),
+  measurementId: text().notNull(),
+  provider: text().notNull(),
+  engine: text().notNull(),
+  slotIds: text().array().notNull(),
+  createdAt: at().notNull().defaultNow(),
+});
 
 /** The row each provider account's lease acquisition locks. */
 export const leasePools = opsTable("lease_pools", {
