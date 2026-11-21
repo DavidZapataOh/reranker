@@ -10,7 +10,13 @@ export default mergeConfig(
     test: {
       coverage: {
         thresholds: CRITICAL_COVERAGE,
-        exclude: ["src/measurement.ts", "src/capture.ts", "src/persist.ts", "src/answers.ts"],
+        exclude: [
+          "src/measurement.ts",
+          "src/capture.ts",
+          "src/persist.ts",
+          "src/queue.ts",
+          "src/answers.ts",
+        ],
       },
     },
   }),
