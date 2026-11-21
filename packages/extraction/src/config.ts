@@ -111,9 +111,9 @@ function buildCurrent(): ExtractorConfig & { configHash: string } {
   const config: ExtractorConfig = {
     version: 1,
     models: {
-      primary: { provider: "openai", model: "gpt-6-luna", reasoning: "low" },
+      primary: { provider: "openai", model: "gpt-6-luna", reasoning: "none" },
       secondary: { provider: "gemini", model: "gemini-3.1-flash-lite", reasoning: "minimal" },
-      judge: { provider: "openai", model: "gpt-6.1-terra", reasoning: "low" },
+      judge: { provider: "openai", model: "gpt-6.1-terra", reasoning: "none" },
       resolveJudge: { provider: "openai", model: "gpt-6-luna", reasoning: "low" },
       classifier: { provider: "openai", model: "gpt-6-luna", reasoning: "low" },
     },
@@ -142,7 +142,8 @@ function buildCurrent(): ExtractorConfig & { configHash: string } {
       floor: 0.6,
     },
     timeoutsMs: {
-      extract: 6000,
+      // Measured on real answers in six languages: the primary call ran p95 6.7 s, max 7.7 s.
+      extract: 10_000,
       judge: 8000,
       classifier: 3000,
       findings: 3000,

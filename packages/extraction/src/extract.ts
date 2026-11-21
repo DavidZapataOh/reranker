@@ -160,6 +160,11 @@ function shortCircuit(
  * Turns one captured answer into its mentions: both extractors in parallel, the judge only on
  * disagreement, the raw outputs to R2 and one row per capture and config. A retried step reads
  * the stored extraction back instead of paying for it again.
+ *
+ * It never gives up on a slow answer by itself: a report that cannot wait past its extraction
+ * cutoff records that answer as `extraction_late`, leaves it out of its estimates and says so,
+ * while this call still finishes and stores the extraction, which the report's late settlement
+ * reads back without paying twice.
  */
 export async function extractResponse(
   raw: RawCapture,

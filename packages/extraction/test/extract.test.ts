@@ -181,11 +181,11 @@ test("a config without a registry entry leaves the platform untagged", async () 
   expect(r.mentions[1]).toMatchObject({ entityKind: "other", entityKey: "name:doctoralia" });
 });
 
-test("secondary timeout falls back to single within 7 s", async () => {
+test("secondary timeout falls back to single within the extract deadline", async () => {
   vi.useFakeTimers();
   doubles.gemini.mockImplementation(() => new Promise(() => {}));
   const p = extractResponse(capture({}), ctx);
-  await vi.advanceTimersByTimeAsync(7000);
+  await vi.advanceTimersByTimeAsync(currentExtractorConfig.timeoutsMs.extract + 1000);
   const r = await p;
   expect(r).toMatchObject({ agreement: "single", models: { secondary: null } });
   // The timed-out secondary settled its reservation, so the cost carries it.

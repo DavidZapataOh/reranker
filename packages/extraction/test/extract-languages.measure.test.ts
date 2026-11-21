@@ -102,12 +102,8 @@ const spend: SpendContext = {
   refId: randomUUID(),
 };
 
-// Accuracy is what is measured: the production deadlines would turn a slow call into a missing
-// answer, and the latency each language takes is reported apart.
-const config: ExtractorConfig = {
-  ...currentExtractorConfig,
-  timeoutsMs: { ...currentExtractorConfig.timeoutsMs, extract: 60_000, judge: 60_000 },
-};
+// The production config, deadlines included: a call they cut counts as a failed extraction.
+const config: ExtractorConfig = currentExtractorConfig;
 
 beforeAll(() => {
   vi.stubEnv("APP_ENV", process.env.APP_ENV || "development");

@@ -121,14 +121,18 @@ describe("currentExtractorConfig", () => {
     expect(currentExtractorConfig.models.primary).toEqual({
       provider: "openai",
       model: "gpt-6-luna",
-      reasoning: "low",
+      reasoning: "none",
     });
     expect(currentExtractorConfig.models.secondary).toEqual({
       provider: "gemini",
       model: "gemini-3.1-flash-lite",
       reasoning: "minimal",
     });
-    expect(currentExtractorConfig.models.judge.model).toBe("gpt-6.1-terra");
+    expect(currentExtractorConfig.models.judge).toEqual({
+      provider: "openai",
+      model: "gpt-6.1-terra",
+      reasoning: "none",
+    });
     expect(currentExtractorConfig.models.resolveJudge.model).toBe("gpt-6-luna");
     expect(currentExtractorConfig.models.classifier.model).toBe("gpt-6-luna");
     expect(currentExtractorConfig.pinnedFrom).toBeNull();
@@ -153,7 +157,7 @@ describe("currentExtractorConfig", () => {
         floor: 0.6,
       },
       timeoutsMs: {
-        extract: 6000,
+        extract: 10_000,
         judge: 8000,
         classifier: 3000,
         findings: 3000,
