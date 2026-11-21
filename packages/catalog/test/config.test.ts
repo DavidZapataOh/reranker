@@ -1,4 +1,5 @@
 import { cost } from "@reranker/schema";
+import { MeasurementLanguage } from "@reranker/schema/measurement";
 import { expect, test } from "vitest";
 import lexicons from "../data/guards/lexicons.json" with { type: "json" };
 import {
@@ -7,6 +8,8 @@ import {
   GENERATOR_CONFIG,
   type GeneratorConfig,
   generatorConfigHash,
+  languageConfig,
+  languageConfigHash,
 } from "../src/generate/config";
 import { GENERATION_LANGUAGES, promptsFor } from "../src/generate/prompts";
 import { jcs, promptSha256, sha256Hex } from "../src/hash";
@@ -25,6 +28,20 @@ test("generator config hash is stable and changes with any field", () => {
     const prompts = { ...GENERATOR_CONFIG.prompts, [language]: own };
     expect(hashOf({ ...GENERATOR_CONFIG, prompts })).not.toBe(generatorConfigHash);
   }
+});
+
+test("a language's reuse hash covers its own prompts and templates and no other language's", () => {
+  const hashes = MeasurementLanguage.options.map(languageConfigHash);
+  expect(new Set(hashes).size).toBe(MeasurementLanguage.options.length);
+  for (const language of MeasurementLanguage.options) {
+    expect(languageConfigHash(language)).toBe(sha256Hex(jcs(languageConfig(language))));
+  }
+  const de = languageConfig("de");
+  expect(de.prompts).toEqual(GENERATOR_CONFIG.prompts.de);
+  expect(de.templatesVersion).toBe(templatesVersion("de"));
+  expect(JSON.stringify(de)).not.toContain(GENERATOR_CONFIG.prompts.es.paraphrase);
+  // Shared settings reach every language.
+  expect(hashOf({ ...de, dedupe: 0.91 } as never)).not.toBe(languageConfigHash("de"));
 });
 
 test("every language with prompts has its own templates and guard lexicon", () => {

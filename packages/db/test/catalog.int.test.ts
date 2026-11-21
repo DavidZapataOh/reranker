@@ -15,6 +15,7 @@ const TABLES = [
   "personas",
   "paraphrases",
   "intent_sets",
+  "intent_set_claims",
 ] as const;
 
 const sha = (seed: string) => createHash("sha256").update(seed).digest("hex");

@@ -13,7 +13,7 @@ import type {
 import { agree, type GenderedLanguage, type GenderedNoun, type Noun, nounText } from "../grammar";
 import { requireNounGender } from "../language";
 import { type FallbackIntent, fallbackTemplates, templatesVersion } from "../templates";
-import { GENERATOR_CONFIG, generatorConfigHash } from "./config";
+import { GENERATOR_CONFIG, languageConfigHash } from "./config";
 import { type PoolReport, selectPool } from "./filter";
 import {
   type Candidate,
@@ -360,7 +360,7 @@ export async function generateIntentSet(
   const set = draftSet(input, complete, preambles, {
     kind: "generated",
     version: new Date().toISOString().slice(0, 10),
-    generatorConfigHash,
+    generatorConfigHash: languageConfigHash(language),
     generators,
   });
   return { set, report, outcome: "generated", generators };

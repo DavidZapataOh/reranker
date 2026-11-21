@@ -1,6 +1,7 @@
 import { ProviderUnavailableError } from "@reranker/jobs";
 import { type BusinessCategory, IntentSet } from "@reranker/schema/measurement";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { languageConfigHash } from "../src/generate/config";
 import { generateIntentSet, templateIntentSet } from "../src/generate/pipeline";
 import type { DraftIntent } from "../src/generate/providers";
 import { intentSetId, variantTemplates } from "../src/hash";
@@ -177,7 +178,7 @@ describe("generateIntentSet", () => {
     // The persona with a phone number is dropped; three is the cap.
     expect(set.personas.map((p) => p.preamble)).toEqual([PERSONAS[0], PERSONAS[1], PERSONAS[3]]);
     expect(set.manifest).toMatchObject({ kind: "generated", generators: 2 });
-    expect(set.manifest.generatorConfigHash).toMatch(/^[0-9a-f]{64}$/);
+    expect(set.manifest.generatorConfigHash).toBe(languageConfigHash("es"));
     expect(set.manifest.variantCount).toBe(variantTemplates(set).length);
     expect(r.report.fallback).toBeNull();
   });
