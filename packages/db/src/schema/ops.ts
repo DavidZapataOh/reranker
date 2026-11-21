@@ -6,6 +6,7 @@ import {
   doublePrecision,
   index,
   integer,
+  jsonb,
   primaryKey,
   text,
   timestamp,
@@ -44,6 +45,37 @@ export const workflowStarts = opsTable(
   (t) => [
     primaryKey({ columns: [t.kind, t.key] }),
     check("workflow_starts_status_check", sql`${t.status} in ('pending', 'started')`),
+  ],
+);
+
+/**
+ * One row per slot queued on a provider's task queue. Inserting it is the claim that the slot is
+ * posted once across processes and retries; `posting_at` marks that the call may have gone out,
+ * after which only a lookup at the provider decides whether the task exists.
+ */
+export const captureTasks = opsTable(
+  "capture_tasks",
+  {
+    slotId: text().primaryKey(),
+    measurementId: text().notNull(),
+    provider: text().notNull(),
+    engine: text().notNull(),
+    claimToken: uuid().notNull(),
+    claimedAt: at().notNull().defaultNow(),
+    postingAt: at(),
+    // The open reservation and who pays for it, so a task found after its poster died is charged.
+    reservationId: uuid(),
+    spend: jsonb(),
+    vendorTaskId: text(),
+    postedAt: at(),
+    // Set before each fetch: a task fetched and not stored is no longer listed as ready.
+    fetchingAt: at(),
+    collectedAt: at(),
+  },
+  (t) => [
+    index("capture_tasks_measurement_id_open_idx")
+      .on(t.measurementId)
+      .where(sql`${t.collectedAt} is null`),
   ],
 );
 
