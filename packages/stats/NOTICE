@@ -1,0 +1,8 @@
+@reranker/stats
+
+Cited sites are grouped by registrable domain using the Public Suffix List
+(https://publicsuffix.org), maintained by the Mozilla Foundation and contributors and
+licensed under the Mozilla Public License 2.0 (https://mozilla.org/MPL/2.0/). The list is
+read through tldts 7.5.4 (MIT, https://github.com/remusao/tldts), which embeds a snapshot
+of it; the version is pinned in the workspace catalog, so a report is grouped the same way
+until the pin moves. The list is used unmodified.
