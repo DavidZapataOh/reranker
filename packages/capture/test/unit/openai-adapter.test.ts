@@ -5,7 +5,7 @@ import {
   InvalidInputError,
   ProviderRejectedError,
   ProviderUnavailableError,
-  type RateLimitedError,
+  RateLimitedError,
 } from "@reranker/jobs/errors";
 import { server } from "@reranker/testing/msw";
 import { HttpResponse, http } from "msw";
