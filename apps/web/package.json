@@ -34,13 +34,13 @@
     "@reranker/verify": "workspace:*",
     "better-auth": "catalog:",
     "drizzle-orm": "catalog:",
-    "lucide-react": "1.68.0",
+    "lucide-react": "1.75.0",
     "next": "catalog:",
     "next-intl": "catalog:",
-    "posthog-js": "1.446.0",
+    "posthog-js": "1.450.1",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "simple-icons": "16.36.0",
+    "simple-icons": "16.38.0",
     "workflow": "catalog:"
   },
   "devDependencies": {
