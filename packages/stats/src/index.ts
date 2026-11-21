@@ -1,4 +1,15 @@
 export {
+  type AnswerCitations,
+  type CitationCapture,
+  type CitationInput,
+  type CitedSource,
+  citationKeyOf,
+  citationStats,
+  citationsOf,
+  registrableDomain,
+  targetKeysOf,
+} from "./citations";
+export {
   type CaptureFrame,
   type EntityColumn,
   pairedCompare,

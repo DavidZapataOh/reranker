@@ -26,7 +26,8 @@
     "@stdlib/math-base-special-betaln": "catalog:",
     "@stdlib/stats-base-dists-beta-quantile": "catalog:",
     "canonicalize": "catalog:",
-    "drizzle-orm": "catalog:"
+    "drizzle-orm": "catalog:",
+    "tldts": "catalog:"
   },
   "devDependencies": {
     "@opentelemetry/sdk-trace": "catalog:",

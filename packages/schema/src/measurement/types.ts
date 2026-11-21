@@ -74,6 +74,34 @@ export interface EngineCoverage {
   geo: EngineGeo; // copied from the frozen plan
 }
 
+// A cited site: `platform:<slug>` when the registry knows it, else `web:<registrable domain>`.
+export interface CitedDomain {
+  key: EntityKey;
+  isTarget: boolean;
+  rate: RateEstimate; // share of the answers in scope that cite it at least once
+}
+
+// Where the AI takes its sources from, read from the cited URLs of every valid answer.
+export interface CitationStats {
+  answers: number;
+  answersCiting: number;
+  citations: number; // distinct cited URLs per answer, summed
+  unattributed: number; // cited behind a Google redirect that never resolved
+  // Null when the business has no site of its own.
+  target: {
+    keys: EntityKey[];
+    rate: RateEstimate; // share of valid answers citing any of its sites
+    byEngine: Partial<Record<EngineId, RateEstimate>>;
+    // Its sites' part of all citations, answers weighted like the rates; null when none cite.
+    share: { estimate: number; citations: number; total: number } | null;
+  } | null;
+  top: CitedDomain[];
+  topByEngine: Partial<Record<EngineId, CitedDomain[]>>;
+  // Cited in answers that recommend a competitor and in none that recommend the business;
+  // rates over the answers that recommend a competitor.
+  competitorOnly: CitedDomain[];
+}
+
 export interface IntentCoverage {
   intentId: IntentId;
   namesEntitiesRate: RateEstimate;
