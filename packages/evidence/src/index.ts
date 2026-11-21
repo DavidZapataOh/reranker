@@ -37,6 +37,7 @@ export { type RemovableKind, removeArtifact } from "./removal";
 export {
   type CapturePredicateInput,
   captureRow,
+  ENVELOPE_CONTENT_TYPE,
   latestNormalized,
   logOrigin,
   readRaw,

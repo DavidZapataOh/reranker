@@ -291,6 +291,7 @@ describe("opsAlerts", () => {
         runbook: "capture-dataforseo-errors.md",
         source: "capture",
       },
+      "model-change": { severity: "warning", runbook: "model-change.md", source: "capture" },
     });
   });
 
