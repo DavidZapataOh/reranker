@@ -87,6 +87,7 @@ export {
 } from "./rate";
 export {
   costOf,
+  recordIncurredSpend,
   releaseSpend,
   releaseStaleSpend,
   reserveSpend,

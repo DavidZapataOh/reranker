@@ -16,7 +16,7 @@ import { type JobsConfig, loadJobsConfig } from "./config";
 import { nextResetAt, spendDay } from "./day";
 import { InvalidInputError, SpendCapExceededError } from "./errors";
 import type { PaidProvider, SpendPool, SpendPurpose } from "./providers";
-import { emit, spendDenied, spendReserved } from "./telemetry";
+import { emit, spendDenied, spendIncurred, spendReserved } from "./telemetry";
 
 export interface SpendRequest {
   provider: PaidProvider;
@@ -250,6 +250,57 @@ export async function releaseSpend(
 ): Promise<{ applied: boolean }> {
   assertReservation(r);
   return applied(sql`select ops.release_spend(${r.id}::uuid) as applied`, "release_spend", opts.tx);
+}
+
+/**
+ * Records money a provider already charged when no open reservation stands for it, such as a
+ * queued task found after its poster died and its reservation was released as abandoned. Caps
+ * limit new reservations, not spending that already happened, so this is never refused; it counts
+ * on every scope, so later reservations see it, and alerts when it takes a scope past its cap.
+ */
+export async function recordIncurredSpend(
+  req: Omit<SpendRequest, "estimate">,
+  actual: ProviderCost,
+  opts: { tx?: SystemTx | undefined } = {},
+): Promise<{ id: string }> {
+  const config = loadJobsConfig();
+  const currency = currencyOf(config);
+  assertAmount(actual, currency);
+  if (!req.refType || !req.refId) throw new InvalidInputError("Spend needs a reference");
+  const scopes = scopesFor({ ...req, estimate: actual });
+  const caps = scopes.map((scope) => capOf(config, scope).amount_micros);
+  const ledger = {
+    provider: req.provider,
+    channel: req.channel ?? null,
+    engine: req.engine ?? null,
+    purpose: req.purpose,
+    pool: req.pool ?? null,
+    ref_type: req.refType,
+    ref_id: req.refId,
+    currency,
+  };
+  const run = (tx: SystemTx) =>
+    tx.execute<Omit<ReserveRow, "denied_scope">>(
+      sql`select * from ops.record_incurred_spend(${spendDay(new Date())}::date,
+        ${sql.param(scopes)}::text[], ${sql.param(caps)}::bigint[], ${actual.amount_micros}::bigint,
+        ${JSON.stringify(ledger)}::jsonb)`,
+    );
+  // With `tx` the charge commits with the caller's own writes, such as adopting the task it pays.
+  const { rows } = await (opts.tx ? run(opts.tx) : system(run));
+  const row = rows[0];
+  if (!row?.ledger_id) throw new Error("record_incurred_spend returned no row");
+  await spendIncurred({
+    id: row.ledger_id,
+    reserved: cost(actual.amount_micros, currency),
+    provider: req.provider,
+    purpose: req.purpose,
+    scopes: row.scopes.map((scope, i) => ({
+      scope,
+      used: cost(Number(row.used[i]), currency),
+      cap: cost(Number(row.caps[i]), currency),
+    })),
+  });
+  return { id: row.ledger_id };
 }
 
 /**

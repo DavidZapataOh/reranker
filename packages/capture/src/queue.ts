@@ -7,6 +7,7 @@ import {
   InvalidInputError,
   loadJobsConfig,
   ProviderUnavailableError,
+  recordIncurredSpend,
   releaseSpend,
   reserveSpend,
   runBatch,
@@ -227,41 +228,29 @@ async function reconcile(measurementId: string): Promise<void> {
         slot_id: row.slotId,
         vendor_task_id: task.providerTaskId,
       });
-      const charged: ProviderCost | null = task.cost;
-      const outcome = await system(async (tx) => {
+      await system(async (tx) => {
         const adopted = await tx
           .update(captureTasks)
           .set({ vendorTaskId: task.providerTaskId, postedAt: row.postingAt })
           .where(open)
           .returning();
-        if (adopted.length === 0 || !reservation) return "skipped" as const;
-        const { applied } = await settleSpend(reservation, charged ?? reservation.reserved, { tx });
-        return applied ? ("settled" as const) : ("released" as const);
-      });
-      // The stale-reservation sweep gave the reservation back before the task was found; the
-      // charge is recorded anew so the ledger still holds it once.
-      if (outcome === "released" && reservation) {
-        const spend = row.spend as SpendContext;
-        const amount = charged ?? reservation.reserved;
-        try {
-          const again = await reserveSpend({
-            ...spend,
+        if (adopted.length === 0 || !reservation) return;
+        const amount: ProviderCost = task.cost ?? reservation.reserved;
+        const { applied } = await settleSpend(reservation, amount, { tx });
+        if (applied) return;
+        // The stale-reservation sweep gave the reservation back before the task was found. The
+        // provider charged regardless, so the charge is recorded where no cap can refuse it.
+        await recordIncurredSpend(
+          {
+            ...(row.spend as SpendContext),
             provider: reservation.provider,
             channel,
             engine: row.engine as FrozenSlot["engine"],
-            estimate: amount,
-          });
-          await settleSpend(again, amount);
-        } catch (error) {
-          // The task is adopted either way; a charge the caps refuse is left for operations.
-          log.error("capture.task_charge_unrecorded", {
-            provider,
-            slot_id: row.slotId,
-            micro_usd: amount.amount_micros,
-            error: error instanceof Error ? error.name : "unknown",
-          });
-        }
-      }
+          },
+          amount,
+          { tx },
+        );
+      });
     }
   }
 }
