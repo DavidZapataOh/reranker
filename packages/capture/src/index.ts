@@ -34,6 +34,7 @@ export {
   loadPlan,
 } from "./measurement";
 export { persistCapture } from "./persist";
+export { collectReadyTasks, postCaptureTasks } from "./queue";
 export { RawSink } from "./raw/raw-sink";
 export { type Fetch, recordingFetch, teeFetch } from "./raw/tee-fetch";
 export { resolveRedirects } from "./resolve-redirects";

@@ -42,7 +42,7 @@ export type CaptureSlotsOptions = {
 type Outcome = { ok: true } | { ok: false; error: Error; retryable: boolean; alert?: "balance" };
 
 const asError = (error: unknown) => (error instanceof Error ? error : new Error(String(error)));
-const codeOf = (error: Error) =>
+export const codeOf = (error: Error) =>
   isAppError(error) ? error.code : error.name.replace(/Error$/, "");
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const isLate = (opts: CaptureSlotsOptions) =>
@@ -56,7 +56,7 @@ function bodyOf(bytes: Uint8Array): unknown | null {
   }
 }
 
-function outcomeOf(record: CaptureRecord): Outcome {
+export function outcomeOf(record: CaptureRecord): Outcome {
   if (record.status === "succeeded") return { ok: true };
   if (record.failure) return { ok: false, ...record.failure };
   const outcome = mapDataForSeoStatus({
@@ -68,7 +68,7 @@ function outcomeOf(record: CaptureRecord): Outcome {
 }
 
 // A call that reported no cost may still have been billed, so its reservation stands.
-function settle(reservation: SpendReservation, charged: ProviderCost | null, tx?: SystemTx) {
+export function settle(reservation: SpendReservation, charged: ProviderCost | null, tx?: SystemTx) {
   if (charged === null) return settleSpend(reservation, reservation.reserved, { tx });
   if (charged.amount_micros === 0) return releaseSpend(reservation, { tx });
   return settleSpend(reservation, charged, { tx });
@@ -179,7 +179,7 @@ async function captureWithRetry(slot: FrozenSlot, opts: CaptureSlotsOptions): Pr
   if (!outcome.ok) throw outcome.error;
 }
 
-async function succeededSlots(measurementId: string): Promise<Set<number>> {
+export async function succeededSlots(measurementId: string): Promise<Set<number>> {
   // Served by the partial unique index captures_one_success.
   const rows = await withSystem("capture", (tx) =>
     tx
@@ -190,15 +190,8 @@ async function succeededSlots(measurementId: string): Promise<Set<number>> {
   return new Set(rows.map((row) => row.slotIndex));
 }
 
-/**
- * Captures the given slots of a frozen plan, each once: a slot with a stored success is never
- * called again, so a retried step pays only for what is missing. Failures are returned per slot.
- */
-export async function captureSlots(
-  measurementId: string,
-  slotIds: SlotId[],
-  opts: CaptureSlotsOptions,
-): Promise<{ succeeded: SlotId[]; failed: Array<{ slotId: SlotId; code: string }> }> {
+/** The frozen slots of `slotIds`, every one of which must belong to the measurement's plan. */
+export async function planSlots(measurementId: string, slotIds: SlotId[]): Promise<FrozenSlot[]> {
   const plan = await loadPlan(measurementId);
   const slots = slotIds.map((id) => {
     const { measurementId: owner, slotIndex } = parseSlotId(id);
@@ -210,16 +203,34 @@ export async function captureSlots(
   });
   // A statement that cannot name its intent set must fail before anything is paid.
   await loadIntentSets(slots.map((slot) => slot.intentSetId));
-  const done = await succeededSlots(measurementId);
+  return slots;
+}
 
-  const ordered = dispatchOrder(slots);
-  // No more slots run than their providers' lease pools admit: the rest would only wait for a
-  // lease while holding database connections the running ones need to seal and settle.
+// No more slots run than their providers' lease pools admit: the rest would only wait for a
+// lease while holding database connections the running ones need to seal and settle.
+export function admittedConcurrency(
+  slots: readonly { provider: FrozenSlot["provider"] }[],
+): number {
   const { limits } = loadJobsConfig();
-  const admitted = [...new Set(ordered.map((slot) => slot.provider))].reduce(
+  const admitted = [...new Set(slots.map((slot) => slot.provider))].reduce(
     (sum, provider) => sum + limits[provider].maxInFlight,
     0,
   );
+  return Math.max(1, Math.min(slots.length, admitted));
+}
+
+/**
+ * Captures the given slots of a frozen plan, each once: a slot with a stored success is never
+ * called again, so a retried step pays only for what is missing. Failures are returned per slot.
+ */
+export async function captureSlots(
+  measurementId: string,
+  slotIds: SlotId[],
+  opts: CaptureSlotsOptions,
+): Promise<{ succeeded: SlotId[]; failed: Array<{ slotId: SlotId; code: string }> }> {
+  const slots = await planSlots(measurementId, slotIds);
+  const done = await succeededSlots(measurementId);
+  const ordered = dispatchOrder(slots);
   const results = await runBatch(
     ordered,
     async (slot) => {
@@ -235,7 +246,7 @@ export async function captureSlots(
     {
       key: (slot) => slot.slotId,
       isDone: async (key) => (done.has(parseSlotId(key).slotIndex) ? true : null),
-      concurrency: Math.max(1, Math.min(ordered.length, admitted)),
+      concurrency: admittedConcurrency(ordered),
     },
   );
   return {
