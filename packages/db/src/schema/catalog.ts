@@ -2,6 +2,7 @@ import {
   CategoryArchetype,
   IntentKind,
   IntentSetKind,
+  MeasurementLanguage,
   Paraphrase,
   ParaphraseFormat,
   QuestionScope,
@@ -47,6 +48,10 @@ export const intentSetKind = publicPanelSchema.enum("intent_set_kind", enumValue
 export const registerProfile = publicPanelSchema.enum(
   "register_profile",
   enumValues(RegisterProfile),
+);
+export const measurementLanguage = publicPanelSchema.enum(
+  "measurement_language",
+  enumValues(MeasurementLanguage),
 );
 
 /** One frozen version of the reviewed seed; its JSON lives in the repository. */
@@ -146,6 +151,9 @@ export const intentSets = sharedTable(
     kind: intentSetKind().notNull(),
     scope: questionScope().notNull(),
     registerProfile: registerProfile().notNull(),
+    // Part of the reuse key, since a set is asked in one language. Rows written before languages
+    // were recorded are Spanish.
+    language: measurementLanguage().notNull().default("es"),
     generators: smallint().notNull(),
     variantCount: smallint().notNull(),
     setId: text().notNull().unique("intent_sets_set_id_key"),

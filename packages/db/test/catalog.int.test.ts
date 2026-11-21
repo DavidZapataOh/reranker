@@ -112,7 +112,7 @@ test.each(TABLES)("app role can read but not write %s", async (table) => {
 const REUSE = `
   select set_id, artifact_sha256 from public_panel.intent_sets
   where category_key = $1 and scope = $2 and register_profile = $3 and generator_config_hash = $4
-    and created_at > now() - interval '30 days'
+    and language = 'es' and created_at > now() - interval '30 days'
   order by created_at desc limit 1`;
 
 // Ten thousand generated sets across 300 categories, both profiles and three generator configs.
