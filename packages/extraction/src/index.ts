@@ -1,3 +1,4 @@
+export { categoryByRules, type InferredCategory } from "./category";
 export {
   assertDistinctProviders,
   configHashOf,

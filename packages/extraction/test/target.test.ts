@@ -48,6 +48,11 @@ const BOGOTA: PlacesAddressComponent[] = [
   { longText: "Bogotá, D.C.", shortText: "Bogotá, D.C.", types: ["administrative_area_level_1"] },
   { longText: "Colombia", shortText: "CO", types: ["country", "political"] },
 ];
+const PARIS: PlacesAddressComponent[] = [
+  { longText: "Paris", shortText: "Paris", types: ["locality", "political"] },
+  { longText: "Île-de-France", shortText: "IDF", types: ["administrative_area_level_1"] },
+  { longText: "France", shortText: "FR", types: ["country", "political"] },
+];
 const HAVANA: PlacesAddressComponent[] = [
   { longText: "La Habana", shortText: "La Habana", types: ["locality", "political"] },
   { longText: "Cuba", shortText: "CU", types: ["country", "political"] },
@@ -137,7 +142,16 @@ test("candidates: ≤ 5, measurable countries only, Pro target mask, no city bia
     placeId: "p1",
     domain: null,
     displayName: "Panadería La Espiga",
-    categoryHint: null,
+    categoryHint: {
+      key: "gen:places:bakery",
+      source: "places_type",
+      label: "Panadería",
+      noun: "panadería",
+      archetype: "food",
+      scope: "local",
+      register: "tu",
+      placesTypes: ["bakery"],
+    },
     places: {
       types: ["bakery", "food", "store"],
       primaryType: "bakery",
@@ -148,6 +162,32 @@ test("candidates: ≤ 5, measurable countries only, Pro target mask, no city bia
   });
   expect(c[0]?.geo).toMatchObject({ country: "CO", level: "city", name: "Bogotá, D.C." });
   expect(c[0]?.confidence ?? 0).toBeGreaterThan(c[1]?.confidence ?? 1);
+  // The hint is a plain category: what only inference needs stays out of the candidate.
+  expect(c[0]?.categoryHint).not.toHaveProperty("confidence");
+});
+
+test("a bakery outside Spanish gets no hint: its name must come from its own language", async () => {
+  placesReturn(place("p1", "Boulangerie Dupont", PARIS));
+  const [c] = await findBusinessCandidates({ query: "Boulangerie Dupont", country: "FR", spend });
+  expect(c).toMatchObject({ kind: "place", categoryHint: null });
+});
+
+test("a seed type outside Spanish is hinted with the seed's own noun", async () => {
+  placesReturn({
+    ...place("p1", "Cabinet Dentaire Dupont", PARIS),
+    primaryType: "dentist",
+    types: ["dentist"],
+  });
+  const [c] = await findBusinessCandidates({
+    query: "Cabinet Dentaire Dupont",
+    country: "FR",
+    spend,
+  });
+  expect(c?.categoryHint).toMatchObject({
+    key: "dental_clinic",
+    noun: "dentiste",
+    label: "Dentiste",
+  });
 });
 
 test("the connection country only biases the search as its region code", async () => {
