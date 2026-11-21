@@ -112,16 +112,17 @@ test.each(TABLES)("app role can read but not write %s", async (table) => {
 const REUSE = `
   select set_id, artifact_sha256 from public_panel.intent_sets
   where category_key = $1 and scope = $2 and register_profile = $3 and generator_config_hash = $4
-    and created_at > now() - interval '30 days'
+    and language = 'es' and created_at > now() - interval '30 days'
   order by created_at desc limit 1`;
 
 // Ten thousand generated sets across 300 categories, both profiles and three generator configs.
+// Versions are the generation date, as the pipeline writes them, so row sizes match production.
 const SEED_INTENT_SETS = `
   insert into public_panel.intent_sets (set_id, kind, version, category_key, scope,
     register_profile, generator_config_hash, generators, content_hash, merkle_root,
     artifact_sha256, variant_count, created_at)
   select 'is_' || left(encode(sha256(g::text::bytea), 'hex'), 16), 'generated',
-    '2026-11-18.' || g, 'gen:places:type' || (g % 300), 'local',
+    '2026-11-18', 'gen:places:type' || (g % 300), 'local',
     (case when g % 2 = 0 then 'co' else 'neutral' end)::public_panel.register_profile,
     sha256(('cfg' || g % 3)::bytea), 2, sha256(g::text::bytea), sha256(('root' || g)::bytea),
     sha256(('artifact' || g)::bytea), 240, now() - make_interval(days => g % 60)

@@ -169,6 +169,13 @@
       "when": 1795207914300,
       "tag": "0023_signing_keys_seed",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1795221904611,
+      "tag": "0024_intent_set_language",
+      "breakpoints": true
     }
   ]
 }

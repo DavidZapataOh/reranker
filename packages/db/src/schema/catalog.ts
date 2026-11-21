@@ -2,6 +2,7 @@ import {
   CategoryArchetype,
   IntentKind,
   IntentSetKind,
+  MeasurementLanguage,
   Paraphrase,
   ParaphraseFormat,
   QuestionScope,
@@ -156,6 +157,11 @@ export const intentSets = sharedTable(
     generatorConfigHash: bytea(),
     // Null for the seed, which ships with the code.
     artifactSha256: bytea(),
+    // Part of the reuse key, since a set is asked in one language; rows written before languages
+    // were recorded are Spanish. Two-letter text takes 3 bytes, an enum 4 plus alignment.
+    language: text({ enum: enumValues(MeasurementLanguage) })
+      .notNull()
+      .default("es"),
   },
   (t) => [
     index("intent_sets_reuse_idx").on(
@@ -167,6 +173,8 @@ export const intentSets = sharedTable(
     ),
     check("intent_sets_set_id_check", sql`${t.setId} ~ '^is_[0-9a-f]{16}$'`),
     check("intent_sets_generators_check", sql`${t.generators} between 0 and 2`),
+    // The MeasurementLanguage values; a schema test keeps the two lists equal.
+    check("intent_sets_language_check", sql`${t.language} in ('es', 'en', 'pt', 'fr', 'de', 'it')`),
     sha256("intent_sets", "content_hash"),
     sha256("intent_sets", "merkle_root"),
     sha256("intent_sets", "generator_config_hash"),
