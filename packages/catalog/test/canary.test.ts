@@ -104,6 +104,12 @@ describe("canary@3", () => {
 
   test("stable across calls", () => expect(canaryFrom(seed)).toEqual(canary));
 
+  test("every question names the seed version's intent set and its own scope", () => {
+    expect(canary.intentSetId).toBe(`is_${entry.contentHash.slice(0, 16)}`);
+    const scopes = new Map(seed.catalog.intents.map((i) => [i.intentId, i.scope]));
+    expect(canary.variants.every((v) => v.scope === scopes.get(v.intentId))).toBe(true);
+  });
+
   test("a seed with fewer than 25 such questions is refused", () => {
     const short = catalog();
     const kept = short.intents.filter((i) => !i.intentId.startsWith("hotel."));
