@@ -81,6 +81,7 @@ const FUNCTIONS = [
   "settle_spend",
   "release_spend",
   "release_stale_reservations",
+  "record_incurred_spend",
   "breaker_check",
   "breaker_record",
   "breaker_record_transition",

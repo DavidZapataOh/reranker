@@ -121,6 +121,38 @@ export async function spendReserved(r: SpendReservation): Promise<void> {
   }
 }
 
+/**
+ * Counts money already charged without a reservation, and alerts on the thresholds it crossed and
+ * on every scope it left past its cap: no cap stopped that spending.
+ */
+export async function spendIncurred(r: SpendReservation): Promise<void> {
+  emit({
+    name: "jobs.spend.settled",
+    props: { provider: r.provider, purpose: r.purpose, micro_usd: r.reserved.amount_micros },
+  });
+  if (!sink()) return;
+  for (const { scope, used, cap } of r.scopes) {
+    const after = used.amount_micros;
+    const before = after - r.reserved.amount_micros;
+    for (const threshold of SPEND_THRESHOLDS) {
+      const limit = (cap.amount_micros * threshold) / 100;
+      if (cap.amount_micros > 0 && before < limit && after >= limit) {
+        await spendAlert(scope, threshold, after, cap.amount_micros);
+      }
+    }
+    if (after > cap.amount_micros) {
+      await alertOnce("jobs-spend-cap-reached", `${spendDay()}:over:${scope}`, DAY_MS, {
+        scope,
+        threshold: 100,
+        over_cap: true,
+        used_micros: after,
+        cap_micros: cap.amount_micros,
+        severity: "critical",
+      });
+    }
+  }
+}
+
 /** A cap turned work away: the scope is full for this request whether or not it reached 100%. */
 export async function spendDenied(scope: string): Promise<void> {
   emit({ name: "jobs.spend.cap_reached", props: { scope } });

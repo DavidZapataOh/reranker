@@ -10,6 +10,7 @@ import { InvalidInputError, SpendCapExceededError } from "../src/errors";
 import type { PaidProvider, SpendPool, SpendPurpose } from "../src/providers";
 import {
   costOf,
+  recordIncurredSpend,
   releaseSpend,
   releaseStaleSpend,
   reserveSpend,
@@ -129,6 +130,41 @@ const granted = <T>(results: PromiseSettledResult<T>[]) =>
   results.flatMap((r) => (r.status === "fulfilled" ? [r.value] : []));
 const denials = <T>(results: PromiseSettledResult<T>[]) =>
   results.flatMap((r) => (r.status === "rejected" ? [r.reason as unknown] : []));
+
+describe("recordIncurredSpend", () => {
+  test("records a charge already made once even with every cap exhausted, counts it and alerts", async () => {
+    withCaps({ global: 100_000 });
+    await settleSpend(await reserveSpend(req(100_000)), usd(100_000));
+    await expect(reserveSpend(req(1000))).rejects.toBeInstanceOf(SpendCapExceededError);
+
+    const alerts: Array<{ kind: string; payload: Record<string, unknown> }> = [];
+    registerJobsTelemetry({
+      capture: () => {},
+      alert: async (kind, payload) => void alerts.push({ kind, payload }),
+    });
+    const refId = randomUUID();
+    const { id } = await recordIncurredSpend(
+      { provider: "dataforseo", channel: "api", purpose: "benchmark", refType: "test", refId },
+      usd(1200),
+    );
+    registerJobsTelemetry(null);
+
+    expect(await ledgerStatus(id)).toBe("settled");
+    expect(await costOf("test", refId)).toEqual(usd(1200));
+    const rows = await system<{ n: number }>(
+      sql`select count(*)::int as n from ops.spend_ledger where ref_id = ${refId}`,
+    );
+    expect(rows[0]?.n).toBe(1);
+    expect(await usedOf("global")).toBe(101_200);
+    expect(alerts).toContainEqual({
+      kind: "jobs-spend-cap-reached",
+      payload: expect.objectContaining({ scope: "global", over_cap: true, used_micros: 101_200 }),
+    });
+    // Later reservations see the spending.
+    withCaps({ global: 102_000 });
+    await expect(reserveSpend(req(1000))).rejects.toBeInstanceOf(SpendCapExceededError);
+  });
+});
 
 describe("reserveSpend", () => {
   test("US$1 cap with 100 concurrent US$0.04 reservations grants exactly 25", async () => {
