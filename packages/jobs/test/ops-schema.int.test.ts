@@ -54,6 +54,7 @@ const PRIMARY_KEYS: Record<string, string[]> = {
   alert_deliveries: ["kind", "bucket_hour"],
   workflow_starts: ["kind", "key"],
   capture_tasks: ["slot_id"],
+  capture_task_batches: ["id"],
   lease_pools: ["key"],
   concurrency_leases: ["lease_id"],
   rate_buckets: ["key"],

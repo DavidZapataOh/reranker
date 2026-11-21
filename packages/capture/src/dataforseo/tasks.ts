@@ -1,4 +1,4 @@
-import { InvalidInputError } from "@reranker/jobs/errors";
+import { InvalidInputError, ProviderUnavailableError } from "@reranker/jobs/errors";
 import { type EngineId, z } from "@reranker/schema";
 import {
   type AiOptimizationChatGptLlmScraperTaskPostRequestInfo,
@@ -7,18 +7,19 @@ import {
   type SerpGoogleOrganicTaskPostRequestInfo,
   SerpIdListRequestInfo,
 } from "dataforseo-client";
-import type { CaptureRecord, FoundTask, PostedTask, ReadyTask } from "../adapters";
+import type { CaptureRecord, FoundTask, PostedTasks, ReadyTask } from "../adapters";
 import type { EngineAnswer } from "../answer";
 import { RawSink } from "../raw/raw-sink";
 import type { FrozenSlot } from "../slot";
 import { createDataForSeo } from "./client";
-import { exchange, recordOf, reportedCost, reportedTaskId } from "./live";
-import { buildRequest, type DataForSeoRequest, requestBytes } from "./request";
+import { exchange, recordOf, reportedCost } from "./live";
+import { buildRequest, type DataForSeoRequest } from "./request";
+import { mapDataForSeoStatus } from "./status";
 
 type Clients = ReturnType<typeof createDataForSeo>;
 
 type TaskEndpoints = {
-  post: (clients: Clients, request: DataForSeoRequest) => Promise<unknown>;
+  post: (clients: Clients, requests: DataForSeoRequest[]) => Promise<unknown>;
   ready: (clients: Clients) => Promise<unknown>;
   get: (clients: Clients, id: string) => Promise<unknown>;
 };
@@ -27,23 +28,23 @@ type TaskEndpoints = {
 export const TASKS: Partial<Record<EngineId, TaskEndpoints>> = {
   gemini: {
     post: (c, r) =>
-      c.ai.geminiLlmScraperTaskPost([r as AiOptimizationGeminiLlmScraperTaskPostRequestInfo]),
+      c.ai.geminiLlmScraperTaskPost(r as AiOptimizationGeminiLlmScraperTaskPostRequestInfo[]),
     ready: (c) => c.ai.geminiLlmScraperTasksReady(),
     get: (c, id) => c.ai.geminiLlmScraperTaskGetAdvanced(id),
   },
   chatgpt: {
     post: (c, r) =>
-      c.ai.chatGptLlmScraperTaskPost([r as AiOptimizationChatGptLlmScraperTaskPostRequestInfo]),
+      c.ai.chatGptLlmScraperTaskPost(r as AiOptimizationChatGptLlmScraperTaskPostRequestInfo[]),
     ready: (c) => c.ai.chatGptLlmScraperTasksReady(),
     get: (c, id) => c.ai.chatGptLlmScraperTaskGetAdvanced(id),
   },
   "google-ai-overview": {
-    post: (c, r) => c.serp.googleOrganicTaskPost([r as SerpGoogleOrganicTaskPostRequestInfo]),
+    post: (c, r) => c.serp.googleOrganicTaskPost(r as SerpGoogleOrganicTaskPostRequestInfo[]),
     ready: (c) => c.serp.googleOrganicTasksReady(),
     get: (c, id) => c.serp.googleOrganicTaskGetAdvanced(id),
   },
   "google-ai-mode": {
-    post: (c, r) => c.serp.googleAiModeTaskPost([r as SerpGoogleAiModeTaskPostRequestInfo]),
+    post: (c, r) => c.serp.googleAiModeTaskPost(r as SerpGoogleAiModeTaskPostRequestInfo[]),
     ready: (c) => c.serp.googleAiModeTasksReady(),
     get: (c, id) => c.serp.googleAiModeTaskGetAdvanced(id),
   },
@@ -63,20 +64,85 @@ const TasksReady = z.object({
   ),
 });
 
+/** DataForSEO takes at most 100 tasks per task_post call. */
+export const MAX_TASKS_PER_POST = 100;
+
+const Posted = z.object({
+  status_code: z.int(),
+  tasks: z
+    .array(
+      z.object({
+        id: z.string().nullish(),
+        status_code: z.int(),
+        cost: z.number().nullish(),
+        data: z.object({ tag: z.string().nullish() }).nullish(),
+      }),
+    )
+    .nullish(),
+});
+
+/** The body task_post sends for these slots, in this order, byte for byte. */
+export function batchRequestBytes(slots: readonly FrozenSlot[]): Uint8Array {
+  return new TextEncoder().encode(JSON.stringify(slots.map((slot) => buildRequest(slot, "task"))));
+}
+
 /**
- * Queues one slot on the Standard queue, one task per call so that each capture's sealed request
- * is exactly the task as posted. The task is billed here; its result is fetched for free.
+ * Queues up to 100 slots of one engine on the Standard queue in one task_post call. Each task is
+ * billed here and its result fetched for free later. When the answer does not say whether the
+ * tasks were created (timeout, unreadable body, a server error) it throws
+ * ProviderUnavailableError: only a lookup at the provider can tell.
  */
-export async function postTask(slot: FrozenSlot): Promise<PostedTask> {
-  const { post } = endpointsOf(slot.engine);
-  const request = buildRequest(slot, "task");
+export async function postTasks(slots: readonly FrozenSlot[]): Promise<PostedTasks> {
+  const engine = slots[0]?.engine;
+  if (engine === undefined || slots.length > MAX_TASKS_PER_POST) {
+    throw new InvalidInputError(`A task_post carries 1 to ${MAX_TASKS_PER_POST} tasks`);
+  }
+  if (slots.some((slot) => slot.engine !== engine)) {
+    throw new InvalidInputError("A task_post carries the tasks of one engine");
+  }
+  const { post } = endpointsOf(engine);
+  const requests = slots.map((slot) => buildRequest(slot, "task"));
   const sink = new RawSink();
   const clients = createDataForSeo(sink);
-  const { outcome, body, timedOut } = await exchange(sink, () => post(clients, request));
+  const { outcome, body, timedOut } = await exchange(sink, () => post(clients, requests));
+  const parsed = Posted.safeParse(body);
+  // A server error on the whole call does not say whether any task was created.
+  if (timedOut || !parsed.success || parsed.data.status_code >= 50000) {
+    throw new ProviderUnavailableError("dataforseo", 5000);
+  }
+  const { status_code, tasks } = parsed.data;
+  if (status_code !== 20000) {
+    // The whole call was refused: no task exists.
+    const error = outcome.ok ? new ProviderUnavailableError("dataforseo", 5000) : outcome.error;
+    return {
+      tasks: slots.map((slot) => ({
+        slot,
+        status: "refused",
+        providerTaskId: null,
+        cost: null,
+        error,
+      })),
+    };
+  }
   return {
-    providerTaskId: outcome.ok ? reportedTaskId(body) : null,
-    cost: timedOut ? null : reportedCost(body),
-    error: outcome.ok ? null : outcome.error,
+    tasks: slots.map((slot) => {
+      // Each task echoes the parameters it was posted with, its tag among them.
+      const task = tasks?.find((t) => t.data?.tag === slot.slotId);
+      if (!task) return { slot, status: "unknown", providerTaskId: null, cost: null, error: null };
+      const cost = typeof task.cost === "number" ? reportedCost({ cost: task.cost }) : null;
+      const own = mapDataForSeoStatus({
+        httpStatus: 200,
+        body: { status_code: 20000, tasks: [{ status_code: task.status_code }] },
+        timedOut: false,
+      });
+      if (own.ok && task.id) {
+        return { slot, status: "accepted", providerTaskId: task.id, cost, error: null };
+      }
+      if (!own.ok && !own.breakerFailure) {
+        return { slot, status: "refused", providerTaskId: null, cost, error: own.error };
+      }
+      return { slot, status: "unknown", providerTaskId: null, cost: null, error: null };
+    }),
   };
 }
 
@@ -87,15 +153,16 @@ const NOT_FINISHED = new Set([40601, 40602]);
 export async function collectTask(
   slot: FrozenSlot,
   id: string,
+  batch: readonly FrozenSlot[],
   parse: (bytes: Uint8Array) => EngineAnswer,
 ): Promise<CaptureRecord | null> {
   const { get } = endpointsOf(slot.engine);
   const sink = new RawSink();
   const clients = createDataForSeo(sink);
   const sent = await exchange(sink, () => get(clients, id));
-  // The GET carries no body: the request sealed is the task as it was posted, rebuilt byte for
-  // byte from the frozen slot.
-  const record = recordOf(slot, { ...sent, request: requestBytes(slot, "task") }, parse, "task");
+  // The GET carries no body: the request sealed is the task_post that created the task, rebuilt
+  // byte for byte from the frozen slots it carried.
+  const record = recordOf(slot, { ...sent, request: batchRequestBytes(batch) }, parse, "task");
   return NOT_FINISHED.has(record.providerStatusCode ?? 0) ? null : record;
 }
 
@@ -103,10 +170,7 @@ export async function collectTask(
  * Finished tasks of `slots`, found by their tag. The account is shared with other measurements
  * and environments, so a task whose tag is not one of these slot ids is never fetched.
  */
-export async function collectReady(
-  slots: readonly FrozenSlot[],
-  parserOf: (engine: EngineId) => (bytes: Uint8Array) => EngineAnswer,
-): Promise<ReadyTask[]> {
+export async function collectReady(slots: readonly FrozenSlot[]): Promise<ReadyTask[]> {
   const bySlotId = new Map<string, FrozenSlot>(slots.map((slot) => [slot.slotId, slot]));
   const engines = [...new Set(slots.map((slot) => slot.engine))];
   const listed = await Promise.all(
@@ -121,8 +185,7 @@ export async function collectReady(
       return results.flatMap(({ id, tag }): ReadyTask[] => {
         const slot = tag ? bySlotId.get(tag) : undefined;
         if (!slot || slot.engine !== engine) return [];
-        const parse = parserOf(engine);
-        return [{ slot, providerTaskId: id, collect: () => collectTask(slot, id, parse) }];
+        return [{ slot, providerTaskId: id }];
       });
     }),
   );

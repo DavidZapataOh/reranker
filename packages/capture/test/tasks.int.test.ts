@@ -68,8 +68,9 @@ type Task = { id: string; engine: EngineId; tag: string; body: Uint8Array };
 
 /** DataForSEO's Standard queue: tasks finish as soon as they are created. */
 const queue = {
-  /** Every task_post request that reached the provider. */
+  /** Tasks created by every task_post that reached the provider, and those calls. */
   posts: 0,
+  requests: 0,
   created: [] as Task[],
   foreign: [] as Task[],
   fetched: [] as string[],
@@ -110,18 +111,25 @@ async function fakeQueue(request: Request): Promise<Response | null> {
       queue.dropRequest = false;
       throw new TypeError("fetch failed");
     }
-    queue.posts += 1;
+    queue.requests += 1;
     const body = new Uint8Array(await request.arrayBuffer());
-    const id = randomUUID();
-    const tag = JSON.parse(new TextDecoder().decode(body))[0].tag;
-    queue.created.push({ id, engine, tag, body });
+    const sent = JSON.parse(new TextDecoder().decode(body)) as Array<{ tag: string }>;
+    const created = sent.map(({ tag }) => ({ id: randomUUID(), engine, tag, body }));
+    queue.created.push(...created);
+    queue.posts += created.length;
     if (queue.dropAnswer) {
       queue.dropAnswer = false;
       throw new TypeError("fetch failed");
     }
     const out = sandbox("ai-mode-task-post");
-    out.cost = 0.0012;
-    Object.assign(out.tasks[0], { id, cost: 0.0012 });
+    const [template] = out.tasks;
+    out.cost = 0.0012 * created.length;
+    out.tasks = created.map(({ id, tag }) => ({
+      ...template,
+      id,
+      cost: 0.0012,
+      data: { ...template.data, tag },
+    }));
     return json(out);
   }
   if (action === "tasks_ready") {
@@ -187,6 +195,7 @@ beforeEach(() => {
   switchedOff.clear();
   Object.assign(queue, {
     posts: 0,
+    requests: 0,
     created: [],
     foreign: [],
     fetched: [],
@@ -212,9 +221,16 @@ const cycle = (n: number) => Array.from({ length: n }, (_, i) => ENDPOINTS[i % 3
 describe("postCaptureTasks", () => {
   test("posting 1,550 slots posts each once and settles the task_post cost", async () => {
     const { m, ids } = await frozen(cycle(1550));
+    const started = performance.now();
     await expect(postCaptureTasks(m, ids, spend(m))).resolves.toEqual({ posted: 1550, failed: [] });
+    const seconds = (performance.now() - started) / 1000;
+    console.info(
+      `posted 1,550 slots in ${seconds.toFixed(1)} s: ${(1550 / seconds).toFixed(0)} slots/s`,
+    );
     expect(queue.created.map((t) => t.tag).sort()).toEqual([...ids].sort());
-    expect(await ledger(m)).toEqual({ settled: 1550 });
+    // 517, 517 and 516 slots per engine, in calls of at most 100 tasks: one reservation each.
+    expect(queue.requests).toBe(18);
+    expect(await ledger(m)).toEqual({ settled: 18 });
     expect(await settledMicros(m)).toBe(1550 * 1200);
     // Claimed already: posting again pays nothing.
     await expect(postCaptureTasks(m, ids, spend(m))).resolves.toEqual({ posted: 0, failed: [] });
@@ -231,7 +247,8 @@ describe("postCaptureTasks", () => {
     expect(outs.reduce((sum, o) => sum + o.posted, 0)).toBe(30);
     expect(queue.posts).toBe(30);
     expect(createdPerSlot()).toEqual(Array(30).fill(1));
-    expect(await ledger(m)).toEqual({ settled: 30 });
+    expect(await ledger(m)).not.toHaveProperty("reserved");
+    expect(await settledMicros(m)).toBe(30 * 1200);
   });
 
   test("a crash after the task was created recovers it by tag without a second charge", async () => {
@@ -310,13 +327,14 @@ describe("collectReadyTasks", () => {
     expect(await rowsOf(other.m)).toHaveLength(0);
   });
 
-  test("collected captures are sealed with the posted request bytes", async () => {
-    const { m, ids } = await frozen(cycle(3));
+  test("collected captures are sealed with the exact body of the task_post that created them", async () => {
+    const { m, ids } = await frozen(cycle(6));
     await postCaptureTasks(m, ids, spend(m));
+    expect(queue.requests).toBe(3);
     await collectReadyTasks(m);
     const rows = await rowsOf(m);
     expect(rows.map((r) => [r.mode, r.status, r.cost_amount_micros])).toEqual(
-      Array(3).fill(["task", "succeeded", 1200]),
+      Array(6).fill(["task", "succeeded", 1200]),
     );
     for (const task of queue.created) {
       const row = rows.find((r) => `${m}:${r.slotIndex}` === task.tag);

@@ -28,21 +28,25 @@ export interface CaptureRecord {
   failure?: { error: Error; retryable: boolean };
 }
 
-/** A queued task as the provider answered its posting. */
+/** One task of a task_post call as the provider answered it. */
 export interface PostedTask {
-  /** The provider's id for the task, when it accepted it. */
+  slot: FrozenSlot;
+  /** `unknown` when the answer does not tell whether the task exists: a lookup decides. */
+  status: "accepted" | "refused" | "unknown";
   providerTaskId: string | null;
   cost: ProviderCost | null;
-  /** Why the provider refused the task, or null when it was accepted. */
+  /** Why the provider refused the task. */
   error: Error | null;
+}
+
+export interface PostedTasks {
+  tasks: PostedTask[];
 }
 
 /** A finished task of a measurement, waiting to be fetched. */
 export interface ReadyTask {
   slot: FrozenSlot;
   providerTaskId: string;
-  /** Fetches the result: one provider call, its bytes ready to seal. */
-  collect(): Promise<CaptureRecord | null>;
 }
 
 export interface CaptureAdapter {
@@ -55,12 +59,24 @@ export interface CaptureAdapter {
   captureLive(slot: FrozenSlot): Promise<CaptureRecord>;
   /** The current parser of an engine's responses, which re-derives answers from sealed bytes. */
   parse?(engine: EngineId, bytes: Uint8Array): EngineAnswer;
-  /** Queues one slot on the provider's cheaper, slower queue; throws only when nothing came back. */
-  postTask?(slot: FrozenSlot): Promise<PostedTask>;
+  /** Most slots one `postTasks` call carries. */
+  maxTasksPerPost?: number;
+  /**
+   * Queues slots of one engine on the provider's cheaper, slower queue in one call; throws when
+   * the answer does not tell whether the tasks were created.
+   */
+  postTasks?(slots: readonly FrozenSlot[]): Promise<PostedTasks>;
   /** Finished tasks of `slots`; tasks of anything else on the account stay untouched. */
   collectReady?(slots: readonly FrozenSlot[]): Promise<ReadyTask[]>;
-  /** Fetches a task's result by id; null while the provider has not finished it. */
-  collectTask?(slot: FrozenSlot, providerTaskId: string): Promise<CaptureRecord | null>;
+  /**
+   * Fetches a task's result by id; null while the provider has not finished it. `batch` is the
+   * slots of the call that posted it, in order, whose request each capture seals.
+   */
+  collectTask?(
+    slot: FrozenSlot,
+    providerTaskId: string,
+    batch: readonly FrozenSlot[],
+  ): Promise<CaptureRecord | null>;
   /**
    * Tasks of `slots` the provider created within `window`, finished or not, found by their tag:
    * how a posting whose answer never arrived is settled without posting again.
