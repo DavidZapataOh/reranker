@@ -135,7 +135,10 @@ async function fakeQueue(request: Request): Promise<Response | null> {
   const id = action.match(/^task_get\/advanced\/(.+)$/)?.[1];
   if (!id) return null;
   queue.fetched.push(id);
-  return new Response(answer, { headers: { "content-type": "application/json" } });
+  // The recorded Live answer, under the id of the task it now stands for.
+  const body = JSON.parse(new TextDecoder().decode(answer));
+  body.tasks[0].id = id;
+  return json(body);
 }
 
 const spend = (m: string) => ({
