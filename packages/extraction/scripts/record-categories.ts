@@ -8,7 +8,7 @@
  * Every search is charged to the spend ledger as `contract-test`.
  */
 import { randomUUID } from "node:crypto";
-import { appendFileSync, existsSync, writeFileSync } from "node:fs";
+import { appendFileSync, closeSync, openSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { placesTypeArchetype, seedCategories } from "@reranker/catalog";
 import { endPools } from "@reranker/db";
@@ -102,7 +102,8 @@ function expectedOf(hit: PlaceHit) {
 }
 
 async function main(out: string): Promise<boolean> {
-  if (existsSync(out)) throw new Error(`${out} already exists`);
+  // Created before any search is paid for, and never over an earlier recording.
+  const file = openSync(out, "wx");
   const spend: SpendContext = {
     purpose: "contract-test",
     refType: "category-recording",
@@ -154,9 +155,10 @@ async function main(out: string): Promise<boolean> {
     if (count !== PER_LANGUAGE) short.push(`${language}: ${count} of ${PER_LANGUAGE}`);
   }
   writeFileSync(
-    out,
+    file,
     `${JSON.stringify({ recordedAt: new Date().toISOString(), businesses }, null, 2)}\n`,
   );
+  closeSync(file);
   const table = `${summary.join("\n")}\n`;
   console.log(table);
   if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, table);
