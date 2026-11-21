@@ -6,6 +6,7 @@ import type { SpendContext } from "@reranker/jobs";
 import type { ExtractedMention, MeasurementLanguage } from "@reranker/schema/measurement";
 import { requireEnv } from "@reranker/testing/env";
 import { afterAll, beforeAll, expect, test, vi } from "vitest";
+import { currentExtractorConfig, type ExtractorConfig } from "../src/config";
 import { extractResponse, type RawCapture } from "../src/extract";
 import { jaroWinkler, normalizeName, tokenContainment } from "../src/normalize";
 
@@ -50,6 +51,13 @@ const spend: SpendContext = {
   refId: randomUUID(),
 };
 
+// Accuracy is what is measured: the production deadlines would turn a slow call into a missing
+// answer, and the latency each language takes is reported apart.
+const config: ExtractorConfig = {
+  ...currentExtractorConfig,
+  timeoutsMs: { ...currentExtractorConfig.timeoutsMs, extract: 60_000, judge: 60_000 },
+};
+
 beforeAll(() => {
   vi.stubEnv("APP_ENV", process.env.APP_ENV || "development");
   vi.stubEnv("OPENAI_API_KEY", requireEnv("OPENAI_API_KEY_CI"));
@@ -80,6 +88,7 @@ interface Tally {
   negativeFound: number;
   incidental: number;
   incidentalFound: number;
+  slowestMs: number;
 }
 
 const empty = (): Tally => ({
@@ -94,9 +103,12 @@ const empty = (): Tally => ({
   negativeFound: 0,
   incidental: 0,
   incidentalFound: 0,
+  slowestMs: 0,
 });
 
-function score(t: Tally, mentions: ExtractedMention[], e: Expected): void {
+/** Scores one answer and returns what it got wrong, for the log. */
+function score(t: Tally, mentions: ExtractedMention[], e: Expected): string[] {
+  const misses: string[] = [];
   t.answers++;
   const recommendations = mentions.filter((m) => m.stance === "recommendation");
   const ordinals: number[] = [];
@@ -106,25 +118,32 @@ function score(t: Tally, mentions: ExtractedMention[], e: Expected): void {
     if (m) {
       t.recommendedFound++;
       ordinals.push(m.ordinal ?? Number.POSITIVE_INFINITY);
-    }
+    } else
+      misses.push(`recommended not found: ${name} (${find(mentions, name)?.stance ?? "absent"})`);
   }
   for (let i = 1; i < ordinals.length; i++) {
     t.pairs++;
     if ((ordinals[i - 1] as number) < (ordinals[i] as number)) t.pairsInOrder++;
+    else misses.push(`out of order: ordinals ${ordinals.join(", ")}`);
   }
   t.recommendations += recommendations.length;
-  t.recommendationsExpected += recommendations.filter((m) =>
-    e.recommended.some((name) => same(m.name, name)),
-  ).length;
+  for (const m of recommendations) {
+    if (e.recommended.some((name) => same(m.name, name))) t.recommendationsExpected++;
+    else misses.push(`recommended in excess: ${m.name}`);
+  }
   for (const name of e.negative) {
     t.negative++;
-    if (find(mentions, name)?.stance === "negative") t.negativeFound++;
+    const stance = find(mentions, name)?.stance;
+    if (stance === "negative") t.negativeFound++;
+    else misses.push(`negative missed: ${name} (${stance ?? "absent"})`);
   }
   for (const name of e.incidental) {
     t.incidental++;
     const m = find(mentions, name);
     if (m && m.stance !== "recommendation") t.incidentalFound++;
+    else misses.push(`incidental missed: ${name} (${m?.stance ?? "absent"})`);
   }
+  return misses;
 }
 
 // Each extraction holds leases on two providers and the judge's: past a pool's slots a caller
@@ -162,23 +181,25 @@ test("extraction finds, orders and judges entities in every measurement language
       },
       answer,
     } as RawCapture;
-    const result = await extractResponse(raw, { spend });
+    const result = await extractResponse(raw, { spend }, { config });
     const t = tallies.get(e.language) ?? empty();
     tallies.set(e.language, t);
-    score(t, result.mentions, e);
+    t.slowestMs = Math.max(t.slowestMs, result.latencyMs);
+    const misses = score(t, result.mentions, e);
+    if (misses.length > 0) console.log(`${id} (${result.agreement}):\n  ${misses.join("\n  ")}`);
   });
 
   const rows = [...tallies.entries()].sort(([a], [b]) => a.localeCompare(b));
   const table = [
-    "| language | answers | recommended recall | recommendation precision | order | negative recall | incidental recall |",
-    "|---|---|---|---|---|---|---|",
+    "| language | answers | recommended recall | recommendation precision | order | negative recall | incidental recall | slowest |",
+    "|---|---|---|---|---|---|---|---|",
     ...rows.map(
       ([language, t]) =>
         `| ${language} | ${t.answers} | ${pct(rate(t.recommendedFound, t.recommended))} | ${pct(
           rate(t.recommendationsExpected, t.recommendations),
         )} | ${pct(rate(t.pairsInOrder, t.pairs))} | ${pct(rate(t.negativeFound, t.negative))} | ${pct(
           rate(t.incidentalFound, t.incidental),
-        )} |`,
+        )} | ${(t.slowestMs / 1000).toFixed(1)} s |`,
     ),
   ].join("\n");
   console.log(table);
