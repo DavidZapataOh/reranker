@@ -36,6 +36,7 @@ import { type DraftIntent, embed, generateParaphrases, judge } from "../src/gene
 import type { CallContext } from "../src/generate/spend";
 import { AGREEMENT, agree, isGendered, type Noun, nounText } from "../src/grammar";
 import { fallbackTemplates } from "../src/templates";
+import { failureReason, ProviderHealth } from "./provider-health";
 
 export type SeedGroup = { language: MeasurementLanguage; registerProfile: RegisterProfile };
 
@@ -160,6 +161,8 @@ type Deps = {
   generate: typeof generateParaphrases;
   embed: typeof embed;
   judge: typeof judge;
+  /** Stops the run when a provider stops answering, before a pool lacks it. */
+  health?: ProviderHealth;
 };
 
 export type PoolEntry = Candidate & { closeness: number };
@@ -285,8 +288,21 @@ async function grow(
     );
     const fresh: Candidate[] = [];
     for (const [i, answer] of answers.entries()) {
-      if (answer.status !== "fulfilled") continue;
       const generator = PROVIDERS[i] as Persona["generator"];
+      const usable = answer.status === "fulfilled" && answer.value.paraphrases.length > 0;
+      deps.health?.record(
+        generator,
+        usable
+          ? { ok: true }
+          : {
+              ok: false,
+              reason:
+                answer.status === "rejected"
+                  ? failureReason(answer.reason)
+                  : "no usable paraphrases (refused, truncated or invalid)",
+            },
+      );
+      if (answer.status !== "fulfilled") continue;
       personas.push(...answer.value.personas.map((text) => ({ text, generator })));
       for (const c of answer.value.paraphrases) {
         state.report.candidates++;
@@ -563,9 +579,15 @@ async function main(): Promise<void> {
   if (readdirSync(out).length > 0) throw new Error(`${out} is not empty`);
 
   const spend = { purpose: "benchmark" as const, refType: "seed-build", refId: randomUUID() };
+  const health = new ProviderHealth();
   const categories: CategoryPool[] = [];
   for (const category of seedCategories()) {
-    const built = await buildCategory(category, group, spend);
+    const built = await buildCategory(category, group, spend, {
+      generate: generateParaphrases,
+      embed,
+      judge,
+      health,
+    });
     categories.push(built);
     for (const intent of built.intents) {
       console.log(`${intent.intentId}: ${intent.pool.length} pooled in ${intent.report.rounds}`);

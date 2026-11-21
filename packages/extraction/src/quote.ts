@@ -75,6 +75,21 @@ export function locateQuote(
   return null;
 }
 
+// A quote that ends where the answer spaces its punctuation ("Pennestri** .") misses by that space.
+const EDGE_PUNCTUATION = /^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu;
+/**
+ * Engines cite through long redirect URLs that models miscopy by a character or stitch text across.
+ * A quote that missed still places its mention when the name it quotes is in the answer as written,
+ * at its first appearance.
+ */
+function locateQuotedName(
+  markdown: string,
+  mention: { name: string; quote: string },
+): { start: number; end: number } | null {
+  if (locateQuote(mention.quote, mention.name) === null) return null;
+  return locateQuote(markdown, mention.name);
+}
+
 /** Keeps the mentions whose quote is in the answer, in answer order, with their rank. */
 export function toExtractedMentions(
   markdown: string,
@@ -82,7 +97,10 @@ export function toExtractedMentions(
 ): { mentions: ExtractedMention[]; quoteMisses: number } {
   const mentions: ExtractedMention[] = [];
   for (const mention of out.mentions) {
-    const at = locateQuote(markdown, mention.quote);
+    const at =
+      locateQuote(markdown, mention.quote) ??
+      locateQuote(markdown, mention.quote.replace(EDGE_PUNCTUATION, "")) ??
+      locateQuotedName(markdown, mention);
     if (!at) continue;
     mentions.push({
       name: mention.name,
@@ -98,9 +116,31 @@ export function toExtractedMentions(
       citedUrls: mention.citedUrls,
     });
   }
+  separateSharedQuotes(markdown, mentions);
   mentions.sort((a, b) => a.startOffset - b.startOffset);
   assignOrdinals(mentions);
   return { mentions, quoteMisses: out.mentions.length - mentions.length };
+}
+
+/**
+ * A mention is keyed by where its quote starts, so names quoted with one shared sentence ("ONYX,
+ * Le Colimaçon et La Pie Noir") would collapse into the first. Each of them starts at its own name
+ * instead, which also ranks them in the order the answer gives them.
+ */
+function separateSharedQuotes(markdown: string, mentions: ExtractedMention[]): void {
+  const byStart = new Map<number, ExtractedMention[]>();
+  for (const mention of mentions) {
+    byStart.set(mention.startOffset, [...(byStart.get(mention.startOffset) ?? []), mention]);
+  }
+  for (const shared of byStart.values()) {
+    if (shared.length < 2) continue;
+    for (const mention of shared) {
+      const at = locateQuote(markdown.slice(mention.startOffset, mention.endOffset), mention.name);
+      if (!at) continue;
+      mention.startOffset += at.start;
+      mention.quote = markdown.slice(mention.startOffset, mention.endOffset);
+    }
+  }
 }
 
 /** Ranks recommended commercial entities in place; `mentions` must be in answer order. */

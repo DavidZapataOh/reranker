@@ -8,8 +8,10 @@ const bytes = (hex: string) => Buffer.from(hex, "hex");
 
 /**
  * The rows the free report shows: the target's score overall, per engine, per intent and on the
- * canonical questions, the top competitors' overall score and how often each engine names anyone.
- * Everything else is recomputed from the extractions, byte for byte, when needed.
+ * canonical questions, the top competitors' overall score and how often each engine names anyone;
+ * and where answers take their sources from: how often they cite the business's sites, the most
+ * cited sites overall and per engine, and those only competitors get. Panels read these across
+ * reports. Everything else is recomputed from the extractions, byte for byte, when needed.
  */
 export function estimateRows(measurementId: string, stats: FreeReportStats): EstimateRow[] {
   const shared = {
@@ -60,21 +62,43 @@ export function estimateRows(measurementId: string, stats: FreeReportStats): Est
       rows.push(score(competitor.entityKey, "overall", null, competitor.overall));
     }
   }
-  for (const { engine, namesEntitiesRate: rate } of stats.engines) {
-    if (!rate) continue;
-    rows.push({
-      ...shared,
-      entityKey: "*",
-      scope: "engine",
-      scopeKey: engine,
-      metric: "names_entities_rate",
-      estimate: rate.estimate,
-      lower: rate.lower,
-      upper: rate.upper,
-      ...counts(rate),
-      level: null,
-      sufficiency: null,
-    });
+  const rate = (
+    entityKey: string,
+    scope: EstimateRow["scope"],
+    scopeKey: string | null,
+    metric: EstimateRow["metric"],
+    r: RateEstimate,
+  ): EstimateRow => ({
+    ...shared,
+    entityKey,
+    scope,
+    scopeKey,
+    metric,
+    estimate: r.estimate,
+    lower: r.lower,
+    upper: r.upper,
+    ...counts(r),
+    level: null,
+    sufficiency: null,
+  });
+  for (const { engine, namesEntitiesRate } of stats.engines) {
+    if (namesEntitiesRate) {
+      rows.push(rate("*", "engine", engine, "names_entities_rate", namesEntitiesRate));
+    }
+  }
+  const { citations } = stats;
+  if (citations.target) {
+    rows.push(rate(target, "overall", null, "site_citation_rate", citations.target.rate));
+    for (const [engine, r] of Object.entries(citations.target.byEngine)) {
+      if (r) rows.push(rate(target, "engine", engine, "site_citation_rate", r));
+    }
+  }
+  for (const d of citations.top) rows.push(rate(d.key, "overall", null, "citation_rate", d.rate));
+  for (const [engine, top] of Object.entries(citations.topByEngine)) {
+    for (const d of top ?? []) rows.push(rate(d.key, "engine", engine, "citation_rate", d.rate));
+  }
+  for (const d of citations.competitorOnly) {
+    rows.push(rate(d.key, "overall", null, "competitor_citation_rate", d.rate));
   }
   return rows;
 }

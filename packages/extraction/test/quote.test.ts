@@ -154,6 +154,93 @@ describe("toExtractedMentions", () => {
     });
   });
 
+  test("names quoted with the same sentence each start at their own name, in answer order", () => {
+    const md = "Parmi les adresses, **ONYX** (9e), **Le Colimaçon** (4e) et **La Pie Noir** (5e).";
+    const r = toExtractedMentions(
+      md,
+      out([
+        ["La Pie Noir", md, "recommendation", "business"],
+        ["ONYX", md, "recommendation", "business"],
+        ["Le Colimaçon", md, "recommendation", "business"],
+      ]),
+    );
+    expect(
+      r.mentions.map((x) => [x.name, x.ordinal, md.slice(x.startOffset, x.endOffset)]),
+    ).toEqual([
+      ["ONYX", 1, "ONYX** (9e), **Le Colimaçon** (4e) et **La Pie Noir** (5e)."],
+      ["Le Colimaçon", 2, "Le Colimaçon** (4e) et **La Pie Noir** (5e)."],
+      ["La Pie Noir", 3, "La Pie Noir** (5e)."],
+    ]);
+    expect(new Set(r.mentions.map((x) => x.quote)).size).toBe(3);
+  });
+
+  test("a quote whose link target was miscopied is found by the part that holds the name", () => {
+    const md =
+      "- **[Osteria da Fortunata](https://google.com/goto?url=CAESXwHEIkXX) - Baullari**: pasta.";
+    const r = toExtractedMentions(
+      md,
+      out([
+        [
+          "Osteria da Fortunata",
+          "**[Osteria da Fortunata](https://google.com/goto?url=CAESXwHEIkYY) - Baullari**: pasta.",
+          "recommendation",
+          "business",
+        ],
+        [
+          "Fantasma",
+          "[Fantasma](https://fantasma.example) - Baullari",
+          "recommendation",
+          "business",
+        ],
+      ]),
+    );
+    expect(r.mentions.map((x) => [x.name, x.quote])).toEqual([
+      ["Osteria da Fortunata", "Osteria da Fortunata"],
+    ]);
+    expect(r.quoteMisses).toBe(1);
+  });
+
+  test("a quote that drops a space before its closing punctuation is still found", () => {
+    const md = "La guida include **Roscioli** e **Trattoria Pennestri** . Altro testo.";
+    const r = toExtractedMentions(
+      md,
+      out([
+        [
+          "Roscioli",
+          "include **Roscioli** e **Trattoria Pennestri**.",
+          "recommendation",
+          "business",
+        ],
+      ]),
+    );
+    expect(r.mentions.map((x) => x.quote)).toEqual([
+      "include **Roscioli** e **Trattoria Pennestri",
+    ]);
+  });
+
+  test("a quote that stitched text across a link falls back to the name in the answer", () => {
+    const md = "- [Centre dentaire Bastille](https://g.co/x)\n  (3 Rue Saint-Antoine) : équipe.";
+    const r = toExtractedMentions(
+      md,
+      out([
+        [
+          "Centre dentaire Bastille",
+          "Centre dentaire Bastille (3 Rue Saint-Antoine) : équipe.",
+          "recommendation",
+          "business",
+        ],
+        [
+          "Clinique Fantôme",
+          "Clinique Fantôme (3 Rue Saint-Antoine)",
+          "recommendation",
+          "business",
+        ],
+      ]),
+    );
+    expect(r.mentions.map((x) => x.quote)).toEqual(["Centre dentaire Bastille"]);
+    expect(r.quoteMisses).toBe(1);
+  });
+
   test("an answer without entities yields no mentions", () =>
     expect(toExtractedMentions("No sé.", { answerKind: "no_entities", mentions: [] })).toEqual({
       mentions: [],

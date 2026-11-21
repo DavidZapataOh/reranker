@@ -4,9 +4,9 @@ import canonicalize from "canonicalize";
 import { NAME_RULES, type NameRules } from "./normalize";
 import { PLATFORMS, type PlatformEntry } from "./platforms";
 import { CLASSIFY_PROMPT_V1 } from "./prompts/classify.v1";
-import { EXTRACT_PROMPT_V1 } from "./prompts/extract.v1";
-import { JUDGE_PROMPT_V1 } from "./prompts/judge.v1";
-import { RESOLVE_JUDGE_PROMPT_V1 } from "./prompts/resolve-judge.v1";
+import { EXTRACT_PROMPT_V2 } from "./prompts/extract.v2";
+import { JUDGE_PROMPT_V2 } from "./prompts/judge.v2";
+import { RESOLVE_JUDGE_PROMPT_V2 } from "./prompts/resolve-judge.v2";
 import type { ModelRef } from "./providers/types";
 import { ClassifierSchema, MentionsSchema, ResolveJudgeSchema } from "./schema";
 
@@ -29,9 +29,9 @@ export interface ExtractorConfig {
     classifier: ModelRef;
   };
   prompts: {
-    extract: PromptRef<"extract.v1">;
-    judge: PromptRef<"judge.v1">;
-    resolveJudge: PromptRef<"resolve-judge.v1">;
+    extract: PromptRef<"extract.v2">;
+    judge: PromptRef<"judge.v2">;
+    resolveJudge: PromptRef<"resolve-judge.v2">;
     classify: PromptRef<"classify.v1">;
   };
   schemaSha256: string;
@@ -118,9 +118,9 @@ function buildCurrent(): ExtractorConfig & { configHash: string } {
       classifier: { provider: "openai", model: "gpt-6-luna", reasoning: "low" },
     },
     prompts: {
-      extract: { id: "extract.v1", sha256: sha256Hex(EXTRACT_PROMPT_V1) },
-      judge: { id: "judge.v1", sha256: sha256Hex(JUDGE_PROMPT_V1) },
-      resolveJudge: { id: "resolve-judge.v1", sha256: sha256Hex(RESOLVE_JUDGE_PROMPT_V1) },
+      extract: { id: "extract.v2", sha256: sha256Hex(EXTRACT_PROMPT_V2) },
+      judge: { id: "judge.v2", sha256: sha256Hex(JUDGE_PROMPT_V2) },
+      resolveJudge: { id: "resolve-judge.v2", sha256: sha256Hex(RESOLVE_JUDGE_PROMPT_V2) },
       classify: { id: "classify.v1", sha256: sha256Hex(CLASSIFY_PROMPT_V1) },
     },
     schemaSha256: SCHEMA_SHA256,
