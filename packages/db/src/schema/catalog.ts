@@ -181,3 +181,12 @@ export const intentSets = sharedTable(
     sha256("intent_sets", "artifact_sha256"),
   ],
 );
+
+/**
+ * The caller generating the set for one reuse key. Committed before the generation starts, so no
+ * connection is held while it runs; a claim past its expiry belongs to a caller that died.
+ */
+export const intentSetClaims = sharedTable("intent_set_claims", {
+  expiresAt: at().notNull(),
+  key: text().notNull().unique("intent_set_claims_key_key"),
+});

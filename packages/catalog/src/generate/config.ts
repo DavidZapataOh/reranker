@@ -1,5 +1,5 @@
 import { AppError, cost, type ProviderCost } from "@reranker/schema";
-import type { MeasurementLanguage } from "@reranker/schema/measurement";
+import { MeasurementLanguage } from "@reranker/schema/measurement";
 import { jcs, promptSha256, sha256Hex } from "../hash";
 import { TEMPLATE_LANGUAGES, templatesVersion } from "../templates";
 import { GENERATION_LANGUAGES, type GenerationLanguage, promptsFor } from "./prompts";
@@ -79,7 +79,31 @@ export const GENERATOR_CONFIG: Readonly<GeneratorConfig> = deepFreeze({
   templatesVersions: Object.fromEntries(TEMPLATE_LANGUAGES.map((l) => [l, templatesVersion(l)])),
 });
 
+/** Every language's prompts and templates: what the deployed generator as a whole runs with. */
 export const generatorConfigHash: string = sha256Hex(jcs(GENERATOR_CONFIG));
+
+/** The shared settings plus only the prompts and templates of `language`. */
+export function languageConfig(language: MeasurementLanguage) {
+  const { prompts, templatesVersions, ...shared } = GENERATOR_CONFIG;
+  return {
+    ...shared,
+    language,
+    prompts: (prompts as Partial<Record<MeasurementLanguage, PromptHashes>>)[language] ?? null,
+    templatesVersion: templatesVersions[language] ?? null,
+  };
+}
+
+const languageHashes = new Map(
+  MeasurementLanguage.options.map((l) => [l, sha256Hex(jcs(languageConfig(l)))]),
+);
+
+/**
+ * The config a set in `language` was generated with, which keys its reuse: rewording one
+ * language's prompts regenerates that language's sets and leaves the others alone.
+ */
+export function languageConfigHash(language: MeasurementLanguage): string {
+  return languageHashes.get(language) as string;
+}
 
 export type GeneratorModel = GeneratorConfig["models"][keyof GeneratorConfig["models"]];
 

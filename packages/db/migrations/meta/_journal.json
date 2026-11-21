@@ -176,6 +176,13 @@
       "when": 1795221904611,
       "tag": "0024_intent_set_language",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1795222530719,
+      "tag": "0025_intent_set_claims",
+      "breakpoints": true
     }
   ]
 }
