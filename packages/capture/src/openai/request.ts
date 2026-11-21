@@ -8,12 +8,15 @@ import type {
 import type { FrozenSlot } from "../slot";
 import { assertPinnedProfile, CONTROL_PROFILE } from "./profile";
 
-// Without a declared location OpenAI searches as if the user were in the United States.
+// Without a declared location OpenAI searches as if the user were in the United States. The
+// slot's frozen location decides how precise it is, so the report never declares less than
+// what was sent; a national question names only the country.
 function userLocation(slot: FrozenSlot): WebSearchTool.UserLocation {
   const geo = getGeo(slot.geoKey);
+  const level = slot.geoDeclared.level;
   const location: WebSearchTool.UserLocation = { type: "approximate", country: geo.country };
-  if (geo.level === "city") location.city = spokenPlaceName(geo.name);
-  const region = geo.level === "region" ? geo.name : geo.regionName;
+  if (level === "city") location.city = spokenPlaceName(geo.name);
+  const region = level === "country" ? null : geo.level === "region" ? geo.name : geo.regionName;
   if (region) location.region = region;
   location.timezone = getCountry(geo.country).timeZone;
   return location;

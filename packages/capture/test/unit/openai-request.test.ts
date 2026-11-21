@@ -1,9 +1,10 @@
 import { readFileSync } from "node:fs";
 import { geoForEngine, getGeo, jcs, sha256Hex } from "@reranker/catalog";
 import { defineEnv } from "@reranker/env";
+import { getCountry } from "@reranker/i18n/countries";
 import { InvalidInputError } from "@reranker/jobs/errors";
 import type { CaptureProvider } from "@reranker/schema";
-import type { GeoKey } from "@reranker/schema/measurement";
+import type { GeoKey, QuestionScope } from "@reranker/schema/measurement";
 import { afterEach, expect, test, vi } from "vitest";
 import { openaiControlEnv } from "../../src/openai/env";
 import {
@@ -21,8 +22,12 @@ const PROMPT = "¿Qué odontólogo me recomiendas en Medellín?";
 
 afterEach(() => vi.unstubAllEnvs());
 
-function slot(geoKey: GeoKey, provider: CaptureProvider = "openai"): FrozenSlot {
-  const geoDeclared = geoForEngine("chatgpt", getGeo(geoKey), "local", { provider });
+function slot(
+  geoKey: GeoKey,
+  provider: CaptureProvider = "openai",
+  scope: QuestionScope = "local",
+): FrozenSlot {
+  const geoDeclared = geoForEngine("chatgpt", getGeo(geoKey), scope, { provider });
   if (!geoDeclared) throw new Error(`ChatGPT is not offered in ${geoKey}`);
   return {
     engine: "chatgpt",
@@ -98,6 +103,28 @@ test("a region target declares the region and no city", () =>
 
 test("a country target declares only the country and its time zone", () =>
   expect(locationOf(slot("co"))).toEqual({
+    type: "approximate",
+    country: "CO",
+    timezone: "America/Bogota",
+  }));
+
+test.each([
+  [MEDELLIN, "local"],
+  [BOGOTA, "local"],
+  ["co-r20198", "local"],
+  ["co", "local"],
+  [MEDELLIN, "national"],
+] as const)("the slot declares %s (%s) at the precision the request sends", (key, scope) => {
+  const s = slot(key, "openai", scope);
+  const sent = locationOf(s);
+  const level = sent?.city ? "city" : sent?.region ? "region" : "country";
+  expect(s.geoDeclared.level).toBe(level);
+  const geo = getGeo(key);
+  expect(s.geoDeclared.label).toBe(level === "country" ? getCountry(geo.country).name : geo.name);
+});
+
+test("a national question names only the country", () =>
+  expect(locationOf(slot(MEDELLIN, "openai", "national"))).toEqual({
     type: "approximate",
     country: "CO",
     timezone: "America/Bogota",
