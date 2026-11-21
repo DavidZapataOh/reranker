@@ -265,19 +265,28 @@ function intentPayload(intent: DraftIntent) {
 
 /**
  * Paraphrases of one intent from one provider, plus personas when asked. An answer that came back
- * unusable (refusal, truncation, invalid JSON) yields nothing; transport failures throw.
+ * unusable (refusal, truncation, invalid JSON) yields nothing; transport failures throw. The
+ * counts default to what a generated set needs; the reviewed seed asks for more to choose from.
  */
 export async function generateParaphrases(
   provider: "openai" | "gemini",
-  req: { intent: DraftIntent; register: RegisterProfile; withPersonas: boolean },
+  req: {
+    intent: DraftIntent;
+    register: RegisterProfile;
+    withPersonas: boolean;
+    count?: number;
+    personas?: number;
+  },
   ctx: CallContext,
 ): Promise<{ paraphrases: Candidate[]; personas: string[] }> {
   const prompts = promptsFor(req.intent.language);
   requireNounGender(req.intent.noun, req.intent.language);
+  const count = req.count ?? GENERATOR_CONFIG.perCall;
+  const personaCount = req.personas ?? GENERATOR_CONFIG.personas;
   const payload = {
     ...intentPayload({ ...req.intent, registerProfile: req.register }),
-    count: GENERATOR_CONFIG.perCall,
-    ...(req.withPersonas && { personas: GENERATOR_CONFIG.personas }),
+    count,
+    ...(req.withPersonas && { personas: personaCount }),
   };
   const call = {
     schema: req.withPersonas ? ParaphrasesWithPersonas : ParaphraseList,
@@ -306,8 +315,8 @@ export async function generateParaphrases(
   }
   const personas = [...new Set((output.personas ?? []).map((p) => p.trim()).filter(Boolean))];
   return {
-    paraphrases: paraphrases.slice(0, GENERATOR_CONFIG.perCall),
-    personas: personas.slice(0, GENERATOR_CONFIG.personas),
+    paraphrases: paraphrases.slice(0, count),
+    personas: personas.slice(0, personaCount),
   };
 }
 

@@ -1,0 +1,164 @@
+{
+  "version": "2026.11.0",
+  "extras": {
+    "dental_clinic": [
+      {
+        "kind": "price",
+        "slug": "affordable",
+        "canonical": {
+          "es": "¿Qué {sustantivo} tiene buenos precios en {lugar}?",
+          "en": "Which {sustantivo} in {lugar} is affordable?",
+          "pt": "Qual {sustantivo} cobra um preço justo em {lugar}?",
+          "fr": "Où trouver {un|une} {sustantivo} {pas cher|pas chère} à {lugar} ?",
+          "de": "Wo finde ich {einen günstigen|eine günstige|ein günstiges} {sustantivo} in {lugar}?",
+          "it": "Quale {sustantivo} a {lugar} ha prezzi onesti?"
+        }
+      },
+      {
+        "kind": "ranking",
+        "slug": "top_rated",
+        "canonical": {
+          "es": "¿Qué {sustantivo} tiene mejores reseñas en {lugar}?",
+          "en": "Which {sustantivo} in {lugar} has the best reviews?",
+          "pt": "Qual {sustantivo} tem as melhores avaliações em {lugar}?",
+          "fr": "{Quel|Quelle} {sustantivo} a les meilleurs avis à {lugar} ?",
+          "de": "{Welcher|Welche|Welches} {sustantivo} in {lugar} hat die besten Bewertungen?",
+          "it": "Quale {sustantivo} ha le recensioni migliori a {lugar}?"
+        }
+      }
+    ],
+    "restaurant": [
+      {
+        "kind": "urgency",
+        "slug": "open_now",
+        "canonical": {
+          "es": "¿Qué {sustantivo} está abierto ahora en {lugar}?",
+          "en": "Which {sustantivo} in {lugar} is open now?",
+          "pt": "Qual {sustantivo} está {aberto|aberta} agora em {lugar}?",
+          "fr": "{Quel|Quelle} {sustantivo} est {ouvert|ouverte} maintenant à {lugar} ?",
+          "de": "{Welcher|Welche|Welches} {sustantivo} in {lugar} hat jetzt geöffnet?",
+          "it": "Quale {sustantivo} è {aperto|aperta} adesso a {lugar}?"
+        }
+      },
+      {
+        "kind": "specialty",
+        "slug": "delivery",
+        "canonical": {
+          "es": "¿Qué {sustantivo} hace entregas a domicilio en {lugar}?",
+          "en": "Which {sustantivo} in {lugar} delivers?",
+          "pt": "Qual {sustantivo} em {lugar} faz entrega?",
+          "fr": "{Quel|Quelle} {sustantivo} livre à domicile à {lugar} ?",
+          "de": "{Welcher|Welche|Welches} {sustantivo} in {lugar} hat einen Lieferservice?",
+          "it": "Quale {sustantivo} a {lugar} fa consegna a domicilio?"
+        }
+      }
+    ],
+    "hotel": [
+      {
+        "kind": "urgency",
+        "slug": "tonight",
+        "canonical": {
+          "es": "¿Qué {sustantivo} tiene habitaciones disponibles esta noche en {lugar}?",
+          "en": "Which {sustantivo} in {lugar} has rooms available tonight?",
+          "pt": "Qual {sustantivo} em {lugar} tem quarto disponível hoje à noite?",
+          "fr": "{Quel|Quelle} {sustantivo} a des chambres libres ce soir à {lugar} ?",
+          "de": "{Welcher|Welche|Welches} {sustantivo} in {lugar} hat heute Nacht noch ein Zimmer frei?",
+          "it": "Quale {sustantivo} a {lugar} ha camere libere stanotte?"
+        }
+      },
+      {
+        "kind": "specialty",
+        "slug": "family",
+        "canonical": {
+          "es": "¿Qué {sustantivo} me recomiendas en {lugar} para ir con niños?",
+          "en": "Can you recommend a family-friendly {sustantivo} in {lugar}?",
+          "pt": "Qual {sustantivo} você recomenda em {lugar} para ir com crianças?",
+          "fr": "Tu peux me conseiller {un|une} {sustantivo} à {lugar} pour une famille avec enfants ?",
+          "de": "Kannst du mir {einen familienfreundlichen|eine familienfreundliche|ein familienfreundliches} {sustantivo} in {lugar} empfehlen?",
+          "it": "Mi consigli {un|una} {sustantivo} a {lugar} {adatto|adatta} ai bambini?"
+        }
+      }
+    ],
+    "car_repair": [
+      {
+        "kind": "ranking",
+        "slug": "top_rated",
+        "canonical": {
+          "es": "¿Qué {sustantivo} tiene mejores reseñas en {lugar}?",
+          "en": "Which {sustantivo} in {lugar} has the best reviews?",
+          "pt": "Qual {sustantivo} tem as melhores avaliações em {lugar}?",
+          "fr": "{Quel|Quelle} {sustantivo} a les meilleurs avis à {lugar} ?",
+          "de": "{Welcher|Welche|Welches} {sustantivo} in {lugar} hat die besten Bewertungen?",
+          "it": "Quale {sustantivo} ha le recensioni migliori a {lugar}?"
+        }
+      },
+      {
+        "kind": "insurance_or_payment",
+        "slug": "insurance",
+        "canonical": {
+          "es": "¿Qué {sustantivo} en {lugar} trabaja con mi aseguradora?",
+          "en": "Which {sustantivo} in {lugar} works with my insurance?",
+          "pt": "Qual {sustantivo} em {lugar} é {credenciado|credenciada} pela minha seguradora?",
+          "fr": "{Quel|Quelle} {sustantivo} à {lugar} est {agréé|agréée} par mon assurance ?",
+          "de": "{Welcher|Welche|Welches} {sustantivo} in {lugar} arbeitet mit meiner Versicherung zusammen?",
+          "it": "Quale {sustantivo} a {lugar} è {convenzionato|convenzionata} con la mia assicurazione?"
+        }
+      }
+    ],
+    "real_estate_agency": [
+      {
+        "kind": "specialty",
+        "slug": "rent",
+        "canonical": {
+          "es": {
+            "co": "¿Qué {sustantivo} me recomiendas en {lugar} para arrendar un apartamento?",
+            "neutral": "¿Qué {sustantivo} me recomiendas en {lugar} para alquilar una vivienda?"
+          },
+          "en": "Which {sustantivo} in {lugar} can help me find an apartment to rent?",
+          "pt": "Qual {sustantivo} em {lugar} tem apartamento para alugar?",
+          "fr": "{Quel|Quelle} {sustantivo} à {lugar} propose des appartements en location ?",
+          "de": "{Welcher|Welche|Welches} {sustantivo} in {lugar} vermittelt Mietwohnungen?",
+          "it": "Quale {sustantivo} a {lugar} ha appartamenti in affitto?"
+        }
+      },
+      {
+        "kind": "specialty",
+        "slug": "buy",
+        "canonical": {
+          "es": "¿Qué {sustantivo} me recomiendas en {lugar} para comprar casa?",
+          "en": "Which {sustantivo} in {lugar} should I use to buy a house?",
+          "pt": "Qual {sustantivo} você recomenda em {lugar} para comprar um apartamento?",
+          "fr": "{Quel|Quelle} {sustantivo} me conseilles-tu à {lugar} pour acheter un appartement ?",
+          "de": "{Welcher|Welche|Welches} {sustantivo} in {lugar} hilft beim Hauskauf?",
+          "it": "Quale {sustantivo} mi consigli a {lugar} per comprare casa?"
+        }
+      }
+    ],
+    "online_store": [
+      {
+        "kind": "price",
+        "slug": "free_shipping",
+        "canonical": {
+          "es": "¿Qué tienda online de {sustantivo} tiene envío gratis en {país}?",
+          "en": "Which online store for {sustantivo} offers free shipping?",
+          "pt": "Qual loja online de {sustantivo} tem frete grátis?",
+          "fr": "Quelle boutique en ligne de {sustantivo} propose la livraison gratuite ?",
+          "de": "Welcher Onlineshop für {sustantivo} bietet kostenlosen Versand?",
+          "it": "Quale negozio online di {sustantivo} ha la spedizione gratuita?"
+        }
+      },
+      {
+        "kind": "insurance_or_payment",
+        "slug": "payment",
+        "canonical": {
+          "es": "¿Qué tienda online de {sustantivo} tiene pago contra entrega en {país}?",
+          "en": "Which online store for {sustantivo} lets me buy now and pay later?",
+          "pt": "Qual loja online de {sustantivo} parcela sem juros?",
+          "fr": "Quelle boutique en ligne de {sustantivo} propose le paiement en plusieurs fois ?",
+          "de": "Welcher Onlineshop für {sustantivo} bietet Kauf auf Rechnung?",
+          "it": "Quale negozio online di {sustantivo} accetta il pagamento alla consegna?"
+        }
+      }
+    ]
+  }
+}

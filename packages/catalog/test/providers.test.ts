@@ -223,6 +223,27 @@ test("gemini returns paraphrases and personas, billing thinking as output", asyn
   );
 });
 
+test("a caller can ask for more paraphrases and personas than a generated set keeps", async () => {
+  const many = Array.from({ length: 26 }, (_, i) => ({
+    text: `¿Qué panadería ${i} me recomiendas en {lugar}?`,
+    format: FORMATS[i % 4] ?? "keyword",
+  }));
+  const personas = Array.from({ length: 7 }, (_, i) => `Soy cliente número ${i} de la zona.`);
+  const bodies = respond(RESPONSES, () =>
+    HttpResponse.json(openaiResponse(outputText({ paraphrases: many, personas }))),
+  );
+  const out = await generateParaphrases(
+    "openai",
+    { intent: bakery, register: "co", withPersonas: true, count: 25, personas: 6 },
+    ctx(),
+  );
+
+  const payload = JSON.parse(String(bodies[0]?.input));
+  expect(payload).toMatchObject({ count: 25, personas: 6 });
+  expect(out.paraphrases).toHaveLength(25);
+  expect(out.personas).toHaveLength(6);
+});
+
 test("a signal aborted before sending takes no slot and reserves nothing", async () => {
   const controller = new AbortController();
   controller.abort();
