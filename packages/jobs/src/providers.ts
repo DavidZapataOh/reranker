@@ -8,7 +8,8 @@ export type SpendPurpose =
   | "control-canary"
   | "quality-canary"
   | "benchmark"
-  | "contract-test";
+  | "contract-test"
+  | "language-mix";
 
 /** Child scopes of `purpose:free-report` that a reservation chooses between. */
 export type SpendPool = "free-report-anonymous" | "free-report-verified";

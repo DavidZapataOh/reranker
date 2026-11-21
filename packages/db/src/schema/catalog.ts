@@ -17,12 +17,14 @@ import {
   foreignKey,
   index,
   integer,
+  jsonb,
   smallint,
   text,
   timestamp,
   unique,
 } from "drizzle-orm/pg-core";
 import { bytea, enumValues } from "./_columns";
+import { costMicrosColumn } from "./_money";
 import { publicPanelSchema } from "./_schemas";
 import { sharedTable } from "./_tables";
 
@@ -207,4 +209,40 @@ export const intentSets = sharedTable(
 export const intentSetClaims = sharedTable("intent_set_claims", {
   expiresAt: at().notNull(),
   key: text().notNull().unique("intent_set_claims_key_key"),
+});
+
+/**
+ * How a place's searches for a category split by language, shared by every business there for
+ * 30 days. `config_hash` covers the words searched in each language, so a change to them refetches.
+ */
+export const languageMixes = sharedTable(
+  "language_mixes",
+  {
+    fetchedAt: at().notNull().defaultNow(),
+    ...costMicrosColumn("cost"),
+    // The DataForSEO location the volumes are for: the place, else its region, else its country.
+    locationCode: integer().notNull(),
+    geoKey: text().notNull(),
+    categoryKey: text().notNull(),
+    configHash: bytea().notNull(),
+    level: text({ enum: ["city", "region", "country"] }).notNull(),
+    // Null when no language had searches at any level.
+    source: text({ enum: ["google_ads", "ai_search"] }),
+    // Language → share of the searches, adding up to 1; empty without searches.
+    shares: jsonb().$type<Record<string, number>>().notNull(),
+    // Language → monthly searches counted, kept to audit the shares.
+    volumes: jsonb().$type<Record<string, number>>().notNull(),
+  },
+  (t) => [
+    unique("language_mixes_key").on(t.geoKey, t.categoryKey, t.configHash),
+    check("language_mixes_level_check", sql`${t.level} in ('city', 'region', 'country')`),
+    check("language_mixes_source_check", sql`${t.source} in ('google_ads', 'ai_search')`),
+    sha256("language_mixes", "config_hash"),
+  ],
+);
+
+/** The caller fetching the mix for one key; same protocol as `intent_set_claims`. */
+export const languageMixClaims = sharedTable("language_mix_claims", {
+  expiresAt: at().notNull(),
+  key: text().notNull().unique("language_mix_claims_key_key"),
 });

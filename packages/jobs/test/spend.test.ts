@@ -87,7 +87,7 @@ describe("reserveSpend", () => {
       "purpose:free-report",
       "provider:dataforseo",
     ]);
-    expect(caps).toEqual([320_000_000, 120_000_000, 80_000_000, 200_000_000, 379_800_000]);
+    expect(caps).toEqual([320_000_000, 120_000_000, 80_000_000, 200_000_000, 391_800_000]);
     expect([fallback, fallbackCap, amount]).toEqual([
       "pool:free-report-verified",
       80_000_000,

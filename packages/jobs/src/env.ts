@@ -37,6 +37,7 @@ export const jobsEnv = z.object({
   SPEND_CAP_DAILY_QUALITY_CANARY_USD: usd("Daily quality canary spend cap, in USD"),
   SPEND_CAP_DAILY_BENCHMARK_USD: usd("Daily benchmark spend cap, in USD"),
   SPEND_CAP_DAILY_CONTRACT_TEST_USD: usd("Daily provider contract test spend cap, in USD"),
+  SPEND_CAP_DAILY_LANGUAGE_MIX_USD: usd("Daily search language mix spend cap, in USD"),
   WORKFLOWS_MONTHLY_BUDGET_USD: usd("Monthly Vercel Workflows budget, in USD"),
   QUOTA_RESEND_EMAILS_HOURLY_FLOOR: whole("Fewest Resend emails an hour allows, whatever the peak"),
   QUOTA_RESEND_EMAILS_PEAK_MULTIPLIER: whole(
