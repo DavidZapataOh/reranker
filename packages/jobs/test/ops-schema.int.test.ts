@@ -53,6 +53,7 @@ async function waitUntilBlockedBy(pid: number, count = 1) {
 const PRIMARY_KEYS: Record<string, string[]> = {
   alert_deliveries: ["kind", "bucket_hour"],
   workflow_starts: ["kind", "key"],
+  capture_tasks: ["slot_id"],
   lease_pools: ["key"],
   concurrency_leases: ["lease_id"],
   rate_buckets: ["key"],
@@ -131,6 +132,7 @@ describe("catalog", () => {
         join pg_namespace s on s.oid = c.relnamespace
        where s.nspname = 'ops' and not i.indisprimary order by 1`);
     expect(rows.map((row) => row.name)).toEqual([
+      "capture_tasks_measurement_id_open_idx",
       "concurrency_leases_key_expires_at_idx",
       "network_ranges_prefix_gist_idx",
       "spend_ledger_day_provider_idx",
