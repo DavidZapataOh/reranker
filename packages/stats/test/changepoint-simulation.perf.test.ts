@@ -9,7 +9,7 @@ import {
 } from "../src/changepoint";
 import { type Rng, rngFromSeed } from "../src/rng";
 
-// The engine-level rule of simulations/linea_base_canario.py: 50 prompts at p 0.2 or 0.5, ten
+// The engine-level rule of simulations/canary_baseline.py: 50 prompts at p 0.2 or 0.5, ten
 // runs a day, a 42-day baseline, then 90 days. h comes from the baseline's own rate, as the
 // canary sets it. The seed is fixed and never changed to make the test pass.
 const N_RUNS = 10;

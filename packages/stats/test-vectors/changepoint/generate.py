@@ -1,6 +1,6 @@
 """Reference CUSUM and Beta-Binomial BOCPD runs for @reranker/stats changepoint detection.
 
-CUSUM follows simulations/cusum_h_y_arl.py and simulations/linea_base_canario.py; BOCPD follows
+CUSUM follows simulations/cusum_h_arl.py and simulations/canary_baseline.py; BOCPD follows
 Adams and MacKay (2007, arXiv:0710.3742) with a constant hazard and a Beta-Binomial predictive.
 
 Regenerate from the repository root:

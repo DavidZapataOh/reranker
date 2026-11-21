@@ -1,7 +1,7 @@
 import numpy as np
 
 # Engine-level regime rule: open a regime when >= 30% of the 50 canary prompts
-# are in alarm on the same day. Per-prompt CUSUM (k = 0.5 sd, h from cusum_h_y_arl.py), mu0 and sd
+# are in alarm on the same day. Per-prompt CUSUM (k = 0.5 sd, h from cusum_h_arl.py), mu0 and sd
 # estimated from m baseline days. Measures false regimes in 90 in-control days, and the
 # delay to detect a real shift of `shift` logits applied to every prompt.
 rng = np.random.default_rng(11)

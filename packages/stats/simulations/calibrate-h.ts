@@ -1,5 +1,5 @@
 // Calibrates the CUSUM threshold h (in units of sigma) for every baseline rate p of a canary
-// prompt measured over ten runs a day, as simulations/cusum_h_y_arl.py does: bisection on h
+// prompt measured over ten runs a day, as simulations/cusum_h_arl.py does: bisection on h
 // until a one-sided chart with known parameters has an in-control ARL of 180 days (two
 // one-sided charts give about 90). Writes src/changepoint/h-table.json.
 //
