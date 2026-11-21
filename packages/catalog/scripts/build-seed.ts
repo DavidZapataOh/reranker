@@ -55,7 +55,8 @@ const PERSONAS_PER_CALL = 6;
 /** 29 paraphrases beside the canonical, plus reserves that replace what review rejects. */
 export const POOL_TARGET = 40;
 export const MIN_PER_FORMAT = 6;
-const MAX_ROUNDS = 3;
+// Narrow intents ("the best hotel") run out of distinct phrasings; five rounds reach most pools.
+const MAX_ROUNDS = 5;
 const FREE_REPORT = 5;
 const CALL_MS = 120_000;
 
@@ -98,21 +99,25 @@ export type SeedIntentPlan = {
 
 /**
  * The noun and synonyms as people asking in the language say them. A web-only store names what it
- * sells, so its questions keep {sustantivo}; its templates agree with nothing.
+ * sells, so its questions keep {sustantivo}; its templates agree with nothing, and the models
+ * are told it is an online store by its first synonym.
  */
 export function namesFor(
   category: Readonly<SeedCategory>,
   language: MeasurementLanguage,
-): { noun: Noun; synonyms: string[] } {
+): { noun: Noun; synonyms: string[]; label: string } {
   const names =
     language === "es"
       ? { noun: category.noun, synonyms: category.synonyms }
       : category.languages[language];
-  if (names.noun !== null) return { noun: names.noun, synonyms: names.synonyms };
+  if (names.noun !== null) {
+    return { noun: names.noun, synonyms: names.synonyms, label: nounText(names.noun) };
+  }
   const placeholder = "{sustantivo}";
   return {
     noun: isGendered(language) ? { text: placeholder, gender: "m" } : placeholder,
     synonyms: names.synonyms,
+    label: names.synonyms[0] ?? placeholder,
   };
 }
 
@@ -322,13 +327,13 @@ export async function buildCategory(
   deps: Deps = { generate: generateParaphrases, embed, judge },
 ): Promise<CategoryPool> {
   const { language, registerProfile } = group;
-  const { noun, synonyms } = namesFor(category, language);
+  const { noun, synonyms, label } = namesFor(category, language);
   const text = nounText(noun);
   const scope = category.defaultScope;
   const business = {
     key: category.key,
     source: "seed" as const,
-    label: text,
+    label,
     noun: text,
     archetype: category.archetype,
     scope,
