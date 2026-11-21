@@ -38,5 +38,6 @@ export { persistCapture } from "./persist";
 export { collectReadyTasks, postCaptureTasks } from "./queue";
 export { RawSink } from "./raw/raw-sink";
 export { type Fetch, recordingFetch, teeFetch } from "./raw/tee-fetch";
+export { currentRegime, openRegime, recordModelSeen } from "./regimes";
 export { resolveRedirects } from "./resolve-redirects";
 export { type FrozenSlot, newCaptureId, parseSlotId, type SlotId, slotId } from "./slot";

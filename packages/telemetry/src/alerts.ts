@@ -113,6 +113,8 @@ export const opsAlerts = {
   },
   // Templates keep reports flowing, so a high share of them only warns; the payload names the
   // language that regressed, or `all` when the rise is spread across languages.
+  // A capture reported another model: comparisons across the change need its regime marked.
+  "model-change": { severity: "warning", runbook: "model-change.md", source: "capture" },
   "intent-generation-template-rate": {
     severity: "warning",
     runbook: "intent-generation.md",

@@ -5,11 +5,13 @@ import { type CapturePredicateInput, captureRow, sealCapture } from "@reranker/e
 import { getCountry } from "@reranker/i18n/countries";
 import { InvalidInputError } from "@reranker/jobs/errors";
 import type { EngineId } from "@reranker/schema";
+import { log } from "@reranker/telemetry";
 import { inArray } from "drizzle-orm";
 import { adapterFor, type CaptureRecord } from "./adapters";
 import type { EngineAnswer } from "./answer";
 import { ENGINES } from "./engines";
 import { loadPlan } from "./measurement";
+import { recordModelSeen } from "./regimes";
 
 // The product surface each engine answers on, as the signed statement names it.
 const SURFACES: Record<EngineId, string> = {
@@ -153,7 +155,8 @@ export async function persistCapture(
   // Without a reported cost the reservation is what the ledger keeps, so the row says the same. A
   // queued task reports its cost when posted, at the queue's list price.
   const { estimate } = ENGINES[slot.engine];
-  const charged = record.cost ?? (record.mode === "task" ? estimate.task : null) ?? estimate.live;
+  const held = adapterFor(slot.provider).estimate?.(slot) ?? estimate.live;
+  const charged = record.cost ?? (record.mode === "task" ? estimate.task : null) ?? held;
 
   const existing = await withSystem("capture", (tx) => captureRow(tx, record.captureId), {
     readOnly: true,
@@ -168,7 +171,7 @@ export async function persistCapture(
     normalized: answer && parserVersion !== null ? { json: jcs(answer), parserVersion } : null,
     predicate,
   });
-  return withSystem("capture", async (tx) => {
+  const stored = await withSystem("capture", async (tx) => {
     // No target: a retried capture conflicts on its id, a second success for the slot on
     // captures_one_success, and neither may store another row.
     const [inserted] = await tx
@@ -203,4 +206,15 @@ export async function persistCapture(
     await opts.inTransaction?.(tx);
     return { captureId: record.captureId, stored: inserted !== undefined, transacted: true };
   });
+  if (stored.stored && record.modelReported !== null) {
+    // The capture and its payment are already stored; a regime that fails to update is
+    // reported, never turned into a failed capture that would be paid for again.
+    await recordModelSeen(record.captureId).catch((error: unknown) =>
+      log.error("capture.model_regime_failed", {
+        captureId: record.captureId,
+        name: error instanceof Error ? error.name : "unknown",
+      }),
+    );
+  }
+  return stored;
 }
