@@ -36,6 +36,10 @@ export const estimateMetric = publicPanelSchema.enum("estimate_metric", [
   "prominence",
   "score",
   "names_entities_rate",
+  // How often answers cite the business's own sites, a cited site, or a site only competitors get.
+  "site_citation_rate",
+  "citation_rate",
+  "competitor_citation_rate",
 ]);
 export const estimateLevel = publicPanelSchema.enum("estimate_level", enumValues(keys(levels)));
 export const estimateSufficiency = publicPanelSchema.enum(

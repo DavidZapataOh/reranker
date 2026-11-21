@@ -145,12 +145,36 @@ test("one row per key, an absent scope key included", async () => {
   });
 });
 
+test("citation rates are stored per cited site and for the business's own sites", async () => {
+  const rate = { level: null, sufficiency: null, lower: 0.2, estimate: 0.3, upper: 0.4 };
+  await insert({ ...rate, metric: "site_citation_rate" });
+  await insert({ ...rate, metric: "site_citation_rate", scope: "engine", scopeKey: "gemini" });
+  await insert({ ...rate, entityKey: "platform:doctoralia", metric: "citation_rate" });
+  await insert({ ...rate, entityKey: "web:example.com", metric: "competitor_citation_rate" });
+  const { rows } = await owner.query<{ metric: string }>(
+    `select metric from public_panel.estimates
+     where measurement_id = $1 and metric::text like '%citation_rate' order by metric`,
+    [measurementId],
+  );
+  expect(rows.map((r) => r.metric)).toEqual([
+    "site_citation_rate",
+    "site_citation_rate",
+    "citation_rate",
+    "competitor_citation_rate",
+  ]);
+});
+
 test.each<[string, Partial<Row>]>([
   ["an overall row with a scope key", { scopeKey: "gemini" }],
   ["an engine row without one", { scope: "engine" }],
   ["a score without a level", { level: null }],
   ["a rate with a level", { entityKey: "*", metric: "names_entities_rate" }],
   ["a rate about one entity", { metric: "names_entities_rate", level: null, sufficiency: null }],
+  [
+    "a citation rate about every answer",
+    { entityKey: "*", metric: "citation_rate", level: null, sufficiency: null },
+  ],
+  ["a citation rate with a level", { entityKey: "web:example.com", metric: "citation_rate" }],
   ["an estimate outside its interval", { estimate: 57 }],
   ["more successes than trials", { successes: 201 }],
 ])("rejects %s", async (_, over) => {
