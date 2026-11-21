@@ -22,7 +22,83 @@ import { type IntentFit, intentFit, PERSONAS_PER_CATEGORY, planKept } from "./se
 
 const FREE_REPORT = 5;
 
-export type Decision = { item: string; step: number; text: string; verdict: "approve" | "reject" };
+/** Why the founder rejected an item, when he said; the review page offers these. */
+export const REJECTION_REASONS = [
+  "sounds_off",
+  "spelling",
+  "changes_question",
+  "names_brand_or_place",
+  "other",
+] as const;
+export type RejectionReason = (typeof REJECTION_REASONS)[number];
+
+export type Decision = {
+  item: string;
+  step: number;
+  text: string;
+  verdict: "approve" | "reject";
+  reason?: RejectionReason;
+  note?: string;
+};
+
+type ReasonCounts = Partial<Record<RejectionReason | "none", number>>;
+
+export type RejectionReport = {
+  byReason: ReasonCounts;
+  /** Per intent, or per category for personas. */
+  byItem: Record<string, ReasonCounts>;
+  /** Per intent kind, persona and canonical, where a cluster shows a rule to tighten. */
+  byKind: Record<string, ReasonCounts>;
+  notes: Array<{ item: string; note: string }>;
+};
+
+/** The founder's rejections counted by reason, per intent and per intent kind. */
+export function rejectionReasons(
+  pools: readonly GroupPool[],
+  decided: readonly Decision[],
+): RejectionReport {
+  const items = new Map(reviewItems(pools).map((i) => [i.id, i]));
+  const kindOf = new Map<string, string>(
+    pools.flatMap((p) =>
+      p.categories.flatMap((c) => c.intents.map((i) => [i.intentId, i.kind] as const)),
+    ),
+  );
+  const report: RejectionReport = { byReason: {}, byItem: {}, byKind: {}, notes: [] };
+  const add = (counts: ReasonCounts, reason: RejectionReason | "none") => {
+    counts[reason] = (counts[reason] ?? 0) + 1;
+  };
+  for (const d of decided) {
+    if (d.verdict !== "reject") continue;
+    const item = items.get(d.item);
+    if (!item) continue;
+    const reason = d.reason ?? "none";
+    const [key, kind] =
+      item.kind === "persona"
+        ? [`${item.group}:${item.id.split(":")[2]}:personas`, "persona"]
+        : item.kind === "canonical"
+          ? [item.intentIds[0] ?? item.id, "canonical"]
+          : [item.intentId, kindOf.get(item.intentId) ?? "unknown"];
+    report.byItem[key] = report.byItem[key] ?? {};
+    report.byKind[kind] = report.byKind[kind] ?? {};
+    for (const counts of [report.byReason, report.byItem[key], report.byKind[kind]]) {
+      add(counts, reason);
+    }
+    if (d.note) report.notes.push({ item: d.item, note: d.note });
+  }
+  return report;
+}
+
+/** A reason given at least three times that makes up half of a kind's rejections. */
+export function reasonClusters(
+  report: RejectionReport,
+): Array<{ kind: string; reason: string; count: number }> {
+  return Object.entries(report.byKind).flatMap(([kind, counts]) => {
+    const total = Object.values(counts).reduce((sum, n) => sum + (n ?? 0), 0);
+    return Object.entries(counts)
+      .filter(([reason, n]) => reason !== "none" && (n ?? 0) >= 3 && (n ?? 0) * 2 >= total)
+      .map(([reason, n]) => ({ kind, reason, count: n ?? 0 }));
+  });
+}
 
 /** How a group's content was reviewed, asked the same way for both kinds of review. */
 type Judge = {
@@ -265,7 +341,12 @@ function main(): void {
   ];
   pools.sort((a, b) => order.indexOf(groupKey(a)) - order.indexOf(groupKey(b)));
   const spanish = pools.filter((p) => p.language === "es");
-  const founder = founderJudge(spanish, readJson<Decision[]>(decisionsFile));
+  const decided = readJson<Decision[]>(decisionsFile);
+  const reasons = rejectionReasons(spanish, decided);
+  for (const c of reasonClusters(reasons)) {
+    console.log(`cluster: ${c.count} × ${c.reason} on ${c.kind}`);
+  }
+  const founder = founderJudge(spanish, decided);
   const judges = new Map<string, Judge>(spanish.map((p) => [groupKey(p), founder(groupKey(p))]));
   for (const file of findFiles(reviewsDir, /^review-[a-z]{2}-[a-z]+\.json$/)) {
     const review = readJson<{ group: string; categories: CategoryReview[] }>(file);
@@ -276,7 +357,10 @@ function main(): void {
   const dir = join(root, "data", version);
   mkdirSync(dir, { recursive: true });
   writeFileSync(join(dir, "catalog.json"), `${JSON.stringify(catalog, null, 2)}\n`);
-  writeFileSync(join(dir, "filter-report.json"), `${JSON.stringify(report, null, 2)}\n`);
+  writeFileSync(
+    join(dir, "filter-report.json"),
+    `${JSON.stringify({ ...report, rejections: reasons }, null, 2)}\n`,
+  );
   for (const [group, records] of Object.entries(report)) {
     const count = (fit: IntentFit) => records.filter((r) => r.fit === fit).length;
     const promoted = records.filter((r) => r.promoted).map((r) => r.intentId);
