@@ -1,5 +1,5 @@
 {
-  "id": "bc78771c-c4e8-47cf-a6fe-79f1f7a61437",
+  "id": "44c38b6e-749e-4bca-9669-6a05b6cb93dd",
   "prevId": "e6c62552-98e3-4981-bdbd-ed1bdd31e292",
   "version": "7",
   "dialect": "postgresql",
@@ -1428,14 +1428,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "language": {
-          "name": "language",
-          "type": "measurement_language",
-          "typeSchema": "public_panel",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'es'"
-        },
         "generators": {
           "name": "generators",
           "type": "smallint",
@@ -1489,6 +1481,13 @@
           "type": "bytea",
           "primaryKey": false,
           "notNull": false
+        },
+        "language": {
+          "name": "language",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'es'"
         }
       },
       "indexes": {
@@ -1555,6 +1554,10 @@
         "intent_sets_generators_check": {
           "name": "intent_sets_generators_check",
           "value": "\"public_panel\".\"intent_sets\".\"generators\" between 0 and 2"
+        },
+        "intent_sets_language_check": {
+          "name": "intent_sets_language_check",
+          "value": "\"public_panel\".\"intent_sets\".\"language\" in ('es', 'en', 'pt', 'fr', 'de', 'it')"
         },
         "intent_sets_content_hash_length": {
           "name": "intent_sets_content_hash_length",
@@ -4039,11 +4042,6 @@
       "name": "intent_set_kind",
       "schema": "public_panel",
       "values": ["seed", "generated", "template"]
-    },
-    "public_panel.measurement_language": {
-      "name": "measurement_language",
-      "schema": "public_panel",
-      "values": ["es", "en", "pt", "fr", "de", "it"]
     },
     "public_panel.paraphrase_format": {
       "name": "paraphrase_format",
