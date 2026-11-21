@@ -22,10 +22,11 @@
       "Dr. John",
       "Torhaus",
       "Prof. Dr. Andreas Olze & Kollegen",
-      "zahn&art"
+      "zahn&art",
+      "jameda"
     ],
     "negative": [],
-    "incidental": ["Charité", "Top Bewertung AI", "jameda"]
+    "incidental": ["Charité", "Top Bewertung AI"]
   },
   "ai-overview-en-car-repair-new-york": {
     "language": "en",
@@ -102,10 +103,12 @@
       "Marano Dental Experience",
       "Studio Dentistico Dr. Marco Bazzucchi & Partners",
       "Centro Odontoiatrico Nomentano",
-      "Centro Odontoiatrico Idea"
+      "Centro Odontoiatrico Idea",
+      "MioDottore",
+      "Top Doctors"
     ],
     "negative": [],
-    "incidental": ["MioDottore", "Top Doctors"]
+    "incidental": []
   },
   "ai-overview-it-officina-evitare-roma": {
     "language": "it",

@@ -26,11 +26,17 @@ interface StoredOutputs {
 const stored = vi.hoisted(() => ({
   outputs: new Map<string, StoredOutputs>(),
   inputTokens: new Map<string, number>(),
+  outputTokens: new Map<string, number>(),
 }));
 vi.mock("../src/store", () => ({
   findExtraction: async () => null,
-  insertExtraction: async (row: { captureId: string; inputTokens: number }) => {
+  insertExtraction: async (row: {
+    captureId: string;
+    inputTokens: number;
+    outputTokens: number;
+  }) => {
     stored.inputTokens.set(row.captureId, row.inputTokens);
+    stored.outputTokens.set(row.captureId, row.outputTokens);
     return { id: "measured", inserted: true };
   },
 }));
@@ -49,7 +55,10 @@ const DIR = new URL("fixtures/answers/languages/", import.meta.url);
 /** What a reader checks by hand in each answer, names as written in it. */
 interface Expected {
   language: MeasurementLanguage;
-  /** Offered as options, in the order the answer gives them. */
+  /**
+   * Offered as options, in the order the answer gives them: a platform the answer sends the reader
+   * to book or buy through is one, unranked.
+   */
   recommended: string[];
   /** Warned against. */
   negative: string[];
@@ -163,7 +172,7 @@ function score(t: Tally, mentions: ExtractedMention[], e: Expected): string[] {
     const m = find(recommendations, name);
     if (m) {
       t.recommendedFound++;
-      ordinals.push(m.ordinal ?? Number.POSITIVE_INFINITY);
+      if (m.ordinal !== null) ordinals.push(m.ordinal);
     } else
       misses.push(`recommended not found: ${name} (${find(mentions, name)?.stance ?? "absent"})`);
   }
@@ -207,12 +216,62 @@ async function inLanes<T>(items: readonly T[], work: (item: T, i: number) => Pro
   await Promise.all(Array.from({ length: Math.min(LANES, items.length) }, lane));
 }
 
+/** One extraction's wall time, for the deadline the free report can afford. */
+interface Timing {
+  language: MeasurementLanguage;
+  chars: number;
+  ms: number;
+  outputTokens: number;
+}
+
+const LENGTHS = [
+  { label: "< 3k chars", below: 3000 },
+  { label: "3k–6k chars", below: 6000 },
+  { label: "6k–10k chars", below: 10_000 },
+  { label: "≥ 10k chars", below: Number.POSITIVE_INFINITY },
+];
+
+// Nearest rank, so a reported p95 is a latency that was actually observed.
+function percentile(sorted: number[], p: number): number {
+  return sorted[Math.max(0, Math.ceil(p * sorted.length) - 1)] as number;
+}
+
+function latencyTable(timings: Timing[]): string {
+  const row = (label: string, group: Timing[]) => {
+    const ms = group.map((t) => t.ms).sort((a, b) => a - b);
+    const out = group.reduce((n, t) => n + t.outputTokens, 0) / group.length;
+    const s = (v: number) => `${(v / 1000).toFixed(1)} s`;
+    return `| ${label} | ${group.length} | ${s(percentile(ms, 0.5))} | ${s(percentile(ms, 0.95))} | ${s(ms.at(-1) as number)} | ${Math.round(out)} |`;
+  };
+  const languages = [...new Set(timings.map((t) => t.language))].sort();
+  const rows = [
+    row("all", timings),
+    ...languages.map((l) =>
+      row(
+        l,
+        timings.filter((t) => t.language === l),
+      ),
+    ),
+    ...LENGTHS.flatMap(({ label, below }, i) => {
+      const from = i === 0 ? 0 : (LENGTHS[i - 1] as { below: number }).below;
+      const group = timings.filter((t) => t.chars >= from && t.chars < below);
+      return group.length > 0 ? [row(label, group)] : [];
+    }),
+  ];
+  return [
+    "| group | answers | p50 | p95 | max | output tokens |",
+    "|---|---|---|---|---|---|",
+    ...rows,
+  ].join("\n");
+}
+
 const rate = (n: number, d: number) => (d === 0 ? null : n / d);
 const pct = (r: number | null) => (r === null ? "–" : `${(r * 100).toFixed(1)} %`);
 
 // One extraction per recorded answer with the production pair and judge, a few US cents in all.
 test("extraction finds, orders and judges entities in every measurement language", async () => {
   const tallies = new Map<MeasurementLanguage, Tally>();
+  const timings: Timing[] = [];
   await inLanes(answers, async ({ id, answer }, i) => {
     const e = expected[id];
     if (!e) throw new Error(`${id} has no expectation`);
@@ -235,6 +294,12 @@ test("extraction finds, orders and judges entities in every measurement language
     try {
       result = await extractResponse(raw, { spend }, { config });
       t.slowestMs = Math.max(t.slowestMs, result.latencyMs);
+      timings.push({
+        language: e.language,
+        chars: answer.markdown.length,
+        ms: result.latencyMs,
+        outputTokens: stored.outputTokens.get(raw.capture.id) ?? 0,
+      });
       const outputs = stored.outputs.get(raw.capture.id);
       const tokens = stored.inputTokens.get(raw.capture.id);
       if (outputs && tokens && !outputs.judge) {
@@ -266,9 +331,11 @@ test("extraction finds, orders and judges entities in every measurement language
         )} | ${t.failed} | ${(t.slowestMs / 1000).toFixed(1)} s | ${t.charsPerToken.toFixed(2)} |`,
     ),
   ].join("\n");
-  console.log(table);
-  if (process.env.GITHUB_STEP_SUMMARY)
-    appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${table}\n`);
+  const latency = latencyTable(timings);
+  console.log(`${table}\n\n${latency}`);
+  if (process.env.GITHUB_STEP_SUMMARY) {
+    appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${table}\n\n${latency}\n`);
+  }
 
   for (const [language, t] of rows) {
     expect(t.failed, `${language} failed extractions`).toBe(0);
