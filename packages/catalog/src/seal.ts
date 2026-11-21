@@ -18,7 +18,15 @@ import {
 } from "@reranker/schema/measurement";
 import type { IntentSetDraft } from "./generate/pipeline";
 import type { Noun } from "./grammar";
-import { contentHash, intentSetId, jcs, merkleRoot, variantId, variantTemplates } from "./hash";
+import {
+  contentHash,
+  intentSetId,
+  jcs,
+  merkleRoot,
+  personaFits,
+  variantId,
+  variantTemplates,
+} from "./hash";
 import type { FrozenSeed } from "./seed/load";
 import { materialize, variantContext, variantPool } from "./variants";
 
@@ -76,7 +84,8 @@ export function seedIntentSets(seed: FrozenSeed): ReadonlyMap<string, IntentSet>
   const groups = Map.groupBy(seed.catalog.intents, keyOf);
   return new Map(
     [...groups].map(([key, intents]) => {
-      const [{ categoryKey, scope, registerProfile }] = intents as [(typeof intents)[number]];
+      const [first] = intents as [(typeof intents)[number]];
+      const { categoryKey, scope, registerProfile } = first;
       const ids = new Set(intents.map((i) => i.intentId));
       const set: IntentSet = {
         manifest: {
@@ -94,7 +103,9 @@ export function seedIntentSets(seed: FrozenSeed): ReadonlyMap<string, IntentSet>
         },
         intents: intents.map((intent) => ({ ...intent, intentSetId: id })),
         paraphrases: seed.catalog.paraphrases.filter((p) => ids.has(p.intentId)),
-        personas: seed.catalog.personas.filter((p) => p.categoryKey === categoryKey),
+        personas: seed.catalog.personas
+          .filter((p) => personaFits(p, first))
+          .map(({ personaId, preamble }) => ({ personaId, categoryKey, preamble })),
       };
       return [key, set];
     }),

@@ -1,3 +1,4 @@
+import { getTranslator } from "@reranker/i18n";
 import { CategoryArchetype, SeedCategoryKey } from "@reranker/schema/measurement";
 import { describe, expect, test } from "vitest";
 import placesTypes from "../data/places-commercial-types.json" with { type: "json" };
@@ -6,6 +7,18 @@ import { placesTypeArchetype, placesTypeLabel, seedCategories } from "../src/cat
 import { nounText } from "../src/grammar";
 
 describe("seed categories", () => {
+  test("each seed category's label key has its es-CO text", () => {
+    const t = getTranslator("es-CO", "catalog.categories", {
+      onError: (error) => {
+        throw error;
+      },
+    });
+    for (const c of seedCategories()) {
+      const key = c.labelKey.replace("catalog.categories.", "") as Parameters<typeof t>[0];
+      expect(t(key)).toMatch(/^\p{Lu}/u);
+    }
+  });
+
   test("six seed categories with their Places types and scope", () => {
     expect(seedCategories().map((c) => c.key)).toEqual(SeedCategoryKey.options);
     expect(seedCategories().find((c) => c.key === "online_store")).toMatchObject({

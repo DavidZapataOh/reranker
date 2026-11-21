@@ -73,6 +73,36 @@ test("variant templates cover every paraphrase without a persona and with each p
   expect(ts.filter((t) => t.personaId === null)).toHaveLength(2);
 });
 
+test("a seed persona pairs only with intents asked in its language and profile", () => {
+  const intent = (intentId: string, language: string, registerProfile: string) => ({
+    intentId,
+    categoryKey: "hotel",
+    language,
+    registerProfile,
+  });
+  const persona = (personaId: string, language: string, registerProfile: string) => ({
+    personaId,
+    categoryKey: "hotel",
+    preamble: personaId,
+    language,
+    registerProfile,
+  });
+  const ts = variantTemplates({
+    intents: [intent("hotel.co", "es", "co"), intent("hotel.en", "en", "neutral")],
+    paraphrases: [
+      { paraphraseId: "hotel.co.p00", intentId: "hotel.co", format: "keyword", text: "hotel" },
+      { paraphraseId: "hotel.en.p00", intentId: "hotel.en", format: "keyword", text: "hotel" },
+    ],
+    personas: [
+      persona("co", "es", "co"),
+      persona("neutral", "es", "neutral"),
+      persona("en", "en", "neutral"),
+    ],
+  });
+  const pairs = ts.map((t) => `${t.intentId}:${t.personaId}`);
+  expect(pairs).toEqual(["hotel.co:null", "hotel.co:co", "hotel.en:null", "hotel.en:en"]);
+});
+
 test("the registered fixture passes the check", () => {
   expect(() => checkLock(copyFixtureCatalog())).not.toThrow();
 });

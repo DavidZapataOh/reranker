@@ -101,6 +101,29 @@ describe("seed", () => {
     expect(dental?.personas.every((p) => p.categoryKey === "dental_clinic")).toBe(true);
   });
 
+  test("a set holds only the personas of its language and profile, as plain personas", () => {
+    const english = { ...mini.personas[0], personaId: "dental_clinic.en.parent", language: "en" };
+    const twoLanguages = frozenSeed([entry], () => ({
+      ...mini,
+      personas: [...mini.personas, { ...english, registerProfile: "neutral" }],
+    }));
+    const dental = seedSetFor(seedIntentSets(defined(twoLanguages)), {
+      categoryKey: "dental_clinic",
+      scope: "local",
+      registerProfile: "co",
+      language: "es",
+    });
+    expect(dental?.personas.map((p) => p.personaId)).toEqual([
+      "dental_clinic.parent",
+      "dental_clinic.senior",
+    ]);
+    expect(dental?.personas[0]).toEqual({
+      personaId: "dental_clinic.parent",
+      categoryKey: "dental_clinic",
+      preamble: "Tengo dos hijos pequeños.",
+    });
+  });
+
   test("a language the seed was not written in is not served from it", () =>
     expect(
       seedSetFor(seedIntentSets(defined(seed)), {

@@ -57,27 +57,43 @@ export type VariantTemplate = {
   preamble: string | null;
 };
 
+/** A seed persona names the language and profile it speaks in; a set's personas speak its own. */
+type Speech = { language?: string; registerProfile?: string };
+
 type TemplateSource = {
-  intents: readonly { intentId: string; categoryKey: string }[];
+  intents: readonly ({ intentId: string; categoryKey: string } & Speech)[];
   paraphrases: readonly { paraphraseId: string; intentId: string; format: string; text: string }[];
-  personas: readonly { personaId: string; categoryKey: string; preamble: string }[];
+  personas: readonly ({ personaId: string; categoryKey: string; preamble: string } & Speech)[];
 };
 
-/** Every paraphrase of every intent, once without a persona and once per persona of its category. */
+/** Same category, and the same language and profile when the persona names them. */
+export function personaFits(
+  persona: { categoryKey: string } & Speech,
+  intent: { categoryKey: string } & Speech,
+): boolean {
+  return (
+    persona.categoryKey === intent.categoryKey &&
+    (persona.language === undefined || persona.language === intent.language) &&
+    (persona.registerProfile === undefined || persona.registerProfile === intent.registerProfile)
+  );
+}
+
+/** Every paraphrase of every intent, once without a persona and once per persona that fits it. */
 export function variantTemplates(set: TemplateSource): VariantTemplate[] {
-  const categoryOf = new Map(set.intents.map((i) => [i.intentId, i.categoryKey]));
   const personasOf = Map.groupBy(set.personas, (p) => p.categoryKey);
+  const fitting = new Map(
+    set.intents.map((i) => [
+      i.intentId,
+      (personasOf.get(i.categoryKey) ?? []).filter((p) => personaFits(p, i)),
+    ]),
+  );
   return set.paraphrases.flatMap(({ intentId, paraphraseId, format, text }) => {
-    const category = categoryOf.get(intentId);
-    if (category === undefined) throw new TypeError(`paraphrase ${paraphraseId} has no intent`);
+    const personas = fitting.get(intentId);
+    if (personas === undefined) throw new TypeError(`paraphrase ${paraphraseId} has no intent`);
     const base = { intentId, paraphraseId, format, text };
     return [
       { ...base, personaId: null, preamble: null },
-      ...(personasOf.get(category) ?? []).map((p) => ({
-        ...base,
-        personaId: p.personaId,
-        preamble: p.preamble,
-      })),
+      ...personas.map((p) => ({ ...base, personaId: p.personaId, preamble: p.preamble })),
     ];
   });
 }
