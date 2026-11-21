@@ -31,6 +31,11 @@ export function isGendered(language: MeasurementLanguage): language is GenderedL
   return Object.hasOwn(GENDERS, language);
 }
 
+/** The genders a noun takes in `language`; none where the templates never agree with it. */
+export function nounGenders(language: MeasurementLanguage): readonly Gender[] {
+  return isGendered(language) ? GENDERS[language] : [];
+}
+
 /** "{un bon|une bonne}": two or more alternatives, none empty. */
 export const AGREEMENT = /\{([^{}|]+(?:\|[^{}|]+)+)\}/g;
 

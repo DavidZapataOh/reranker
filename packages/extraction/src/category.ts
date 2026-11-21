@@ -2,12 +2,14 @@ import {
   ARCHETYPE_SCOPES,
   countryLanguage,
   type Gender,
+  nounGenders,
   placesTypeArchetype,
   placesTypeLabel,
   registerFor,
   type SeedCategory,
   seedCategories,
 } from "@reranker/catalog";
+import type { SpendContext } from "@reranker/jobs";
 import type {
   BusinessCandidate,
   BusinessCategory,
@@ -15,6 +17,10 @@ import type {
   MeasurementLanguage,
   QuestionScope,
 } from "@reranker/schema/measurement";
+import { currentExtractorConfig, type ExtractorConfig } from "./config";
+import { CLASSIFY_PROMPT_V1 } from "./prompts/classify.v1";
+import { callerFor, paidCall } from "./providers/call";
+import { type ClassifierOutput, ClassifierSchema } from "./schema";
 
 /**
  * A category named in the language the business is measured in. `nounGender` is set in the
@@ -28,15 +34,20 @@ export type InferredCategory = BusinessCategory & {
 
 const SEED_CONFIDENCE = 0.95;
 const PLACES_TYPE_CONFIDENCE = 0.9;
+const FALLBACK_CONFIDENCE = 0.5;
+const NATIONAL_CONFIDENCE = 0.8;
+const CLASSIFIER_MAX_OUTPUT_TOKENS = 512;
 // Table A types that name a kind of place, not what the business sells.
 const GENERIC_TYPES = new Set(["store", "service", "establishment", "point_of_interest"]);
 // When the country speaks none of the measured languages the measurement is refused later; the
 // category still needs a name until then.
 const HOUSE_LANGUAGE: MeasurementLanguage = "es";
+const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 const seedByType = new Map<string, Readonly<SeedCategory>>(
   seedCategories().flatMap((seed) => seed.placesTypes.map((type) => [type, seed] as const)),
 );
+const seedByKey = new Map(seedCategories().map((seed) => [seed.key as string, seed]));
 
 function languageOf(c: BusinessCandidate): MeasurementLanguage {
   if (c.geo === null) return HOUSE_LANGUAGE;
@@ -61,6 +72,11 @@ function seedNoun(
   const noun = seed.languages[language].noun;
   if (noun === null) return null;
   return typeof noun === "string" ? { text: noun, gender: null } : noun;
+}
+
+function seedSynonym(seed: Readonly<SeedCategory>, language: MeasurementLanguage): string {
+  const synonyms = language === "es" ? seed.synonyms : seed.languages[language].synonyms;
+  return synonyms[0] ?? seed.key;
 }
 
 function allowedScope(archetype: CategoryArchetype, wanted: QuestionScope): QuestionScope {
@@ -154,4 +170,145 @@ export function categoryByRules(
       : null;
   }
   return null;
+}
+
+/**
+ * What is left when the rules gave nothing and the classifier cannot answer: the archetype of
+ * Places' first business type, generic ones included, or an online store for a website.
+ */
+function fallback(c: BusinessCandidate, language: MeasurementLanguage): InferredCategory {
+  for (const type of typesOf(c)) {
+    const archetype = placesTypeArchetype(type);
+    if (archetype === null) continue;
+    const label = language === "es" && c.places?.googleMapsTypeLabel;
+    const found = fromPlacesType(
+      c,
+      type,
+      archetype,
+      language,
+      FALLBACK_CONFIDENCE,
+      label || undefined,
+    );
+    if (found) return { ...found, scope: allowedScope(archetype, "local") };
+  }
+  const store = seedByKey.get("online_store") as Readonly<SeedCategory>;
+  const name = seedSynonym(store, language);
+  return {
+    ...fromSeed(store, { text: name, gender: null }, language, FALLBACK_CONFIDENCE),
+    placesTypes: [],
+  };
+}
+
+function slugOf(key: string): string | null {
+  const slug = key
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+  return slug.length >= 2 && slug.length <= 40 && SLUG.test(slug) ? slug : null;
+}
+
+/** The classifier's answer as a category, or null when it breaks a rule the measurement needs. */
+function fromClassifier(
+  c: BusinessCandidate,
+  out: ClassifierOutput,
+  language: MeasurementLanguage,
+): InferredCategory | null {
+  const genders = nounGenders(language);
+  const gender = genders.length === 0 ? null : out.nounGender;
+  if (genders.length > 0 && (gender === null || !genders.includes(gender))) return null;
+  const noun = out.noun.trim();
+  const label = out.label.trim();
+  if (noun === "" || label === "") return null;
+
+  const website = c.kind === "website";
+  const wantsNational =
+    website ||
+    out.archetype === "online_national" ||
+    (out.scope === "national" && out.confidence >= NATIONAL_CONFIDENCE);
+  // A business known only by its website has no premises to be asked about locally.
+  const archetype =
+    website && !ARCHETYPE_SCOPES[out.archetype].includes("national")
+      ? "online_national"
+      : out.archetype;
+  const scope: QuestionScope = wantsNational ? "national" : "local";
+
+  const seed = seedByKey.get(out.categoryKey);
+  if (seed) {
+    const reviewed = seedNoun(seed, language);
+    return {
+      ...fromSeed(seed, reviewed ?? { text: noun, gender }, language, out.confidence),
+      ...(reviewed === null && { label }),
+      scope: allowedScope(seed.archetype, scope),
+    };
+  }
+  const slug = slugOf(out.categoryKey);
+  if (slug === null) return null;
+  return category({
+    key: `gen:${slug}`,
+    source: "inferred",
+    label,
+    noun,
+    nounGender: gender,
+    archetype,
+    scope,
+    placesTypes: typesOf(c).filter((t) => placesTypeArchetype(t) !== null),
+    confidence: out.confidence,
+    language,
+  });
+}
+
+function classifierMessage(c: BusinessCandidate, language: MeasurementLanguage): string {
+  return JSON.stringify({
+    language,
+    country: c.geo?.country ?? null,
+    name: c.displayName,
+    placesTypes: c.places?.types ?? [],
+    primaryType: c.places?.primaryType ?? null,
+    primaryTypeLabel: c.places?.primaryTypeDisplayName ?? null,
+    googleMapsTypeLabel: c.places?.googleMapsTypeLabel ?? null,
+    website: c.website ?? null,
+  });
+}
+
+/**
+ * The category and scope a business is measured with, named in its measurement language
+ * (`language`, else its country's). Rules first; the classifier only when Places does not say.
+ * Never throws: a classifier that fails, answers late or breaks a rule leaves the rules' or
+ * Places' archetype at low confidence, and whatever the call cost is settled by `paidCall`.
+ */
+export async function inferCategory(
+  c: BusinessCandidate,
+  opts: { spend: SpendContext; config?: ExtractorConfig; language?: MeasurementLanguage },
+): Promise<InferredCategory> {
+  const language = opts.language ?? languageOf(c);
+  const rules = categoryByRules(c, language);
+  if (rules) return rules;
+
+  const config = opts.config ?? currentExtractorConfig;
+  const model = config.models.classifier;
+  const timeoutMs = config.timeoutsMs.classifier;
+  const classified = paidCall(
+    callerFor(model),
+    {
+      model,
+      system: CLASSIFY_PROMPT_V1,
+      user: classifierMessage(c, language),
+      schema: ClassifierSchema,
+      schemaName: "category",
+      maxOutputTokens: CLASSIFIER_MAX_OUTPUT_TOKENS,
+    },
+    { timeoutMs, retries: 0, spend: opts.spend },
+  ).then(
+    ({ output }) => fromClassifier(c, output, language),
+    () => null,
+  );
+  // Waiting for a provider slot is not bounded by the call's own deadline.
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const late = new Promise<null>((resolve) => {
+    timer = setTimeout(() => resolve(null), timeoutMs);
+  });
+  const found = await Promise.race([classified, late]).finally(() => clearTimeout(timer));
+  return found ?? fallback(c, language);
 }
