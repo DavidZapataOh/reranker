@@ -22,7 +22,7 @@ export async function record429(): Promise<void> {
 
 /** Refuses a call before it is sent while the fleet guard holds. */
 export async function assertNotRateLimited(): Promise<void> {
-  const { active, activeUntil } = await guardModeStatus(RATE_GUARD.mode);
-  if (!active || activeUntil === null) return;
-  throw new RateLimitedError(Math.max(1, activeUntil.getTime() - Date.now()), "Bright Data");
+  const { active, remainingMs } = await guardModeStatus(RATE_GUARD.mode);
+  if (!active || remainingMs === null) return;
+  throw new RateLimitedError(Math.max(1, remainingMs), "Bright Data");
 }

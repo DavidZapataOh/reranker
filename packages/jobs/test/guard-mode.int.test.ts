@@ -30,11 +30,11 @@ describe("guard modes", () => {
     const b = await tripGuardMode(n, "spike", HALF_HOUR);
     expect([a.newlyTripped, b.newlyTripped]).toEqual([true, false]);
     expect(b.activeUntil.getTime()).toBeGreaterThanOrEqual(a.activeUntil.getTime());
-    expect(await guardModeStatus(n)).toMatchObject({
-      active: true,
-      reason: "spike",
-      releasedNow: false,
-    });
+    const status = await guardModeStatus(n);
+    expect(status).toMatchObject({ active: true, reason: "spike", releasedNow: false });
+    // Measured on the database clock that decides the mode, so it never exceeds the hold.
+    expect(status.remainingMs).toBeGreaterThan(HALF_HOUR - 60_000);
+    expect(status.remainingMs).toBeLessThanOrEqual(HALF_HOUR);
 
     await shiftGuardMode(n, 31 * 60_000);
     expect(await guardModeStatus(n)).toMatchObject({ active: false, releasedNow: true });
@@ -85,6 +85,7 @@ describe("guard modes", () => {
     expect(await guardModeStatus(name("none"))).toEqual({
       active: false,
       activeUntil: null,
+      remainingMs: null,
       reason: null,
       releasedNow: false,
     });

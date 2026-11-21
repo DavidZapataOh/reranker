@@ -63,11 +63,20 @@ describe("tripGuardMode", () => {
 describe("guardModeStatus", () => {
   test("maps an active mode", async () => {
     execute.mockResolvedValue({
-      rows: [{ active: true, active_until: until, reason: "spike", released_now: false }],
+      rows: [
+        {
+          active: true,
+          active_until: until,
+          remaining_ms: "299990",
+          reason: "spike",
+          released_now: false,
+        },
+      ],
     });
     await expect(guardModeStatus("x")).resolves.toEqual({
       active: true,
       activeUntil: until,
+      remainingMs: 299_990,
       reason: "spike",
       releasedNow: false,
     });
@@ -75,11 +84,20 @@ describe("guardModeStatus", () => {
 
   test("maps a mode that was never tripped", async () => {
     execute.mockResolvedValue({
-      rows: [{ active: false, active_until: null, reason: null, released_now: false }],
+      rows: [
+        {
+          active: false,
+          active_until: null,
+          remaining_ms: null,
+          reason: null,
+          released_now: false,
+        },
+      ],
     });
     await expect(guardModeStatus("x")).resolves.toEqual({
       active: false,
       activeUntil: null,
+      remainingMs: null,
       reason: null,
       releasedNow: false,
     });
