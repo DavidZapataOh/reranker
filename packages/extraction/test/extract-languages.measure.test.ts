@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { randomBytes, randomUUID } from "node:crypto";
 import { appendFileSync, readdirSync, readFileSync } from "node:fs";
 import type { EngineAnswer } from "@reranker/capture";
 import { endPools } from "@reranker/db";
@@ -6,16 +6,40 @@ import type { SpendContext } from "@reranker/jobs";
 import type { ExtractedMention, MeasurementLanguage } from "@reranker/schema/measurement";
 import { requireEnv } from "@reranker/testing/env";
 import { afterAll, beforeAll, expect, test, vi } from "vitest";
+import { currentExtractorConfig, type ExtractorConfig } from "../src/config";
 import { extractResponse, type RawCapture } from "../src/extract";
 import { jaroWinkler, normalizeName, tokenContainment } from "../src/normalize";
+import { EXTRACT_PROMPT_V1 } from "../src/prompts/extract.v1";
+import type { MentionsOutput } from "../src/schema";
 
 // Storage is not what is measured: extractions are neither looked up nor kept.
+type CallRecord = { model: string; output: MentionsOutput | null };
+interface StoredOutputs {
+  captureId: string;
+  primary: CallRecord;
+  secondary: CallRecord | null;
+  judge: CallRecord | null;
+  quoteMisses: { primary: number; secondary: number; judge: number };
+}
+
+// What each extraction would have stored, kept to explain its misses and its token use.
+const stored = vi.hoisted(() => ({
+  outputs: new Map<string, StoredOutputs>(),
+  inputTokens: new Map<string, number>(),
+}));
 vi.mock("../src/store", () => ({
   findExtraction: async () => null,
-  insertExtraction: async () => ({ id: "measured", inserted: true }),
+  insertExtraction: async (row: { captureId: string; inputTokens: number }) => {
+    stored.inputTokens.set(row.captureId, row.inputTokens);
+    return { id: "measured", inserted: true };
+  },
 }));
 vi.mock("@reranker/evidence", () => ({
-  putArtifact: async () => ({ sha256: "0".repeat(64), created: true }),
+  putArtifact: async (_kind: string, bytes: Uint8Array) => {
+    const outputs = JSON.parse(new TextDecoder().decode(bytes)) as StoredOutputs;
+    stored.outputs.set(outputs.captureId, outputs);
+    return { sha256: "0".repeat(64), created: true };
+  },
   getArtifact: async () => null,
 }));
 vi.mock("@reranker/flags", () => ({ isEnabled: async () => true }));
@@ -50,10 +74,19 @@ const spend: SpendContext = {
   refId: randomUUID(),
 };
 
+// Accuracy is what is measured: the production deadlines would turn a slow call into a missing
+// answer, and the latency each language takes is reported apart.
+const config: ExtractorConfig = {
+  ...currentExtractorConfig,
+  timeoutsMs: { ...currentExtractorConfig.timeoutsMs, extract: 60_000, judge: 60_000 },
+};
+
 beforeAll(() => {
   vi.stubEnv("APP_ENV", process.env.APP_ENV || "development");
   vi.stubEnv("OPENAI_API_KEY", requireEnv("OPENAI_API_KEY_CI"));
   vi.stubEnv("GEMINI_API_KEY", requireEnv("GEMINI_API_KEY_CI"));
+  // Professionals named in the answers are keyed by HMAC; any key scores the same.
+  vi.stubEnv("ENTITY_NAME_HMAC_KEY", randomBytes(32).toString("base64url"));
 });
 afterAll(async () => {
   vi.unstubAllEnvs();
@@ -80,6 +113,10 @@ interface Tally {
   negativeFound: number;
   incidental: number;
   incidentalFound: number;
+  failed: number;
+  slowestMs: number;
+  /** The fewest characters per input token of an extraction without a judge. */
+  charsPerToken: number;
 }
 
 const empty = (): Tally => ({
@@ -94,9 +131,30 @@ const empty = (): Tally => ({
   negativeFound: 0,
   incidental: 0,
   incidentalFound: 0,
+  failed: 0,
+  slowestMs: 0,
+  charsPerToken: Number.POSITIVE_INFINITY,
 });
 
-function score(t: Tally, mentions: ExtractedMention[], e: Expected): void {
+/** What each call said about a name the score missed, to tell a skipped name from a dropped quote. */
+function trace(outputs: StoredOutputs | undefined, misses: string[]): string[] {
+  if (!outputs) return [];
+  const lines = [`quote misses ${JSON.stringify(outputs.quoteMisses)}`];
+  for (const call of ["primary", "secondary", "judge"] as const) {
+    const said = outputs[call]?.output?.mentions;
+    if (!said) continue;
+    for (const m of said) {
+      if (misses.some((miss) => miss.includes(m.name) || same(miss.split(": ")[1] ?? "", m.name))) {
+        lines.push(`${call}: ${m.name} ${m.stance} ${m.entityKind} «${m.quote}»`);
+      }
+    }
+  }
+  return lines;
+}
+
+/** Scores one answer and returns what it got wrong, for the log. */
+function score(t: Tally, mentions: ExtractedMention[], e: Expected): string[] {
+  const misses: string[] = [];
   t.answers++;
   const recommendations = mentions.filter((m) => m.stance === "recommendation");
   const ordinals: number[] = [];
@@ -106,25 +164,32 @@ function score(t: Tally, mentions: ExtractedMention[], e: Expected): void {
     if (m) {
       t.recommendedFound++;
       ordinals.push(m.ordinal ?? Number.POSITIVE_INFINITY);
-    }
+    } else
+      misses.push(`recommended not found: ${name} (${find(mentions, name)?.stance ?? "absent"})`);
   }
   for (let i = 1; i < ordinals.length; i++) {
     t.pairs++;
     if ((ordinals[i - 1] as number) < (ordinals[i] as number)) t.pairsInOrder++;
+    else misses.push(`out of order: ordinals ${ordinals.join(", ")}`);
   }
   t.recommendations += recommendations.length;
-  t.recommendationsExpected += recommendations.filter((m) =>
-    e.recommended.some((name) => same(m.name, name)),
-  ).length;
+  for (const m of recommendations) {
+    if (e.recommended.some((name) => same(m.name, name))) t.recommendationsExpected++;
+    else misses.push(`recommended in excess: ${m.name}`);
+  }
   for (const name of e.negative) {
     t.negative++;
-    if (find(mentions, name)?.stance === "negative") t.negativeFound++;
+    const stance = find(mentions, name)?.stance;
+    if (stance === "negative") t.negativeFound++;
+    else misses.push(`negative missed: ${name} (${stance ?? "absent"})`);
   }
   for (const name of e.incidental) {
     t.incidental++;
     const m = find(mentions, name);
     if (m && m.stance !== "recommendation") t.incidentalFound++;
+    else misses.push(`incidental missed: ${name} (${m?.stance ?? "absent"})`);
   }
+  return misses;
 }
 
 // Each extraction holds leases on two providers and the judge's: past a pool's slots a caller
@@ -162,23 +227,43 @@ test("extraction finds, orders and judges entities in every measurement language
       },
       answer,
     } as RawCapture;
-    const result = await extractResponse(raw, { spend });
     const t = tallies.get(e.language) ?? empty();
     tallies.set(e.language, t);
-    score(t, result.mentions, e);
+    // A failed extraction finds nothing: it counts against the language instead of hiding the rest.
+    let result: Awaited<ReturnType<typeof extractResponse>> | null = null;
+    let failure = "";
+    try {
+      result = await extractResponse(raw, { spend }, { config });
+      t.slowestMs = Math.max(t.slowestMs, result.latencyMs);
+      const outputs = stored.outputs.get(raw.capture.id);
+      const tokens = stored.inputTokens.get(raw.capture.id);
+      if (outputs && tokens && !outputs.judge) {
+        const calls = outputs.secondary ? 2 : 1;
+        const chars = (EXTRACT_PROMPT_V1.length + answer.markdown.length) * calls;
+        t.charsPerToken = Math.min(t.charsPerToken, chars / tokens);
+      }
+    } catch (error) {
+      t.failed++;
+      failure = ` failed: ${error instanceof Error ? error.message : String(error)}`;
+    }
+    const misses = score(t, result?.mentions ?? [], e);
+    if (misses.length > 0 || failure) {
+      const lines = [...misses, ...trace(stored.outputs.get(raw.capture.id), misses)];
+      console.log(`${id} (${result?.agreement ?? "none"})${failure}\n  ${lines.join("\n  ")}`);
+    }
   });
 
   const rows = [...tallies.entries()].sort(([a], [b]) => a.localeCompare(b));
   const table = [
-    "| language | answers | recommended recall | recommendation precision | order | negative recall | incidental recall |",
-    "|---|---|---|---|---|---|---|",
+    "| language | answers | recommended recall | recommendation precision | order | negative recall | incidental recall | failed | slowest | chars/token |",
+    "|---|---|---|---|---|---|---|---|---|---|",
     ...rows.map(
       ([language, t]) =>
         `| ${language} | ${t.answers} | ${pct(rate(t.recommendedFound, t.recommended))} | ${pct(
           rate(t.recommendationsExpected, t.recommendations),
         )} | ${pct(rate(t.pairsInOrder, t.pairs))} | ${pct(rate(t.negativeFound, t.negative))} | ${pct(
           rate(t.incidentalFound, t.incidental),
-        )} |`,
+        )} | ${t.failed} | ${(t.slowestMs / 1000).toFixed(1)} s | ${t.charsPerToken.toFixed(2)} |`,
     ),
   ].join("\n");
   console.log(table);
@@ -186,6 +271,7 @@ test("extraction finds, orders and judges entities in every measurement language
     appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${table}\n`);
 
   for (const [language, t] of rows) {
+    expect(t.failed, `${language} failed extractions`).toBe(0);
     expect(rate(t.recommendedFound, t.recommended), `${language} recall`).toBeGreaterThanOrEqual(
       0.9,
     );

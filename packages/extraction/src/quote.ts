@@ -8,8 +8,9 @@ const WORD_START = /^[\p{L}\p{N}]/u;
 const WORD_END = /[\p{L}\p{N}]$/u;
 const DOUBLE_QUOTES = new Set(["“", "”", "„", "«", "»"]);
 const SINGLE_QUOTES = new Set(["‘", "’", "‚"]);
-// Models quote the words and drop markdown emphasis, so it must not break a match.
-const EMPHASIS = new Set(["*", "_", "`"]);
+// Models quote the words and drop markdown emphasis and escapes ("1\.", "\:"), so neither may
+// break a match.
+const EMPHASIS = new Set(["*", "_", "`", "\\"]);
 const RANKED_KINDS = new Set<EntityKind>(["business", "professional", "chain"]);
 
 /** Text folded for matching, with the original UTF-16 span behind each of its code units. */

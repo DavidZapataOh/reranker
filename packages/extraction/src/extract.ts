@@ -27,7 +27,9 @@ import { findExtraction, insertExtraction } from "./store";
 
 export type RawCapture = RawCaptureOf<EngineAnswer>;
 
-const MAX_OUTPUT_TOKENS = 4096;
+// Reasoning counts against the cap, and a long answer that lists twenty places with addresses
+// ran past 4096 before its last mention; only the tokens used are billed.
+const MAX_OUTPUT_TOKENS = 16_384;
 const ARTIFACT_KIND = "extractions";
 
 /** What a call that ran left behind: its raw output, or the refusal that replaced it. */

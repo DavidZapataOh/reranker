@@ -93,11 +93,11 @@ test("reserves the estimate, settles the real cost and frees the slot", async ()
   expect(jobs.acquireProviderSlot).toHaveBeenCalledWith(
     "openai",
     { maxInFlight: 8 },
-    { cost: { requests: 1, tokens: 300 + 4096 } },
+    { cost: { requests: 1, tokens: 450 + 4096 } },
   );
   expect(jobs.reserveSpend).toHaveBeenCalledWith({
     provider: "openai",
-    estimate: estimateOf("gpt-6-luna", 300, 4096),
+    estimate: estimateOf("gpt-6-luna", 450, 4096),
     ...spend,
   });
   expect(jobs.settleSpend).toHaveBeenCalledWith(
