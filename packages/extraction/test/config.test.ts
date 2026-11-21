@@ -9,8 +9,8 @@ import {
 import { PLATFORMS, type PlatformEntry, platformFor } from "../src/platforms";
 import { estimateOf } from "../src/prices";
 import { CLASSIFY_PROMPT_V1 } from "../src/prompts/classify.v1";
-import { EXTRACT_EXAMPLES_V2, EXTRACT_PROMPT_V2 } from "../src/prompts/extract.v2";
-import { JUDGE_PROMPT_V2 } from "../src/prompts/judge.v2";
+import { EXTRACT_EXAMPLES_V3, EXTRACT_PROMPT_V3 } from "../src/prompts/extract.v3";
+import { JUDGE_PROMPT_V3 } from "../src/prompts/judge.v3";
 import { RESOLVE_JUDGE_PROMPT_V2 } from "../src/prompts/resolve-judge.v2";
 import { toExtractedMentions } from "../src/quote";
 import { MentionsSchema } from "../src/schema";
@@ -121,14 +121,18 @@ describe("currentExtractorConfig", () => {
     expect(currentExtractorConfig.models.primary).toEqual({
       provider: "openai",
       model: "gpt-6-luna",
-      reasoning: "low",
+      reasoning: "none",
     });
     expect(currentExtractorConfig.models.secondary).toEqual({
       provider: "gemini",
       model: "gemini-3.1-flash-lite",
       reasoning: "minimal",
     });
-    expect(currentExtractorConfig.models.judge.model).toBe("gpt-6.1-terra");
+    expect(currentExtractorConfig.models.judge).toEqual({
+      provider: "openai",
+      model: "gpt-6.1-terra",
+      reasoning: "none",
+    });
     expect(currentExtractorConfig.models.resolveJudge.model).toBe("gpt-6-luna");
     expect(currentExtractorConfig.models.classifier.model).toBe("gpt-6-luna");
     expect(currentExtractorConfig.pinnedFrom).toBeNull();
@@ -153,7 +157,7 @@ describe("currentExtractorConfig", () => {
         floor: 0.6,
       },
       timeoutsMs: {
-        extract: 6000,
+        extract: 10_000,
         judge: 8000,
         classifier: 3000,
         findings: 3000,
@@ -165,8 +169,8 @@ describe("currentExtractorConfig", () => {
 
   test("prompt hashes match the prompt files", () => {
     expect(currentExtractorConfig.prompts).toEqual({
-      extract: { id: "extract.v2", sha256: sha256Hex(EXTRACT_PROMPT_V2) },
-      judge: { id: "judge.v2", sha256: sha256Hex(JUDGE_PROMPT_V2) },
+      extract: { id: "extract.v3", sha256: sha256Hex(EXTRACT_PROMPT_V3) },
+      judge: { id: "judge.v3", sha256: sha256Hex(JUDGE_PROMPT_V3) },
       resolveJudge: { id: "resolve-judge.v2", sha256: sha256Hex(RESOLVE_JUDGE_PROMPT_V2) },
       classify: { id: "classify.v1", sha256: sha256Hex(CLASSIFY_PROMPT_V1) },
     });
@@ -190,23 +194,23 @@ describe("currentExtractorConfig", () => {
 
 describe("prompts and registry", () => {
   test("the extraction prompt carries no capture text, so providers can cache it", () => {
-    expect(EXTRACT_PROMPT_V2).not.toMatch(/\{\{|\$\{/);
+    expect(EXTRACT_PROMPT_V3).not.toMatch(/\{\{|\$\{/);
   });
 
-  test.each(EXTRACT_EXAMPLES_V2.map((e, i) => [i, e] as const))(
+  test.each(EXTRACT_EXAMPLES_V3.map((e, i) => [i, e] as const))(
     "example %i matches the schema and every quote is in its answer",
     (_, example) => {
       expect(MentionsSchema.parse(example.output)).toEqual(example.output);
       expect(toExtractedMentions(example.answer, example.output).quoteMisses).toBe(0);
-      expect(EXTRACT_PROMPT_V2).toContain(JSON.stringify(example.output));
+      expect(EXTRACT_PROMPT_V3).toContain(JSON.stringify(example.output));
     },
   );
 
   test("examples cover every stance, entity kind and answer kind", () => {
-    const mentions = EXTRACT_EXAMPLES_V2.flatMap((e) => e.output.mentions);
+    const mentions = EXTRACT_EXAMPLES_V3.flatMap((e) => e.output.mentions);
     expect(new Set(mentions.map((m) => m.stance)).size).toBe(3);
     expect(new Set(mentions.map((m) => m.entityKind)).size).toBe(6);
-    expect(new Set(EXTRACT_EXAMPLES_V2.map((e) => e.output.answerKind)).size).toBe(3);
+    expect(new Set(EXTRACT_EXAMPLES_V3.map((e) => e.output.answerKind)).size).toBe(3);
   });
 
   test("tagging can follow a config's own registry", () => {

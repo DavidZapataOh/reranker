@@ -4,8 +4,8 @@ import canonicalize from "canonicalize";
 import { NAME_RULES, type NameRules } from "./normalize";
 import { PLATFORMS, type PlatformEntry } from "./platforms";
 import { CLASSIFY_PROMPT_V1 } from "./prompts/classify.v1";
-import { EXTRACT_PROMPT_V2 } from "./prompts/extract.v2";
-import { JUDGE_PROMPT_V2 } from "./prompts/judge.v2";
+import { EXTRACT_PROMPT_V3 } from "./prompts/extract.v3";
+import { JUDGE_PROMPT_V3 } from "./prompts/judge.v3";
 import { RESOLVE_JUDGE_PROMPT_V2 } from "./prompts/resolve-judge.v2";
 import type { ModelRef } from "./providers/types";
 import { ClassifierSchema, MentionsSchema, ResolveJudgeSchema } from "./schema";
@@ -29,8 +29,8 @@ export interface ExtractorConfig {
     classifier: ModelRef;
   };
   prompts: {
-    extract: PromptRef<"extract.v2">;
-    judge: PromptRef<"judge.v2">;
+    extract: PromptRef<"extract.v3">;
+    judge: PromptRef<"judge.v3">;
     resolveJudge: PromptRef<"resolve-judge.v2">;
     classify: PromptRef<"classify.v1">;
   };
@@ -111,15 +111,15 @@ function buildCurrent(): ExtractorConfig & { configHash: string } {
   const config: ExtractorConfig = {
     version: 1,
     models: {
-      primary: { provider: "openai", model: "gpt-6-luna", reasoning: "low" },
+      primary: { provider: "openai", model: "gpt-6-luna", reasoning: "none" },
       secondary: { provider: "gemini", model: "gemini-3.1-flash-lite", reasoning: "minimal" },
-      judge: { provider: "openai", model: "gpt-6.1-terra", reasoning: "low" },
+      judge: { provider: "openai", model: "gpt-6.1-terra", reasoning: "none" },
       resolveJudge: { provider: "openai", model: "gpt-6-luna", reasoning: "low" },
       classifier: { provider: "openai", model: "gpt-6-luna", reasoning: "low" },
     },
     prompts: {
-      extract: { id: "extract.v2", sha256: sha256Hex(EXTRACT_PROMPT_V2) },
-      judge: { id: "judge.v2", sha256: sha256Hex(JUDGE_PROMPT_V2) },
+      extract: { id: "extract.v3", sha256: sha256Hex(EXTRACT_PROMPT_V3) },
+      judge: { id: "judge.v3", sha256: sha256Hex(JUDGE_PROMPT_V3) },
       resolveJudge: { id: "resolve-judge.v2", sha256: sha256Hex(RESOLVE_JUDGE_PROMPT_V2) },
       classify: { id: "classify.v1", sha256: sha256Hex(CLASSIFY_PROMPT_V1) },
     },
@@ -142,7 +142,8 @@ function buildCurrent(): ExtractorConfig & { configHash: string } {
       floor: 0.6,
     },
     timeoutsMs: {
-      extract: 6000,
+      // Measured on real answers in six languages: the primary call ran p95 6.7 s, max 7.7 s.
+      extract: 10_000,
       judge: 8000,
       classifier: 3000,
       findings: 3000,

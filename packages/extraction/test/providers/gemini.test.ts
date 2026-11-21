@@ -108,7 +108,7 @@ test("returns the parsed output, the reported model and usage with thinking bill
   respond();
   const result = await callGemini(call);
   expect(result.output.mentions).toHaveLength(2);
-  expect(result.output.mentions[1]?.citedUrls).toEqual(["https://www.doctoralia.co"]);
+  expect(result.output.mentions[1]?.name).toBe("Doctoralia");
   expect(result.modelReported).toBe("gemini-3.1-flash-lite");
   expect(result.usage).toEqual(completedUsage);
   expect(result.raw).toMatchObject({ id: expect.stringMatching(/^v1_/) });

@@ -90,6 +90,37 @@ function locateQuotedName(
   return locateQuote(markdown, mention.name);
 }
 
+// A markdown link that is not an image (its text may hold one bracket pair, as in "[[1]](…)"), or
+// a bare URL that is not a link's target.
+const URL_IN_TEXT =
+  /(?<!!)\[(?:[^[\]]|\[[^\]]*\])*\]\((https?:\/\/[^\s)]+)\)|(?<![(\w])(https?:\/\/[^\s)\]>]+)/g;
+const TRAILING_PUNCTUATION = /[.,;:!?\\]+$/;
+
+const indentOf = (line: string) =>
+  (/^[ \t]*/.exec(line)?.[0] ?? "").replaceAll("\t", "    ").length;
+
+/**
+ * The URLs the answer gives with a mention: the links on the lines its quote spans and on the
+ * lines indented under them (an entry's address and source sub-items). Read from the answer, not
+ * copied by the model: redirect URLs are long, cost output tokens and came back miscopied.
+ */
+function citedUrlsOf(markdown: string, start: number, end: number): string[] {
+  const from = markdown.lastIndexOf("\n", start - 1) + 1;
+  const base = indentOf(markdown.slice(from));
+  let to = markdown.indexOf("\n", end);
+  while (to !== -1) {
+    const next = markdown.indexOf("\n", to + 1);
+    const line = markdown.slice(to + 1, next === -1 ? undefined : next);
+    if (line.trim() === "" || indentOf(line) <= base) break;
+    to = next;
+  }
+  const block = markdown.slice(from, to === -1 ? undefined : to);
+  const urls = [...block.matchAll(URL_IN_TEXT)].map((match) =>
+    (match[1] ?? (match[2] as string)).replace(TRAILING_PUNCTUATION, ""),
+  );
+  return [...new Set(urls)];
+}
+
 /** Keeps the mentions whose quote is in the answer, in answer order, with their rank. */
 export function toExtractedMentions(
   markdown: string,
@@ -113,7 +144,7 @@ export function toExtractedMentions(
       entityKind: mention.entityKind,
       sentiment: mention.sentiment,
       locationHint: mention.locationHint,
-      citedUrls: mention.citedUrls,
+      citedUrls: citedUrlsOf(markdown, at.start, at.end),
     });
   }
   separateSharedQuotes(markdown, mentions);

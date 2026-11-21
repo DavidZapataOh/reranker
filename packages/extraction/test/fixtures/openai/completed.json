@@ -25,7 +25,7 @@
           "type": "output_text",
           "annotations": [],
           "logprobs": [],
-          "text": "{\"answerKind\":\"names_entities\",\"mentions\":[{\"name\":\"Clínica Dental Sonrisa Paisa\",\"quote\":\"Clínica Dental Sonrisa Paisa\",\"stance\":\"recommendation\",\"entityKind\":\"business\",\"sentiment\":\"positive\",\"locationHint\":\"El Poblado\",\"citedUrls\":[]},{\"name\":\"Doctoralia\",\"quote\":\"Doctoralia\",\"stance\":\"incidental\",\"entityKind\":\"platform\",\"sentiment\":\"neutral\",\"locationHint\":null,\"citedUrls\":[\"https://www.doctoralia.co\"]}]}"
+          "text": "{\"answerKind\":\"names_entities\",\"mentions\":[{\"name\":\"Clínica Dental Sonrisa Paisa\",\"quote\":\"Clínica Dental Sonrisa Paisa\",\"stance\":\"recommendation\",\"entityKind\":\"business\",\"sentiment\":\"positive\",\"locationHint\":\"El Poblado\"},{\"name\":\"Doctoralia\",\"quote\":\"Doctoralia\",\"stance\":\"incidental\",\"entityKind\":\"platform\",\"sentiment\":\"neutral\",\"locationHint\":null}]}"
         }
       ]
     }

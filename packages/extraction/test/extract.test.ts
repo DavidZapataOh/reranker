@@ -5,7 +5,7 @@ import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { currentExtractorConfig, type ExtractorConfig } from "../src/config";
 import { extractResponse, type RawCapture } from "../src/extract";
 import { costOfUsage } from "../src/prices";
-import { JUDGE_PROMPT_V2 } from "../src/prompts/judge.v2";
+import { JUDGE_PROMPT_V3 } from "../src/prompts/judge.v3";
 import { ProviderRefusalError, type StructuredResult } from "../src/providers/types";
 import type { MentionsOutput } from "../src/schema";
 
@@ -181,11 +181,11 @@ test("a config without a registry entry leaves the platform untagged", async () 
   expect(r.mentions[1]).toMatchObject({ entityKind: "other", entityKey: "name:doctoralia" });
 });
 
-test("secondary timeout falls back to single within 7 s", async () => {
+test("secondary timeout falls back to single within the extract deadline", async () => {
   vi.useFakeTimers();
   doubles.gemini.mockImplementation(() => new Promise(() => {}));
   const p = extractResponse(capture({}), ctx);
-  await vi.advanceTimersByTimeAsync(7000);
+  await vi.advanceTimersByTimeAsync(currentExtractorConfig.timeoutsMs.extract + 1000);
   const r = await p;
   expect(r).toMatchObject({ agreement: "single", models: { secondary: null } });
   // The timed-out secondary settled its reservation, so the cost carries it.
@@ -236,7 +236,7 @@ test("a disagreement calls the judge once and cost adds every call", async () =>
   expect(doubles.openai).toHaveBeenCalledTimes(2);
   // The judge prompt names these fences, whatever language the answer is in.
   const judged = doubles.openai.mock.calls[1]?.[0];
-  expect(judged?.system).toBe(JUDGE_PROMPT_V2);
+  expect(judged?.system).toBe(JUDGE_PROMPT_V3);
   expect(judged?.user).toMatch(/^Answer:\n"""\n[\s\S]*\n"""\n\nDisagreement:\n\{/);
   expect(judged?.user).toContain('"onlySecondary"');
   expect(r).toMatchObject({ agreement: "adjudicated", models: { judge: "gpt-6.1-terra" } });

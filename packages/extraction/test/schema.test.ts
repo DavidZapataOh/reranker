@@ -24,7 +24,6 @@ const okMention = {
   entityKind: "business",
   sentiment: "positive",
   locationHint: "Chapinero",
-  citedUrls: ["https://sonrisa.example.co/"],
 };
 
 describe("MentionsSchema", () => {
@@ -34,7 +33,6 @@ describe("MentionsSchema", () => {
     expect(json.additionalProperties).toBe(false);
     expect(item.additionalProperties).toBe(false);
     expect(item.required?.sort()).toEqual([
-      "citedUrls",
       "entityKind",
       "locationHint",
       "name",

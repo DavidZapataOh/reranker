@@ -11,7 +11,6 @@ const m = (name: string, quote: string, over: Partial<Mention> = {}): Mention =>
   entityKind: "business",
   sentiment: "positive",
   locationHint: null,
-  citedUrls: [],
   ...over,
 });
 
@@ -124,14 +123,12 @@ describe("toExtractedMentions", () => {
   });
 
   test("keeps the exact span of the answer, the normalized name and the model's fields", () => {
-    const md = "Te recomiendo “Clínica Sonrisas S.A.S.” en Laureles.";
+    const md =
+      "Te recomiendo “Clínica Sonrisas S.A.S.” en Laureles ([web](https://sonrisas.example.co/)).";
     const r = toExtractedMentions(md, {
       answerKind: "names_entities",
       mentions: [
-        m("Clínica Sonrisas S.A.S.", '"clinica sonrisas s.a.s."', {
-          locationHint: "Laureles",
-          citedUrls: ["https://sonrisas.example.co/"],
-        }),
+        m("Clínica Sonrisas S.A.S.", '"clinica sonrisas s.a.s."', { locationHint: "Laureles" }),
       ],
     });
     expect(r).toEqual({
@@ -152,6 +149,28 @@ describe("toExtractedMentions", () => {
         },
       ],
     });
+  });
+
+  test("cited URLs are the links of the mention's line and its indented lines, never images", () => {
+    const md = [
+      "- **KU64** (Charlottenburg) [[1]](https://g.co/goto?u=1)",
+      "  - Hinweis: [KU64](https://ku64.de/) oder https://ku64.de/termin.",
+      "  - ![Praxis](https://images.example/ku64.png)",
+      "- **Dental21** – siehe [jameda](https://www.jameda.de/dental21)",
+      "",
+      "Quelle: https://quelle.example/",
+    ].join("\n");
+    const r = toExtractedMentions(
+      md,
+      out([
+        ["KU64", "KU64** (Charlottenburg)", "recommendation", "business"],
+        ["Dental21", "Dental21** – siehe", "recommendation", "business"],
+      ]),
+    );
+    expect(r.mentions.map((x) => x.citedUrls)).toEqual([
+      ["https://g.co/goto?u=1", "https://ku64.de/", "https://ku64.de/termin"],
+      ["https://www.jameda.de/dental21"],
+    ]);
   });
 
   test("names quoted with the same sentence each start at their own name, in answer order", () => {
