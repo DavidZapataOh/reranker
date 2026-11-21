@@ -19,6 +19,7 @@ export default mergeConfig(
           "src/control/plan.ts",
           "src/language-mix/fetch.ts",
           "src/language-mix/estimate.ts",
+          "src/language-mix/prewarm.ts",
           "src/regimes.ts",
         ],
       },
