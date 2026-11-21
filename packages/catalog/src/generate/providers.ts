@@ -24,7 +24,7 @@ import { GENERATOR_CONFIG, type TokenUsage } from "./config";
 import { catalogEnv } from "./env";
 import type { Candidate } from "./guards";
 import { type GenerationLanguage, promptsFor } from "./prompts";
-import { REVIEW_PROMPT_V2 } from "./prompts/review.v2";
+import { REVIEW_PROMPT_V3 } from "./prompts/review.v3";
 import { BilledFailure, type CallContext, paidCall } from "./spend";
 
 export type { GenerationLanguage } from "./prompts";
@@ -277,6 +277,8 @@ export async function generateParaphrases(
     withPersonas: boolean;
     count?: number;
     personas?: number;
+    /** Only these formats, to top up a pool short of them. */
+    formats?: readonly ParaphraseFormat[];
   },
   ctx: CallContext,
 ): Promise<{ paraphrases: Candidate[]; personas: string[] }> {
@@ -287,6 +289,7 @@ export async function generateParaphrases(
   const payload = {
     ...intentPayload({ ...req.intent, registerProfile: req.register }),
     count,
+    ...(req.formats && { formats: req.formats }),
     ...(req.withPersonas && { personas: personaCount }),
   };
   const call = {
@@ -310,7 +313,7 @@ export async function generateParaphrases(
   const paraphrases: Candidate[] = [];
   for (const { text, format } of output.paraphrases) {
     const clean = text.trim();
-    if (!clean || seen.has(clean)) continue;
+    if (!clean || seen.has(clean) || (req.formats && !req.formats.includes(format))) continue;
     seen.add(clean);
     paraphrases.push({ text: clean, format, generator: provider });
   }
@@ -421,7 +424,7 @@ export async function reviewNative(
   const call = {
     schema: Reviews,
     name: "verdicts",
-    system: REVIEW_PROMPT_V2,
+    system: REVIEW_PROMPT_V3,
     user: JSON.stringify({
       language: req.language,
       variety: variety[req.registerProfile],

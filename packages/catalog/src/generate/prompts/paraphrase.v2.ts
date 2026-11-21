@@ -1,15 +1,19 @@
-export const PARAPHRASE_PROMPT_V1 = `Escribes las preguntas que una persona real le hace a un asistente de IA (ChatGPT, Gemini, Perplexity) o al buscador de Google cuando busca un negocio. En el mensaje del usuario llega un JSON con la intención de búsqueda:
+// v2: a constraint adds context about who asks or why, never an attribute that narrows the
+// businesses recommended, which judge.v3 holds as another need; `formats` asks for some formats
+// only, so a pool short of one can be topped up.
+export const PARAPHRASE_PROMPT_V2 = `Escribes las preguntas que una persona real le hace a un asistente de IA (ChatGPT, Gemini, Perplexity) o al buscador de Google cuando busca un negocio. En el mensaje del usuario llega un JSON con la intención de búsqueda:
 - category y noun: la categoría del negocio y su sustantivo.
 - kind y canonical: el tipo de intención y la pregunta canónica que la expresa.
 - scope: local (se pregunta en una ciudad) o national (en todo el país).
 - variety y address: la variedad del español y el trato (tú o usted) que usa la gente.
 - count: cuántas preguntas devolver.
+- formats: si llega, los únicos formatos que debes usar.
 
-Devuelve en paraphrases exactamente count formas distintas de pedir lo mismo que la canónica, repartidas por igual entre los cuatro formatos:
+Devuelve en paraphrases exactamente count formas distintas de pedir lo mismo que la canónica, repartidas por igual entre los formatos de formats o, si no llega, entre los cuatro:
 - open_question: una pregunta completa, como se la haría a un asistente.
 - list_request: un pedido de varias opciones o de una lista.
 - keyword: una búsqueda corta de palabras clave, como se escribe en Google.
-- constraint: un pedido con una condición concreta que no cambia la intención.
+- constraint: la misma pregunta con contexto de quién pregunta o por qué ("viajo con mi pareja", "es para mi mamá", "acabo de mudarme", "somos cuatro"). Nunca un atributo del negocio que reduzca cuáles se recomiendan ("con estacionamiento", "barato", "abierto los domingos", "de confianza"), salvo que la canónica ya lo pida.
 
 Reglas para cada pregunta:
 - Pide lo mismo que la canónica: conserva su calificador (precio, urgencia, zona, confianza, ranking, especialidad o medio de pago) y no agregues el de otra intención.
@@ -20,18 +24,19 @@ Reglas para cada pregunta:
 - Entre 3 y 40 palabras.
 - Varía el vocabulario, el orden y la longitud como lo haría gente distinta, en la variedad y el trato indicados.`;
 
-export const PARAPHRASE_PROMPT_V1_EN = `You write the questions a real person asks an AI assistant (ChatGPT, Gemini, Perplexity) or types into Google when looking for a business. The user message is a JSON object describing the search intent:
+export const PARAPHRASE_PROMPT_V2_EN = `You write the questions a real person asks an AI assistant (ChatGPT, Gemini, Perplexity) or types into Google when looking for a business. The user message is a JSON object describing the search intent:
 - category and noun: the business category and the noun people use for it.
 - kind and canonical: the intent type and the canonical question that expresses it.
 - scope: local (asked about a city) or national (asked about the whole country).
 - variety: the variety of English people use.
 - count: how many questions to return.
+- formats: when present, the only formats to use.
 
-Return in paraphrases exactly count different ways of asking for the same thing as the canonical, split evenly across the four formats:
+Return in paraphrases exactly count different ways of asking for the same thing as the canonical, split evenly across the formats in formats or, when absent, across all four:
 - open_question: a full question, as someone would ask an assistant.
 - list_request: a request for several options or a list.
 - keyword: a short keyword search, as people type into Google.
-- constraint: a request with one concrete condition that does not change the intent.
+- constraint: the same request with context about who is asking or why ("I'm traveling with my partner", "it's for my mom", "I just moved here", "there are four of us"). Never a business attribute that narrows which businesses get recommended ("with parking", "cheap", "open on Sundays", "trustworthy"), unless the canonical already asks for it.
 
 Rules for every question:
 - Ask for the same thing as the canonical: keep its qualifier (price, urgency, area, trust, ranking, specialty or payment method) and never add another intent's qualifier.
@@ -42,18 +47,19 @@ Rules for every question:
 - Between 3 and 40 words.
 - Vary the wording, the order and the length the way different people would, in the variety given.`;
 
-export const PARAPHRASE_PROMPT_V1_PT = `Você escreve as perguntas que uma pessoa de verdade faz a um assistente de IA (ChatGPT, Gemini, Perplexity) ou digita no Google quando procura um negócio. A mensagem do usuário traz um JSON com a intenção de busca:
+export const PARAPHRASE_PROMPT_V2_PT = `Você escreve as perguntas que uma pessoa de verdade faz a um assistente de IA (ChatGPT, Gemini, Perplexity) ou digita no Google quando procura um negócio. A mensagem do usuário traz um JSON com a intenção de busca:
 - category e noun: a categoria do negócio e o substantivo que as pessoas usam para ela.
 - kind e canonical: o tipo de intenção e a pergunta canônica que a expressa.
 - scope: local (pergunta-se numa cidade) ou national (no país inteiro).
 - variety e address: a variedade do português e a forma de tratamento que as pessoas usam.
 - count: quantas perguntas devolver.
+- formats: se vier, os únicos formatos a usar.
 
-Devolva em paraphrases exatamente count jeitos diferentes de pedir a mesma coisa que a canônica, divididos igualmente entre os quatro formatos:
+Devolva em paraphrases exatamente count jeitos diferentes de pedir a mesma coisa que a canônica, divididos igualmente entre os formatos de formats ou, se não vier, entre os quatro:
 - open_question: uma pergunta completa, como se faria a um assistente.
 - list_request: um pedido de várias opções ou de uma lista.
 - keyword: uma busca curta por palavras-chave, como se digita no Google.
-- constraint: um pedido com uma condição concreta que não muda a intenção.
+- constraint: o mesmo pedido com contexto de quem pergunta ou por quê ("estou viajando com minha esposa", "é para minha mãe", "acabei de me mudar", "somos quatro"). Nunca um atributo do negócio que reduza quais são recomendados ("com estacionamento", "barato", "aberto aos domingos", "de confiança"), a não ser que a canônica já peça isso.
 
 Regras para cada pergunta:
 - Peça a mesma coisa que a canônica: mantenha o qualificador dela (preço, urgência, região, confiança, ranking, especialidade ou forma de pagamento) e não acrescente o de outra intenção.
@@ -64,18 +70,19 @@ Regras para cada pergunta:
 - Entre 3 e 40 palavras.
 - Varie o vocabulário, a ordem e o tamanho como pessoas diferentes fariam, na variedade e no tratamento indicados.`;
 
-export const PARAPHRASE_PROMPT_V1_FR = `Tu écris les questions qu'une vraie personne pose à un assistant d'IA (ChatGPT, Gemini, Perplexity) ou tape dans Google quand elle cherche un commerce ou un professionnel. Le message de l'utilisateur contient un JSON qui décrit l'intention de recherche :
+export const PARAPHRASE_PROMPT_V2_FR = `Tu écris les questions qu'une vraie personne pose à un assistant d'IA (ChatGPT, Gemini, Perplexity) ou tape dans Google quand elle cherche un commerce ou un professionnel. Le message de l'utilisateur contient un JSON qui décrit l'intention de recherche :
 - category et noun : la catégorie de l'établissement et le nom que les gens lui donnent.
 - kind et canonical : le type d'intention et la question canonique qui l'exprime.
 - scope : local (on demande dans une ville) ou national (dans tout le pays).
 - variety et address : la variété de français et la façon de s'adresser à l'assistant (tu ou vous) qu'emploient les gens.
 - count : le nombre de questions à renvoyer.
+- formats : s'il est présent, les seuls formats à utiliser.
 
-Renvoie dans paraphrases exactement count façons différentes de demander la même chose que la canonique, réparties à parts égales entre les quatre formats :
+Renvoie dans paraphrases exactement count façons différentes de demander la même chose que la canonique, réparties à parts égales entre les formats de formats ou, s'il est absent, entre les quatre :
 - open_question : une question complète, comme on la poserait à un assistant.
 - list_request : une demande de plusieurs adresses ou d'une liste.
 - keyword : une recherche courte par mots-clés, comme on la tape dans Google.
-- constraint : une demande avec une condition précise qui ne change pas l'intention.
+- constraint : la même demande avec un contexte sur qui demande ou pourquoi (« je voyage avec ma compagne », « c'est pour ma mère », « je viens d'emménager », « on est quatre »). Jamais un attribut de l'établissement qui réduit ceux qu'on recommande (« avec parking », « pas cher », « ouvert le dimanche », « sérieux »), sauf si la canonique le demande déjà.
 
 Règles pour chaque question :
 - Elle demande la même chose que la canonique : garde son critère (prix, urgence, quartier, confiance, classement, spécialité ou moyen de paiement) et n'ajoute jamais celui d'une autre intention.
@@ -86,18 +93,19 @@ Règles pour chaque question :
 - Entre 3 et 40 mots.
 - Varie le vocabulaire, l'ordre et la longueur comme le feraient des personnes différentes, dans la variété et le registre indiqués.`;
 
-export const PARAPHRASE_PROMPT_V1_DE = `Du schreibst die Fragen, die ein echter Mensch einem KI-Assistenten (ChatGPT, Gemini, Perplexity) stellt oder bei Google eintippt, wenn er ein Geschäft, einen Betrieb oder eine Praxis sucht. Die Nachricht des Nutzers enthält ein JSON mit der Suchabsicht:
+export const PARAPHRASE_PROMPT_V2_DE = `Du schreibst die Fragen, die ein echter Mensch einem KI-Assistenten (ChatGPT, Gemini, Perplexity) stellt oder bei Google eintippt, wenn er ein Geschäft, einen Betrieb oder eine Praxis sucht. Die Nachricht des Nutzers enthält ein JSON mit der Suchabsicht:
 - category und noun: die Kategorie des Betriebs und das Wort, mit dem die Leute ihn bezeichnen.
 - kind und canonical: die Art der Absicht und die kanonische Frage, die sie ausdrückt.
 - scope: local (gefragt wird in einer Stadt) oder national (im ganzen Land).
 - variety und address: die Sprachvarietät und die Anrede (du oder Sie), die die Leute verwenden.
 - count: wie viele Fragen du zurückgibst.
+- formats: falls vorhanden, die einzigen Formate, die du verwendest.
 
-Gib in paraphrases genau count verschiedene Formulierungen zurück, die dasselbe erfragen wie die kanonische Frage, gleichmäßig auf die vier Formate verteilt:
+Gib in paraphrases genau count verschiedene Formulierungen zurück, die dasselbe erfragen wie die kanonische Frage, gleichmäßig auf die Formate in formats verteilt oder, falls es fehlt, auf alle vier:
 - open_question: eine vollständige Frage, wie man sie einem Assistenten stellt.
 - list_request: eine Bitte um mehrere Optionen oder eine Liste.
 - keyword: eine kurze Stichwortsuche, wie man sie bei Google eintippt.
-- constraint: eine Anfrage mit einer konkreten Bedingung, die die Absicht nicht verändert.
+- constraint: dieselbe Anfrage mit Kontext dazu, wer fragt oder warum („ich reise mit meiner Partnerin“, „es ist für meine Mutter“, „ich bin gerade hergezogen“, „wir sind zu viert“). Nie ein Merkmal des Betriebs, das einschränkt, welche Betriebe empfohlen werden („mit Parkplatz“, „günstig“, „sonntags geöffnet“, „seriös“), außer die kanonische Frage verlangt es schon.
 
 Regeln für jede Frage:
 - Sie erfragt dasselbe wie die kanonische Frage: Behalte ihr Kriterium bei (Preis, Dringlichkeit, Viertel, Vertrauen, Ranking, Spezialisierung oder Zahlungsart) und füge nie das Kriterium einer anderen Absicht hinzu.
@@ -108,18 +116,19 @@ Regeln für jede Frage:
 - Zwischen 3 und 40 Wörtern.
 - Variiere Wortwahl, Reihenfolge und Länge so, wie es verschiedene Menschen tun würden, in der angegebenen Varietät und Anrede.`;
 
-export const PARAPHRASE_PROMPT_V1_IT = `Scrivi le domande che una persona vera fa a un assistente di IA (ChatGPT, Gemini, Perplexity) o digita su Google quando cerca un'attività o un professionista. Il messaggio dell'utente contiene un JSON con l'intento di ricerca:
+export const PARAPHRASE_PROMPT_V2_IT = `Scrivi le domande che una persona vera fa a un assistente di IA (ChatGPT, Gemini, Perplexity) o digita su Google quando cerca un'attività o un professionista. Il messaggio dell'utente contiene un JSON con l'intento di ricerca:
 - category e noun: la categoria dell'attività e il nome con cui la gente la chiama.
 - kind e canonical: il tipo di intento e la domanda canonica che lo esprime.
 - scope: local (si chiede in una città) o national (in tutto il paese).
 - variety e address: la varietà di italiano e la forma di cortesia (tu o Lei) che usa la gente.
 - count: quante domande restituire.
+- formats: se presente, gli unici formati da usare.
 
-Restituisci in paraphrases esattamente count modi diversi di chiedere la stessa cosa della canonica, divisi in parti uguali tra i quattro formati:
+Restituisci in paraphrases esattamente count modi diversi di chiedere la stessa cosa della canonica, divisi in parti uguali tra i formati di formats o, se manca, tra tutti e quattro:
 - open_question: una domanda completa, come la si farebbe a un assistente.
 - list_request: una richiesta di più opzioni o di una lista.
 - keyword: una ricerca breve per parole chiave, come si digita su Google.
-- constraint: una richiesta con una condizione concreta che non cambia l'intento.
+- constraint: la stessa richiesta con un contesto su chi chiede o perché ("viaggio con la mia compagna", "è per mia madre", "mi sono appena trasferito", "siamo in quattro"). Mai un attributo dell'attività che restringe quali vengono consigliate ("con parcheggio", "economico", "aperto la domenica", "affidabile"), a meno che la canonica non lo chieda già.
 
 Regole per ogni domanda:
 - Chiede la stessa cosa della canonica: mantieni il suo criterio (prezzo, urgenza, zona, fiducia, classifica, specialità o metodo di pagamento) e non aggiungere mai quello di un altro intento.

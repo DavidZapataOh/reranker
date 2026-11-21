@@ -13,7 +13,14 @@ import { endPools } from "@reranker/db";
 import { costOf as ledgerCost } from "@reranker/jobs";
 import { seedCategories } from "../src/categories";
 import { generatorConfigHash } from "../src/generate/config";
-import { draftFor, type GroupPool, groupIntents, groupKey, rejudgeIntent } from "./build-seed";
+import {
+  draftFor,
+  type GroupPool,
+  groupIntents,
+  groupKey,
+  guardContext,
+  rejudgeIntent,
+} from "./build-seed";
 
 async function main(): Promise<void> {
   const [rawPool, rawOut] = process.argv.slice(2);
@@ -33,7 +40,8 @@ async function main(): Promise<void> {
       pool.intents.map((intent) => {
         const plan = plans.get(intent.intentId);
         if (!plan) throw new Error(`${intent.intentId} is not in the group's plan`);
-        return rejudgeIntent(intent, draftFor(category, built, plan), spend);
+        const draft = draftFor(category, built, plan);
+        return rejudgeIntent(intent, draft, guardContext(category, built, plan.kind), spend);
       }),
     );
     for (const i of intents) console.log(`${i.intentId}: ${i.pool.length} pooled`);

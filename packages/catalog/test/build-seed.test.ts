@@ -5,6 +5,7 @@ import {
   fillCanonical,
   groupIntents,
   groupKey,
+  guardContext,
   MIN_PER_FORMAT,
   namesFor,
   POOL_TARGET,
@@ -175,29 +176,53 @@ describe("building a category's pools", () => {
     expect(MIN_PER_FORMAT).toBeGreaterThanOrEqual(5);
   });
 
-  test("a later judge rules again on the archived candidates without regenerating", async () => {
+  test("a later judge rules again on the archived candidates and tops up only what it lacks", async () => {
     const { deps } = fakes(() => 25);
     const built = await buildCategory(category("dental_clinic"), group, spend, deps as never);
     const intent = built.intents[5];
     if (!intent) throw new Error("no trust intent");
     expect(intent.candidates).toHaveLength(50);
     expect(intent.candidates.every((c) => c.judged)).toBe(true);
+    deps.generate.mockClear();
 
     // The new judge rejects every list request the old one kept.
     const judge = vi.fn(async (_intent: unknown, candidates: Candidate[]) =>
       candidates.map((c) => c.format !== "list_request"),
     );
     const plan = { ...intent };
-    const draft = draftFor(category("dental_clinic"), group, plan);
-    const rejudged = await rejudgeIntent(intent, draft, spend, {
-      embed: deps.embed,
-      judge,
-    } as never);
+    const dental = category("dental_clinic");
+    const draft = draftFor(dental, group, plan);
+    const guard = guardContext(dental, group, plan.kind);
+    const rejudged = await rejudgeIntent(intent, draft, guard, spend, { ...deps, judge } as never);
 
-    expect(deps.generate).toHaveBeenCalledTimes(16);
-    expect(rejudged.candidates.map((c) => c.text)).toEqual(intent.candidates.map((c) => c.text));
+    const archived = intent.candidates.map((c) => c.text);
+    expect(rejudged.candidates.map((c) => c.text).slice(0, archived.length)).toEqual(archived);
+    // Two format-only rounds, each asking both providers for list requests alone.
+    expect(deps.generate).toHaveBeenCalledTimes(4);
+    for (const [, req] of deps.generate.mock.calls as unknown as Array<
+      [string, { formats?: string[] }]
+    >) {
+      expect(req.formats).toEqual(["list_request"]);
+    }
+    expect(rejudged.report.topUpRounds).toBe(2);
     expect(rejudged.pool.some((p) => p.format === "list_request")).toBe(false);
-    expect(rejudged.pool.length).toBeLessThan(intent.pool.length);
-    expect(rejudged.report.rounds).toBe(intent.report.rounds);
+  });
+
+  test("a pool with every format gets no top-up", async () => {
+    const { deps } = fakes(() => 25);
+    const built = await buildCategory(category("dental_clinic"), group, spend, deps as never);
+    const intent = built.intents[0];
+    if (!intent) throw new Error("no intent");
+    deps.generate.mockClear();
+    const dental = category("dental_clinic");
+    const rejudged = await rejudgeIntent(
+      intent,
+      draftFor(dental, group, intent),
+      guardContext(dental, group, intent.kind),
+      spend,
+      deps as never,
+    );
+    expect(deps.generate).not.toHaveBeenCalled();
+    expect(rejudged.report.topUpRounds).toBe(0);
   });
 });
