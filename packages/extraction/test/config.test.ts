@@ -9,9 +9,9 @@ import {
 import { PLATFORMS, type PlatformEntry, platformFor } from "../src/platforms";
 import { estimateOf } from "../src/prices";
 import { CLASSIFY_PROMPT_V1 } from "../src/prompts/classify.v1";
-import { EXTRACT_EXAMPLES_V1, EXTRACT_PROMPT_V1 } from "../src/prompts/extract.v1";
-import { JUDGE_PROMPT_V1 } from "../src/prompts/judge.v1";
-import { RESOLVE_JUDGE_PROMPT_V1 } from "../src/prompts/resolve-judge.v1";
+import { EXTRACT_EXAMPLES_V2, EXTRACT_PROMPT_V2 } from "../src/prompts/extract.v2";
+import { JUDGE_PROMPT_V2 } from "../src/prompts/judge.v2";
+import { RESOLVE_JUDGE_PROMPT_V2 } from "../src/prompts/resolve-judge.v2";
 import { toExtractedMentions } from "../src/quote";
 import { MentionsSchema } from "../src/schema";
 
@@ -165,9 +165,9 @@ describe("currentExtractorConfig", () => {
 
   test("prompt hashes match the prompt files", () => {
     expect(currentExtractorConfig.prompts).toEqual({
-      extract: { id: "extract.v1", sha256: sha256Hex(EXTRACT_PROMPT_V1) },
-      judge: { id: "judge.v1", sha256: sha256Hex(JUDGE_PROMPT_V1) },
-      resolveJudge: { id: "resolve-judge.v1", sha256: sha256Hex(RESOLVE_JUDGE_PROMPT_V1) },
+      extract: { id: "extract.v2", sha256: sha256Hex(EXTRACT_PROMPT_V2) },
+      judge: { id: "judge.v2", sha256: sha256Hex(JUDGE_PROMPT_V2) },
+      resolveJudge: { id: "resolve-judge.v2", sha256: sha256Hex(RESOLVE_JUDGE_PROMPT_V2) },
       classify: { id: "classify.v1", sha256: sha256Hex(CLASSIFY_PROMPT_V1) },
     });
   });
@@ -190,23 +190,23 @@ describe("currentExtractorConfig", () => {
 
 describe("prompts and registry", () => {
   test("the extraction prompt carries no capture text, so providers can cache it", () => {
-    expect(EXTRACT_PROMPT_V1).not.toMatch(/\{\{|\$\{/);
+    expect(EXTRACT_PROMPT_V2).not.toMatch(/\{\{|\$\{/);
   });
 
-  test.each(EXTRACT_EXAMPLES_V1.map((e, i) => [i, e] as const))(
+  test.each(EXTRACT_EXAMPLES_V2.map((e, i) => [i, e] as const))(
     "example %i matches the schema and every quote is in its answer",
     (_, example) => {
       expect(MentionsSchema.parse(example.output)).toEqual(example.output);
       expect(toExtractedMentions(example.answer, example.output).quoteMisses).toBe(0);
-      expect(EXTRACT_PROMPT_V1).toContain(JSON.stringify(example.output));
+      expect(EXTRACT_PROMPT_V2).toContain(JSON.stringify(example.output));
     },
   );
 
   test("examples cover every stance, entity kind and answer kind", () => {
-    const mentions = EXTRACT_EXAMPLES_V1.flatMap((e) => e.output.mentions);
+    const mentions = EXTRACT_EXAMPLES_V2.flatMap((e) => e.output.mentions);
     expect(new Set(mentions.map((m) => m.stance)).size).toBe(3);
     expect(new Set(mentions.map((m) => m.entityKind)).size).toBe(6);
-    expect(new Set(EXTRACT_EXAMPLES_V1.map((e) => e.output.answerKind)).size).toBe(3);
+    expect(new Set(EXTRACT_EXAMPLES_V2.map((e) => e.output.answerKind)).size).toBe(3);
   });
 
   test("tagging can follow a config's own registry", () => {

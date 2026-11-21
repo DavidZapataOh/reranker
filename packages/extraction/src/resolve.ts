@@ -37,7 +37,7 @@ import {
 } from "./places/client";
 import { decide, type ScoredCandidate, scoreCandidates } from "./places/score";
 import { platformFor } from "./platforms";
-import { RESOLVE_JUDGE_PROMPT_V1 } from "./prompts/resolve-judge.v1";
+import { RESOLVE_JUDGE_PROMPT_V2 } from "./prompts/resolve-judge.v2";
 import { callerFor, paidCall } from "./providers/call";
 import { ResolveJudgeSchema } from "./schema";
 import { extractionIdsOf, insertMentions, type MentionRow } from "./store";
@@ -339,7 +339,7 @@ async function resolveCluster(
     callerFor(model),
     {
       model,
-      system: RESOLVE_JUDGE_PROMPT_V1,
+      system: RESOLVE_JUDGE_PROMPT_V2,
       user: judgeMessage(c, m, decision.top3, websites, geo, category),
       schema: ResolveJudgeSchema,
       schemaName: "resolve_judge",
