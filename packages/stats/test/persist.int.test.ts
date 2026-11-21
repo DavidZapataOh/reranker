@@ -15,20 +15,33 @@ const placeKey = (key: EntityKey): EntityKey =>
 
 const stats = computeFreeReportStats(
   reportInput(
-    { mentions: (slot) => ladder(slot).map((m) => ({ ...m, entityKey: placeKey(m.entityKey) })) },
+    {
+      mentions: (slot) => ladder(slot).map((m) => ({ ...m, entityKey: placeKey(m.entityKey) })),
+      // Enough distinct sites that every top list is full, as in a real report.
+      sources: (slot) => [
+        ...(slot % 2 === 0 ? [{ url: "https://www.clinicasonrisas.com.co/", cited: true }] : []),
+        ...(slot % 2 === 1 ? [{ url: "https://www.topdoctors.com.co/x", cited: true }] : []),
+        ...[0, 1, 2].map((k) => ({
+          url: `https://site${(slot + k * 5) % 15}.com.co/`,
+          cited: true,
+        })),
+      ],
+    },
     {
       target: {
         entityKey: placeKey(TARGET),
         displayName: "Clínica Sonrisas",
         entityKind: "business",
+        domains: ["clinicasonrisas.com.co"],
       },
     },
   ),
 );
 
-// Rows and index entries of one report, pages included. Measured at about 10.3 KiB: every row
-// carries the report's four 32-byte digests, a third of its size. The bound stops any growth.
-const REPORT_BUDGET_BYTES = 11 * 1024;
+// Rows and index entries of one report, pages included: about 480 bytes a row, a third of it the
+// report's four 32-byte digests. The 22 score and rate rows measured 10.3 KiB; citations add up
+// to 76 rows when every top list is full. The bound stops any further growth.
+const REPORT_BUDGET_BYTES = 48 * 1024;
 
 async function measurement(): Promise<string> {
   return withSystem("stats.test", async (tx) => {
@@ -58,11 +71,14 @@ const storedBytes = () =>
     return Number(rows[0]?.bytes);
   });
 
-test("persists exactly the 22 rows the report shows", async () => {
+const ROWS = estimateRows(randomUUID(), stats).length;
+
+test("persists exactly the rows the report shows, citations included", async () => {
+  expect(ROWS).toBe(22 + 6 + 10 + 50 + stats.citations.competitorOnly.length);
   const id = await measurement();
-  expect(await persistEstimates(id, stats)).toEqual({ inserted: 22 });
+  expect(await persistEstimates(id, stats)).toEqual({ inserted: ROWS });
   const rows = await rowsOf(id);
-  expect(rows).toHaveLength(22);
+  expect(rows).toHaveLength(ROWS);
   expect(rows.map((r) => `${r.entity_key}|${r.scope}|${r.scope_key}|${r.metric}`).sort()).toEqual(
     estimateRows(id, stats)
       .map((r) => `${r.entityKey}|${r.scope}|${r.scopeKey}|${r.metric}`)
@@ -87,9 +103,9 @@ test("a new methodology version adds rows and never updates old ones", async () 
   await persistEstimates(id, stats);
   const before = await rowsOf(id);
   const next = { ...stats, methodologyHash: "d".repeat(64), seed: "e".repeat(64) };
-  expect(await persistEstimates(id, next)).toEqual({ inserted: 22 });
+  expect(await persistEstimates(id, next)).toEqual({ inserted: ROWS });
   const after = await rowsOf(id);
-  expect(after).toHaveLength(44);
+  expect(after).toHaveLength(2 * ROWS);
   expect(after.filter((r) => before.some((b) => b.id === r.id))).toEqual(before);
 });
 
@@ -100,6 +116,7 @@ test("one report stays within its storage budget, measured over many batched rep
   const before = await storedBytes();
   for (let i = 0; i < reports; i++) await persistEstimates(await measurement(), stats);
   const perReport = ((await storedBytes()) - before) / reports;
+  console.info(`estimates per report: ${ROWS} rows, ${perReport.toFixed(0)} bytes`);
   expect(perReport).toBeLessThanOrEqual(REPORT_BUDGET_BYTES);
 }, 120_000);
 

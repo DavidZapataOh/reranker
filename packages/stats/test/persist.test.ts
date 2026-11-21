@@ -74,3 +74,50 @@ test("absent estimates add no rows: no canonical data, an engine with no valid c
   expect(keys).not.toContain("*|engine|perplexity|names_entities_rate");
   expect(keys).toHaveLength(19);
 });
+
+test("citation rows: the business's sites by scope, top sites overall and per engine, competitor-only", () => {
+  const cited = computeFreeReportStats(
+    reportInput(
+      {
+        mentions: ladder,
+        sources: (slot) => [
+          ...(slot % 2 === 0 ? [{ url: "https://www.clinicasonrisas.com.co/", cited: true }] : []),
+          ...(slot % 2 === 1 ? [{ url: "https://www.topdoctors.com.co/x", cited: true }] : []),
+          { url: `https://site${slot % 12}.com.co/`, cited: true },
+        ],
+      },
+      {
+        target: { ...reportInput().target, domains: ["clinicasonrisas.com.co"] },
+      },
+    ),
+  );
+  const { citations } = cited;
+  const keys = estimateRows(measurementId, cited)
+    .filter((r) => r.metric.endsWith("citation_rate"))
+    .map(keyOf);
+  expect(keys.sort()).toEqual(
+    [
+      `${TARGET}|overall|null|site_citation_rate`,
+      ...ENGINES.map((e) => `${TARGET}|engine|${e}|site_citation_rate`),
+      ...citations.top.map((d) => `${d.key}|overall|null|citation_rate`),
+      ...ENGINES.flatMap((e) =>
+        (citations.topByEngine[e] ?? []).map((d) => `${d.key}|engine|${e}|citation_rate`),
+      ),
+      ...citations.competitorOnly.map((d) => `${d.key}|overall|null|competitor_citation_rate`),
+    ].sort(),
+  );
+  expect(citations.top).toHaveLength(10);
+  expect(citations.competitorOnly.map((d) => d.key)).toContain("platform:top-doctors");
+  const site = estimateRows(measurementId, cited).find(
+    (r) => keyOf(r) === `${TARGET}|overall|null|site_citation_rate`,
+  );
+  expect(site).toMatchObject({
+    estimate: citations.target?.rate.estimate,
+    lower: citations.target?.rate.lower,
+    upper: citations.target?.rate.upper,
+    successes: 100,
+    trials: 200,
+    level: null,
+    sufficiency: null,
+  });
+});
