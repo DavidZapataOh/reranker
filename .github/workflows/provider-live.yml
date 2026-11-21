@@ -9,9 +9,9 @@ on:
         options: [dataforseo, brightdata]
         default: dataforseo
       cases:
-        description: DataForSEO questions to ask, the Spanish set or one per other measurement language
+        description: DataForSEO questions to ask, the Spanish set, the measurement languages, or one of them alone
         type: choice
-        options: [spanish, languages]
+        options: [spanish, languages, languages-es, languages-en, languages-pt, languages-fr, languages-de, languages-it]
         default: spanish
       snapshots:
         description: Bright Data snapshot ids a run left pending, space-separated, to collect instead

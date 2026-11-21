@@ -2,7 +2,7 @@
  * Records real DataForSEO production answers for local-business questions so the parsers are
  * tested on what the engines actually return, not on the sandbox's canned answers.
  *
- * Usage: pnpm --filter @reranker/capture record:live <empty output dir> [spanish|languages]
+ * Usage: pnpm --filter @reranker/capture record:live <empty output dir> [spanish|languages|languages-<language>]
  * Each file holds a response's exact wire bytes. Every call is charged to the spend ledger as
  * `contract-test`, and the run refuses to start above its budget.
  */
@@ -71,10 +71,19 @@ const SPANISH: Case[] = [
   },
 ];
 
-// The other measurement languages, each asked natively in its main market's largest city, so the
-// extractors are measured on answers written in them. The last question of each tends to draw
+// Every measurement language, each asked natively in one of its main market's largest cities, so
+// the extractors are measured on answers written in them. The last question of each tends to draw
 // warnings, the negative mentions a recommendation list rarely has.
 const LANGUAGE_QUESTIONS: Record<string, { geoKey: GeoKey; prompts: [string, string][] }> = {
+  es: {
+    geoKey: BOGOTA,
+    prompts: [
+      ["dentistas-bogota", "mejores dentistas en Bogotá"],
+      ["restaurantes-bogota", "mejores restaurantes en Bogotá"],
+      ["taller-bogota", "taller mecánico de confianza en Bogotá"],
+      ["taller-evitar-bogota", "talleres mecánicos para evitar en Bogotá"],
+    ],
+  },
   en: {
     geoKey: "us-c1023191",
     prompts: [
@@ -133,10 +142,17 @@ const LANGUAGES: Case[] = Object.entries(LANGUAGE_QUESTIONS).flatMap(([language,
   ),
 );
 
-// Well under a day's contract-test cap: at most forty calls at US$0.004.
+// Well under a day's contract-test cap: at most forty-eight calls at US$0.004. One language alone
+// tops up its share of the measurement without paying for the others again.
 const SETS: Record<string, { cases: Case[]; budgetMicros: number }> = {
   spanish: { cases: SPANISH, budgetMicros: 100_000 },
   languages: { cases: LANGUAGES, budgetMicros: 200_000 },
+  ...Object.fromEntries(
+    Object.keys(LANGUAGE_QUESTIONS).map((language) => [
+      `languages-${language}`,
+      { cases: LANGUAGES.filter((c) => c.name.startsWith(`${language}-`)), budgetMicros: 50_000 },
+    ]),
+  ),
 };
 
 const MEASUREMENT = "recording";
@@ -235,7 +251,7 @@ async function main(
 const [outDir, setName = "spanish"] = process.argv.slice(2);
 const set = SETS[setName];
 if (!outDir || !set)
-  throw new Error("Usage: record-live.ts <empty output dir> [spanish|languages]");
+  throw new Error(`Usage: record-live.ts <empty output dir> [${Object.keys(SETS).join("|")}]`);
 try {
   process.exitCode = (await main(resolve(outDir), set)) ? 0 : 1;
 } finally {
