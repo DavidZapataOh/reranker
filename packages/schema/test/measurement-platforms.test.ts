@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { type PlatformEntry, platformOfUrl } from "../src/measurement/platforms";
+import { PLATFORMS, type PlatformEntry, platformOfUrl } from "../src/measurement/platforms";
 import { isGoogleRedirect } from "../src/measurement/redirects";
 
 const slugOf = (url: string, registry?: readonly PlatformEntry[]) =>
@@ -19,6 +19,33 @@ test("hosts match label-wise and path-scoped domains only under their path", () 
   expect(slugOf("https://www.google.com/mapsy")).toBeNull();
   expect(slugOf("https://www.google.com/search?q=x")).toBeNull();
   expect(slugOf("https://maps.google.com./?cid=1")).toBe("google-maps");
+});
+
+test("the host index picks the rule a scan of the registry in order would", () => {
+  const scan = (raw: string) => {
+    const url = new URL(raw);
+    for (const entry of PLATFORMS) {
+      for (const domain of entry.domains) {
+        const [host, ...rest] = domain.split("/");
+        const path = rest.length > 0 ? `/${rest.join("/")}` : "";
+        const onHost = url.hostname === host || url.hostname.endsWith(`.${host}`);
+        const onPath = !path || url.pathname === path || url.pathname.startsWith(`${path}/`);
+        if (onHost && onPath) return entry.slug;
+      }
+    }
+    return null;
+  };
+  for (const entry of PLATFORMS) {
+    for (const domain of entry.domains) {
+      for (const url of [`https://${domain}`, `https://www.${domain}/x`, `https://a.b.${domain}`]) {
+        expect(slugOf(url), url).toBe(scan(url));
+      }
+    }
+  }
+});
+
+test("a parsed URL is read without parsing it again", () => {
+  expect(platformOfUrl(new URL("https://www.doctoralia.co/x"))?.slug).toBe("doctoralia");
 });
 
 test("a URL that does not parse belongs to no platform", () => {

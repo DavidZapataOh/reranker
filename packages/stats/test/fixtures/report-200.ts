@@ -9,6 +9,7 @@ import type {
   ResolvedMention,
   ResponseExtraction,
 } from "@reranker/schema/measurement";
+import type { CitedSource } from "../../src/citations";
 import type { ObservedCapture } from "../../src/observations";
 import type { FreeReportInput } from "../../src/report";
 
@@ -160,6 +161,8 @@ export interface FixtureOptions {
   channel?: Record<number, CaptureChannel>;
   /** Mentions of a slot's answer; by default the target is recommended first in even slots. */
   mentions?: (slot: number) => ResolvedMention[];
+  /** Sources of a slot's answer; none by default. */
+  sources?: (slot: number) => CitedSource[];
   intentWeights?: Partial<Record<IntentId, number>>;
 }
 
@@ -189,7 +192,9 @@ export function fixture(opts: FixtureOptions = {}) {
     const present = !failed && nth >= failedCount + notPresent;
     const channel = opts.channel?.[slot] ?? "ui-vendor";
     const mentions = present ? (opts.mentions ?? defaultMentions)(slot) : [];
-    const answer = failed ? null : { present };
+    const answer = failed
+      ? null
+      : { present, sources: present ? (opts.sources?.(slot) ?? []) : [] };
     captures.push({
       capture: {
         id: captureId(slot),

@@ -938,48 +938,57 @@ export const PLATFORMS: readonly PlatformEntry[] = [
 ];
 
 interface DomainRule {
-  host: string;
   path: string;
   entry: PlatformEntry;
+  /** Position in the registry: the first matching rule wins, as listed. */
+  order: number;
 }
 
 // Built once per registry: the module's own and each extractor config's, which is hashed with it.
-const RULES = new WeakMap<readonly PlatformEntry[], readonly DomainRule[]>();
+const RULES = new WeakMap<readonly PlatformEntry[], Map<string, DomainRule[]>>();
 
-function rulesOf(registry: readonly PlatformEntry[]): readonly DomainRule[] {
-  let rules = RULES.get(registry);
-  if (rules) return rules;
-  rules = registry.flatMap((entry) =>
-    entry.domains.map((domain) => {
+/** Rules by host, each host's in registry order, so a lookup walks the URL's labels only. */
+function rulesOf(registry: readonly PlatformEntry[]): Map<string, DomainRule[]> {
+  let byHost = RULES.get(registry);
+  if (byHost) return byHost;
+  byHost = new Map();
+  let order = 0;
+  for (const entry of registry) {
+    for (const domain of entry.domains) {
       const slash = domain.indexOf("/");
-      return slash === -1
-        ? { host: domain, path: "", entry }
-        : { host: domain.slice(0, slash), path: domain.slice(slash), entry };
-    }),
-  );
-  RULES.set(registry, rules);
-  return rules;
-}
-
-// Label-wise suffix, so "notbooking.com" is not "booking.com".
-function onHost(host: string, domain: string): boolean {
-  return host === domain || host.endsWith(`.${domain}`);
+      const host = slash === -1 ? domain : domain.slice(0, slash);
+      const rules = byHost.get(host) ?? [];
+      rules.push({ path: slash === -1 ? "" : domain.slice(slash), entry, order: order++ });
+      byHost.set(host, rules);
+    }
+  }
+  RULES.set(registry, byHost);
+  return byHost;
 }
 
 /** The platform a URL belongs to, by host and, where the registry gives one, path prefix. */
 export function platformOfUrl(
-  raw: string,
+  raw: string | URL,
   registry: readonly PlatformEntry[] = PLATFORMS,
 ): PlatformEntry | null {
-  const url = URL.parse(raw);
+  const url = typeof raw === "string" ? URL.parse(raw) : raw;
   if (!url) return null;
-  const host = url.hostname.replace(/\.$/, "");
-  for (const rule of rulesOf(registry)) {
-    if (!onHost(host, rule.host)) continue;
-    if (rule.path && url.pathname !== rule.path && !url.pathname.startsWith(`${rule.path}/`)) {
-      continue;
+  const byHost = rulesOf(registry);
+  let best: DomainRule | null = null;
+  // Whole labels only, so "notbooking.com" is not "booking.com".
+  let host = url.hostname.endsWith(".") ? url.hostname.slice(0, -1) : url.hostname;
+  for (;;) {
+    for (const rule of byHost.get(host) ?? []) {
+      if (best !== null && rule.order > best.order) break;
+      if (rule.path && url.pathname !== rule.path && !url.pathname.startsWith(`${rule.path}/`)) {
+        continue;
+      }
+      best = rule;
+      break;
     }
-    return rule.entry;
+    const dot = host.indexOf(".");
+    if (dot === -1) break;
+    host = host.slice(dot + 1);
   }
-  return null;
+  return best?.entry ?? null;
 }

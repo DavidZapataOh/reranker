@@ -14,6 +14,7 @@ import type {
   ResponseExtraction,
   ScoreEstimate,
 } from "@reranker/schema/measurement";
+import { citationStats } from "./citations";
 import { type EntityColumn, pairedCompare, rankWithTies } from "./compare";
 import { engineStatus } from "./levels";
 import { methodology, seedFor } from "./methodology";
@@ -34,8 +35,13 @@ export interface FreeReportInput {
   extractions: ResponseExtraction[];
   /** The capture's closing time: read from the caller so the output stays reproducible. */
   asOf: Date;
-  /** The business the report is about, also when no answer names it. */
-  target: { entityKey: EntityKey; displayName: string; entityKind: EntityKind };
+  /** The business the report is about, also when no answer names it, with its own sites. */
+  target: {
+    entityKey: EntityKey;
+    displayName: string;
+    entityKind: EntityKind;
+    domains?: readonly string[];
+  };
   intentWeights?: Partial<Record<IntentId, number>>;
   /** Each language's share of the category's searches, required when the plan has a second language. */
   languageShares?: LanguageShares;
@@ -293,6 +299,21 @@ export function computeFreeReportStats(input: FreeReportInput): FreeReportStats 
   const canonicalScore = (key: string, column: EntityColumn): ScoreEstimate =>
     estimateScore(observationsOf(column, canonical), seedOf(key, "canonical"), { bootstrap });
 
+  const recommendsCompetitor = new Uint8Array(n);
+  for (const { entity } of rivals) {
+    for (const i of all) {
+      if (entity.stance[i] === STANCE.recommendation) recommendsCompetitor[i] = 1;
+    }
+  }
+  const citations = citationStats({
+    captures,
+    answers: captures.map((c) => c.citations),
+    targetDomains: input.target.domains ?? [],
+    recommendsTarget: target.stance.map((s) => (s === STANCE.recommendation ? 1 : 0)),
+    recommendsCompetitor,
+    topN: methodology.citations.topDomains,
+  });
+
   return {
     methodologyVersion: methodology.version,
     methodologyHash: methodology.hash,
@@ -309,6 +330,7 @@ export function computeFreeReportStats(input: FreeReportInput): FreeReportStats 
     engines,
     intents,
     languages,
+    citations,
     canonicalOnly: weighted(canonical)
       ? {
           target: canonicalScore(targetKey, target.column),

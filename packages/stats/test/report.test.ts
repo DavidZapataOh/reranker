@@ -136,6 +136,63 @@ describe("computeFreeReportStats", () => {
   });
 });
 
+describe("citations", () => {
+  // The target in even answers; Booking, a platform, in odd ones; the rival in one of four,
+  // linked by the extraction to its own site.
+  const stats = computeFreeReportStats(
+    inputOf(
+      {
+        mentions: (slot) =>
+          slot % 2 === 0
+            ? [mention({ entityKey: TARGET })]
+            : [
+                mention({ entityKey: "platform:booking", entityKind: "platform", ordinal: null }),
+                ...(slot % 4 === 1
+                  ? [mention({ entityKey: RIVAL, citedUrls: ["https://rival.com.co/"] })]
+                  : []),
+              ],
+        sources: (slot) =>
+          slot % 2 === 0
+            ? [{ url: "https://www.clinicasonrisas.com.co/", cited: true }]
+            : [
+                { url: "https://www.doctoralia.co/x", cited: true },
+                ...(slot % 4 === 1
+                  ? [{ url: "https://www.topdoctors.com.co/x", cited: true }]
+                  : []),
+              ],
+      },
+      {
+        target: {
+          entityKey: TARGET,
+          displayName: "Clínica Sonrisas",
+          entityKind: "business",
+          domains: ["clinicasonrisas.com.co"],
+        },
+      },
+    ),
+  ).citations;
+
+  test("the target's sites are read from its domains", () => {
+    expect(stats.target?.keys).toEqual(["web:clinicasonrisas.com.co"]);
+    expect(stats.target?.rate).toMatchObject({ estimate: 0.5, successes: 100, trials: 200 });
+    expect(stats.target?.share).toMatchObject({ citations: 100, total: 300 });
+  });
+
+  test("competitor-only sources come from answers recommending a business, not a platform", () => {
+    expect(stats.competitorOnly.map((d) => [d.key, d.rate.estimate, d.rate.trials])).toEqual([
+      ["platform:doctoralia", 1, 50],
+      ["platform:top-doctors", 1, 50],
+      ["web:rival.com.co", 1, 50],
+    ]);
+  });
+
+  test("a report without sources cites nothing", () => {
+    const empty = computeFreeReportStats(inputOf()).citations;
+    expect(empty).toMatchObject({ answers: 200, answersCiting: 0, citations: 0, target: null });
+    expect(empty.top).toEqual([]);
+  });
+});
+
 describe("toFreeReportSummary", () => {
   test("throws when the target has no range or a competitor was not compared", () => {
     const stats = computeFreeReportStats(inputOf());

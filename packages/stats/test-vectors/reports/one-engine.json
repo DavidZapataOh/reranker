@@ -1,6 +1,6 @@
 {
-  "methodologyVersion": "2026.11.1",
-  "methodologyHash": "f5661011aa4e58a84cd2f84ddef4f80955f11a4fa47a8eea5c989c20bf3bcb44",
+  "methodologyVersion": "2026.11.2",
+  "methodologyHash": "3693bebdc499730b12b2e42f71af4ba8ee29c5287a9f93830577676c75cc4196",
   "input": {
     "reportId": "fr_01JDB4Q7W2M8N3P5R6S9T0V1A4",
     "asOf": "2026-11-20T17:00:00.000Z",
@@ -4110,7 +4110,8 @@
           "slotId": "m1:40"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4123,7 +4124,8 @@
           "slotId": "m1:41"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4136,7 +4138,8 @@
           "slotId": "m1:42"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4149,7 +4152,8 @@
           "slotId": "m1:43"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4162,7 +4166,8 @@
           "slotId": "m1:44"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4175,7 +4180,8 @@
           "slotId": "m1:45"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4188,7 +4194,8 @@
           "slotId": "m1:46"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4201,7 +4208,8 @@
           "slotId": "m1:47"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4214,7 +4222,8 @@
           "slotId": "m1:48"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4227,7 +4236,8 @@
           "slotId": "m1:49"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4240,7 +4250,8 @@
           "slotId": "m1:50"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4253,7 +4264,8 @@
           "slotId": "m1:51"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4266,7 +4278,8 @@
           "slotId": "m1:52"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4279,7 +4292,8 @@
           "slotId": "m1:53"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4292,7 +4306,8 @@
           "slotId": "m1:54"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4305,7 +4320,8 @@
           "slotId": "m1:55"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4318,7 +4334,8 @@
           "slotId": "m1:56"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4331,7 +4348,8 @@
           "slotId": "m1:57"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4344,7 +4362,8 @@
           "slotId": "m1:58"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4357,7 +4376,8 @@
           "slotId": "m1:59"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4370,7 +4390,8 @@
           "slotId": "m1:60"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4383,7 +4404,8 @@
           "slotId": "m1:61"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4396,7 +4418,8 @@
           "slotId": "m1:62"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4409,7 +4432,8 @@
           "slotId": "m1:63"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4422,7 +4446,8 @@
           "slotId": "m1:64"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4435,7 +4460,8 @@
           "slotId": "m1:65"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4448,7 +4474,8 @@
           "slotId": "m1:66"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4461,7 +4488,8 @@
           "slotId": "m1:67"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4474,7 +4502,8 @@
           "slotId": "m1:68"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4487,7 +4516,8 @@
           "slotId": "m1:69"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4500,7 +4530,8 @@
           "slotId": "m1:70"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4513,7 +4544,8 @@
           "slotId": "m1:71"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4526,7 +4558,8 @@
           "slotId": "m1:72"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4539,7 +4572,8 @@
           "slotId": "m1:73"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4552,7 +4586,8 @@
           "slotId": "m1:74"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4565,7 +4600,8 @@
           "slotId": "m1:75"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4578,7 +4614,8 @@
           "slotId": "m1:76"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4591,7 +4628,8 @@
           "slotId": "m1:77"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4604,7 +4642,8 @@
           "slotId": "m1:78"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -4617,7 +4656,8 @@
           "slotId": "m1:79"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -11244,12 +11284,12 @@
     ]
   },
   "output": {
-    "methodologyVersion": "2026.11.1",
-    "methodologyHash": "f5661011aa4e58a84cd2f84ddef4f80955f11a4fa47a8eea5c989c20bf3bcb44",
+    "methodologyVersion": "2026.11.2",
+    "methodologyHash": "3693bebdc499730b12b2e42f71af4ba8ee29c5287a9f93830577676c75cc4196",
     "intentSetId": "is_0123456789abcdef",
     "intentSetHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
     "extractorConfigHash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-    "seed": "cce98d8191facaf0a5a2c8bf64c7310f9ef6176794dae5f5246994ab107a4107",
+    "seed": "28b59ff3dc9366d9076dd31f5f960c4af83bdbd282f599fa5b8f9a2093a619c9",
     "computedAt": "2026-11-20T17:00:00.000Z",
     "target": {
       "entityKey": "place:target",
@@ -11294,7 +11334,7 @@
           "score": {
             "value": 50,
             "lower": 34,
-            "upper": 66,
+            "upper": 65,
             "atMost": null,
             "level": "on_the_list",
             "levelDisplay": {
@@ -11392,8 +11432,8 @@
         "entityKind": "business",
         "overall": {
           "value": 29,
-          "lower": 17,
-          "upper": 44,
+          "lower": 18,
+          "upper": 43,
           "atMost": null,
           "level": "sometimes",
           "levelDisplay": {
@@ -11483,8 +11523,8 @@
         "entityKind": "business",
         "overall": {
           "value": 18,
-          "lower": 9,
-          "upper": 32,
+          "lower": 8,
+          "upper": 31,
           "atMost": null,
           "level": "sometimes",
           "levelDisplay": {
@@ -11593,7 +11633,7 @@
       {
         "a": "place:target",
         "b": "place:rival1",
-        "pAAhead": 0.98325,
+        "pAAhead": 0.98425,
         "verdict": "ahead"
       },
       {
@@ -11605,7 +11645,7 @@
       {
         "a": "place:target",
         "b": "place:rival3",
-        "pAAhead": 0.99975,
+        "pAAhead": 1,
         "verdict": "ahead"
       },
       {
@@ -11713,7 +11753,7 @@
         },
         "targetScore": {
           "value": 50,
-          "lower": 20,
+          "lower": 19,
           "upper": 81,
           "atMost": null,
           "level": "on_the_list",
@@ -11762,7 +11802,7 @@
         },
         "targetScore": {
           "value": 50,
-          "lower": 19,
+          "lower": 18,
           "upper": 81,
           "atMost": null,
           "level": "on_the_list",
@@ -11811,8 +11851,8 @@
         },
         "targetScore": {
           "value": 50,
-          "lower": 21,
-          "upper": 81,
+          "lower": 20,
+          "upper": 80,
           "atMost": null,
           "level": "on_the_list",
           "levelDisplay": {
@@ -11860,8 +11900,8 @@
         },
         "targetScore": {
           "value": 50,
-          "lower": 19,
-          "upper": 80,
+          "lower": 20,
+          "upper": 81,
           "atMost": null,
           "level": "on_the_list",
           "levelDisplay": {
@@ -11909,8 +11949,8 @@
         },
         "targetScore": {
           "value": 50,
-          "lower": 20,
-          "upper": 81,
+          "lower": 19,
+          "upper": 80,
           "atMost": null,
           "level": "on_the_list",
           "levelDisplay": {
@@ -11940,10 +11980,22 @@
       }
     ],
     "languages": [],
+    "citations": {
+      "answers": 40,
+      "answersCiting": 0,
+      "citations": 0,
+      "unattributed": 0,
+      "target": null,
+      "top": [],
+      "topByEngine": {
+        "gemini": []
+      },
+      "competitorOnly": []
+    },
     "canonicalOnly": {
       "target": {
         "value": 100,
-        "lower": 63,
+        "lower": 61,
         "upper": 100,
         "atMost": null,
         "level": "regular",
@@ -11978,7 +12030,7 @@
           "entityKey": "place:rival0",
           "score": {
             "value": 90,
-            "lower": 57,
+            "lower": 53,
             "upper": 90,
             "atMost": null,
             "level": "regular",
@@ -12013,8 +12065,8 @@
           "entityKey": "place:rival1",
           "score": {
             "value": 36,
-            "lower": 8,
-            "upper": 72,
+            "lower": 7,
+            "upper": 70,
             "atMost": null,
             "level": "sometimes",
             "levelDisplay": {
@@ -12046,7 +12098,7 @@
           "entityKey": "place:rival2",
           "score": {
             "value": 90,
-            "lower": 55,
+            "lower": 54,
             "upper": 90,
             "atMost": null,
             "level": "regular",
@@ -12082,7 +12134,7 @@
           "score": {
             "value": 18,
             "lower": 2,
-            "upper": 57,
+            "upper": 55,
             "atMost": null,
             "level": "sometimes",
             "levelDisplay": {
