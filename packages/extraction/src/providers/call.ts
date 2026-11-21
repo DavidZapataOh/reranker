@@ -46,9 +46,10 @@ export function callerFor(model: ModelRef): StructuredCaller {
   return CALLERS[model.provider];
 }
 
-// Spanish text averages over three characters per token on these tokenizers; three keeps the
-// reservation and the token bucket above what the call will use.
-const CHARS_PER_TOKEN = 3;
+// Captured answers in every measurement language ran 2.1 to 3.2 characters per o200k token: the
+// redirect URLs they cite tokenize far denser than prose. Two keeps the reservation and the token
+// bucket above what the call will use in any of them.
+const CHARS_PER_TOKEN = 2;
 const RETRY_BACKOFF_MS = { min: 300, jitter: 300 };
 const DEADLINE_RETRY_AFTER_MS = 1000;
 
