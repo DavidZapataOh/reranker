@@ -56,6 +56,19 @@ export {
   placeTerm,
 } from "./language";
 export {
+  type DecideLanguagesInput,
+  decideLanguages,
+  type LanguageDecision,
+  type LanguageMix,
+  type LanguageMixDegraded,
+  type LanguageMixSource,
+  SECOND_LANGUAGE_MIN_SHARE,
+  type SecondLanguage,
+  type SecondLanguageReason,
+  secondLanguageOf,
+  unmeasuredMix,
+} from "./language-mix";
+export {
   type PlanMeasurementInput,
   planMeasurement,
   type SecondaryLanguage,
