@@ -54,10 +54,13 @@ export async function tripGuardMode(
 /**
  * Reads a guard mode; one that has expired is marked released by the same statement, and only that
  * call sees `releasedNow`, so only one caller announces the release. A name never tripped is off.
+ * `remainingMs` is measured on the database clock that decides the mode, never against this
+ * process's clock: a skewed instance would otherwise report more time than the hold itself.
  */
 export async function guardModeStatus(name: string): Promise<{
   active: boolean;
   activeUntil: Date | null;
+  remainingMs: number | null;
   reason: string | null;
   releasedNow: boolean;
 }> {
@@ -66,15 +69,23 @@ export async function guardModeStatus(name: string): Promise<{
     tx.execute<{
       active: boolean;
       active_until: Date | string | null;
+      remaining_ms: string | number | null;
       reason: string | null;
       released_now: boolean;
-    }>(sql`select * from ops.guard_mode_status(${name}::text)`),
+    }>(
+      sql`select s.*,
+                 case when s.active then greatest(0, ceil(
+                   extract(epoch from s.active_until - clock_timestamp()) * 1000))::bigint
+                 end as remaining_ms
+            from ops.guard_mode_status(${name}::text) s`,
+    ),
   );
   const row = rows[0];
   if (!row) throw new Error("guard_mode_status returned no row");
   return {
     active: row.active,
     activeUntil: row.active_until === null ? null : asDate(row.active_until),
+    remainingMs: row.remaining_ms === null ? null : Number(row.remaining_ms),
     reason: row.reason,
     releasedNow: row.released_now,
   };
