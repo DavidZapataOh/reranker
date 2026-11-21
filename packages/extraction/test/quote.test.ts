@@ -174,6 +174,32 @@ describe("toExtractedMentions", () => {
     expect(new Set(r.mentions.map((x) => x.quote)).size).toBe(3);
   });
 
+  test("a quote whose link target was miscopied is found by the part that holds the name", () => {
+    const md =
+      "- **[Osteria da Fortunata](https://google.com/goto?url=CAESXwHEIkXX) - Baullari**: pasta.";
+    const r = toExtractedMentions(
+      md,
+      out([
+        [
+          "Osteria da Fortunata",
+          "**[Osteria da Fortunata](https://google.com/goto?url=CAESXwHEIkYY) - Baullari**: pasta.",
+          "recommendation",
+          "business",
+        ],
+        [
+          "Fantasma",
+          "[Fantasma](https://fantasma.example) - Baullari",
+          "recommendation",
+          "business",
+        ],
+      ]),
+    );
+    expect(r.mentions.map((x) => [x.name, x.quote])).toEqual([
+      ["Osteria da Fortunata", "Osteria da Fortunata"],
+    ]);
+    expect(r.quoteMisses).toBe(1);
+  });
+
   test("an answer without entities yields no mentions", () =>
     expect(toExtractedMentions("No sé.", { answerKind: "no_entities", mentions: [] })).toEqual({
       mentions: [],

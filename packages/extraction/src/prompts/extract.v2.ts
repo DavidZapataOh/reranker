@@ -250,6 +250,7 @@ ${MENTION_DEFINITIONS_V2}
 - Platforms: "book on Booking" recommends the platform; "according to Tripadvisor reviews" or "compare dentists on jameda" is "incidental".
 - Sections: an answer often ends with "platforms to search", "sources" or "further reading"; what it lists there is "incidental" unless it is offered as the way to get the service.
 - Markdown: the answer may escape punctuation ("1\\.", "\\:") and use emphasis; copy the quote as it appears, the matching tolerates both.
+- Images: the text of an image "![…](…)" is the caption of a picture taken from another page; a name that appears only there is not a mention.
 - Several languages: the answer may mix languages; apply the same rules and copy the quote in its original language. Never translate a name or a quote.
 - Do not invent entities the answer does not name, even if you know them.
 - Long answers: list every entity up to the last one; never stop early.

@@ -75,6 +75,24 @@ export function locateQuote(
   return null;
 }
 
+const LINK_SYNTAX = /\]\([^)]*\)?|\[/;
+
+/**
+ * Engines cite through long redirect URLs that models miscopy by a character. A quote that missed
+ * is looked for again by its piece outside the link syntax that holds the name, so the name still
+ * has to be in the answer as quoted.
+ */
+function locateByLinkText(
+  markdown: string,
+  mention: { name: string; quote: string },
+): { start: number; end: number } | null {
+  if (!LINK_SYNTAX.test(mention.quote)) return null;
+  const piece = mention.quote
+    .split(LINK_SYNTAX)
+    .find((part) => locateQuote(part, mention.name) !== null);
+  return piece === undefined ? null : locateQuote(markdown, piece);
+}
+
 /** Keeps the mentions whose quote is in the answer, in answer order, with their rank. */
 export function toExtractedMentions(
   markdown: string,
@@ -82,7 +100,7 @@ export function toExtractedMentions(
 ): { mentions: ExtractedMention[]; quoteMisses: number } {
   const mentions: ExtractedMention[] = [];
   for (const mention of out.mentions) {
-    const at = locateQuote(markdown, mention.quote);
+    const at = locateQuote(markdown, mention.quote) ?? locateByLinkText(markdown, mention);
     if (!at) continue;
     mentions.push({
       name: mention.name,
