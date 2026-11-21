@@ -49,6 +49,25 @@ vi.mock("@reranker/evidence", () => ({
   getArtifact: async () => null,
 }));
 vi.mock("@reranker/flags", () => ({ isEnabled: async () => true }));
+// Each provider call's own wall time, which its deadline in the config has to cover.
+const calls = vi.hoisted(() => [] as { model: string; ms: number }[]);
+vi.mock("../src/providers/call", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../src/providers/call")>();
+  return {
+    ...actual,
+    callerFor: (model: Parameters<typeof actual.callerFor>[0]) => {
+      const caller = actual.callerFor(model);
+      return (async (call: Parameters<typeof caller>[0]) => {
+        const startedAt = Date.now();
+        try {
+          return await caller(call);
+        } finally {
+          calls.push({ model: `${model.model} (${model.reasoning})`, ms: Date.now() - startedAt });
+        }
+      }) as typeof caller;
+    },
+  };
+});
 
 const DIR = new URL("fixtures/answers/languages/", import.meta.url);
 
@@ -258,10 +277,23 @@ function latencyTable(timings: Timing[]): string {
       return group.length > 0 ? [row(label, group)] : [];
     }),
   ];
+  const models = [...new Set(calls.map((c) => c.model))].sort();
+  const callRows = models.map((model) => {
+    const ms = calls
+      .filter((c) => c.model === model)
+      .map((c) => c.ms)
+      .sort((a, b) => a - b);
+    const s = (v: number) => `${(v / 1000).toFixed(1)} s`;
+    return `| ${model} | ${ms.length} | ${s(percentile(ms, 0.5))} | ${s(percentile(ms, 0.95))} | ${s(ms.at(-1) as number)} |`;
+  });
   return [
     "| group | answers | p50 | p95 | max | output tokens |",
     "|---|---|---|---|---|---|",
     ...rows,
+    "",
+    "| call | calls | p50 | p95 | max |",
+    "|---|---|---|---|---|",
+    ...callRows,
   ].join("\n");
 }
 
@@ -272,6 +304,7 @@ const pct = (r: number | null) => (r === null ? "–" : `${(r * 100).toFixed(1)}
 test("extraction finds, orders and judges entities in every measurement language", async () => {
   const tallies = new Map<MeasurementLanguage, Tally>();
   const timings: Timing[] = [];
+  calls.length = 0;
   await inLanes(answers, async ({ id, answer }, i) => {
     const e = expected[id];
     if (!e) throw new Error(`${id} has no expectation`);
