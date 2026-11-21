@@ -125,6 +125,7 @@ export interface FreeReportStats {
   engines: EngineCoverage[];
   intents: IntentCoverage[]; // intents with a valid capture in an included engine
   languages: LanguageCoverage[]; // empty when the report is measured in one language
+  citations: CitationStats;
   // Null when no included engine has a valid canonical capture.
   canonicalOnly: {
     target: ScoreEstimate;

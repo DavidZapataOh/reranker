@@ -11,6 +11,7 @@ import {
   type RawCaptureOf,
   type ResponseExtraction,
 } from "@reranker/schema/measurement";
+import { type AnswerCitations, type CitedSource, citationsOf } from "./citations";
 import type { CaptureFrame, EntityColumn } from "./compare";
 import { methodology } from "./methodology";
 
@@ -30,6 +31,7 @@ export interface ObservationFrame extends CaptureFrame {
     isCanonical: boolean;
     present: boolean;
     namesEntities: boolean;
+    citations: AnswerCitations;
   }>;
   engines: Array<{
     engine: EngineId;
@@ -73,8 +75,8 @@ const KEPT_KINDS = new Set<EntityKind>(["business", "professional", "chain", "pl
 
 export const STANCE = { recommendation: 1, incidental: 2, negative: 3 } as const;
 
-/** All the statistics read from a capture's answer: whether the AI surface showed. */
-export type ObservedCapture = RawCaptureOf<{ present: boolean }>;
+/** All the statistics read from a capture's answer: whether the AI surface showed, and its sources. */
+export type ObservedCapture = RawCaptureOf<{ present: boolean; sources: readonly CitedSource[] }>;
 
 type Valid = { raw: ObservedCapture; planned: PlannedObservation; slotIndex: number };
 type Entity = ObservationFrame["entities"] extends Map<EntityKey, infer E> ? E : never;
@@ -334,6 +336,7 @@ export function buildObservations(input: {
         });
 
   const byCapture = new Map(extractions.map((e) => [e.captureId, e]));
+  const domains = new Map<string, string>();
   const n = valid.length;
   const entities = new Map<EntityKey, Entity>();
   const captures = valid.map(({ raw, planned }, i) => {
@@ -397,6 +400,11 @@ export function buildObservations(input: {
       isCanonical: planned.isCanonical,
       present: answer.present,
       namesEntities: extraction.answerKind === "names_entities",
+      citations: citationsOf(
+        answer.sources,
+        extraction.mentions.flatMap((m) => m.citedUrls),
+        domains,
+      ),
     };
   });
 

@@ -1,13 +1,17 @@
 {
-  "methodologyVersion": "2026.11.1",
-  "methodologyHash": "f5661011aa4e58a84cd2f84ddef4f80955f11a4fa47a8eea5c989c20bf3bcb44",
+  "methodologyVersion": "2026.11.2",
+  "methodologyHash": "3693bebdc499730b12b2e42f71af4ba8ee29c5287a9f93830577676c75cc4196",
   "input": {
     "reportId": "fr_01JDB4Q7W2M8N3P5R6S9T0V1A1",
     "asOf": "2026-11-20T14:00:00.000Z",
     "target": {
       "entityKey": "place:target",
       "displayName": "Clínica Sonrisas",
-      "entityKind": "business"
+      "entityKind": "business",
+      "domains": [
+        "clinicasonrisas.com.co",
+        "instagram.com/sonrisas"
+      ]
     },
     "plan": {
       "intentSet": {
@@ -3703,7 +3707,29 @@
           "slotId": "m1:3"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -3716,7 +3742,17 @@
           "slotId": "m1:4"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -3729,7 +3765,29 @@
           "slotId": "m1:5"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -3742,7 +3800,21 @@
           "slotId": "m1:6"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -3755,7 +3827,25 @@
           "slotId": "m1:7"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -3768,7 +3858,17 @@
           "slotId": "m1:8"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -3781,7 +3881,29 @@
           "slotId": "m1:9"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -3794,7 +3916,21 @@
           "slotId": "m1:10"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -3807,7 +3943,25 @@
           "slotId": "m1:11"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -3820,7 +3974,21 @@
           "slotId": "m1:12"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -3833,7 +4001,25 @@
           "slotId": "m1:13"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -3846,7 +4032,17 @@
           "slotId": "m1:14"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -3859,7 +4055,33 @@
           "slotId": "m1:15"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -3872,7 +4094,17 @@
           "slotId": "m1:16"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -3885,7 +4117,25 @@
           "slotId": "m1:17"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -3898,7 +4148,21 @@
           "slotId": "m1:18"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -3911,7 +4175,25 @@
           "slotId": "m1:19"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -3924,7 +4206,21 @@
           "slotId": "m1:20"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -3937,7 +4233,29 @@
           "slotId": "m1:21"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -3950,7 +4268,17 @@
           "slotId": "m1:22"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -3963,7 +4291,25 @@
           "slotId": "m1:23"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -3976,7 +4322,21 @@
           "slotId": "m1:24"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -3989,7 +4349,29 @@
           "slotId": "m1:25"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4002,7 +4384,17 @@
           "slotId": "m1:26"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4015,7 +4407,29 @@
           "slotId": "m1:27"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4028,7 +4442,17 @@
           "slotId": "m1:28"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4041,7 +4465,25 @@
           "slotId": "m1:29"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4054,7 +4496,25 @@
           "slotId": "m1:30"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4067,7 +4527,25 @@
           "slotId": "m1:31"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4080,7 +4558,17 @@
           "slotId": "m1:32"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4093,7 +4581,29 @@
           "slotId": "m1:33"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4106,7 +4616,17 @@
           "slotId": "m1:34"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4119,7 +4639,29 @@
           "slotId": "m1:35"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4132,7 +4674,21 @@
           "slotId": "m1:36"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4145,7 +4701,25 @@
           "slotId": "m1:37"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4158,7 +4732,17 @@
           "slotId": "m1:38"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4171,7 +4755,29 @@
           "slotId": "m1:39"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4184,7 +4790,8 @@
           "slotId": "m1:40"
         },
         "answer": {
-          "present": false
+          "present": false,
+          "sources": []
         }
       },
       {
@@ -4197,7 +4804,8 @@
           "slotId": "m1:41"
         },
         "answer": {
-          "present": false
+          "present": false,
+          "sources": []
         }
       },
       {
@@ -4210,7 +4818,8 @@
           "slotId": "m1:42"
         },
         "answer": {
-          "present": false
+          "present": false,
+          "sources": []
         }
       },
       {
@@ -4223,7 +4832,8 @@
           "slotId": "m1:43"
         },
         "answer": {
-          "present": false
+          "present": false,
+          "sources": []
         }
       },
       {
@@ -4236,7 +4846,26 @@
           "slotId": "m1:44"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a44",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b44",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4249,7 +4878,42 @@
           "slotId": "m1:45"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a45",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b45",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4262,7 +4926,26 @@
           "slotId": "m1:46"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a46",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b46",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4275,7 +4958,34 @@
           "slotId": "m1:47"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a47",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b47",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4288,7 +4998,30 @@
           "slotId": "m1:48"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a48",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b48",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4301,7 +5034,34 @@
           "slotId": "m1:49"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a49",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b49",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4314,7 +5074,30 @@
           "slotId": "m1:50"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a50",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b50",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4327,7 +5110,38 @@
           "slotId": "m1:51"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a51",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b51",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4340,7 +5154,26 @@
           "slotId": "m1:52"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a52",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b52",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4353,7 +5186,34 @@
           "slotId": "m1:53"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a53",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b53",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4366,7 +5226,30 @@
           "slotId": "m1:54"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a54",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b54",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4379,7 +5262,38 @@
           "slotId": "m1:55"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a55",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b55",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4392,7 +5306,26 @@
           "slotId": "m1:56"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a56",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b56",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4405,7 +5338,38 @@
           "slotId": "m1:57"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a57",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b57",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4418,7 +5382,26 @@
           "slotId": "m1:58"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a58",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b58",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4431,7 +5414,34 @@
           "slotId": "m1:59"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a59",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b59",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4444,7 +5454,34 @@
           "slotId": "m1:60"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a60",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b60",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4457,7 +5494,34 @@
           "slotId": "m1:61"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a61",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b61",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4470,7 +5534,26 @@
           "slotId": "m1:62"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a62",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b62",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4483,7 +5566,38 @@
           "slotId": "m1:63"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a63",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b63",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4496,7 +5610,26 @@
           "slotId": "m1:64"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a64",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b64",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4509,7 +5642,38 @@
           "slotId": "m1:65"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a65",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b65",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4522,7 +5686,30 @@
           "slotId": "m1:66"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a66",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b66",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4535,7 +5722,34 @@
           "slotId": "m1:67"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a67",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b67",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4548,7 +5762,26 @@
           "slotId": "m1:68"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a68",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b68",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4561,7 +5794,38 @@
           "slotId": "m1:69"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a69",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b69",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4574,7 +5838,30 @@
           "slotId": "m1:70"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a70",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b70",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4587,7 +5874,34 @@
           "slotId": "m1:71"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a71",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b71",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4600,7 +5914,30 @@
           "slotId": "m1:72"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a72",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b72",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4613,7 +5950,34 @@
           "slotId": "m1:73"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a73",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b73",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4626,7 +5990,26 @@
           "slotId": "m1:74"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a74",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b74",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4639,7 +6022,42 @@
           "slotId": "m1:75"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a75",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b75",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4652,7 +6070,26 @@
           "slotId": "m1:76"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a76",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b76",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4665,7 +6102,34 @@
           "slotId": "m1:77"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a77",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b77",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4678,7 +6142,30 @@
           "slotId": "m1:78"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a78",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b78",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4691,7 +6178,34 @@
           "slotId": "m1:79"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/a79",
+              "resolvedUrl": "https://es.wikipedia.org/wiki/Implante",
+              "cited": true
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/b79",
+              "cited": true
+            }
+          ]
         }
       },
       {
@@ -4704,7 +6218,21 @@
           "slotId": "m1:80"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4717,7 +6245,29 @@
           "slotId": "m1:81"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4730,7 +6280,17 @@
           "slotId": "m1:82"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4743,7 +6303,25 @@
           "slotId": "m1:83"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4756,7 +6334,21 @@
           "slotId": "m1:84"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4769,7 +6361,29 @@
           "slotId": "m1:85"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4782,7 +6396,17 @@
           "slotId": "m1:86"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4795,7 +6419,29 @@
           "slotId": "m1:87"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4808,7 +6454,17 @@
           "slotId": "m1:88"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4821,7 +6477,25 @@
           "slotId": "m1:89"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4834,7 +6508,25 @@
           "slotId": "m1:90"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4847,7 +6539,25 @@
           "slotId": "m1:91"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4860,7 +6570,17 @@
           "slotId": "m1:92"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4873,7 +6593,29 @@
           "slotId": "m1:93"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4886,7 +6628,17 @@
           "slotId": "m1:94"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4899,7 +6651,29 @@
           "slotId": "m1:95"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4912,7 +6686,21 @@
           "slotId": "m1:96"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4925,7 +6713,25 @@
           "slotId": "m1:97"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4938,7 +6744,17 @@
           "slotId": "m1:98"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4951,7 +6767,29 @@
           "slotId": "m1:99"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4964,7 +6802,21 @@
           "slotId": "m1:100"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4977,7 +6829,25 @@
           "slotId": "m1:101"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -4990,7 +6860,21 @@
           "slotId": "m1:102"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5003,7 +6887,25 @@
           "slotId": "m1:103"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5016,7 +6918,17 @@
           "slotId": "m1:104"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5029,7 +6941,33 @@
           "slotId": "m1:105"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5042,7 +6980,17 @@
           "slotId": "m1:106"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5055,7 +7003,25 @@
           "slotId": "m1:107"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5068,7 +7034,21 @@
           "slotId": "m1:108"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5081,7 +7061,25 @@
           "slotId": "m1:109"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5094,7 +7092,21 @@
           "slotId": "m1:110"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5107,7 +7119,29 @@
           "slotId": "m1:111"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5120,7 +7154,17 @@
           "slotId": "m1:112"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5133,7 +7177,25 @@
           "slotId": "m1:113"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5146,7 +7208,21 @@
           "slotId": "m1:114"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5159,7 +7235,29 @@
           "slotId": "m1:115"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5172,7 +7270,17 @@
           "slotId": "m1:116"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5185,7 +7293,29 @@
           "slotId": "m1:117"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5198,7 +7328,17 @@
           "slotId": "m1:118"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5211,7 +7351,25 @@
           "slotId": "m1:119"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5224,7 +7382,25 @@
           "slotId": "m1:120"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5237,7 +7413,25 @@
           "slotId": "m1:121"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5250,7 +7444,17 @@
           "slotId": "m1:122"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5263,7 +7467,29 @@
           "slotId": "m1:123"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5276,7 +7502,17 @@
           "slotId": "m1:124"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5289,7 +7525,29 @@
           "slotId": "m1:125"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5302,7 +7560,21 @@
           "slotId": "m1:126"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5315,7 +7587,25 @@
           "slotId": "m1:127"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5328,7 +7618,17 @@
           "slotId": "m1:128"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5341,7 +7641,29 @@
           "slotId": "m1:129"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5354,7 +7676,21 @@
           "slotId": "m1:130"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5367,7 +7703,25 @@
           "slotId": "m1:131"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5380,7 +7734,21 @@
           "slotId": "m1:132"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5393,7 +7761,25 @@
           "slotId": "m1:133"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5406,7 +7792,17 @@
           "slotId": "m1:134"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5419,7 +7815,33 @@
           "slotId": "m1:135"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5432,7 +7854,17 @@
           "slotId": "m1:136"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5445,7 +7877,25 @@
           "slotId": "m1:137"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5458,7 +7908,21 @@
           "slotId": "m1:138"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5471,7 +7935,25 @@
           "slotId": "m1:139"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5484,7 +7966,21 @@
           "slotId": "m1:140"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5497,7 +7993,29 @@
           "slotId": "m1:141"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5510,7 +8028,17 @@
           "slotId": "m1:142"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5523,7 +8051,25 @@
           "slotId": "m1:143"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5536,7 +8082,21 @@
           "slotId": "m1:144"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5549,7 +8109,29 @@
           "slotId": "m1:145"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5562,7 +8144,17 @@
           "slotId": "m1:146"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5575,7 +8167,29 @@
           "slotId": "m1:147"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5588,7 +8202,17 @@
           "slotId": "m1:148"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5601,7 +8225,25 @@
           "slotId": "m1:149"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5614,7 +8256,25 @@
           "slotId": "m1:150"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5627,7 +8287,25 @@
           "slotId": "m1:151"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5640,7 +8318,17 @@
           "slotId": "m1:152"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5653,7 +8341,29 @@
           "slotId": "m1:153"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5666,7 +8376,17 @@
           "slotId": "m1:154"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5679,7 +8399,29 @@
           "slotId": "m1:155"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5692,7 +8434,21 @@
           "slotId": "m1:156"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5705,7 +8461,25 @@
           "slotId": "m1:157"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5718,7 +8492,17 @@
           "slotId": "m1:158"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5731,7 +8515,29 @@
           "slotId": "m1:159"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5744,7 +8550,21 @@
           "slotId": "m1:160"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5757,7 +8577,25 @@
           "slotId": "m1:161"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5770,7 +8608,21 @@
           "slotId": "m1:162"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5783,7 +8635,25 @@
           "slotId": "m1:163"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5796,7 +8666,17 @@
           "slotId": "m1:164"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5809,7 +8689,33 @@
           "slotId": "m1:165"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5822,7 +8728,17 @@
           "slotId": "m1:166"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5835,7 +8751,25 @@
           "slotId": "m1:167"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5848,7 +8782,21 @@
           "slotId": "m1:168"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5861,7 +8809,25 @@
           "slotId": "m1:169"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5874,7 +8840,21 @@
           "slotId": "m1:170"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5887,7 +8867,29 @@
           "slotId": "m1:171"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5900,7 +8902,17 @@
           "slotId": "m1:172"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5913,7 +8925,25 @@
           "slotId": "m1:173"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5926,7 +8956,21 @@
           "slotId": "m1:174"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5939,7 +8983,29 @@
           "slotId": "m1:175"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5952,7 +9018,17 @@
           "slotId": "m1:176"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5965,7 +9041,29 @@
           "slotId": "m1:177"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5978,7 +9076,17 @@
           "slotId": "m1:178"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -5991,7 +9099,25 @@
           "slotId": "m1:179"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -6004,7 +9130,25 @@
           "slotId": "m1:180"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -6017,7 +9161,25 @@
           "slotId": "m1:181"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -6030,7 +9192,17 @@
           "slotId": "m1:182"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -6043,7 +9215,29 @@
           "slotId": "m1:183"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -6056,7 +9250,17 @@
           "slotId": "m1:184"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -6069,7 +9273,29 @@
           "slotId": "m1:185"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -6082,7 +9308,21 @@
           "slotId": "m1:186"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -6095,7 +9335,25 @@
           "slotId": "m1:187"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -6108,7 +9366,17 @@
           "slotId": "m1:188"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -6121,7 +9389,29 @@
           "slotId": "m1:189"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -6134,7 +9424,21 @@
           "slotId": "m1:190"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -6147,7 +9451,25 @@
           "slotId": "m1:191"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -6160,7 +9482,21 @@
           "slotId": "m1:192"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -6173,7 +9509,25 @@
           "slotId": "m1:193"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -6186,7 +9540,17 @@
           "slotId": "m1:194"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -6199,7 +9563,33 @@
           "slotId": "m1:195"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.google.com/maps/place/Rival",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -6212,7 +9602,17 @@
           "slotId": "m1:196"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -6225,7 +9625,25 @@
           "slotId": "m1:197"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -6238,7 +9656,21 @@
           "slotId": "m1:198"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.clinicasonrisas.com.co/implantes",
+              "cited": true
+            },
+            {
+              "url": "https://www.doctoralia.co/clinica-sonrisas",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       },
       {
@@ -6251,7 +9683,25 @@
           "slotId": "m1:199"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": [
+            {
+              "url": "https://www.topdoctors.com.co/rival/",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/?utm_source=openai",
+              "cited": true
+            },
+            {
+              "url": "https://rival0.com.co/",
+              "cited": true
+            },
+            {
+              "url": "https://www.pullman.com.co/",
+              "cited": false
+            }
+          ]
         }
       }
     ],
@@ -23838,12 +27288,12 @@
     ]
   },
   "output": {
-    "methodologyVersion": "2026.11.1",
-    "methodologyHash": "f5661011aa4e58a84cd2f84ddef4f80955f11a4fa47a8eea5c989c20bf3bcb44",
+    "methodologyVersion": "2026.11.2",
+    "methodologyHash": "3693bebdc499730b12b2e42f71af4ba8ee29c5287a9f93830577676c75cc4196",
     "intentSetId": "is_0123456789abcdef",
     "intentSetHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
     "extractorConfigHash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-    "seed": "d614b5b664c98e5db7809843c267b4628b8777505d3efa9a26ba9b9d28912200",
+    "seed": "0982fba1d0eea4ba27edb839b9d5b9c923aca06e452d82d7f16d43644f32a42e",
     "computedAt": "2026-11-20T14:00:00.000Z",
     "target": {
       "entityKey": "place:target",
@@ -23887,7 +27337,7 @@
           "score": {
             "value": 48,
             "lower": 32,
-            "upper": 65,
+            "upper": 64,
             "atMost": null,
             "level": "on_the_list",
             "levelDisplay": {
@@ -23926,7 +27376,7 @@
         "gemini": {
           "score": {
             "value": 45,
-            "lower": 29,
+            "lower": 30,
             "upper": 61,
             "atMost": null,
             "level": "on_the_list",
@@ -24006,7 +27456,7 @@
         "google-ai-mode": {
           "score": {
             "value": 50,
-            "lower": 35,
+            "lower": 34,
             "upper": 65,
             "atMost": null,
             "level": "on_the_list",
@@ -24015,7 +27465,7 @@
               "from": "sometimes",
               "to": "on_the_list"
             },
-            "sufficiency": "orientative",
+            "sufficiency": "insufficient",
             "preliminary": true,
             "components": {
               "recommendationRate": {
@@ -24047,7 +27497,7 @@
           "score": {
             "value": 50,
             "lower": 34,
-            "upper": 66,
+            "upper": 65,
             "atMost": null,
             "level": "on_the_list",
             "levelDisplay": {
@@ -24100,7 +27550,7 @@
         "overall": {
           "value": 44,
           "lower": 37,
-          "upper": 50,
+          "upper": 51,
           "atMost": null,
           "level": "on_the_list",
           "levelDisplay": {
@@ -24333,9 +27783,7 @@
         "place:rival2"
       ],
       [
-        "place:rival3"
-      ],
-      [
+        "place:rival3",
         "place:rival4"
       ]
     ],
@@ -24572,7 +28020,7 @@
         "targetScore": {
           "value": 50,
           "lower": 34,
-          "upper": 66,
+          "upper": 65,
           "atMost": null,
           "level": "on_the_list",
           "levelDisplay": {
@@ -24622,7 +28070,7 @@
         },
         "targetScore": {
           "value": 50,
-          "lower": 34,
+          "lower": 35,
           "upper": 66,
           "atMost": null,
           "level": "on_the_list",
@@ -24673,7 +28121,7 @@
         },
         "targetScore": {
           "value": 50,
-          "lower": 34,
+          "lower": 35,
           "upper": 65,
           "atMost": null,
           "level": "on_the_list",
@@ -24682,7 +28130,7 @@
             "from": "sometimes",
             "to": "on_the_list"
           },
-          "sufficiency": "insufficient",
+          "sufficiency": "orientative",
           "preliminary": true,
           "components": {
             "recommendationRate": {
@@ -24724,8 +28172,8 @@
         },
         "targetScore": {
           "value": 50,
-          "lower": 34,
-          "upper": 65,
+          "lower": 35,
+          "upper": 66,
           "atMost": null,
           "level": "on_the_list",
           "levelDisplay": {
@@ -24757,6 +28205,576 @@
       }
     ],
     "languages": [],
+    "citations": {
+      "answers": 197,
+      "answersCiting": 193,
+      "citations": 429,
+      "unattributed": 36,
+      "target": {
+        "keys": [
+          "web:clinicasonrisas.com.co"
+        ],
+        "rate": {
+          "estimate": 0.4860000000000001,
+          "lower": 0.4165430092894526,
+          "upper": 0.5558685026693605,
+          "successes": 96,
+          "trials": 197,
+          "effectiveTrials": 195.31250000000026,
+          "designEffect": 1.0086399999999986,
+          "method": "jeffreys_eff"
+        },
+        "byEngine": {
+          "chatgpt": {
+            "estimate": 0.48,
+            "lower": 0.3230663178509072,
+            "upper": 0.6400326940984459,
+            "successes": 18,
+            "trials": 37,
+            "effectiveTrials": 35.71428571428571,
+            "designEffect": 1.0360000000000003,
+            "method": "jeffreys_eff"
+          },
+          "gemini": {
+            "estimate": 0.45,
+            "lower": 0.3038079203171527,
+            "upper": 0.6031424839391506,
+            "successes": 18,
+            "trials": 40,
+            "effectiveTrials": 40,
+            "designEffect": 1,
+            "method": "jeffreys_eff"
+          },
+          "google-ai-overview": {
+            "estimate": 0.5,
+            "lower": 0.3496035019208622,
+            "upper": 0.6503964980791378,
+            "successes": 20,
+            "trials": 40,
+            "effectiveTrials": 40,
+            "designEffect": 1,
+            "method": "jeffreys_eff"
+          },
+          "google-ai-mode": {
+            "estimate": 0.5,
+            "lower": 0.3496035019208622,
+            "upper": 0.6503964980791378,
+            "successes": 20,
+            "trials": 40,
+            "effectiveTrials": 40,
+            "designEffect": 1,
+            "method": "jeffreys_eff"
+          },
+          "perplexity": {
+            "estimate": 0.5,
+            "lower": 0.3496035019208622,
+            "upper": 0.6503964980791378,
+            "successes": 20,
+            "trials": 40,
+            "effectiveTrials": 40,
+            "designEffect": 1,
+            "method": "jeffreys_eff"
+          }
+        },
+        "share": {
+          "estimate": 0.22314049586776938,
+          "citations": 96,
+          "total": 429
+        }
+      },
+      "top": [
+        {
+          "key": "platform:top-doctors",
+          "isTarget": false,
+          "rate": {
+            "estimate": 0.4940000000000001,
+            "lower": 0.4244032770207383,
+            "upper": 0.563773085356229,
+            "successes": 97,
+            "trials": 197,
+            "effectiveTrials": 195.31250000000026,
+            "designEffect": 1.0086399999999986,
+            "method": "jeffreys_eff"
+          }
+        },
+        {
+          "key": "web:rival0.com.co",
+          "isTarget": false,
+          "rate": {
+            "estimate": 0.4940000000000001,
+            "lower": 0.4244032770207383,
+            "upper": 0.563773085356229,
+            "successes": 97,
+            "trials": 197,
+            "effectiveTrials": 195.31250000000026,
+            "designEffect": 1.0086399999999986,
+            "method": "jeffreys_eff"
+          }
+        },
+        {
+          "key": "web:clinicasonrisas.com.co",
+          "isTarget": true,
+          "rate": {
+            "estimate": 0.4860000000000001,
+            "lower": 0.4165430092894526,
+            "upper": 0.5558685026693605,
+            "successes": 96,
+            "trials": 197,
+            "effectiveTrials": 195.31250000000026,
+            "designEffect": 1.0086399999999986,
+            "method": "jeffreys_eff"
+          }
+        },
+        {
+          "key": "platform:doctoralia",
+          "isTarget": false,
+          "rate": {
+            "estimate": 0.331,
+            "lower": 0.2678669449527696,
+            "upper": 0.39909997864229135,
+            "successes": 65,
+            "trials": 197,
+            "effectiveTrials": 195.31250000000026,
+            "designEffect": 1.0086399999999986,
+            "method": "jeffreys_eff"
+          }
+        },
+        {
+          "key": "platform:google-maps",
+          "isTarget": false,
+          "rate": {
+            "estimate": 0.19300000000000003,
+            "lower": 0.14239184991795303,
+            "upper": 0.252626772077414,
+            "successes": 38,
+            "trials": 197,
+            "effectiveTrials": 195.31250000000026,
+            "designEffect": 1.0086399999999986,
+            "method": "jeffreys_eff"
+          }
+        },
+        {
+          "key": "platform:wikipedia",
+          "isTarget": false,
+          "rate": {
+            "estimate": 0.17999999999999994,
+            "lower": 0.13102821089545683,
+            "upper": 0.23837150658496375,
+            "successes": 36,
+            "trials": 197,
+            "effectiveTrials": 195.31250000000026,
+            "designEffect": 1.0086399999999986,
+            "method": "jeffreys_eff"
+          }
+        }
+      ],
+      "topByEngine": {
+        "chatgpt": [
+          {
+            "key": "platform:top-doctors",
+            "isTarget": false,
+            "rate": {
+              "estimate": 0.52,
+              "lower": 0.3599673059015541,
+              "upper": 0.6769336821490928,
+              "successes": 19,
+              "trials": 37,
+              "effectiveTrials": 35.71428571428571,
+              "designEffect": 1.0360000000000003,
+              "method": "jeffreys_eff"
+            }
+          },
+          {
+            "key": "web:rival0.com.co",
+            "isTarget": false,
+            "rate": {
+              "estimate": 0.52,
+              "lower": 0.3599673059015541,
+              "upper": 0.6769336821490928,
+              "successes": 19,
+              "trials": 37,
+              "effectiveTrials": 35.71428571428571,
+              "designEffect": 1.0360000000000003,
+              "method": "jeffreys_eff"
+            }
+          },
+          {
+            "key": "web:clinicasonrisas.com.co",
+            "isTarget": true,
+            "rate": {
+              "estimate": 0.48,
+              "lower": 0.3230663178509072,
+              "upper": 0.6400326940984459,
+              "successes": 18,
+              "trials": 37,
+              "effectiveTrials": 35.71428571428571,
+              "designEffect": 1.0360000000000003,
+              "method": "jeffreys_eff"
+            }
+          },
+          {
+            "key": "platform:doctoralia",
+            "isTarget": false,
+            "rate": {
+              "estimate": 0.35500000000000004,
+              "lower": 0.21418406586466934,
+              "upper": 0.5182731186000127,
+              "successes": 13,
+              "trials": 37,
+              "effectiveTrials": 35.71428571428571,
+              "designEffect": 1.0360000000000003,
+              "method": "jeffreys_eff"
+            }
+          },
+          {
+            "key": "platform:google-maps",
+            "isTarget": false,
+            "rate": {
+              "estimate": 0.19000000000000003,
+              "lower": 0.08807331860889156,
+              "upper": 0.33980574175433137,
+              "successes": 7,
+              "trials": 37,
+              "effectiveTrials": 35.71428571428571,
+              "designEffect": 1.0360000000000003,
+              "method": "jeffreys_eff"
+            }
+          }
+        ],
+        "gemini": [
+          {
+            "key": "platform:wikipedia",
+            "isTarget": false,
+            "rate": {
+              "estimate": 0.9,
+              "lower": 0.779551513158138,
+              "upper": 0.9652932440207287,
+              "successes": 36,
+              "trials": 40,
+              "effectiveTrials": 40,
+              "designEffect": 1,
+              "method": "jeffreys_eff"
+            }
+          },
+          {
+            "key": "platform:top-doctors",
+            "isTarget": false,
+            "rate": {
+              "estimate": 0.45,
+              "lower": 0.3038079203171527,
+              "upper": 0.6031424839391506,
+              "successes": 18,
+              "trials": 40,
+              "effectiveTrials": 40,
+              "designEffect": 1,
+              "method": "jeffreys_eff"
+            }
+          },
+          {
+            "key": "web:clinicasonrisas.com.co",
+            "isTarget": true,
+            "rate": {
+              "estimate": 0.45,
+              "lower": 0.3038079203171527,
+              "upper": 0.6031424839391506,
+              "successes": 18,
+              "trials": 40,
+              "effectiveTrials": 40,
+              "designEffect": 1,
+              "method": "jeffreys_eff"
+            }
+          },
+          {
+            "key": "web:rival0.com.co",
+            "isTarget": false,
+            "rate": {
+              "estimate": 0.45,
+              "lower": 0.3038079203171527,
+              "upper": 0.6031424839391506,
+              "successes": 18,
+              "trials": 40,
+              "effectiveTrials": 40,
+              "designEffect": 1,
+              "method": "jeffreys_eff"
+            }
+          },
+          {
+            "key": "platform:doctoralia",
+            "isTarget": false,
+            "rate": {
+              "estimate": 0.3,
+              "lower": 0.1756198057418179,
+              "upper": 0.45215830798924045,
+              "successes": 12,
+              "trials": 40,
+              "effectiveTrials": 40,
+              "designEffect": 1,
+              "method": "jeffreys_eff"
+            }
+          },
+          {
+            "key": "platform:google-maps",
+            "isTarget": false,
+            "rate": {
+              "estimate": 0.175,
+              "lower": 0.08185393408002502,
+              "upper": 0.31317231261408185,
+              "successes": 7,
+              "trials": 40,
+              "effectiveTrials": 40,
+              "designEffect": 1,
+              "method": "jeffreys_eff"
+            }
+          }
+        ],
+        "google-ai-overview": [
+          {
+            "key": "platform:top-doctors",
+            "isTarget": false,
+            "rate": {
+              "estimate": 0.5,
+              "lower": 0.3496035019208622,
+              "upper": 0.6503964980791378,
+              "successes": 20,
+              "trials": 40,
+              "effectiveTrials": 40,
+              "designEffect": 1,
+              "method": "jeffreys_eff"
+            }
+          },
+          {
+            "key": "web:clinicasonrisas.com.co",
+            "isTarget": true,
+            "rate": {
+              "estimate": 0.5,
+              "lower": 0.3496035019208622,
+              "upper": 0.6503964980791378,
+              "successes": 20,
+              "trials": 40,
+              "effectiveTrials": 40,
+              "designEffect": 1,
+              "method": "jeffreys_eff"
+            }
+          },
+          {
+            "key": "web:rival0.com.co",
+            "isTarget": false,
+            "rate": {
+              "estimate": 0.5,
+              "lower": 0.3496035019208622,
+              "upper": 0.6503964980791378,
+              "successes": 20,
+              "trials": 40,
+              "effectiveTrials": 40,
+              "designEffect": 1,
+              "method": "jeffreys_eff"
+            }
+          },
+          {
+            "key": "platform:doctoralia",
+            "isTarget": false,
+            "rate": {
+              "estimate": 0.325,
+              "lower": 0.19595096412132484,
+              "upper": 0.4783606734882155,
+              "successes": 13,
+              "trials": 40,
+              "effectiveTrials": 40,
+              "designEffect": 1,
+              "method": "jeffreys_eff"
+            }
+          },
+          {
+            "key": "platform:google-maps",
+            "isTarget": false,
+            "rate": {
+              "estimate": 0.2,
+              "lower": 0.09937400567988146,
+              "upper": 0.3422211236378557,
+              "successes": 8,
+              "trials": 40,
+              "effectiveTrials": 40,
+              "designEffect": 1,
+              "method": "jeffreys_eff"
+            }
+          }
+        ],
+        "google-ai-mode": [
+          {
+            "key": "platform:top-doctors",
+            "isTarget": false,
+            "rate": {
+              "estimate": 0.5,
+              "lower": 0.3496035019208622,
+              "upper": 0.6503964980791378,
+              "successes": 20,
+              "trials": 40,
+              "effectiveTrials": 40,
+              "designEffect": 1,
+              "method": "jeffreys_eff"
+            }
+          },
+          {
+            "key": "web:clinicasonrisas.com.co",
+            "isTarget": true,
+            "rate": {
+              "estimate": 0.5,
+              "lower": 0.3496035019208622,
+              "upper": 0.6503964980791378,
+              "successes": 20,
+              "trials": 40,
+              "effectiveTrials": 40,
+              "designEffect": 1,
+              "method": "jeffreys_eff"
+            }
+          },
+          {
+            "key": "web:rival0.com.co",
+            "isTarget": false,
+            "rate": {
+              "estimate": 0.5,
+              "lower": 0.3496035019208622,
+              "upper": 0.6503964980791378,
+              "successes": 20,
+              "trials": 40,
+              "effectiveTrials": 40,
+              "designEffect": 1,
+              "method": "jeffreys_eff"
+            }
+          },
+          {
+            "key": "platform:doctoralia",
+            "isTarget": false,
+            "rate": {
+              "estimate": 0.35,
+              "lower": 0.21672061120298733,
+              "upper": 0.5041219103280545,
+              "successes": 14,
+              "trials": 40,
+              "effectiveTrials": 40,
+              "designEffect": 1,
+              "method": "jeffreys_eff"
+            }
+          },
+          {
+            "key": "platform:google-maps",
+            "isTarget": false,
+            "rate": {
+              "estimate": 0.2,
+              "lower": 0.09937400567988146,
+              "upper": 0.3422211236378557,
+              "successes": 8,
+              "trials": 40,
+              "effectiveTrials": 40,
+              "designEffect": 1,
+              "method": "jeffreys_eff"
+            }
+          }
+        ],
+        "perplexity": [
+          {
+            "key": "platform:top-doctors",
+            "isTarget": false,
+            "rate": {
+              "estimate": 0.5,
+              "lower": 0.3496035019208622,
+              "upper": 0.6503964980791378,
+              "successes": 20,
+              "trials": 40,
+              "effectiveTrials": 40,
+              "designEffect": 1,
+              "method": "jeffreys_eff"
+            }
+          },
+          {
+            "key": "web:clinicasonrisas.com.co",
+            "isTarget": true,
+            "rate": {
+              "estimate": 0.5,
+              "lower": 0.3496035019208622,
+              "upper": 0.6503964980791378,
+              "successes": 20,
+              "trials": 40,
+              "effectiveTrials": 40,
+              "designEffect": 1,
+              "method": "jeffreys_eff"
+            }
+          },
+          {
+            "key": "web:rival0.com.co",
+            "isTarget": false,
+            "rate": {
+              "estimate": 0.5,
+              "lower": 0.3496035019208622,
+              "upper": 0.6503964980791378,
+              "successes": 20,
+              "trials": 40,
+              "effectiveTrials": 40,
+              "designEffect": 1,
+              "method": "jeffreys_eff"
+            }
+          },
+          {
+            "key": "platform:doctoralia",
+            "isTarget": false,
+            "rate": {
+              "estimate": 0.325,
+              "lower": 0.19595096412132484,
+              "upper": 0.4783606734882155,
+              "successes": 13,
+              "trials": 40,
+              "effectiveTrials": 40,
+              "designEffect": 1,
+              "method": "jeffreys_eff"
+            }
+          },
+          {
+            "key": "platform:google-maps",
+            "isTarget": false,
+            "rate": {
+              "estimate": 0.2,
+              "lower": 0.09937400567988146,
+              "upper": 0.3422211236378557,
+              "successes": 8,
+              "trials": 40,
+              "effectiveTrials": 40,
+              "designEffect": 1,
+              "method": "jeffreys_eff"
+            }
+          }
+        ]
+      },
+      "competitorOnly": [
+        {
+          "key": "platform:top-doctors",
+          "isTarget": false,
+          "rate": {
+            "estimate": 0.3493333333333331,
+            "lower": 0.27512865993325814,
+            "upper": 0.4295168610030442,
+            "successes": 53,
+            "trials": 149,
+            "effectiveTrials": 144.23076923076928,
+            "designEffect": 1.0330666666666664,
+            "method": "jeffreys_eff"
+          }
+        },
+        {
+          "key": "web:rival0.com.co",
+          "isTarget": false,
+          "rate": {
+            "estimate": 0.3493333333333331,
+            "lower": 0.27512865993325814,
+            "upper": 0.4295168610030442,
+            "successes": 53,
+            "trials": 149,
+            "effectiveTrials": 144.23076923076928,
+            "designEffect": 1.0330666666666664,
+            "method": "jeffreys_eff"
+          }
+        }
+      ]
+    },
     "canonicalOnly": {
       "target": {
         "value": 96,
@@ -24794,7 +28812,7 @@
           "entityKey": "place:rival0",
           "score": {
             "value": 86,
-            "lower": 74,
+            "lower": 73,
             "upper": 90,
             "atMost": null,
             "level": "regular",
@@ -24802,7 +28820,7 @@
               "kind": "single",
               "level": "regular"
             },
-            "sufficiency": "sufficient",
+            "sufficiency": "orientative",
             "preliminary": true,
             "components": {
               "recommendationRate": {
@@ -24863,7 +28881,7 @@
           "entityKey": "place:rival2",
           "score": {
             "value": 86,
-            "lower": 73,
+            "lower": 74,
             "upper": 90,
             "atMost": null,
             "level": "regular",
@@ -24871,7 +28889,7 @@
               "kind": "single",
               "level": "regular"
             },
-            "sufficiency": "orientative",
+            "sufficiency": "sufficient",
             "preliminary": true,
             "components": {
               "recommendationRate": {
@@ -24933,7 +28951,7 @@
           "score": {
             "value": 30,
             "lower": 15,
-            "upper": 48,
+            "upper": 49,
             "atMost": null,
             "level": "sometimes",
             "levelDisplay": {

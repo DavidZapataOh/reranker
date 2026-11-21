@@ -24,7 +24,8 @@ export interface AnswerCitations {
 }
 
 // Private PSL rules on: a site on blogspot.com or github.io belongs to its owner, not the host.
-const PSL = { allowPrivateDomains: true, extractHostname: false } as const;
+// The hosts come from WHATWG URL parsing, already valid and lowercased.
+const PSL = { allowPrivateDomains: true, extractHostname: false, validateHostname: false } as const;
 
 /** The registrable domain (eTLD+1 under the Public Suffix List) of a host, or the host itself
  * when it has none, such as an IP address. */
@@ -34,29 +35,42 @@ export function registrableDomain(host: string): string {
 }
 
 /** A cited URL's typed key: its platform when the registry knows it, else its registrable domain. */
-export function citationKeyOf(raw: string): EntityKey | null {
-  const url = URL.parse(raw);
+export function citationKeyOf(
+  raw: string | URL,
+  domains: Map<string, string> = new Map(),
+): EntityKey | null {
+  const url = typeof raw === "string" ? URL.parse(raw) : raw;
   if (url === null || (url.protocol !== "https:" && url.protocol !== "http:")) return null;
-  const platform = platformOfUrl(url.href);
-  return platform === null ? `web:${registrableDomain(url.hostname)}` : `platform:${platform.slug}`;
+  const platform = platformOfUrl(url);
+  if (platform !== null) return `platform:${platform.slug}`;
+  let domain = domains.get(url.hostname);
+  if (domain === undefined) {
+    domain = registrableDomain(url.hostname);
+    domains.set(url.hostname, domain);
+  }
+  return `web:${domain}`;
 }
 
 /**
  * The URLs an answer cites, read once each: its sources marked cited and the links the
  * extraction tied to a mention, through their resolved redirect when Google wrapped them.
+ * `domains` memoizes registrable domains by host; a report shares one across its answers.
  */
 export function citationsOf(
   sources: readonly CitedSource[],
   mentionUrls: readonly string[] = [],
+  domains: Map<string, string> = new Map(),
 ): AnswerCitations {
   const resolved = new Map<string, string | undefined>();
   for (const s of sources) {
     if (s.cited) resolved.set(s.url, s.resolvedUrl);
   }
-  // A link the extraction copied may be a redirect the sources already resolved.
-  const resolvedOf = new Map(sources.map((s) => [s.url, s.resolvedUrl]));
-  for (const url of mentionUrls) {
-    if (!resolved.has(url)) resolved.set(url, resolvedOf.get(url));
+  if (mentionUrls.length > 0) {
+    // A link the extraction copied may be a redirect the sources already resolved.
+    const resolvedOf = new Map(sources.map((s) => [s.url, s.resolvedUrl]));
+    for (const url of mentionUrls) {
+      if (!resolved.has(url)) resolved.set(url, resolvedOf.get(url));
+    }
   }
 
   const seen = new Set<string>();
@@ -71,13 +85,15 @@ export function citationsOf(
     const parsed = URL.parse(target);
     if (parsed === null) continue;
     // The same page with its fragment or campaign tags is one citation; OpenAI tags every link.
-    parsed.hash = "";
+    if (parsed.hash !== "") parsed.hash = "";
     // Deleting reserializes the query, so an untagged one is left as written.
-    const tags = [...parsed.searchParams.keys()].filter((name) => name.startsWith("utm_"));
-    for (const name of tags) parsed.searchParams.delete(name);
+    if (parsed.search.includes("utm_")) {
+      const tags = [...parsed.searchParams.keys()].filter((name) => name.startsWith("utm_"));
+      for (const name of tags) parsed.searchParams.delete(name);
+    }
     if (seen.has(parsed.href)) continue;
     seen.add(parsed.href);
-    const key = citationKeyOf(parsed.href);
+    const key = citationKeyOf(parsed, domains);
     if (key !== null) byKey.set(key, (byKey.get(key) ?? 0) + 1);
   }
   return { byKey, unattributed };

@@ -6,6 +6,7 @@ import {
   TracerProvider,
 } from "@opentelemetry/sdk-trace";
 import { expect, test } from "vitest";
+import type { CitedSource } from "../src/citations";
 import { type CaptureFrame, type EntityColumn, pairedCompare, rankWithTies } from "../src/compare";
 import { seedFor } from "../src/methodology";
 import { computeFreeReportStats, type FreeReportInput } from "../src/report";
@@ -96,15 +97,39 @@ test("free report scores, comparisons and ranking: p50 ≤ 150 ms, p95 ≤ 300 m
 }, 60_000);
 
 // The full step on a realistic report: 200 answers naming 100 distinct businesses, from a few
-// leaders recommended across engines to a long tail named once, at mixed ranks.
+// leaders recommended across engines to a long tail named once, at mixed ranks. Each answer
+// cites about ten pages from 80 sites, platforms among them, behind Google redirects in a
+// third of the answers, and lists a few more it did not cite.
 const ENTITIES = 100;
+const SITES = 80;
+const PLATFORM_PAGES = ["https://www.doctoralia.co/x", "https://www.google.com/maps/place/x"];
+const sourcesOf = (slot: number): CitedSource[] =>
+  Array.from({ length: 14 }, (_, k) => {
+    const page =
+      k < 2
+        ? (PLATFORM_PAGES[k] as string)
+        : `https://www.site${(slot * 13 + k * 7) % SITES}.com.co/p${k}`;
+    return slot % 3 === 1 && k < 10
+      ? {
+          url: `https://vertexaisearch.cloud.google.com/grounding-api-redirect/${slot}-${k}`,
+          resolvedUrl: page,
+          cited: true,
+        }
+      : { url: page, cited: k < 10 };
+  });
 const named = (slot: number) =>
   Array.from({ length: ENTITIES }, (_, j) => j).filter((j) => (slot + j * 7) % (j + 3) === 0);
 const report200: FreeReportInput = {
   reportId: "fr_perf",
   asOf: new Date("2026-11-19T15:00:00.000Z"),
-  target: { entityKey: TARGET, displayName: "Clínica Sonrisas", entityKind: "business" },
+  target: {
+    entityKey: TARGET,
+    displayName: "Clínica Sonrisas",
+    entityKind: "business",
+    domains: ["site7.com.co"],
+  },
   ...fixture({
+    sources: sourcesOf,
     mentions: (slot) => [
       ...(slot % 3 === 0 ? [mention({ entityKey: TARGET, ordinal: 1 + (slot % 4) })] : []),
       ...named(slot).map((j, rank) =>

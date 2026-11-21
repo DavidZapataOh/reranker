@@ -1,6 +1,6 @@
 {
-  "methodologyVersion": "2026.11.1",
-  "methodologyHash": "f5661011aa4e58a84cd2f84ddef4f80955f11a4fa47a8eea5c989c20bf3bcb44",
+  "methodologyVersion": "2026.11.2",
+  "methodologyHash": "3693bebdc499730b12b2e42f71af4ba8ee29c5287a9f93830577676c75cc4196",
   "input": {
     "reportId": "fr_01JDB4Q7W2M8N3P5R6S9T0V1A6",
     "asOf": "2026-11-20T19:00:00.000Z",
@@ -5513,7 +5513,8 @@
           "slotId": "m1:2"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5526,7 +5527,8 @@
           "slotId": "m1:3"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5539,7 +5541,8 @@
           "slotId": "m1:4"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5552,7 +5555,8 @@
           "slotId": "m1:5"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5565,7 +5569,8 @@
           "slotId": "m1:6"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5578,7 +5583,8 @@
           "slotId": "m1:7"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5591,7 +5597,8 @@
           "slotId": "m1:8"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5604,7 +5611,8 @@
           "slotId": "m1:9"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5617,7 +5625,8 @@
           "slotId": "m1:10"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5630,7 +5639,8 @@
           "slotId": "m1:11"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5643,7 +5653,8 @@
           "slotId": "m1:12"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5656,7 +5667,8 @@
           "slotId": "m1:13"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5669,7 +5681,8 @@
           "slotId": "m1:14"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5682,7 +5695,8 @@
           "slotId": "m1:15"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5695,7 +5709,8 @@
           "slotId": "m1:16"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5708,7 +5723,8 @@
           "slotId": "m1:17"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5721,7 +5737,8 @@
           "slotId": "m1:18"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5734,7 +5751,8 @@
           "slotId": "m1:19"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5747,7 +5765,8 @@
           "slotId": "m1:20"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5760,7 +5779,8 @@
           "slotId": "m1:21"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5773,7 +5793,8 @@
           "slotId": "m1:22"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5786,7 +5807,8 @@
           "slotId": "m1:23"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5799,7 +5821,8 @@
           "slotId": "m1:24"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5812,7 +5835,8 @@
           "slotId": "m1:25"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5825,7 +5849,8 @@
           "slotId": "m1:26"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5838,7 +5863,8 @@
           "slotId": "m1:27"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5851,7 +5877,8 @@
           "slotId": "m1:28"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5864,7 +5891,8 @@
           "slotId": "m1:29"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5877,7 +5905,8 @@
           "slotId": "m1:30"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5890,7 +5919,8 @@
           "slotId": "m1:31"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5903,7 +5933,8 @@
           "slotId": "m1:32"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5916,7 +5947,8 @@
           "slotId": "m1:33"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5929,7 +5961,8 @@
           "slotId": "m1:34"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5942,7 +5975,8 @@
           "slotId": "m1:35"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5955,7 +5989,8 @@
           "slotId": "m1:36"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5968,7 +6003,8 @@
           "slotId": "m1:37"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5981,7 +6017,8 @@
           "slotId": "m1:38"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -5994,7 +6031,8 @@
           "slotId": "m1:39"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6007,7 +6045,8 @@
           "slotId": "m1:40"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6020,7 +6059,8 @@
           "slotId": "m1:41"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6033,7 +6073,8 @@
           "slotId": "m1:42"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6046,7 +6087,8 @@
           "slotId": "m1:43"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6059,7 +6101,8 @@
           "slotId": "m1:44"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6072,7 +6115,8 @@
           "slotId": "m1:45"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6085,7 +6129,8 @@
           "slotId": "m1:46"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6098,7 +6143,8 @@
           "slotId": "m1:47"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6111,7 +6157,8 @@
           "slotId": "m1:48"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6124,7 +6171,8 @@
           "slotId": "m1:49"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6137,7 +6185,8 @@
           "slotId": "m1:50"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6150,7 +6199,8 @@
           "slotId": "m1:51"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6163,7 +6213,8 @@
           "slotId": "m1:52"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6176,7 +6227,8 @@
           "slotId": "m1:53"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6189,7 +6241,8 @@
           "slotId": "m1:54"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6202,7 +6255,8 @@
           "slotId": "m1:55"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6215,7 +6269,8 @@
           "slotId": "m1:56"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6228,7 +6283,8 @@
           "slotId": "m1:57"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6241,7 +6297,8 @@
           "slotId": "m1:58"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6254,7 +6311,8 @@
           "slotId": "m1:59"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6267,7 +6325,8 @@
           "slotId": "m1:60"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6280,7 +6339,8 @@
           "slotId": "m1:61"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6293,7 +6353,8 @@
           "slotId": "m1:62"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6306,7 +6367,8 @@
           "slotId": "m1:63"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6319,7 +6381,8 @@
           "slotId": "m1:64"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6332,7 +6395,8 @@
           "slotId": "m1:65"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6345,7 +6409,8 @@
           "slotId": "m1:66"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6358,7 +6423,8 @@
           "slotId": "m1:67"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6371,7 +6437,8 @@
           "slotId": "m1:68"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6384,7 +6451,8 @@
           "slotId": "m1:69"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6397,7 +6465,8 @@
           "slotId": "m1:70"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6410,7 +6479,8 @@
           "slotId": "m1:71"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6423,7 +6493,8 @@
           "slotId": "m1:72"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6436,7 +6507,8 @@
           "slotId": "m1:73"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6449,7 +6521,8 @@
           "slotId": "m1:74"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6462,7 +6535,8 @@
           "slotId": "m1:75"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6475,7 +6549,8 @@
           "slotId": "m1:76"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6488,7 +6563,8 @@
           "slotId": "m1:77"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6501,7 +6577,8 @@
           "slotId": "m1:78"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6514,7 +6591,8 @@
           "slotId": "m1:79"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6527,7 +6605,8 @@
           "slotId": "m1:80"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6540,7 +6619,8 @@
           "slotId": "m1:81"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6553,7 +6633,8 @@
           "slotId": "m1:82"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6566,7 +6647,8 @@
           "slotId": "m1:83"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6579,7 +6661,8 @@
           "slotId": "m1:84"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6592,7 +6675,8 @@
           "slotId": "m1:85"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6605,7 +6689,8 @@
           "slotId": "m1:86"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6618,7 +6703,8 @@
           "slotId": "m1:87"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6631,7 +6717,8 @@
           "slotId": "m1:88"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6644,7 +6731,8 @@
           "slotId": "m1:89"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6657,7 +6745,8 @@
           "slotId": "m1:90"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6670,7 +6759,8 @@
           "slotId": "m1:91"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6683,7 +6773,8 @@
           "slotId": "m1:92"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6696,7 +6787,8 @@
           "slotId": "m1:93"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6709,7 +6801,8 @@
           "slotId": "m1:94"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6722,7 +6815,8 @@
           "slotId": "m1:95"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6735,7 +6829,8 @@
           "slotId": "m1:96"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6748,7 +6843,8 @@
           "slotId": "m1:97"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6761,7 +6857,8 @@
           "slotId": "m1:98"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6774,7 +6871,8 @@
           "slotId": "m1:99"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6787,7 +6885,8 @@
           "slotId": "m1:100"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6800,7 +6899,8 @@
           "slotId": "m1:101"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6813,7 +6913,8 @@
           "slotId": "m1:102"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6826,7 +6927,8 @@
           "slotId": "m1:103"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6839,7 +6941,8 @@
           "slotId": "m1:104"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6852,7 +6955,8 @@
           "slotId": "m1:105"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6865,7 +6969,8 @@
           "slotId": "m1:106"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6878,7 +6983,8 @@
           "slotId": "m1:107"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6891,7 +6997,8 @@
           "slotId": "m1:108"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6904,7 +7011,8 @@
           "slotId": "m1:109"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6917,7 +7025,8 @@
           "slotId": "m1:110"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6930,7 +7039,8 @@
           "slotId": "m1:111"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6943,7 +7053,8 @@
           "slotId": "m1:112"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6956,7 +7067,8 @@
           "slotId": "m1:113"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6969,7 +7081,8 @@
           "slotId": "m1:114"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6982,7 +7095,8 @@
           "slotId": "m1:115"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -6995,7 +7109,8 @@
           "slotId": "m1:116"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7008,7 +7123,8 @@
           "slotId": "m1:117"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7021,7 +7137,8 @@
           "slotId": "m1:118"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7034,7 +7151,8 @@
           "slotId": "m1:119"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7047,7 +7165,8 @@
           "slotId": "m1:120"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7060,7 +7179,8 @@
           "slotId": "m1:121"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7073,7 +7193,8 @@
           "slotId": "m1:122"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7086,7 +7207,8 @@
           "slotId": "m1:123"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7099,7 +7221,8 @@
           "slotId": "m1:124"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7112,7 +7235,8 @@
           "slotId": "m1:125"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7125,7 +7249,8 @@
           "slotId": "m1:126"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7138,7 +7263,8 @@
           "slotId": "m1:127"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7151,7 +7277,8 @@
           "slotId": "m1:128"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7164,7 +7291,8 @@
           "slotId": "m1:129"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7177,7 +7305,8 @@
           "slotId": "m1:130"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7190,7 +7319,8 @@
           "slotId": "m1:131"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7203,7 +7333,8 @@
           "slotId": "m1:132"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7216,7 +7347,8 @@
           "slotId": "m1:133"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7229,7 +7361,8 @@
           "slotId": "m1:134"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7242,7 +7375,8 @@
           "slotId": "m1:135"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7255,7 +7389,8 @@
           "slotId": "m1:136"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7268,7 +7403,8 @@
           "slotId": "m1:137"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7281,7 +7417,8 @@
           "slotId": "m1:138"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7294,7 +7431,8 @@
           "slotId": "m1:139"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7307,7 +7445,8 @@
           "slotId": "m1:140"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7320,7 +7459,8 @@
           "slotId": "m1:141"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7333,7 +7473,8 @@
           "slotId": "m1:142"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7346,7 +7487,8 @@
           "slotId": "m1:143"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7359,7 +7501,8 @@
           "slotId": "m1:144"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7372,7 +7515,8 @@
           "slotId": "m1:145"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7385,7 +7529,8 @@
           "slotId": "m1:146"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7398,7 +7543,8 @@
           "slotId": "m1:147"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7411,7 +7557,8 @@
           "slotId": "m1:148"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7424,7 +7571,8 @@
           "slotId": "m1:149"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7437,7 +7585,8 @@
           "slotId": "m1:150"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7450,7 +7599,8 @@
           "slotId": "m1:151"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7463,7 +7613,8 @@
           "slotId": "m1:152"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7476,7 +7627,8 @@
           "slotId": "m1:153"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7489,7 +7641,8 @@
           "slotId": "m1:154"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7502,7 +7655,8 @@
           "slotId": "m1:155"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7515,7 +7669,8 @@
           "slotId": "m1:156"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7528,7 +7683,8 @@
           "slotId": "m1:157"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7541,7 +7697,8 @@
           "slotId": "m1:158"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7554,7 +7711,8 @@
           "slotId": "m1:159"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7567,7 +7725,8 @@
           "slotId": "m1:160"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7580,7 +7739,8 @@
           "slotId": "m1:161"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7593,7 +7753,8 @@
           "slotId": "m1:162"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7606,7 +7767,8 @@
           "slotId": "m1:163"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7619,7 +7781,8 @@
           "slotId": "m1:164"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7632,7 +7795,8 @@
           "slotId": "m1:165"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7645,7 +7809,8 @@
           "slotId": "m1:166"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7658,7 +7823,8 @@
           "slotId": "m1:167"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7671,7 +7837,8 @@
           "slotId": "m1:168"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7684,7 +7851,8 @@
           "slotId": "m1:169"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7697,7 +7865,8 @@
           "slotId": "m1:170"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7710,7 +7879,8 @@
           "slotId": "m1:171"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7723,7 +7893,8 @@
           "slotId": "m1:172"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7736,7 +7907,8 @@
           "slotId": "m1:173"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7749,7 +7921,8 @@
           "slotId": "m1:174"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7762,7 +7935,8 @@
           "slotId": "m1:175"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7775,7 +7949,8 @@
           "slotId": "m1:176"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7788,7 +7963,8 @@
           "slotId": "m1:177"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7801,7 +7977,8 @@
           "slotId": "m1:178"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7814,7 +7991,8 @@
           "slotId": "m1:179"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7827,7 +8005,8 @@
           "slotId": "m1:180"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7840,7 +8019,8 @@
           "slotId": "m1:181"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7853,7 +8033,8 @@
           "slotId": "m1:182"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7866,7 +8047,8 @@
           "slotId": "m1:183"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7879,7 +8061,8 @@
           "slotId": "m1:184"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7892,7 +8075,8 @@
           "slotId": "m1:185"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7905,7 +8089,8 @@
           "slotId": "m1:186"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7918,7 +8103,8 @@
           "slotId": "m1:187"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7931,7 +8117,8 @@
           "slotId": "m1:188"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7944,7 +8131,8 @@
           "slotId": "m1:189"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7957,7 +8145,8 @@
           "slotId": "m1:190"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7970,7 +8159,8 @@
           "slotId": "m1:191"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7983,7 +8173,8 @@
           "slotId": "m1:192"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -7996,7 +8187,8 @@
           "slotId": "m1:193"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8009,7 +8201,8 @@
           "slotId": "m1:194"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8022,7 +8215,8 @@
           "slotId": "m1:195"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8035,7 +8229,8 @@
           "slotId": "m1:196"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8048,7 +8243,8 @@
           "slotId": "m1:197"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8061,7 +8257,8 @@
           "slotId": "m1:198"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8074,7 +8271,8 @@
           "slotId": "m1:199"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8087,7 +8285,8 @@
           "slotId": "m1:200"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8100,7 +8299,8 @@
           "slotId": "m1:201"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8113,7 +8313,8 @@
           "slotId": "m1:202"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8126,7 +8327,8 @@
           "slotId": "m1:203"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8139,7 +8341,8 @@
           "slotId": "m1:204"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8152,7 +8355,8 @@
           "slotId": "m1:205"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8165,7 +8369,8 @@
           "slotId": "m1:206"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8178,7 +8383,8 @@
           "slotId": "m1:207"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8191,7 +8397,8 @@
           "slotId": "m1:208"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8204,7 +8411,8 @@
           "slotId": "m1:209"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8217,7 +8425,8 @@
           "slotId": "m1:210"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8230,7 +8439,8 @@
           "slotId": "m1:211"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8243,7 +8453,8 @@
           "slotId": "m1:212"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8256,7 +8467,8 @@
           "slotId": "m1:213"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8269,7 +8481,8 @@
           "slotId": "m1:214"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8282,7 +8495,8 @@
           "slotId": "m1:215"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8295,7 +8509,8 @@
           "slotId": "m1:216"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8308,7 +8523,8 @@
           "slotId": "m1:217"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8321,7 +8537,8 @@
           "slotId": "m1:218"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8334,7 +8551,8 @@
           "slotId": "m1:219"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8380,7 +8598,8 @@
           "slotId": "m1:223"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8393,7 +8612,8 @@
           "slotId": "m1:224"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8406,7 +8626,8 @@
           "slotId": "m1:225"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8419,7 +8640,8 @@
           "slotId": "m1:226"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8432,7 +8654,8 @@
           "slotId": "m1:227"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8445,7 +8668,8 @@
           "slotId": "m1:228"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8458,7 +8682,8 @@
           "slotId": "m1:229"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8471,7 +8696,8 @@
           "slotId": "m1:230"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8484,7 +8710,8 @@
           "slotId": "m1:231"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8497,7 +8724,8 @@
           "slotId": "m1:232"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8510,7 +8738,8 @@
           "slotId": "m1:233"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8523,7 +8752,8 @@
           "slotId": "m1:234"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8536,7 +8766,8 @@
           "slotId": "m1:235"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8549,7 +8780,8 @@
           "slotId": "m1:236"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8562,7 +8794,8 @@
           "slotId": "m1:237"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8575,7 +8808,8 @@
           "slotId": "m1:238"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8588,7 +8822,8 @@
           "slotId": "m1:239"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8601,7 +8836,8 @@
           "slotId": "m1:240"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8614,7 +8850,8 @@
           "slotId": "m1:241"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8627,7 +8864,8 @@
           "slotId": "m1:242"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8640,7 +8878,8 @@
           "slotId": "m1:243"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8653,7 +8892,8 @@
           "slotId": "m1:244"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8666,7 +8906,8 @@
           "slotId": "m1:245"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8679,7 +8920,8 @@
           "slotId": "m1:246"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8692,7 +8934,8 @@
           "slotId": "m1:247"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8705,7 +8948,8 @@
           "slotId": "m1:248"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8718,7 +8962,8 @@
           "slotId": "m1:249"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8731,7 +8976,8 @@
           "slotId": "m1:250"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8744,7 +8990,8 @@
           "slotId": "m1:251"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8757,7 +9004,8 @@
           "slotId": "m1:252"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8770,7 +9018,8 @@
           "slotId": "m1:253"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8783,7 +9032,8 @@
           "slotId": "m1:254"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8796,7 +9046,8 @@
           "slotId": "m1:255"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8809,7 +9060,8 @@
           "slotId": "m1:256"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8822,7 +9074,8 @@
           "slotId": "m1:257"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8835,7 +9088,8 @@
           "slotId": "m1:258"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8848,7 +9102,8 @@
           "slotId": "m1:259"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8861,7 +9116,8 @@
           "slotId": "m1:260"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8874,7 +9130,8 @@
           "slotId": "m1:261"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8887,7 +9144,8 @@
           "slotId": "m1:262"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8900,7 +9158,8 @@
           "slotId": "m1:263"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8913,7 +9172,8 @@
           "slotId": "m1:264"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8926,7 +9186,8 @@
           "slotId": "m1:265"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8939,7 +9200,8 @@
           "slotId": "m1:266"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8952,7 +9214,8 @@
           "slotId": "m1:267"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8965,7 +9228,8 @@
           "slotId": "m1:268"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8978,7 +9242,8 @@
           "slotId": "m1:269"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -8991,7 +9256,8 @@
           "slotId": "m1:270"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -9004,7 +9270,8 @@
           "slotId": "m1:271"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -9017,7 +9284,8 @@
           "slotId": "m1:272"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -9030,7 +9298,8 @@
           "slotId": "m1:273"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -9043,7 +9312,8 @@
           "slotId": "m1:274"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -9056,7 +9326,8 @@
           "slotId": "m1:275"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -9069,7 +9340,8 @@
           "slotId": "m1:276"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -9082,7 +9354,8 @@
           "slotId": "m1:277"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -9095,7 +9368,8 @@
           "slotId": "m1:278"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -9108,7 +9382,8 @@
           "slotId": "m1:279"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -9242,7 +9517,8 @@
           "slotId": "m1:291"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -9255,7 +9531,8 @@
           "slotId": "m1:292"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -9268,7 +9545,8 @@
           "slotId": "m1:293"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -9281,7 +9559,8 @@
           "slotId": "m1:294"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -9294,7 +9573,8 @@
           "slotId": "m1:295"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -9307,7 +9587,8 @@
           "slotId": "m1:296"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -9320,7 +9601,8 @@
           "slotId": "m1:297"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -9333,7 +9615,8 @@
           "slotId": "m1:298"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       },
       {
@@ -9346,7 +9629,8 @@
           "slotId": "m1:299"
         },
         "answer": {
-          "present": true
+          "present": true,
+          "sources": []
         }
       }
     ],
@@ -26729,12 +27013,12 @@
     }
   },
   "output": {
-    "methodologyVersion": "2026.11.1",
-    "methodologyHash": "f5661011aa4e58a84cd2f84ddef4f80955f11a4fa47a8eea5c989c20bf3bcb44",
+    "methodologyVersion": "2026.11.2",
+    "methodologyHash": "3693bebdc499730b12b2e42f71af4ba8ee29c5287a9f93830577676c75cc4196",
     "intentSetId": "is_0123456789abcdef",
     "intentSetHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
     "extractorConfigHash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-    "seed": "087bfb3c23d8f0f6bb7bde1fdd99e179afe00d80c0305d9dcf3ae4d691fd49a5",
+    "seed": "d43dbe63004f3aaa572404f3d2a279291485775058b090917ef5cf7b8402f6c2",
     "computedAt": "2026-11-20T19:00:00.000Z",
     "target": {
       "entityKey": "place:target",
@@ -26744,7 +27028,7 @@
       "overall": {
         "value": 47,
         "lower": 40,
-        "upper": 53,
+        "upper": 54,
         "atMost": null,
         "level": "on_the_list",
         "levelDisplay": {
@@ -26766,8 +27050,8 @@
           },
           "prominence": {
             "estimate": 0.9894640488193158,
-            "lower": 0.9855572973997281,
-            "upper": 0.9929942696141942,
+            "lower": 0.9854434233084991,
+            "upper": 0.9928427820103563,
             "typicalPosition": 1
           }
         }
@@ -26777,8 +27061,8 @@
         "chatgpt": {
           "score": {
             "value": 47,
-            "lower": 33,
-            "upper": 61,
+            "lower": 32,
+            "upper": 62,
             "atMost": null,
             "level": "on_the_list",
             "levelDisplay": {
@@ -26801,8 +27085,8 @@
               },
               "prominence": {
                 "estimate": 0.9889417989417988,
-                "lower": 0.9796252087542262,
-                "upper": 0.9955855945448828,
+                "lower": 0.9799581631136552,
+                "upper": 0.9954843381416997,
                 "typicalPosition": 1
               }
             }
@@ -26817,7 +27101,7 @@
         "gemini": {
           "score": {
             "value": 46,
-            "lower": 33,
+            "lower": 32,
             "upper": 61,
             "atMost": null,
             "level": "on_the_list",
@@ -26841,8 +27125,8 @@
               },
               "prominence": {
                 "estimate": 0.9910492505353318,
-                "lower": 0.982971878130329,
-                "upper": 0.9970421558689492,
+                "lower": 0.9826010411099162,
+                "upper": 0.9969420682927782,
                 "typicalPosition": 1
               }
             }
@@ -26855,46 +27139,6 @@
           }
         },
         "google-ai-overview": {
-          "score": {
-            "value": 47,
-            "lower": 33,
-            "upper": 61,
-            "atMost": null,
-            "level": "on_the_list",
-            "levelDisplay": {
-              "kind": "between",
-              "from": "sometimes",
-              "to": "on_the_list"
-            },
-            "sufficiency": "orientative",
-            "preliminary": true,
-            "components": {
-              "recommendationRate": {
-                "estimate": 0.4725,
-                "lower": 0.33765346952275854,
-                "upper": 0.6104901524512896,
-                "successes": 25,
-                "trials": 60,
-                "effectiveTrials": 49.001592551757945,
-                "designEffect": 1.2244499999999996,
-                "method": "jeffreys_eff"
-              },
-              "prominence": {
-                "estimate": 0.9889417989417988,
-                "lower": 0.9803039540439901,
-                "upper": 0.9956256451176813,
-                "typicalPosition": 1
-              }
-            }
-          },
-          "counts": {
-            "recommended": 25,
-            "incidental": 0,
-            "negative": 0,
-            "validCaptures": 60
-          }
-        },
-        "google-ai-mode": {
           "score": {
             "value": 47,
             "lower": 33,
@@ -26921,8 +27165,48 @@
               },
               "prominence": {
                 "estimate": 0.9889417989417988,
-                "lower": 0.9795779010012146,
-                "upper": 0.9954094473633193,
+                "lower": 0.9799173008913606,
+                "upper": 0.9956142857341562,
+                "typicalPosition": 1
+              }
+            }
+          },
+          "counts": {
+            "recommended": 25,
+            "incidental": 0,
+            "negative": 0,
+            "validCaptures": 60
+          }
+        },
+        "google-ai-mode": {
+          "score": {
+            "value": 47,
+            "lower": 33,
+            "upper": 61,
+            "atMost": null,
+            "level": "on_the_list",
+            "levelDisplay": {
+              "kind": "between",
+              "from": "sometimes",
+              "to": "on_the_list"
+            },
+            "sufficiency": "orientative",
+            "preliminary": true,
+            "components": {
+              "recommendationRate": {
+                "estimate": 0.4725,
+                "lower": 0.33765346952275854,
+                "upper": 0.6104901524512896,
+                "successes": 25,
+                "trials": 60,
+                "effectiveTrials": 49.001592551757945,
+                "designEffect": 1.2244499999999996,
+                "method": "jeffreys_eff"
+              },
+              "prominence": {
+                "estimate": 0.9889417989417988,
+                "lower": 0.9795118351537204,
+                "upper": 0.9954863179200375,
                 "typicalPosition": 1
               }
             }
@@ -26938,7 +27222,7 @@
           "score": {
             "value": 50,
             "lower": 35,
-            "upper": 66,
+            "upper": 65,
             "atMost": null,
             "level": "on_the_list",
             "levelDisplay": {
@@ -26946,7 +27230,7 @@
               "from": "sometimes",
               "to": "on_the_list"
             },
-            "sufficiency": "insufficient",
+            "sufficiency": "orientative",
             "preliminary": true,
             "components": {
               "recommendationRate": {
@@ -27013,8 +27297,8 @@
             },
             "prominence": {
               "estimate": 0.9198198198198181,
-              "lower": 0.9179070144581607,
-              "upper": 0.9221709382644021,
+              "lower": 0.9179951663407296,
+              "upper": 0.9221601946272261,
               "typicalPosition": 2
             }
           }
@@ -27395,7 +27679,7 @@
         "targetScore": {
           "value": 50,
           "lower": 34,
-          "upper": 66,
+          "upper": 65,
           "atMost": null,
           "level": "on_the_list",
           "levelDisplay": {
@@ -27445,7 +27729,7 @@
         },
         "targetScore": {
           "value": 50,
-          "lower": 34,
+          "lower": 35,
           "upper": 66,
           "atMost": null,
           "level": "on_the_list",
@@ -27496,7 +27780,7 @@
         },
         "targetScore": {
           "value": 50,
-          "lower": 34,
+          "lower": 35,
           "upper": 66,
           "atMost": null,
           "level": "on_the_list",
@@ -27547,7 +27831,7 @@
         },
         "targetScore": {
           "value": 50,
-          "lower": 35,
+          "lower": 34,
           "upper": 65,
           "atMost": null,
           "level": "on_the_list",
@@ -27556,7 +27840,7 @@
             "from": "sometimes",
             "to": "on_the_list"
           },
-          "sufficiency": "orientative",
+          "sufficiency": "insufficient",
           "preliminary": true,
           "components": {
             "recommendationRate": {
@@ -27599,7 +27883,7 @@
         "targetScore": {
           "value": 50,
           "lower": 34,
-          "upper": 65,
+          "upper": 66,
           "atMost": null,
           "level": "on_the_list",
           "levelDisplay": {
@@ -27649,7 +27933,7 @@
         },
         "targetScore": {
           "value": 15,
-          "lower": 2,
+          "lower": 3,
           "upper": 41,
           "atMost": null,
           "level": "sometimes",
@@ -27699,7 +27983,7 @@
         "targetScore": {
           "value": 20,
           "lower": 7,
-          "upper": 41,
+          "upper": 40,
           "atMost": null,
           "level": "sometimes",
           "levelDisplay": {
@@ -27965,6 +28249,22 @@
         }
       }
     ],
+    "citations": {
+      "answers": 284,
+      "answersCiting": 0,
+      "citations": 0,
+      "unattributed": 0,
+      "target": null,
+      "top": [],
+      "topByEngine": {
+        "chatgpt": [],
+        "gemini": [],
+        "google-ai-overview": [],
+        "google-ai-mode": [],
+        "perplexity": []
+      },
+      "competitorOnly": []
+    },
     "canonicalOnly": {
       "target": {
         "value": 98,
@@ -27991,7 +28291,7 @@
           },
           "prominence": {
             "estimate": 0.979293982688498,
-            "lower": 0.944748561987087,
+            "lower": 0.9446703028236323,
             "upper": 0.979293982688498,
             "typicalPosition": 1
           }
@@ -28026,7 +28326,7 @@
               "prominence": {
                 "estimate": 0.9108979038481592,
                 "lower": 0.9108979038481592,
-                "upper": 0.9290797042173222,
+                "upper": 0.9291208932507199,
                 "typicalPosition": 2
               }
             }
@@ -28106,7 +28406,7 @@
           "entityKey": "place:rival3",
           "score": {
             "value": 13,
-            "lower": 4,
+            "lower": 5,
             "upper": 28,
             "atMost": null,
             "level": "sometimes",

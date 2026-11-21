@@ -5,6 +5,7 @@ import type {
   MeasurementPlan,
   ResolvedMention,
 } from "@reranker/schema/measurement";
+import type { CitedSource } from "../src/citations";
 import { methodology } from "../src/methodology";
 import { computeFreeReportStats, type FreeReportInput } from "../src/report";
 import {
@@ -14,6 +15,7 @@ import {
   INTENTS,
   ladder,
   mention,
+  PER_ENGINE,
   plan,
   RIVAL,
   reportInput,
@@ -121,6 +123,44 @@ function templateMentions(slot: number): ResolvedMention[] {
   ];
 }
 
+const TARGET_INPUT = {
+  entityKey: TARGET,
+  displayName: "Clínica Sonrisas",
+  entityKind: "business",
+} as const;
+const SITE = "https://www.clinicasonrisas.com.co";
+const GROUNDING = "https://vertexaisearch.cloud.google.com/grounding-api-redirect/";
+
+// The target's site where it is recommended, a directory both share, sources only rivals get,
+// a page cited twice with campaign tags, a retrieved page nobody cites, and Gemini's grounding
+// redirects, one resolved and one not.
+function citing(slot: number): CitedSource[] {
+  const gemini = ENGINES[Math.floor(slot / PER_ENGINE)] === "gemini";
+  return [
+    ...(slot % 2 === 0 ? [{ url: `${SITE}/implantes`, cited: true }] : []),
+    ...(slot % 3 === 0 ? [{ url: "https://www.doctoralia.co/clinica-sonrisas", cited: true }] : []),
+    ...(slot % 2 === 1
+      ? [
+          { url: "https://www.topdoctors.com.co/rival/", cited: true },
+          { url: "https://rival0.com.co/?utm_source=openai", cited: true },
+          { url: "https://rival0.com.co/", cited: true },
+        ]
+      : []),
+    ...(slot % 5 === 0 ? [{ url: "https://www.google.com/maps/place/Rival", cited: true }] : []),
+    { url: "https://www.pullman.com.co/", cited: false },
+    ...(gemini
+      ? [
+          {
+            url: `${GROUNDING}a${slot}`,
+            resolvedUrl: "https://es.wikipedia.org/wiki/Implante",
+            cited: true,
+          },
+          { url: `${GROUNDING}b${slot}`, cited: true },
+        ]
+      : []),
+  ];
+}
+
 function cases(): Record<VectorName, FreeReportInput> {
   const asOf = (h: number) => new Date(Date.UTC(2026, 10, 20, h));
 
@@ -128,6 +168,7 @@ function cases(): Record<VectorName, FreeReportInput> {
     {
       failed: { chatgpt: 3 },
       notPresent: { gemini: 4 },
+      sources: citing,
       mentions: (slot) => [
         ...ladder(slot),
         ...(slot % 4 === 0
@@ -138,6 +179,7 @@ function cases(): Record<VectorName, FreeReportInput> {
     },
     {
       reportId: "fr_01JDB4Q7W2M8N3P5R6S9T0V1A1",
+      target: { ...TARGET_INPUT, domains: ["clinicasonrisas.com.co", "instagram.com/sonrisas"] },
       asOf: asOf(14),
       plan: planOf({ id: "is_0123456789abcdef", kind: "seed" }),
     },
@@ -182,7 +224,7 @@ function cases(): Record<VectorName, FreeReportInput> {
       ...(template.captures[10]?.capture as FreeReportInput["captures"][number]["capture"]),
       id: "cap_0010_retry",
     },
-    answer: { present: true },
+    answer: { present: true, sources: [] },
   });
   template.extractions.push({
     ...(template.extractions[10] as FreeReportInput["extractions"][number]),
@@ -204,6 +246,7 @@ function cases(): Record<VectorName, FreeReportInput> {
   const invisible = reportInput(
     {
       failed: { gemini: 8 },
+      sources: citing,
       mentions: (slot) => [
         ...(slot % 5 === 0
           ? [mention({ entityKey: TARGET, stance: "incidental", ordinal: null })]
@@ -214,6 +257,7 @@ function cases(): Record<VectorName, FreeReportInput> {
     },
     {
       reportId: "fr_01JDB4Q7W2M8N3P5R6S9T0V1A5",
+      target: { ...TARGET_INPUT, domains: [SITE] },
       asOf: asOf(18),
       plan: planOf({ id: "is_0123456789abcdef", kind: "seed" }),
     },
