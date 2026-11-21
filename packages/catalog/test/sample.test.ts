@@ -1,10 +1,12 @@
 import type { EngineId } from "@reranker/schema";
 import { MeasurementPlan } from "@reranker/schema/measurement";
+import { rngFromSeed } from "@reranker/stats";
 import fc from "fast-check";
 import { describe, expect, test } from "vitest";
 import { getGeo } from "../src/geo/resolve";
 import { jcs, sha256Hex, variantTemplates } from "../src/hash";
-import { planMeasurement } from "../src/sample";
+import { drawVariants, planMeasurement } from "../src/sample";
+import { variantPool } from "../src/variants";
 import { dentalSet } from "./fixtures/intent-set";
 
 const ENGINES: readonly EngineId[] = [
@@ -199,18 +201,29 @@ describe("a seed intent shorter than 30 paraphrases", () => {
   test("property: the plan keeps its design, no paraphrase drawn twice", () =>
     fc.assert(fc.property(fc.string({ minLength: 1 }), (reportId) => checkDesign(plan(reportId)))));
 
+  // The plan's first draw for a report: its first intent, seeded by sha256(reportId).
+  const firstIntent = short.intents.find((i) => i.freeReport) as (typeof short.intents)[number];
+  const pool = variantPool(short, firstIntent);
+  const draw = (reportId: string) => drawVariants(pool, 8, rngFromSeed(sha256Hex(reportId)));
+
+  test("the plan draws exactly what drawVariants draws from the report's seed", () => {
+    for (const reportId of ["report-0", "report-1", "report-2"]) {
+      const one = planMeasurement({ ...input(reportId), intentSet: short, engines: ["gemini"] });
+      const firstDraw = one.observations.filter((o) => o.intentId === firstIntent.intentId);
+      expect(firstDraw.map((o) => o.paraphraseId)).toEqual(
+        draw(reportId).map((c) => c.paraphraseId),
+      );
+    }
+  });
+
+  // Draws alone, not whole plans: materializing 3,000 plans is CPU-bound and outran the test
+  // timeout on a loaded CI runner.
   test("every non-canonical paraphrase is drawn equally often", () => {
     const runs = 3000;
     const counts = new Map<string, number>();
     for (let r = 0; r < runs; r++) {
-      const one = planMeasurement({
-        ...input(`report-${r}`),
-        intentSet: short,
-        engines: ["gemini"],
-        intents: 1,
-      });
-      for (const o of one.observations) {
-        if (!o.isCanonical) counts.set(o.paraphraseId, (counts.get(o.paraphraseId) ?? 0) + 1);
+      for (const c of draw(`report-${r}`)) {
+        if (!c.isCanonical) counts.set(c.paraphraseId, (counts.get(c.paraphraseId) ?? 0) + 1);
       }
     }
     // Seven draws among the eleven paraphrases that are not the canonical's.

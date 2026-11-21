@@ -82,7 +82,7 @@ function pickIntents(set: IntentSet, neighborhood: string | null, count: number)
  * Uniform among eligible candidates at each step, so variants alike under the constraints are
  * equally likely.
  */
-function drawVariants(
+export function drawVariants(
   pool: readonly VariantCandidate[],
   count: number,
   rng: Rng,
