@@ -7,20 +7,23 @@
     ".": "./src/index.ts",
     "./methodology": "./src/methodology.ts",
     "./persist": "./src/persist.ts",
-    "./telemetry": "./src/telemetry.ts"
+    "./telemetry": "./src/telemetry.ts",
+    "./changepoint": "./src/changepoint/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run --project unit --coverage --passWithNoTests && vitest run --project heavy",
     "test:perf": "vitest run --project perf --passWithNoTests",
     "test:integration": "vitest run --project integration --passWithNoTests",
-    "vectors:write": "tsx scripts/write-vectors.ts"
+    "vectors:write": "tsx scripts/write-vectors.ts",
+    "changepoint:calibrate": "tsx simulations/calibrate-h.ts"
   },
   "dependencies": {
     "@opentelemetry/api": "catalog:",
     "@reranker/db": "workspace:*",
     "@reranker/schema": "workspace:*",
     "@reranker/telemetry": "workspace:*",
+    "@stdlib/math-base-special-betaln": "catalog:",
     "@stdlib/stats-base-dists-beta-quantile": "catalog:",
     "canonicalize": "catalog:",
     "drizzle-orm": "catalog:"
