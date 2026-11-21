@@ -4,7 +4,7 @@ import type { SpendContext } from "@reranker/jobs";
 import { requireEnv } from "@reranker/testing/env";
 import { afterAll, beforeAll, expect, test, vi } from "vitest";
 import type { GenerationLanguage } from "../src/generate/prompts";
-import { type DraftIntent, judge } from "../src/generate/providers";
+import { type DraftIntent, judge, reviewNative } from "../src/generate/providers";
 
 const spend: SpendContext = {
   purpose: "contract-test",
@@ -63,6 +63,7 @@ const CASES: Record<GenerationLanguage, Case> = {
 beforeAll(() => {
   vi.stubEnv("APP_ENV", process.env.APP_ENV || "development");
   vi.stubEnv("OPENAI_API_KEY", requireEnv("OPENAI_API_KEY_CI"));
+  vi.stubEnv("GEMINI_API_KEY", requireEnv("GEMINI_API_KEY_CI"));
 });
 afterAll(async () => {
   vi.unstubAllEnvs();
@@ -100,5 +101,25 @@ test.each(Object.entries(CASES))(
     }));
     const verdicts = await judge(intent, candidates, ctx());
     expect(verdicts).toEqual([...c.lists.map(() => true), false]);
+  },
+);
+
+// Twelve short review calls, one per language and provider: about two US cents.
+test.each(Object.entries(CASES))(
+  "%s: both native reviewers keep a list of the best and reject a cheaper one",
+  async (language, c) => {
+    const noun = typeof c.noun === "string" ? c.noun : c.noun.text;
+    const req = {
+      language: language as GenerationLanguage,
+      registerProfile: "neutral" as const,
+      category: noun,
+      noun,
+      intent: { kind: "ranking" as const, canonical: c.canonical },
+      items: [...c.lists, c.otherQualifier].map((text) => ({ role: "paraphrase" as const, text })),
+    };
+    for (const provider of ["openai", "gemini"] as const) {
+      const verdicts = await reviewNative(provider, req, ctx());
+      expect(verdicts.map((v) => v?.keep)).toEqual([...c.lists.map(() => true), false]);
+    }
   },
 );
