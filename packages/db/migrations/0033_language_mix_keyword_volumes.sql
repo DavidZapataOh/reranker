@@ -1,0 +1,1 @@
+ALTER TABLE "public_panel"."language_mixes" ADD COLUMN "keyword_volumes" jsonb;

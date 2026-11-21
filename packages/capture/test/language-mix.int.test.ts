@@ -65,6 +65,7 @@ describe("estimateLanguageMix", () => {
     expect(mix.asOf).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     expect(await rowOf()).toMatchObject({
       volumes: { en: 10_400, es: 1250 },
+      keywordVolumes: { "dentist near me": 10_400, "dentista cerca de mi": 1250 },
       cost_amount_micros: 90_000,
     });
 
