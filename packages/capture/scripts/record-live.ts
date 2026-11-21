@@ -2,7 +2,7 @@
  * Records real DataForSEO production answers for local-business questions so the parsers are
  * tested on what the engines actually return, not on the sandbox's canned answers.
  *
- * Usage: pnpm --filter @reranker/capture record:live <empty output dir>
+ * Usage: pnpm --filter @reranker/capture record:live <empty output dir> [spanish|languages]
  * Each file holds a response's exact wire bytes. Every call is charged to the spend ledger as
  * `contract-test`, and the run refuses to start above its budget.
  */
@@ -36,7 +36,9 @@ const ALL = Object.keys(FILE) as (keyof typeof FILE)[];
 
 // Local-business questions in Spanish, plus navigational ones Google answers without an AI
 // Overview; two of those in case one starts showing it.
-const CASES: { name: string; geoKey: GeoKey; prompt: string; engines: (keyof typeof FILE)[] }[] = [
+type Case = { name: string; geoKey: GeoKey; prompt: string; engines: (keyof typeof FILE)[] };
+
+const SPANISH: Case[] = [
   {
     name: "dentistas-medellin",
     geoKey: MEDELLIN,
@@ -69,8 +71,73 @@ const CASES: { name: string; geoKey: GeoKey; prompt: string; engines: (keyof typ
   },
 ];
 
-// Well under a day's contract-test cap: about twenty calls at US$0.004.
-const BUDGET_MICROS = 100_000;
+// The other measurement languages, each asked natively in its main market's largest city, so the
+// extractors are measured on answers written in them. The last question of each tends to draw
+// warnings, the negative mentions a recommendation list rarely has.
+const LANGUAGE_QUESTIONS: Record<string, { geoKey: GeoKey; prompts: [string, string][] }> = {
+  en: {
+    geoKey: "us-c1023191",
+    prompts: [
+      ["dentists-new-york", "best dentists in New York"],
+      ["restaurants-new-york", "best restaurants in New York"],
+      ["car-repair-new-york", "reliable auto repair shop in New York"],
+      ["car-repair-avoid-new-york", "auto repair shops to avoid in New York"],
+    ],
+  },
+  pt: {
+    geoKey: "br-c1001773",
+    prompts: [
+      ["dentistas-sao-paulo", "melhores dentistas em São Paulo"],
+      ["restaurantes-sao-paulo", "melhores restaurantes em São Paulo"],
+      ["oficina-sao-paulo", "oficina mecânica de confiança em São Paulo"],
+      ["oficina-evitar-sao-paulo", "oficinas mecânicas para evitar em São Paulo"],
+    ],
+  },
+  fr: {
+    geoKey: "fr-c1006094",
+    prompts: [
+      ["dentistes-paris", "meilleurs dentistes à Paris"],
+      ["restaurants-paris", "meilleurs restaurants à Paris"],
+      ["garage-paris", "garage automobile de confiance à Paris"],
+      ["garage-eviter-paris", "garages automobiles à éviter à Paris"],
+    ],
+  },
+  de: {
+    geoKey: "de-c1003854",
+    prompts: [
+      ["zahnaerzte-berlin", "beste Zahnärzte in Berlin"],
+      ["restaurants-berlin", "beste Restaurants in Berlin"],
+      ["werkstatt-berlin", "zuverlässige Autowerkstatt in Berlin"],
+      ["werkstatt-meiden-berlin", "Autowerkstätten in Berlin, die man meiden sollte"],
+    ],
+  },
+  it: {
+    geoKey: "it-c9206269",
+    prompts: [
+      ["dentisti-roma", "migliori dentisti a Roma"],
+      ["ristoranti-roma", "migliori ristoranti a Roma"],
+      ["officina-roma", "officina meccanica affidabile a Roma"],
+      ["officina-evitare-roma", "officine meccaniche da evitare a Roma"],
+    ],
+  },
+};
+
+const LANGUAGES: Case[] = Object.entries(LANGUAGE_QUESTIONS).flatMap(([language, q]) =>
+  q.prompts.map(
+    ([name, prompt]): Case => ({
+      name: `${language}-${name}`,
+      geoKey: q.geoKey,
+      prompt,
+      engines: ["chatgpt", "google-ai-overview"],
+    }),
+  ),
+);
+
+// Well under a day's contract-test cap: at most forty calls at US$0.004.
+const SETS: Record<string, { cases: Case[]; budgetMicros: number }> = {
+  spanish: { cases: SPANISH, budgetMicros: 100_000 },
+  languages: { cases: LANGUAGES, budgetMicros: 200_000 },
+};
 
 const MEASUREMENT = "recording";
 
@@ -107,13 +174,16 @@ function reported(bytes: Uint8Array): { status: unknown; cost: unknown; model: u
   }
 }
 
-async function main(outDir: string): Promise<boolean> {
+async function main(
+  outDir: string,
+  set: { cases: Case[]; budgetMicros: number },
+): Promise<boolean> {
   mkdirSync(outDir, { recursive: true });
   if (readdirSync(outDir).length > 0) throw new Error(`${outDir} is not empty`);
 
-  const calls = CASES.flatMap((c) => c.engines.map((engine) => ({ ...c, engine })));
+  const calls = set.cases.flatMap((c) => c.engines.map((engine) => ({ ...c, engine })));
   const total = calls.reduce((sum, c) => sum + ENGINES[c.engine].estimate.live.amount_micros, 0);
-  if (total > BUDGET_MICROS) throw new Error(`Estimated ${total} micro-USD exceeds the budget`);
+  if (total > set.budgetMicros) throw new Error(`Estimated ${total} micro-USD exceeds the budget`);
 
   const refId = randomUUID();
   const summary = ["| file | status | cost | model | ms |", "|---|---|---|---|---|"];
@@ -162,10 +232,12 @@ async function main(outDir: string): Promise<boolean> {
   return ok;
 }
 
-const outDir = process.argv[2];
-if (!outDir) throw new Error("Usage: record-live.ts <empty output dir>");
+const [outDir, setName = "spanish"] = process.argv.slice(2);
+const set = SETS[setName];
+if (!outDir || !set)
+  throw new Error("Usage: record-live.ts <empty output dir> [spanish|languages]");
 try {
-  process.exitCode = (await main(resolve(outDir))) ? 0 : 1;
+  process.exitCode = (await main(resolve(outDir), set)) ? 0 : 1;
 } finally {
   await endPools();
 }
