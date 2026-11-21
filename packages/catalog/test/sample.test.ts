@@ -3,7 +3,7 @@ import { MeasurementPlan } from "@reranker/schema/measurement";
 import fc from "fast-check";
 import { describe, expect, test } from "vitest";
 import { getGeo } from "../src/geo/resolve";
-import { jcs, sha256Hex } from "../src/hash";
+import { jcs, sha256Hex, variantTemplates } from "../src/hash";
 import { planMeasurement } from "../src/sample";
 import { dentalSet } from "./fixtures/intent-set";
 
@@ -168,4 +168,53 @@ describe("planMeasurement", () => {
 
   test("the sampler seed is sha256(reportId) as hex", () =>
     expect(planMeasurement(input("r-7")).seed).toBe(sha256Hex("r-7")));
+});
+
+describe("a seed intent shorter than 30 paraphrases", () => {
+  // Twelve paraphrases per intent, the canonical among them: what a narrow seed intent can end with.
+  const short = {
+    ...set,
+    paraphrases: set.intents.flatMap((intent) => {
+      const own = set.paraphrases.filter((p) => p.intentId === intent.intentId);
+      const extra = [9, 10, 11].map((n) => ({
+        ...(own[1] as (typeof own)[number]),
+        paraphraseId: `${intent.intentId}.p${n}`,
+        text: `${own[1]?.text} (${n})`,
+      }));
+      return [...own, ...extra];
+    }),
+  };
+  const plan = (reportId: string) => planMeasurement({ ...input(reportId), intentSet: short });
+
+  test("each intent really has 12 paraphrases and its variant count is 12 × (personas + 1)", () => {
+    const perIntent = Map.groupBy(short.paraphrases, (p) => p.intentId);
+    for (const ps of perIntent.values()) expect(ps).toHaveLength(12);
+    const templates = variantTemplates(short);
+    expect(templates).toHaveLength(short.intents.length * 12 * (short.personas.length + 1));
+    expect(new Set(templates.map((t) => `${t.paraphraseId}|${t.personaId}`)).size).toBe(
+      templates.length,
+    );
+  });
+
+  test("property: the plan keeps its design, no paraphrase drawn twice", () =>
+    fc.assert(fc.property(fc.string({ minLength: 1 }), (reportId) => checkDesign(plan(reportId)))));
+
+  test("every non-canonical paraphrase is drawn equally often", () => {
+    const runs = 3000;
+    const counts = new Map<string, number>();
+    for (let r = 0; r < runs; r++) {
+      const one = planMeasurement({
+        ...input(`report-${r}`),
+        intentSet: short,
+        engines: ["gemini"],
+        intents: 1,
+      });
+      for (const o of one.observations) {
+        if (!o.isCanonical) counts.set(o.paraphraseId, (counts.get(o.paraphraseId) ?? 0) + 1);
+      }
+    }
+    // Seven draws among the eleven paraphrases that are not the canonical's.
+    expect(counts.size).toBe(11);
+    for (const n of counts.values()) expect(Math.abs(n / runs - 7 / 11)).toBeLessThan(0.04);
+  });
 });
