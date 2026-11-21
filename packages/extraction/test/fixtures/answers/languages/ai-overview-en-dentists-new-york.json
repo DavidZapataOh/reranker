@@ -1,0 +1,33 @@
+{
+  "parserVersion": "ai-overview@1",
+  "engine": "google-ai-overview",
+  "channel": "ui-vendor",
+  "provider": "dataforseo",
+  "modelReported": null,
+  "present": true,
+  "markdown": "**Sky Dental** offers on-site endodontic and periodontic specialists alongside pediatric and cosmetic care, **Smile Dental Studio** features extended daily hours through **9:00 PM** , and **TriBeCa Dental Associates | Murray** provides multispecialty wellness and pediatric dentistry.[[1]](https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWI2ajcxemcwGAo)[[2]](https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMXdmazI0NjM4GAo)[[3]](https://www.google.com/searchviewer/10?svid=CCYSDyoNCgsvZy8xdGRoNHNwZBgK)Would you like to filter by **insurance acceptance**, **specific treatments** like cosmetic or pediatric care, or **another neighborhood** in New York?",
+  "sources": [
+    {
+      "url": "https://google.com/goto?url=CAESdgHEIkXXIqJT7LZxAqd4GXx1-RTaQXO_Mx32vyiAnrzpjQAc8RZRVr3-TmuaHwGgvGmRZkaVo2zVBIM5JB55vrjJ1nStdkv1Qmyq_RI_2H_A7K4_rBO4LJo0p1nzSwGo84JDsYeiaeIzhulOAegV5WvYIepDxfs",
+      "domain": "google.com",
+      "title": "Best Dentists in New York - Lip Fillers",
+      "cited": true
+    }
+  ],
+  "searchQueries": "unavailable",
+  "localBusinesses": [
+    {
+      "name": "Sky Dental",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWI2ajcxemcwGAo"
+    },
+    {
+      "name": "Smile Dental Studio",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMXdmazI0NjM4GAo"
+    },
+    {
+      "name": "TriBeCa Dental Associates | Murray",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSDyoNCgsvZy8xdGRoNHNwZBgK"
+    }
+  ],
+  "products": []
+}

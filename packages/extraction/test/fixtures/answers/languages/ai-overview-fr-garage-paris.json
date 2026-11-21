@@ -1,0 +1,107 @@
+{
+  "parserVersion": "ai-overview@1",
+  "engine": "google-ai-overview",
+  "channel": "ui-vendor",
+  "provider": "dataforseo",
+  "modelReported": null,
+  "present": true,
+  "markdown": "Voici `plusieurs garages automobiles bien notés et appréciés pour leur sérieux à Paris` :\n\n- **Garage Republique** (11e) – 133 Rue Amelot, 75011 Paris • Note : 4,8/5 (164 avis) • Tél. : +33 9 84 48 27 16 • Ouvert mar.–ven. 9h–19h, sam. 9h–18h.[[1]](https://www.google.com/searchviewer/10?svid=CCYSDyoNCgsvZy8xdGNfa2Z3YhgK)\n- **Garage de l'Île Saint-Louis Mannes Paris** (4e) – 5 Bd Henri IV, 75004 Paris • Note : 4,7/5 (77 avis) • Ouvert lun.–jeu. 8h30–12h30 et 14h–18h, ven. 8h30–12h30 et 14h–17h.[[1]](https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMXZoaG52M3NmGAo)\n- **Williamson Automobiles** (8e) – 11-13 Av. de Friedland, 75008 Paris • Note : 4,8/5 (204 avis) • Ouvert mar.–sam. 10h–19h.[[1]](https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMXZoaG52M3NmGAo)\n- **Garage MK** (13e) – 11 Rue du Dessous des Berges, 75013 Paris • Note : 4,9/5 (51 avis) • Ouvert lun.–ven. 9h–18h, sam. 9h–17h.[[1]](https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMXZoaG52M3NmGAo)\n- **AK Garage Paris** (20e) – 53 Rue des Frères Flavien, 75020 Paris • Note : 4,6/5 (86 avis) • Ouvert lun.–ven. 8h30–18h.[[1]](https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMXZoaG52M3NmGAo)\n- **Garage Saint Antoine** (11e) – 295 Rue du Faubourg Saint-Antoine, 75011 Paris • Note : 4,1/5 (161 avis) • Ouvert lun.–jeu. 8h–12h30 et 14h–19h, ven. 8h–12h30 et 14h–18h.[[1]](https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMXZoaG52M3NmGAo)\n- **GARAGE SAINT GEORGES** (19e) – 76 Avenue Secrétan, 75019 Paris • Fiche disponible sur [GARAGE SAINT GEORGES](https://google.com/goto?url=CAESjwEBxCJF13fEVCimbnlY-9F1wRqakv_k3c2SZzUMb0LApjUzhy3XiSdrD8TzV98bNofqY2Ut3MEI2Dl9ytQEKEE9CG407dDYR8MyPtTwNwO03q2doXXPMV-MxJca2aLHlQgCXXpsxbZxGZJrgsWOtJa7WJdvcPSUb1X7CxFtJIbQjYERt-mMT9z1nJo1r2t_qw).[[1]](https://google.com/goto?url=CAESjwEBxCJF13fEVCimbnlY-9F1wRqakv_k3c2SZzUMb0LApjUzhy3XiSdrD8TzV98bNofqY2Ut3MEI2Dl9ytQEKEE9CG407dDYR8MyPtTwNwO03q2doXXPMV-MxJca2aLHlQgCXXpsxbZxGZJrgsWOtJa7WJdvcPSUb1X7CxFtJIbQjYERt-mMT9z1nJo1r2t_qw)\n\nPrécisez votre **arrondissement** , le **type d'intervention** (entretien, freinage, diagnostic, carrosserie) et la **marque du véhicule** pour affiner ces adresses.",
+  "sources": [
+    {
+      "url": "https://google.com/goto?url=CAESgAEBxCJF10dhYjAncP79ywJFOTCRAqqhxJNaO2h9csC4Qgd8UO6VDXj_Ktg0e2x_kFpz8iTvszIx-C7p81HouNbXl7vzoO8twmJ4Ehh3AQqa7oNaRMxjJR7DAJAYbr4-NhBHD3EixSMtli9PNVOMy2jqc-cVn2pmESRoolRenarjgA",
+      "domain": "google.com",
+      "title": "Garage de confiance : r/paris - Reddit",
+      "cited": true
+    },
+    {
+      "url": "https://google.com/goto?url=CAESjwEBxCJF13fEVCimbnlY-9F1wRqakv_k3c2SZzUMb0LApjUzhy3XiSdrD8TzV98bNofqY2Ut3MEI2Dl9ytQEKEE9CG407dDYR8MyPtTwNwO03q2doXXPMV-MxJca2aLHlQgCXXpsxbZxGZJrgsWOtJa7WJdvcPSUb1X7CxFtJIbQjYERt-mMT9z1nJo1r2t_qw",
+      "domain": "google.com",
+      "title": "GARAGE SAINT GEORGES - Garage automobile à Paris | NosAvis.com",
+      "cited": true
+    }
+  ],
+  "searchQueries": "unavailable",
+  "localBusinesses": [
+    {
+      "name": "Mecanicien top garage diagnostic auto",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMXZoaG52M3NmGAo"
+    },
+    {
+      "name": "TSR AUTOMOBILE - REPROGRAMMATION MOTEUR",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMXNrN3ExMG5qGAo"
+    },
+    {
+      "name": "Garage Republique",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSDyoNCgsvZy8xdGNfa2Z3YhgK"
+    },
+    {
+      "name": "Garage de l'Île Saint-Louis Mannes Paris",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSDyoNCgsvZy8xdGRyd21zYhgK"
+    },
+    {
+      "name": "Mécanique Auto A Domicile et Mobile",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWx3NGQ1NjNrGAo"
+    },
+    {
+      "name": "CARS FACTORY",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMW5iNTU5cnN3GAo"
+    },
+    {
+      "name": "GARAGE PARIS 15 AUTO REPARATION MECANIQUE CARROSSERIE PEINTURE PARE BRISE VIDANGE REPARATION BOITE AUTOMATIQUE TOUTES MARQUES",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWI3M21xOGdtGAo"
+    },
+    {
+      "name": "CARFACE®",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWx6X2NuMjhfGAo"
+    },
+    {
+      "name": "Diagnostic automobile mécanicien",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWs5OW4wNGxkGAo"
+    },
+    {
+      "name": "Canacars Automobiles",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMXB5c3NuX3B6GAo"
+    },
+    {
+      "name": "Garage MK",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWd0eW5scjV5GAo"
+    },
+    {
+      "name": "garage automobile mecanicien five",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMXN2eG1oOHd0GAo"
+    },
+    {
+      "name": "Track My Cars",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMXpoYmRqcDdtGAo"
+    },
+    {
+      "name": "Garage automobile rive de Paris sos batterie 24h/24",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMXlxeDZ2NmdwGAo"
+    },
+    {
+      "name": "AK Garage Paris",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMXNkeXFwZnA2GAo"
+    },
+    {
+      "name": "Williamson Automobiles",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMW12d2o0OGJ4GAo"
+    },
+    {
+      "name": "Garage Saint Antoine",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSDyoNCgsvZy8xdGZkMXFkORgK"
+    },
+    {
+      "name": "Garage Five",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWZnazFuajV2GAo"
+    },
+    {
+      "name": "SOS Réparation Pneus Paris IDF",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWZwcGZzbHY5GAo"
+    },
+    {
+      "name": "MAURICE S AUTOMOBILES",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWg2cTFqMGJ6GAo"
+    }
+  ],
+  "products": []
+}

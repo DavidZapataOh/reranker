@@ -1,0 +1,137 @@
+{
+  "parserVersion": "chatgpt@1",
+  "engine": "chatgpt",
+  "channel": "ui-vendor",
+  "provider": "dataforseo",
+  "modelReported": "gpt-6",
+  "present": true,
+  "markdown": "If you're looking for auto repair shops to avoid in New York, I'd focus on shops with documented histories of **fraud, overcharging, unnecessary repairs, deceptive estimates, or consumer-protection violations** rather than relying solely on bad online reviews.\n\nOne important distinction: a shop having negative reviews isn't proof of misconduct. I'll prioritize documented complaints, government enforcement actions, and recurring customer allegations.\n\n### NYC businesses worth checking carefully\n\nI found some warning signals, but I couldn't verify a government finding of fraud against the following independent repair shops.\n\n| Business | Location | Why I'd investigate |\n|--------|--------|--------|\n| AAA Auto Repair | 415 W 54th St, Manhattan | Low 2.2/5 rating across 139 reviews |\n| 96 Auto Repair Inc. | 315 W 96th St, Manhattan | Relatively low 3.5/5 rating across 37 reviews |\n| Usmania Auto Repairs | 1353 Park Ave, Manhattan | Individual complaints about overcharging and replacement-part quality |\n\n\nThese are review-based caution flags, not proven fraud or official misconduct findings.\n\n### Documented New York enforcement cases\n\nThese are dealerships rather than independent repair shops, but they illustrate documented consumer-protection problems\\:\n\n- **26 Motors dealership group\\:** NYC authorities reported more than 100 consumer complaints involving deceptive advertising, overcharging, and defective vehicles. [www.nyc.gov](https://www.nyc.gov/site/dca/news/001-24/mayor-adams-dcwp-commissioner-mayuga-secure-1-5-million-consumers-harmed-predatory-used?utm_source=chatgpt.com)\n- **Honda of the Bronx\\:** In May 2026, NYC authorities announced enforcement over deceptive pricing and other consumer-protection violations. [www.nyc.gov](https://www.nyc.gov/site/dca/news/036-26/dcwp-takes-action-against-bronx-used-auto-dealer-driving-up-vehicle-costs-bait-and-switch?utm_source=chatgpt.com)[www.nyc.gov](https://www.nyc.gov/site/dca/consumers/consumer-complaint-topics.page?utm_source=chatgpt.com)\n\n### Protect yourself before authorizing repairs\n\nNew York DMV recommends\\:\n\n- Get a written estimate.\n- Require authorization before additional work.\n- Request an itemized invoice.\n- Keep receipts and replaced parts.\n- Check whether the repair shop is registered with NY DMV.\n\nYou can also [check New York DMV repair-shop consumer protections](https://dmv.ny.gov/know-your-rights-in-auto-repair)\\. [dmv.ny.gov](https://dmv.ny.gov/know-your-rights-in-auto-repair?utm_source=chatgpt.com)\n\n---\n\n### Let me narrow this down\n\nAre you looking for shops to avoid in\\:\n\n**1\\. Which part of New York?**\n\n---\n\n**2\\. What type of auto businesses?**\n\n[Find shops to avoid]\n\nI'll focus on identifying businesses with repeated complaints, lawsuits, consumer-protection actions, and documented patterns of dishonest work—not simply businesses with a few bad reviews.",
+  "sources": [
+    {
+      "url": "https://www.nyc.gov/site/dca/news/001-24/mayor-adams-dcwp-commissioner-mayuga-secure-1-5-million-consumers-harmed-predatory-used?utm_source=chatgpt.com",
+      "domain": "www.nyc.gov",
+      "title": "$1.5 Million for Consumers Harmed by Predatory Used Car Dealer Group",
+      "cited": true
+    },
+    {
+      "url": "https://www.nyc.gov/site/dca/news/036-26/dcwp-takes-action-against-bronx-used-auto-dealer-driving-up-vehicle-costs-bait-and-switch?utm_source=chatgpt.com",
+      "domain": "www.nyc.gov",
+      "title": "DCWP Takes Action Against Bronx Used Auto Dealer for Driving Up Vehicle Costs",
+      "cited": true
+    },
+    {
+      "url": "https://www.nyc.gov/site/dca/consumers/consumer-complaint-topics.page?utm_source=chatgpt.com",
+      "domain": "www.nyc.gov",
+      "title": "Recent Settlements and Lawsuits",
+      "cited": true
+    },
+    {
+      "url": "https://dmv.ny.gov/know-your-rights-in-auto-repair",
+      "domain": "dmv.ny.gov",
+      "title": "check New York DMV repair-shop consumer protections",
+      "cited": true
+    },
+    {
+      "url": "https://dmv.ny.gov/know-your-rights-in-auto-repair?utm_source=chatgpt.com",
+      "domain": "dmv.ny.gov",
+      "title": "Know Your Rights in Auto Repair",
+      "cited": true
+    },
+    {
+      "url": "https://ag.ny.gov/press-release/2026/attorney-general-james-releases-top-10-consumer-complaints-2025",
+      "domain": "ag.ny.gov",
+      "title": "Attorney General James Releases Top 10 Consumer Complaints of 2025",
+      "cited": false
+    },
+    {
+      "url": "https://ag.ny.gov/press-release/2026/attorney-general-james-secures-more-1-million-refunds-new-yorkers-cheated",
+      "domain": "ag.ny.gov",
+      "title": "Attorney General James Secures More Than $1 Million in Refunds for New Yorkers Cheated by Westchester Car Dealerships",
+      "cited": false
+    },
+    {
+      "url": "https://ag.ny.gov/press-release/2025/attorney-general-james-releases-top-10-consumer-complaints-2024",
+      "domain": "ag.ny.gov",
+      "title": "Attorney General James Releases Top 10 Consumer Complaints of 2024",
+      "cited": false
+    },
+    {
+      "url": "https://ag.ny.gov/resources/individuals/car-auto",
+      "domain": "ag.ny.gov",
+      "title": "Car & Auto | New York Attorney General",
+      "cited": false
+    },
+    {
+      "url": "https://www.nyc.gov/site/dca/news/036-26/dcwp-takes-action-against-bronx-used-auto-dealer-driving-up-vehicle-costs-bait-and-switch",
+      "domain": "www.nyc.gov",
+      "title": "DCWP Takes Action Against Bronx Used Auto Dealer for Driving Up Vehicle Costs | City of New York",
+      "cited": false
+    },
+    {
+      "url": "https://www.nyc.gov/site/dca/consumers/consumer-complaint-topics.page",
+      "domain": "www.nyc.gov",
+      "title": "Recent Settlements and Lawsuits - DCWP",
+      "cited": false
+    },
+    {
+      "url": "https://www.nyc.gov/assets/dca/downloads/pdf/about/Final-Agency-Decision-B-M-Electronic-Diagnostic-Repair-Service.pdf",
+      "domain": "www.nyc.gov",
+      "title": "OATH Index No. 1869/23 Final Agency Decision Against B&M Electronic Diagnostic Repair Service Inc.",
+      "cited": false
+    },
+    {
+      "url": "https://www.nyc.gov/site/dca/news/001-24/mayor-adams-dcwp-commissioner-mayuga-secure-1-5-million-consumers-harmed-predatory-used",
+      "domain": "www.nyc.gov",
+      "title": "$1.5 Million for Consumers Harmed by Predatory Used Car Dealer Group | City of New York",
+      "cited": false
+    },
+    {
+      "url": "https://mtaig.ny.gov/Reports/2026-04%20Excessive%20Billing%20by%20Auto%20Repair%20Shop%20Missed%20by%20LIRR%20and%20Fleet%20Management%20Vendor.pdf",
+      "domain": "mtaig.ny.gov",
+      "title": "MTA/OIG Report #2026-04",
+      "cited": false
+    },
+    {
+      "url": "https://portal.311.nyc.gov/article/?kanumber=KA-02153",
+      "domain": "portal.311.nyc.gov",
+      "title": "Store Complaint · NYC311",
+      "cited": false
+    },
+    {
+      "url": "https://portal.311.nyc.gov/article/?kanumber=KA-02136",
+      "domain": "portal.311.nyc.gov",
+      "title": "Overcharge · NYC311",
+      "cited": false
+    },
+    {
+      "url": "https://data.cityofnewyork.us/api/views/vwpc-kje2/rows.pdf",
+      "domain": "data.cityofnewyork.us",
+      "title": "311 Web Content - Services",
+      "cited": false
+    },
+    {
+      "url": "https://data.cityofnewyork.us/api/views/nre2-6m2s/rows.pdf",
+      "domain": "data.cityofnewyork.us",
+      "title": "DCWP Consumer Complaints",
+      "cited": false
+    },
+    {
+      "url": "https://nyc-business.nyc.gov/nycbusiness/resources-by-industry/autorepairshop",
+      "domain": "nyc-business.nyc.gov",
+      "title": "Auto Repair Shop",
+      "cited": false
+    },
+    {
+      "url": "https://www.dfs.ny.gov/reports_and_publications/press_releases/pr2026042301",
+      "domain": "www.dfs.ny.gov",
+      "title": "Fighting for New Yorkers: Governor Hochul Announces $237.7 Million Recovered for New Yorkers in 2025 | Department of Financial Services",
+      "cited": false
+    }
+  ],
+  "searchQueries": [
+    "New York City auto repair shops consumer complaints fraud overcharging deceptive practices Attorney General NYC Department Consumer and Worker Protection 2025 2026"
+  ],
+  "localBusinesses": [],
+  "brandEntities": [],
+  "products": []
+}

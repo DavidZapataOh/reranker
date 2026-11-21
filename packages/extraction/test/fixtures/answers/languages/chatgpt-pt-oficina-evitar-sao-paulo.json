@@ -1,0 +1,107 @@
+{
+  "parserVersion": "chatgpt@1",
+  "engine": "chatgpt",
+  "channel": "ui-vendor",
+  "provider": "dataforseo",
+  "modelReported": "gpt-6",
+  "present": true,
+  "markdown": "Fiz uma busca sobre oficinas mecânicas em São Paulo e encontrei um dado importante: **o Procon-SP registrou 1.224 reclamações contra oficinas mecânicas em 2025, contra 801 em 2024 — aumento de 52%.** Os principais problemas foram serviços mal executados, atrasos, serviços incompletos e ofertas não cumpridas. [sbtnews.sbt.com.br](https://sbtnews.sbt.com.br/noticia/brasil/reclamacoes-contra-oficinas-mecanicas-mais-que-dobram-em-sao-paulo-aponta-procon?utm_source=chatgpt.com)[correio.rac.com.br](https://correio.rac.com.br/campinasermc/crescem-reclamac-es-contra-oficinas-mecanicas-e-auto-centers-no-procon-campinas-1.1762421?utm_source=chatgpt.com)\n\n## Oficinas que merecem atenção antes de contratar\n\nNão encontrei, nas fontes consultadas, uma lista oficial confiável que identifique oficinas específicas de São Paulo como fraudulentas ou que devam ser evitadas. Não seria correto acusar estabelecimentos sem provas.\n\nMas recomendo atenção especial a oficinas que apresentem estes sinais\\:\n\n- Orçamento que muda constantemente sem justificativa.\n- Diagnóstico de defeitos caros sem apresentar evidências.\n- Pressão para trocar várias peças imediatamente.\n- Recusa em fornecer orçamento por escrito.\n- Não devolução das peças substituídas.\n- Atrasos frequentes e serviços entregues incompletos.\n- Exigência de Pix para contas de terceiros.\n\n## Onde consultar oficinas com reclamações\n\n**1\\. Procon-SP — Cadastro de Reclamações Fundamentadas**\n\nConsulte empresas que possuem reclamações registradas e verifique os resultados.\n\n[Consultar cadastro do Procon-SP](https://www.procon.sp.gov.br/espaco-consumidor/#ReclamacoesFundamentadas)\n\n---\n\n**2\\. Reclame Aqui**\n\n[Pesquisar reclamações de oficinas](https://www.reclameaqui.com.br/)\n\n---\n\n**3\\. Consumidor.gov.br**\n\n[Consultar empresas participantes](https://www.consumidor.gov.br/)\n\n[servicos.sp.gov.br](https://servicos.sp.gov.br/fcarta/69559dc9-3554-4ef6-b91c-a4176b21c32a?utm_source=chatgpt.com)[oficinasmecanicas.ia.br](https://oficinasmecanicas.ia.br/consumidor/onde-reclamar-de-oficina/?utm_source=chatgpt.com)\n\n## Quero fazer uma pesquisa mais específica\n\nPosso investigar oficinas com histórico de reclamações, denúncias de clientes e problemas recorrentes.\n\nEm qual região de São Paulo você quer pesquisar?\n\n**Região**\n\n---\n\n**Tipo de estabelecimento**\n\n---\n\n**O que deseja identificar?**\n\n[Pesquisar oficinas suspeitas]\n\nMinha intenção é apresentar nomes e evidências verificáveis, não simplesmente apontar oficinas com avaliações baixas.",
+  "sources": [
+    {
+      "url": "https://sbtnews.sbt.com.br/noticia/brasil/reclamacoes-contra-oficinas-mecanicas-mais-que-dobram-em-sao-paulo-aponta-procon?utm_source=chatgpt.com",
+      "domain": "sbtnews.sbt.com.br",
+      "title": "Reclamações contra oficinas mecânicas mais que dobram em São Paulo, aponta Procon",
+      "cited": true
+    },
+    {
+      "url": "https://correio.rac.com.br/campinasermc/crescem-reclamac-es-contra-oficinas-mecanicas-e-auto-centers-no-procon-campinas-1.1762421?utm_source=chatgpt.com",
+      "domain": "correio.rac.com.br",
+      "title": "Crescem reclamações contra oficinas mecânicas e auto centers no Procon Campinas",
+      "cited": true
+    },
+    {
+      "url": "https://www.procon.sp.gov.br/espaco-consumidor/#ReclamacoesFundamentadas",
+      "domain": "www.procon.sp.gov.br",
+      "title": "Consultar cadastro do Procon-SP",
+      "cited": true
+    },
+    {
+      "url": "https://www.reclameaqui.com.br/",
+      "domain": "www.reclameaqui.com.br",
+      "title": "Pesquisar reclamações de oficinas",
+      "cited": true
+    },
+    {
+      "url": "https://www.consumidor.gov.br/",
+      "domain": "www.consumidor.gov.br",
+      "title": "Consultar empresas participantes",
+      "cited": true
+    },
+    {
+      "url": "https://servicos.sp.gov.br/fcarta/69559dc9-3554-4ef6-b91c-a4176b21c32a?utm_source=chatgpt.com",
+      "domain": "servicos.sp.gov.br",
+      "title": "Portal de Serviços do Estado de São Paulo",
+      "cited": true
+    },
+    {
+      "url": "https://oficinasmecanicas.ia.br/consumidor/onde-reclamar-de-oficina/?utm_source=chatgpt.com",
+      "domain": "oficinasmecanicas.ia.br",
+      "title": "Como reclamar de uma oficina",
+      "cited": true
+    },
+    {
+      "url": "https://www.almg.gov.br/comunicacao/noticias/arquivos/Oficinas-mecanicas-e-clientes-sao-alvos-de-novo-golpe/?utm_source=chatgpt.com",
+      "domain": "www.almg.gov.br",
+      "title": "Oficinas mecânicas e clientes são alvos de novo golpe - Assembleia Legislativa de Minas Gerais",
+      "cited": false
+    },
+    {
+      "url": "https://oficinasmecanicas.ia.br/como-verificamos/?utm_source=chatgpt.com",
+      "domain": "oficinasmecanicas.ia.br",
+      "title": "Como verificamos os dados das oficinas | BYTX",
+      "cited": false
+    },
+    {
+      "url": "https://www.uol.com.br/carros/noticias/redacao/2026/06/04/golpe-do-falso-mecanico-ladroes-enganam-oficinas-e-clientes-com-jogo-duplo.ghtm?utm_source=chatgpt.com",
+      "domain": "www.uol.com.br",
+      "title": "Golpe do falso mecânico: ladrões enganam oficinas e clientes com jogo duplo",
+      "cited": false
+    },
+    {
+      "url": "https://novomomento.com.br/aumenta-reclamacoes-a-oficinas-mecanicas-estado/?utm_source=chatgpt.com",
+      "domain": "novomomento.com.br",
+      "title": "Aumentam reclamações a oficinas mecânicas no Estado - Novo Momento",
+      "cited": false
+    },
+    {
+      "url": "https://ifolha.com.br/noticias/golpe-do-falso-mecanico-causa-prejuizo-a-clientes-e-oficina-em-olimpia/?utm_source=chatgpt.com",
+      "domain": "ifolha.com.br",
+      "title": "Golpe do falso mecânico causa prejuízo a clientes e oficina em Olímpia – iFolha",
+      "cited": false
+    },
+    {
+      "url": "https://al.sp.gov.br/noticia/?id=511110&utm_source=chatgpt.com",
+      "domain": "al.sp.gov.br",
+      "title": "Fraudes no setor automotivo pautam audiência na Alesp",
+      "cited": false
+    },
+    {
+      "url": "https://localbrazil.net/categoria/oficinas-mecanicas/sao-paulo/sao-paulo?utm_source=chatgpt.com",
+      "domain": "localbrazil.net",
+      "title": "Oficinas mecânicas & auto centers em São Paulo - SP: avaliações e notas",
+      "cited": false
+    },
+    {
+      "url": "https://www.procon.sp.gov.br/carta-de-servicos/?utm_source=chatgpt.com",
+      "domain": "www.procon.sp.gov.br",
+      "title": "Carta de Serviços – PROCON.SP",
+      "cited": false
+    }
+  ],
+  "searchQueries": [
+    "oficinas mecânicas São Paulo reclamações Procon autuação golpes lista oficinas evitar critérios 2026"
+  ],
+  "localBusinesses": [],
+  "brandEntities": [],
+  "products": []
+}
