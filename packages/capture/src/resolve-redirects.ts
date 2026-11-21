@@ -1,15 +1,8 @@
+import { isGoogleRedirect as isRedirect } from "@reranker/schema/measurement";
 import type { EngineAnswer } from "./answer";
 
-// Gemini's grounding redirects, and the ones AI Overviews put in front of their references.
-const REDIRECTS = [
-  "https://vertexaisearch.cloud.google.com/grounding-api-redirect/",
-  "https://google.com/goto?",
-  "https://www.google.com/goto?",
-];
 // google.com/goto first moves to www.google.com/goto, which then names the site.
 const MAX_HOPS = 3;
-
-const isRedirect = (url: string) => REDIRECTS.some((prefix) => url.startsWith(prefix));
 
 async function locationOf(url: string, timeoutMs: number): Promise<string | undefined> {
   try {
