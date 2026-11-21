@@ -18,6 +18,7 @@ import { type ReviewRequest, type ReviewVerdict, reviewNative } from "../src/gen
 import type { CallContext } from "../src/generate/spend";
 import { nounText } from "../src/grammar";
 import { type CategoryPool, fillCanonical, type GroupPool, groupKey } from "./build-seed";
+import { failureReason, ProviderHealth } from "./provider-health";
 
 const REVIEWERS = ["openai", "gemini"] as const;
 const CALL_MS = 120_000;
@@ -47,24 +48,26 @@ const callContext = (spend: SpendContext): CallContext => ({
 /** Why each reviewer's calls failed, counted, so a reviewer that never ruled is seen at once. */
 export type Failures = Record<Reviewer, Record<string, number>>;
 
-const failureOf = (error: unknown) =>
-  error instanceof Error ? `${error.name}: ${error.message}`.slice(0, 160) : String(error);
-
 /** Both reviewers on the same items; a reviewer that failed counts as no verdict for each. */
 async function bothReview(
   req: ReviewRequest,
   spend: SpendContext,
   review: Review,
   failures: Failures,
+  health?: ProviderHealth,
 ): Promise<Reviewed[]> {
   const answers = await Promise.allSettled(
     REVIEWERS.map((provider) => review(provider, req, callContext(spend))),
   );
   answers.forEach((answer, p) => {
-    if (answer.status !== "rejected") return;
     const provider = REVIEWERS[p] as Reviewer;
-    const reason = failureOf(answer.reason);
+    if (answer.status !== "rejected") {
+      health?.record(provider, { ok: true });
+      return;
+    }
+    const reason = failureReason(answer.reason);
     failures[provider][reason] = (failures[provider][reason] ?? 0) + 1;
+    health?.record(provider, { ok: false, reason });
   });
   return req.items.map((item, i) => {
     const verdicts = Object.fromEntries(
@@ -84,6 +87,7 @@ export async function reviewCategory(
   spend: SpendContext,
   review: Review = reviewNative,
   failures: Failures = { openai: {}, gemini: {} },
+  health?: ProviderHealth,
 ): Promise<CategoryReview> {
   const { language, registerProfile } = group;
   if (!isGenerationLanguage(language)) throw new Error(`${language} has no prompts`);
@@ -106,6 +110,7 @@ export async function reviewCategory(
       spend,
       review,
       failures,
+      health,
     ),
     ...category.intents.map((intent, i) =>
       bothReview(
@@ -117,6 +122,7 @@ export async function reviewCategory(
         spend,
         review,
         failures,
+        health,
       ),
     ),
   ]);
@@ -144,8 +150,9 @@ async function main(): Promise<void> {
   const spend = { purpose: "benchmark" as const, refType: "seed-review", refId: randomUUID() };
   const categories: CategoryReview[] = [];
   const failures: Failures = { openai: {}, gemini: {} };
+  const health = new ProviderHealth();
   for (const category of pool.categories) {
-    const reviewed = await reviewCategory(pool, category, spend, reviewNative, failures);
+    const reviewed = await reviewCategory(pool, category, spend, reviewNative, failures, health);
     categories.push(reviewed);
     const passed = (items: Reviewed[]) => `${items.filter((r) => r.pass).length}/${items.length}`;
     console.log(
