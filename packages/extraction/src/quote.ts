@@ -77,22 +77,17 @@ export function locateQuote(
 
 // A quote that ends where the answer spaces its punctuation ("Pennestri** .") misses by that space.
 const EDGE_PUNCTUATION = /^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu;
-const LINK_SYNTAX = /\]\([^)]*\)?|\[/;
-
 /**
- * Engines cite through long redirect URLs that models miscopy by a character. A quote that missed
- * is looked for again by its piece outside the link syntax that holds the name, so the name still
- * has to be in the answer as quoted.
+ * Engines cite through long redirect URLs that models miscopy by a character or stitch text across.
+ * A quote that missed still places its mention when the name it quotes is in the answer as written,
+ * at its first appearance.
  */
-function locateByLinkText(
+function locateQuotedName(
   markdown: string,
   mention: { name: string; quote: string },
 ): { start: number; end: number } | null {
-  if (!LINK_SYNTAX.test(mention.quote)) return null;
-  const piece = mention.quote
-    .split(LINK_SYNTAX)
-    .find((part) => locateQuote(part, mention.name) !== null);
-  return piece === undefined ? null : locateQuote(markdown, piece);
+  if (locateQuote(mention.quote, mention.name) === null) return null;
+  return locateQuote(markdown, mention.name);
 }
 
 /** Keeps the mentions whose quote is in the answer, in answer order, with their rank. */
@@ -105,7 +100,7 @@ export function toExtractedMentions(
     const at =
       locateQuote(markdown, mention.quote) ??
       locateQuote(markdown, mention.quote.replace(EDGE_PUNCTUATION, "")) ??
-      locateByLinkText(markdown, mention);
+      locateQuotedName(markdown, mention);
     if (!at) continue;
     mentions.push({
       name: mention.name,

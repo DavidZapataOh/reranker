@@ -218,6 +218,29 @@ describe("toExtractedMentions", () => {
     ]);
   });
 
+  test("a quote that stitched text across a link falls back to the name in the answer", () => {
+    const md = "- [Centre dentaire Bastille](https://g.co/x)\n  (3 Rue Saint-Antoine) : équipe.";
+    const r = toExtractedMentions(
+      md,
+      out([
+        [
+          "Centre dentaire Bastille",
+          "Centre dentaire Bastille (3 Rue Saint-Antoine) : équipe.",
+          "recommendation",
+          "business",
+        ],
+        [
+          "Clinique Fantôme",
+          "Clinique Fantôme (3 Rue Saint-Antoine)",
+          "recommendation",
+          "business",
+        ],
+      ]),
+    );
+    expect(r.mentions.map((x) => x.quote)).toEqual(["Centre dentaire Bastille"]);
+    expect(r.quoteMisses).toBe(1);
+  });
+
   test("an answer without entities yields no mentions", () =>
     expect(toExtractedMentions("No sé.", { answerKind: "no_entities", mentions: [] })).toEqual({
       mentions: [],
