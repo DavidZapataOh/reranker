@@ -487,5 +487,67 @@
       "EXAME",
       "Folha"
     ]
+  },
+  "chatgpt-es-dentistas-bogota": {
+    "language": "es",
+    "recommended": [
+      "Unidad Odontofacial",
+      "Salud Bucal Familiar",
+      "Sandra Poveda Clínica Odontológica",
+      "Dentica Dental Clinic",
+      "Estación Dental"
+    ],
+    "negative": [],
+    "incidental": ["Doctoralia", "Top Doctors"]
+  },
+  "chatgpt-es-restaurantes-bogota": {
+    "language": "es",
+    "recommended": [
+      "El Chato",
+      "Leo",
+      "Afluente",
+      "Elcielo",
+      "Harry Sasson",
+      "Prudencia",
+      "Débora",
+      "Galenos",
+      "Andrés D.C.",
+      "Santa Fe Restaurante"
+    ],
+    "negative": [],
+    "incidental": []
+  },
+  "chatgpt-es-taller-bogota": {
+    "language": "es",
+    "recommended": [
+      "Coltalleres",
+      "Asistencia Técnica Automotriz",
+      "Total Car Centro de Mantenimiento",
+      "Casferautos",
+      "SAE Automotriz",
+      "Grand Prix R"
+    ],
+    "negative": [],
+    "incidental": []
+  },
+  "chatgpt-es-taller-evitar-bogota": {
+    "language": "es",
+    "recommended": [],
+    "negative": [],
+    "incidental": ["Secretaría de Seguridad"]
+  },
+  "ai-overview-es-taller-evitar-bogota": {
+    "language": "es",
+    "recommended": [],
+    "negative": [
+      "Los Boyacos Serviteca",
+      "ASVE",
+      "Sama Motors",
+      "Auto Center Service",
+      "Autolab",
+      "C3 Care Car Center",
+      "Villacars Eurotaller"
+    ],
+    "incidental": []
   }
 }
