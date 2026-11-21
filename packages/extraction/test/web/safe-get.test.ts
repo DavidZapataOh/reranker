@@ -68,13 +68,18 @@ test("safeGet refuses a host that does not resolve", async () => {
   expect(await safeGet("https://nadie.example/", OPTS)).toBeNull();
 });
 
-test("safeGet returns the status, body and final URL of a public page", async () => {
+test("safeGet returns the status, body, final URL and language of a public page", async () => {
   stubLookup("tienda.example", PUBLIC_IP);
-  server.use(http.get("https://tienda.example/", () => HttpResponse.html("<title>Hola</title>")));
+  server.use(
+    http.get("https://tienda.example/", () =>
+      HttpResponse.html("<title>Hola</title>", { headers: { "content-language": "es-CO" } }),
+    ),
+  );
   expect(await safeGet("https://tienda.example/", OPTS)).toEqual({
     status: 200,
     body: "<title>Hola</title>",
     finalUrl: "https://tienda.example/",
+    contentLanguage: "es-CO",
   });
 });
 

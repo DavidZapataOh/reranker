@@ -9,6 +9,7 @@ export interface SafeGetResult {
   status: number;
   body: string;
   finalUrl: string;
+  contentLanguage: string | null;
 }
 
 const MAX_REDIRECTS = 3;
@@ -162,7 +163,12 @@ export async function safeGet(
         continue;
       }
       const body = await readUpTo(response, opts.maxBytes);
-      return { status, body, finalUrl: current.href };
+      return {
+        status,
+        body,
+        finalUrl: current.href,
+        contentLanguage: response.headers["content-language"] ?? null,
+      };
     }
   } catch {
     return null;

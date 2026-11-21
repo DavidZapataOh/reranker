@@ -74,3 +74,4 @@ export {
 } from "./store";
 export { assignCountry, findBusinessCandidates } from "./target";
 export { type SafeGetResult, safeGet } from "./web/safe-get";
+export { fetchSiteLanguages, readSiteLanguages, type SiteLanguages } from "./web/site-languages";

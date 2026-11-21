@@ -30,6 +30,7 @@
     "@reranker/schema": "workspace:*",
     "canonicalize": "catalog:",
     "drizzle-orm": "catalog:",
+    "franc-min": "catalog:",
     "htmlparser2": "catalog:",
     "openai": "catalog:",
     "server-only": "catalog:",
