@@ -171,3 +171,97 @@ describe("collectReady", () => {
     );
   });
 });
+
+describe("collectTask", () => {
+  test.each([40601, 40602])("a task still queued (%i) has nothing to seal", async (code) => {
+    server.use(
+      http.get(`${AI_MODE}/task_get/advanced/:id`, () =>
+        json(JSON.stringify({ status_code: 20000, tasks: [{ id: "t-0", status_code: code }] })),
+      ),
+    );
+    await expect(dataforseoAdapter.collectTask?.(slot("google-ai-mode", 0), "t-0")).resolves.toBe(
+      null,
+    );
+  });
+
+  test("a finished task is fetched by id", async () => {
+    server.use(
+      http.get(`${AI_MODE}/task_get/advanced/:id`, () => json(recorded("ai-mode-task-get"))),
+    );
+    const record = await dataforseoAdapter.collectTask?.(slot("google-ai-mode", 0), "t-0");
+    expect(record).toMatchObject({ status: "succeeded", mode: "task" });
+  });
+});
+
+describe("findTasks", () => {
+  type Listed = { id: string; tag: string; cost?: number };
+  const page = (tasks: Listed[]) =>
+    json(
+      JSON.stringify({
+        status_code: 20000,
+        tasks: [
+          {
+            status_code: 20000,
+            result: tasks.map(({ id, tag, cost }) => ({
+              id,
+              datetime_posted: "2026-11-20 10:00:01 +00:00",
+              status: "Ok.",
+              cost: cost ?? 0.0012,
+              metadata: { tag, keyword: "x" },
+            })),
+          },
+        ],
+      }),
+    );
+
+  test("pages through SERP and AI Optimization id lists and matches each slot by its tag", async () => {
+    const serpSlot = slot("google-ai-mode", 0);
+    const aiSlot = slot("gemini", 1);
+    const bodies: Array<{ api: string; body: Record<string, unknown> }> = [];
+    const full = Array.from({ length: 1000 }, (_, i) => ({
+      id: `other-${i}`,
+      tag: `${OTHER}:${i}`,
+    }));
+    for (const api of ["serp", "ai_optimization"]) {
+      server.use(
+        http.post(`*/v3/${api}/id_list`, async ({ request }) => {
+          const [body] = (await request.json()) as Array<Record<string, unknown>>;
+          bodies.push({ api, body: body ?? {} });
+          if (api === "ai_optimization") return page([{ id: "ai-1", tag: aiSlot.slotId }]);
+          return body?.offset === 0 ? page(full) : page([{ id: "serp-1", tag: serpSlot.slotId }]);
+        }),
+      );
+    }
+    const found = await dataforseoAdapter.findTasks?.([serpSlot, aiSlot], {
+      from: new Date("2026-11-20T10:00:00Z"),
+      to: new Date("2026-11-20T10:05:00Z"),
+    });
+    expect(found?.map((t) => [t.slot.slotId, t.providerTaskId, t.cost?.amount_micros])).toEqual([
+      [serpSlot.slotId, "serp-1", 1200],
+      [aiSlot.slotId, "ai-1", 1200],
+    ]);
+    expect(bodies.map(({ api, body }) => [api, body.offset])).toEqual([
+      ["serp", 0],
+      ["serp", 1000],
+      ["ai_optimization", 0],
+    ]);
+    expect(bodies[0]?.body).toEqual({
+      datetime_from: "2026-11-20 10:00:00 +00:00",
+      datetime_to: "2026-11-20 10:05:00 +00:00",
+      limit: 1000,
+      offset: 0,
+      sort: "asc",
+      include_metadata: true,
+    });
+  });
+
+  test("a refused id list throws its error", async () => {
+    server.use(http.post("*/v3/serp/id_list", () => json(JSON.stringify({ status_code: 40210 }))));
+    await expect(
+      dataforseoAdapter.findTasks?.([slot("google-ai-mode", 0)], {
+        from: new Date(Date.now() - 60_000),
+        to: new Date(Date.now() + 60_000),
+      }),
+    ).rejects.toBeInstanceOf(ProviderRejectedError);
+  });
+});
