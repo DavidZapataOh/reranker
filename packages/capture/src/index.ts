@@ -29,6 +29,12 @@ export {
 export { type DataForSeoOutcome, mapDataForSeoStatus } from "./dataforseo/status";
 export { ENGINES, type EngineSpec } from "./engines";
 export {
+  type CategoryTerms,
+  type EstimateLanguageMixInput,
+  type EstimateOptions,
+  estimateLanguageMix,
+} from "./language-mix/estimate";
+export {
   createMeasurement,
   freezeMeasurementPlan,
   type LoadedPlan,
