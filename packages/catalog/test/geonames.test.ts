@@ -2,7 +2,12 @@ import { readFileSync } from "node:fs";
 import { parse } from "csv-parse/sync";
 import { describe, expect, test } from "vitest";
 import { buildCountry, CSV_OPTIONS, cityNames, type LocationRow } from "../scripts/build-geo.ts";
-import { type GeoNamesEntry, geoNamesCollector, pairGeoNames } from "../scripts/geonames.ts";
+import {
+  type GeoNamesEntry,
+  geoNamesCollector,
+  pairGeoNames,
+  withGeoNamesAccents,
+} from "../scripts/geonames.ts";
 import { type Coordinate, expandGeoFile, type GeoPlace } from "../src/geo/format.ts";
 
 // Recorded extracts of DataForSEO's locations CSV and of the GeoNames dumps for these places.
@@ -453,4 +458,70 @@ describe("cityNames", () => {
         [4, "Ciudad de México", 1, null, ["mexico city"]],
       ]),
     ).toEqual([["Ciudad de México", "Mexico City", "Distrito Federal"], "Guadalajara"]));
+});
+
+describe("withGeoNamesAccents", () => {
+  const place = (name: string, alternates: GeoNamesEntry["alternates"] = []) =>
+    entry({ id: 1, name, alternates });
+  const tagged = (name: string, lang: string) => ({
+    id: 2,
+    name,
+    lang,
+    preferred: true,
+    short: false,
+  });
+
+  test.each([
+    ["the place's own name", "Le Precheur", "fr", place("Le Prêcheur"), "Le Prêcheur"],
+    [
+      "the place's own name, in another language",
+      "Le Precheur",
+      "en",
+      place("Le Prêcheur"),
+      "Le Prêcheur",
+    ],
+    ["the name in the language", "Dubai", "es", place("Dubai", [tagged("Dubái", "es")]), "Dubái"],
+    [
+      "a name the language gives as it is",
+      "Zurich",
+      "en",
+      place("Zürich", [tagged("Zurich", "en")]),
+      "Zurich",
+    ],
+    ["another name entirely", "Lodz", "en", place("Łódź"), "Lodz"],
+    [
+      "a name the gazetteer row lists",
+      "La Vallee",
+      "fr",
+      { ...place("La Vallée de Jacmel"), accentedNames: ["La Vallée", "Lavale Jakmèl"] },
+      "La Vallée",
+    ],
+    [
+      "not another language's spelling",
+      "Boca Raton",
+      "it",
+      { ...place("Boca Raton"), accentedNames: ["Boca Ratón"] },
+      "Boca Raton",
+    ],
+    [
+      "not a transliteration",
+      "Vijayawada",
+      "en",
+      { ...place("Vijayawada"), accentedNames: ["Vijayawāda"] },
+      "Vijayawada",
+    ],
+  ] as const)("%s: %s in %s", (_, name, language, source, expected) =>
+    expect(withGeoNamesAccents(name, language, source)).toBe(expected),
+  );
+
+  test("a romanized name keeps only the accents its speakers' spelling writes", () => {
+    expect(withGeoNamesAccents("Kilmudalambedu", "en", place("Kīlmudalambedu"), false)).toBe(
+      "Kilmudalambedu",
+    );
+    expect(withGeoNamesAccents("Cacak", "en", place("Čačak"), false)).toBe("Čačak");
+    expect(withGeoNamesAccents("Charoun", "fr", place("Châroûn"), false)).toBe("Charoun");
+    expect(withGeoNamesAccents("Sidi Bel Abbes", "fr", place("Sidi Bel Abbès"), false)).toBe(
+      "Sidi Bel Abbès",
+    );
+  });
 });

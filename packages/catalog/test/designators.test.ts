@@ -1,5 +1,10 @@
 import { describe, expect, test } from "vitest";
-import { localDesignated, parseDesignated, speller } from "../scripts/designators.ts";
+import {
+  localDesignated,
+  parseDesignated,
+  sameDesignator,
+  speller,
+} from "../scripts/designators.ts";
 
 const place = (name: string, aliases: string[] = [], names: Record<string, string> = {}) => ({
   name,
@@ -84,3 +89,12 @@ describe("designators", () => {
     },
   );
 });
+
+test.each([
+  ["Maipu Department", "Maipú Department", true],
+  ["Le Precheur", "Le Prêcheur", true],
+  ["Provincia de Manica", "Província de Manica", false],
+  ["Region Autonoma del Atlantico Sur", "Región Autónoma del Atlántico Sur", false],
+] as const)("%s and %s carry the same designator: %s", (a, b, same) =>
+  expect(sameDesignator(a, b)).toBe(same),
+);

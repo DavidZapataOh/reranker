@@ -16,7 +16,11 @@ const dir = new URL("../data/geo/", import.meta.url);
 const path = (name: string) => new URL(name, dir);
 const read = <T>(name: string): T => JSON.parse(readFileSync(path(name), "utf8"));
 
-const manifest = read<{ version: string; geoDataHash: Record<string, string> }>("manifest.json");
+const manifest = read<{
+  version: string;
+  geoDataHash: Record<string, string>;
+  accentsMissing: Record<string, number>;
+}>("manifest.json");
 const codes = measurableCountries().map((country) => country.code.toLowerCase());
 const geoFile = (code: string) => `${code}-${GEO_DATA_VERSION}.json`;
 
@@ -77,6 +81,18 @@ describe("generated location data", () => {
       }
     }
     expect(foreign).toEqual([]);
+  });
+
+  test("no name lacks an accent GeoNames writes it with", () =>
+    expect(manifest.accentsMissing).toEqual({}));
+
+  test.each([
+    ["mq", 9224790, "Le Prêcheur"],
+    ["ht", 9229397, "La Vallée"],
+    ["nc", 9236937, "La Coulée"],
+  ])("%s %i reads %s", (code, at, name) => {
+    const { cities } = read<GeoFile>(geoFile(code));
+    expect(cities.find((row) => row[0] === at)?.[1]).toBe(name);
   });
 
   test("Colombia carries all 1,122 DIVIPOLA records with unique keys", () => {

@@ -41,6 +41,8 @@ export type GeoNamesEntry = {
    * listed under a name `alternates` leaves out ("Elx" for Elche), and never name one.
    */
   gazetteerNames: string[];
+  /** The gazetteer row's names written with accents ("La Vallée"): they restore those of a name. */
+  accentedNames?: readonly string[];
 };
 
 export type CountryGeoNames = {
@@ -48,6 +50,8 @@ export type CountryGeoNames = {
   spanishSpeaking: boolean;
   /** The languages the country has established, from `countryInfo.txt`, as ISO 639-1 codes. */
   languages?: readonly string[];
+  /** The first language the country lists besides English: the one its own place names are in. */
+  localLanguage?: string;
   entries: readonly GeoNamesEntry[];
   /** Populated places below `cities500`'s threshold, named like a listed city: points only. */
   minorPlaces: readonly GeoNamesEntry[];
@@ -128,6 +132,8 @@ export function pairGeoNames(
   cities: Map<number, Naming>;
   /** GeoNames' point for each located region and city, by DataForSEO code. */
   centers: Map<number, Coordinate>;
+  /** The GeoNames entry each region and city is paired with or, failing that, located at. */
+  sources: Map<number, GeoNamesEntry>;
 } {
   const areas = data.entries.filter((entry) => entry.kind !== "place");
   const areaStages = [0, 1, 2, 3].map((stage) =>
@@ -202,6 +208,7 @@ export function pairGeoNames(
     groupByKeys(anyPlace, (entry) => entry.gazetteerNames),
   ];
   const cities = new Map<number, GeoNamesEntry>();
+  const locatedAt = new Map<number, GeoNamesEntry>();
   for (const city of input.cities) {
     const region = city.region === null ? undefined : regions.get(city.region);
     const within = (found: readonly GeoNamesEntry[]) => {
@@ -223,13 +230,20 @@ export function pairGeoNames(
     // Same-named places in one area share a name but not a point: only a clear pair locates one.
     if (point?.center && (!rival || point.population > rival.population)) {
       centers.set(city.code, point.center);
+      locatedAt.set(city.code, point);
     }
   }
 
   const listed = new Map([...input.regions, ...input.cities].map((p) => [p.code, p.name]));
   const name = (pairs: ReadonlyMap<number, GeoNamesEntry>, naming: typeof cityNaming) =>
     new Map([...pairs].map(([code, entry]) => [code, naming(listed.get(code) ?? "", entry, data)]));
-  return { regions: name(regions, regionNaming), cities: name(cities, cityNaming), centers };
+  const sources = new Map([...locatedAt, ...regions, ...cities]);
+  return {
+    regions: name(regions, regionNaming),
+    cities: name(cities, cityNaming),
+    centers,
+    sources,
+  };
 }
 
 const byPopulation = (found: readonly GeoNamesEntry[]) =>
@@ -346,6 +360,43 @@ function accented(name: string, pool: readonly string[]): string {
 }
 
 /**
+ * `name` with the accents GeoNames writes it with, in `language`, as the place's own name or among
+ * the names its gazetteer row lists: DataForSEO lists "Le Precheur" for "Le Prêcheur" and "La
+ * Vallee" for "La Vallée". A name GeoNames itself gives in the language is left as it is
+ * ("Zurich" in English, though the town writes "Zürich").
+ */
+export function withGeoNamesAccents(
+  name: string,
+  language: string,
+  entry: GeoNamesEntry,
+  /** Whether the place's own language is written in Latin letters, so GeoNames' accents are its own. */
+  latinLocally = true,
+): string {
+  const written = entry.alternates.filter((a) => a.lang === language).map((a) => a.name);
+  if (written.includes(name)) return name;
+  // Elsewhere GeoNames romanizes, and only the accents of French or Slavic spelling ("Sidi Bel
+  // Abbès", "Čačak") are written; macrons and dots below ("Kīlmudalambedu") are not.
+  const romanized = (candidate: string) =>
+    latinLocally ||
+    [...candidate.normalize("NFD")].every((c) => !/\p{M}/u.test(c) || WRITTEN_MARKS.has(c));
+  // Untagged names and the gazetteer's list mix transliterations and other languages
+  // ("Vijayawāda", "Boca Ratón" for the Florida city): they only lend the letters the place's
+  // own name or its names in the language already write.
+  const letters = new Set([entry.name, ...written].flatMap(accentedLetters));
+  const lent = [...local(entry), ...(entry.accentedNames ?? [])].filter((candidate) =>
+    accentedLetters(candidate).every((letter) => letters.has(letter)),
+  );
+  return accented(name, [...written, ...[entry.name, ...lent].filter(romanized)]);
+}
+
+// Grave, acute, diaeresis and caron: the circumflexes of Lebanon's French transcription
+// ("Châroûn") and Indic macrons are not what people write.
+const WRITTEN_MARKS = new Set(["\u0300", "\u0301", "\u0308", "\u030C"]);
+
+const accentedLetters = (name: string) =>
+  [...name.normalize("NFC")].filter((letter) => /[^\p{ASCII}]/u.test(letter));
+
+/**
  * The name people in the country write: the Spanish display name where Spanish is spoken;
  * elsewhere DataForSEO's unaccented name with the accents GeoNames writes ("Zürich" for
  * "Zurich"), else GeoNames' own name, else DataForSEO's. GeoNames names first-level divisions
@@ -445,6 +496,7 @@ export function geoNamesCollector(
   const entries = new Map<number, GeoNamesEntry>();
   const spanishSpeaking = new Set<string>();
   const languages = new Map<string, string[]>();
+  const localLanguages = new Map<string, string>();
   const add = (country: string, entry: GeoNamesEntry) => {
     const list = byCountry.get(country);
     if (list) list.push(entry);
@@ -514,6 +566,9 @@ export function geoNamesCollector(
         ...new Set(established.length ? established : tags.slice(0, 1).map(code)),
       ]);
       if (tags[0] && code(tags[0]) === "es") spanishSpeaking.add(f[0]);
+      // English is listed first for many countries whose own language is another ("en-IN,hi,…").
+      const own = tags.map(code).find((language) => language !== "en");
+      if (own) localLanguages.set(f[0], own);
     },
     done(): (country: string) => CountryGeoNames {
       // The dumps promise no row order; ids make every run pick the same names.
@@ -525,6 +580,7 @@ export function geoNamesCollector(
         country,
         spanishSpeaking: spanishSpeaking.has(country),
         languages: languages.get(country) ?? [],
+        localLanguage: localLanguages.get(country) ?? "en",
         entries: byCountry.get(country) ?? [],
         minorPlaces: minorByCountry.get(country) ?? [],
       });
@@ -534,6 +590,7 @@ export function geoNamesCollector(
 
 /** A populated place from the fields of a `geoname` table row. */
 function placeEntry(f: readonly string[]): GeoNamesEntry {
+  const names = (f[3] ?? "").split(",").filter(Boolean);
   return {
     id: Number(f[0]),
     kind: "place",
@@ -544,7 +601,8 @@ function placeEntry(f: readonly string[]): GeoNamesEntry {
     population: Number(f[14] ?? 0),
     center: coordinate(f[4], f[5]),
     alternates: [],
-    gazetteerNames: [...new Set((f[3] ?? "").split(",").filter(Boolean).map(normalizePlaceName))],
+    gazetteerNames: [...new Set(names.map(normalizePlaceName))],
+    accentedNames: names.filter((name) => diacritics(name) > 0),
   };
 }
 
