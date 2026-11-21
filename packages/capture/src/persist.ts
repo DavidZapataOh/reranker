@@ -68,6 +68,13 @@ function sent(request: Uint8Array, key: string): unknown {
   }
 }
 
+// The tool the request named, such as OpenAI's dated web search tool.
+function toolVersion(request: Uint8Array): string | null {
+  const tools = sent(request, "tools");
+  const type = Array.isArray(tools) ? (tools[0] as { type?: unknown } | undefined)?.type : null;
+  return typeof type === "string" ? type : null;
+}
+
 function declaredGeo(record: CaptureRecord): CapturePredicateInput["geo"]["declared"] {
   const { slot } = record;
   const target = getGeo(slot.geoKey);
@@ -130,7 +137,7 @@ export async function persistCapture(
       endpoint: record.endpoint,
       model_reported: record.modelReported,
       mode: record.mode,
-      tool_version: null,
+      tool_version: toolVersion(record.request),
       fan_out_queries: Array.isArray(answer?.searchQueries) ? answer.searchQueries : null,
     },
     params: {

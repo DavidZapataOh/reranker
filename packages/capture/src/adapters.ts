@@ -24,6 +24,8 @@ export interface CaptureRecord {
   cost: ProviderCost | null;
   latencyMs: number;
   mode: "live" | "task";
+  /** The adapter's reading of a failed call; without it the DataForSEO status decides. */
+  failure?: { error: Error; retryable: boolean };
 }
 
 /** A queued task as the provider answered its posting. */
@@ -47,6 +49,8 @@ export interface CaptureAdapter {
   provider: CaptureProvider;
   /** The channel recorded on the capture row: OpenAI is `api`, the UI vendors `ui-vendor`. */
   channel: CaptureChannel;
+  /** What a call reserves before it runs, when the engine's UI-vendor estimate does not apply. */
+  estimate?(slot: FrozenSlot): ProviderCost;
   /** Calls and parses only; capacity, spend and persistence belong to the caller. */
   captureLive(slot: FrozenSlot): Promise<CaptureRecord>;
   /** The current parser of an engine's responses, which re-derives answers from sealed bytes. */
