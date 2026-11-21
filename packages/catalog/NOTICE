@@ -13,3 +13,10 @@ and countryInfo.txt. The files used, with their date and SHA-256, are listed und
 sourceGeoNames in data/geo/manifest.json.
 
 The data is provided by GeoNames "as is", without warranty of any kind.
+
+The Swiss language areas in data/regional-languages.json are derived from the Swiss Federal
+Statistical Office (BFS/OFS), Application of Swiss Communes, typologies SPRGEB2020 and
+SPRGEB2000, https://www.agvchapp.bfs.admin.ch, under the BFS open-use terms (source must be
+cited). Each place is joined to its canton through the Google Ads geotargets file,
+https://developers.google.com/google-ads/api/data/geotargets. scripts/build-regional-languages.ts
+lists the files used with their SHA-256 in the output.

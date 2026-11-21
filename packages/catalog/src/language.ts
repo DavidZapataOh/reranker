@@ -1,6 +1,8 @@
 import { type CountryCode, getCountry, mainLanguage } from "@reranker/i18n/countries";
 import { AppError } from "@reranker/schema";
 import { type GeoTarget, MeasurementLanguage } from "@reranker/schema/measurement";
+import regionalLanguages from "../data/regional-languages.json" with { type: "json" };
+import { loadCountryGeo } from "./geo/load";
 import { localPlaceArticle, localPlaceName, spokenPlaceName } from "./geo/resolve";
 import { isGendered, type Noun, type PlaceName } from "./grammar";
 
@@ -24,14 +26,38 @@ export class MeasurementLanguageError extends AppError {
   }
 }
 
-/** The language a business is measured in unless told otherwise: its country's main one. */
-export function countryLanguage(country: CountryCode): MeasurementLanguage {
-  const language = mainLanguage(country);
+function measured(language: string, where: string): MeasurementLanguage {
   const parsed = MeasurementLanguage.safeParse(language);
   if (!parsed.success) {
-    throw new MeasurementLanguageError(language, "unsupported", `${country} speaks ${language}`);
+    throw new MeasurementLanguageError(language, "unsupported", `${where} speaks ${language}`);
   }
   return parsed.data;
+}
+
+/** The main language of a country as a whole. */
+export function countryLanguage(country: CountryCode): MeasurementLanguage {
+  return measured(mainLanguage(country), country);
+}
+
+const regional = regionalLanguages.places as Readonly<
+  Record<string, Readonly<Record<string, string>>>
+>;
+
+/**
+ * The language a business is measured in unless told otherwise: its place's main one, which in a
+ * multilingual country is its region's ("fr" in Geneva and Montreal, "it" in Lugano), else its
+ * country's. Sources are listed in data/regional-languages.json.
+ */
+export function placeLanguage(geo: GeoTarget): MeasurementLanguage {
+  const places = regional[geo.country];
+  if (places && geo.level !== "country") {
+    const place = loadCountryGeo(geo.country).byKey.get(geo.key);
+    const region = place?.regionKey ? loadCountryGeo(geo.country).byKey.get(place.regionKey) : null;
+    const language =
+      (place && places[place.locationCode]) ?? (region && places[region.locationCode]);
+    if (language) return measured(language, geo.key);
+  }
+  return countryLanguage(geo.country);
 }
 
 const countryNames = new Map<MeasurementLanguage, Intl.DisplayNames>();

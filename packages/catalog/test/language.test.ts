@@ -5,6 +5,7 @@ import {
   countryLanguage,
   countryName,
   MeasurementLanguageError,
+  placeLanguage,
   placeName,
   placeTerm,
 } from "../src/language";
@@ -188,5 +189,33 @@ describe("placeTerm", () => {
   test("a country and a Spanish name carry no article", () => {
     expect(placeTerm(getGeo("br"), "pt")).toEqual({ text: "Brasil" });
     expect(placeTerm(getGeo("br-c1001655"), "es")).toEqual({ text: "Río de Janeiro" });
+  });
+});
+
+describe("placeLanguage", () => {
+  test.each([
+    ["ch-c1002992", "fr"], // Geneva
+    ["ch-c1003174", "it"], // Lugano
+    ["ch-c1003297", "de"], // Zürich
+    ["ch-c1002876", "de"], // Biel/Bienne, a German-majority bilingual town
+    ["ch-c1002971", "fr"], // Fribourg
+    ["ch-c1003220", "de"], // Brig, Upper Valais
+    ["ch", "de"],
+    ["ca-c9196770", "fr"], // Montreal, through Quebec
+    ["ca-r20123", "fr"],
+    ["ca-c1002451", "en"], // Toronto
+    ["be-c1001004", "fr"], // Brussels
+    ["be-c1001394", "fr"], // Liège
+    ["be-c1001382", "de"], // Eupen
+    ["us-c1015049", "en"], // Hialeah
+    ["co-c1003654", "es"], // Medellín
+  ] as const)("%s is measured in %s", (key, language) =>
+    expect(placeLanguage(getGeo(key))).toBe(language),
+  );
+
+  test("a region whose language is not measured is refused like its country", () => {
+    expect(() => placeLanguage(getGeo("be-c1001021"))).toThrow(
+      expect.objectContaining({ language: "nl", gap: "unsupported" }),
+    );
   });
 });

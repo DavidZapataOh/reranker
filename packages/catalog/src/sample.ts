@@ -13,7 +13,7 @@ import { type Rng, rngFromSeed } from "@reranker/stats";
 import { geoForEngine } from "./geo/effects";
 import type { Noun } from "./grammar";
 import { sha256Hex } from "./hash";
-import { countryLanguage } from "./language";
+import { placeLanguage } from "./language";
 import { requireTemplates } from "./templates";
 import {
   materialize,
@@ -37,7 +37,7 @@ export type PlanMeasurementInput = {
   neighborhood: string | null;
   /** The business category's noun, which fills {sustantivo}. */
   noun: Noun;
-  /** The language `intentSet` and `noun` are in; the country's main language by default. */
+  /** The language `intentSet` and `noun` are in; the place's main language by default. */
   language?: MeasurementLanguage;
   /** Asked on half the sample of the main language, never less, so its result stands alone. */
   secondary?: SecondaryLanguage;
@@ -176,7 +176,7 @@ function observe(
  */
 export function planMeasurement(input: PlanMeasurementInput): MeasurementPlan {
   const { intentSet, geo, scope, noun, reportId, secondary } = input;
-  const language = input.language ?? countryLanguage(geo.country);
+  const language = input.language ?? placeLanguage(geo);
   const design = {
     intents: input.intents ?? 5,
     variantsPerIntent: input.variantsPerIntent ?? 8,

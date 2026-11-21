@@ -1,6 +1,6 @@
-import type { CountryCode } from "@reranker/i18n/countries";
 import { MeasurementLanguageRequest } from "@reranker/schema/measurement";
 import { describe, expect, test } from "vitest";
+import { getGeo } from "../src/geo/resolve";
 import {
   decideLanguages,
   type LanguageMix,
@@ -17,8 +17,9 @@ const mix = (shares: LanguageMix["shares"], main: "es" | "en" | "de" = "en"): La
   degraded: null,
 });
 
+// A country code ("US") or a place's key ("ch-c1002992").
 const decide = (
-  country: CountryCode,
+  place: string,
   shares: LanguageMix["shares"] | LanguageMix,
   extra: Partial<{
     site: ("es" | "en" | "pt" | "fr" | "de" | "it")[];
@@ -26,7 +27,7 @@ const decide = (
   }> = {},
 ) =>
   decideLanguages({
-    country,
+    geo: getGeo(place.toLowerCase()),
     mix: "degraded" in shares ? (shares as LanguageMix) : mix(shares as LanguageMix["shares"]),
     businessLanguages: extra.site ?? [],
     alsoServesIn: extra.owner ?? null,
@@ -93,35 +94,41 @@ describe("decideLanguages", () => {
     });
   });
 
-  test("a Montreal business is measured in French, the majority of its city's searches", () => {
-    expect(decide("CA", { en: 0.32, fr: 0.68 }, { site: ["fr", "en"] })).toEqual({
-      main: "en",
+  test("a Montreal business is measured in French, Quebec's language, and in English too", () => {
+    expect(decide("ca-c9196770", { en: 0.32, fr: 0.68 }, { site: ["fr", "en"] })).toEqual({
+      main: "fr",
       secondary: {
-        language: "fr",
+        language: "en",
         reasons: ["business_signal", "search_share"],
-        share: 0.68,
+        share: 0.32,
         weighted: true,
       },
-      languageShares: { en: 0.32, fr: 0.68 },
+      languageShares: { fr: 0.68, en: 0.32 },
     });
   });
 
-  test("in Switzerland one second language is chosen among several", () => {
+  test("in Geneva French is the main language and one second is chosen among several", () => {
     const geneva = { de: 0.12, fr: 0.7, it: 0.05, en: 0.13 };
-    expect(decide("CH", geneva).secondary?.language).toBe("fr");
-    // A site in Italian and English: the language with two reasons beats the larger share alone.
-    expect(decide("CH", geneva, { site: ["en", "it"] }).secondary).toEqual({
-      language: "en",
+    expect(decide("ch-c1002992", geneva).main).toBe("fr");
+    expect(decide("ch-c1002992", geneva).secondary?.language).toBe("en");
+    // A site in Italian and German: the language with two reasons beats the larger share alone.
+    expect(decide("ch-c1002992", geneva, { site: ["de", "it"] }).secondary).toEqual({
+      language: "de",
       reasons: ["business_signal", "search_share"],
-      share: 0.13,
+      share: 0.12,
       weighted: true,
     });
     // The owner's word ranks first.
-    expect(decide("CH", geneva, { site: ["en"], owner: "it" })).toEqual({
-      main: "de",
+    expect(decide("ch-c1002992", geneva, { site: ["en"], owner: "it" })).toEqual({
+      main: "fr",
       secondary: { language: "it", reasons: ["owner"], share: 0.05, weighted: true },
-      languageShares: { de: 0.12, it: 0.05 },
+      languageShares: { fr: 0.7, it: 0.05 },
     });
+  });
+
+  test("Lugano is measured in Italian and Zürich in German", () => {
+    expect(decide("ch-c1003174", { it: 0.8, de: 0.2 }).main).toBe("it");
+    expect(decide("ch-c1003297", { de: 0.8, en: 0.2 }).main).toBe("de");
   });
 
   test("a second language without searches is reported on its own, not weighted", () => {
