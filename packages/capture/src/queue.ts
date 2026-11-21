@@ -243,14 +243,24 @@ async function reconcile(measurementId: string): Promise<void> {
       if (outcome === "released" && reservation) {
         const spend = row.spend as SpendContext;
         const amount = charged ?? reservation.reserved;
-        const again = await reserveSpend({
-          ...spend,
-          provider: reservation.provider,
-          channel,
-          engine: row.engine as FrozenSlot["engine"],
-          estimate: amount,
-        });
-        await settleSpend(again, amount);
+        try {
+          const again = await reserveSpend({
+            ...spend,
+            provider: reservation.provider,
+            channel,
+            engine: row.engine as FrozenSlot["engine"],
+            estimate: amount,
+          });
+          await settleSpend(again, amount);
+        } catch (error) {
+          // The task is adopted either way; a charge the caps refuse is left for operations.
+          log.error("capture.task_charge_unrecorded", {
+            provider,
+            slot_id: row.slotId,
+            micro_usd: amount.amount_micros,
+            error: error instanceof Error ? error.name : "unknown",
+          });
+        }
       }
     }
   }
