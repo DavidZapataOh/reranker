@@ -1,4 +1,4 @@
-export { categoryByRules, type InferredCategory } from "./category";
+export { categoryByRules, type InferredCategory, inferCategory } from "./category";
 export {
   assertDistinctProviders,
   configHashOf,

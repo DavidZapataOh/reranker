@@ -93,19 +93,21 @@ describe("ClassifierSchema", () => {
     categoryKey: "gen:cafe-de-origen",
     label: "Café de origen",
     noun: "tienda de café",
+    nounGender: null,
     archetype: "food",
     scope: "national",
-    register: "tu",
     confidence: 0.82,
   };
 
   test("accepts a category with a known archetype", () => {
     expect(ClassifierSchema.safeParse(ok).success).toBe(true);
+    expect(ClassifierSchema.safeParse({ ...ok, nounGender: "n" }).success).toBe(true);
   });
 
-  test("rejects an archetype outside the catalog and a confidence above 1", () => {
+  test("rejects an archetype outside the catalog, a confidence above 1 and an unknown gender", () => {
     expect(ClassifierSchema.safeParse({ ...ok, archetype: "pets" }).success).toBe(false);
     expect(ClassifierSchema.safeParse({ ...ok, confidence: 1.2 }).success).toBe(false);
+    expect(ClassifierSchema.safeParse({ ...ok, nounGender: "x" }).success).toBe(false);
   });
 
   test("is strict for structured outputs", () => {

@@ -1,6 +1,6 @@
 import type { MeasurementLanguage } from "@reranker/schema/measurement";
 import { describe, expect, test } from "vitest";
-import { agree, type GenderedNoun, type PlaceName } from "../src/grammar";
+import { agree, type GenderedNoun, nounGenders, type PlaceName } from "../src/grammar";
 import { placeholderShape } from "../src/templates";
 import { instantiate } from "../src/variants";
 
@@ -221,4 +221,14 @@ describe("place articles fuse with the preposition before the place", () => {
     expect(asked("dentista {lugar}", { text: "Il Cairo", article: "il" }, "it")).toBe(
       "dentista Il Cairo",
     ));
+});
+
+describe("nounGenders", () => {
+  test("lists the genders templates agree with, and none in Spanish or English", () => {
+    expect(nounGenders("de")).toEqual(["m", "f", "n"]);
+    for (const language of ["pt", "fr", "it"] as const)
+      expect(nounGenders(language)).toEqual(["m", "f"]);
+    expect(nounGenders("es")).toEqual([]);
+    expect(nounGenders("en")).toEqual([]);
+  });
 });

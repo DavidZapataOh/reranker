@@ -40,8 +40,9 @@ export const ClassifierSchema = z.strictObject({
   label: z.string(),
   noun: z.string(),
   archetype: CategoryArchetype,
+  // Only the languages whose question templates agree with the noun need it.
+  nounGender: z.enum(["m", "f", "n"]).nullable(),
   scope: z.enum(["local", "national"]),
-  register: z.enum(["tu", "usted"]),
   confidence: z.number().min(0).max(1),
 });
 export type ClassifierOutput = z.infer<typeof ClassifierSchema>;

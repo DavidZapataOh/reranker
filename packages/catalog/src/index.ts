@@ -22,7 +22,14 @@ export {
   resolveGeo,
   spokenPlaceName,
 } from "./geo/resolve";
-export { agree, type Gender, type GenderedNoun, type Noun, nounText } from "./grammar";
+export {
+  agree,
+  type Gender,
+  type GenderedNoun,
+  type Noun,
+  nounGenders,
+  nounText,
+} from "./grammar";
 export {
   contentHash,
   type IntentSetId,
