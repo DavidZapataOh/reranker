@@ -50,8 +50,11 @@ jobs:
           GROUP: ${{ inputs.group }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY_CI }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY_CI }}
-          # A group's review spends well under US$1; each run has a ledger of its own.
+          # A group's review spends well under US$1; each run has a ledger of its own. Outside
+          # production every provider is capped at zero unless raised here.
           SPEND_CAP_DAILY_BENCHMARK_USD: "3"
+          SPEND_CAP_DAILY_OPENAI_USD: "3"
+          SPEND_CAP_DAILY_GEMINI_USD: "3"
           POOL: ${{ runner.temp }}/seed-build
           OUT_DIR: ${{ runner.temp }}/seed-review
         run: pnpm --filter @reranker/catalog seed:review-native "$POOL/seed-$GROUP.json" "$OUT_DIR"
