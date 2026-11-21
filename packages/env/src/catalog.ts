@@ -138,7 +138,7 @@ const rows: Row[] = [
   ["DATAFORSEO_PASSWORD", "secret", ALL, true, "capture", true],
   ["OPENAI_API_KEY", "secret", ALL, false, "extraction", true],
   ["OPENAI_API_KEY_CI", "secret", NONE, true, "extraction", true],
-  ["OPENAI_CONTROL_MODEL", "config", ALL, false, "capture"],
+  ["OPENAI_CONTROL_MODEL", "config", ALL, false, "capture", true],
   ["OPENAI_CONTROL_API_KEY", "secret", PROD, false, "capture", true],
   ["GEMINI_API_KEY", "secret", ALL, false, "extraction", true],
   ["GEMINI_API_KEY_CI", "secret", NONE, true, "extraction", true],

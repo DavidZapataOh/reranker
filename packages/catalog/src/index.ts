@@ -15,7 +15,13 @@ export {
   type GeoForEngineOptions,
   geoForEngine,
 } from "./geo/effects";
-export { cityDisplayName, getGeo, type ResolveGeoInput, resolveGeo } from "./geo/resolve";
+export {
+  cityDisplayName,
+  getGeo,
+  type ResolveGeoInput,
+  resolveGeo,
+  spokenPlaceName,
+} from "./geo/resolve";
 export { agree, type Gender, type GenderedNoun, type Noun, nounText } from "./grammar";
 export {
   contentHash,
