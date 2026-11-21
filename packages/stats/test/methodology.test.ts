@@ -5,14 +5,14 @@ import { describe, expect, test } from "vitest";
 import { MethodologySchema, methodology, seedFor } from "../src/methodology";
 
 async function readMethodologyFile(): Promise<Record<string, unknown>> {
-  const url = new URL("../methodology/2026.11.0.json", import.meta.url);
+  const url = new URL("../methodology/2026.11.1.json", import.meta.url);
   return JSON.parse(await readFile(url, "utf8"));
 }
 
 describe("methodology", () => {
   test("values are the published ones", () => {
     expect(methodology).toMatchObject({
-      version: "2026.11.0",
+      version: "2026.11.1",
       confidenceLevel: 0.95,
       levelCuts: [10, 40, 70],
       positionDiscount: 0.9,
@@ -25,7 +25,8 @@ describe("methodology", () => {
       fullIntervalTopN: 10,
       competitorsShown: 5,
       wilsonDivergencePts: 3,
-      weights: { engines: "equal", intents: "demandWeight" },
+      weights: { engines: "equal", intents: "demandWeight", languages: "searchShare" },
+      secondaryLanguage: { sampleFloor: 0.5 },
     });
   });
 

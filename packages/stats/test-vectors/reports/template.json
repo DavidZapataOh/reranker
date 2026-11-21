@@ -1,6 +1,6 @@
 {
-  "methodologyVersion": "2026.11.0",
-  "methodologyHash": "f4ef02b882a6bea95b7ebb77a987b6a4a0abdcea0045a70f4ee7c9f904ec660e",
+  "methodologyVersion": "2026.11.1",
+  "methodologyHash": "f5661011aa4e58a84cd2f84ddef4f80955f11a4fa47a8eea5c989c20bf3bcb44",
   "input": {
     "reportId": "fr_01JDB4Q7W2M8N3P5R6S9T0V1A3",
     "asOf": "2026-11-20T16:00:00.000Z",
@@ -28315,12 +28315,12 @@
     }
   },
   "output": {
-    "methodologyVersion": "2026.11.0",
-    "methodologyHash": "f4ef02b882a6bea95b7ebb77a987b6a4a0abdcea0045a70f4ee7c9f904ec660e",
+    "methodologyVersion": "2026.11.1",
+    "methodologyHash": "f5661011aa4e58a84cd2f84ddef4f80955f11a4fa47a8eea5c989c20bf3bcb44",
     "intentSetId": "is_bbbbbbbbbbbbbbbb",
     "intentSetHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
     "extractorConfigHash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-    "seed": "3d326cafcb92b48d1ca656e9b8634ec7a63deac18c922f57d801e58a11fdd97f",
+    "seed": "b873f1b22e28fa19f3c8723ff8418e043f79c92159c02d5c10c50ce79583b3f1",
     "computedAt": "2026-11-20T16:00:00.000Z",
     "target": {
       "entityKey": "place:target",
@@ -28330,7 +28330,7 @@
       "overall": {
         "value": 59,
         "lower": 51,
-        "upper": 66,
+        "upper": 65,
         "atMost": null,
         "level": "on_the_list",
         "levelDisplay": {
@@ -28364,7 +28364,7 @@
           "score": {
             "value": 62,
             "lower": 46,
-            "upper": 75,
+            "upper": 74,
             "atMost": null,
             "level": "on_the_list",
             "levelDisplay": {
@@ -28404,7 +28404,7 @@
           "score": {
             "value": 59,
             "lower": 43,
-            "upper": 72,
+            "upper": 73,
             "atMost": null,
             "level": "on_the_list",
             "levelDisplay": {
@@ -28444,7 +28444,7 @@
           "score": {
             "value": 59,
             "lower": 43,
-            "upper": 73,
+            "upper": 72,
             "atMost": null,
             "level": "on_the_list",
             "levelDisplay": {
@@ -28523,7 +28523,7 @@
         "perplexity": {
           "score": {
             "value": 59,
-            "lower": 43,
+            "lower": 44,
             "upper": 72,
             "atMost": null,
             "level": "on_the_list",
@@ -28667,7 +28667,7 @@
         "entityKind": "business",
         "overall": {
           "value": 22,
-          "lower": 17,
+          "lower": 16,
           "upper": 27,
           "atMost": null,
           "level": "sometimes",
@@ -28757,7 +28757,7 @@
         "entityKind": "business",
         "overall": {
           "value": 15,
-          "lower": 10,
+          "lower": 11,
           "upper": 21,
           "atMost": null,
           "level": "sometimes",
@@ -29133,7 +29133,7 @@
         "targetScore": {
           "value": 61,
           "lower": 46,
-          "upper": 74,
+          "upper": 73,
           "atMost": null,
           "level": "on_the_list",
           "levelDisplay": {
@@ -29183,7 +29183,7 @@
         },
         "targetScore": {
           "value": 61,
-          "lower": 47,
+          "lower": 46,
           "upper": 73,
           "atMost": null,
           "level": "on_the_list",
@@ -29215,11 +29215,12 @@
         }
       }
     ],
+    "languages": [],
     "canonicalOnly": {
       "target": {
         "value": 56,
         "lower": 36,
-        "upper": 74,
+        "upper": 73,
         "atMost": null,
         "level": "on_the_list",
         "levelDisplay": {
@@ -29321,7 +29322,7 @@
           "score": {
             "value": 23,
             "lower": 11,
-            "upper": 37,
+            "upper": 38,
             "atMost": null,
             "level": "sometimes",
             "levelDisplay": {
@@ -29354,8 +29355,8 @@
           "entityKey": "name:dra gomez@co-c1003654",
           "score": {
             "value": 75,
-            "lower": 61,
-            "upper": 80,
+            "lower": 60,
+            "upper": 81,
             "atMost": null,
             "level": "regular",
             "levelDisplay": {

@@ -3,6 +3,7 @@ import { type CaptureChannel, cost, EngineId } from "@reranker/schema";
 import type {
   EntityKey,
   IntentId,
+  MeasurementLanguage,
   MeasurementPlan,
   PlannedObservation,
   ResolvedMention,
@@ -104,9 +105,55 @@ export const plan: MeasurementPlan = {
   observations: Array.from({ length: ENGINES.length * PER_ENGINE }, (_, slot) => observation(slot)),
 };
 
+// A second language on the half-sample floor: 4 variants per intent, appended after the main 200.
+export const SECONDARY_INTENTS: IntentId[] = ["discovery", "price", "urgency", "trust", "zone"].map(
+  (slug) => `dental_clinic.en-neutral-${slug}` as IntentId,
+);
+export const SECONDARY_VARIANTS = 4;
+export const SECONDARY_PER_ENGINE = SECONDARY_INTENTS.length * SECONDARY_VARIANTS;
+const SECONDARY_SET = "is_1111111111111111";
+
+export function bilingualPlan(variants = SECONDARY_VARIANTS): MeasurementPlan {
+  const perEngine = SECONDARY_INTENTS.length * variants;
+  const secondary = Array.from({ length: ENGINES.length * perEngine }, (_, k) => {
+    const engine = ENGINES[Math.floor(k / perEngine)] as EngineId;
+    const intent = Math.floor((k % perEngine) / variants);
+    const variant = k % variants;
+    const slot = plan.observations.length + k;
+    return {
+      ...observation(ENGINES.indexOf(engine) * PER_ENGINE),
+      intentSetId: SECONDARY_SET,
+      intentId: SECONDARY_INTENTS[intent] as IntentId,
+      paraphraseId: `en${intent}-${variant}`,
+      language: "en" as const,
+      promptText: `prompt ${slot}`,
+      variantId: `pv_${slot.toString(16).padStart(16, "0")}`,
+      isCanonical: variant === 0,
+    } satisfies PlannedObservation;
+  });
+  return {
+    ...plan,
+    language: "es",
+    secondary: {
+      language: "en",
+      intentSet: { ...plan.intentSet, id: SECONDARY_SET, registerProfile: "neutral" },
+      design: { intents: SECONDARY_INTENTS.length, variantsPerIntent: variants, runsPerVariant: 1 },
+    },
+    observations: [
+      ...plan.observations.map((o) => ({ ...o, language: "es" as const })),
+      ...secondary,
+    ],
+  };
+}
+
 export interface FixtureOptions {
+  /** The plan to answer; the V0 one-language plan by default. */
+  plan?: MeasurementPlan;
   /** The first n slots of each engine fail; 'all' fails every slot. */
   failed?: Partial<Record<EngineId, number>> | "all";
+  /** The first n slots of each engine in the second language fail. */
+  secondaryFailed?: Partial<Record<EngineId, number>>;
+  languageShares?: Partial<Record<MeasurementLanguage, number>>;
   /** The n slots after the failed ones succeed without an AI answer. */
   notPresent?: Partial<Record<EngineId, number>>;
   mixedConfig?: boolean;
@@ -124,11 +171,22 @@ const defaultMentions = (slot: number) =>
 export function fixture(opts: FixtureOptions = {}) {
   const captures: ObservedCapture[] = [];
   const extractions: ResponseExtraction[] = [];
-  plan.observations.forEach((o, slot) => {
-    const nth = slot % PER_ENGINE;
-    const failedCount = opts.failed === "all" ? PER_ENGINE : (opts.failed?.[o.engine] ?? 0);
+  const answered = opts.plan ?? plan;
+  const seen = new Map<string, number>();
+  answered.observations.forEach((o, slot) => {
+    // Position within the engine's slots of the same language.
+    const cell = `${o.engine}|${o.language === "en" ? "en" : ""}`;
+    const nth = seen.get(cell) ?? 0;
+    seen.set(cell, nth + 1);
+    const failedCount =
+      o.language === "en"
+        ? (opts.secondaryFailed?.[o.engine] ?? 0)
+        : opts.failed === "all"
+          ? PER_ENGINE
+          : (opts.failed?.[o.engine] ?? 0);
     const failed = nth < failedCount;
-    const present = !failed && nth >= failedCount + (opts.notPresent?.[o.engine] ?? 0);
+    const notPresent = o.language === "en" ? 0 : (opts.notPresent?.[o.engine] ?? 0);
+    const present = !failed && nth >= failedCount + notPresent;
     const channel = opts.channel?.[slot] ?? "ui-vendor";
     const mentions = present ? (opts.mentions ?? defaultMentions)(slot) : [];
     const answer = failed ? null : { present };
@@ -159,10 +217,11 @@ export function fixture(opts: FixtureOptions = {}) {
     });
   });
   return {
-    plan,
+    plan: answered,
     captures,
     extractions,
     ...(opts.intentWeights === undefined ? {} : { intentWeights: opts.intentWeights }),
+    ...(opts.languageShares === undefined ? {} : { languageShares: opts.languageShares }),
   };
 }
 

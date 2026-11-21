@@ -1,0 +1,17 @@
+{
+  "version": "2026.11.1",
+  "confidenceLevel": 0.95,
+  "levelCuts": [10, 40, 70],
+  "positionDiscount": 0.9,
+  "mcDraws": 4000,
+  "tie": { "ahead": 0.8, "behind": 0.2 },
+  "sufficiency": { "sufficient": 8, "orientative": 15 },
+  "engineMinValid": 20,
+  "plannedPerEngine": 40,
+  "rho": { "prior": 0.26, "floor": 0.1 },
+  "fullIntervalTopN": 10,
+  "competitorsShown": 5,
+  "wilsonDivergencePts": 3,
+  "weights": { "engines": "equal", "intents": "demandWeight", "languages": "searchShare" },
+  "secondaryLanguage": { "sampleFloor": 0.5 }
+}

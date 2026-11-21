@@ -1,6 +1,6 @@
 {
-  "methodologyVersion": "2026.11.0",
-  "methodologyHash": "f4ef02b882a6bea95b7ebb77a987b6a4a0abdcea0045a70f4ee7c9f904ec660e",
+  "methodologyVersion": "2026.11.1",
+  "methodologyHash": "f5661011aa4e58a84cd2f84ddef4f80955f11a4fa47a8eea5c989c20bf3bcb44",
   "input": {
     "reportId": "fr_01JDB4Q7W2M8N3P5R6S9T0V1A2",
     "asOf": "2026-11-20T15:00:00.000Z",
@@ -19765,12 +19765,12 @@
     ]
   },
   "output": {
-    "methodologyVersion": "2026.11.0",
-    "methodologyHash": "f4ef02b882a6bea95b7ebb77a987b6a4a0abdcea0045a70f4ee7c9f904ec660e",
+    "methodologyVersion": "2026.11.1",
+    "methodologyHash": "f5661011aa4e58a84cd2f84ddef4f80955f11a4fa47a8eea5c989c20bf3bcb44",
     "intentSetId": "is_aaaaaaaaaaaaaaaa",
     "intentSetHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
     "extractorConfigHash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-    "seed": "a38f88f6f1e2a7c5215e9b0114f9710b8cac6f25f3685fcffaac3c4b41976a9f",
+    "seed": "1d68e9fb510c55ead20bde642f77552a0586e7fe93b88708001a871e8013eaf1",
     "computedAt": "2026-11-20T15:00:00.000Z",
     "target": {
       "entityKey": "place:target",
@@ -19814,7 +19814,7 @@
           "score": {
             "value": 50,
             "lower": 34,
-            "upper": 66,
+            "upper": 65,
             "atMost": null,
             "level": "on_the_list",
             "levelDisplay": {
@@ -19854,7 +19854,7 @@
           "score": {
             "value": 50,
             "lower": 35,
-            "upper": 65,
+            "upper": 66,
             "atMost": null,
             "level": "on_the_list",
             "levelDisplay": {
@@ -19862,7 +19862,7 @@
               "from": "sometimes",
               "to": "on_the_list"
             },
-            "sufficiency": "orientative",
+            "sufficiency": "insufficient",
             "preliminary": true,
             "components": {
               "recommendationRate": {
@@ -20429,7 +20429,7 @@
         "targetScore": {
           "value": 50,
           "lower": 33,
-          "upper": 68,
+          "upper": 67,
           "atMost": null,
           "level": "on_the_list",
           "levelDisplay": {
@@ -20479,7 +20479,7 @@
         },
         "targetScore": {
           "value": 50,
-          "lower": 33,
+          "lower": 32,
           "upper": 67,
           "atMost": null,
           "level": "on_the_list",
@@ -20530,7 +20530,7 @@
         },
         "targetScore": {
           "value": 50,
-          "lower": 34,
+          "lower": 33,
           "upper": 67,
           "atMost": null,
           "level": "on_the_list",
@@ -20664,6 +20664,7 @@
         }
       }
     ],
+    "languages": [],
     "canonicalOnly": {
       "target": {
         "value": 100,
@@ -20805,7 +20806,7 @@
           "score": {
             "value": 18,
             "lower": 6,
-            "upper": 38,
+            "upper": 37,
             "atMost": null,
             "level": "sometimes",
             "levelDisplay": {
@@ -20840,7 +20841,7 @@
           "score": {
             "value": 32,
             "lower": 15,
-            "upper": 52,
+            "upper": 51,
             "atMost": null,
             "level": "sometimes",
             "levelDisplay": {

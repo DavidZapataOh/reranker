@@ -1,10 +1,10 @@
 import { createHash } from "node:crypto";
 import { z } from "@reranker/schema";
 import canonicalize from "canonicalize";
-import file from "../methodology/2026.11.0.json" with { type: "json" };
+import file from "../methodology/2026.11.1.json" with { type: "json" };
 
 export interface Methodology {
-  version: "2026.11.0";
+  version: "2026.11.1";
   confidenceLevel: 0.95;
   levelCuts: readonly [10, 40, 70];
   positionDiscount: 0.9;
@@ -17,12 +17,13 @@ export interface Methodology {
   fullIntervalTopN: 10;
   competitorsShown: 5;
   wilsonDivergencePts: 3;
-  weights: { engines: "equal"; intents: "demandWeight" };
+  weights: { engines: "equal"; intents: "demandWeight"; languages: "searchShare" };
+  secondaryLanguage: { sampleFloor: 0.5 };
 }
 
 // Literal values: a published methodology never changes in place; a change is a new version file.
 export const MethodologySchema: z.ZodType<Methodology> = z.strictObject({
-  version: z.literal("2026.11.0"),
+  version: z.literal("2026.11.1"),
   confidenceLevel: z.literal(0.95),
   levelCuts: z.tuple([z.literal(10), z.literal(40), z.literal(70)]).readonly(),
   positionDiscount: z.literal(0.9),
@@ -35,7 +36,12 @@ export const MethodologySchema: z.ZodType<Methodology> = z.strictObject({
   fullIntervalTopN: z.literal(10),
   competitorsShown: z.literal(5),
   wilsonDivergencePts: z.literal(3),
-  weights: z.strictObject({ engines: z.literal("equal"), intents: z.literal("demandWeight") }),
+  weights: z.strictObject({
+    engines: z.literal("equal"),
+    intents: z.literal("demandWeight"),
+    languages: z.literal("searchShare"),
+  }),
+  secondaryLanguage: z.strictObject({ sampleFloor: z.literal(0.5) }),
 });
 
 function sha256Hex(input: string): string {

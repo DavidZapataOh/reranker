@@ -4,6 +4,7 @@ import {
   type EntityKey,
   type EntityKind,
   type IntentId,
+  type MeasurementLanguage,
   type MeasurementPlan,
   type PlannedObservation,
   parseSlotId,
@@ -13,13 +14,19 @@ import {
 import type { CaptureFrame, EntityColumn } from "./compare";
 import { methodology } from "./methodology";
 
+export type LanguageShares = Partial<Record<MeasurementLanguage, number>>;
+
 export interface ObservationFrame extends CaptureFrame {
   captures: Array<{
     captureId: string;
     engine: EngineId;
     intentId: IntentId;
+    /** Null in a one-language report. */
+    language: MeasurementLanguage | null;
     stratum: string;
     weight: number;
+    /** The stratum's weight within its engine alone, for the engine's own estimates. */
+    engineWeight: number;
     isCanonical: boolean;
     present: boolean;
     namesEntities: boolean;
@@ -32,6 +39,17 @@ export interface ObservationFrame extends CaptureFrame {
     notPresent: number;
     included: boolean;
     geo: EngineGeo;
+    /** `weight` is proportional to `engineWeight` over the engine's captures, so its own
+     * estimates can read the report's shared bootstrap draws. */
+    sharesFrame: boolean;
+  }>;
+  /** Empty in a one-language report. */
+  languages: Array<{
+    language: MeasurementLanguage;
+    searchShare: number;
+    planned: number;
+    valid: number;
+    included: boolean;
   }>;
   entities: Map<
     EntityKey,
@@ -116,57 +134,204 @@ function demandWeightOf(
   return w;
 }
 
+interface Languages {
+  main: MeasurementLanguage;
+  secondary: MeasurementLanguage;
+  /** Normalized to sum 1. */
+  shares: Map<MeasurementLanguage, number>;
+}
+
+/** Null for a one-language plan, whose language does not enter the weights. */
+function languagesOf(plan: MeasurementPlan, shares: LanguageShares): Languages | null {
+  const secondary = plan.secondary?.language;
+  if (secondary === undefined) return null;
+  const main = plan.language;
+  if (main === undefined || main === secondary) {
+    throw new AppError("validation_failed", {
+      detail: "a two-language plan must name its main language, distinct from the second",
+    });
+  }
+  const counts = new Map<string, { main: number; secondary: number }>();
+  for (const o of plan.observations) {
+    if (o.language !== main && o.language !== secondary) {
+      throw new AppError("validation_failed", {
+        detail: `observation ${o.variantId} is in ${o.language ?? "no language"}, not ${main} or ${secondary}`,
+      });
+    }
+    const c = counts.get(o.engine) ?? { main: 0, secondary: 0 };
+    c[o.language === main ? "main" : "secondary"]++;
+    counts.set(o.engine, c);
+  }
+  // The second language is sampled on a fixed floor, not in proportion to its share, so its
+  // own estimate stays stable; a thinner sample would publish noise.
+  for (const [engine, c] of counts) {
+    if (c.secondary < methodology.secondaryLanguage.sampleFloor * c.main) {
+      throw new AppError("validation_failed", {
+        detail: `${engine} plans ${c.secondary} ${secondary} questions, under half of its ${c.main}`,
+      });
+    }
+  }
+  const raw = [main, secondary].map((language) => {
+    const share = shares[language];
+    if (share === undefined || !(Number.isFinite(share) && share > 0)) {
+      throw new AppError("validation_failed", {
+        detail: `language ${language} has search share ${share}`,
+      });
+    }
+    return [language, share] as const;
+  });
+  const total = raw.reduce((sum, [, s]) => sum + s, 0);
+  return { main, secondary, shares: new Map(raw.map(([l, s]) => [l, s / total])) };
+}
+
+interface Cell {
+  engine: EngineId;
+  language: MeasurementLanguage | null;
+  planned: number;
+  valid: number;
+  included: boolean;
+  /** demandWeight of each intent with a valid capture. */
+  intents: Map<IntentId, number>;
+}
+
 export function buildObservations(input: {
   plan: MeasurementPlan;
   captures: ObservedCapture[];
   extractions: ResponseExtraction[];
   intentWeights?: Partial<Record<IntentId, number>>;
+  /** Each language's share of the category's searches; read only in a two-language plan. */
+  languageShares?: LanguageShares;
 }): ObservationFrame {
   const { plan, extractions, intentWeights = {} } = input;
+  const languages = languagesOf(plan, input.languageShares ?? {});
   const valid = validCaptures(plan, input.captures);
   const extractorConfigHash = configHashOf(extractions);
   if (valid.length === 0) {
     throw new AppError("provider_unavailable", { detail: "no capture of the report succeeded" });
   }
 
-  const engines = EngineId.options.flatMap((engine) => {
-    const planned = plan.observations.filter((o) => o.engine === engine);
-    const first = planned[0];
-    if (first === undefined) return [];
-    const mine = valid.filter((v) => v.planned.engine === engine);
-    const notPresent = mine.filter((v) => !v.raw.answer?.present).length;
-    return [
-      {
-        engine,
-        planned: planned.length,
-        valid: mine.length,
-        failed: planned.length - mine.length,
-        notPresent,
-        included: mine.length >= methodology.engineMinValid,
-        geo: first.geoDeclared,
-      },
-    ];
-  });
-  const included = new Set(engines.filter((e) => e.included).map((e) => e.engine));
-  if (included.size === 0) {
+  // A cell is one engine in one language: inclusion and the engine split are decided per cell.
+  const languageOf = (o: PlannedObservation) =>
+    languages === null ? null : (o.language as MeasurementLanguage);
+  const cellKey = (engine: EngineId, language: MeasurementLanguage | null) =>
+    `${engine}|${language ?? ""}`;
+  const cells = new Map<string, Cell>();
+  const cellOf = (o: PlannedObservation): Cell => {
+    const key = cellKey(o.engine, languageOf(o));
+    let cell = cells.get(key);
+    if (cell === undefined) {
+      cell = {
+        engine: o.engine,
+        language: languageOf(o),
+        planned: 0,
+        valid: 0,
+        included: false,
+        intents: new Map(),
+      };
+      cells.set(key, cell);
+    }
+    return cell;
+  };
+  for (const o of plan.observations) cellOf(o).planned++;
+  for (const { planned } of valid) {
+    const cell = cellOf(planned);
+    cell.valid++;
+    cell.intents.set(planned.intentId, demandWeightOf(planned.intentId, intentWeights));
+  }
+  for (const cell of cells.values()) {
+    // The second language must keep the same share of its planned answers as the main one.
+    const main = languages === null ? null : cells.get(cellKey(cell.engine, languages.main));
+    const minValid =
+      main === null || main === undefined || cell === main
+        ? methodology.engineMinValid
+        : Math.ceil((methodology.engineMinValid * cell.planned) / main.planned);
+    cell.included = cell.valid >= minValid;
+  }
+  if (![...cells.values()].some((c) => c.included)) {
     throw new AppError("provider_unavailable", { detail: "no engine has enough valid captures" });
   }
 
-  // W_h = (1/k) · demandWeight_i / Σ demandWeight over the engine's intents with valid captures.
-  const strataOf = new Map<EngineId, Map<IntentId, number>>();
-  for (const { planned } of valid) {
-    const intents = strataOf.get(planned.engine) ?? new Map<IntentId, number>();
-    intents.set(planned.intentId, demandWeightOf(planned.intentId, intentWeights));
-    strataOf.set(planned.engine, intents);
-  }
+  const languageList = languages === null ? [null] : [languages.main, languages.secondary];
+  const enginesIn = new Map(
+    languageList.map((l) => [
+      l,
+      [...cells.values()].filter((c) => c.language === l && c.included).length,
+    ]),
+  );
+  const shareOf = (l: MeasurementLanguage | null) =>
+    l === null ? 1 : (languages?.shares.get(l) as number);
+  // A language with no engine left gives its share to the other.
+  const liveShare = languageList
+    .filter((l) => (enginesIn.get(l) as number) > 0)
+    .reduce((sum, l) => sum + shareOf(l), 0);
+
+  // W_h = (s_l / k_l) · demandWeight_i / Σ demandWeight over the cell's intents with valid
+  // captures, where s_l is the language's search share and k_l its number of included engines.
+  // These are the fixed stratum weights of a stratified estimator, so the rate's variance is
+  // Σ W_h² p_h(1 − p_h)/n_h (Cochran, Sampling Techniques, 3rd ed., 1977, eq. 5.6) and its
+  // interval uses Korn and Graubard's effective size (Survey Methodology 24(2), 1998), both in
+  // `effectiveSize`; the score's Monte Carlo and the bootstrap read the same W_h.
   const weights = new Map<string, number>();
-  for (const [engine, intents] of strataOf) {
-    const total = [...intents.values()].reduce((a, b) => a + b, 0);
-    for (const [intentId, w] of intents) {
-      weights.set(`${engine}|${intentId}`, included.has(engine) ? w / total / included.size : 0);
+  // Within one engine, s_l renormalized over the languages the engine counts in.
+  const engineWeights = new Map<string, number>();
+  const sharesFrame = new Map<EngineId, boolean>();
+  for (const engine of EngineId.options) {
+    const own = languageList.flatMap((l) => cells.get(cellKey(engine, l)) ?? []);
+    const counted = own.some((c) => c.included) ? own.filter((c) => c.included) : own;
+    const engineShare = counted.reduce((sum, c) => sum + shareOf(c.language), 0);
+    sharesFrame.set(
+      engine,
+      new Set(own.filter((c) => c.included).map((c) => enginesIn.get(c.language))).size === 1,
+    );
+    for (const cell of own) {
+      const total = [...cell.intents.values()].reduce((a, b) => a + b, 0);
+      const k = enginesIn.get(cell.language) as number;
+      for (const [intentId, w] of cell.intents) {
+        const stratum = `${engine}|${intentId}`;
+        const share = shareOf(cell.language);
+        weights.set(stratum, cell.included ? ((share / liveShare) * (w / total)) / k : 0);
+        engineWeights.set(
+          stratum,
+          counted.includes(cell) ? (share / engineShare) * (w / total) : 0,
+        );
+      }
     }
   }
   const mass = [...weights.values()].reduce((a, b) => a + b, 0);
+
+  const engines = EngineId.options.flatMap((engine) => {
+    const own = languageList.flatMap((l) => cells.get(cellKey(engine, l)) ?? []);
+    const first = plan.observations.find((o) => o.engine === engine);
+    if (first === undefined) return [];
+    const mine = valid.filter((v) => v.planned.engine === engine);
+    const planned = own.reduce((sum, c) => sum + c.planned, 0);
+    return [
+      {
+        engine,
+        planned,
+        valid: mine.length,
+        failed: planned - mine.length,
+        notPresent: mine.filter((v) => !v.raw.answer?.present).length,
+        included: own.some((c) => c.included),
+        geo: first.geoDeclared,
+        sharesFrame: sharesFrame.get(engine) as boolean,
+      },
+    ];
+  });
+
+  const languageRows =
+    languages === null
+      ? []
+      : languageList.map((l) => {
+          const own = [...cells.values()].filter((c) => c.language === l);
+          return {
+            language: l as MeasurementLanguage,
+            searchShare: shareOf(l),
+            planned: own.reduce((sum, c) => sum + c.planned, 0),
+            valid: own.reduce((sum, c) => sum + c.valid, 0),
+            included: (enginesIn.get(l) as number) > 0,
+          };
+        });
 
   const byCapture = new Map(extractions.map((e) => [e.captureId, e]));
   const n = valid.length;
@@ -225,13 +390,15 @@ export function buildObservations(input: {
       captureId: capture.id,
       engine: planned.engine,
       intentId: planned.intentId,
+      language: languageOf(planned),
       stratum,
       weight: (weights.get(stratum) as number) / mass,
+      engineWeight: engineWeights.get(stratum) as number,
       isCanonical: planned.isCanonical,
       present: answer.present,
       namesEntities: extraction.answerKind === "names_entities",
     };
   });
 
-  return { captures, engines, entities, extractorConfigHash };
+  return { captures, engines, languages: languageRows, entities, extractorConfigHash };
 }

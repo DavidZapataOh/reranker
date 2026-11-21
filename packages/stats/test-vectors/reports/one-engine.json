@@ -1,6 +1,6 @@
 {
-  "methodologyVersion": "2026.11.0",
-  "methodologyHash": "f4ef02b882a6bea95b7ebb77a987b6a4a0abdcea0045a70f4ee7c9f904ec660e",
+  "methodologyVersion": "2026.11.1",
+  "methodologyHash": "f5661011aa4e58a84cd2f84ddef4f80955f11a4fa47a8eea5c989c20bf3bcb44",
   "input": {
     "reportId": "fr_01JDB4Q7W2M8N3P5R6S9T0V1A4",
     "asOf": "2026-11-20T17:00:00.000Z",
@@ -11244,12 +11244,12 @@
     ]
   },
   "output": {
-    "methodologyVersion": "2026.11.0",
-    "methodologyHash": "f4ef02b882a6bea95b7ebb77a987b6a4a0abdcea0045a70f4ee7c9f904ec660e",
+    "methodologyVersion": "2026.11.1",
+    "methodologyHash": "f5661011aa4e58a84cd2f84ddef4f80955f11a4fa47a8eea5c989c20bf3bcb44",
     "intentSetId": "is_0123456789abcdef",
     "intentSetHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
     "extractorConfigHash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-    "seed": "754317a238ef73577648a7e7b59721727a90feda41d0bfad95028a6df286f425",
+    "seed": "cce98d8191facaf0a5a2c8bf64c7310f9ef6176794dae5f5246994ab107a4107",
     "computedAt": "2026-11-20T17:00:00.000Z",
     "target": {
       "entityKey": "place:target",
@@ -11258,7 +11258,7 @@
       "entityKind": "business",
       "overall": {
         "value": 50,
-        "lower": 35,
+        "lower": 34,
         "upper": 65,
         "atMost": null,
         "level": "on_the_list",
@@ -11267,7 +11267,7 @@
           "from": "sometimes",
           "to": "on_the_list"
         },
-        "sufficiency": "orientative",
+        "sufficiency": "insufficient",
         "preliminary": true,
         "components": {
           "recommendationRate": {
@@ -11293,7 +11293,7 @@
         "gemini": {
           "score": {
             "value": 50,
-            "lower": 35,
+            "lower": 34,
             "upper": 66,
             "atMost": null,
             "level": "on_the_list",
@@ -11439,7 +11439,7 @@
         "overall": {
           "value": 23,
           "lower": 12,
-          "upper": 37,
+          "upper": 36,
           "atMost": null,
           "level": "sometimes",
           "levelDisplay": {
@@ -11484,7 +11484,7 @@
         "overall": {
           "value": 18,
           "lower": 9,
-          "upper": 31,
+          "upper": 32,
           "atMost": null,
           "level": "sometimes",
           "levelDisplay": {
@@ -11593,7 +11593,7 @@
       {
         "a": "place:target",
         "b": "place:rival1",
-        "pAAhead": 0.98975,
+        "pAAhead": 0.98325,
         "verdict": "ahead"
       },
       {
@@ -11713,8 +11713,8 @@
         },
         "targetScore": {
           "value": 50,
-          "lower": 19,
-          "upper": 82,
+          "lower": 20,
+          "upper": 81,
           "atMost": null,
           "level": "on_the_list",
           "levelDisplay": {
@@ -11762,7 +11762,7 @@
         },
         "targetScore": {
           "value": 50,
-          "lower": 18,
+          "lower": 19,
           "upper": 81,
           "atMost": null,
           "level": "on_the_list",
@@ -11811,8 +11811,8 @@
         },
         "targetScore": {
           "value": 50,
-          "lower": 20,
-          "upper": 80,
+          "lower": 21,
+          "upper": 81,
           "atMost": null,
           "level": "on_the_list",
           "levelDisplay": {
@@ -11861,7 +11861,7 @@
         "targetScore": {
           "value": 50,
           "lower": 19,
-          "upper": 81,
+          "upper": 80,
           "atMost": null,
           "level": "on_the_list",
           "levelDisplay": {
@@ -11910,7 +11910,7 @@
         "targetScore": {
           "value": 50,
           "lower": 20,
-          "upper": 80,
+          "upper": 81,
           "atMost": null,
           "level": "on_the_list",
           "levelDisplay": {
@@ -11939,10 +11939,11 @@
         }
       }
     ],
+    "languages": [],
     "canonicalOnly": {
       "target": {
         "value": 100,
-        "lower": 62,
+        "lower": 63,
         "upper": 100,
         "atMost": null,
         "level": "regular",
@@ -11977,7 +11978,7 @@
           "entityKey": "place:rival0",
           "score": {
             "value": 90,
-            "lower": 55,
+            "lower": 57,
             "upper": 90,
             "atMost": null,
             "level": "regular",
@@ -12013,7 +12014,7 @@
           "score": {
             "value": 36,
             "lower": 8,
-            "upper": 71,
+            "upper": 72,
             "atMost": null,
             "level": "sometimes",
             "levelDisplay": {
@@ -12081,7 +12082,7 @@
           "score": {
             "value": 18,
             "lower": 2,
-            "upper": 58,
+            "upper": 57,
             "atMost": null,
             "level": "sometimes",
             "levelDisplay": {
@@ -12114,7 +12115,7 @@
           "score": {
             "value": 36,
             "lower": 8,
-            "upper": 71,
+            "upper": 72,
             "atMost": null,
             "level": "sometimes",
             "levelDisplay": {

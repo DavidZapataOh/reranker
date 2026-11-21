@@ -1,5 +1,5 @@
 import type { EngineId } from "../domain";
-import type { EngineGeo, IntentId, IntentSetId } from "./catalog";
+import type { EngineGeo, IntentId, IntentSetId, MeasurementLanguage } from "./catalog";
 import type { EntityKey, EntityKind } from "./extraction";
 
 export type LevelKey = "invisible" | "sometimes" | "on_the_list" | "regular"; // Invisible / A veces / En la lista / De los fijos
@@ -96,11 +96,23 @@ export interface FreeReportStats {
   platforms: { entityKey: EntityKey; displayName: string; recommendedShare: RateEstimate }[];
   engines: EngineCoverage[];
   intents: IntentCoverage[]; // intents with a valid capture in an included engine
+  languages: LanguageCoverage[]; // empty when the report is measured in one language
   // Null when no included engine has a valid canonical capture.
   canonicalOnly: {
     target: ScoreEstimate;
     competitors: { entityKey: EntityKey; score: ScoreEstimate }[];
   } | null;
+}
+
+// One entry per language of a two-language report; the headline weighs each by its search share.
+export interface LanguageCoverage {
+  language: MeasurementLanguage;
+  searchShare: number; // the caller's share, normalized over the report's languages
+  planned: number;
+  valid: number;
+  included: boolean; // false when no engine has enough valid captures in this language
+  targetCounts: MentionCounts;
+  targetScore: ScoreEstimate | null; // null when not included
 }
 
 // Compact summary stored with the free report (≤ 1 KB) and sent with its result.

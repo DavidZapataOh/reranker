@@ -8,6 +8,7 @@ import type {
   FreeReportSummary,
   IntentCoverage,
   IntentId,
+  LanguageCoverage,
   MeasurementPlan,
   MentionCounts,
   ResponseExtraction,
@@ -18,6 +19,7 @@ import { engineStatus } from "./levels";
 import { methodology, seedFor } from "./methodology";
 import {
   buildObservations,
+  type LanguageShares,
   type ObservationFrame,
   type ObservedCapture,
   STANCE,
@@ -35,6 +37,8 @@ export interface FreeReportInput {
   /** The business the report is about, also when no answer names it. */
   target: { entityKey: EntityKey; displayName: string; entityKind: EntityKind };
   intentWeights?: Partial<Record<IntentId, number>>;
+  /** Each language's share of the category's searches, required when the plan has a second language. */
+  languageShares?: LanguageShares;
 }
 
 type Capture = ObservationFrame["captures"][number];
@@ -69,9 +73,8 @@ export function computeFreeReportStats(input: FreeReportInput): FreeReportStats 
   const bootstrap = { frame, seed };
   const weighted = (indices: number[]) => indices.some((i) => captures[i]?.weight !== 0);
 
-  // Within one engine only the intents' relative weights matter, so an excluded engine's own
-  // rates use them directly.
-  const intentWeight = (i: number) => input.intentWeights?.[(captures[i] as Capture).intentId] ?? 1;
+  const engineWeight = (i: number) => (captures[i] as Capture).engineWeight;
+  const sharesFrame = new Map(frame.engines.map((e) => [e.engine, e.sharesFrame]));
   const frameWeight = (i: number) => (captures[i] as Capture).weight;
 
   const observationsOf = (
@@ -145,12 +148,14 @@ export function computeFreeReportStats(input: FreeReportInput): FreeReportStats 
   const targetByEngine: EntityStats["byEngine"] = {};
   for (const [engine, indices] of byEngine) {
     const engineSeed = seedOf(targetKey, "engine", engine);
-    // An included engine reads the report's shared draws; an excluded one weighs zero in the
-    // frame, so it draws its own over its intents.
+    // An engine whose frame weights are proportional to its own reads the report's shared
+    // draws. An excluded one weighs zero in the frame, and one whose languages kept different
+    // engine counts weighs them differently there, so those draw their own.
     targetByEngine[engine] = {
-      score: weighted(indices)
-        ? estimateScore(observationsOf(target.column, indices), engineSeed, { bootstrap })
-        : estimateScore(observationsOf(target.column, indices, intentWeight), engineSeed),
+      score:
+        weighted(indices) && sharesFrame.get(engine)
+          ? estimateScore(observationsOf(target.column, indices), engineSeed, { bootstrap })
+          : estimateScore(observationsOf(target.column, indices, engineWeight), engineSeed),
       counts: countsOf(target.stance, indices),
     };
   }
@@ -247,7 +252,7 @@ export function computeFreeReportStats(input: FreeReportInput): FreeReportStats 
       namesEntitiesRate:
         indices.length === 0
           ? null
-          : rateOf(indices, (i) => captures[i]?.namesEntities === true, intentWeight),
+          : rateOf(indices, (i) => captures[i]?.namesEntities === true, engineWeight),
       included: e.included,
       geo: e.geo,
     };
@@ -268,6 +273,23 @@ export function computeFreeReportStats(input: FreeReportInput): FreeReportStats 
     });
   }
 
+  // Within one language the frame weights are s_l/k_l times its own, a constant, so each
+  // language's estimate reads the shared draws.
+  const languages: LanguageCoverage[] = frame.languages.map((l) => {
+    const indices = all.filter((i) => captures[i]?.language === l.language);
+    return {
+      ...l,
+      targetCounts: countsOf(target.stance, indices),
+      targetScore: l.included
+        ? estimateScore(
+            observationsOf(target.column, indices),
+            seedOf(targetKey, "language", l.language),
+            { bootstrap },
+          )
+        : null,
+    };
+  });
+
   const canonicalScore = (key: string, column: EntityColumn): ScoreEstimate =>
     estimateScore(observationsOf(column, canonical), seedOf(key, "canonical"), { bootstrap });
 
@@ -286,6 +308,7 @@ export function computeFreeReportStats(input: FreeReportInput): FreeReportStats 
     platforms,
     engines,
     intents,
+    languages,
     canonicalOnly: weighted(canonical)
       ? {
           target: canonicalScore(targetKey, target.column),
