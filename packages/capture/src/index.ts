@@ -35,6 +35,12 @@ export {
   estimateLanguageMix,
 } from "./language-mix/estimate";
 export {
+  type PrewarmPair,
+  type PrewarmResult,
+  prewarmLanguageMixes,
+  prewarmPairs,
+} from "./language-mix/prewarm";
+export {
   createMeasurement,
   freezeMeasurementPlan,
   type LoadedPlan,
