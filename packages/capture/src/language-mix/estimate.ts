@@ -3,6 +3,7 @@ import {
   type LanguageMix,
   type LanguageMixDegraded,
   placeLanguage,
+  placeName,
   secondLanguageOf,
   unmeasuredMix,
 } from "@reranker/catalog";
@@ -18,7 +19,7 @@ import {
   fetchLanguageVolumes,
   type LanguageVolumes,
 } from "./fetch";
-import { type CategoryTerms, languageKeywords, sharesOf } from "./keywords";
+import { type CategoryTerms, type LanguageKeyword, languageKeywords, sharesOf } from "./keywords";
 
 export type { CategoryTerms } from "./keywords";
 
@@ -36,7 +37,7 @@ export type EstimateOptions = Pick<FetchContext, "base">;
 
 const REASON = "capture.language-mix";
 // Bumped when the keywords or the shares are computed differently, so old rows are refetched.
-const METHOD = 2;
+const METHOD = 3;
 const REUSE_DAYS = 30;
 const REUSE_MS = REUSE_DAYS * 86_400_000;
 const POLL_MS = 250;
@@ -60,12 +61,39 @@ function remember(key: string, mix: LanguageMix): LanguageMix {
   return mix;
 }
 
-// The keywords asked, not the terms, so a change to the lexicon or the phrases refetches too.
-function configHash(keywords: ReadonlyMap<string, MeasurementLanguage>): Buffer {
+type Query = { keywords: Map<string, LanguageKeyword>; hash: Buffer };
+const queries = new Map<string, Query>();
+
+/**
+ * The keywords to ask and the key their mix is stored under, which hashes the keywords and the
+ * language each counts for, not the terms: a change to the lexicon, the phrases or the place's
+ * main language refetches too. Memoized, so a mix held in memory costs no rebuild.
+ */
+function queryOf(
+  geo: GeoTarget,
+  terms: CategoryTerms,
+  scope: QuestionScope,
+  main: MeasurementLanguage,
+): Query {
+  const id = JSON.stringify([geo.key, scope, terms]);
+  const known = queries.get(id);
+  if (known) return known;
+  const places: Partial<Record<MeasurementLanguage, string>> = {};
+  for (const language of Object.keys(terms) as MeasurementLanguage[]) {
+    try {
+      places[language] = placeName(geo, language);
+    } catch {
+      // A language without names for the place still counts its other searches.
+    }
+  }
+  const keywords = languageKeywords(terms, { scope, places, main });
   const sorted = [...keywords].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
-  return createHash("sha256")
+  const hash = createHash("sha256")
     .update(JSON.stringify({ method: METHOD, keywords: sorted }))
     .digest();
+  queries.set(id, { keywords, hash });
+  if (queries.size > CACHE_SIZE) queries.delete(queries.keys().next().value as string);
+  return { keywords, hash };
 }
 
 function mixOf(row: Row, main: MeasurementLanguage): LanguageMix {
@@ -135,6 +163,7 @@ function store(
     source: f.source,
     shares: sharesOf(f.volumes),
     volumes: f.volumes,
+    keywordVolumes: f.keywordVolumes,
     cost_amount_micros: f.costMicros,
     cost_currency: "USD",
   };
@@ -182,12 +211,11 @@ export async function estimateLanguageMix(
 ): Promise<LanguageMix> {
   const { geo, categoryKey, terms, scope, deadlineAt } = input;
   const main = placeLanguage(geo);
-  const keywords = languageKeywords(terms, scope);
+  const { keywords, hash } = queryOf(geo, terms, scope, main);
   // With words in one language there is nothing to split, and nothing worth paying for.
-  if (new Set(keywords.values()).size < 2) {
+  if (new Set([...keywords.values()].map((k) => k.language)).size < 2) {
     return { ...unmeasuredMix("unavailable"), degraded: null };
   }
-  const hash = configHash(keywords);
   const name = `${geo.key}|${categoryKey}|${hash.toString("hex")}`;
   const hit = cache.get(name);
   if (hit?.asOf && Date.parse(hit.asOf) > Date.now() - REUSE_MS) return hit;
@@ -207,10 +235,14 @@ export async function estimateLanguageMix(
 
   const fetchClaimed = async (): Promise<LanguageMix> => {
     try {
-      const fetched = await fetchLanguageVolumes(geo, keywords, {
-        refId: hash.toString("hex"),
-        base: opts.base,
-      });
+      const fetched = await fetchLanguageVolumes(
+        geo,
+        { keywords, main },
+        {
+          refId: hash.toString("hex"),
+          base: opts.base,
+        },
+      );
       const stored = await store(geo, categoryKey, hash, fetched, name);
       log.info("capture.language_mix_fetched", {
         level: fetched.level,

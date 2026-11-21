@@ -7,7 +7,7 @@ export type CategoryTerms = Partial<Record<MeasurementLanguage, readonly string[
 /**
  * Each language's most searched way to ask for a place nearby without naming the city
  * ("zahnarzt in meiner nähe" 201K a month in Germany). Unlike a bare noun ("hotel", "garage"),
- * a phrase ending this way is written in exactly one language.
+ * a keyword ending this way is written in exactly one language.
  */
 export const NEAR_ME: Readonly<Record<MeasurementLanguage, string>> = {
   es: "cerca de mi",
@@ -24,8 +24,8 @@ export const COMMON_RANK = 10_000;
 // Google Ads limits (https://docs.dataforseo.com/v3/keywords_data-google_ads-search_volume-live/).
 const MAX_CHARS = 80;
 const MAX_WORDS = 10;
-// Google merges close variants across languages ("restaurants miami" and "restaurantes miami"
-// both came back as 14,800), so two such keywords with the same volume count for neither.
+// Terms this close are variants Google may group ("restaurants miami" and "restaurantes miami"
+// both came back as 14,800).
 const VARIANT_DISTANCE = 2;
 
 // Sent as written, accents kept ("in meiner nähe" is not "nahe"); compared folded, as Google
@@ -48,55 +48,79 @@ const common = new Map(
 );
 
 /**
- * Whether a term reads as `language` alone among `others`: some word of it is not common in
- * each of them. A word the lexicon was not built with fails, so an unreviewed term never counts.
+ * The languages among `candidates` a term could be written in: its own, and every other one in
+ * which all its words are common ("garage" is French, English, German and Italian). A word the
+ * lexicon was not built with could be anything, so it makes the term any candidate's.
  */
-export function distinctive(
+export function readsAs(
   term: string,
   language: MeasurementLanguage,
-  others: Iterable<MeasurementLanguage>,
-): boolean {
+  candidates: readonly MeasurementLanguage[],
+): Set<MeasurementLanguage> {
   const list = words(term);
-  if (list.length === 0 || list.some((word) => !vocabulary.has(word))) return false;
-  for (const other of others) {
-    if (other === language) continue;
-    const shared = common.get(other);
-    if (shared && list.every((word) => shared.has(word))) return false;
+  if (list.length === 0 || list.some((word) => !vocabulary.has(word))) {
+    return new Set([language, ...candidates]);
   }
-  return true;
+  const out = new Set([language]);
+  for (const other of candidates) {
+    if (list.every((word) => common.get(other)?.has(word))) out.add(other);
+  }
+  return out;
+}
+
+/** The language a keyword's searches are credited to, and the term it asks for. */
+export type LanguageKeyword = { language: MeasurementLanguage; term: string };
+
+export interface KeywordContext {
+  scope: QuestionScope;
+  /** The place as people searching in each language write it; a language without one skips it. */
+  places: Partial<Record<MeasurementLanguage, string>>;
+  /** The place's main language, which a keyword written alike in several languages counts for. */
+  main: MeasurementLanguage;
 }
 
 /**
- * The keywords that tell each language's searches apart, keyed by the text to send.
+ * The keywords whose searches are credited to one language, keyed by the text to send: each
+ * term alone, beside the place and, for a local category, with the language's "near me" phrase.
  *
- * For a local category every language asks the same thing, each term followed by its "near me"
- * phrase, so the volumes compare like for like. A bare term or one beside the place is left
- * out: the city is written the same in most languages and many nouns are shared ("hotel",
- * "restaurant", "garage"), and Google counts their volume once for every language using them.
- * A national category has no "near me", so its terms are asked alone, only those `distinctive`.
+ * Google Ads volume is not language-specific, so a keyword that reads as several languages
+ * ("hotel", "restaurant montreal", "garage hialeah") is credited to the place's main language
+ * when it is one of them, and left out otherwise: a second language counts only searches
+ * written unmistakably in it. A "near me" phrase is written in one language whatever the noun.
  */
 export function languageKeywords(
   terms: CategoryTerms,
-  scope: QuestionScope,
-): Map<string, MeasurementLanguage> {
-  const languages = MeasurementLanguage.options.filter((l) => (terms[l]?.length ?? 0) > 0);
-  const owners = new Map<string, { keyword: string; languages: Set<MeasurementLanguage> }>();
-  for (const language of languages) {
+  { scope, places, main }: KeywordContext,
+): Map<string, LanguageKeyword> {
+  const candidates = MeasurementLanguage.options.filter((l) => (terms[l]?.length ?? 0) > 0);
+  const found = new Map<
+    string,
+    { keyword: string; term: string; languages: Set<MeasurementLanguage> }
+  >();
+  const add = (keyword: string, term: string, languages: Iterable<MeasurementLanguage>) => {
+    if (keyword.length > MAX_CHARS || keyword.split(" ").length > MAX_WORDS) return;
+    const entry = found.get(fold(keyword)) ?? { keyword, term, languages: new Set() };
+    for (const language of languages) entry.languages.add(language);
+    found.set(fold(keyword), entry);
+  };
+  for (const language of candidates) {
+    const place = places[language] && lower(places[language]);
     for (const term of terms[language] ?? []) {
       const t = lower(term);
       if (t === "") continue;
-      if (scope === "national" && !distinctive(t, language, languages)) continue;
-      const keyword = scope === "national" ? t : `${t} ${NEAR_ME[language]}`;
-      if (keyword.length > MAX_CHARS || keyword.split(" ").length > MAX_WORDS) continue;
-      const owner = owners.get(fold(keyword)) ?? { keyword, languages: new Set() };
-      owner.languages.add(language);
-      owners.set(fold(keyword), owner);
+      const readers = readsAs(t, language, candidates);
+      add(t, t, readers);
+      if (scope === "local") {
+        if (place) add(`${t} ${place}`, t, readers);
+        add(`${t} ${NEAR_ME[language]}`, t, [language]);
+      }
     }
   }
-  const out = new Map<string, MeasurementLanguage>();
-  for (const { keyword, languages: owned } of owners.values()) {
-    const [only] = owned;
-    if (owned.size === 1 && only) out.set(keyword, only);
+  const out = new Map<string, LanguageKeyword>();
+  for (const { keyword, term, languages } of found.values()) {
+    const [only] = languages;
+    const language = languages.size === 1 ? only : languages.has(main) ? main : undefined;
+    if (language) out.set(keyword, { language, term: fold(term) });
   }
   return out;
 }
@@ -117,18 +141,24 @@ function withinDistance(a: string, b: string, max: number): boolean {
 
 export type KeywordVolume = { keyword?: string | null; volume?: number | null };
 
-/** Monthly searches per language, leaving out keywords Google merged across languages. */
+/**
+ * Monthly searches per language. Google groups close variants, even across languages ("restaurant
+ * near me" and "restaurant in meiner nähe" for one noun), and reports the group's volume for each:
+ * two keywords of close terms with the same volume are one group, counted for the main language
+ * when it is one of them and for neither otherwise.
+ */
 export function languageVolumes(
-  keywords: ReadonlyMap<string, MeasurementLanguage>,
+  keywords: ReadonlyMap<string, LanguageKeyword>,
   rows: readonly KeywordVolume[],
+  main: MeasurementLanguage,
 ): Partial<Record<MeasurementLanguage, number>> {
-  const byFolded = new Map([...keywords].map(([keyword, language]) => [fold(keyword), language]));
-  const counted: { keyword: string; language: MeasurementLanguage; volume: number }[] = [];
+  const byFolded = new Map([...keywords].map(([keyword, entry]) => [fold(keyword), entry]));
+  const counted: (LanguageKeyword & { keyword: string; volume: number })[] = [];
   for (const row of rows) {
     const keyword = row.keyword ? fold(row.keyword) : "";
-    const language = byFolded.get(keyword);
-    if (language && typeof row.volume === "number" && row.volume > 0) {
-      counted.push({ keyword, language, volume: row.volume });
+    const entry = byFolded.get(keyword);
+    if (entry && typeof row.volume === "number" && row.volume > 0) {
+      counted.push({ ...entry, keyword, volume: row.volume });
     }
   }
   const merged = new Set<string>();
@@ -137,9 +167,10 @@ export function languageVolumes(
       if (
         a.volume === b.volume &&
         a.language !== b.language &&
-        withinDistance(a.keyword, b.keyword, VARIANT_DISTANCE)
+        withinDistance(a.term, b.term, VARIANT_DISTANCE)
       ) {
-        merged.add(a.keyword).add(b.keyword);
+        if (a.language !== main) merged.add(a.keyword);
+        if (b.language !== main) merged.add(b.keyword);
       }
     }
   }

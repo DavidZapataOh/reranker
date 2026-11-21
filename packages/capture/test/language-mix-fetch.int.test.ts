@@ -27,7 +27,12 @@ afterEach(() => {
 });
 afterAll(() => endPools());
 
-const fetch = () => fetchLanguageVolumes(MIAMI, languageKeywords(TERMS, "local"), { refId });
+const keywords = languageKeywords(TERMS, {
+  scope: "local",
+  places: { en: "Miami", es: "Miami" },
+  main: "en",
+});
+const fetch = () => fetchLanguageVolumes(MIAMI, { keywords, main: "en" }, { refId });
 
 const ledger = () =>
   withSystem("capture.test", (tx) =>
@@ -44,7 +49,8 @@ const ledger = () =>
 describe("fetchLanguageVolumes", () => {
   test("counts a Miami dentist's searches per language in the city, in one charged call", async () => {
     provider.ads.set(1015116, {
-      "dentist near me": 10_400,
+      "dentist near me": 9900,
+      "dentist miami": 500,
       "dentista cerca de mi": 1250,
     });
     expect(await fetch()).toEqual({
@@ -52,6 +58,11 @@ describe("fetchLanguageVolumes", () => {
       locationCode: 1015116,
       source: "google_ads",
       volumes: { en: 10_400, es: 1250 },
+      keywordVolumes: {
+        "dentist near me": 9900,
+        "dentist miami": 500,
+        "dentista cerca de mi": 1250,
+      },
       costMicros: 90_000,
     });
     expect(provider.calls).toEqual([{ path: ADS, location: 1015116 }]);

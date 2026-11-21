@@ -232,6 +232,9 @@ export const languageMixes = sharedTable(
     shares: jsonb().$type<Record<string, number>>().notNull(),
     // Language → monthly searches counted, kept to audit the shares.
     volumes: jsonb().$type<Record<string, number>>().notNull(),
+    // Keyword → monthly searches Google reported, those credited to no language included. Null
+    // for rows stored before it was kept.
+    keywordVolumes: jsonb().$type<Record<string, number>>(),
   },
   (t) => [
     unique("language_mixes_key").on(t.geoKey, t.categoryKey, t.configHash),

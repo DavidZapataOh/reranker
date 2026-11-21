@@ -16,7 +16,7 @@ import {
 } from "dataforseo-client";
 import { createDataForSeo } from "../dataforseo/client";
 import { RawSink } from "../raw/raw-sink";
-import { type KeywordVolume, languageVolumes } from "./keywords";
+import { type KeywordVolume, type LanguageKeyword, languageVolumes } from "./keywords";
 
 // Below this many monthly searches a share is noise, so the next wider location is asked.
 const MIN_SEARCHES = 100;
@@ -43,7 +43,15 @@ export interface LanguageVolumes {
   /** Null when no language had searches anywhere. */
   source: "google_ads" | "ai_search" | null;
   volumes: Partial<Record<MeasurementLanguage, number>>;
+  /** Every keyword's monthly searches as reported, including those credited to no language. */
+  keywordVolumes: Record<string, number>;
   costMicros: number;
+}
+
+/** What to ask (`languageKeywords`) and the main language close variants are credited to. */
+export interface LanguageQuery {
+  keywords: ReadonlyMap<string, LanguageKeyword>;
+  main: MeasurementLanguage;
 }
 
 export interface FetchContext {
@@ -115,10 +123,16 @@ const total = (volumes: LanguageVolumes["volumes"]) =>
  */
 export async function fetchLanguageVolumes(
   geo: GeoTarget,
-  keywords: ReadonlyMap<string, MeasurementLanguage>,
+  { keywords, main }: LanguageQuery,
   context: FetchContext,
 ): Promise<LanguageVolumes> {
   const list = [...keywords.keys()];
+  const measured = (rows: readonly KeywordVolume[]) => ({
+    volumes: languageVolumes(keywords, rows, main),
+    keywordVolumes: Object.fromEntries(
+      rows.flatMap(({ keyword, volume }) => (keyword && volume ? [[keyword, volume]] : [])),
+    ),
+  });
   let spent = 0;
   let widest: LanguageVolumes | null = null;
   const seen = new Set<number>();
@@ -141,16 +155,15 @@ export async function fetchLanguageVolumes(
     const rows = ((task.result ?? []) as { keyword?: string; search_volume?: number }[]).map(
       (r): KeywordVolume => ({ keyword: r.keyword ?? null, volume: r.search_volume ?? null }),
     );
-    const volumes = languageVolumes(keywords, rows);
-    widest = { level, locationCode, source: "google_ads", volumes, costMicros: spent };
-    if (total(volumes) >= MIN_SEARCHES) return widest;
+    widest = { level, locationCode, source: "google_ads", ...measured(rows), costMicros: spent };
+    if (total(widest.volumes) >= MIN_SEARCHES) return widest;
   }
   if (widest && total(widest.volumes) > 0) return widest;
 
   const country = widerGeos(geo).at(-1) ?? geo;
   const tasks = await Promise.all(
-    [...new Set(keywords.values())].map((language) => {
-      const own = list.filter((k) => keywords.get(k) === language);
+    [...new Set([...keywords.values()].map((k) => k.language))].map((language) => {
+      const own = list.filter((k) => keywords.get(k)?.language === language);
       return paidCall(
         context,
         PRICE.aiVolume(own.length),
@@ -178,12 +191,12 @@ export async function fetchLanguageVolumes(
       rows.push({ keyword: item.keyword ?? null, volume: item.ai_search_volume ?? null });
     }
   }
-  const volumes = languageVolumes(keywords, rows);
+  const result = measured(rows);
   return {
     level: "country",
     locationCode: country.dataforseo.locationCode,
-    source: total(volumes) > 0 ? "ai_search" : null,
-    volumes,
+    source: total(result.volumes) > 0 ? "ai_search" : null,
+    ...result,
     costMicros: spent,
   };
 }
