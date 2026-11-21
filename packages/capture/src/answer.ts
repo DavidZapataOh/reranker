@@ -62,6 +62,7 @@ export const PARSER_VERSIONS: Record<string, number> = {
   gemini: 1,
   "google-ai-overview": 1,
   "google-ai-mode": 1,
+  "openai-responses": 1,
 };
 
 /** Never throws: a body that does not parse is still sealed, with the error beside it. */
