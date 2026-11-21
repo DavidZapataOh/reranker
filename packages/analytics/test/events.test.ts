@@ -34,6 +34,7 @@ test("server catalog names every event the other packages emit", () => {
     "db_rls_violation",
     "email_code_blocked",
     "free_report_verify_mode",
+    "intent_set_resolved",
     "jobs.breaker.state",
     "jobs.lease.denied",
     "jobs.lease.wait_ms",

@@ -9,7 +9,7 @@ import { MeasurementLanguageError } from "../src/language";
 
 type Provider = "openai" | "gemini";
 type Req = { intent: DraftIntent; withPersonas: boolean };
-type Ctx = { signal: AbortSignal };
+type Ctx = { signal: AbortSignal; spent?: { micros: number } };
 
 const doubles = vi.hoisted(() => ({
   enabled: true,
@@ -191,6 +191,30 @@ describe("generateIntentSet", () => {
     expect(doubles.generate.mock.calls.filter(([, req]) => (req as Req).withPersonas)).toHaveLength(
       2,
     );
+  });
+
+  test("what every call settled is the generation's cost, a fallback's included", async () => {
+    const bill = (ctx: { spent?: { micros: number } }) => {
+      if (ctx.spent) ctx.spent.micros += 1000;
+    };
+    doubles.generate.mockImplementationOnce(async (provider: Provider, req: Req, ctx: Ctx) => {
+      bill(ctx);
+      return { paraphrases: paraphrasesOf(provider, req.intent), personas: PERSONAS };
+    });
+    doubles.embed.mockImplementationOnce(async (texts: string[], ctx: Ctx) => {
+      bill(ctx);
+      return texts.map(vector);
+    });
+    expect((await generateIntentSet(bakery())).costMicros).toBe(2000);
+
+    doubles.generate.mockImplementation(async (_: Provider, req: Req, ctx: Ctx) => {
+      bill(ctx);
+      return { paraphrases: [], personas: req.withPersonas ? PERSONAS : [] };
+    });
+    const empty = await generateIntentSet(bakery());
+    expect(empty).toMatchObject({ outcome: "template", costMicros: 12_000 });
+    doubles.enabled = false;
+    expect((await generateIntentSet(bakery())).costMicros).toBe(0);
   });
 
   test("one provider down: generators 1", async () => {

@@ -41,6 +41,12 @@ import {
   seedSetFor,
 } from "./seal";
 import { currentSeed } from "./seed/load";
+import {
+  type IntentSetOutcome,
+  type IntentSetResolution,
+  recordIntentSetResolution,
+  type TemplateReason,
+} from "./telemetry";
 import { setLanguage } from "./variants";
 
 export type ResolveIntentSetInput = {
@@ -179,17 +185,45 @@ async function store(draft: IntentSetDraft, claimed?: string): Promise<IntentSet
 }
 
 type Generation = GenerateIntentSetInput & { key: IntentSetKey };
+type Resolved = Omit<IntentSetResolution, "language" | "geoLevel">;
 
-async function generateClaimed(input: Generation, name: string): Promise<IntentSet> {
+const served = (
+  set: IntentSet,
+  outcome: IntentSetOutcome,
+  fallback: TemplateReason | null = null,
+): Resolved => ({
+  set,
+  outcome,
+  fallback,
+  generationMs: 0,
+  costMicros: 0,
+  generators: 0,
+  guardRejects: 0,
+  judgeRejects: 0,
+});
+
+async function generateClaimed(input: Generation, name: string): Promise<Resolved> {
   try {
     // A holder that finished between our lookup and our claim left its set behind.
     const row = await withSystem(REASON, (tx) => reusable(tx, input.key), { readOnly: true });
     if (row) {
       await withSystem(REASON, (tx) => release(tx, name));
-      return readStored(row.setId, row.artifactSha256);
+      return served(await readStored(row.setId, row.artifactSha256), "reused");
     }
-    const { set } = await generateIntentSet(input);
-    return await store(set, name);
+    const startedAt = performance.now();
+    const generated = await generateIntentSet(input);
+    const generationMs = Math.round(performance.now() - startedAt);
+    const { report } = generated;
+    return {
+      set: await store(generated.set, name),
+      outcome: generated.outcome,
+      fallback: report.fallback,
+      generationMs,
+      costMicros: generated.costMicros,
+      generators: generated.generators,
+      guardRejects: Object.values(report.guards).reduce((sum, n) => sum + n, 0),
+      judgeRejects: report.judge,
+    };
   } catch (error) {
     await withSystem(REASON, (tx) => release(tx, name)).catch(() => undefined);
     throw error;
@@ -203,9 +237,13 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
  * poll until the deadline. A claim gone with no set behind it means the holder fell back, so the
  * waiter takes the same deterministic template rather than paying for a second try.
  */
-async function generateOnce(input: Generation): Promise<IntentSet> {
+async function generateOnce(input: Generation): Promise<Resolved> {
   const { key, category, scope, registerProfile, language, deadlineAt } = input;
   const name = claimName(key);
+  const template = async (reason: TemplateReason) => {
+    const set = await store(templateIntentSet(category, scope, registerProfile, language));
+    return served(set, "template", reason);
+  };
   if (await claim(name, deadlineAt)) return generateClaimed(input, name);
 
   while (Date.now() < deadlineAt) {
@@ -226,14 +264,14 @@ async function generateOnce(input: Generation): Promise<IntentSet> {
       },
       { readOnly: true },
     );
-    if (state === "fell_back") break;
+    if (state === "fell_back") return template("shared");
     if (state === "expired") {
       if (await claim(name, deadlineAt)) return generateClaimed(input, name);
     } else if (state) {
-      return readStored(state.setId, state.artifactSha256);
+      return served(await readStored(state.setId, state.artifactSha256), "reused");
     }
   }
-  return store(templateIntentSet(category, scope, registerProfile, language));
+  return template("no_time");
 }
 
 /**
@@ -243,18 +281,27 @@ async function generateOnce(input: Generation): Promise<IntentSet> {
  * templates, never to an error; a gendered language without the noun's gender is refused.
  */
 export async function resolveIntentSet(input: ResolveIntentSetInput): Promise<IntentSet> {
+  const language = input.language ?? countryLanguage(input.geo.country);
+  const resolved = await resolve(input, language);
+  recordIntentSetResolution({ ...resolved, language, geoLevel: input.geo.level });
+  return resolved.set;
+}
+
+async function resolve(
+  input: ResolveIntentSetInput,
+  language: MeasurementLanguage,
+): Promise<Resolved> {
   const { category, geo, scope } = input;
-  const language = input.language ?? countryLanguage(geo.country);
   // The house country's speech is measured in its own register; every other one shares neutral.
   const registerProfile = geo.country === DEFAULT_COUNTRY_CODE ? "co" : "neutral";
   const key: IntentSetKey = { categoryKey: category.key, scope, registerProfile, language };
   const seeded = seed();
   const fromSeed = seeded && seedSetFor(seeded, key);
-  if (fromSeed) return fromSeed;
+  if (fromSeed) return served(fromSeed, "seed");
 
   const noun = requireNounGender(input.noun ?? category.noun, language);
   const row = await withSystem(REASON, (tx) => reusable(tx, key), { readOnly: true });
-  if (row) return readStored(row.setId, row.artifactSha256);
+  if (row) return served(await readStored(row.setId, row.artifactSha256), "reused");
   return generateOnce({
     key,
     category,

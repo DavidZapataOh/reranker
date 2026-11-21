@@ -29,6 +29,7 @@
     "@reranker/jobs": "workspace:*",
     "@reranker/schema": "workspace:*",
     "@reranker/stats": "workspace:*",
+    "@reranker/telemetry": "workspace:*",
     "@reranker/verify": "workspace:*",
     "canonicalize": "catalog:",
     "drizzle-orm": "catalog:",

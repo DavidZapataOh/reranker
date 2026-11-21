@@ -11,6 +11,7 @@ import { getGeo } from "../src/geo/resolve";
 import { MeasurementLanguageError } from "../src/language";
 import { openIntentSet, sealIntentSet } from "../src/seal";
 import { type FrozenSeed, frozenSeed } from "../src/seed/load";
+import type { IntentSetResolution as Resolution } from "../src/telemetry";
 
 const doubles = vi.hoisted(() => ({
   artifacts: new Map<string, Uint8Array>(),
@@ -20,6 +21,7 @@ const doubles = vi.hoisted(() => ({
   transactions: 0,
   reservationFailures: 0,
   seed: null as FrozenSeed | null,
+  resolutions: [] as Resolution[],
 }));
 
 vi.mock("@reranker/evidence", async () => {
@@ -72,8 +74,31 @@ vi.mock("../src/generate/pipeline", async (importOriginal) => {
         input.registerProfile,
         input.language,
       );
+      const report = (fallback: "incomplete" | null) => ({
+        candidates: 144,
+        guards: {
+          placeholder: 2,
+          category_noun: 1,
+          proper_name: 0,
+          qualifier: 0,
+          length: 1,
+          personal_data: 0,
+        },
+        dedupe: 3,
+        offCentroid: 2,
+        judge: 5,
+        quota: 0,
+        complete: fallback ? 2 : 6,
+        fallback,
+      });
       if (doubles.outcome === "template") {
-        return { set, report: {}, outcome: "template", generators: 0 };
+        return {
+          set,
+          report: report("incomplete"),
+          outcome: "template",
+          generators: 0,
+          costMicros: 9000,
+        };
       }
       const manifest = {
         ...set.manifest,
@@ -82,12 +107,24 @@ vi.mock("../src/generate/pipeline", async (importOriginal) => {
         generatorConfigHash: doubles.configHash,
         generators: 2 as const,
       };
-      return { set: { ...set, manifest }, report: {}, outcome: "generated", generators: 2 };
+      return {
+        set: { ...set, manifest },
+        report: report(null),
+        outcome: "generated",
+        generators: 2,
+        costMicros: 41_000,
+      };
     },
   };
 });
 
+vi.mock("../src/telemetry", () => ({
+  recordIntentSetResolution: (r: Resolution) => doubles.resolutions.push(r),
+}));
+
 const { resolveIntentSet, getIntent } = await import("../src/intent-sets");
+
+const outcomes = () => doubles.resolutions.map((r) => [r.outcome, r.fallback]);
 
 const run = randomBytes(4).toString("hex");
 const bogota = getGeo("co-c1003659");
@@ -145,6 +182,7 @@ beforeEach(() => {
   doubles.outcome = "generated";
   doubles.configHash = "c".repeat(64);
   doubles.seed = null;
+  doubles.resolutions = [];
 });
 
 afterAll(async () => {
@@ -175,6 +213,7 @@ test("seed categories never touch the database", async () => {
   expect(set.manifest).toMatchObject({ kind: "seed", contentHash: sha });
   expect(doubles.transactions).toBe(0);
   expect(doubles.generations).toBe(0);
+  expect(outcomes()).toEqual([["seed", null]]);
 });
 
 test("a generated set is reused for another business of the same category", async () => {
@@ -183,6 +222,21 @@ test("a generated set is reused for another business of the same category", asyn
   expect(b.manifest.id).toBe(a.manifest.id);
   expect(a.manifest.kind).toBe("generated");
   expect(doubles.generations).toBe(1);
+  expect(outcomes()).toEqual([
+    ["generated", null],
+    ["reused", null],
+  ]);
+  const [generated, reused] = doubles.resolutions;
+  expect(generated).toMatchObject({
+    language: "es",
+    geoLevel: bogota.level,
+    costMicros: 41_000,
+    generators: 2,
+    guardRejects: 4,
+    judgeRejects: 5,
+  });
+  expect(generated?.generationMs).toBeGreaterThanOrEqual(400);
+  expect(reused).toMatchObject({ generationMs: 0, costMicros: 0, generators: 0 });
 });
 
 test("another config hash for the language creates a new set and leaves the old one intact", async () => {
@@ -210,6 +264,29 @@ test("ten concurrent requests for a new category generate one set", async () => 
   expect(new Set(sets.map((s) => s.manifest.id)).size).toBe(1);
   expect(doubles.generations).toBe(1);
   expect(await rows("concurrent")).toHaveLength(1);
+  expect(outcomes().filter(([o]) => o === "generated")).toHaveLength(1);
+  expect(outcomes().filter(([o]) => o === "reused")).toHaveLength(9);
+});
+
+test("a waiter whose deadline passes before the holder finishes takes the template", async () => {
+  const holding = resolve("late");
+  const key = `${category("late").key}|local|co|es|${doubles.configHash}`;
+  while (
+    (await owner.query("select 1 from public_panel.intent_set_claims where key = $1", [key]))
+      .rowCount === 0
+  ) {
+    await new Promise((resolve) => setTimeout(resolve, 10));
+  }
+  const waited = await resolve("late", { deadlineMs: 100 });
+  const held = await holding;
+  expect(held.manifest.kind).toBe("generated");
+  expect(waited.manifest.kind).toBe("template");
+  expect(outcomes()).toEqual(
+    expect.arrayContaining([
+      ["generated", null],
+      ["template", "no_time"],
+    ]),
+  );
 });
 
 test("more new categories at once than pool connections: each generates once, no reservation starves", async () => {
@@ -234,6 +311,12 @@ test("when the holder falls back, waiters take its template without waiting out 
   const template = sealIntentSet(templateIntentSet(category("fallback"), "local", "co", "es"));
   expect(new Set(sets.map((s) => s.manifest.id))).toEqual(new Set([template.manifest.id]));
   expect(doubles.generations).toBe(1);
+  // Only the holder's fallback is an attempt; the waiters share it.
+  expect(outcomes().sort()).toEqual([
+    ["template", "incomplete"],
+    ...Array.from({ length: 4 }, () => ["template", "shared"]),
+  ]);
+  expect(doubles.resolutions.find((r) => r.fallback === "incomplete")?.costMicros).toBe(9000);
   // A template is never reused by key: the next request tries to generate again.
   doubles.outcome = "generated";
   expect((await resolve("fallback")).manifest.kind).toBe("generated");

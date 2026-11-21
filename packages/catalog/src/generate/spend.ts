@@ -8,6 +8,7 @@ import {
   type SpendReservation,
   settleSpend,
 } from "@reranker/jobs";
+import type { ProviderCost } from "@reranker/schema";
 import { costOf, estimateOf, type GeneratorModel, type TokenUsage } from "./config";
 
 export interface CallContext {
@@ -15,6 +16,8 @@ export interface CallContext {
   signal: AbortSignal;
   /** Epoch ms after which no call may still be waiting for a slot. */
   deadlineAt: number;
+  /** Adds up what every call under this context settled, in USD micros. */
+  spent?: { micros: number };
 }
 
 /** The provider answered and billed the call, but the answer cannot be used. */
@@ -28,18 +31,28 @@ export class BilledFailure extends Error {
   }
 }
 
+async function settle(
+  reservation: SpendReservation,
+  actual: ProviderCost,
+  ctx: CallContext,
+): Promise<void> {
+  await settleSpend(reservation, actual);
+  if (ctx.spent) ctx.spent.micros += actual.amount_micros;
+}
+
 // An unusable answer was billed at its usage; an outage or an abort in flight may have been billed
 // in full; a rejection before the model ran (rate limit, other 4xx) was not billed at all.
 async function settleFailure(
   reservation: SpendReservation,
   model: GeneratorModel,
   error: unknown,
-  signal: AbortSignal,
+  ctx: CallContext,
 ): Promise<void> {
   if (error instanceof BilledFailure) {
-    await settleSpend(reservation, error.usage ? costOf(model, error.usage) : reservation.reserved);
-  } else if (error instanceof ProviderUnavailableError || signal.aborted) {
-    await settleSpend(reservation, reservation.reserved);
+    const actual = error.usage ? costOf(model, error.usage) : reservation.reserved;
+    await settle(reservation, actual, ctx);
+  } else if (error instanceof ProviderUnavailableError || ctx.signal.aborted) {
+    await settle(reservation, reservation.reserved, ctx);
   } else {
     await releaseSpend(reservation);
   }
@@ -76,11 +89,11 @@ export async function paidCall<T>(
     try {
       outcome = await run();
     } catch (error) {
-      await settleFailure(reservation, model, error, ctx.signal);
+      await settleFailure(reservation, model, error, ctx);
       throw error;
     }
     // The answer was billed: a settle that fails leaves the reservation standing, never released.
-    await settleSpend(reservation, costOf(model, outcome.usage));
+    await settle(reservation, costOf(model, outcome.usage), ctx);
     return outcome.value;
   } finally {
     await slot.release();

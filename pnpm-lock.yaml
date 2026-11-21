@@ -809,6 +809,9 @@ importers:
       '@reranker/stats':
         specifier: workspace:*
         version: link:../stats
+      '@reranker/telemetry':
+        specifier: workspace:*
+        version: link:../telemetry
       '@reranker/verify':
         specifier: workspace:*
         version: link:../verify
