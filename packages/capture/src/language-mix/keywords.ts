@@ -1,11 +1,15 @@
-import { MeasurementLanguage } from "@reranker/schema/measurement";
+import { MeasurementLanguage, type QuestionScope } from "@reranker/schema/measurement";
+import lexicon from "../../data/common-words.json" with { type: "json" };
 
 /** The noun first, then its synonyms, as people searching in each language write them. */
 export type CategoryTerms = Partial<Record<MeasurementLanguage, readonly string[]>>;
 
-// Searches that leave the city out because Google already knows it, in each language's most
-// searched form ("zahnarzt in meiner nähe" 201K a month in Germany).
-const NEAR_ME: Readonly<Record<MeasurementLanguage, string>> = {
+/**
+ * Each language's most searched way to ask for a place nearby without naming the city
+ * ("zahnarzt in meiner nähe" 201K a month in Germany). Unlike a bare noun ("hotel", "garage"),
+ * a phrase ending this way is written in exactly one language.
+ */
+export const NEAR_ME: Readonly<Record<MeasurementLanguage, string>> = {
   es: "cerca de mi",
   en: "near me",
   pt: "perto de mim",
@@ -13,6 +17,9 @@ const NEAR_ME: Readonly<Record<MeasurementLanguage, string>> = {
   de: "in meiner nähe",
   it: "vicino a me",
 };
+
+/** A word among a language's this many most frequent ones is common in it. */
+export const COMMON_RANK = 10_000;
 
 // Google Ads limits (https://docs.dataforseo.com/v3/keywords_data-google_ads-search_volume-live/).
 const MAX_CHARS = 80;
@@ -29,35 +36,67 @@ const fold = (text: string) =>
     .normalize("NFD")
     .replace(/\p{M}+/gu, "");
 
+/** The folded words of a text, as the frequency lists are compared: "chambre d'hôte" → 3. */
+export const words = (text: string): string[] =>
+  fold(text)
+    .split(/[^\p{L}\p{N}]+/u)
+    .filter(Boolean);
+
+const vocabulary = new Set(lexicon.vocabulary);
+const common = new Map(
+  Object.entries(lexicon.common).map(([language, list]) => [language, new Set(list)]),
+);
+
 /**
- * The keywords that tell each language's searches apart, keyed by the text to send: every term
- * alone, beside the place and with "near me". A keyword written the same in two languages
- * ("hotel miami") says nothing about either, so it is left out.
+ * Whether a term reads as `language` alone among `others`: some word of it is not common in
+ * each of them. A word the lexicon was not built with fails, so an unreviewed term never counts.
+ */
+export function distinctive(
+  term: string,
+  language: MeasurementLanguage,
+  others: Iterable<MeasurementLanguage>,
+): boolean {
+  const list = words(term);
+  if (list.length === 0 || list.some((word) => !vocabulary.has(word))) return false;
+  for (const other of others) {
+    if (other === language) continue;
+    const shared = common.get(other);
+    if (shared && list.every((word) => shared.has(word))) return false;
+  }
+  return true;
+}
+
+/**
+ * The keywords that tell each language's searches apart, keyed by the text to send.
+ *
+ * For a local category every language asks the same thing, each term followed by its "near me"
+ * phrase, so the volumes compare like for like. A bare term or one beside the place is left
+ * out: the city is written the same in most languages and many nouns are shared ("hotel",
+ * "restaurant", "garage"), and Google counts their volume once for every language using them.
+ * A national category has no "near me", so its terms are asked alone, only those `distinctive`.
  */
 export function languageKeywords(
   terms: CategoryTerms,
-  places: Partial<Record<MeasurementLanguage, string>>,
+  scope: QuestionScope,
 ): Map<string, MeasurementLanguage> {
+  const languages = MeasurementLanguage.options.filter((l) => (terms[l]?.length ?? 0) > 0);
   const owners = new Map<string, { keyword: string; languages: Set<MeasurementLanguage> }>();
-  for (const language of MeasurementLanguage.options) {
-    const place = places[language] && lower(places[language]);
+  for (const language of languages) {
     for (const term of terms[language] ?? []) {
       const t = lower(term);
       if (t === "") continue;
-      for (const keyword of [t, place && `${t} ${place}`, `${t} ${NEAR_ME[language]}`]) {
-        if (!keyword || keyword.length > MAX_CHARS || keyword.split(" ").length > MAX_WORDS) {
-          continue;
-        }
-        const owner = owners.get(fold(keyword)) ?? { keyword, languages: new Set() };
-        owner.languages.add(language);
-        owners.set(fold(keyword), owner);
-      }
+      if (scope === "national" && !distinctive(t, language, languages)) continue;
+      const keyword = scope === "national" ? t : `${t} ${NEAR_ME[language]}`;
+      if (keyword.length > MAX_CHARS || keyword.split(" ").length > MAX_WORDS) continue;
+      const owner = owners.get(fold(keyword)) ?? { keyword, languages: new Set() };
+      owner.languages.add(language);
+      owners.set(fold(keyword), owner);
     }
   }
   const out = new Map<string, MeasurementLanguage>();
-  for (const { keyword, languages } of owners.values()) {
-    const [only] = languages;
-    if (languages.size === 1 && only) out.set(keyword, only);
+  for (const { keyword, languages: owned } of owners.values()) {
+    const [only] = owned;
+    if (owned.size === 1 && only) out.set(keyword, only);
   }
   return out;
 }

@@ -8,7 +8,7 @@
  */
 import { appendFileSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { categoryTerms, getGeo, seedCategories } from "@reranker/catalog";
+import { categoryTerms, getGeo, placeLanguage, seedCategories } from "@reranker/catalog";
 import { endPools, withSystem } from "@reranker/db";
 import { languageMixes } from "@reranker/db/schema";
 import { and, eq } from "drizzle-orm";
@@ -31,6 +31,7 @@ async function record(pair: string) {
     geo: getGeo(geoKey),
     categoryKey,
     terms: categoryTerms(category),
+    scope: category.defaultScope,
     deadlineAt: Date.now() + DEADLINE_MS,
   });
   const [mix, missMs] = await timed(() => estimateLanguageMix(input(), { base: "production" }));
@@ -44,7 +45,7 @@ async function record(pair: string) {
       .where(and(eq(languageMixes.geoKey, geoKey), eq(languageMixes.categoryKey, categoryKey)))
       .then(([r]) => r ?? null),
   );
-  return { pair, mix, row, missMs, databaseMs, memoryMs };
+  return { pair, main: placeLanguage(getGeo(geoKey)), mix, row, missMs, databaseMs, memoryMs };
 }
 
 async function main(outDir: string, pairs: string[]): Promise<boolean> {
@@ -56,11 +57,12 @@ async function main(outDir: string, pairs: string[]): Promise<boolean> {
   writeFileSync(join(outDir, "results.json"), JSON.stringify(results, null, 2));
   const usd = (micros: number) => (micros / 1_000_000).toFixed(4);
   const table = [
-    "| place:category | level | source | shares | second | cost US$ | miss ms | database hit ms | memory hit ms |",
-    "|---|---|---|---|---|---|---|---|---|",
-    ...results.map(({ pair, mix, row, missMs, databaseMs, memoryMs }) =>
+    "| place:category | main | level | source | shares | second | cost US$ | miss ms | database hit ms | memory hit ms |",
+    "|---|---|---|---|---|---|---|---|---|---|",
+    ...results.map(({ pair, main, mix, row, missMs, databaseMs, memoryMs }) =>
       [
         pair,
+        main,
         mix.level ?? mix.degraded,
         mix.source ?? "",
         JSON.stringify(mix.shares),

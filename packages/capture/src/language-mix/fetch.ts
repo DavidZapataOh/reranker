@@ -1,4 +1,4 @@
-import { placeName, widerGeos } from "@reranker/catalog";
+import { widerGeos } from "@reranker/catalog";
 import {
   acquireProviderSlot,
   breakerRecord,
@@ -16,12 +16,7 @@ import {
 } from "dataforseo-client";
 import { createDataForSeo } from "../dataforseo/client";
 import { RawSink } from "../raw/raw-sink";
-import {
-  type CategoryTerms,
-  type KeywordVolume,
-  languageKeywords,
-  languageVolumes,
-} from "./keywords";
+import { type KeywordVolume, languageVolumes } from "./keywords";
 
 // Below this many monthly searches a share is noise, so the next wider location is asked.
 const MIN_SEARCHES = 100;
@@ -113,25 +108,16 @@ const total = (volumes: LanguageVolumes["volumes"]) =>
   Object.values(volumes).reduce((sum, v) => sum + v, 0);
 
 /**
- * Asks Google Ads for the monthly searches of each language's keywords at the place, then at its
- * region and its country while it has fewer than 100. Only where Google has none anywhere does
- * AI-search volume, modeled and national, stand in. Throws `LanguageVolumesError` on a failed
- * call, and the spend and admission errors of the jobs runtime.
+ * Asks Google Ads for the monthly searches of each language's keywords (`languageKeywords`) at
+ * the place, then at its region and its country while it has fewer than 100. Only where Google
+ * has none anywhere does AI-search volume, modeled and national, stand in. Throws
+ * `LanguageVolumesError` on a failed call, and the spend and admission errors of the jobs runtime.
  */
 export async function fetchLanguageVolumes(
   geo: GeoTarget,
-  terms: CategoryTerms,
+  keywords: ReadonlyMap<string, MeasurementLanguage>,
   context: FetchContext,
 ): Promise<LanguageVolumes> {
-  const places: Partial<Record<MeasurementLanguage, string>> = {};
-  for (const language of Object.keys(terms) as MeasurementLanguage[]) {
-    try {
-      places[language] = placeName(geo, language);
-    } catch {
-      // A language without names for the place still counts its "near me" searches.
-    }
-  }
-  const keywords = languageKeywords(terms, places);
   const list = [...keywords.keys()];
   let spent = 0;
   let widest: LanguageVolumes | null = null;

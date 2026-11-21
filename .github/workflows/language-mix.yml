@@ -6,7 +6,7 @@ on:
       pairs:
         description: Comma-separated geoKey:seedCategory pairs whose search language mix to record
         type: string
-        default: us-c1015116:dental_clinic,es-c1005493:dental_clinic,ca-c9196770:restaurant,ch-c1002992:hotel,ch-c1003174:restaurant,co-c1003654:dental_clinic,us-c1015049:car_repair
+        default: us-c1015116:dental_clinic,es-c1005493:dental_clinic,ca-c9196770:restaurant,ch-c1002992:hotel,ch-c1003174:restaurant,co-c1003654:dental_clinic,us-c1015049:car_repair,ch-c1003297:dental_clinic,be-c1001004:restaurant
 permissions: {}
 concurrency:
   group: language-mix
@@ -40,10 +40,10 @@ jobs:
           APP_ENV: development
           DATAFORSEO_LOGIN: ${{ secrets.DATAFORSEO_LOGIN }}
           DATAFORSEO_PASSWORD: ${{ secrets.DATAFORSEO_PASSWORD }}
-          # Seven misses cost at most about US$2 (three Google Ads levels and AI volume each);
+          # Nine misses cost at most about US$3 (three Google Ads levels and AI volume each);
           # outside production DataForSEO is capped at zero unless raised here.
-          SPEND_CAP_DAILY_LANGUAGE_MIX_USD: "2.5"
-          SPEND_CAP_DAILY_DATAFORSEO_USD: "2.5"
+          SPEND_CAP_DAILY_LANGUAGE_MIX_USD: "3"
+          SPEND_CAP_DAILY_DATAFORSEO_USD: "3"
           OUT_DIR: ${{ runner.temp }}/language-mix
           PAIRS: ${{ inputs.pairs }}
         run: pnpm --filter @reranker/capture record:language-mix "$OUT_DIR" "$PAIRS"

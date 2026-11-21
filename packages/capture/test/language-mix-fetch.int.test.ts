@@ -5,6 +5,7 @@ import { spendLedger } from "@reranker/db/schema";
 import { and, eq } from "drizzle-orm";
 import { afterAll, afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { fetchLanguageVolumes, LanguageVolumesError } from "../src/language-mix/fetch";
+import { languageKeywords } from "../src/language-mix/keywords";
 import { ADS, AI, installFakeDataForSeo, provider } from "./support/language-mix";
 
 vi.hoisted(() => {
@@ -26,7 +27,7 @@ afterEach(() => {
 });
 afterAll(() => endPools());
 
-const fetch = () => fetchLanguageVolumes(MIAMI, TERMS, { refId });
+const fetch = () => fetchLanguageVolumes(MIAMI, languageKeywords(TERMS, "local"), { refId });
 
 const ledger = () =>
   withSystem("capture.test", (tx) =>
@@ -43,10 +44,8 @@ const ledger = () =>
 describe("fetchLanguageVolumes", () => {
   test("counts a Miami dentist's searches per language in the city, in one charged call", async () => {
     provider.ads.set(1015116, {
-      "dentist near me": 9900,
-      "dentist miami": 500,
-      "dentista cerca de mi": 880,
-      "dentista miami": 370,
+      "dentist near me": 10_400,
+      "dentista cerca de mi": 1250,
     });
     expect(await fetch()).toEqual({
       level: "city",
