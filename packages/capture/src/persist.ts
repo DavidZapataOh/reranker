@@ -93,6 +93,20 @@ function declaredGeo(record: CaptureRecord): CapturePredicateInput["geo"]["decla
 
 export const versionOf = (answer: EngineAnswer) => Number(answer.parserVersion.split("@")[1]);
 
+// Regime updates of one engine, channel and provider touch the same row: a burst of captures
+// takes turns for it here, holding one database connection instead of one per capture.
+const regimeTurns = new Map<string, Promise<unknown>>();
+
+function oneAtATime<T>(key: string, fn: () => Promise<T>): Promise<T> {
+  const turn = (regimeTurns.get(key) ?? Promise.resolve()).then(fn, fn);
+  const done = turn.catch(() => {});
+  regimeTurns.set(key, done);
+  void done.then(() => {
+    if (regimeTurns.get(key) === done) regimeTurns.delete(key);
+  });
+  return turn;
+}
+
 /**
  * Seals a capture, then stores its row: a row exists only once its signed evidence does, and a
  * seal that fails stores nothing. Persisting the same capture again stores nothing new.
@@ -209,7 +223,9 @@ export async function persistCapture(
   if (stored.stored && record.modelReported !== null) {
     // The capture and its payment are already stored; a regime that fails to update is
     // reported, never turned into a failed capture that would be paid for again.
-    await recordModelSeen(record.captureId).catch((error: unknown) =>
+    await oneAtATime(`${slot.engine}:${channel}:${slot.provider}`, () =>
+      recordModelSeen(record.captureId),
+    ).catch((error: unknown) =>
       log.error("capture.model_regime_failed", {
         captureId: record.captureId,
         name: error instanceof Error ? error.name : "unknown",

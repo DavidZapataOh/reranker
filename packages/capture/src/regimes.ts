@@ -95,6 +95,38 @@ export async function recordModelSeen(
       .where(eq(captures.id, captureId));
     if (!capture?.model) return null;
     const { model, capturedAt } = capture;
+    // Almost every capture repeats the current model: one statement, without the regime lock, so
+    // a burst of captures never queues connections behind it. A capture racing a just-committed
+    // change only lands in the regime it ends; the next capture of its model opens its own.
+    const [seen] = await tx
+      .update(modelRegimes)
+      .set({
+        firstSeenAt: sql`least(${modelRegimes.firstSeenAt}, ${capturedAt})`,
+        lastSeenAt: sql`greatest(${modelRegimes.lastSeenAt}, ${capturedAt})`,
+        captureCount: sql`${modelRegimes.captureCount} + 1`,
+      })
+      .where(
+        and(
+          eq(
+            modelRegimes.id,
+            tx
+              .select({ id: modelRegimes.id })
+              .from(modelRegimes)
+              .where(
+                and(
+                  eq(modelRegimes.engine, capture.engine),
+                  eq(modelRegimes.channel, capture.channel),
+                  eq(modelRegimes.provider, capture.provider),
+                ),
+              )
+              .orderBy(desc(modelRegimes.openedAt))
+              .limit(1),
+          ),
+          eq(modelRegimes.modelReported, model),
+        ),
+      )
+      .returning({ id: modelRegimes.id });
+    if (seen) return seen.id;
     await lockKey(tx, capture);
     const current = await latest(tx, capture);
 
