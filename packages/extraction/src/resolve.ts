@@ -20,6 +20,7 @@ import type {
   TargetBusiness,
 } from "@reranker/schema/measurement";
 import { currentExtractorConfig } from "./config";
+import { languageOfCountry } from "./language";
 import { jaroWinkler, nameHmac, normalizeName, normalizeText } from "./normalize";
 import {
   type CachedDecision,
@@ -228,6 +229,8 @@ function searchRequestOf(
   return {
     textQuery: local ? `${name} ${geo.name}` : name,
     mask: "resolve",
+    // Answers name businesses in their country's language; Places reads the name in it.
+    languageCode: languageOfCountry(geo.country),
     regionCode: geo.country.toLowerCase(),
     ...(includedType !== undefined && { includedType }),
     ...(locationBias !== undefined && { locationBias }),

@@ -13,7 +13,7 @@ import {
   settleSpend,
 } from "@reranker/jobs";
 import { type ProviderCost, z } from "@reranker/schema";
-import type { PlacesAddressComponent } from "@reranker/schema/measurement";
+import type { MeasurementLanguage, PlacesAddressComponent } from "@reranker/schema/measurement";
 import { extractionEnv } from "../env";
 import { PLACES_SKU_PRICES } from "../prices";
 
@@ -47,6 +47,8 @@ export interface PlaceHit {
 export interface SearchTextRequest {
   textQuery: string;
   mask: "resolve" | "target";
+  /** The measurement language: type labels, addresses and the geocoder's reading follow it. */
+  languageCode: MeasurementLanguage;
   regionCode?: string;
   includedType?: string;
   locationBias?:
@@ -71,7 +73,6 @@ const BASE_URL = "https://places.googleapis.com/v1";
 const TIMEOUT_MS = 3000;
 // Google sends no Retry-After on most refusals; one second spreads the retries of a burst.
 const DEFAULT_RETRY_AFTER_MS = 1000;
-const LANGUAGE_CODE = "es";
 const PAGE_SIZE = 5;
 
 const DETAIL_PRICES = {
@@ -82,7 +83,10 @@ const DETAIL_PRICES = {
 
 // Proto3 JSON leaves out empty fields: a Havana hotel came with an address component that has
 // neither a short name nor types.
-const LocalizedText = z.object({ text: z.string().default("") });
+const LocalizedText = z.object({
+  text: z.string().default(""),
+  languageCode: z.string().optional(),
+});
 const AddressComponent = z.object({
   longText: z.string().default(""),
   shortText: z.string().default(""),
@@ -196,7 +200,7 @@ async function call(
   }
 }
 
-/** Text Search (New) on the Pro SKU; `languageCode` and `pageSize` are fixed, region only if given. */
+/** Text Search (New) on the Pro SKU; `pageSize` is fixed, region only if given. */
 export async function searchText(req: SearchTextRequest, spend: SpendContext): Promise<PlaceHit[]> {
   const { mask, ...params } = req;
   const response = await call(
@@ -204,17 +208,26 @@ export async function searchText(req: SearchTextRequest, spend: SpendContext): P
     {
       method: "POST",
       fieldMask: FIELD_MASKS[mask],
-      body: { ...params, languageCode: LANGUAGE_CODE, pageSize: PAGE_SIZE },
+      body: { ...params, pageSize: PAGE_SIZE },
     },
     PLACES_SKU_PRICES.textSearchPro,
     spend,
   );
   if (!response) throw new ProviderRejectedError("google_places", "NOT_FOUND");
   const { places = [] } = parsed(SearchResponse, await response.json());
-  return places.map((place) => toHit(place, mask));
+  return places.map((place) => toHit(place, req));
 }
 
-function toHit(place: z.infer<typeof PlaceSchema>, mask: SearchTextRequest["mask"]): PlaceHit {
+type Localized = z.infer<typeof LocalizedText> | undefined;
+
+// "If a name is not available in the preferred language, the API uses the closest match": a type
+// label in another language would name the business in the wrong one.
+function inLanguage(label: Localized, language: MeasurementLanguage): string | null {
+  if (!label?.text || !label.languageCode) return null;
+  return label.languageCode.split("-")[0]?.toLowerCase() === language ? label.text : null;
+}
+
+function toHit(place: z.infer<typeof PlaceSchema>, req: SearchTextRequest): PlaceHit {
   const hit: PlaceHit = {
     id: place.id,
     displayName: place.displayName?.text ?? "",
@@ -223,13 +236,13 @@ function toHit(place: z.infer<typeof PlaceSchema>, mask: SearchTextRequest["mask
     primaryType: place.primaryType ?? null,
     businessStatus: place.businessStatus ?? null,
   };
-  if (mask === "resolve") return hit;
+  if (req.mask === "resolve") return hit;
   return {
     ...hit,
     addressComponents: place.addressComponents ?? [],
     ...(place.location && { location: place.location }),
-    primaryTypeDisplayName: place.primaryTypeDisplayName?.text ?? null,
-    googleMapsTypeLabel: place.googleMapsTypeLabel?.text ?? null,
+    primaryTypeDisplayName: inLanguage(place.primaryTypeDisplayName, req.languageCode),
+    googleMapsTypeLabel: inLanguage(place.googleMapsTypeLabel, req.languageCode),
     pureServiceAreaBusiness: place.pureServiceAreaBusiness ?? false,
   };
 }

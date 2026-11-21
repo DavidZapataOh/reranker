@@ -40,9 +40,9 @@ test("searching without a region code finds the business about as often as with 
   for (const c of BIAS_CASES) {
     const regionCode = c.country.toLowerCase();
     const [anchor, withRegion, withoutRegion] = await Promise.all([
-      searchText({ textQuery: c.anchor, mask: "target", regionCode }, spend),
-      searchText({ textQuery: c.query, mask: "target", regionCode }, spend),
-      searchText({ textQuery: c.query, mask: "target" }, spend),
+      searchText({ textQuery: c.anchor, mask: "target", languageCode: "es", regionCode }, spend),
+      searchText({ textQuery: c.query, mask: "target", languageCode: "es", regionCode }, spend),
+      searchText({ textQuery: c.query, mask: "target", languageCode: "es" }, spend),
     ]);
     const expected = anchor[0]?.id;
     expect(expected, c.anchor).toBeDefined();

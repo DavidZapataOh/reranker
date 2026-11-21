@@ -36,7 +36,8 @@ const spend: SpendContext = {
   refType: "report",
   refId: "rep_01",
 };
-const search = (textQuery = "a") => searchText({ textQuery, mask: "resolve" }, spend);
+const search = (textQuery = "a") =>
+  searchText({ textQuery, mask: "resolve", languageCode: "es" }, spend);
 
 function capture(url: string, reply: () => Response = () => HttpResponse.json({})) {
   const seen: { method: string; url: string; headers: Record<string, string>; body: unknown }[] =
@@ -86,7 +87,12 @@ afterAll(() => {
 test("resolution search sends exactly the Pro mask and the fixed body", async () => {
   const seen = capture(SEARCH_URL);
   await searchText(
-    { textQuery: "Clínica Sonrisas Pereira", mask: "resolve", regionCode: "co" },
+    {
+      textQuery: "Clínica Sonrisas Pereira",
+      mask: "resolve",
+      languageCode: "es",
+      regionCode: "co",
+    },
     spend,
   );
   expect(seen[0]?.method).toBe("POST");
@@ -110,7 +116,10 @@ test("target search passes its optional filters and no region it was not given",
     locationBias: { circle: { center: { latitude: 4.81, longitude: -75.69 }, radius: 5000 } },
     includePureServiceAreaBusinesses: true,
   };
-  await searchText({ textQuery: "Odontología Pereira", mask: "target", ...filters }, spend);
+  await searchText(
+    { textQuery: "Odontología Pereira", mask: "target", languageCode: "es", ...filters },
+    spend,
+  );
   expect(seen[0]?.headers["x-goog-fieldmask"]).toBe(FIELD_MASKS.target);
   expect(seen[0]?.body).toEqual({
     textQuery: "Odontología Pereira",
@@ -179,7 +188,10 @@ test("a target hit adds address components, location and the type labels", async
       ],
     }),
   );
-  const [first, second] = await searchText({ textQuery: "a", mask: "target" }, spend);
+  const [first, second] = await searchText(
+    { textQuery: "a", mask: "target", languageCode: "es" },
+    spend,
+  );
   expect(first).toMatchObject({
     addressComponents,
     location,
@@ -207,7 +219,7 @@ test.each(["mexico-city", "madrid", "havana"])(
       SEARCH_URL,
       () => new HttpResponse(body, { headers: { "Content-Type": "application/json" } }),
     );
-    const hits = await searchText({ textQuery: "a", mask: "target" }, spend);
+    const hits = await searchText({ textQuery: "a", mask: "target", languageCode: "es" }, spend);
     expect(hits.length).toBeGreaterThan(0);
     for (const component of hits.flatMap((hit) => hit.addressComponents ?? [])) {
       expect(component).toMatchObject({ shortText: expect.any(String), types: expect.any(Array) });
@@ -229,7 +241,7 @@ test("an address component without a short name or types keeps empty ones", asyn
       ],
     }),
   );
-  const [hit] = await searchText({ textQuery: "a", mask: "target" }, spend);
+  const [hit] = await searchText({ textQuery: "a", mask: "target", languageCode: "es" }, spend);
   expect(hit?.addressComponents).toEqual([
     { longText: "Vedado", shortText: "", types: [], languageCode: "es" },
     { longText: "Cuba", shortText: "CU", types: ["country", "political"] },
@@ -389,4 +401,23 @@ test("the slot is taken for every call and given back when it fails", async () =
   await expect(search()).rejects.toThrow("cap");
   expect(seen).toHaveLength(0);
   expect(jobs.release).toHaveBeenCalledOnce();
+});
+
+test("type labels come only in the asked language", async () => {
+  const seen = capture(SEARCH_URL, () =>
+    HttpResponse.json({
+      places: [
+        {
+          id: "ChIJa",
+          primaryTypeDisplayName: { text: "Boulangerie", languageCode: "fr" },
+          googleMapsTypeLabel: { text: "Bakery", languageCode: "en" },
+        },
+        { id: "ChIJb", primaryTypeDisplayName: { text: "Bäckerei", languageCode: "de-DE" } },
+      ],
+    }),
+  );
+  const [fr, de] = await searchText({ textQuery: "a", mask: "target", languageCode: "fr" }, spend);
+  expect(seen[0]?.body).toMatchObject({ languageCode: "fr" });
+  expect(fr).toMatchObject({ primaryTypeDisplayName: "Boulangerie", googleMapsTypeLabel: null });
+  expect(de).toMatchObject({ primaryTypeDisplayName: null });
 });

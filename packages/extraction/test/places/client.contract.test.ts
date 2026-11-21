@@ -24,7 +24,7 @@ afterAll(async () => {
 // One Text Search Pro request (0.032 USD) and one free IDs Only detail per run.
 test("a fixed search finds a place whose IDs Only detail returns the same id", async () => {
   const hits = await searchText(
-    { textQuery: "Museo del Oro Bogotá", mask: "resolve", regionCode: "co" },
+    { textQuery: "Museo del Oro Bogotá", mask: "resolve", languageCode: "es", regionCode: "co" },
     spend,
   );
   expect(hits.length).toBeGreaterThanOrEqual(1);
