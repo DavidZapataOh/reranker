@@ -1,12 +1,13 @@
 import { z } from "@reranker/schema";
 import {
   CategoryArchetype,
+  type MeasurementLanguage,
   type QuestionScope,
   type SeedCategoryKey,
 } from "@reranker/schema/measurement";
 import data from "../data/places-commercial-types.json" with { type: "json" };
 import { registerFor } from "./archetypes";
-import type { GenderedNoun, Noun } from "./grammar";
+import { type GenderedNoun, type Noun, nounText } from "./grammar";
 
 const PlacesTypes = z.object({
   source: z.url(),
@@ -286,4 +287,20 @@ const SEED_CATEGORIES: ReadonlyArray<Readonly<SeedCategory>> = Object.freeze([
 
 export function seedCategories(): ReadonlyArray<Readonly<SeedCategory>> {
   return SEED_CATEGORIES;
+}
+
+/** The words people search a category by in each language: its noun first, then its synonyms. */
+export function categoryTerms(
+  category: Readonly<SeedCategory>,
+): Partial<Record<MeasurementLanguage, string[]>> {
+  const terms = (names: { noun: Noun | null; synonyms: readonly string[] }) => [
+    ...(names.noun === null ? [] : [nounText(names.noun)]),
+    ...names.synonyms,
+  ];
+  return {
+    es: terms(category),
+    ...Object.fromEntries(
+      Object.entries(category.languages).map(([language, names]) => [language, terms(names)]),
+    ),
+  };
 }

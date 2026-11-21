@@ -1,0 +1,73 @@
+name: language-mix
+# Spends real money on DataForSEO production endpoints, so it only ever runs when dispatched.
+on:
+  workflow_dispatch:
+    inputs:
+      pairs:
+        description: Comma-separated geoKey:seedCategory pairs whose search language mix to record
+        type: string
+        default: us-c1015116:dental_clinic,es-c1005493:dental_clinic,ca-c9196770:restaurant,ch-c1002992:hotel,ch-c1003174:restaurant,co-c1003654:dental_clinic,us-c1015049:car_repair
+permissions: {}
+concurrency:
+  group: language-mix
+  cancel-in-progress: false
+jobs:
+  record:
+    # Only reviewed code reaches the production credentials.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    # Up to 15 min queueing for a Neon CI branch slot, then up to two minutes per pair.
+    timeout-minutes: 40
+    permissions: { contents: read }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
+        with: { cache: true, require-lockfile: true }
+      # The estimator stores each mix and claims its key on the database, as in production.
+      - id: branch
+        uses: ./.github/actions/neon-ci-branch
+        with:
+          api-key: ${{ secrets.NEON_NONPROD_API_KEY }}
+          project-id: ${{ vars.NEON_PROJECT_ID }}
+          branch-name: ci/language-mix-${{ github.run_id }}-${{ github.run_attempt }}
+      - uses: ./.github/actions/ci-database
+        with:
+          db-url: ${{ steps.branch.outputs.db-url }}
+          db-host-pooled: ${{ steps.branch.outputs.db-host-pooled }}
+      - name: Record each pair's language mix, its cost and its latency
+        env:
+          APP_ENV: development
+          DATAFORSEO_LOGIN: ${{ secrets.DATAFORSEO_LOGIN }}
+          DATAFORSEO_PASSWORD: ${{ secrets.DATAFORSEO_PASSWORD }}
+          # Seven misses cost at most about US$2 (three Google Ads levels and AI volume each);
+          # outside production DataForSEO is capped at zero unless raised here.
+          SPEND_CAP_DAILY_LANGUAGE_MIX_USD: "2.5"
+          SPEND_CAP_DAILY_DATAFORSEO_USD: "2.5"
+          OUT_DIR: ${{ runner.temp }}/language-mix
+          PAIRS: ${{ inputs.pairs }}
+        run: pnpm --filter @reranker/capture record:language-mix "$OUT_DIR" "$PAIRS"
+      - if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: language-mix
+          path: ${{ runner.temp }}/language-mix
+          retention-days: 7
+          if-no-files-found: error
+      - if: always() && steps.branch.outputs.branch-id != ''
+        name: Prepare npm for the branch cleanup
+        env:
+          PREFIX: ${{ runner.temp }}/npm-global
+        run: |
+          {
+            echo "NPM_CONFIG_PREFIX=$PREFIX"
+            echo "NPM_CONFIG_BEFORE=2026-11-01T00:00:00Z"
+            echo "NPM_CONFIG_IGNORE_SCRIPTS=true"
+          } >> "$GITHUB_ENV"
+          echo "$PREFIX/bin" >> "$GITHUB_PATH"
+      - if: always() && steps.branch.outputs.branch-id != ''
+        uses: neondatabase/delete-branch-action@4468d825d5a88ef4012f1705a82f02ec3072f776 # v3.2.1
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          branch: ${{ steps.branch.outputs.branch-id }}
+          api_key: ${{ secrets.NEON_NONPROD_API_KEY }}

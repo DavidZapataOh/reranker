@@ -3,7 +3,12 @@ import { CategoryArchetype, SeedCategoryKey } from "@reranker/schema/measurement
 import { describe, expect, test } from "vitest";
 import placesTypes from "../data/places-commercial-types.json" with { type: "json" };
 import { ARCHETYPE_SCOPES, ARCHETYPE_SLATES, registerFor } from "../src/archetypes";
-import { placesTypeArchetype, placesTypeLabel, seedCategories } from "../src/categories";
+import {
+  categoryTerms,
+  placesTypeArchetype,
+  placesTypeLabel,
+  seedCategories,
+} from "../src/categories";
 import { nounText } from "../src/grammar";
 
 describe("seed categories", () => {
@@ -194,4 +199,23 @@ describe("Places types", () => {
     // online_national has no Places type: a web-only store has no storefront to list.
     expect(placesTypes.types.some((t) => t.archetype === "online_national")).toBe(false);
   });
+});
+
+describe("categoryTerms", () => {
+  const byKey = (key: string) => {
+    const found = seedCategories().find((c) => c.key === key);
+    if (!found) throw new Error(key);
+    return found;
+  };
+
+  test("lists each language's noun first, then its synonyms", () => {
+    const terms = categoryTerms(byKey("dental_clinic"));
+    expect(terms.es?.[0]).toBe("clínica odontológica");
+    expect(terms.en).toEqual(["dentist", "dental clinic", "dental office", "family dentist"]);
+    expect(terms.de?.[0]).toBe("Zahnarzt");
+    expect(Object.keys(terms).sort()).toEqual(["de", "en", "es", "fr", "it", "pt"]);
+  });
+
+  test("a category without a noun searches by its synonyms alone", () =>
+    expect(categoryTerms(byKey("online_store")).en).toEqual(["online store", "online shop"]));
 });
