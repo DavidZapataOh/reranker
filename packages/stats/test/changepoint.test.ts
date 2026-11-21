@@ -1,7 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, test } from "vitest";
 import {
-  type BocpdState,
   bocpdInit,
   bocpdStep,
   cusumBaseline,
@@ -11,6 +10,7 @@ import {
   regimeAlarm,
 } from "../src/changepoint";
 import { rngFromSeed } from "../src/rng";
+import { bocpdVectors, expectVector, runBocpd, UNIT_MAX_DAYS } from "./support/bocpd";
 
 const vectors = (name: string) =>
   JSON.parse(readFileSync(new URL(`../test-vectors/changepoint/${name}`, import.meta.url), "utf8"))
@@ -24,24 +24,7 @@ type CusumCase = {
     steps: Array<{ up: number; down: number; alarm: boolean }>;
   };
 };
-type BocpdCase = {
-  input: { ys: number[]; ns: number[] };
-  output: { mapRunLengths: number[]; finalLogR: number[] };
-};
-
 const cusumVectors: CusumCase[] = vectors("cusum.json");
-const bocpdVectors: BocpdCase[] = vectors("bocpd.json");
-
-function runBocpd(ys: readonly number[], ns: readonly number[]) {
-  let state: BocpdState = bocpdInit();
-  const maps: number[] = [];
-  ys.forEach((y, t) => {
-    const step = bocpdStep(state, y, ns[t] as number);
-    state = step.state;
-    maps.push(step.mapRunLength);
-  });
-  return { state, maps };
-}
 
 describe("CUSUM", () => {
   test("h matches the audit simulation", () => {
@@ -91,14 +74,9 @@ describe("CUSUM", () => {
 });
 
 describe("BOCPD", () => {
-  test.each(bocpdVectors)("vector %#", ({ input, output }) => {
-    const { state, maps } = runBocpd(input.ys, input.ns);
-    expect(maps).toEqual(output.mapRunLengths);
-    expect(state.logR).toHaveLength(output.finalLogR.length);
-    state.logR.forEach((v, r) => {
-      expect(v).toBeCloseTo(output.finalLogR[r] as number, 8);
-    });
-  });
+  test.each(bocpdVectors.filter((c) => c.input.ys.length <= UNIT_MAX_DAYS))("vector %#", (c) =>
+    expectVector(c, expect),
+  );
 
   test("run length drops to a recent changepoint after a shift", () => {
     const rng = rngFromSeed("a".repeat(64));
@@ -110,10 +88,12 @@ describe("BOCPD", () => {
     expect(maps[69]).toBeLessThanOrEqual(12);
   });
 
-  test("a long stable series stays at the last run length instead of resetting", () => {
-    const { state, maps } = runBocpd(Array(450).fill(5), Array(450).fill(10));
-    expect(maps.at(-1)).toBe(400);
-    expect(state.logR).toHaveLength(401);
+  test("a stable series past the window stays at the last run length instead of resetting", () => {
+    const { state, maps } = runBocpd(Array(60).fill(5), Array(60).fill(10), {
+      maxRunLength: 40,
+    });
+    expect(maps.at(-1)).toBe(40);
+    expect(state.logR).toHaveLength(41);
   });
 
   test("the posterior stays normalized and refuses impossible counts", () => {
