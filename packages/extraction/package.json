@@ -14,7 +14,8 @@
     "test:integration": "vitest run --project integration --passWithNoTests",
     "test:contract": "vitest run --project contract --passWithNoTests",
     "test:measure": "vitest run --project measure",
-    "test:perf": "vitest run --project perf --passWithNoTests"
+    "test:perf": "vitest run --project perf --passWithNoTests",
+    "record:categories": "tsx --conditions=react-server scripts/record-categories.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "catalog:",
@@ -44,6 +45,7 @@
     "@vitest/coverage-v8": "catalog:",
     "msw": "catalog:",
     "pg": "catalog:",
+    "tsx": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }
