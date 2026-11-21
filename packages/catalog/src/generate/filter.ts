@@ -25,7 +25,7 @@ export function cosine(a: Float32Array, b: Float32Array): number {
 }
 
 // Mean of the unit vectors, so a long embedding cannot pull the centroid its way.
-function centroid(embeddings: readonly Float32Array[]): Float32Array {
+export function centroid(embeddings: readonly Float32Array[]): Float32Array {
   const out = new Float32Array(embeddings[0]?.length ?? 0);
   for (const e of embeddings) {
     const norm = Math.hypot(...e);
