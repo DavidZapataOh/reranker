@@ -2,13 +2,13 @@ import type { MeasurementLanguage, RegisterProfile } from "@reranker/schema/meas
 import { MeasurementLanguageError } from "../../language";
 import type { GuardLanguage } from "../guards";
 import {
-  JUDGE_PROMPT_V1,
-  JUDGE_PROMPT_V1_DE,
-  JUDGE_PROMPT_V1_EN,
-  JUDGE_PROMPT_V1_FR,
-  JUDGE_PROMPT_V1_IT,
-  JUDGE_PROMPT_V1_PT,
-} from "./judge.v1";
+  JUDGE_PROMPT_V2,
+  JUDGE_PROMPT_V2_DE,
+  JUDGE_PROMPT_V2_EN,
+  JUDGE_PROMPT_V2_FR,
+  JUDGE_PROMPT_V2_IT,
+  JUDGE_PROMPT_V2_PT,
+} from "./judge.v2";
 import {
   PARAPHRASE_PROMPT_V1,
   PARAPHRASE_PROMPT_V1_DE,
@@ -42,7 +42,7 @@ const PROMPTS = {
   es: {
     paraphrase: PARAPHRASE_PROMPT_V1,
     persona: PERSONA_PROMPT_V1,
-    judge: JUDGE_PROMPT_V1,
+    judge: JUDGE_PROMPT_V2,
     variety: {
       co: "español de Colombia",
       neutral: "español neutro, natural en cualquier país hispanohablante",
@@ -52,7 +52,7 @@ const PROMPTS = {
   en: {
     paraphrase: PARAPHRASE_PROMPT_V1_EN,
     persona: PERSONA_PROMPT_V1_EN,
-    judge: JUDGE_PROMPT_V1_EN,
+    judge: JUDGE_PROMPT_V2_EN,
     variety: {
       co: "natural English, as visitors and residents of Colombia write it",
       neutral: "natural English, as people in any English-speaking country write it",
@@ -63,7 +63,7 @@ const PROMPTS = {
   pt: {
     paraphrase: PARAPHRASE_PROMPT_V1_PT,
     persona: PERSONA_PROMPT_V1_PT,
-    judge: JUDGE_PROMPT_V1_PT,
+    judge: JUDGE_PROMPT_V2_PT,
     variety: {
       co: "português do Brasil, como escrevem brasileiros que visitam a Colômbia ou moram lá",
       neutral: "português do Brasil, natural para qualquer brasileiro",
@@ -74,7 +74,7 @@ const PROMPTS = {
   fr: {
     paraphrase: PARAPHRASE_PROMPT_V1_FR,
     persona: PERSONA_PROMPT_V1_FR,
-    judge: JUDGE_PROMPT_V1_FR,
+    judge: JUDGE_PROMPT_V2_FR,
     variety: {
       co: "français courant, tel que l'écrivent les francophones qui visitent la Colombie ou y vivent",
       neutral: "français courant de France, naturel pour n'importe quel francophone",
@@ -85,7 +85,7 @@ const PROMPTS = {
   de: {
     paraphrase: PARAPHRASE_PROMPT_V1_DE,
     persona: PERSONA_PROMPT_V1_DE,
-    judge: JUDGE_PROMPT_V1_DE,
+    judge: JUDGE_PROMPT_V2_DE,
     variety: {
       co: "Alltagsdeutsch, wie es Deutschsprachige schreiben, die Kolumbien besuchen oder dort leben",
       neutral: "Alltagsdeutsch aus Deutschland, natürlich für alle Deutschsprachigen",
@@ -96,7 +96,7 @@ const PROMPTS = {
   it: {
     paraphrase: PARAPHRASE_PROMPT_V1_IT,
     persona: PERSONA_PROMPT_V1_IT,
-    judge: JUDGE_PROMPT_V1_IT,
+    judge: JUDGE_PROMPT_V2_IT,
     variety: {
       co: "italiano corrente, come lo scrivono gli italiani che visitano la Colombia o ci vivono",
       neutral: "italiano corrente, naturale per qualsiasi italiano",

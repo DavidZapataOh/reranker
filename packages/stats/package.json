@@ -13,7 +13,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run --project unit --coverage --passWithNoTests && vitest run --project heavy",
     "test:perf": "vitest run --project perf --passWithNoTests",
-    "test:integration": "vitest run --project integration --passWithNoTests"
+    "test:integration": "vitest run --project integration --passWithNoTests",
+    "vectors:write": "tsx scripts/write-vectors.ts"
   },
   "dependencies": {
     "@opentelemetry/api": "catalog:",
@@ -32,6 +33,7 @@
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "fast-check": "catalog:",
+    "tsx": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }

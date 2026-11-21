@@ -75,6 +75,7 @@ describe("web environment", () => {
       POSTHOG_PLAN: "free",
       BRIGHTDATA_PERPLEXITY_DATASET_ID: "gd_m7dhdot1vw9a7gc1n",
       BRIGHTDATA_CHATGPT_DATASET_ID: "gd_m7aof0k82r803d5bjm",
+      OPENAI_CONTROL_MODEL: "gpt-6.1-terra",
       ...local,
     });
   });

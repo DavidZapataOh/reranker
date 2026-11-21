@@ -57,6 +57,7 @@ describe("EngineAnswer", () => {
       gemini: 1,
       "google-ai-overview": 1,
       "google-ai-mode": 1,
+      "openai-responses": 1,
     });
   });
 });

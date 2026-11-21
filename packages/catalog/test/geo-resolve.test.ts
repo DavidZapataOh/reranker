@@ -253,6 +253,8 @@ describe("geoForEngine", () => {
       { level: "country", label: "Colombia" },
     ],
     ["chatgpt", "local", { provider: "brightdata" }, { level: "country", label: "Colombia" }],
+    ["chatgpt", "local", { provider: "openai" }, { level: "city", label: "Pereira" }],
+    ["chatgpt", "national", { provider: "openai" }, { level: "country", label: "Colombia" }],
     ["gemini", "national", {}, { level: "country", label: "Colombia" }],
     ["google-ai-overview", "national", {}, { level: "country", label: "Colombia" }],
     ["google-ai-mode", "national", {}, { level: "country", label: "Colombia" }],
@@ -309,6 +311,12 @@ describe("geoForEngine", () => {
         chatgptCityEffect: "confirmed",
       }),
     ).toEqual({ level: "country", label: "España" }));
+
+  test("the ChatGPT control API declares a region target by its region", () =>
+    expect(geoForEngine("chatgpt", getGeo("co-r20198"), "local", { provider: "openai" })).toEqual({
+      level: "region",
+      label: "Antioquia",
+    }));
 
   test("Venezuela has no chatgpt", () =>
     expect(geoForEngine("chatgpt", resolveFixture("VE", "caracas"), "local")).toBeNull());
