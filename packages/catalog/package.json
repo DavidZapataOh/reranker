@@ -14,6 +14,7 @@
     "test:perf": "vitest run --project perf --passWithNoTests",
     "geo:build": "tsx scripts/build-geo.ts",
     "record:generation": "tsx scripts/record-generation.ts",
+    "seed:assemble": "tsx scripts/assemble-seed.ts",
     "seed:build": "tsx scripts/build-seed.ts",
     "seed:rejudge": "tsx scripts/rejudge-seed.ts",
     "seed:review": "tsx scripts/review-sample.ts",
