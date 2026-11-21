@@ -7,6 +7,8 @@ import {
   IN_TOTO_STATEMENT_V1,
   type KeyAnnouncementStatementV1,
   type MeasurementPlanStatementV1,
+  type ModelRegimePredicateV1,
+  type ModelRegimeStatementV1,
   type NormalizationStatementV1,
   PREDICATE,
 } from "@reranker/verify/format";
@@ -128,6 +130,25 @@ export function buildKeyAnnouncementStatement(input: {
         valid_from: key.validFrom,
       },
       previous: previous === null ? null : { keyid: previous.keyid },
+      time: { worker_utc: input.signedAt.toISOString() },
+      worker: workerIdentity(),
+    },
+  };
+}
+
+/** A reported model change, anchored on the signed envelope of the capture that first showed it. */
+export function buildModelRegimeStatement(input: {
+  regime: Omit<ModelRegimePredicateV1, "cause" | "time" | "worker">;
+  firstCaptureEnvelopeSha256: string;
+  signedAt: Date;
+}): ModelRegimeStatementV1 {
+  return {
+    _type: IN_TOTO_STATEMENT_V1,
+    subject: [{ name: "capture_envelope", digest: { sha256: input.firstCaptureEnvelopeSha256 } }],
+    predicateType: PREDICATE.modelRegime,
+    predicate: {
+      ...input.regime,
+      cause: "model",
       time: { worker_utc: input.signedAt.toISOString() },
       worker: workerIdentity(),
     },

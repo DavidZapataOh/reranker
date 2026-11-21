@@ -9,6 +9,7 @@ export const PREDICATE = {
   normalization: "https://reranker.co/attestations/ai-answer-normalization/v1",
   plan: "https://reranker.co/attestations/measurement-plan/v1",
   keyAnnouncement: "https://reranker.co/attestations/key-announcement/v1",
+  modelRegime: "https://reranker.co/attestations/model-regime/v1",
 } as const;
 
 /** `digest.sha256` is lowercase hex. */
@@ -230,3 +231,50 @@ export const KeyAnnouncementStatementV1Schema: z.ZodMiniType<KeyAnnouncementStat
       worker,
     }),
   });
+
+/**
+ * An engine started answering with another reported model. The subject is the signed envelope of
+ * the first capture that reported it; `from` is the model of the regime it ends, null for none.
+ */
+export interface ModelRegimePredicateV1 extends SignerContextV1 {
+  regime_id: string;
+  engine: string;
+  channel: string;
+  vendor: string;
+  cause: "model";
+  from: string | null;
+  to: string;
+  first_capture_id: CaptureId;
+  opened_at: string;
+}
+
+export type ModelRegimeStatementV1 = InTotoStatement<
+  typeof PREDICATE.modelRegime,
+  ModelRegimePredicateV1
+>;
+
+export const ModelRegimeStatementV1Schema: z.ZodMiniType<ModelRegimeStatementV1> = z.strictObject({
+  _type: z.literal(IN_TOTO_STATEMENT_V1),
+  subject: z
+    .array(
+      z.strictObject({
+        name: z.literal("capture_envelope"),
+        digest: z.strictObject({ sha256: sha256Hex }),
+      }),
+    )
+    .check(z.length(1)),
+  predicateType: z.literal(PREDICATE.modelRegime),
+  predicate: z.strictObject({
+    regime_id: text,
+    engine: text,
+    channel: text,
+    vendor: text,
+    cause: z.literal("model"),
+    from: z.nullable(text),
+    to: text,
+    first_capture_id: captureIdSchema,
+    opened_at: z.iso.datetime(),
+    time: z.strictObject({ worker_utc: z.iso.datetime() }),
+    worker,
+  }),
+});

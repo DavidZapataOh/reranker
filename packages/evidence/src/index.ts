@@ -49,4 +49,4 @@ export {
   signStatement,
 } from "./seal";
 export { kmsSigner, loadSigner, type Signer } from "./signer";
-export { workerIdentity } from "./statement";
+export { buildModelRegimeStatement, workerIdentity } from "./statement";
