@@ -166,10 +166,61 @@ test("candidates: ≤ 5, measurable countries only, Pro target mask, no city bia
   expect(c[0]?.categoryHint).not.toHaveProperty("confidence");
 });
 
-test("a bakery outside Spanish gets no hint: its name must come from its own language", async () => {
-  placesReturn(place("p1", "Boulangerie Dupont", PARIS));
-  const [c] = await findBusinessCandidates({ query: "Boulangerie Dupont", country: "FR", spend });
+const labelled = (hit: ReturnType<typeof place>, text: string, languageCode: string) => ({
+  ...hit,
+  primaryTypeDisplayName: { text, languageCode },
+  googleMapsTypeLabel: { text, languageCode },
+});
+
+test.each([
+  ["CO", "es"],
+  ["US", "en"],
+  ["BR", "pt"],
+  ["FR", "fr"],
+  ["DE", "de"],
+  ["IT", "it"],
+  [null, "es"],
+] as const)("from %s Places is asked in %s", async (country, languageCode) => {
+  placesReturn(place("p1", "La Espiga", BOGOTA));
+  await findBusinessCandidates({ query: "La Espiga", country, spend });
+  expect(lastSearch().body).toMatchObject({ languageCode });
+});
+
+test("a French bakery keeps Google's French labels but gets no hint: its noun needs a gender", async () => {
+  placesReturn(labelled(place("p1", "Maison Dupont", PARIS), "Boulangerie", "fr"));
+  const [c] = await findBusinessCandidates({ query: "Maison Dupont", country: "FR", spend });
   expect(c).toMatchObject({ kind: "place", categoryHint: null });
+  expect(c?.places).toMatchObject({
+    primaryTypeDisplayName: "Boulangerie",
+    googleMapsTypeLabel: "Boulangerie",
+  });
+});
+
+test("a US bakery is hinted with Google's English label", async () => {
+  const NYC = [
+    { longText: "New York", shortText: "New York", types: ["locality", "political"] },
+    { longText: "United States", shortText: "US", types: ["country", "political"] },
+  ];
+  placesReturn(labelled(place("p1", "Golden Crust", NYC), "Bakery", "en"));
+  const [c] = await findBusinessCandidates({ query: "Golden Crust", country: "US", spend });
+  expect(c?.categoryHint).toMatchObject({
+    key: "gen:places:bakery",
+    label: "Bakery",
+    noun: "bakery",
+  });
+});
+
+test("labels asked in the connection's language are dropped for a business in another one", async () => {
+  placesReturn(labelled(place("p1", "Maison Dupont", PARIS), "Panadería", "es"));
+  const [c] = await findBusinessCandidates({ query: "Maison Dupont", country: "CO", spend });
+  expect(c?.places).toMatchObject({ primaryTypeDisplayName: null, googleMapsTypeLabel: null });
+  expect(c?.categoryHint).toBeNull();
+});
+
+test("a label Google could not give in the asked language is dropped", async () => {
+  placesReturn(labelled(place("p1", "Maison Dupont", PARIS), "Bakery", "en"));
+  const [c] = await findBusinessCandidates({ query: "Maison Dupont", country: "FR", spend });
+  expect(c?.places).toMatchObject({ primaryTypeDisplayName: null, googleMapsTypeLabel: null });
 });
 
 test("a seed type outside Spanish is hinted with the seed's own noun", async () => {

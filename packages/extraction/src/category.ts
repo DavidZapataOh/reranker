@@ -1,6 +1,5 @@
 import {
   ARCHETYPE_SCOPES,
-  countryLanguage,
   type Gender,
   nounGenders,
   placesTypeArchetype,
@@ -18,6 +17,7 @@ import type {
   QuestionScope,
 } from "@reranker/schema/measurement";
 import { currentExtractorConfig, type ExtractorConfig } from "./config";
+import { languageOfCountry } from "./language";
 import { CLASSIFY_PROMPT_V1 } from "./prompts/classify.v1";
 import { callerFor, paidCall } from "./providers/call";
 import { type ClassifierOutput, ClassifierSchema } from "./schema";
@@ -39,9 +39,6 @@ const NATIONAL_CONFIDENCE = 0.8;
 const CLASSIFIER_MAX_OUTPUT_TOKENS = 512;
 // Table A types that name a kind of place, not what the business sells.
 const GENERIC_TYPES = new Set(["store", "service", "establishment", "point_of_interest"]);
-// When the country speaks none of the measured languages the measurement is refused later; the
-// category still needs a name until then.
-const HOUSE_LANGUAGE: MeasurementLanguage = "es";
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 const seedByType = new Map<string, Readonly<SeedCategory>>(
@@ -50,18 +47,14 @@ const seedByType = new Map<string, Readonly<SeedCategory>>(
 const seedByKey = new Map(seedCategories().map((seed) => [seed.key as string, seed]));
 
 function languageOf(c: BusinessCandidate): MeasurementLanguage {
-  if (c.geo === null) return HOUSE_LANGUAGE;
-  try {
-    return countryLanguage(c.geo.country);
-  } catch {
-    return HOUSE_LANGUAGE;
-  }
+  return languageOfCountry(c.geo?.country ?? null);
 }
 
 const capitalize = (text: string, language: MeasurementLanguage) =>
   text.charAt(0).toLocaleUpperCase(language) + text.slice(1);
+// German capitalizes every noun, so a heading label is already the noun as written in a sentence.
 const uncapitalize = (text: string, language: MeasurementLanguage) =>
-  text.charAt(0).toLocaleLowerCase(language) + text.slice(1);
+  language === "de" ? text : text.charAt(0).toLocaleLowerCase(language) + text.slice(1);
 
 /** The seed's reviewed noun in `language`; null where the business's product names it. */
 function seedNoun(
@@ -120,20 +113,27 @@ function typesOf(c: BusinessCandidate): string[] {
   return [...new Set(primaryType ? [primaryType, ...types] : types)];
 }
 
-/** The type's own name: Google's label in Spanish, its English type name everywhere else. */
+/** Google's label, asked in the business's language, when that is the one being named. */
+function googleLabel(
+  c: BusinessCandidate,
+  label: string | null | undefined,
+  language: MeasurementLanguage,
+): string | null {
+  return (language === languageOf(c) && label) || null;
+}
+
+/** The type's name in `language`: Google's label, else our reviewed Spanish one. */
 function placesTypeName(c: BusinessCandidate, type: string, language: MeasurementLanguage) {
-  if (language !== "es") return capitalize(type.replaceAll("_", " "), language);
-  const google = type === c.places?.primaryType ? c.places.primaryTypeDisplayName : null;
-  return google || placesTypeLabel(type);
+  const primary = type === c.places?.primaryType ? c.places.primaryTypeDisplayName : null;
+  return googleLabel(c, primary, language) ?? (language === "es" ? placesTypeLabel(type) : null);
 }
 
 function fromPlacesType(
-  c: BusinessCandidate,
   type: string,
   archetype: CategoryArchetype,
   language: MeasurementLanguage,
   confidence: number,
-  label = placesTypeName(c, type, language),
+  label: string | null,
 ): InferredCategory | null {
   if (!label) return null;
   return category({
@@ -151,8 +151,9 @@ function fromPlacesType(
 
 /**
  * The category Places already tells: the reviewed seed in every language, then a specific
- * Table A type, named by Google's Spanish label, only for businesses measured in Spanish.
- * Null when the classifier has to name it.
+ * Table A type named by Google in the business's language. Google gives no grammatical gender,
+ * so in languages whose templates agree with the noun only the classifier can name a type
+ * outside the seed. Null when the classifier has to name it.
  */
 export function categoryByRules(
   c: BusinessCandidate,
@@ -165,30 +166,28 @@ export function categoryByRules(
     if (GENERIC_TYPES.has(type)) continue;
     const archetype = placesTypeArchetype(type);
     if (archetype === null) continue;
-    return language === "es"
-      ? fromPlacesType(c, type, archetype, language, PLACES_TYPE_CONFIDENCE)
-      : null;
+    if (nounGenders(language).length > 0) return null;
+    const label = placesTypeName(c, type, language);
+    return fromPlacesType(type, archetype, language, PLACES_TYPE_CONFIDENCE, label);
   }
   return null;
 }
 
 /**
  * What is left when the rules gave nothing and the classifier cannot answer: the archetype of
- * Places' first business type, generic ones included, or an online store for a website.
+ * Places' first business type, generic ones included, or an online store for a website. Without
+ * a name in the language, a type keeps its English name; a gendered language then refuses it
+ * where questions are built rather than asking with a wrong noun.
  */
 function fallback(c: BusinessCandidate, language: MeasurementLanguage): InferredCategory {
   for (const type of typesOf(c)) {
     const archetype = placesTypeArchetype(type);
     if (archetype === null) continue;
-    const label = language === "es" && c.places?.googleMapsTypeLabel;
-    const found = fromPlacesType(
-      c,
-      type,
-      archetype,
-      language,
-      FALLBACK_CONFIDENCE,
-      label || undefined,
-    );
+    const label =
+      googleLabel(c, c.places?.googleMapsTypeLabel, language) ??
+      placesTypeName(c, type, language) ??
+      capitalize(type.replaceAll("_", " "), language);
+    const found = fromPlacesType(type, archetype, language, FALLBACK_CONFIDENCE, label);
     if (found) return { ...found, scope: allowedScope(archetype, "local") };
   }
   const store = seedByKey.get("online_store") as Readonly<SeedCategory>;

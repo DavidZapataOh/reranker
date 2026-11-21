@@ -181,14 +181,36 @@ describe("categoryByRules", () => {
     }),
   );
 
-  // Google's type labels come in Spanish; outside Spanish the classifier names the business.
-  test.each(["us", "br", "fr", "de", "it"])("in %s a Table A type goes to the classifier", (c) =>
+  // A candidate's Google labels are in its own language (Places is asked in it).
+  test("in English a Table A type is named by Google's English label", () =>
     expect(
       categoryByRules(
-        place({ primaryType: "bakery", primaryTypeDisplayName: "Panadería", country: c }),
+        place({ primaryType: "bakery", primaryTypeDisplayName: "Bakery", country: "us" }),
       ),
+    ).toMatchObject({ key: "gen:places:bakery", label: "Bakery", noun: "bakery", language: "en" }));
+
+  test("in English without Google's label the classifier names the type", () =>
+    expect(categoryByRules(place({ primaryType: "bakery", country: "us" }))).toBeNull());
+
+  // Google gives no gender, which these languages' templates need.
+  test.each([
+    ["br", "Padaria"],
+    ["fr", "Boulangerie"],
+    ["de", "Bäckerei"],
+    ["it", "Panetteria"],
+  ])("in %s a Table A type goes to the classifier, even labelled %s", (country, label) =>
+    expect(
+      categoryByRules(place({ primaryType: "bakery", primaryTypeDisplayName: label, country })),
     ).toBeNull(),
   );
+
+  test("Google's label is not used to name the business in another language", () =>
+    expect(
+      categoryByRules(
+        place({ primaryType: "bakery", primaryTypeDisplayName: "Bakery", country: "us" }),
+        "es",
+      ),
+    ).toMatchObject({ label: "Panadería", language: "es" }));
 
   test("an explicit language overrides the country's", () =>
     expect(categoryByRules(place({ primaryType: "dentist", country: "co" }), "en")).toMatchObject({
@@ -461,6 +483,26 @@ describe("inferCategory in every measurement language", () => {
       key: "gen:places:hair_salon",
       label: "Hair salon",
       noun: "hair salon",
+    });
+  });
+});
+
+describe("the Places fallback in every language", () => {
+  test.each([
+    ["fr", "Boulangerie", "boulangerie"],
+    ["de", "Bäckerei", "Bäckerei"],
+  ])("in %s it keeps Google's own label %s", async (country, mapsLabel, noun) => {
+    doubles.classify.mockRejectedValue(new Error("down"));
+    await expect(
+      inferCategory(
+        place({ primaryType: "bakery", googleMapsTypeLabel: mapsLabel, country }),
+        opts,
+      ),
+    ).resolves.toMatchObject({
+      key: "gen:places:bakery",
+      label: mapsLabel,
+      noun,
+      nounGender: null,
     });
   });
 });

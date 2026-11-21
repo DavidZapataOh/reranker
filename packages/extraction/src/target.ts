@@ -1,11 +1,17 @@
 import { getGeo, resolveGeo } from "@reranker/catalog";
 import { type CountryCode, isMeasurable } from "@reranker/i18n/countries";
 import { InvalidInputError, type SpendContext } from "@reranker/jobs";
-import type { BusinessCandidate, BusinessCategory, GeoTarget } from "@reranker/schema/measurement";
+import type {
+  BusinessCandidate,
+  BusinessCategory,
+  GeoTarget,
+  MeasurementLanguage,
+} from "@reranker/schema/measurement";
 import { Parser } from "htmlparser2";
 import { parse } from "tldts";
 import { categoryByRules } from "./category";
 import { currentExtractorConfig } from "./config";
+import { languageOfCountry } from "./language";
 import { jaroWinkler, normalizeName } from "./normalize";
 import { type PlaceHit, searchText } from "./places/client";
 import { scoreCandidates } from "./places/score";
@@ -145,11 +151,17 @@ function nationalGeo(country: CountryCode): GeoTarget {
   return getGeo(country.toLowerCase());
 }
 
-function placeCandidate(hit: PlaceHit, confidence: number): BusinessCandidate | null {
+function placeCandidate(
+  hit: PlaceHit,
+  confidence: number,
+  language: MeasurementLanguage,
+): BusinessCandidate | null {
   const components = hit.addressComponents ?? [];
   const component = (type: string) => components.find((c) => c.types.includes(type));
   const country = component("country")?.shortText.toUpperCase();
   if (country === undefined || !isMeasurable(country)) return null;
+  // Labels asked in another language than the business's would name it in the wrong one.
+  const labelled = languageOfCountry(country) === language;
   const candidate: BusinessCandidate = {
     kind: "place",
     placeId: hit.id,
@@ -170,8 +182,8 @@ function placeCandidate(hit: PlaceHit, confidence: number): BusinessCandidate | 
     places: {
       types: hit.types,
       primaryType: hit.primaryType,
-      primaryTypeDisplayName: hit.primaryTypeDisplayName ?? null,
-      googleMapsTypeLabel: hit.googleMapsTypeLabel ?? null,
+      primaryTypeDisplayName: (labelled && hit.primaryTypeDisplayName) || null,
+      googleMapsTypeLabel: (labelled && hit.googleMapsTypeLabel) || null,
       pureServiceAreaBusiness: hit.pureServiceAreaBusiness ?? false,
     },
   };
@@ -199,11 +211,14 @@ export async function findBusinessCandidates(q: {
   const domain = domainOf(q.query);
   const textQuery = domain?.name || q.query.trim();
   if (textQuery === "") throw new InvalidInputError("empty business query");
+  // The owner most likely types in the language of the country they connect from.
+  const language = languageOfCountry(q.country);
 
   const hits = await searchText(
     {
       textQuery,
       mask: "target",
+      languageCode: language,
       includePureServiceAreaBusinesses: true,
       // Without a measurable country Places falls back to IP bias; the contract test keeps that
       // within 5 points of hits found with the right region code.
@@ -220,7 +235,7 @@ export async function findBusinessCandidates(q: {
     { categoryTypes: [], websites: new Map() },
     currentExtractorConfig.resolution,
   )
-    .map(({ hit, score }) => placeCandidate(hit, score))
+    .map(({ hit, score }) => placeCandidate(hit, score, language))
     .filter((candidate) => candidate !== null);
 
   const found =
