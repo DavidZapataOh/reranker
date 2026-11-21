@@ -75,6 +75,8 @@ export function locateQuote(
   return null;
 }
 
+// A quote that ends where the answer spaces its punctuation ("Pennestri** .") misses by that space.
+const EDGE_PUNCTUATION = /^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu;
 const LINK_SYNTAX = /\]\([^)]*\)?|\[/;
 
 /**
@@ -100,7 +102,10 @@ export function toExtractedMentions(
 ): { mentions: ExtractedMention[]; quoteMisses: number } {
   const mentions: ExtractedMention[] = [];
   for (const mention of out.mentions) {
-    const at = locateQuote(markdown, mention.quote) ?? locateByLinkText(markdown, mention);
+    const at =
+      locateQuote(markdown, mention.quote) ??
+      locateQuote(markdown, mention.quote.replace(EDGE_PUNCTUATION, "")) ??
+      locateByLinkText(markdown, mention);
     if (!at) continue;
     mentions.push({
       name: mention.name,

@@ -200,6 +200,24 @@ describe("toExtractedMentions", () => {
     expect(r.quoteMisses).toBe(1);
   });
 
+  test("a quote that drops a space before its closing punctuation is still found", () => {
+    const md = "La guida include **Roscioli** e **Trattoria Pennestri** . Altro testo.";
+    const r = toExtractedMentions(
+      md,
+      out([
+        [
+          "Roscioli",
+          "include **Roscioli** e **Trattoria Pennestri**.",
+          "recommendation",
+          "business",
+        ],
+      ]),
+    );
+    expect(r.mentions.map((x) => x.quote)).toEqual([
+      "include **Roscioli** e **Trattoria Pennestri",
+    ]);
+  });
+
   test("an answer without entities yields no mentions", () =>
     expect(toExtractedMentions("No sé.", { answerKind: "no_entities", mentions: [] })).toEqual({
       mentions: [],
