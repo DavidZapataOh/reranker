@@ -1,43 +1,42 @@
 import { randomUUID } from "node:crypto";
 import { mkdirSync, writeFileSync } from "node:fs";
+import { geoForEngine, getGeo } from "@reranker/catalog";
 import { endPools } from "@reranker/db";
 import { releaseSpend, reserveSpend, settleSpend } from "@reranker/jobs";
 import { requireEnv } from "@reranker/testing/env";
-import type {
-  Response as OpenAIResponse,
-  ResponseCreateParamsNonStreaming,
-} from "openai/resources/responses/responses";
+import type { Response as OpenAIResponse } from "openai/resources/responses/responses";
 import { afterAll, beforeAll, expect, test, vi } from "vitest";
 import { callControl, createOpenAIControl } from "../../src/openai/client";
 import { CONTROL_RESERVE, costFromUsage } from "../../src/openai/cost";
+import { buildControlRequest } from "../../src/openai/request";
 import { RawSink } from "../../src/raw/raw-sink";
+import { type FrozenSlot, slotId } from "../../src/slot";
 
 // Each run rewrites the recording, which the client and parser tests replay as real wire bytes.
 const RECORDED = new URL("../fixtures/recorded/openai/", import.meta.url);
 
-// The control profile, asked from Medellín.
-const params: ResponseCreateParamsNonStreaming = {
-  model: "gpt-6.1-terra",
-  input: "¿Qué odontólogo me recomiendas en Medellín?",
-  store: false,
-  max_output_tokens: 1200,
-  tool_choice: "required",
-  include: ["web_search_call.action.sources"],
-  reasoning: { effort: "low" },
-  tools: [
-    {
-      type: "web_search_2025_08_26",
-      search_context_size: "medium",
-      user_location: {
-        type: "approximate",
-        country: "CO",
-        city: "Medellín",
-        region: "Antioquia",
-        timezone: "America/Bogota",
-      },
-    },
-  ],
-};
+// The control profile, asked from Medellín as the canary plans it.
+const MEASUREMENT = "0193b6f2-7c1e-7a51-9b3a-5f2e8d4c1a90";
+const MEDELLIN = "co-c1003654";
+
+function medellinSlot(): FrozenSlot {
+  const geoDeclared = geoForEngine("chatgpt", getGeo(MEDELLIN), "local", { provider: "openai" });
+  if (!geoDeclared) throw new Error("ChatGPT is not offered in Colombia");
+  return {
+    engine: "chatgpt",
+    provider: "openai",
+    intentSetId: "is_0123456789abcdef",
+    intentId: "dental_clinic.best",
+    paraphraseId: "p1",
+    geoKey: MEDELLIN,
+    geoDeclared,
+    runIndex: 0,
+    promptText: "¿Qué odontólogo me recomiendas en Medellín?",
+    measurementId: MEASUREMENT,
+    slotIndex: 0,
+    slotId: slotId(MEASUREMENT, 0),
+  };
+}
 
 beforeAll(() => {
   // The env helpers read APP_ENV, which the contract job does not set.
@@ -64,6 +63,7 @@ test("a control call from Medellín searches, cites and keeps its exact bytes", 
     refType: "openai-control-contract",
     refId: randomUUID(),
   });
+  const params = buildControlRequest(medellinSlot());
   const sink = new RawSink();
   const client = createOpenAIControl(sink, { apiKey: requireEnv("OPENAI_API_KEY_CI") });
   // Nothing was billed without a response; once one arrives, its usage settles the call.

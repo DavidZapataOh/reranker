@@ -59,6 +59,8 @@ export function geoForEngine(
       if (!target.center) return byCountry;
       return { level: target.center.level, label: target.center.label };
     case "chatgpt": {
+      // The control API takes the place itself as its declared user location.
+      if (opts.provider === "openai") return { level: target.level, label: target.name };
       const byCity =
         opts.provider === "brightdata" &&
         target.center?.level === "city" &&
