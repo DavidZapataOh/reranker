@@ -1,12 +1,14 @@
 import { describe, expect, test, vi } from "vitest";
 import {
   buildCategory,
+  draftFor,
   fillCanonical,
   groupIntents,
   groupKey,
   MIN_PER_FORMAT,
   namesFor,
   POOL_TARGET,
+  rejudgeIntent,
   SEED_GROUPS,
 } from "../scripts/build-seed";
 import { ARCHETYPE_SLATES } from "../src/archetypes";
@@ -171,5 +173,31 @@ describe("building a category's pools", () => {
       expect(intent.pool.length).toBeLessThan(POOL_TARGET);
     }
     expect(MIN_PER_FORMAT).toBeGreaterThanOrEqual(5);
+  });
+
+  test("a later judge rules again on the archived candidates without regenerating", async () => {
+    const { deps } = fakes(() => 25);
+    const built = await buildCategory(category("dental_clinic"), group, spend, deps as never);
+    const intent = built.intents[5];
+    if (!intent) throw new Error("no trust intent");
+    expect(intent.candidates).toHaveLength(50);
+    expect(intent.candidates.every((c) => c.judged)).toBe(true);
+
+    // The new judge rejects every list request the old one kept.
+    const judge = vi.fn(async (_intent: unknown, candidates: Candidate[]) =>
+      candidates.map((c) => c.format !== "list_request"),
+    );
+    const plan = { ...intent };
+    const draft = draftFor(category("dental_clinic"), group, plan);
+    const rejudged = await rejudgeIntent(intent, draft, spend, {
+      embed: deps.embed,
+      judge,
+    } as never);
+
+    expect(deps.generate).toHaveBeenCalledTimes(16);
+    expect(rejudged.candidates.map((c) => c.text)).toEqual(intent.candidates.map((c) => c.text));
+    expect(rejudged.pool.some((p) => p.format === "list_request")).toBe(false);
+    expect(rejudged.pool.length).toBeLessThan(intent.pool.length);
+    expect(rejudged.report.rounds).toBe(intent.report.rounds);
   });
 });

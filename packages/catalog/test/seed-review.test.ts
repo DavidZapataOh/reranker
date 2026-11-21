@@ -65,6 +65,7 @@ function categoryPool(key: string, language: "es" | "fr", profile: "co" | "neutr
     intents: groupIntents(category, { language, registerProfile: profile }).map((plan) => ({
       ...plan,
       pool: pool(40, `${plan.intentId}:`),
+      candidates: pool(40, `${plan.intentId}:`).map((p) => ({ ...p, judged: true })),
       report: {
         candidates: 50,
         guards: {

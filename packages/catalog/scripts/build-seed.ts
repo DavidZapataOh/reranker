@@ -164,8 +164,12 @@ type Deps = {
 
 export type PoolEntry = Candidate & { closeness: number };
 
+/** A guarded paraphrase with its verdict, kept so a later judge can rule without regenerating. */
+export type JudgedCandidate = Candidate & { judged: boolean };
+
 export type IntentPool = SeedIntentPlan & {
   pool: PoolEntry[];
+  candidates: JudgedCandidate[];
   report: {
     candidates: number;
     guards: Record<GuardName, number>;
@@ -230,7 +234,6 @@ async function buildIntent(
   const verdicts: boolean[] = [];
   const [canonicalVector] = await deps.embed([draft.canonicalText], callContext(spend));
   let ranked: Candidate[] = [];
-  let pooled = { dedupe: 0, offCentroid: 0, judge: 0 };
 
   while (report.rounds < MAX_ROUNDS && (ranked.length < POOL_TARGET || formatsShort(ranked))) {
     const withPersonas = report.rounds === 0 && plan.kind === "discovery";
@@ -286,18 +289,41 @@ async function buildIntent(
       minPerFormat: 0,
     });
     ranked = selected.kept;
-    pooled = selected.report;
   }
 
+  const ranking = rankPool(accepted, vectors, verdicts, canonicalVector as Float32Array);
+  return {
+    ...plan,
+    pool: ranking.pool,
+    candidates: accepted.map((c, i) => ({ ...c, judged: verdicts[i] === true })),
+    report: { ...report, ...ranking.report },
+  };
+}
+
+/** The judged candidates ranked by closeness to their centroid, near duplicates and rejects out. */
+function rankPool(
+  candidates: Candidate[],
+  vectors: Float32Array[],
+  verdicts: boolean[],
+  canonicalVector: Float32Array,
+) {
+  const selected = selectPool({
+    candidates,
+    embeddings: vectors,
+    judged: verdicts,
+    keep: Number.MAX_SAFE_INTEGER,
+    minPerFormat: 0,
+  });
   const center = centroid(vectors);
-  const vectorOf = new Map(accepted.map((c, i) => [c, vectors[i] as Float32Array]));
+  const vectorOf = new Map(candidates.map((c, i) => [c, vectors[i] as Float32Array]));
+  const ranked = selected.kept;
   const pool = ranked.map((c) => ({
     ...c,
     closeness: cosine(vectorOf.get(c) as Float32Array, center),
   }));
   let maxPairCosine = 0;
-  for (let i = 0; i < pool.length; i++) {
-    for (let j = i + 1; j < pool.length; j++) {
+  for (let i = 0; i < ranked.length; i++) {
+    for (let j = i + 1; j < ranked.length; j++) {
       const pair = cosine(
         vectorOf.get(ranked[i] as Candidate) as Float32Array,
         vectorOf.get(ranked[j] as Candidate) as Float32Array,
@@ -305,19 +331,96 @@ async function buildIntent(
       maxPairCosine = Math.max(maxPairCosine, pair);
     }
   }
-  const canonicalCloseness =
-    vectors.length === 0 ? 0 : cosine(canonicalVector as Float32Array, center);
+  const canonicalCloseness = vectors.length === 0 ? 0 : cosine(canonicalVector, center);
+  const { dedupe, offCentroid, judge: rejected } = selected.report;
   return {
-    ...plan,
     pool,
     report: {
-      ...report,
-      ...pooled,
+      dedupe,
+      offCentroid,
+      judge: rejected,
       maxPairCosine,
       canonicalCloseness,
       canonicalRank: 1 + pool.filter((p) => p.closeness > canonicalCloseness).length,
     },
   };
+}
+
+const JUDGE_BATCH = 60;
+const EMBED_BATCH = 500;
+
+async function inBatches<T, R>(
+  items: readonly T[],
+  size: number,
+  run: (batch: T[]) => Promise<R[]>,
+): Promise<R[]> {
+  const out: R[] = [];
+  for (let i = 0; i < items.length; i += size) out.push(...(await run(items.slice(i, i + size))));
+  return out;
+}
+
+/**
+ * Rules again on an intent's archived candidates with the current judge and ranks them anew:
+ * the candidates stay identical and nothing is regenerated.
+ */
+export async function rejudgeIntent(
+  intent: IntentPool,
+  draft: DraftIntent,
+  spend: SpendContext,
+  deps: Pick<Deps, "embed" | "judge"> = { embed, judge },
+): Promise<IntentPool> {
+  const candidates: Candidate[] = intent.candidates.map(({ text, format, generator }) => ({
+    text,
+    format,
+    generator,
+  }));
+  const [vectors, verdicts, [canonicalVector]] = await Promise.all([
+    inBatches(candidates, EMBED_BATCH, (batch) =>
+      deps.embed(
+        batch.map((c) => c.text),
+        callContext(spend),
+      ),
+    ),
+    inBatches(candidates, JUDGE_BATCH, (batch) => deps.judge(draft, batch, callContext(spend))),
+    deps.embed([draft.canonicalText], callContext(spend)),
+  ]);
+  const ranking = rankPool(candidates, vectors, verdicts, canonicalVector as Float32Array);
+  return {
+    ...intent,
+    pool: ranking.pool,
+    candidates: candidates.map((c, i) => ({ ...c, judged: verdicts[i] === true })),
+    report: { ...intent.report, ...ranking.report },
+  };
+}
+
+/** An intent as the providers and the judge read it, in the group's language and speech. */
+export function draftFor(
+  category: Readonly<SeedCategory>,
+  group: SeedGroup,
+  plan: SeedIntentPlan,
+): DraftIntent {
+  const { language, registerProfile } = group;
+  const { noun, label } = namesFor(category, language);
+  const scope = category.defaultScope;
+  return {
+    category: {
+      key: category.key,
+      source: "seed",
+      label,
+      noun: nounText(noun),
+      archetype: category.archetype,
+      scope,
+      register: category.register,
+      placesTypes: category.placesTypes,
+    },
+    noun,
+    scope,
+    kind: plan.kind,
+    slug: plan.slug,
+    canonicalText: fillCanonical(plan.canonical, noun, language),
+    language,
+    registerProfile,
+  } as DraftIntent;
 }
 
 export async function buildCategory(
@@ -326,20 +429,10 @@ export async function buildCategory(
   spend: SpendContext,
   deps: Deps = { generate: generateParaphrases, embed, judge },
 ): Promise<CategoryPool> {
-  const { language, registerProfile } = group;
-  const { noun, synonyms, label } = namesFor(category, language);
+  const { language } = group;
+  const { noun, synonyms } = namesFor(category, language);
   const text = nounText(noun);
   const scope = category.defaultScope;
-  const business = {
-    key: category.key,
-    source: "seed" as const,
-    label,
-    noun: text,
-    archetype: category.archetype,
-    scope,
-    register: category.register,
-    placesTypes: category.placesTypes,
-  };
   const personas: Persona[] = [];
   const guardFor = (kind: IntentKind): GuardContext => ({
     scope,
@@ -352,19 +445,16 @@ export async function buildCategory(
     blockedNames: new Set(),
   });
   const intents = await Promise.all(
-    groupIntents(category, group).map((plan) => {
-      const draft = {
-        category: business,
-        noun,
-        scope,
-        kind: plan.kind,
-        slug: plan.slug,
-        canonicalText: fillCanonical(plan.canonical, noun, language),
-        language,
-        registerProfile,
-      } as DraftIntent;
-      return buildIntent(plan, draft, guardFor(plan.kind), spend, deps, personas);
-    }),
+    groupIntents(category, group).map((plan) =>
+      buildIntent(
+        plan,
+        draftFor(category, group, plan),
+        guardFor(plan.kind),
+        spend,
+        deps,
+        personas,
+      ),
+    ),
   );
   const seen = new Set<string>();
   const kept = personas.filter((p) => {

@@ -7,6 +7,10 @@ on:
         description: Seed group (language and speech profile) whose candidate pool to build
         type: choice
         options: [es-co, es-neutral, en-neutral, pt-neutral, fr-neutral, de-neutral, it-neutral]
+      rejudge-run:
+        description: A seed-build run whose pool to judge again instead of building a new one
+        type: string
+        default: ""
 permissions: {}
 concurrency:
   group: seed-build-${{ inputs.group }}
@@ -18,12 +22,19 @@ jobs:
     runs-on: ubuntu-24.04
     # Up to 15 min queueing for a Neon CI branch slot, then up to three rounds per intent.
     timeout-minutes: 60
-    permissions: { contents: read }
+    permissions: { contents: read, actions: read }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { persist-credentials: false }
       - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
         with: { cache: true, require-lockfile: true }
+      - if: inputs.rejudge-run != ''
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: seed-build-${{ inputs.group }}
+          run-id: ${{ inputs.rejudge-run }}
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/prior
       # Every call is reserved and settled on the spend ledger under the benchmark cap.
       - id: branch
         uses: ./.github/actions/neon-ci-branch
@@ -47,7 +58,14 @@ jobs:
           SPEND_CAP_DAILY_OPENAI_USD: "6"
           SPEND_CAP_DAILY_GEMINI_USD: "6"
           OUT_DIR: ${{ runner.temp }}/seed-build
-        run: pnpm --filter @reranker/catalog seed:build "${GROUP%-*}" "${GROUP#*-}" "$OUT_DIR"
+          PRIOR: ${{ runner.temp }}/prior
+          REJUDGE_RUN: ${{ inputs.rejudge-run }}
+        run: |
+          if [ -n "$REJUDGE_RUN" ]; then
+            pnpm --filter @reranker/catalog seed:rejudge "$PRIOR/seed-$GROUP.json" "$OUT_DIR"
+          else
+            pnpm --filter @reranker/catalog seed:build "${GROUP%-*}" "${GROUP#*-}" "$OUT_DIR"
+          fi
       - if: ${{ !cancelled() }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
