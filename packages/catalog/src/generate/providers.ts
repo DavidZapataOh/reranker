@@ -24,7 +24,7 @@ import { GENERATOR_CONFIG, type TokenUsage } from "./config";
 import { catalogEnv } from "./env";
 import type { Candidate } from "./guards";
 import { type GenerationLanguage, promptsFor } from "./prompts";
-import { REVIEW_PROMPT_V1 } from "./prompts/review.v1";
+import { REVIEW_PROMPT_V2 } from "./prompts/review.v2";
 import { BilledFailure, type CallContext, paidCall } from "./spend";
 
 export type { GenerationLanguage } from "./prompts";
@@ -421,7 +421,7 @@ export async function reviewNative(
   const call = {
     schema: Reviews,
     name: "verdicts",
-    system: REVIEW_PROMPT_V1,
+    system: REVIEW_PROMPT_V2,
     user: JSON.stringify({
       language: req.language,
       variety: variety[req.registerProfile],
