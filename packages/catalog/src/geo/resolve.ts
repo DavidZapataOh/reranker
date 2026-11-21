@@ -179,3 +179,13 @@ export function spokenPlaceName(name: string): string {
   if (head.length === before.length) return name;
   return head.endsWith(",") ? head.slice(0, -1) : head;
 }
+
+/** The wider targets a place falls back to when it has too little data, nearest first. */
+export function widerGeos(target: GeoTarget): GeoTarget[] {
+  if (target.level === "country") return [];
+  const geo = loadCountryGeo(target.country);
+  const regionKey = geo.byKey.get(target.key)?.regionKey ?? null;
+  const region = target.level === "city" && regionKey !== null ? geo.byKey.get(regionKey) : null;
+  const country = countryTarget(target.country, geo);
+  return region ? [placeTarget(target.country, geo, region), country] : [country];
+}
