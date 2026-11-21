@@ -248,6 +248,7 @@ ${MENTION_DEFINITIONS_V2}
 - Staff: "Zahnzentrum Mitte (Dr. Lena Hoff)" recommends the practice; Dr. Lena Hoff is "incidental". A professional the answer offers on their own is a "recommendation".
 - Chains and branches: "Cruz Verde has branches all over the city" is "chain"; "Cruz Verde de la 70" is "business" with locationHint "de la 70".
 - Platforms: "book on Booking" recommends the platform; "according to Tripadvisor reviews" or "compare dentists on jameda" is "incidental".
+- Guides: businesses the answer brings from a guide or ranking ("the Michelin selection includes X and Y", "secondo Gambero Rosso, X") are offered as options and are "recommendation"; only the guide itself is "incidental".
 - Sections: an answer often ends with "platforms to search", "sources" or "further reading"; what it lists there is "incidental" unless it is offered as the way to get the service.
 - Markdown: the answer may escape punctuation ("1\\.", "\\:") and use emphasis; copy the quote as it appears, the matching tolerates both.
 - Images: the text of an image "![…](…)" is the caption of a picture taken from another page; a name that appears only there is not a mention.
