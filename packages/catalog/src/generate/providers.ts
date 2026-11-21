@@ -24,6 +24,7 @@ import { GENERATOR_CONFIG, type TokenUsage } from "./config";
 import { catalogEnv } from "./env";
 import type { Candidate } from "./guards";
 import { type GenerationLanguage, promptsFor } from "./prompts";
+import { REVIEW_PROMPT_V1 } from "./prompts/review.v1";
 import { BilledFailure, type CallContext, paidCall } from "./spend";
 
 export type { GenerationLanguage } from "./prompts";
@@ -376,4 +377,69 @@ export async function judge(
   }
   const kept = new Map(verdicts.map((v) => [v.id, v.keep]));
   return candidates.map((_, id) => kept.get(id) === true);
+}
+
+export const ReviewCheck = z.enum([
+  "grammar",
+  "register",
+  "naturalness",
+  "noun",
+  "leakage",
+  "fidelity",
+]);
+export type ReviewCheck = z.infer<typeof ReviewCheck>;
+
+export type ReviewRequest = {
+  language: GenerationLanguage;
+  registerProfile: RegisterProfile;
+  category: string;
+  noun: string;
+  intent?: { kind: IntentKind; canonical: string };
+  items: Array<{ role: "canonical" | "paraphrase" | "persona"; text: string }>;
+};
+
+/** One reviewer's verdict on an item; null when it gave none, which never counts as a pass. */
+export type ReviewVerdict = { keep: boolean; reasons: ReviewCheck[] } | null;
+
+const Reviews = z.object({
+  verdicts: z.array(
+    z.object({ id: z.number().int(), keep: z.boolean(), reasons: z.array(ReviewCheck) }),
+  ),
+});
+
+/**
+ * A native-speaker review of seed content by one provider, in a call of its own that knows
+ * nothing of how the items were written. An unusable answer yields no verdicts.
+ */
+export async function reviewNative(
+  provider: "openai" | "gemini",
+  req: ReviewRequest,
+  ctx: CallContext,
+): Promise<ReviewVerdict[]> {
+  if (req.items.length === 0) return [];
+  const { variety } = promptsFor(req.language);
+  const call = {
+    schema: Reviews,
+    name: "verdicts",
+    system: REVIEW_PROMPT_V1,
+    user: JSON.stringify({
+      language: req.language,
+      variety: variety[req.registerProfile],
+      category: req.category,
+      noun: req.noun,
+      ...(req.intent && { intent: req.intent }),
+      items: req.items.map((item, id) => ({ id, ...item })),
+    }),
+  };
+  let verdicts: z.infer<typeof Reviews>["verdicts"];
+  try {
+    verdicts = (
+      provider === "openai" ? await callOpenAI(call, "judge", ctx) : await callGemini(call, ctx)
+    ).verdicts;
+  } catch (error) {
+    if (error instanceof BilledFailure) return req.items.map(() => null);
+    throw error;
+  }
+  const byId = new Map(verdicts.map((v) => [v.id, { keep: v.keep, reasons: v.reasons }]));
+  return req.items.map((_, id) => byId.get(id) ?? null);
 }

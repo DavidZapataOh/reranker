@@ -1,0 +1,81 @@
+name: seed-review
+# Spends real money on the review providers, so it only ever runs when dispatched.
+on:
+  workflow_dispatch:
+    inputs:
+      group:
+        description: Seed group, outside Spanish, whose built pool to review
+        type: choice
+        options: [en-neutral, pt-neutral, fr-neutral, de-neutral, it-neutral]
+      build-run:
+        description: Id of the seed-build run whose artifact holds the group's pool
+        type: string
+        required: true
+permissions: {}
+concurrency:
+  group: seed-review-${{ inputs.group }}
+  cancel-in-progress: false
+jobs:
+  review:
+    # Only reviewed code reaches the production credentials.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    permissions: { contents: read, actions: read }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
+        with: { cache: true, require-lockfile: true }
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: seed-build-${{ inputs.group }}
+          run-id: ${{ inputs.build-run }}
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/seed-build
+      # Every call is reserved and settled on the spend ledger under the benchmark cap.
+      - id: branch
+        uses: ./.github/actions/neon-ci-branch
+        with:
+          api-key: ${{ secrets.NEON_NONPROD_API_KEY }}
+          project-id: ${{ vars.NEON_PROJECT_ID }}
+          branch-name: ci/seed-review-${{ github.run_id }}-${{ github.run_attempt }}
+      - uses: ./.github/actions/ci-database
+        with:
+          db-url: ${{ steps.branch.outputs.db-url }}
+          db-host-pooled: ${{ steps.branch.outputs.db-host-pooled }}
+      - name: Review the group with two independent reviewers
+        env:
+          APP_ENV: development
+          GROUP: ${{ inputs.group }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY_CI }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY_CI }}
+          # A group's review spends well under US$1; each run has a ledger of its own.
+          SPEND_CAP_DAILY_BENCHMARK_USD: "3"
+          POOL: ${{ runner.temp }}/seed-build
+          OUT_DIR: ${{ runner.temp }}/seed-review
+        run: pnpm --filter @reranker/catalog seed:review-native "$POOL/seed-$GROUP.json" "$OUT_DIR"
+      - if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: seed-review-${{ inputs.group }}
+          path: ${{ runner.temp }}/seed-review
+          retention-days: 30
+          if-no-files-found: error
+      - if: always() && steps.branch.outputs.branch-id != ''
+        name: Prepare npm for the branch cleanup
+        env:
+          PREFIX: ${{ runner.temp }}/npm-global
+        run: |
+          {
+            echo "NPM_CONFIG_PREFIX=$PREFIX"
+            echo "NPM_CONFIG_BEFORE=2026-11-01T00:00:00Z"
+            echo "NPM_CONFIG_IGNORE_SCRIPTS=true"
+          } >> "$GITHUB_ENV"
+          echo "$PREFIX/bin" >> "$GITHUB_PATH"
+      - if: always() && steps.branch.outputs.branch-id != ''
+        uses: neondatabase/delete-branch-action@4468d825d5a88ef4012f1705a82f02ec3072f776 # v3.2.1
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          branch: ${{ steps.branch.outputs.branch-id }}
+          api_key: ${{ secrets.NEON_NONPROD_API_KEY }}
