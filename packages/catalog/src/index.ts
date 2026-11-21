@@ -4,6 +4,7 @@ export { ARCHETYPE_SCOPES, ARCHETYPE_SLATES, registerFor } from "./archetypes";
 export { CANARY_GEOS, CANARY_ID, type CanarySet, type CanaryVariant, canarySet } from "./canary";
 export {
   type CategoryNames,
+  categoryTerms,
   placesTypeArchetype,
   placesTypeLabel,
   type SeedCategory,
