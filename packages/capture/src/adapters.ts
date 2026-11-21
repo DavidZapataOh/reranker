@@ -26,6 +26,23 @@ export interface CaptureRecord {
   mode: "live" | "task";
 }
 
+/** A queued task as the provider answered its posting. */
+export interface PostedTask {
+  /** The provider's id for the task, when it accepted it. */
+  providerTaskId: string | null;
+  cost: ProviderCost | null;
+  /** Why the provider refused the task, or null when it was accepted. */
+  error: Error | null;
+}
+
+/** A finished task of a measurement, waiting to be fetched. */
+export interface ReadyTask {
+  slot: FrozenSlot;
+  providerTaskId: string;
+  /** Fetches the result: one provider call, its bytes ready to seal. */
+  collect(): Promise<CaptureRecord>;
+}
+
 export interface CaptureAdapter {
   provider: CaptureProvider;
   /** The channel recorded on the capture row: OpenAI is `api`, the UI vendors `ui-vendor`. */
@@ -34,6 +51,10 @@ export interface CaptureAdapter {
   captureLive(slot: FrozenSlot): Promise<CaptureRecord>;
   /** The current parser of an engine's responses, which re-derives answers from sealed bytes. */
   parse?(engine: EngineId, bytes: Uint8Array): EngineAnswer;
+  /** Queues one slot on the provider's cheaper, slower queue; throws only when nothing came back. */
+  postTask?(slot: FrozenSlot): Promise<PostedTask>;
+  /** Finished tasks of `slots`; tasks of anything else on the account stay untouched. */
+  collectReady?(slots: readonly FrozenSlot[]): Promise<ReadyTask[]>;
 }
 
 const adapters = new Map<CaptureProvider, CaptureAdapter>();

@@ -5,6 +5,8 @@ export {
   adapterFor,
   type CaptureAdapter,
   type CaptureRecord,
+  type PostedTask,
+  type ReadyTask,
   registerCaptureAdapter,
 } from "./adapters";
 export { EngineAnswer, PARSER_VERSIONS, safeParseAnswer } from "./answer";
