@@ -32,7 +32,7 @@ A platform is a "recommendation" only when the answer offers it as the way to ge
 ## Fields
 
 - name: the name as the answer writes it, without adding or completing anything.
-- quote: a fragment copied exactly from the answer, character by character, that contains the name and shows the stance; ideally the sentence or list item where it appears, no longer than one sentence. Do not summarize, translate, fix accents or typos, or drop punctuation. If the name appears several times, use a fragment of the first occurrence that belongs to this mention.
+- quote: a fragment copied exactly from the answer, character by character, that contains the name and shows the stance; ideally the sentence or list item where it appears, no longer than one sentence. Do not summarize, translate, fix accents or typos, or drop punctuation. If the name appears several times, use a fragment of the first occurrence that belongs to this mention. Never copy a link target into the quote: for "[Name](https://…)" quote the words before or after the link, or "[Name]" alone; a long URL copied with one wrong character loses the mention.
 - sentiment: the answer's tone toward the entity: "positive", "neutral" or "negative".
 - locationHint: the branch, neighborhood, address or city the answer gives for that entity, copied as written ("sede Laureles", "Kurfürstendamm 64", "(9e)"); null if none.
 - citedUrls: the URLs the answer links or cites next to that entity, copied in full; [] if none.

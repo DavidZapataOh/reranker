@@ -98,9 +98,31 @@ export function toExtractedMentions(
       citedUrls: mention.citedUrls,
     });
   }
+  separateSharedQuotes(markdown, mentions);
   mentions.sort((a, b) => a.startOffset - b.startOffset);
   assignOrdinals(mentions);
   return { mentions, quoteMisses: out.mentions.length - mentions.length };
+}
+
+/**
+ * A mention is keyed by where its quote starts, so names quoted with one shared sentence ("ONYX,
+ * Le Colimaçon et La Pie Noir") would collapse into the first. Each of them starts at its own name
+ * instead, which also ranks them in the order the answer gives them.
+ */
+function separateSharedQuotes(markdown: string, mentions: ExtractedMention[]): void {
+  const byStart = new Map<number, ExtractedMention[]>();
+  for (const mention of mentions) {
+    byStart.set(mention.startOffset, [...(byStart.get(mention.startOffset) ?? []), mention]);
+  }
+  for (const shared of byStart.values()) {
+    if (shared.length < 2) continue;
+    for (const mention of shared) {
+      const at = locateQuote(markdown.slice(mention.startOffset, mention.endOffset), mention.name);
+      if (!at) continue;
+      mention.startOffset += at.start;
+      mention.quote = markdown.slice(mention.startOffset, mention.endOffset);
+    }
+  }
 }
 
 /** Ranks recommended commercial entities in place; `mentions` must be in answer order. */

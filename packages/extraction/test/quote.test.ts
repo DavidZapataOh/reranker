@@ -154,6 +154,26 @@ describe("toExtractedMentions", () => {
     });
   });
 
+  test("names quoted with the same sentence each start at their own name, in answer order", () => {
+    const md = "Parmi les adresses, **ONYX** (9e), **Le Colimaçon** (4e) et **La Pie Noir** (5e).";
+    const r = toExtractedMentions(
+      md,
+      out([
+        ["La Pie Noir", md, "recommendation", "business"],
+        ["ONYX", md, "recommendation", "business"],
+        ["Le Colimaçon", md, "recommendation", "business"],
+      ]),
+    );
+    expect(
+      r.mentions.map((x) => [x.name, x.ordinal, md.slice(x.startOffset, x.endOffset)]),
+    ).toEqual([
+      ["ONYX", 1, "ONYX** (9e), **Le Colimaçon** (4e) et **La Pie Noir** (5e)."],
+      ["Le Colimaçon", 2, "Le Colimaçon** (4e) et **La Pie Noir** (5e)."],
+      ["La Pie Noir", 3, "La Pie Noir** (5e)."],
+    ]);
+    expect(new Set(r.mentions.map((x) => x.quote)).size).toBe(3);
+  });
+
   test("an answer without entities yields no mentions", () =>
     expect(toExtractedMentions("No sé.", { answerKind: "no_entities", mentions: [] })).toEqual({
       mentions: [],
