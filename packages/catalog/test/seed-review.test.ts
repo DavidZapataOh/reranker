@@ -100,13 +100,17 @@ describe("native review", () => {
       return req.items.map(() => ({ keep: true, reasons: [] }));
     });
     const group = { language: "fr", registerProfile: "neutral" } as const;
+    const failures = { openai: {}, gemini: {} };
     const result = await reviewCategory(
       group,
       categoryPool("hotel", "fr", "neutral"),
       spend,
       review,
+      failures,
     );
     expect(result.personas.every((p) => !p.pass && p.verdicts.openai === null)).toBe(true);
+    // Each of the nine calls is counted with its reason, so a reviewer that never ruled shows.
+    expect(failures).toEqual({ openai: { "Error: down": 9 }, gemini: {} });
   });
 });
 

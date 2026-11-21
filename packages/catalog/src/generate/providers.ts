@@ -412,7 +412,8 @@ const Reviews = z.object({
 
 /**
  * A native-speaker review of seed content by one provider, in a call of its own that knows
- * nothing of how the items were written. An unusable answer yields no verdicts.
+ * nothing of how the items were written. An unusable answer throws its `BilledFailure`, so the
+ * caller can tell a reviewer that failed from one that ruled.
  */
 export async function reviewNative(
   provider: "openai" | "gemini",
@@ -434,15 +435,8 @@ export async function reviewNative(
       items: req.items.map((item, id) => ({ id, ...item })),
     }),
   };
-  let verdicts: z.infer<typeof Reviews>["verdicts"];
-  try {
-    verdicts = (
-      provider === "openai" ? await callOpenAI(call, "judge", ctx) : await callGemini(call, ctx)
-    ).verdicts;
-  } catch (error) {
-    if (error instanceof BilledFailure) return req.items.map(() => null);
-    throw error;
-  }
+  const { verdicts } =
+    provider === "openai" ? await callOpenAI(call, "judge", ctx) : await callGemini(call, ctx);
   const byId = new Map(verdicts.map((v) => [v.id, { keep: v.keep, reasons: v.reasons }]));
   return req.items.map((_, id) => byId.get(id) ?? null);
 }
