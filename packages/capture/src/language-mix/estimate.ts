@@ -1,8 +1,8 @@
 import { createHash } from "node:crypto";
 import {
-  countryLanguage,
   type LanguageMix,
   type LanguageMixDegraded,
+  placeLanguage,
   secondLanguageOf,
   unmeasuredMix,
 } from "@reranker/catalog";
@@ -180,7 +180,7 @@ export async function estimateLanguageMix(
   opts: EstimateOptions = {},
 ): Promise<LanguageMix> {
   const { geo, categoryKey, terms, deadlineAt } = input;
-  const main = countryLanguage(geo.country);
+  const main = placeLanguage(geo);
   // With words in one language there is nothing to split, and nothing worth paying for.
   if (Object.values(terms).filter((list) => list && list.length > 0).length < 2) {
     return { ...unmeasuredMix("unavailable"), degraded: null };

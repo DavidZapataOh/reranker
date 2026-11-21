@@ -20,6 +20,7 @@
     "seed:review": "tsx scripts/review-sample.ts",
     "seed:review-native": "tsx scripts/review-native.ts",
     "nouns:build": "tsx scripts/build-nouns.ts",
+    "regional-languages:build": "tsx scripts/build-regional-languages.ts",
     "freeze": "tsx scripts/freeze.ts",
     "test:contract": "vitest run --project contract --passWithNoTests",
     "test:integration": "vitest run --project integration --passWithNoTests"

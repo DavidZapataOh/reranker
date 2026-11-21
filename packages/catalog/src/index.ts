@@ -54,6 +54,7 @@ export {
   countryName,
   type LanguageGap,
   MeasurementLanguageError,
+  placeLanguage,
   placeName,
   placeTerm,
 } from "./language";

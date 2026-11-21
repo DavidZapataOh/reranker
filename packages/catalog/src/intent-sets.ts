@@ -29,7 +29,7 @@ import {
 } from "./generate/pipeline";
 import { getGeo } from "./geo/resolve";
 import type { Noun } from "./grammar";
-import { countryLanguage, requireNounGender } from "./language";
+import { placeLanguage, requireNounGender } from "./language";
 import {
   findIntentIn,
   findVariantIn,
@@ -55,7 +55,7 @@ export type ResolveIntentSetInput = {
   scope: QuestionScope;
   deadlineAt: number;
   spend: SpendContext;
-  /** Defaults to the main language of the business's country. */
+  /** Defaults to the main language of the business's place (`placeLanguage`). */
   language?: MeasurementLanguage;
   /** Required with its gender in languages whose templates agree with it; else the category's. */
   noun?: Noun;
@@ -281,7 +281,7 @@ async function generateOnce(input: Generation): Promise<Resolved> {
  * templates, never to an error; a gendered language without the noun's gender is refused.
  */
 export async function resolveIntentSet(input: ResolveIntentSetInput): Promise<IntentSet> {
-  const language = input.language ?? countryLanguage(input.geo.country);
+  const language = input.language ?? placeLanguage(input.geo);
   const resolved = await resolve(input, language);
   recordIntentSetResolution({ ...resolved, language, geoLevel: input.geo.level });
   return resolved.set;

@@ -1,7 +1,6 @@
-import type { CountryCode } from "@reranker/i18n/countries";
-import { type GeoLevel, MeasurementLanguage } from "@reranker/schema/measurement";
+import { type GeoLevel, type GeoTarget, MeasurementLanguage } from "@reranker/schema/measurement";
 import type { LanguageShares } from "@reranker/stats";
-import { countryLanguage } from "./language";
+import { placeLanguage } from "./language";
 
 /** A language this share of a place's searches for the category are written in is measured too. */
 export const SECOND_LANGUAGE_MIN_SHARE = 0.1;
@@ -72,7 +71,7 @@ export interface LanguageDecision {
 }
 
 export interface DecideLanguagesInput {
-  country: CountryCode;
+  geo: GeoTarget;
   mix: LanguageMix;
   /** Languages the business's website or listing declares, is written in or says it serves in. */
   businessLanguages: readonly MeasurementLanguage[];
@@ -84,7 +83,7 @@ const positive = (share: number | undefined): share is number =>
   share !== undefined && Number.isFinite(share) && share > 0;
 
 /**
- * The languages a business is measured in: its country's main one, plus at most one more that
+ * The languages a business is measured in: its place's main one (`placeLanguage`), plus at most one more that
  * reaches the search-share threshold, that the business signals or that the owner says they serve
  * in. The owner's word ranks first, then the language with more of the other reasons, then the
  * larger share.
@@ -96,7 +95,7 @@ const positive = (share: number | undefined): share is number =>
  * score on no evidence.
  */
 export function decideLanguages(input: DecideLanguagesInput): LanguageDecision {
-  const main = countryLanguage(input.country);
+  const main = placeLanguage(input.geo);
   const { shares } = input.mix;
   const signals = new Set(input.businessLanguages);
   let best: { language: MeasurementLanguage; reasons: SecondLanguageReason[] } | null = null;
