@@ -55,7 +55,7 @@ export const HARD_CASES_V3 = `## Hard cases
 - Sections: an answer often ends with "platforms to search", "sources" or "further reading"; what it lists there is "incidental" unless it is offered as the way to get the service.
 - Markdown: the answer may escape punctuation ("1\\.", "\\:") and use emphasis; copy the quote as it appears, the matching tolerates both.
 - Products: a product or listing title ("Colchón Kline Sencillo 100 x 190 cm", "iPhone 17 Pro 256 GB") is not a mention; the shop that sells it is, and a brand the answer names on its own is "other".
-- Shopping centres and buildings that only say where a shop is ("en el Centro Comercial Andino", "in der Mall of Berlin") are "incidental".
+- Shopping centres and buildings that only say where a shop is ("en el Centro Comercial Andino", "in der Mall of Berlin", a card line such as "1.204 reseñas · Centro Comercial Oviedo") are "incidental": list each one, they are still mentions.
 - Images: the text of an image "![…](…)" is the caption of a picture taken from another page; a name that appears only there is not a mention.
 - Several languages: the answer may mix languages; apply the same rules and copy the quote in its original language. Never translate a name or a quote.
 - Do not invent entities the answer does not name, even if you know them.
