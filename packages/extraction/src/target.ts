@@ -1,9 +1,10 @@
 import { getGeo, resolveGeo } from "@reranker/catalog";
 import { type CountryCode, isMeasurable } from "@reranker/i18n/countries";
 import { InvalidInputError, type SpendContext } from "@reranker/jobs";
-import type { BusinessCandidate, GeoTarget } from "@reranker/schema/measurement";
+import type { BusinessCandidate, BusinessCategory, GeoTarget } from "@reranker/schema/measurement";
 import { Parser } from "htmlparser2";
 import { parse } from "tldts";
+import { categoryByRules } from "./category";
 import { currentExtractorConfig } from "./config";
 import { jaroWinkler, normalizeName } from "./normalize";
 import { type PlaceHit, searchText } from "./places/client";
@@ -149,7 +150,7 @@ function placeCandidate(hit: PlaceHit, confidence: number): BusinessCandidate | 
   const component = (type: string) => components.find((c) => c.types.includes(type));
   const country = component("country")?.shortText.toUpperCase();
   if (country === undefined || !isMeasurable(country)) return null;
-  return {
+  const candidate: BusinessCandidate = {
     kind: "place",
     placeId: hit.id,
     domain: null,
@@ -174,6 +175,15 @@ function placeCandidate(hit: PlaceHit, confidence: number): BusinessCandidate | 
       pureServiceAreaBusiness: hit.pureServiceAreaBusiness ?? false,
     },
   };
+  return { ...candidate, categoryHint: hintOf(candidate) };
+}
+
+/** What Places already tells about the category, as a plain category the candidate can carry. */
+function hintOf(candidate: BusinessCandidate): BusinessCategory | null {
+  const rules = categoryByRules(candidate);
+  if (rules === null) return null;
+  const { confidence: _, language: __, nounGender: ___, ...hint } = rules;
+  return hint;
 }
 
 /**
