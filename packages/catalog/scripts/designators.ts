@@ -259,3 +259,10 @@ export function localDesignated(
   }
   return renderDesignated({ ...parsed, core: spell(parsed.core, language) }, language, country);
 }
+
+/** Whether two spellings of a name carry the same designator, in the same language, or none. */
+export function sameDesignator(a: string, b: string): boolean {
+  const [left, right] = [parseDesignated(a), parseDesignated(b)];
+  if (!left || !right) return left === right;
+  return left.designator === right.designator && left.language === right.language;
+}

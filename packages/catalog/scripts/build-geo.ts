@@ -5,6 +5,7 @@
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { Readable } from "node:stream";
 import { measurableCountries } from "@reranker/i18n/countries";
+import type { MeasurementLanguage } from "@reranker/schema/measurement";
 import { parse } from "csv-parse";
 import {
   type CityName,
@@ -23,8 +24,20 @@ import {
 import { normalizePlaceName } from "../src/geo/normalize.ts";
 import { contentHash } from "../src/hash.ts";
 import { placeArticle } from "./articles.ts";
-import { accentedFrom, localDesignated, type Speller, speller } from "./designators.ts";
-import { type CountryGeoNames, type Naming, pairGeoNames, readGeoNames } from "./geonames.ts";
+import {
+  accentedFrom,
+  localDesignated,
+  type Speller,
+  sameDesignator,
+  speller,
+} from "./designators.ts";
+import {
+  type CountryGeoNames,
+  type Naming,
+  pairGeoNames,
+  readGeoNames,
+  withGeoNamesAccents,
+} from "./geonames.ts";
 
 const LOCATIONS_CSV =
   "https://cdn.dataforseo.com/v3/locations/locations_serp_google_2026_11_02.csv";
@@ -156,8 +169,15 @@ function countryOf(rows: readonly LocationRow[]): string {
 }
 
 export type Coverage = { regions: number; cities: number };
-/** Places named in Spanish, and places GeoNames names itself in each other language. */
-export type NamingReport = { spanish?: Coverage; own?: Record<PlaceLanguage, number> };
+/**
+ * Places named in Spanish, places GeoNames names itself in each other language, and names that
+ * regained the accents DataForSEO drops (`missing` counts any GeoNames could still restore).
+ */
+export type NamingReport = {
+  spanish?: Coverage;
+  own?: Record<PlaceLanguage, number>;
+  accents?: { restored: number; missing: number };
+};
 
 export function buildCountry(
   rows: readonly LocationRow[],
@@ -220,6 +240,11 @@ function buildFromLocations(
   };
   const pairs = new Map(places.map((row) => [row.location_code, paired(row)]));
   const spell = speller(pairs.values());
+  let accentsRestored = 0;
+  // GeoNames romanizes places whose own language has another script, with marks no speaker writes.
+  const latinLocally =
+    new Intl.Locale(geonames?.localLanguage ?? "en").maximize().script === "Latn";
+  let accentsMissing = 0;
   const final = new Map(
     [...pairs].map(([code, { name, aliases, names }]) => {
       const own = [name, ...aliases, ...Object.values(names)];
@@ -227,13 +252,40 @@ function buildFromLocations(
         const spelling = spell(core, language);
         return spelling === core ? accentedFrom(core, own) : spelling;
       };
-      const display = localDesignated(name, "es", country, spelled);
+      const source = named?.sources.get(Number(code));
+      // GeoNames' accents, never at the cost of the language's designator: "Maipú Department"
+      // in English, but not Portuguese "Província de Manica" in Spanish.
+      const accents = (written: string, language: MeasurementLanguage) => {
+        const restored = source
+          ? withGeoNamesAccents(written, language, source, latinLocally)
+          : written;
+        return sameDesignator(restored, written) ? restored : written;
+      };
+      // Accents before and after the designator takes the language's own word.
+      const finish = (written: string, language: MeasurementLanguage) => {
+        const before = accents(written, language);
+        const designated = localDesignated(before, language, country, spelled);
+        const after = accents(designated, language);
+        if (before !== written || after !== designated) accentsRestored++;
+        return after;
+      };
+      const display = finish(name, "es");
       const localized = Object.fromEntries(
-        PLACE_LANGUAGES.map((language) => {
-          const written = names[language] === name ? display : names[language];
-          return [language, localDesignated(written, language, country, spelled)];
-        }),
+        PLACE_LANGUAGES.map((language) => [
+          language,
+          finish(names[language] === name ? display : names[language], language),
+        ]),
       ) as Record<PlaceLanguage, string>;
+      const written: [string, MeasurementLanguage][] = [
+        [display, "es"],
+        ...PLACE_LANGUAGES.map((language): [string, MeasurementLanguage] => [
+          localized[language],
+          language,
+        ]),
+      ];
+      accentsMissing += written.filter(
+        ([name, language]) => accents(name, language) !== name,
+      ).length;
       // DataForSEO's English form still finds the place.
       const all = display === name ? aliases : [name, ...aliases.filter((a) => a !== display)];
       return [code, { name: display, aliases: all, names: localized }];
@@ -304,6 +356,7 @@ function buildFromLocations(
         cities: [...named.cities.values()].filter((n) => n.spanish).length,
       },
       own,
+      accents: { restored: accentsRestored, missing: accentsMissing },
     }),
   };
 }
@@ -515,9 +568,10 @@ async function main(): Promise<void> {
   const ownNames = noCounts();
   const stored = noCounts();
   let total = 0;
+  const accentsMissing: Record<string, number> = {};
   for (const code of countries) {
     const rows = byCountry.get(code) ?? [];
-    const { spanish, own, ...tables } = rows.length
+    const { spanish, own, accents, ...tables } = rows.length
       ? buildCountry(
           rows,
           code === divipolaCountry ? { divipola } : { geonames: geonames.forCountry(code) },
@@ -543,7 +597,9 @@ async function main(): Promise<void> {
       stored[language] += Object.keys(tables.names[language]).length;
     }
     total += places;
-    const languages = own ? `; own names ${JSON.stringify(own)}` : "";
+    if (accents?.missing) accentsMissing[code] = accents.missing;
+    const restored = accents?.restored ? `; ${accents.restored} names regained accents` : "";
+    const languages = (own ? `; own names ${JSON.stringify(own)}` : "") + restored;
     console.log(
       `${code}: ${tables.cities.length} cities (${cityCenters} with a centroid), ` +
         `${tables.regions.length} regions (${regionCenters} with a centroid)${named}${languages}`,
@@ -561,6 +617,8 @@ async function main(): Promise<void> {
     sourceDivipola: DIVIPOLA_JSON,
     sourceGeoNames: geonames.sources,
     geoDataHash: files,
+    // Names GeoNames writes with accents the build left out, by country; kept at none.
+    accentsMissing,
   });
 }
 
