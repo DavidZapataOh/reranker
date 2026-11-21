@@ -143,8 +143,10 @@ export async function persistCapture(
     tlsn: null,
     c2pa: null,
   };
-  // Without a reported cost the reservation is what the ledger keeps, so the row says the same.
-  const charged = record.cost ?? ENGINES[slot.engine].estimate.live;
+  // Without a reported cost the reservation is what the ledger keeps, so the row says the same. A
+  // queued task reports its cost when posted, at the queue's list price.
+  const { estimate } = ENGINES[slot.engine];
+  const charged = record.cost ?? (record.mode === "task" ? estimate.task : null) ?? estimate.live;
 
   const existing = await withSystem("capture", (tx) => captureRow(tx, record.captureId), {
     readOnly: true,

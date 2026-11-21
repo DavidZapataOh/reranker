@@ -1,6 +1,6 @@
 import { type SystemTx, withSystem } from "@reranker/db";
 import { captures } from "@reranker/db/schema";
-import { assertCaptureAllowed } from "@reranker/flags";
+import { assertCaptureAllowed, CaptureChannelDisabledError } from "@reranker/flags";
 import {
   acquireProviderSlot,
   InvalidInputError,
@@ -16,7 +16,13 @@ import {
 } from "@reranker/jobs";
 import { isAppError, type ProviderCost } from "@reranker/schema";
 import { and, eq } from "drizzle-orm";
-import { adapterFor, type CaptureRecord, registerCaptureAdapter } from "./adapters";
+import {
+  adapterFor,
+  type CaptureRecord,
+  type PostedTask,
+  type ReadyTask,
+  registerCaptureAdapter,
+} from "./adapters";
 import { dataforseoAdapter } from "./dataforseo/adapter";
 import { mapDataForSeoStatus } from "./dataforseo/status";
 import { dispatchOrder, retryFits } from "./dispatch";
@@ -187,15 +193,8 @@ async function succeededSlots(measurementId: string): Promise<Set<number>> {
   return new Set(rows.map((row) => row.slotIndex));
 }
 
-/**
- * Captures the given slots of a frozen plan, each once: a slot with a stored success is never
- * called again, so a retried step pays only for what is missing. Failures are returned per slot.
- */
-export async function captureSlots(
-  measurementId: string,
-  slotIds: SlotId[],
-  opts: CaptureSlotsOptions,
-): Promise<{ succeeded: SlotId[]; failed: Array<{ slotId: SlotId; code: string }> }> {
+/** The frozen slots of `slotIds`, every one of which must belong to the measurement's plan. */
+async function planSlots(measurementId: string, slotIds: SlotId[]): Promise<FrozenSlot[]> {
   const plan = await loadPlan(measurementId);
   const slots = slotIds.map((id) => {
     const { measurementId: owner, slotIndex } = parseSlotId(id);
@@ -207,16 +206,32 @@ export async function captureSlots(
   });
   // A statement that cannot name its intent set must fail before anything is paid.
   await loadIntentSets(slots.map((slot) => slot.intentSetId));
-  const done = await succeededSlots(measurementId);
+  return slots;
+}
 
-  const ordered = dispatchOrder(slots);
-  // No more slots run than their providers' lease pools admit: the rest would only wait for a
-  // lease while holding database connections the running ones need to seal and settle.
+// No more slots run than their providers' lease pools admit: the rest would only wait for a
+// lease while holding database connections the running ones need to seal and settle.
+function admittedConcurrency(slots: readonly { provider: FrozenSlot["provider"] }[]): number {
   const { limits } = loadJobsConfig();
-  const admitted = [...new Set(ordered.map((slot) => slot.provider))].reduce(
+  const admitted = [...new Set(slots.map((slot) => slot.provider))].reduce(
     (sum, provider) => sum + limits[provider].maxInFlight,
     0,
   );
+  return Math.max(1, Math.min(slots.length, admitted));
+}
+
+/**
+ * Captures the given slots of a frozen plan, each once: a slot with a stored success is never
+ * called again, so a retried step pays only for what is missing. Failures are returned per slot.
+ */
+export async function captureSlots(
+  measurementId: string,
+  slotIds: SlotId[],
+  opts: CaptureSlotsOptions,
+): Promise<{ succeeded: SlotId[]; failed: Array<{ slotId: SlotId; code: string }> }> {
+  const slots = await planSlots(measurementId, slotIds);
+  const done = await succeededSlots(measurementId);
+  const ordered = dispatchOrder(slots);
   const results = await runBatch(
     ordered,
     async (slot) => {
@@ -232,7 +247,7 @@ export async function captureSlots(
     {
       key: (slot) => slot.slotId,
       isDone: async (key) => (done.has(parseSlotId(key).slotIndex) ? true : null),
-      concurrency: Math.max(1, Math.min(ordered.length, admitted)),
+      concurrency: admittedConcurrency(ordered),
     },
   );
   return {
@@ -240,5 +255,155 @@ export async function captureSlots(
     failed: results.flatMap((r) =>
       r.ok ? [] : [{ slotId: r.key as SlotId, code: codeOf(r.error) }],
     ),
+  };
+}
+
+// Slots this process has queued. A task is listed by the provider only once it finishes, so
+// without this a second posting while it runs would pay for the slot twice.
+const queued = new Set<SlotId>();
+
+/** The slots whose kill switches are on; a switched-off engine makes no call at all. */
+async function allowedSlots(slots: readonly FrozenSlot[]): Promise<FrozenSlot[]> {
+  const routes = [...new Set(slots.map((slot) => `${slot.provider}/${slot.engine}`))];
+  const allowed = new Set<string>();
+  await Promise.all(
+    routes.map(async (route) => {
+      const [provider, engine] = route.split("/") as [FrozenSlot["provider"], FrozenSlot["engine"]];
+      try {
+        await assertCaptureAllowed({ channel: adapterFor(provider).channel, provider, engine });
+        allowed.add(route);
+      } catch (error) {
+        if (!(error instanceof CaptureChannelDisabledError)) throw error;
+      }
+    }),
+  );
+  return slots.filter((slot) => allowed.has(`${slot.provider}/${slot.engine}`));
+}
+
+/** Finished queued tasks of `slots`, from every provider that queues them. */
+async function readyTasks(slots: readonly FrozenSlot[]): Promise<ReadyTask[]> {
+  const byProvider = Map.groupBy(await allowedSlots(slots), (slot) => slot.provider);
+  const lists = await Promise.all(
+    [...byProvider].map(([provider, own]) => adapterFor(provider).collectReady?.(own) ?? []),
+  );
+  return lists.flat();
+}
+
+async function postOne(slot: FrozenSlot, spend: SpendContext): Promise<void> {
+  const adapter = adapterFor(slot.provider);
+  const { provider, channel, postTask } = adapter;
+  const { engine } = slot;
+  const estimate = ENGINES[engine].estimate.task;
+  if (!postTask || !estimate) {
+    throw new InvalidInputError(`${engine} cannot be queued through ${provider}`);
+  }
+  await assertCaptureAllowed({ channel, provider, engine });
+  const lease = await acquireProviderSlot(provider, loadJobsConfig().limits[provider]);
+  try {
+    const reservation = await reserveSpend({ ...spend, provider, channel, engine, estimate });
+    let posted: PostedTask;
+    try {
+      posted = await postTask(slot);
+    } catch (error) {
+      // Nothing came back, yet the task may have been created and billed.
+      if (error instanceof ProviderUnavailableError) {
+        await settleSpend(reservation, reservation.reserved);
+      } else {
+        await releaseSpend(reservation);
+      }
+      throw error;
+    }
+    if (posted.error === null) queued.add(slot.slotId);
+    // The task is billed when posted, and task_post reports what it cost.
+    await settle(reservation, posted.cost);
+    if (posted.error !== null) throw posted.error;
+  } finally {
+    await lease.release();
+  }
+}
+
+/**
+ * Queues the given slots of a frozen plan on the providers' Standard queues, one task each. A slot
+ * with a stored success, queued by this process or whose task is already finished is skipped.
+ */
+export async function postCaptureTasks(
+  measurementId: string,
+  slotIds: SlotId[],
+  opts: { spend: SpendContext },
+): Promise<{ posted: number; failed: Array<{ slotId: SlotId; code: string }> }> {
+  const slots = await planSlots(measurementId, slotIds);
+  const done = await succeededSlots(measurementId);
+  const open = slots.filter((slot) => !done.has(slot.slotIndex) && !queued.has(slot.slotId));
+  const finished = new Set((await readyTasks(open)).map((task) => task.slot.slotId));
+  const todo = open.filter((slot) => !finished.has(slot.slotId));
+  const results = await runBatch(todo, (slot) => postOne(slot, opts.spend), {
+    key: (slot) => slot.slotId,
+    isDone: async () => null,
+    concurrency: admittedConcurrency(todo),
+  });
+  return {
+    posted: results.filter((r) => r.ok).length,
+    failed: results.flatMap((r) =>
+      r.ok ? [] : [{ slotId: r.key as SlotId, code: codeOf(r.error) }],
+    ),
+  };
+}
+
+/** Fetches a finished task and stores it; true when it stored the slot's success. */
+async function collectOne(task: ReadyTask): Promise<boolean> {
+  const { provider, channel } = adapterFor(task.slot.provider);
+  const lease = await acquireProviderSlot(provider, loadJobsConfig().limits[provider]);
+  let record: CaptureRecord;
+  try {
+    record = await task.collect();
+  } finally {
+    await lease.release();
+  }
+  try {
+    const answer = record.answer && (await resolveRedirects(record.answer));
+    const { stored } = await persistCapture({ ...record, answer }, { attempt: 1, late: false });
+    return stored && record.status === "succeeded";
+  } catch (error) {
+    // The provider lists a task only until it is fetched: posting the slot again is the way back.
+    queued.delete(task.slot.slotId);
+    throw error;
+  } finally {
+    const outcome = outcomeOf(record);
+    recordCaptureCall(
+      captureCallOf(record, {
+        channel,
+        late: false,
+        alert: outcome.ok ? undefined : outcome.alert,
+      }),
+    );
+  }
+}
+
+/**
+ * Fetches and stores the finished queued tasks of a measurement, at most `max` of them. `pending`
+ * counts the plan's slots still without a stored success.
+ */
+export async function collectReadyTasks(
+  measurementId: string,
+  opts: { max?: number } = {},
+): Promise<{ collected: number; pending: number }> {
+  const plan = await loadPlan(measurementId);
+  const done = await succeededSlots(measurementId);
+  const ready = await readyTasks(plan.slots.filter((slot) => !done.has(slot.slotIndex)));
+  // A slot posted twice has two tasks; one success is all it can store.
+  const unique = [...new Map(ready.map((task) => [task.slot.slotId, task])).values()];
+  const todo = unique.slice(0, opts.max ?? unique.length);
+  const results = await runBatch(todo, collectOne, {
+    key: (task) => task.slot.slotId,
+    isDone: async () => null,
+    concurrency: admittedConcurrency(todo.map((task) => task.slot)),
+  });
+  const failure = results.find((r) => !r.ok);
+  // Everything that could be stored is; the step's retry fetches what is still listed.
+  if (failure && !failure.ok) throw failure.error;
+  const succeeded = await succeededSlots(measurementId);
+  return {
+    collected: results.filter((r) => r.ok && r.value).length,
+    pending: plan.slots.length - succeeded.size,
   };
 }
