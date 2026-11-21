@@ -1,0 +1,33 @@
+{
+  "parserVersion": "ai-overview@1",
+  "engine": "google-ai-overview",
+  "channel": "ui-vendor",
+  "provider": "dataforseo",
+  "modelReported": null,
+  "present": true,
+  "markdown": "**Reliable Auto Center** specializes in collision and auto body repairs, **Yaya Auto Mechanic Service** focuses on fast mechanical repairs during overnight hours, and **Bobby's Auto Repairs Inc Wheel Alignment, NYS Inspection - Brooklyn NY** stands out for walk-in **NYS inspections**, **wheel alignments** , and extended daily hours.[[1]](https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWo5MXh4djVsGAo)[[2]](https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWxtZ185eTM1GAo)[[3]](https://www.google.com/searchviewer/10?svid=CCYSDyoNCgsvZy8xdGZqbTEydBgK)Would you like to narrow this down by **service needed**, **preferred borough** , or **late-night availability**?",
+  "sources": [
+    {
+      "url": "https://google.com/goto?url=CAEShgEBxCJF10g2dMufXIA6pHUamzdkARreV0P2PBf6E8_fRT_R2qVDzJNPnTI2wcU9sJlvboPL4SgBQYWYtHGwOw__rA8tMaZBjbzogR4MvYJUnwg42_XVdwO3Cyl3nhSWJXRjrevILARumY1g3eXcQRFDO4amUQhxCgiZhYGE2a-nr-bavPFaJQ",
+      "domain": "google.com",
+      "title": "What are trustworthy auto repair shops in New York City? - Facebook",
+      "cited": true
+    }
+  ],
+  "searchQueries": "unavailable",
+  "localBusinesses": [
+    {
+      "name": "Bobby's Auto Repairs Inc Wheel Alignment, NYS Inspection - Brooklyn NY",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWo5MXh4djVsGAo"
+    },
+    {
+      "name": "Yaya Auto Mechanic Service",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWxtZ185eTM1GAo"
+    },
+    {
+      "name": "Reliable Auto Center",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSDyoNCgsvZy8xdGZqbTEydBgK"
+    }
+  ],
+  "products": []
+}

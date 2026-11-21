@@ -1,0 +1,488 @@
+{
+  "ai-overview-de-restaurants-berlin": {
+    "language": "de",
+    "recommended": [
+      "Rutz",
+      "Restaurant Tim Raue",
+      "FACIL",
+      "Cookies Cream",
+      "Bless",
+      "Luardi",
+      "Night Kitchen",
+      "Katz Orange"
+    ],
+    "negative": [],
+    "incidental": ["Michelin", "Google", "Tripadvisor", "Mit Vergnügen"]
+  },
+  "ai-overview-de-zahnaerzte-berlin": {
+    "language": "de",
+    "recommended": [
+      "KU64 Zahnarzt Berlin",
+      "Dental21",
+      "Dr. John",
+      "Torhaus",
+      "Prof. Dr. Andreas Olze & Kollegen",
+      "zahn&art"
+    ],
+    "negative": [],
+    "incidental": ["Charité", "Top Bewertung AI", "jameda"]
+  },
+  "ai-overview-en-car-repair-new-york": {
+    "language": "en",
+    "recommended": [
+      "Reliable Auto Center",
+      "Yaya Auto Mechanic Service",
+      "Bobby's Auto Repairs Inc"
+    ],
+    "negative": [],
+    "incidental": []
+  },
+  "ai-overview-en-dentists-new-york": {
+    "language": "en",
+    "recommended": ["Sky Dental", "Smile Dental Studio", "TriBeCa Dental Associates"],
+    "negative": [],
+    "incidental": []
+  },
+  "ai-overview-en-restaurants-new-york": {
+    "language": "en",
+    "recommended": ["Boucherie West Village", "Balthazar", "La Lanterna di Vittorio"],
+    "negative": [],
+    "incidental": []
+  },
+  "ai-overview-es-colchon-bogota": {
+    "language": "es",
+    "recommended": [
+      "Alkosto",
+      "Homecenter",
+      "Éxito",
+      "Colchones Spring",
+      "Colchones ElDorado",
+      "Real Flex"
+    ],
+    "negative": [],
+    "incidental": ["Centro Comercial Plaza de las Américas", "Yellow Pages Network"]
+  },
+  "ai-overview-fr-dentistes-paris": {
+    "language": "fr",
+    "recommended": [
+      "Dentimad Châtelet Rivoli",
+      "Centre dentaire Bastille",
+      "Cabinet dentaire de l’Avenue",
+      "Dr Jonathan Gucciardi",
+      "Dr Emmanuel COHEN",
+      "Cabinet C2S"
+    ],
+    "negative": [],
+    "incidental": ["Philippine Brunet Joly", "Cécile Bousquet", "Dr Meunier-Evrard"]
+  },
+  "ai-overview-fr-garage-paris": {
+    "language": "fr",
+    "recommended": [
+      "Garage Republique",
+      "Garage de l'Île Saint-Louis Mannes Paris",
+      "Williamson Automobiles",
+      "Garage MK",
+      "AK Garage Paris",
+      "Garage Saint Antoine",
+      "GARAGE SAINT GEORGES"
+    ],
+    "negative": [],
+    "incidental": []
+  },
+  "ai-overview-fr-restaurants-paris": {
+    "language": "fr",
+    "recommended": ["ONYX", "Le Colimaçon", "La Pie Noir", "Hestia Notre-Dame"],
+    "negative": [],
+    "incidental": ["Yosuke Fukasawa", "Alex Rochel", "Madame Figaro"]
+  },
+  "ai-overview-it-dentisti-roma": {
+    "language": "it",
+    "recommended": [
+      "Studio Dentistico Mazzei & Partners",
+      "Marano Dental Experience",
+      "Studio Dentistico Dr. Marco Bazzucchi & Partners",
+      "Centro Odontoiatrico Nomentano",
+      "Centro Odontoiatrico Idea"
+    ],
+    "negative": [],
+    "incidental": ["MioDottore", "Top Doctors"]
+  },
+  "ai-overview-it-officina-evitare-roma": {
+    "language": "it",
+    "recommended": [],
+    "negative": [],
+    "incidental": ["Registro delle Imprese", "Quattroruote"]
+  },
+  "ai-overview-it-ristoranti-roma": {
+    "language": "it",
+    "recommended": [
+      "Osteria da Fortunata",
+      "Hostaria de' Pastini",
+      "Tonnarello",
+      "CiPASSO",
+      "Lume",
+      "DOC EnoBistrot",
+      "Come 'na Vorta",
+      "Armando al Pantheon",
+      "Roscioli",
+      "L'Osteria della Trippa",
+      "Romanè",
+      "Trattoria Pennestri"
+    ],
+    "negative": [],
+    "incidental": ["Tripadvisor", "Guida MICHELIN", "Puntarella Rossa"]
+  },
+  "ai-overview-pt-oficina-evitar-sao-paulo": {
+    "language": "pt",
+    "recommended": [],
+    "negative": [
+      "Ocarro Auto Center",
+      "Jet-Car Mecânica Auto Elétrico",
+      "SOS SP Assistência Automotiva",
+      "Mecânico 24h Zona Leste",
+      "Repair Solution Centro Automotivo"
+    ],
+    "incidental": ["Procon-SP"]
+  },
+  "chatgpt-de-restaurants-berlin": {
+    "language": "de",
+    "recommended": [
+      "Rutz",
+      "Restaurant Tim Raue",
+      "FACIL",
+      "CODA Dessert Dining",
+      "Horváth",
+      "Cookies Cream",
+      "Bandol sur mer",
+      "Nobelhart & Schmutzig",
+      "Hackethal's",
+      "Zur letzten Instanz"
+    ],
+    "negative": [],
+    "incidental": ["Guide Michelin", "berlin.de", "visitberlin.de"]
+  },
+  "chatgpt-de-werkstatt-berlin": {
+    "language": "de",
+    "recommended": [
+      "BMT Automobile",
+      "Optimal – Die Meisterwerkstatt",
+      "Sternauto",
+      "Autoservice am Potsdamer Platz",
+      "McCrash"
+    ],
+    "negative": [],
+    "incidental": ["VW", "BMW", "Mercedes"]
+  },
+  "chatgpt-de-werkstatt-meiden-berlin": {
+    "language": "de",
+    "recommended": [],
+    "negative": [
+      "A.T.U. Berlin – Grenzallee",
+      "A.T.U. Berlin – Bismarckstraße",
+      "Motor Centrum Berlin GmbH",
+      "VRM GmbH"
+    ],
+    "incidental": ["Cylex"]
+  },
+  "chatgpt-de-zahnaerzte-berlin": {
+    "language": "de",
+    "recommended": [
+      "deinweiss",
+      "Zahnmedizin am Ku'damm",
+      "Dr. Nora Joos",
+      "F80",
+      "Dental21",
+      "DIE PRAXIS – Tasler & Steude",
+      "torhaus",
+      "CASA Dentalis"
+    ],
+    "negative": [],
+    "incidental": []
+  },
+  "chatgpt-en-car-repair-avoid-new-york": {
+    "language": "en",
+    "recommended": [],
+    "negative": [
+      "AAA Auto Repair",
+      "96 Auto Repair Inc.",
+      "Usmania Auto Repairs",
+      "26 Motors",
+      "Honda of the Bronx"
+    ],
+    "incidental": ["New York DMV"]
+  },
+  "chatgpt-en-car-repair-new-york": {
+    "language": "en",
+    "recommended": [
+      "2020 Auto Service Corp",
+      "L & B Auto Repair",
+      "Inwood Arch Automotive",
+      "Manhattan Alignment & Diagnostic Center",
+      "770 Auto Service"
+    ],
+    "negative": [],
+    "incidental": ["ASE"]
+  },
+  "chatgpt-en-dentists-new-york": {
+    "language": "en",
+    "recommended": [
+      "Fine Dental",
+      "Studio Dental NY",
+      "InStyle Dental",
+      "New York Family Dental Arts",
+      "SmilesNY",
+      "209 NYC Dental",
+      "New York Center for Cosmetic Dentistry",
+      "Lazare Biomimetic Dentistry"
+    ],
+    "negative": [],
+    "incidental": ["Invisalign"]
+  },
+  "chatgpt-en-restaurants-new-york": {
+    "language": "en",
+    "recommended": [
+      "Le Bernardin",
+      "Atomix",
+      "The Modern",
+      "Eleven Madison Park",
+      "Daniel",
+      "Torrisi",
+      "The Corner Store",
+      "Lilia",
+      "Manhatta",
+      "Katz's Delicatessen",
+      "Keens Steakhouse",
+      "Peter Luger Steak House",
+      "Gramercy Tavern",
+      "Minetta Tavern",
+      "Estela"
+    ],
+    "negative": [],
+    "incidental": ["Michelin Guide", "Eater NY", "Time Out"]
+  },
+  "chatgpt-es-abogado-laboral-cdmx": {
+    "language": "es",
+    "recommended": [
+      "Cardoso Abogados",
+      "Lopez Cuellar Abogados",
+      "VZ Despacho Laboral Vilchis Zempoalteca",
+      "LEGAL LABORAL",
+      "Velasco Piñón Abogados",
+      "PRODET"
+    ],
+    "negative": [],
+    "incidental": []
+  },
+  "chatgpt-es-colchon-bogota": {
+    "language": "es",
+    "recommended": [
+      "Colchones El Dorado",
+      "Americana de Colchones",
+      "Colchones Dormiluna",
+      "Sleep Green",
+      "Colchones Pullman"
+    ],
+    "negative": [],
+    "incidental": ["Multiplaza", "Unicentro"]
+  },
+  "chatgpt-es-dentistas-medellin": {
+    "language": "es",
+    "recommended": [
+      "Odontoespecialistas",
+      "OralStudio",
+      "International Smiles",
+      "ORAL MAS",
+      "Premium Dental",
+      "Dental Clinic Home",
+      "ORAL CONCEPT"
+    ],
+    "negative": [],
+    "incidental": ["Centro Comercial Sandiego", "Premium Plaza", "Invisalign", "RETHUS"]
+  },
+  "chatgpt-fr-dentistes-paris": {
+    "language": "fr",
+    "recommended": [
+      "Centre dentaire Paris 13 Château des Rentiers",
+      "Sentier Dentaire",
+      "Dr Thierry Rouach",
+      "Centre de santé dentaire Balard",
+      "Dentimad Ternes Wagram",
+      "Cabinet Frimouth",
+      "Dr Philippe Merat",
+      "Dr Ludovic Ache",
+      "Dr Pascal Touchard"
+    ],
+    "negative": [],
+    "incidental": ["Avis patients vérifiés"]
+  },
+  "chatgpt-fr-garage-eviter-paris": {
+    "language": "fr",
+    "recommended": [],
+    "negative": ["Autogenius", "AK Garage Paris", "Axone Automobiles", "Groult Auto Services"],
+    "incidental": ["DGCCRF", "economie.gouv.fr", "quechoisir.org", "lefigaro.fr"]
+  },
+  "chatgpt-fr-garage-paris": {
+    "language": "fr",
+    "recommended": [
+      "Garage République",
+      "Meca Services",
+      "Gobelins Automobiles",
+      "Suzuki Paris Pyrénées Automobiles",
+      "Garage Saint Georges"
+    ],
+    "negative": [],
+    "incidental": ["AlloGarage", "Vroomly"]
+  },
+  "chatgpt-fr-restaurants-paris": {
+    "language": "fr",
+    "recommended": [
+      "Kei",
+      "Épicure",
+      "Pierre Gagnaire",
+      "Pur'",
+      "Bistrot Instinct",
+      "Bistrot Victoires",
+      "Pizzeria Popolare"
+    ],
+    "negative": [],
+    "incidental": ["Guide Michelin", "Bristol"]
+  },
+  "chatgpt-it-dentisti-roma": {
+    "language": "it",
+    "recommended": [
+      "Centro Odontoiatrico Nomentano",
+      "DENTAL BIOS",
+      "Villa Chigi Odontoiatria",
+      "Studio Dentistico Savarese Barelli",
+      "Centro Odontoiatrico Dott. Vincenzo Russo",
+      "Studio dentistico Biodental",
+      "Dream Smile-Pellegrino Monnanni",
+      "Studio Dentistico MAZZEI & PARTNERS"
+    ],
+    "negative": [],
+    "incidental": ["DentistaGuida", "MioDottore", "AlfaDocs", "Rome Dental Rating"]
+  },
+  "chatgpt-it-officina-evitare-roma": {
+    "language": "it",
+    "recommended": [],
+    "negative": ["Autofficina Fortunati"],
+    "incidental": [
+      "AGCM",
+      "AMA",
+      "Autofficina F.lli Pennesi",
+      "MFM S.r.l.",
+      "Autofficina Pontina",
+      "Drive Line Service",
+      "Italmeccanica",
+      "Pagliani Service",
+      "Officine Meccaniche AR.MA."
+    ]
+  },
+  "chatgpt-it-officina-roma": {
+    "language": "it",
+    "recommended": [
+      "Careddu",
+      "Autofficina Rischia",
+      "Autofficina D.C.S.",
+      "Autofficina Stefano Mattei",
+      "Officina D'Onofrio Alessandro",
+      "LPB AUTO SERVICE",
+      "Autofficina Ferrazzi"
+    ],
+    "negative": [],
+    "incidental": []
+  },
+  "chatgpt-it-ristoranti-roma": {
+    "language": "it",
+    "recommended": [
+      "La Pergola",
+      "Il Pagliaccio",
+      "Zia Restaurant",
+      "ACQUOLINA",
+      "Roscioli",
+      "Armando al Pantheon",
+      "Trattoria Pennestri",
+      "Hosteria Grappolo d'Oro",
+      "CiPASSO",
+      "Aroma",
+      "Moma",
+      "Il Convivio Troiani"
+    ],
+    "negative": [],
+    "incidental": [
+      "Guida Michelin",
+      "Gambero Rosso",
+      "Heinz Beck",
+      "Palazzo Manfredi",
+      "tripadvisor"
+    ]
+  },
+  "chatgpt-pt-dentistas-sao-paulo": {
+    "language": "pt",
+    "recommended": [
+      "Dentar Odontologia",
+      "Simioni Odontologia",
+      "Clínica IEM Odontologia Avançada",
+      "Benatti Odontologia",
+      "BCX Odontologia",
+      "SB Odontologia Especializada",
+      "Sorridents Tatuapé",
+      "Clínica Sorrir Bem Imirim",
+      "Buono Odontologia Especializada",
+      "DRB Odonto"
+    ],
+    "negative": [],
+    "incidental": ["Doctoralia", "DentMap"]
+  },
+  "chatgpt-pt-oficina-evitar-sao-paulo": {
+    "language": "pt",
+    "recommended": [],
+    "negative": [],
+    "incidental": [
+      "Procon-SP",
+      "sbtnews.sbt.com.br",
+      "correio.rac.com.br",
+      "Pix",
+      "Reclame Aqui",
+      "Consumidor.gov.br",
+      "oficinasmecanicas.ia.br"
+    ]
+  },
+  "chatgpt-pt-oficina-sao-paulo": {
+    "language": "pt",
+    "recommended": [
+      "Oficina Grandes Mecânicos SÓGM",
+      "HP Auto Mecânica",
+      "AK Auto Center",
+      "Rd Auto Mecânica",
+      "Jcar Centro Automotivo"
+    ],
+    "negative": [],
+    "incidental": []
+  },
+  "chatgpt-pt-restaurantes-sao-paulo": {
+    "language": "pt",
+    "recommended": [
+      "Tuju",
+      "Evvai",
+      "D.O.M.",
+      "Nelita",
+      "Fame Osteria",
+      "Clandestina",
+      "Ryo Gastronomia",
+      "Sal Gastronomia",
+      "A Casa do Porco",
+      "Fasano"
+    ],
+    "negative": [],
+    "incidental": [
+      "Guia Michelin",
+      "Alex Atala",
+      "Comer &amp; Beber",
+      "Henrique Fogaça",
+      "VEJA",
+      "EXAME",
+      "Folha"
+    ]
+  }
+}

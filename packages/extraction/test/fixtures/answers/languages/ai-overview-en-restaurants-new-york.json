@@ -1,0 +1,33 @@
+{
+  "parserVersion": "ai-overview@1",
+  "engine": "google-ai-overview",
+  "channel": "ui-vendor",
+  "provider": "dataforseo",
+  "modelReported": null,
+  "present": true,
+  "markdown": "**Boucherie West Village** leads with dry-aged steaks and an absinthe bar, **Balthazar** anchors a bustling Parisian brasserie scene with steak frites and pastries, and **La Lanterna di Vittorio** pairs Italian comfort fare with a lantern-lit garden and jazz bar.[[1]](https://www.google.com/searchviewer/10?svid=CCYSDioMCgovbS8wMjBjczhtGAo)[[2]](https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWMybHFfbDg2GAo)[[3]](https://www.google.com/searchviewer/10?svid=CCYSECoOCgwvZy8xaGM0eXA5ajAYCg)Would you like to narrow by **cuisine** , check **reservation options** , or explore **other neighborhoods**?",
+  "sources": [
+    {
+      "url": "https://google.com/goto?url=CAESfQHEIkXXXQ8vyybbMntRibn1TY08lNtGUOYQ7-IKUL4OdR6sTPUT2VVluw-ZnlGeYU74czzsrnwwVl2tKKada27rHytRj7mTO4Py2xcbMgwUQ5L4dMZvj26d5JQkdXQPDtROEXebL5LLb-3wheF8070PReYYBW-M3tE8aZll",
+      "domain": "google.com",
+      "title": "The 16 best restaurants in New York City - OpenTable",
+      "cited": true
+    }
+  ],
+  "searchQueries": "unavailable",
+  "localBusinesses": [
+    {
+      "name": "Balthazar",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSDioMCgovbS8wMjBjczhtGAo"
+    },
+    {
+      "name": "Boucherie West Village",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWMybHFfbDg2GAo"
+    },
+    {
+      "name": "La Lanterna di Vittorio",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSECoOCgwvZy8xaGM0eXA5ajAYCg"
+    }
+  ],
+  "products": []
+}

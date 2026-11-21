@@ -1,0 +1,181 @@
+{
+  "parserVersion": "ai-overview@1",
+  "engine": "google-ai-overview",
+  "channel": "ui-vendor",
+  "provider": "dataforseo",
+  "modelReported": null,
+  "present": true,
+  "markdown": "`A Roma non esiste un unico studio riconosciuto come \"il migliore in assoluto\", ma diversi centri odontoiatrici e studi medici ottengono le valutazioni più alte dai pazienti`:[[1]](https://www.google.com/searchviewer/10?svid=CCYSDyoNCgsvZy8xdzBuYmd2eRgK)\n\n- **Studio Dentistico Mazzei & Partners** (Zona Esquilino / Repubblica - Via Napoleone III, 58): noto per l'esperienza pluriennale, accoglienza multilingue e gestione di casi complessi.[[1]](https://google.com/goto?url=CAESWQHEIkXXkkI_e-V2JzxLbk09XUaCyqvO6yLP5a2GkAjAxGg441Tlscvf8ptvTriLASt-ur4j2pdek3UwrAT76rHzzFmzETCvIJjmaqp_35AkEIySVR0CSsp7)[[2]](https://www.google.com/searchviewer/10?svid=CCYSDyoNCgsvZy8xdzBuYmd2eRgK)\n- **Marano Dental Experience** (Corso d'Italia): molto apprezzato per l'approccio empatico e tecniche dedicate a chi ha ansia o paura del dentista (*metodo piuma*).[[1]](https://www.google.com/searchviewer/10?svid=CCYSECoOCgwvZy8xeWd2c3R6ZzcYCg)\n- **Studio Dentistico Dr. Marco Bazzucchi & Partners** (Zona Prati - Via G.G. Belli): specializzato in laser, robotica e implantologia a carico immediato.[[1]](https://www.google.com/searchviewer/10?svid=CCYSECoOCgwvZy8xcHAydGs5MDYYCg)\n- **Centro Odontoiatrico Nomentano** (Via Gian Luca Squarcialupo): grande struttura con centinaia di recensioni positive per chirurgia e igiene orale GBT.[[1]](https://www.google.com/searchviewer/10?svid=CCYSDyoNCgsvZy8xdGtuNG10NhgK)[[2]](https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWI2eDc0ZzdyGAo)\n- **Centro Odontoiatrico Idea, Aesthetic Department** (Zona Piramide - Via Ostiense, 12): specializzato in estetica dentale e trattamenti personalizzati.[[1]](https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWI2amd2ajc0GAo)\n\nPuoi confrontare i profili, leggere le opinioni verificate e prenotare una prima visita tramite la piattaforma [MioDottore Roma](https://google.com/goto?url=CAESZAHEIkXX5EI4p4sJrg_wwA5GSUSJJqFqUht8oAqMp7Pk2GWtL1SV1IOyJ0T2WjstsZ44zqMNUUBhoR8Ua3DMxqYyThsP-ZmrGkFWV5BHnQqdl987jch7OtXpOHEfjVTm84cJJ_4) o su [Top Doctors Odontoiatria a Roma](https://google.com/goto?url=CAESaQHEIkXXF4fOqVsh1bxeOiJaUN1ZDAebSkUiXsRtMRDk6I1Tk7lhk175wN6b8KaJfMiUpD2ObuATOr2O_1n7cp77VC3vNeY3Xx5ka5etD9QSv4RsLGZiS7a2ohGxzcu2kHvzT5DVGdpOLw).[[1]](https://google.com/goto?url=CAESZAHEIkXX5EI4p4sJrg_wwA5GSUSJJqFqUht8oAqMp7Pk2GWtL1SV1IOyJ0T2WjstsZ44zqMNUUBhoR8Ua3DMxqYyThsP-ZmrGkFWV5BHnQqdl987jch7OtXpOHEfjVTm84cJJ_4)[[2]](https://google.com/goto?url=CAESaQHEIkXXF4fOqVsh1bxeOiJaUN1ZDAebSkUiXsRtMRDk6I1Tk7lhk175wN6b8KaJfMiUpD2ObuATOr2O_1n7cp77VC3vNeY3Xx5ka5etD9QSv4RsLGZiS7a2ohGxzcu2kHvzT5DVGdpOLw)Per aiutarti a trovare la soluzione più adatta, puoi dirmi:\n\n- Quale **trattamento** ti serve (pulizia, carie, impianto, ortodonzia)?\n- In quale **zona di Roma** preferisci cercare?\n- Hai esigenze particolari (es. **paura del dentista** , urgenza o copertura con fondi/assicurazioni)?",
+  "sources": [
+    {
+      "url": "https://google.com/goto?url=CAESZAHEIkXX5EI4p4sJrg_wwA5GSUSJJqFqUht8oAqMp7Pk2GWtL1SV1IOyJ0T2WjstsZ44zqMNUUBhoR8Ua3DMxqYyThsP-ZmrGkFWV5BHnQqdl987jch7OtXpOHEfjVTm84cJJ_4",
+      "domain": "google.com",
+      "title": "Dentisti a Roma. Prenota online la tua visita - MioDottore",
+      "cited": true
+    },
+    {
+      "url": "https://google.com/goto?url=CAESaQHEIkXXF4fOqVsh1bxeOiJaUN1ZDAebSkUiXsRtMRDk6I1Tk7lhk175wN6b8KaJfMiUpD2ObuATOr2O_1n7cp77VC3vNeY3Xx5ka5etD9QSv4RsLGZiS7a2ohGxzcu2kHvzT5DVGdpOLw",
+      "domain": "google.com",
+      "title": "I migliori 10 Odontoiatri di Roma. Prenota ora - Top Doctors",
+      "cited": true
+    },
+    {
+      "url": "https://www.studimazzei.com/",
+      "domain": "www.studimazzei.com",
+      "title": "Dentista Roma Centro dal 1991 | Studio Mazzei & Partners",
+      "cited": true
+    }
+  ],
+  "searchQueries": "unavailable",
+  "localBusinesses": [
+    {
+      "name": "Studio Dentistico MAZZEI & PARTNERS - Dentista Roma",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSDyoNCgsvZy8xdzBuYmd2eRgK"
+    },
+    {
+      "name": "Studio Dentistico dr Marco Bazzucchi & Partners. Laser e Robotica.",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSECoOCgwvZy8xcHAydGs5MDYYCg"
+    },
+    {
+      "name": "Marano Dental Experience®️",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSECoOCgwvZy8xeWd2c3R6ZzcYCg"
+    },
+    {
+      "name": "Studio Dentistico Manzoni | Dr. Mirko Novelli | Dentista a Roma | Dentista San Giovanni",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWgwMzY2OHl6GAo"
+    },
+    {
+      "name": "Dentista - Roma Centro - Dottor Ortuso Giuseppe",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSDyoNCgsvZy8xdzB6cTY1bBgK"
+    },
+    {
+      "name": "Centro Odontoiatrico Dott. Vincenzo Russo I Studio dentistico San Giovanni, Roma",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWpoX2MzcmQwGAo"
+    },
+    {
+      "name": "Centro Odontoiatrico Nomentano",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSDyoNCgsvZy8xdGtuNG10NhgK"
+    },
+    {
+      "name": "Centro Odontoiatrico Esquilino Dott. Raffaele Altomonte",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSDyoNCgsvZy8xdGtyYzUwMBgK"
+    },
+    {
+      "name": "Centro Odontoiatrico Idea, Aesthetic Department",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWI2amd2ajc0GAo"
+    },
+    {
+      "name": "Studio Dentistico Di Piero | Roma Prati, Piazza Mazzini",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSECoOCgwvZy8xMTl2dmpfamMYCg"
+    },
+    {
+      "name": "Studio Odontoiatrico Santilli",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSDyoNCgsvZy8xdGQ2dmNkZxgK"
+    },
+    {
+      "name": "Studio Dentistico MAZZEI & PARTNERS II - Dentista Roma Centro",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMXFoOGJ5em56GAo"
+    },
+    {
+      "name": "ELLE SMILE - Dentista Trastevere - Odontoiatria e Medicina Estetica",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMXBjdGZoMGp4GAo"
+    },
+    {
+      "name": "DENTAL BIOS srl - Dentista Roma Montesacro",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSDyoNCgsvZy8xdnNtdjUwMBgK"
+    },
+    {
+      "name": "Dr. Giovanni Lopez | Dentista Roma Parioli",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWduMXdkcWJuGAo"
+    },
+    {
+      "name": "Prof. Dr. Raoul D’Alessio",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSDyoNCgsvZy8xdGZ5NHoyZhgK"
+    },
+    {
+      "name": "Dott. Marco Squicciarini - Studio Dentistico",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWNtdHY2YjA5GAo"
+    },
+    {
+      "name": "Studio Kol",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSDyoNCgsvZy8xdGpyeTlrNBgK"
+    },
+    {
+      "name": "Prof. Dr. Pier Carmine Passarelli",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWdnNzI2am13GAo"
+    },
+    {
+      "name": "Studio Dentistico Savarese Barelli",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSECoOCgwvZy8xaGMwcnB3ejMYCg"
+    },
+    {
+      "name": "Healthy Smile in Rome - Dental Emergency 24/7",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWI2eDc0ZzdyGAo"
+    },
+    {
+      "name": "Studio dentistico Biodental - Dentista Roma Centocelle",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWZfYzBic3B2GAo"
+    },
+    {
+      "name": "Studio Dentistico Dott. Villani Cristiano",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSECoOCgwvZy8xcHR3cmNncmgYCg"
+    },
+    {
+      "name": "Dream Smile-Pellegrino Monnanni, Studio Odontoiatrico",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSDyoNCgsvZy8xdGoweTZ2bhgK"
+    },
+    {
+      "name": "MioDottore",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWMyMDh4d19wGAo"
+    },
+    {
+      "name": "San Damiano Dental - Clinica Odontoiatrica",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSECoOCgwvZy8xMWdfZ196MHMYCg"
+    },
+    {
+      "name": "🦷Medical Dentist - Dentista Roma",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSDyoNCgsvZy8xdGQ4ZnlwZhgK"
+    },
+    {
+      "name": "Nuova Medica Trieste di Arianna Patriarca",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSDyoNCgsvZy8xdG0xbWRtcBgK"
+    },
+    {
+      "name": "Centro Dentistico Cavour Dentista Prati Roma",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWY2MXc4cjdnGAo"
+    },
+    {
+      "name": "Studio odontoiatrico Dr. Vincenzo Marrapodi",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSECoOCgwvZy8xaGM0MzNwcTEYCg"
+    },
+    {
+      "name": "Freesmile - Centro Odontoiatrico",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWJ3cWJrY3l3GAo"
+    },
+    {
+      "name": "Dott. Amedeo Coppola - Medico Dentista",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWwyN2x4bGo3GAo"
+    },
+    {
+      "name": "Studio Medico Odontoiatrico Dominici",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSECoOCgwvZy8xcHR5X3N6cTEYCg"
+    },
+    {
+      "name": "Studio Dentistico Fabio Maria Salerno",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWJ3aGJrd2toGAo"
+    },
+    {
+      "name": "Studio Dentistico Minasi",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSECoOCgwvZy8xaGMzam53YzEYCg"
+    },
+    {
+      "name": "Dr. Federico Emiliani",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSESoPCg0vZy8xMWJ2Nmw5cW5qGAo"
+    },
+    {
+      "name": "Studio Dentistico Dott. Francesco Rossani",
+      "url": "https://www.google.com/searchviewer/10?svid=CCYSDyoNCgsvZy8xdGN5bjU5YhgK"
+    }
+  ],
+  "products": []
+}
